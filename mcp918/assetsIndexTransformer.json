@@ -1,0 +1,72 @@
+{
+	"rules": [
+		{
+			"minecraft/sounds/music/menu/menu2.ogg": {
+				"action": "encode",
+				"ffmpeg": {
+					"samples": 16000,
+					"bitrate": 48
+				}
+			}
+		},
+		{
+			"minecraft/sounds/records/*": {
+				"action": "exclude"
+			}
+		},
+		{
+			"minecraft/sounds/music/*": {
+				"action": "exclude"
+			}
+		},
+		{
+			"minecraft/sounds/fire/fire.ogg": {
+				"action": "encode",
+				"ffmpeg": {
+					"samples": 16000,
+					"bitrate": 48,
+					"stereo": true
+				}
+			}
+		},
+		{
+			"minecraft/sounds/minecart/inside.ogg": {
+				"action": "encode",
+				"ffmpeg": {
+					"samples": 16000,
+					"bitrate": 48,
+					"stereo": true
+				}
+			}
+		},
+		{
+			"minecraft/sounds/*": {
+				"action": "encode",
+				"ffmpeg": {
+					"samples": 16000,
+					"bitrate": 48
+				}
+			}
+		},
+		{
+			"minecraft/icons/minecraft.icns": {
+				"action": "exclude"
+			}
+		},
+		{
+			"minecraft/icons/*": {
+				"action": "include"
+			}
+		},
+		{
+			"minecraft/sounds.json": {
+				"action": "include"
+			}
+		},
+		{
+			"minecraft/lang/*": {
+				"action": "languages_zip"
+			}
+		}
+	]
+}
