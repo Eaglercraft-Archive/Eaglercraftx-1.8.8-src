@@ -59,9 +59,11 @@
 
 + 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 
-> INSERT  226 : 228  @  213
+> INSERT  226 : 230  @  213
 
-+ 		exitButton.yPosition = 3 + mc.guiAchievement.getHeight();
++ 		if (exitButton != null) {
++ 			exitButton.yPosition = 3 + mc.guiAchievement.getHeight();
++ 		}
 + 
 
 > EOF
