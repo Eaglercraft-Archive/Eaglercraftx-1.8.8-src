@@ -38,7 +38,7 @@ import net.minecraft.util.EnumChatFormatting;
  */
 public class ConnectionHandshake {
 
-	private static final long baseTimeout = 5000l;
+	private static final long baseTimeout = 15000l;
 	
 	private static final int baseVersion = 2; // ProtocolVersions.V_02
 	
