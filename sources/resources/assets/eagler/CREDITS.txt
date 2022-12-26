@@ -547,7 +547,3 @@
  * limitations under the License.
  
  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
- Make sure you also update the copy of this file in "sources/resources/assets/eagler/CREDITS"
- 
- The content of both files should match, but not include this notice in the resources one

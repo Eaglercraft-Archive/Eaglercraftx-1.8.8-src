@@ -220,8 +220,8 @@ public class PlatformApplication {
 	public static void openCreditsPopup(String text) {
 		Window currentWin = Window.current();
 		
-		int w = (int)(530 * currentWin.getDevicePixelRatio());
-		int h = (int)(450 * currentWin.getDevicePixelRatio());
+		int w = (int)(850 * currentWin.getDevicePixelRatio());
+		int h = (int)(700 * currentWin.getDevicePixelRatio());
 		
 		int x = (currentWin.getScreen().getWidth() - w) / 2;
 		int y = (currentWin.getScreen().getHeight() - h) / 2;
