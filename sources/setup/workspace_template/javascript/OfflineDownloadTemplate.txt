@@ -8,6 +8,8 @@ This file is from ${date}, there is no official eagler download link anymore, ch
 
 Be aware that some server owners are lazy and do not update their client regularly
 
+Compile it yourself here: https://gitlab.com/lax1dude/eaglercraftx-1.8/
+
 -->
 
 
