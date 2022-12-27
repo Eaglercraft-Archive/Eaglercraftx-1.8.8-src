@@ -63,6 +63,7 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.LoginEvent;
 import net.md_5.bungee.api.event.PostLoginEvent;
+import net.md_5.bungee.api.event.PreLoginEvent;
 import net.md_5.bungee.chat.ComponentSerializer;
 import net.md_5.bungee.connection.LoginResult;
 import net.md_5.bungee.connection.UpstreamBridge;
@@ -701,13 +702,14 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 		}
 		final EaglerInitialHandler initialHandler = new EaglerInitialHandler(bungee, conf, ch, gameProtocolVersion,
 				usernameStr, clientUUID, baseAddress, ctx.channel().attr(EaglerPipeline.HOST).get());
-		Callback<LoginEvent> complete = (Callback<LoginEvent>) new Callback<LoginEvent>() {
+		final Callback<LoginEvent> complete = (Callback<LoginEvent>) new Callback<LoginEvent>() {
 			public void done(final LoginEvent result, final Throwable error) {
 				if (result.isCancelled()) {
 					final BaseComponent[] reason = result.getCancelReasonComponents();
-					sendLoginDenied(ctx, ComponentSerializer.toString(reason != null ? reason
-							: TextComponent.fromLegacyText(bungee.getTranslation("kick_message", new Object[0]))))
-						.addListener(ChannelFutureListener.CLOSE);
+					sendErrorCode(ctx, HandshakePacketTypes.SERVER_ERROR_CUSTOM_MESSAGE,
+							ComponentSerializer.toString(reason != null ? reason
+									: TextComponent.fromLegacyText(bungee.getTranslation("kick_message", new Object[0]))))
+							.addListener(ChannelFutureListener.CLOSE);
 					return;
 				}
 				if (!ctx.channel().isActive()) {
@@ -872,7 +874,20 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 				});
 			}
 		};
-		bungee.getPluginManager().callEvent(new LoginEvent(initialHandler, complete));
+		final Callback<PreLoginEvent> completePre = new Callback<PreLoginEvent>() {
+			public void done(PreLoginEvent var1, Throwable var2) {
+				if (var1.isCancelled()) {
+					final BaseComponent[] reason = var1.getCancelReasonComponents();
+					sendErrorCode(ctx, HandshakePacketTypes.SERVER_ERROR_CUSTOM_MESSAGE,
+							ComponentSerializer.toString(reason != null ? reason
+									: TextComponent.fromLegacyText(bungee.getTranslation("kick_message", new Object[0]))))
+							.addListener(ChannelFutureListener.CLOSE);
+				}else {
+					bungee.getPluginManager().callEvent(new LoginEvent(initialHandler, complete));
+				}
+			}
+		};
+		bungee.getPluginManager().callEvent(new PreLoginEvent(initialHandler, completePre));
 	}
 
 	private static class EventException extends RuntimeException {
