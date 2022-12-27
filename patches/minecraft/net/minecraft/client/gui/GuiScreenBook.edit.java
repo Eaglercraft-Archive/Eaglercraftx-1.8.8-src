@@ -28,15 +28,17 @@
 
 ~ 	protected void actionPerformed(GuiButton parGuiButton) {
 
-> CHANGE  208 : 209  @  209 : 210
+> CHANGE  208 : 209  @  209 : 211
 
 ~ 	protected void keyTyped(char parChar1, int parInt1) {
 
-> CHANGE  346 : 347  @  347 : 348
+> DELETE  215  @  217 : 218
+
+> CHANGE  344 : 345  @  347 : 348
 
 ~ 					} catch (JSONException var13) {
 
-> CHANGE  381 : 382  @  382 : 383
+> CHANGE  379 : 380  @  382 : 383
 
 ~ 	protected void mouseClicked(int parInt1, int parInt2, int parInt3) {
 

@@ -130,6 +130,18 @@
 
 ~ 				int i1 = "0123456789abcdefklmnor".indexOf(Character.toLowerCase(parString1.charAt(i + 1)));
 
+> CHANGE  418 : 419  @  404 : 405
+
+~ 	private int renderStringAligned(String text, int x, int y, int wrapWidth, int color, boolean parFlag) {
+
+> CHANGE  421 : 422  @  407 : 408
+
+~ 			x = x + wrapWidth - i;
+
+> CHANGE  424 : 425  @  410 : 411
+
+~ 		return this.renderString(text, (float) x, (float) y, color, parFlag);
+
 > CHANGE  429 : 431  @  415 : 416
 
 ~ 			this.posX = x;
@@ -141,18 +153,24 @@
 
 + 		return (int) this.posX;
 
-> CHANGE  603 : 604  @  588 : 589
+> INSERT  573 : 576  @  558
+
++ 		if ((textColor & -67108864) == 0) {
++ 			textColor |= -16777216;
++ 		}
+
+> CHANGE  606 : 607  @  588 : 589
 
 ~ 		return Arrays.asList(this.wrapFormattedStringToWidth(str, wrapWidth, 0).split("\n"));
 
-> CHANGE  606 : 610  @  591 : 592
+> CHANGE  609 : 613  @  591 : 592
 
 ~ 	String wrapFormattedStringToWidth(String str, int wrapWidth, int depthCheck) { // TODO: fix recursive
 ~ 		if (depthCheck > 20) {
 ~ 			return str;
 ~ 		}
 
-> CHANGE  618 : 619  @  600 : 601
+> CHANGE  621 : 622  @  600 : 601
 
 ~ 			return s + "\n" + this.wrapFormattedStringToWidth(s1, wrapWidth, ++depthCheck);
 
