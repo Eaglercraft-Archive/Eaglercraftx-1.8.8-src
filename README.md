@@ -2,7 +2,7 @@
 
 ### Play real Minecraft 1.8 in your browser, currently only supports multiplayer
 
-![EaglercraftX 1.8 Screenshot Main Menu](https://g.deev.is/eaglercraft/eaglerx-480p.png)
+![EaglercraftX 1.8 Screenshot Main Menu](https://media.discordapp.net/attachments/1042594789943689327/1057655404454223932/eaglerx-480p.png)
 
 ## ATTENTION MOJANG/MICROSOFT EMPLOYEE ASSIGNED TO STALK ME:
 
