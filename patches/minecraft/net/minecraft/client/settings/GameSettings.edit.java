@@ -73,7 +73,7 @@
 
 ~ 	public int guiScale = 3;
 
-> INSERT  158 : 166  @  172
+> INSERT  158 : 167  @  172
 
 + 	public boolean hudFps = true;
 + 	public boolean hudCoords = true;
@@ -83,47 +83,48 @@
 + 	public boolean hud24h = false;
 + 	public boolean chunkFix = true;
 + 	public boolean fog = true;
++ 	public boolean fxaa = true;
 
-> CHANGE  167 : 168  @  173 : 174
+> CHANGE  168 : 169  @  173 : 174
 
 ~ 	public GameSettings(Minecraft mcIn) {
 
-> CHANGE  172 : 174  @  178 : 181
+> CHANGE  173 : 175  @  178 : 181
 
 ~ 				this.keyBindTogglePerspective, this.keyBindSmoothCamera, this.keyBindZoomCamera, this.keyBindFunction,
 ~ 				this.keyBindClose }, this.keyBindsHotbar);
 
-> CHANGE  177 : 179  @  184 : 185
+> CHANGE  178 : 180  @  184 : 185
 
 ~ 		this.gammaSetting = 1.0F;
 ~ 		this.language = EagRuntime.getConfiguration().getDefaultLocale();
 
-> CHANGE  181 : 182  @  187 : 193
+> CHANGE  182 : 183  @  187 : 193
 
 ~ 		GameSettings.Options.RENDER_DISTANCE.setValueMax(18.0F);
 
-> CHANGE  183 : 184  @  194 : 195
+> CHANGE  184 : 185  @  194 : 195
 
 ~ 		this.renderDistanceChunks = 4;
 
-> DELETE  187  @  198 : 213
+> DELETE  188  @  198 : 213
 
-> CHANGE  190 : 191  @  216 : 217
+> CHANGE  191 : 192  @  216 : 217
 
 ~ 						: HString.format("%c", new Object[] { Character.valueOf((char) (parInt1 - 256)) })
 
-> DELETE  274  @  300 : 301
+> DELETE  275  @  300 : 301
 
-> DELETE  278  @  305 : 306
+> DELETE  279  @  305 : 306
 
-> INSERT  323 : 325  @  351
+> INSERT  324 : 326  @  351
 
 + 			this.mc.loadingScreen.eaglerShow(I18n.format("resourcePack.load.refreshing"),
 + 					I18n.format("resourcePack.load.pleaseWait"));
 
-> DELETE  383  @  409 : 426
+> DELETE  384  @  409 : 426
 
-> INSERT  396 : 428  @  439
+> INSERT  397 : 433  @  439
 
 + 		if (parOptions == GameSettings.Options.HUD_FPS) {
 + 			this.hudFps = !this.hudFps;
@@ -157,10 +158,14 @@
 + 			this.fog = !this.fog;
 + 		}
 + 
++ 		if (parOptions == GameSettings.Options.FXAA) {
++ 			this.fxaa = !this.fxaa;
++ 		}
++ 
 
-> DELETE  482  @  493 : 499
+> DELETE  487  @  493 : 499
 
-> INSERT  494 : 510  @  511
+> INSERT  499 : 517  @  511
 
 + 		case HUD_COORDS:
 + 			return this.hudCoords;
@@ -178,22 +183,24 @@
 + 			return this.chunkFix;
 + 		case FOG:
 + 			return this.fog;
++ 		case FXAA:
++ 			return this.fxaa;
 
-> CHANGE  553 : 556  @  554 : 558
+> CHANGE  560 : 563  @  554 : 558
 
 ~ 																	: (parOptions == GameSettings.Options.CHAT_SCALE
 ~ 																			? s + (int) (f * 90.0F + 10.0F) + "%"
 ~ 																			: (parOptions == GameSettings.Options.CHAT_HEIGHT_UNFOCUSED
 
-> CHANGE  559 : 560  @  561 : 562
+> CHANGE  566 : 567  @  561 : 562
 
 ~ 																					: (parOptions == GameSettings.Options.CHAT_HEIGHT_FOCUSED
 
-> CHANGE  561 : 562  @  563 : 564
+> CHANGE  568 : 569  @  563 : 564
 
 ~ 																									.calculateChatboxHeight(
 
-> CHANGE  564 : 583  @  566 : 600
+> CHANGE  571 : 590  @  566 : 600
 
 ~ 																							: (parOptions == GameSettings.Options.CHAT_WIDTH
 ~ 																									? s + GuiNewChat
@@ -215,17 +222,17 @@
 ~ 																																	+ "%")
 ~ 																													: "yee"))))))))))));
 
-> CHANGE  618 : 620  @  635 : 636
+> CHANGE  625 : 627  @  635 : 636
 
 ~ 			byte[] options = EagRuntime.getStorage("g");
 ~ 			if (options == null) {
 
-> CHANGE  623 : 625  @  639 : 640
+> CHANGE  630 : 632  @  639 : 640
 
 ~ 			BufferedReader bufferedreader = new BufferedReader(
 ~ 					new InputStreamReader(EaglerZLIB.newGZIPInputStream(new EaglerInputStream(options))));
 
-> CHANGE  708 : 714  @  723 : 724
+> CHANGE  715 : 721  @  723 : 724
 
 ~ 						this.resourcePacks.clear();
 ~ 						for (Object o : (new JSONArray(s.substring(s.indexOf(58) + 1))).toList()) {
@@ -234,7 +241,7 @@
 ~ 							}
 ~ 						}
 
-> CHANGE  720 : 726  @  730 : 731
+> CHANGE  727 : 733  @  730 : 731
 
 ~ 						this.field_183018_l.clear();
 ~ 						for (Object o : (new JSONArray(s.substring(s.indexOf(58) + 1))).toList()) {
@@ -243,11 +250,11 @@
 ~ 							}
 ~ 						}
 
-> DELETE  764  @  769 : 773
+> DELETE  771  @  769 : 773
 
-> DELETE  768  @  777 : 781
+> DELETE  775  @  777 : 781
 
-> INSERT  884 : 916  @  897
+> INSERT  891 : 927  @  897
 
 + 					if (astring[0].equals("hudFps")) {
 + 						this.hudFps = astring[1].equals("true");
@@ -281,29 +288,33 @@
 + 						this.fog = astring[1].equals("true");
 + 					}
 + 
++ 					if (astring[0].equals("fxaa")) {
++ 						this.fxaa = astring[1].equals("true");
++ 					}
++ 
 
-> INSERT  922 : 924  @  903
+> INSERT  933 : 935  @  903
 
 + 					Keyboard.setFunctionKeyModifier(keyBindFunction.getKeyCode());
 + 
 
-> DELETE  941  @  920 : 921
+> DELETE  952  @  920 : 921
 
-> CHANGE  953 : 955  @  933 : 934
+> CHANGE  964 : 966  @  933 : 934
 
 ~ 			ByteArrayOutputStream bao = new ByteArrayOutputStream();
 ~ 			PrintWriter printwriter = new PrintWriter(new OutputStreamWriter(EaglerZLIB.newGZIPOutputStream(bao)));
 
-> CHANGE  981 : 983  @  960 : 962
+> CHANGE  992 : 994  @  960 : 962
 
 ~ 			printwriter.println("resourcePacks:" + toJSONArray(this.resourcePacks));
 ~ 			printwriter.println("incompatibleResourcePacks:" + toJSONArray(this.field_183018_l));
 
-> DELETE  991  @  970 : 971
+> DELETE  1002  @  970 : 971
 
-> DELETE  992  @  972 : 973
+> DELETE  1003  @  972 : 973
 
-> INSERT  1021 : 1029  @  1002
+> INSERT  1032 : 1041  @  1002
 
 + 			printwriter.println("hudFps:" + this.hudFps);
 + 			printwriter.println("hudWorld:" + this.hudWorld);
@@ -313,22 +324,23 @@
 + 			printwriter.println("hud24h:" + this.hud24h);
 + 			printwriter.println("chunkFix:" + this.chunkFix);
 + 			printwriter.println("fog:" + this.fog);
++ 			printwriter.println("fxaa:" + this.fxaa);
 
-> INSERT  1034 : 1036  @  1007
+> INSERT  1046 : 1048  @  1007
 
 + 			Keyboard.setFunctionKeyModifier(keyBindFunction.getKeyCode());
 + 
 
-> INSERT  1047 : 1049  @  1018
+> INSERT  1059 : 1061  @  1018
 
 + 
 + 			EagRuntime.setStorage("g", bao.toByteArray());
 
-> CHANGE  1059 : 1060  @  1028 : 1029
+> CHANGE  1071 : 1072  @  1028 : 1029
 
 ~ 				: (parSoundCategory == SoundCategory.VOICE ? 0.0F : 1.0F);
 
-> INSERT  1113 : 1121  @  1082
+> INSERT  1125 : 1133  @  1082
 
 + 	private String toJSONArray(List<String> e) {
 + 		JSONArray arr = new JSONArray();
@@ -339,21 +351,21 @@
 + 	}
 + 
 
-> CHANGE  1125 : 1126  @  1086 : 1087
+> CHANGE  1137 : 1138  @  1086 : 1087
 
 ~ 		RENDER_DISTANCE("options.renderDistance", true, false, 1.0F, 16.0F, 1.0F),
 
-> CHANGE  1134 : 1136  @  1095 : 1099
+> CHANGE  1146 : 1148  @  1095 : 1099
 
 ~ 		TOUCHSCREEN("options.touchscreen", false, true), CHAT_SCALE("options.chat.scale", true, false),
 ~ 		CHAT_WIDTH("options.chat.width", true, false), CHAT_HEIGHT_FOCUSED("options.chat.height.focused", true, false),
 
-> CHANGE  1150 : 1155  @  1113 : 1114
+> CHANGE  1162 : 1167  @  1113 : 1114
 
 ~ 		ENTITY_SHADOWS("options.entityShadows", false, true), HUD_FPS("options.hud.fps", false, true),
 ~ 		HUD_COORDS("options.hud.coords", false, true), HUD_STATS("options.hud.stats", false, true),
 ~ 		HUD_WORLD("options.hud.world", false, true), HUD_PLAYER("options.hud.player", false, true),
 ~ 		HUD_24H("options.hud.24h", false, true), CHUNK_FIX("options.chunkFix", false, true),
-~ 		FOG("options.fog", false, true);
+~ 		FOG("options.fog", false, true), FXAA("options.fxaa", false, true);
 
 > EOF

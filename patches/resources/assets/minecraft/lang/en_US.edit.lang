@@ -12,7 +12,7 @@
 ~ eaglercraft.recording.start=Record Screen...
 ~ eaglercraft.soundCategory.voice=Voice
 
-> INSERT  22 : 87  @  25
+> INSERT  22 : 88  @  25
 
 + eaglercraft.resourcePack.prompt.title=What do you want to do with '%s'?
 + eaglercraft.resourcePack.prompt.text=Tip: Hold Shift to skip this screen when selecting a resource pack!
@@ -69,6 +69,7 @@
 + eaglercraft.options.hud.24h=24h Day
 + eaglercraft.options.chunkFix=Chunk Lag Fix
 + eaglercraft.options.fog=Fog
++ eaglercraft.options.fxaa=FXAA Antialiasing
 + 
 + eaglercraft.key.function=Function
 + eaglercraft.key.zoomCamera=Zoom Camera
@@ -80,11 +81,11 @@
 + eaglercraft.auth.continue=Join Server
 + 
 
-> CHANGE  555 : 556  @  493 : 494
+> CHANGE  556 : 557  @  493 : 494
 
 ~ resourcePack.openFolder=Open resource pack
 
-> CHANGE  559 : 560  @  497 : 498
+> CHANGE  560 : 561  @  497 : 498
 
 ~ resourcePack.folderInfo=(Select resource pack files here)
 

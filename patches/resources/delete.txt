@@ -1,4 +1,4 @@
-# 87 files to delete:
+# 88 files to delete:
 assets/minecraft/shaders/post/ntsc.json
 assets/minecraft/shaders/program/outline_combine.json
 assets/minecraft/shaders/post/art.json
@@ -32,6 +32,7 @@ assets/minecraft/shaders/program/bits.json
 assets/minecraft/shaders/program/outline_watercolor.json
 assets/minecraft/shaders/program/bumpy.vsh
 assets/minecraft/shaders/post/blobs.json
+log4j2.xml
 assets/minecraft/shaders/program/outline_combine.fsh
 assets/minecraft/shaders/program/outline.fsh
 assets/minecraft/shaders/program/flip.json

@@ -47,18 +47,12 @@ void main() {
 
 	float particleSize = u_texCoordSize2f_particleSize1f.z * p_particleSize_texCoordsSize_2i.x;
 
-	float f1 = u_transformParam_1_2_3_4_f.x;
-	float f2 = u_transformParam_1_2_3_4_f.y;
-	float f3 = u_transformParam_1_2_3_4_f.z;
-	float f4 = u_transformParam_1_2_3_4_f.w;
-	float f5 = u_transformParam_5_f;
-
 	vec3 pos3f = p_position3f;
-	pos3f.x += f1 * particleSize * a_position2f.x;
-	pos3f.x += f4 * particleSize * a_position2f.y;
-	pos3f.y += f2 * particleSize * a_position2f.y;
-	pos3f.z += f3 * particleSize * a_position2f.x;
-	pos3f.z += f5 * particleSize * a_position2f.y;
+	pos3f.x += u_transformParam_1_2_3_4_f.x * particleSize * a_position2f.x;
+	pos3f.x += u_transformParam_1_2_3_4_f.w * particleSize * a_position2f.y;
+	pos3f.y += u_transformParam_1_2_3_4_f.y * particleSize * a_position2f.y;
+	pos3f.z += u_transformParam_1_2_3_4_f.z * particleSize * a_position2f.x;
+	pos3f.z += u_transformParam_5_f * particleSize * a_position2f.y;
 
 	gl_Position = u_matrixTransform * vec4(pos3f, 1.0);
 }

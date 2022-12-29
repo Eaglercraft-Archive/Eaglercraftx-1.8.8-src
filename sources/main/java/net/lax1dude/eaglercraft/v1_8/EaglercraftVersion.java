@@ -8,7 +8,7 @@ public class EaglercraftVersion {
 	/// Customize these to fit your fork:
 	
 	public static final String projectForkName = "EaglercraftX";
-	public static final String projectForkVersion = "u5";
+	public static final String projectForkVersion = "u6";
 	public static final String projectForkVendor = "lax1dude";
 	
 	public static final String projectForkURL = "https://gitlab.com/lax1dude/eaglercraftx-1.8";
@@ -23,7 +23,7 @@ public class EaglercraftVersion {
 	public static final String projectOriginName = "EaglercraftX";
 	public static final String projectOriginAuthor = "lax1dude";
 	public static final String projectOriginRevision = "1.8";
-	public static final String projectOriginVersion = "u5";
+	public static final String projectOriginVersion = "u6";
 	
 	public static final String projectOriginURL = "https://gitlab.com/lax1dude/eaglercraftx-1.8";
 	

@@ -452,6 +452,8 @@ public class EaglercraftGPU {
 		SpriteLevelMixer.initialize();
 		InstancedFontRenderer.initialize();
 		InstancedParticleRenderer.initialize();
+		EffectPipelineFXAA.initialize();
+		SpriteLevelMixer.vshLocal.free();
 	}
 
 	public static final ITextureGL getNativeTexture(int tex) {

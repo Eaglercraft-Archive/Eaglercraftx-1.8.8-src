@@ -35,8 +35,10 @@ public class SpriteLevelMixer {
 	public static final String vertexShaderPath = "/assets/eagler/glsl/local.vsh";
 	public static final String fragmentShaderPath = "/assets/eagler/glsl/texture_mix.fsh";
 
+	public static IShaderGL vshLocal = null;
+
 	private static IBufferGL vertexBuffer = null;
-	private static IBufferArrayGL vertexArray = null;
+	public static IBufferArrayGL vertexArray = null;
 	private static IProgramGL shaderProgram = null;
 
 	private static IUniformGL u_textureLod1f = null;
@@ -75,15 +77,15 @@ public class SpriteLevelMixer {
 			throw new RuntimeException("SpriteLevelMixer shader \"" + fragmentShaderPath + "\" is missing!");
 		}
 
-		IShaderGL vert = _wglCreateShader(GL_VERTEX_SHADER);
+		vshLocal = _wglCreateShader(GL_VERTEX_SHADER);
 		IShaderGL frag = _wglCreateShader(GL_FRAGMENT_SHADER);
 
-		_wglShaderSource(vert, FixedFunctionConstants.VERSION + "\n" + vertexSource);
-		_wglCompileShader(vert);
+		_wglShaderSource(vshLocal, FixedFunctionConstants.VERSION + "\n" + vertexSource);
+		_wglCompileShader(vshLocal);
 
-		if(_wglGetShaderi(vert, GL_COMPILE_STATUS) != GL_TRUE) {
+		if(_wglGetShaderi(vshLocal, GL_COMPILE_STATUS) != GL_TRUE) {
 			LOGGER.error("Failed to compile GL_VERTEX_SHADER \"" + vertexShaderPath + "\" for SpriteLevelMixer!");
-			String log = _wglGetShaderInfoLog(vert);
+			String log = _wglGetShaderInfoLog(vshLocal);
 			if(log != null) {
 				String[] lines = log.split("(\\r\\n|\\r|\\n)");
 				for(int i = 0; i < lines.length; ++i) {
@@ -110,17 +112,16 @@ public class SpriteLevelMixer {
 
 		shaderProgram = _wglCreateProgram();
 
-		_wglAttachShader(shaderProgram, vert);
+		_wglAttachShader(shaderProgram, vshLocal);
 		_wglAttachShader(shaderProgram, frag);
 
 		_wglBindAttribLocation(shaderProgram, 0, "a_position2f");
 
 		_wglLinkProgram(shaderProgram);
 
-		_wglDetachShader(shaderProgram, vert);
+		_wglDetachShader(shaderProgram, vshLocal);
 		_wglDetachShader(shaderProgram, frag);
 
-		_wglDeleteShader(vert);
 		_wglDeleteShader(frag);
 
 		if(_wglGetProgrami(shaderProgram, GL_LINK_STATUS) != GL_TRUE) {

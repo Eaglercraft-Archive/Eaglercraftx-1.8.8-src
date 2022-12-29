@@ -45,8 +45,10 @@ public class PlatformAssets {
 		File loadFile = new File("resources", path);
 		byte[] ret = new byte[(int) loadFile.length()];
 		try(FileInputStream is = new FileInputStream(loadFile)) {
-			is.read(ret);
-			is.close();
+			int i, j = 0;
+			while(j < ret.length && (i = is.read(ret, j, ret.length - j)) != -1) {
+				j += i;
+			}
 			return ret;
 		}catch(IOException ex) {
 			return null;
