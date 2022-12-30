@@ -9,7 +9,7 @@
 
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.ImageData;
 
-> CHANGE  3 : 4  @  3 : 4
+> CHANGE  2 : 3  @  2 : 3
 
 ~ 	ImageData parseUserSkin(ImageData var1);
 

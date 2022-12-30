@@ -7,15 +7,15 @@
 
 > DELETE  2  @  2 : 3
 
-> INSERT  2 : 5  @  3
+> INSERT  2 : 5  @  2
 
 + 
 + import com.google.common.collect.Lists;
 + 
 
-> DELETE  5  @  2 : 3
+> DELETE  2  @  2 : 3
 
-> CHANGE  37 : 38  @  38 : 39
+> CHANGE  37 : 38  @  37 : 38
 
 ~ 					for (ItemStack itemstack1 : (List<ItemStack>) arraylist) {
 

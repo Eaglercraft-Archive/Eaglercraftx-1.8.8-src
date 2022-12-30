@@ -7,9 +7,9 @@
 
 > DELETE  2  @  2 : 5
 
-> DELETE  2  @  5 : 7
+> DELETE  2  @  2 : 4
 
-> CHANGE  4 : 13  @  6 : 7
+> CHANGE  4 : 13  @  4 : 5
 
 ~ 
 ~ import com.google.common.collect.Lists;
@@ -21,19 +21,19 @@
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 
-> DELETE  10  @  2 : 7
+> DELETE  1  @  1 : 6
 
-> DELETE  7  @  12 : 13
+> DELETE  7  @  7 : 8
 
-> CHANGE  1 : 2  @  2 : 3
+> CHANGE  1 : 2  @  1 : 2
 
 ~ 	private String[] stacktrace;
 
-> INSERT  5 : 6  @  5
+> INSERT  4 : 5  @  4
 
 + 		this.stacktrace = EagRuntime.getStackTraceElements(causeThrowable);
 
-> CHANGE  27 : 38  @  26 : 54
+> CHANGE  26 : 37  @  26 : 54
 
 ~ 		if (EagRuntime.getPlatformType() != EnumPlatformType.JAVASCRIPT) {
 ~ 			this.theReportCategory.addCrashSectionCallable("Memory", new Callable<String>() {
@@ -47,24 +47,24 @@
 ~ 					return k + " bytes (" + j1 + " MB) / " + j + " bytes (" + i1 + " MB) up to " + i + " bytes (" + l
 ~ 							+ " MB)";
 
-> CHANGE  12 : 14  @  29 : 38
+> CHANGE  1 : 3  @  1 : 10
 
 ~ 			});
 ~ 		}
 
-> CHANGE  14 : 15  @  21 : 22
+> CHANGE  12 : 13  @  12 : 13
 
 ~ 			this.stacktrace = (String[]) ArrayUtils
 
-> CHANGE  8 : 9  @  8 : 9
+> CHANGE  7 : 8  @  7 : 8
 
 ~ 			for (String stacktraceelement : this.stacktrace) {
 
-> CHANGE  17 : 18  @  17 : 28
+> CHANGE  16 : 17  @  16 : 27
 
 ~ 		StringBuilder stackTrace = new StringBuilder();
 
-> CHANGE  2 : 9  @  12 : 13
+> CHANGE  1 : 8  @  1 : 2
 
 ~ 		if ((this.cause.getMessage() == null || this.cause.getMessage().length() == 0)
 ~ 				&& ((this.cause instanceof NullPointerException) || (this.cause instanceof StackOverflowError)
@@ -74,29 +74,29 @@
 ~ 		} else {
 ~ 			stackTrace.append(this.cause.toString()).append('\n');
 
-> CHANGE  9 : 12  @  3 : 4
+> CHANGE  2 : 5  @  2 : 3
 
 ~ 		EagRuntime.getStackTrace(this.cause, (s) -> {
 ~ 			stackTrace.append("\tat ").append(s).append('\n');
 ~ 		});
 
-> CHANGE  4 : 5  @  2 : 13
+> CHANGE  1 : 2  @  1 : 12
 
 ~ 		return stackTrace.toString();
 
-> DELETE  28  @  38 : 63
+> DELETE  27  @  27 : 52
 
-> CHANGE  12 : 15  @  37 : 40
+> CHANGE  12 : 15  @  12 : 15
 
 ~ 			String[] astacktraceelement = EagRuntime.getStackTraceElements(cause);
 ~ 			String stacktraceelement = null;
 ~ 			String stacktraceelement1 = null;
 
-> CHANGE  24 : 25  @  24 : 25
+> CHANGE  21 : 22  @  21 : 22
 
 ~ 				this.stacktrace = new String[j];
 
-> CHANGE  12 : 13  @  12 : 31
+> CHANGE  11 : 12  @  11 : 30
 
 ~ 		return "eagler";
 

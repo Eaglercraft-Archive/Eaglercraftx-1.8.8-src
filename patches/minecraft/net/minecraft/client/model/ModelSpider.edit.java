@@ -7,7 +7,7 @@
 
 > DELETE  2  @  2 : 4
 
-> CHANGE  81 : 82  @  83 : 84
+> CHANGE  81 : 82  @  81 : 82
 
 ~ 		float f5 = 0.0F;
 

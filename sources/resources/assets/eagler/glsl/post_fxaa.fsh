@@ -57,8 +57,6 @@ out vec4 output4f;
 uniform sampler2D u_screenTexture;
 uniform vec2 u_screenSize2f;
 
-#define FXAA_PC 1
-
 #ifndef FXAA_GREEN_AS_LUMA
     // For those using non-linear color,
     // and either not able to get luma in alpha, or not wanting to,

@@ -7,7 +7,7 @@
 
 > DELETE  2  @  2 : 6
 
-> INSERT  8 : 13  @  12
+> INSERT  8 : 13  @  8
 
 + import com.google.common.base.Function;
 + import com.google.common.collect.Iterables;
@@ -15,11 +15,11 @@
 + import com.google.common.collect.UnmodifiableIterator;
 + 
 
-> CHANGE  37 : 38  @  32 : 33
+> CHANGE  32 : 33  @  32 : 33
 
 ~ 			return (List<T>) Arrays.asList((Object[]) aobject);
 
-> CHANGE  15 : 16  @  15 : 16
+> CHANGE  14 : 15  @  14 : 15
 
 ~ 					? Collections.singletonList((T[]) Cartesian.createArray(this.clazz, 0)).iterator()
 

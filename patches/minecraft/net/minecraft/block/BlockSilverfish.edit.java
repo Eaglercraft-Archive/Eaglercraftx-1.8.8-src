@@ -10,13 +10,13 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
 
-> DELETE  8  @  10 : 11
+> DELETE  6  @  6 : 7
 
-> CHANGE  8 : 9  @  9 : 11
+> CHANGE  8 : 9  @  8 : 10
 
 ~ 	public static PropertyEnum<BlockSilverfish.EnumType> VARIANT;
 
-> CHANGE  9 : 14  @  10 : 11
+> CHANGE  8 : 13  @  8 : 9
 
 ~ 	public static void bootstrapStates() {
 ~ 		VARIANT = PropertyEnum.<BlockSilverfish.EnumType>create("variant", BlockSilverfish.EnumType.class);
@@ -24,6 +24,6 @@
 ~ 
 ~ 	public int quantityDropped(EaglercraftRandom var1) {
 
-> DELETE  31  @  27 : 38
+> DELETE  26  @  26 : 37
 
 > EOF

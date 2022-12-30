@@ -9,22 +9,22 @@
 
 ~ 
 
-> DELETE  4  @  6 : 7
+> DELETE  3  @  3 : 4
 
-> CHANGE  8 : 12  @  9 : 13
+> CHANGE  8 : 12  @  8 : 12
 
 ~ //	public C01PacketEncryptionResponse(SecretKey secretKey, PublicKey publicKey, byte[] verifyToken) {
 ~ //		this.secretKeyEncrypted = CryptManager.encryptData(publicKey, secretKey.getEncoded());
 ~ //		this.verifyTokenEncrypted = CryptManager.encryptData(publicKey, verifyToken);
 ~ //	}
 
-> CHANGE  19 : 22  @  19 : 22
+> CHANGE  15 : 18  @  15 : 18
 
 ~ //	public SecretKey getSecretKey(PrivateKey key) {
 ~ //		return CryptManager.decryptSharedKey(key, this.secretKeyEncrypted);
 ~ //	}
 
-> CHANGE  4 : 7  @  4 : 7
+> CHANGE  1 : 4  @  1 : 4
 
 ~ //	public byte[] getVerifyToken(PrivateKey key) {
 ~ //		return key == null ? this.verifyTokenEncrypted : CryptManager.decryptData(key, this.verifyTokenEncrypted);

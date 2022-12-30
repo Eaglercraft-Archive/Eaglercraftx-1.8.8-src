@@ -18,21 +18,21 @@
 + import java.util.Map;
 + 
 
-> CHANGE  20 : 21  @  10 : 19
+> CHANGE  10 : 11  @  10 : 19
 
 ~ 
 
-> DELETE  3  @  11 : 13
+> DELETE  2  @  2 : 4
 
-> CHANGE  23 : 24  @  25 : 26
+> CHANGE  23 : 24  @  23 : 24
 
 ~ 		ArrayList<BlockState.StateImplementation> arraylist = Lists.newArrayList();
 
-> CHANGE  108 : 109  @  108 : 109
+> CHANGE  107 : 108  @  107 : 108
 
 ~ 					for (Object comparable : iproperty.getAllowedValues()) {
 
-> CHANGE  3 : 4  @  3 : 4
+> CHANGE  2 : 3  @  2 : 3
 
 ~ 									map.get(this.getPropertiesWithValue(iproperty, (Comparable) comparable)));
 

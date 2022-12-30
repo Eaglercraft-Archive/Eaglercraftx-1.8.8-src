@@ -7,7 +7,7 @@
 
 > DELETE  2  @  2 : 5
 
-> INSERT  5 : 11  @  8
+> INSERT  5 : 11  @  5
 
 + import java.util.Set;
 + 
@@ -16,27 +16,27 @@
 + import com.google.common.collect.Maps;
 + 
 
-> DELETE  10  @  4 : 5
+> DELETE  4  @  4 : 5
 
-> DELETE  1  @  2 : 5
+> DELETE  1  @  1 : 4
 
-> DELETE  61  @  64 : 73
+> DELETE  61  @  61 : 70
 
-> DELETE  27  @  36 : 39
+> DELETE  27  @  27 : 30
 
-> CHANGE  24 : 25  @  27 : 28
+> CHANGE  24 : 25  @  24 : 25
 
 ~ 			for (PotionEffect potioneffect : (List<PotionEffect>) list) {
 
-> CHANGE  38 : 39  @  38 : 39
+> CHANGE  37 : 38  @  37 : 38
 
 ~ 				for (PotionEffect potioneffect : (List<PotionEffect>) list1) {
 
-> CHANGE  5 : 6  @  5 : 6
+> CHANGE  4 : 5  @  4 : 5
 
 ~ 						for (Entry entry : (Set<Entry>) map.entrySet()) {
 
-> CHANGE  34 : 35  @  34 : 35
+> CHANGE  33 : 34  @  33 : 34
 
 ~ 				for (Entry entry1 : (Set<Entry>) hashmultimap.entries()) {
 

@@ -96,8 +96,8 @@ public class EaglerContextRedacted {
 				output.println();
 			}
 			
-			lastSourcePos = sourcePos;
-			lastTargetPos = targetPos;
+			lastSourcePos = sourcePos + sourceLen;
+			lastTargetPos = targetPos + targetLen;
 		}
 		
 		output.println("> EOF");
@@ -159,6 +159,8 @@ public class EaglerContextRedacted {
 					lastSourcePos += sourceStart;
 					lastTargetPos += targetStart;
 					newPatch.addDelta(makeDelta(currentDeltaType, lastSourcePos, sourceLen, lastTargetPos, targetLen, context, targetLines));
+					lastSourcePos += sourceLen;
+					lastTargetPos += targetLen;
 				}
 				
 				switch(split[0]) {
@@ -230,6 +232,8 @@ public class EaglerContextRedacted {
 			lastSourcePos += sourceStart;
 			lastTargetPos += targetStart;
 			newPatch.addDelta(makeDelta(currentDeltaType, lastSourcePos, sourceLen, lastTargetPos, targetLen, context, targetLines));
+			lastSourcePos += sourceLen;
+			lastTargetPos += targetLen;
 		}
 		
 		return newPatch;

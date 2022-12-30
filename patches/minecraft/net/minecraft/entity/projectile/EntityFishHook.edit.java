@@ -9,28 +9,28 @@
 
 + 
 
-> DELETE  3  @  2 : 3
+> DELETE  2  @  2 : 3
 
-> DELETE  1  @  2 : 4
+> DELETE  1  @  1 : 3
 
-> DELETE  7  @  9 : 10
+> DELETE  7  @  7 : 8
 
-> DELETE  3  @  4 : 5
+> DELETE  3  @  3 : 4
 
-> DELETE  4  @  5 : 6
+> DELETE  4  @  4 : 5
 
-> DELETE  2  @  3 : 4
+> DELETE  2  @  2 : 3
 
-> DELETE  165  @  166 : 175
+> DELETE  165  @  165 : 174
 
-> DELETE  1  @  10 : 23
+> DELETE  1  @  1 : 14
 
-> DELETE  118  @  131 : 232
+> DELETE  118  @  118 : 219
 
-> CHANGE  40 : 41  @  141 : 180
+> CHANGE  40 : 41  @  40 : 79
 
 ~ 		return 0;
 
-> DELETE  3  @  41 : 66
+> DELETE  2  @  2 : 27
 
 > EOF

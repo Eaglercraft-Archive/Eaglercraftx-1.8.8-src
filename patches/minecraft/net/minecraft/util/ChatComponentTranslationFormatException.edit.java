@@ -9,15 +9,15 @@
 
 ~ import net.lax1dude.eaglercraft.v1_8.HString;
 
-> CHANGE  4 : 5  @  4 : 5
+> CHANGE  3 : 4  @  3 : 4
 
 ~ 		super(HString.format("Error parsing: %s: %s", new Object[] { component, message }));
 
-> CHANGE  4 : 5  @  4 : 5
+> CHANGE  3 : 4  @  3 : 4
 
 ~ 		super(HString.format("Invalid index %d requested for %s", new Object[] { Integer.valueOf(index), component }));
 
-> CHANGE  4 : 5  @  4 : 5
+> CHANGE  3 : 4  @  3 : 4
 
 ~ 		super(HString.format("Error while parsing: %s", new Object[] { component }), cause);
 

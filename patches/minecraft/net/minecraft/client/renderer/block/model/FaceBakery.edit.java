@@ -12,34 +12,34 @@
 + import net.lax1dude.eaglercraft.v1_8.vector.Vector3f;
 + import net.lax1dude.eaglercraft.v1_8.vector.Vector4f;
 
-> DELETE  5  @  1 : 6
+> DELETE  1  @  1 : 6
 
-> DELETE  4  @  9 : 12
+> DELETE  4  @  4 : 7
 
-> CHANGE  5 : 8  @  8 : 11
+> CHANGE  5 : 8  @  5 : 8
 
 ~ 	public BakedQuad makeBakedQuad(Vector3f posFrom, Vector3f posTo, BlockPartFace face,
 ~ 			EaglerTextureAtlasSprite sprite, EnumFacing facing, ModelRotation modelRotationIn,
 ~ 			BlockPartRotation partRotation, boolean uvLocked, boolean shade) {
 
-> CHANGE  17 : 18  @  17 : 18
+> CHANGE  14 : 15  @  14 : 15
 
 ~ 	private int[] makeQuadVertexData(BlockPartFace partFace, EaglerTextureAtlasSprite sprite, EnumFacing facing,
 
-> CHANGE  48 : 50  @  48 : 50
+> CHANGE  47 : 49  @  47 : 49
 
 ~ 			float[] sprite, EaglerTextureAtlasSprite modelRotationIn, ModelRotation partRotation,
 ~ 			BlockPartRotation uvLocked, boolean shade, boolean parFlag2) {
 
-> CHANGE  15 : 16  @  15 : 16
+> CHANGE  13 : 14  @  13 : 14
 
 ~ 			EaglerTextureAtlasSprite sprite, BlockFaceUV faceUV) {
 
-> CHANGE  114 : 115  @  114 : 115
+> CHANGE  113 : 114  @  113 : 114
 
 ~ 			EaglerTextureAtlasSprite parTextureAtlasSprite) {
 
-> CHANGE  77 : 78  @  77 : 78
+> CHANGE  76 : 77  @  76 : 77
 
 ~ 			EaglerTextureAtlasSprite parTextureAtlasSprite) {
 

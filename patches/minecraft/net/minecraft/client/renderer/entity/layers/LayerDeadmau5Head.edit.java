@@ -9,17 +9,17 @@
 
 + import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 
-> CHANGE  2 : 3  @  1 : 2
+> CHANGE  1 : 2  @  1 : 2
 
 ~ import net.minecraft.client.model.ModelPlayer;
 
-> DELETE  2  @  2 : 3
+> DELETE  1  @  1 : 2
 
-> CHANGE  11 : 12  @  12 : 13
+> CHANGE  11 : 12  @  11 : 12
 
 ~ 				&& !abstractclientplayer.isInvisible() && this.playerRenderer.getMainModel() instanceof ModelPlayer) {
 
-> CHANGE  20 : 21  @  20 : 21
+> CHANGE  19 : 20  @  19 : 20
 
 ~ 				((ModelPlayer) this.playerRenderer.getMainModel()).renderDeadmau5Head(0.0625F);
 

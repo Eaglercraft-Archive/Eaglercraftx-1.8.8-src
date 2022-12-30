@@ -10,11 +10,11 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
 
-> CHANGE  22 : 23  @  23 : 25
+> CHANGE  20 : 21  @  20 : 22
 
 ~ 	public static PropertyEnum<BlockPistonExtension.EnumPistonType> TYPE;
 
-> INSERT  12 : 17  @  13
+> INSERT  11 : 16  @  11
 
 + 	public static void bootstrapStates() {
 + 		TYPE = PropertyEnum.<BlockPistonExtension.EnumPistonType>create("type",
@@ -22,7 +22,7 @@
 + 	}
 + 
 
-> CHANGE  49 : 50  @  44 : 45
+> CHANGE  44 : 45  @  44 : 45
 
 ~ 	public int quantityDropped(EaglercraftRandom var1) {
 

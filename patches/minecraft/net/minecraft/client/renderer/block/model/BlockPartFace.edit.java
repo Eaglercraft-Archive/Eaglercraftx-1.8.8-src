@@ -13,28 +13,28 @@
 ~ import net.lax1dude.eaglercraft.v1_8.json.JSONTypeDeserializer;
 ~ import net.lax1dude.eaglercraft.v1_8.json.JSONTypeProvider;
 
-> DELETE  6  @  8 : 9
+> DELETE  1  @  1 : 2
 
-> CHANGE  15 : 17  @  16 : 20
+> CHANGE  15 : 17  @  15 : 19
 
 ~ 	public static class Deserializer implements JSONTypeDeserializer<JSONObject, BlockPartFace> {
 ~ 		public BlockPartFace deserialize(JSONObject jsonobject) throws JSONException {
 
-> CHANGE  5 : 6  @  7 : 9
+> CHANGE  3 : 4  @  3 : 5
 
 ~ 			BlockFaceUV blockfaceuv = JSONTypeProvider.deserialize(jsonobject, BlockFaceUV.class);
 
-> CHANGE  4 : 6  @  5 : 7
+> CHANGE  3 : 5  @  3 : 5
 
 ~ 		protected int parseTintIndex(JSONObject parJsonObject) {
 ~ 			return parJsonObject.optInt("tintindex", -1);
 
-> CHANGE  4 : 6  @  4 : 6
+> CHANGE  2 : 4  @  2 : 4
 
 ~ 		private String parseTexture(JSONObject parJsonObject) {
 ~ 			return parJsonObject.getString("texture");
 
-> CHANGE  4 : 6  @  4 : 6
+> CHANGE  2 : 4  @  2 : 4
 
 ~ 		private EnumFacing parseCullFace(JSONObject parJsonObject) {
 ~ 			String s = parJsonObject.optString("cullface", "");

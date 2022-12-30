@@ -7,7 +7,7 @@
 
 > DELETE  2  @  2 : 4
 
-> INSERT  4 : 11  @  6
+> INSERT  4 : 11  @  4
 
 + 
 + import net.lax1dude.eaglercraft.v1_8.HString;
@@ -17,37 +17,37 @@
 + import com.google.common.collect.Sets;
 + 
 
-> DELETE  8  @  1 : 2
+> DELETE  1  @  1 : 2
 
-> CHANGE  29 : 30  @  30 : 31
+> CHANGE  29 : 30  @  29 : 30
 
 ~ 	public void addSprite(EaglerTextureAtlasSprite parTextureAtlasSprite) {
 
-> CHANGE  16 : 17  @  16 : 17
+> CHANGE  15 : 16  @  15 : 16
 
 ~ 				String s = HString.format("Unable to fit: %s - size: %dx%d - Maybe try a lowerresolution resourcepack?",
 
-> CHANGE  15 : 16  @  15 : 16
+> CHANGE  14 : 15  @  14 : 15
 
 ~ 	public List<EaglerTextureAtlasSprite> getStichSlots() {
 
-> CHANGE  9 : 10  @  9 : 10
+> CHANGE  8 : 9  @  8 : 9
 
 ~ 		for (Stitcher.Slot stitcher$slot1 : (List<Stitcher.Slot>) arraylist) {
 
-> CHANGE  2 : 3  @  2 : 3
+> CHANGE  1 : 2  @  1 : 2
 
 ~ 			EaglerTextureAtlasSprite textureatlassprite = stitcher$holder.getAtlasSprite();
 
-> CHANGE  91 : 92  @  91 : 92
+> CHANGE  90 : 91  @  90 : 91
 
 ~ 		private final EaglerTextureAtlasSprite theTexture;
 
-> CHANGE  7 : 8  @  7 : 8
+> CHANGE  6 : 7  @  6 : 7
 
 ~ 		public Holder(EaglerTextureAtlasSprite parTextureAtlasSprite, int parInt1) {
 
-> CHANGE  9 : 10  @  9 : 10
+> CHANGE  8 : 9  @  8 : 9
 
 ~ 		public EaglerTextureAtlasSprite getAtlasSprite() {
 

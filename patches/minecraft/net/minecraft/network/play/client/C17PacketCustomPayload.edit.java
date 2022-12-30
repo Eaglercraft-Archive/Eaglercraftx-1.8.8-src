@@ -7,7 +7,7 @@
 
 > DELETE  2  @  2 : 3
 
-> INSERT  1 : 3  @  2
+> INSERT  1 : 3  @  1
 
 + 
 + import net.lax1dude.eaglercraft.v1_8.netty.ByteBuf;

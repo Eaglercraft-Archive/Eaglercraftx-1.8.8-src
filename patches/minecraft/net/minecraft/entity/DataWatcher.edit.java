@@ -7,7 +7,7 @@
 
 > DELETE  2  @  2 : 4
 
-> CHANGE  4 : 10  @  6 : 8
+> CHANGE  4 : 10  @  4 : 6
 
 ~ 
 ~ import org.apache.commons.lang3.ObjectUtils;
@@ -16,38 +16,38 @@
 ~ import com.google.common.collect.Maps;
 ~ 
 
-> DELETE  8  @  4 : 5
+> DELETE  2  @  2 : 3
 
-> DELETE  5  @  6 : 7
+> DELETE  5  @  5 : 6
 
-> DELETE  7  @  8 : 9
+> DELETE  7  @  7 : 8
 
-> DELETE  16  @  17 : 18
+> DELETE  16  @  16 : 17
 
-> DELETE  1  @  2 : 3
+> DELETE  1  @  1 : 2
 
-> DELETE  7  @  8 : 9
+> DELETE  7  @  7 : 8
 
-> DELETE  1  @  2 : 3
+> DELETE  1  @  1 : 2
 
-> DELETE  28  @  29 : 31
+> DELETE  28  @  28 : 30
 
-> DELETE  9  @  11 : 13
+> DELETE  9  @  9 : 11
 
-> DELETE  41  @  43 : 45
+> DELETE  41  @  41 : 43
 
-> DELETE  10  @  12 : 14
+> DELETE  10  @  10 : 12
 
-> DELETE  7  @  9 : 11
+> DELETE  7  @  7 : 9
 
-> DELETE  3  @  5 : 7
+> DELETE  3  @  3 : 5
 
-> DELETE  5  @  7 : 8
+> DELETE  5  @  5 : 6
 
-> DELETE  9  @  10 : 11
+> DELETE  9  @  9 : 10
 
-> DELETE  93  @  94 : 95
+> DELETE  93  @  93 : 94
 
-> DELETE  10  @  11 : 12
+> DELETE  10  @  10 : 11
 
 > EOF

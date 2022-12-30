@@ -7,7 +7,7 @@
 
 > DELETE  2  @  2 : 4
 
-> INSERT  2 : 6  @  4
+> INSERT  2 : 6  @  2
 
 + 
 + import com.google.common.base.Predicate;

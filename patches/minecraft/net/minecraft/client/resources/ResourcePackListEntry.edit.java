@@ -13,9 +13,9 @@
 + import net.lax1dude.eaglercraft.v1_8.internal.KeyboardConstants;
 + import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 
-> DELETE  11  @  6 : 8
+> DELETE  6  @  6 : 8
 
-> INSERT  128 : 157  @  130
+> INSERT  128 : 157  @  128
 
 + 	private void proceedWithBs(int l, boolean deleteInstead) {
 + 		if (!deleteInstead && l != 1) {
@@ -47,24 +47,24 @@
 + 	}
 + 
 
-> CHANGE  34 : 38  @  5 : 9
+> CHANGE  5 : 9  @  5 : 9
 
 ~ 				if (Keyboard.isKeyDown(KeyboardConstants.KEY_LSHIFT)
 ~ 						|| Keyboard.isKeyDown(KeyboardConstants.KEY_RSHIFT)) {
 ~ 					proceedWithBs(l, false);
 ~ 				} else {
 
-> CHANGE  6 : 7  @  6 : 14
+> CHANGE  2 : 3  @  2 : 10
 
 ~ 							proceedWithBs(l, flag);
 
-> CHANGE  3 : 7  @  10 : 14
+> CHANGE  2 : 6  @  2 : 6
 
 ~ 					}, I18n.format("resourcePack.prompt.title", this.func_148312_b()),
 ~ 							I18n.format("resourcePack.prompt.text", new Object[0]),
 ~ 							I18n.format("resourcePack.prompt.delete", new Object[0]),
 ~ 							I18n.format("resourcePack.prompt.add", new Object[0]), 0).withOpaqueBackground());
 
-> DELETE  5  @  5 : 6
+> DELETE  1  @  1 : 2
 
 > EOF

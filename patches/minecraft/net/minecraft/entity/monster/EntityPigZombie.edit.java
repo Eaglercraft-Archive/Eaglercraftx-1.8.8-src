@@ -10,26 +10,26 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
 ~ 
 
-> DELETE  3  @  2 : 3
+> DELETE  1  @  1 : 2
 
-> DELETE  3  @  4 : 6
+> DELETE  3  @  3 : 5
 
-> DELETE  2  @  4 : 5
+> DELETE  2  @  2 : 3
 
-> CHANGE  10 : 11  @  11 : 12
+> CHANGE  10 : 11  @  10 : 11
 
 ~ 	private static final EaglercraftUUID ATTACK_SPEED_BOOST_MODIFIER_UUID = EaglercraftUUID
 
-> CHANGE  6 : 7  @  6 : 7
+> CHANGE  5 : 6  @  5 : 6
 
 ~ 	private EaglercraftUUID angerTargetUUID;
 
-> DELETE  15  @  15 : 20
+> DELETE  14  @  14 : 19
 
-> CHANGE  64 : 65  @  69 : 70
+> CHANGE  64 : 65  @  64 : 65
 
 ~ 			this.angerTargetUUID = EaglercraftUUID.fromString(s);
 
-> DELETE  83  @  83 : 106
+> DELETE  82  @  82 : 105
 
 > EOF

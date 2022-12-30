@@ -7,9 +7,9 @@
 
 > DELETE  2  @  2 : 4
 
-> DELETE  4  @  6 : 8
+> DELETE  4  @  4 : 6
 
-> INSERT  1 : 7  @  3
+> INSERT  1 : 7  @  1
 
 + import com.google.common.collect.Lists;
 + import com.google.common.collect.Maps;

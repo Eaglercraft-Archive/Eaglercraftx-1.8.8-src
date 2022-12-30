@@ -7,9 +7,9 @@
 
 > DELETE  2  @  2 : 10
 
-> DELETE  6  @  14 : 16
+> DELETE  6  @  6 : 8
 
-> CHANGE  1 : 10  @  3 : 4
+> CHANGE  1 : 10  @  1 : 2
 
 ~ import java.nio.charset.StandardCharsets;
 ~ 
@@ -21,26 +21,26 @@
 ~ import net.lax1dude.eaglercraft.v1_8.netty.ByteBufInputStream;
 ~ import net.lax1dude.eaglercraft.v1_8.netty.ByteBufOutputStream;
 
-> CHANGE  107 : 108  @  99 : 100
+> CHANGE  98 : 99  @  98 : 99
 
 ~ 	public void writeUuid(EaglercraftUUID uuid) {
 
-> CHANGE  5 : 7  @  5 : 7
+> CHANGE  4 : 6  @  4 : 6
 
 ~ 	public EaglercraftUUID readUuid() {
 ~ 		return new EaglercraftUUID(this.readLong(), this.readLong());
 
-> CHANGE  84 : 85  @  84 : 85
+> CHANGE  82 : 83  @  82 : 83
 
 ~ 			String s = new String(this.readBytes(i).array(), StandardCharsets.UTF_8);
 
-> CHANGE  11 : 12  @  11 : 12
+> CHANGE  10 : 11  @  10 : 11
 
 ~ 		byte[] abyte = string.getBytes(StandardCharsets.UTF_8);
 
-> DELETE  22  @  22 : 26
+> DELETE  21  @  21 : 25
 
-> CHANGE  153 : 158  @  157 : 158
+> CHANGE  153 : 158  @  153 : 154
 
 ~ 		if (parByteBuf instanceof PacketBuffer) {
 ~ 			return this.buf.getBytes(parInt1, ((PacketBuffer) parByteBuf).buf);
@@ -48,7 +48,7 @@
 ~ 			return this.buf.getBytes(parInt1, parByteBuf);
 ~ 		}
 
-> CHANGE  8 : 13  @  4 : 5
+> CHANGE  3 : 8  @  3 : 4
 
 ~ 		if (bytebuf instanceof PacketBuffer) {
 ~ 			return this.buf.getBytes(i, ((PacketBuffer) bytebuf).buf, j);
@@ -56,7 +56,7 @@
 ~ 			return this.buf.getBytes(i, bytebuf, j);
 ~ 		}
 
-> CHANGE  8 : 13  @  4 : 5
+> CHANGE  3 : 8  @  3 : 4
 
 ~ 		if (bytebuf instanceof PacketBuffer) {
 ~ 			return this.buf.getBytes(i, ((PacketBuffer) bytebuf).buf, j, k);
@@ -64,9 +64,9 @@
 ~ 			return this.buf.getBytes(i, bytebuf, j, k);
 ~ 		}
 
-> DELETE  23  @  19 : 23
+> DELETE  18  @  18 : 22
 
-> CHANGE  41 : 46  @  45 : 46
+> CHANGE  41 : 46  @  41 : 42
 
 ~ 		if (bytebuf instanceof PacketBuffer) {
 ~ 			return this.buf.setBytes(i, ((PacketBuffer) bytebuf).buf, j);
@@ -74,7 +74,7 @@
 ~ 			return this.buf.setBytes(i, bytebuf, j);
 ~ 		}
 
-> CHANGE  8 : 13  @  4 : 5
+> CHANGE  3 : 8  @  3 : 4
 
 ~ 		if (bytebuf instanceof PacketBuffer) {
 ~ 			return this.buf.setBytes(i, ((PacketBuffer) bytebuf).buf, j, k);
@@ -82,9 +82,9 @@
 ~ 			return this.buf.setBytes(i, bytebuf, j, k);
 ~ 		}
 
-> DELETE  23  @  19 : 23
+> DELETE  18  @  18 : 22
 
-> CHANGE  65 : 70  @  69 : 70
+> CHANGE  65 : 70  @  65 : 66
 
 ~ 		if (bytebuf instanceof PacketBuffer) {
 ~ 			return this.buf.readBytes(((PacketBuffer) bytebuf).buf);
@@ -92,7 +92,7 @@
 ~ 			return this.buf.readBytes(bytebuf);
 ~ 		}
 
-> CHANGE  8 : 13  @  4 : 5
+> CHANGE  3 : 8  @  3 : 4
 
 ~ 		if (bytebuf instanceof PacketBuffer) {
 ~ 			return this.buf.readBytes(((PacketBuffer) bytebuf).buf, i);
@@ -100,7 +100,7 @@
 ~ 			return this.buf.readBytes(bytebuf, i);
 ~ 		}
 
-> CHANGE  8 : 13  @  4 : 5
+> CHANGE  3 : 8  @  3 : 4
 
 ~ 		if (bytebuf instanceof PacketBuffer) {
 ~ 			return this.buf.readBytes(((PacketBuffer) bytebuf).buf, i, j);
@@ -108,9 +108,9 @@
 ~ 			return this.buf.readBytes(bytebuf, i, j);
 ~ 		}
 
-> DELETE  23  @  19 : 23
+> DELETE  18  @  18 : 22
 
-> CHANGE  41 : 46  @  45 : 46
+> CHANGE  41 : 46  @  41 : 42
 
 ~ 		if (parByteBuf instanceof PacketBuffer) {
 ~ 			return this.buf.writeBytes(((PacketBuffer) parByteBuf).buf);
@@ -118,7 +118,7 @@
 ~ 			return this.buf.writeBytes(parByteBuf);
 ~ 		}
 
-> CHANGE  8 : 13  @  4 : 5
+> CHANGE  3 : 8  @  3 : 4
 
 ~ 		if (bytebuf instanceof PacketBuffer) {
 ~ 			return this.buf.writeBytes(((PacketBuffer) bytebuf).buf, i);
@@ -126,7 +126,7 @@
 ~ 			return this.buf.writeBytes(bytebuf, i);
 ~ 		}
 
-> CHANGE  8 : 13  @  4 : 5
+> CHANGE  3 : 8  @  3 : 4
 
 ~ 		if (bytebuf instanceof PacketBuffer) {
 ~ 			return this.buf.writeBytes(((PacketBuffer) bytebuf).buf, i, j);
@@ -134,10 +134,10 @@
 ~ 			return this.buf.writeBytes(bytebuf, i, j);
 ~ 		}
 
-> DELETE  23  @  19 : 23
+> DELETE  18  @  18 : 22
 
-> DELETE  20  @  24 : 40
+> DELETE  20  @  20 : 36
 
-> DELETE  88  @  104 : 123
+> DELETE  88  @  88 : 107
 
 > EOF

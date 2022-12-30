@@ -7,14 +7,14 @@
 
 > DELETE  2  @  2 : 7
 
-> CHANGE  4 : 5  @  9 : 10
+> CHANGE  4 : 5  @  4 : 5
 
 ~ 	public ServerAddress(String parString1, int parInt1) {
 
-> CHANGE  6 : 7  @  6 : 7
+> CHANGE  5 : 6  @  5 : 6
 
 ~ 		return this.ipAddress;
 
-> DELETE  7  @  7 : 67
+> DELETE  6  @  6 : 66
 
 > EOF

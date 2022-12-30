@@ -7,20 +7,20 @@
 
 > DELETE  2  @  2 : 3
 
-> DELETE  5  @  6 : 20
+> DELETE  5  @  5 : 19
 
-> DELETE  2  @  16 : 22
+> DELETE  2  @  2 : 8
 
-> DELETE  8  @  14 : 15
+> DELETE  8  @  8 : 9
 
-> DELETE  17  @  18 : 39
+> DELETE  17  @  17 : 38
 
-> DELETE  80  @  101 : 116
+> DELETE  80  @  80 : 95
 
-> DELETE  84  @  99 : 100
+> DELETE  84  @  84 : 85
 
-> DELETE  61  @  62 : 69
+> DELETE  61  @  61 : 68
 
-> DELETE  9  @  16 : 32
+> DELETE  9  @  9 : 25
 
 > EOF

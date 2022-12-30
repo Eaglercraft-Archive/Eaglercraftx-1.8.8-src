@@ -10,27 +10,27 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 ~ import net.lax1dude.eaglercraft.v1_8.Keyboard;
 
-> DELETE  4  @  8 : 9
+> DELETE  2  @  2 : 3
 
-> CHANGE  7 : 8  @  8 : 27
+> CHANGE  7 : 8  @  7 : 26
 
 ~ 	private GuiButton hideAddress;
 
-> INSERT  14 : 15  @  32
+> INSERT  13 : 14  @  13
 
 + 		int i = 80;
 
-> CHANGE  2 : 5  @  1 : 2
+> CHANGE  1 : 4  @  1 : 2
 
 ~ 		GuiButton done;
 ~ 		GuiButton cancel;
 ~ 		this.buttonList.add(done = new GuiButton(0, this.width / 2 - 100, i + 96 + 12,
 
-> CHANGE  4 : 5  @  2 : 3
+> CHANGE  1 : 2  @  1 : 2
 
 ~ 		this.buttonList.add(cancel = new GuiButton(1, this.width / 2 - 100, i + 120 + 12,
 
-> CHANGE  2 : 9  @  2 : 3
+> CHANGE  1 : 8  @  1 : 2
 
 ~ 		if (EagRuntime.requireSSL()) {
 ~ 			done.yPosition = cancel.yPosition;
@@ -40,21 +40,21 @@
 ~ 		}
 ~ 		this.buttonList.add(this.serverResourcePacks = new GuiButton(2, this.width / 2 - 100, i + 54,
 
-> INSERT  9 : 12  @  3
+> INSERT  2 : 5  @  2
 
 + 		this.buttonList.add(this.hideAddress = new GuiButton(3, this.width / 2 - 100, i + 78,
 + 				I18n.format("addServer.hideAddress", new Object[0]) + ": "
 + 						+ I18n.format(this.serverData.hideAddress ? "gui.yes" : "gui.no", new Object[0])));
 
-> CHANGE  9 : 10  @  6 : 9
+> CHANGE  6 : 7  @  6 : 9
 
 ~ 		((GuiButton) this.buttonList.get(0)).enabled = this.serverIPField.getText().trim().length() > 0;
 
-> CHANGE  7 : 8  @  9 : 10
+> CHANGE  6 : 7  @  6 : 7
 
 ~ 	protected void actionPerformed(GuiButton parGuiButton) {
 
-> CHANGE  2 : 7  @  2 : 3
+> CHANGE  1 : 6  @  1 : 2
 
 ~ 			if (parGuiButton.id == 3) {
 ~ 				this.serverData.hideAddress = !this.serverData.hideAddress;
@@ -62,24 +62,24 @@
 ~ 						+ I18n.format(this.serverData.hideAddress ? "gui.yes" : "gui.no", new Object[0]);
 ~ 			} else if (parGuiButton.id == 2) {
 
-> CHANGE  13 : 15  @  9 : 11
+> CHANGE  8 : 10  @  8 : 10
 
 ~ 				this.serverData.serverName = this.serverNameField.getText().trim();
 ~ 				this.serverData.serverIP = this.serverIPField.getText().trim();
 
-> CHANGE  8 : 9  @  8 : 9
+> CHANGE  6 : 7  @  6 : 7
 
 ~ 	protected void keyTyped(char parChar1, int parInt1) {
 
-> CHANGE  12 : 13  @  12 : 14
+> CHANGE  11 : 12  @  11 : 13
 
 ~ 		((GuiButton) this.buttonList.get(0)).enabled = this.serverIPField.getText().trim().length() > 0;
 
-> CHANGE  3 : 4  @  4 : 5
+> CHANGE  2 : 3  @  2 : 3
 
 ~ 	protected void mouseClicked(int parInt1, int parInt2, int parInt3) {
 
-> INSERT  14 : 20  @  14
+> INSERT  13 : 19  @  13
 
 + 		if (EagRuntime.requireSSL()) {
 + 			this.drawCenteredString(this.fontRendererObj, I18n.format("addServer.SSLWarn1"), this.width / 2, 184,

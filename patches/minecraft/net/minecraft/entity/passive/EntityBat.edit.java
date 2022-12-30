@@ -9,10 +9,10 @@
 
 + 
 
-> DELETE  4  @  3 : 4
+> DELETE  3  @  3 : 4
 
-> DELETE  3  @  4 : 5
+> DELETE  3  @  3 : 4
 
-> DELETE  141  @  142 : 154
+> DELETE  141  @  141 : 153
 
 > EOF

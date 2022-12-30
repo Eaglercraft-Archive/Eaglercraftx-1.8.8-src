@@ -7,7 +7,7 @@
 
 > DELETE  2  @  2 : 4
 
-> INSERT  1 : 6  @  3
+> INSERT  1 : 6  @  1
 
 + 
 + import org.json.JSONException;
@@ -15,13 +15,13 @@
 + 
 + import net.lax1dude.eaglercraft.v1_8.json.JSONTypeProvider;
 
-> DELETE  10  @  5 : 6
+> DELETE  5  @  5 : 6
 
-> CHANGE  3 : 4  @  4 : 13
+> CHANGE  3 : 4  @  3 : 12
 
 ~ 
 
-> CHANGE  11 : 17  @  19 : 21
+> CHANGE  10 : 16  @  10 : 12
 
 ~ 		try {
 ~ 			this.response = (ServerStatusResponse) JSONTypeProvider.deserialize(
@@ -30,7 +30,7 @@
 ~ 			throw new IOException("Invalid ServerStatusResponse JSON payload", exc);
 ~ 		}
 
-> CHANGE  9 : 14  @  5 : 6
+> CHANGE  3 : 8  @  3 : 4
 
 ~ 		try {
 ~ 			parPacketBuffer.writeString(((JSONObject) JSONTypeProvider.serialize(this.response)).toString());

@@ -7,11 +7,11 @@
 
 > DELETE  2  @  2 : 5
 
-> CHANGE  3 : 4  @  6 : 7
+> CHANGE  3 : 4  @  3 : 4
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 
-> INSERT  2 : 9  @  2
+> INSERT  1 : 8  @  1
 
 + 
 + import com.google.common.collect.Lists;
@@ -21,13 +21,13 @@
 + import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 + import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 
-> DELETE  9  @  2 : 3
+> DELETE  2  @  2 : 3
 
-> DELETE  25  @  26 : 45
+> DELETE  25  @  25 : 44
 
-> DELETE  2  @  21 : 30
+> DELETE  2  @  2 : 11
 
-> CHANGE  19 : 64  @  28 : 119
+> CHANGE  19 : 64  @  19 : 110
 
 ~ 	public static BiomeGenBase ocean;
 ~ 	public static BiomeGenBase plains;
@@ -75,33 +75,33 @@
 ~ 	protected static final NoiseGeneratorPerlin GRASS_COLOR_NOISE = new NoiseGeneratorPerlin(
 ~ 			new EaglercraftRandom(2345L), 1);
 
-> DELETE  56  @  102 : 103
+> DELETE  11  @  11 : 12
 
-> DELETE  7  @  8 : 11
+> DELETE  7  @  7 : 10
 
-> DELETE  12  @  15 : 18
+> DELETE  12  @  12 : 15
 
-> DELETE  2  @  5 : 6
+> DELETE  2  @  2 : 3
 
-> DELETE  16  @  17 : 21
+> DELETE  16  @  16 : 20
 
-> CHANGE  21 : 22  @  25 : 34
+> CHANGE  21 : 22  @  21 : 30
 
 ~ 	public BlockFlower.EnumFlowerType pickRandomFlower(EaglercraftRandom rand, BlockPos pos) {
 
-> DELETE  95  @  103 : 107
+> DELETE  94  @  94 : 98
 
-> CHANGE  16 : 18  @  20 : 22
+> CHANGE  16 : 18  @  16 : 18
 
 ~ 	public void genTerrainBlocks(World worldIn, EaglercraftRandom rand, ChunkPrimer chunkPrimerIn, int parInt1,
 ~ 			int parInt2, double parDouble1) {
 
-> CHANGE  5 : 7  @  5 : 7
+> CHANGE  3 : 5  @  3 : 5
 
 ~ 	public final void generateBiomeTerrain(World worldIn, EaglercraftRandom rand, ChunkPrimer chunkPrimerIn,
 ~ 			int parInt1, int parInt2, double parDouble1) {
 
-> CHANGE  103 : 216  @  103 : 104
+> CHANGE  101 : 214  @  101 : 102
 
 ~ 	public static class Height {
 ~ 		public float rootHeight;
@@ -217,8 +217,8 @@
 ~ 		field_180279_ad = ocean;
 ~ 
 
-> DELETE  154  @  42 : 45
+> DELETE  41  @  41 : 44
 
-> DELETE  2  @  5 : 41
+> DELETE  2  @  2 : 38
 
 > EOF

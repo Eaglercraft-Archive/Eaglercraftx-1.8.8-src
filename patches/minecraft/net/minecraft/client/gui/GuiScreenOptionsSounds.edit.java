@@ -9,9 +9,9 @@
 
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 
-> DELETE  5  @  5 : 8
+> DELETE  4  @  4 : 7
 
-> CHANGE  37 : 38  @  40 : 41
+> CHANGE  37 : 38  @  37 : 38
 
 ~ 	protected void actionPerformed(GuiButton parGuiButton) {
 

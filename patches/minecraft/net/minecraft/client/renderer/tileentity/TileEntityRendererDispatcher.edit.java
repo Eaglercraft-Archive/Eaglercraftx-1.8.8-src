@@ -7,7 +7,7 @@
 
 > DELETE  2  @  2 : 3
 
-> INSERT  1 : 6  @  2
+> INSERT  1 : 6  @  1
 
 + 
 + import com.google.common.collect.Maps;
@@ -15,11 +15,11 @@
 + import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 + import net.lax1dude.eaglercraft.v1_8.opengl.OpenGlHelper;
 
-> DELETE  6  @  1 : 3
+> DELETE  1  @  1 : 3
 
-> DELETE  1  @  3 : 14
+> DELETE  1  @  1 : 12
 
-> CHANGE  58 : 60  @  69 : 70
+> CHANGE  58 : 60  @  58 : 59
 
 ~ 			tileentityspecialrenderer = this
 ~ 					.getSpecialRendererByClass((Class<? extends TileEntity>) teClass.getSuperclass());

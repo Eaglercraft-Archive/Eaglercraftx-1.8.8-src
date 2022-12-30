@@ -9,11 +9,11 @@
 
 ~ 
 
-> CHANGE  14 : 15  @  14 : 16
+> CHANGE  13 : 14  @  13 : 15
 
 ~ 	public static PropertyEnum<BlockPrismarine.EnumType> VARIANT;
 
-> INSERT  11 : 15  @  12
+> INSERT  10 : 14  @  10
 
 + 	public static void bootstrapStates() {
 + 		VARIANT = PropertyEnum.<BlockPrismarine.EnumType>create("variant", BlockPrismarine.EnumType.class);

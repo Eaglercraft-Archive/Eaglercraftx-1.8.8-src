@@ -7,15 +7,15 @@
 
 > DELETE  2  @  2 : 3
 
-> INSERT  1 : 4  @  2
+> INSERT  1 : 4  @  1
 
 + 
 + import com.google.common.collect.AbstractIterator;
 + 
 
-> DELETE  4  @  1 : 5
+> DELETE  1  @  1 : 5
 
-> INSERT  103 : 120  @  107
+> INSERT  103 : 120  @  103
 
 + 	public BlockPos offsetFaster(EnumFacing facing, MutableBlockPos ret) {
 + 		ret.x = this.getX() + facing.getFrontOffsetX();
@@ -35,9 +35,9 @@
 + 	}
 + 
 
-> DELETE  125  @  108 : 111
+> DELETE  108  @  108 : 111
 
-> CHANGE  6 : 7  @  9 : 13
+> CHANGE  6 : 7  @  6 : 10
 
 ~ 			super(x_, y_, z_);
 

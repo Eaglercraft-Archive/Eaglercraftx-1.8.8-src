@@ -19,21 +19,21 @@
 + import net.lax1dude.eaglercraft.v1_8.profile.EaglerSkinTexture;
 + import net.minecraft.client.Minecraft;
 
-> INSERT  14 : 15  @  3
+> INSERT  3 : 4  @  3
 
 + import net.minecraft.util.ResourceLocation;
 
-> CHANGE  5 : 8  @  4 : 7
+> CHANGE  4 : 7  @  4 : 7
 
 ~ 	public String populationInfo = "";
 ~ 	public String serverMOTD = "";
 ~ 	public long pingToServer = -1l;
 
-> CHANGE  8 : 9  @  8 : 9
+> CHANGE  5 : 6  @  5 : 6
 
 ~ 	public boolean hideAddress = false;
 
-> INSERT  2 : 10  @  2
+> INSERT  1 : 9  @  1
 
 + 	public IServerQuery currentQuery = null;
 + 	public final ResourceLocation iconResourceLocation;
@@ -44,27 +44,27 @@
 + 	public boolean serverIconEnabled = false;
 + 	public boolean isDefault = false;
 
-> INSERT  9 : 13  @  1
+> INSERT  1 : 5  @  1
 
 + 	private static final Logger logger = LogManager.getLogger("MOTDQuery");
 + 
 + 	private static int serverTextureId = 0;
 + 
 
-> INSERT  8 : 9  @  4
+> INSERT  4 : 5  @  4
 
 + 		this.iconResourceLocation = new ResourceLocation("eagler:servers/icons/tex_" + serverTextureId++);
 
-> DELETE  7  @  6 : 9
+> DELETE  6  @  6 : 9
 
-> INSERT  7 : 9  @  10
+> INSERT  7 : 9  @  7
 
 + 		nbttagcompound.setBoolean("hideAddress", this.hideAddress);
 + 
 
-> DELETE  15  @  13 : 16
+> DELETE  13  @  13 : 16
 
-> INSERT  11 : 17  @  14
+> INSERT  11 : 17  @  11
 
 + 		if (nbtCompound.hasKey("hideAddress", 1)) {
 + 			serverdata.hideAddress = nbtCompound.getBoolean("hideAddress");
@@ -73,13 +73,13 @@
 + 		}
 + 
 
-> DELETE  9  @  3 : 11
+> DELETE  3  @  3 : 11
 
-> CHANGE  8 : 9  @  16 : 17
+> CHANGE  8 : 9  @  8 : 9
 
 ~ 		this.hideAddress = serverDataIn.hideAddress;
 
-> INSERT  17 : 83  @  17
+> INSERT  16 : 82  @  16
 
 + 
 + 	public void setMOTDFromQuery(QueryResponse pkt) {

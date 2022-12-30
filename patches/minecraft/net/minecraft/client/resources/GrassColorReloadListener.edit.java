@@ -9,9 +9,9 @@
 
 + 
 
-> DELETE  2  @  1 : 3
+> DELETE  1  @  1 : 3
 
-> CHANGE  8 : 10  @  10 : 11
+> CHANGE  8 : 10  @  8 : 9
 
 ~ 			ColorizerGrass.setGrassBiomeColorizer(
 ~ 					TextureUtil.convertComponentOrder(TextureUtil.readImageData(iresourcemanager, LOC_GRASS_PNG)));

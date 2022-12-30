@@ -7,7 +7,7 @@
 
 > DELETE  2  @  2 : 3
 
-> INSERT  1 : 4  @  2
+> INSERT  1 : 4  @  1
 
 + 
 + import com.google.common.collect.ImmutableMap;

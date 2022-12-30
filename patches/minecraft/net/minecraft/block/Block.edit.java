@@ -10,47 +10,47 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
 
-> DELETE  11  @  141 : 143
+> DELETE  9  @  9 : 11
 
-> CHANGE  343 : 344  @  345 : 346
+> CHANGE  343 : 344  @  343 : 344
 
 ~ 	public void randomTick(World world, BlockPos blockpos, IBlockState iblockstate, EaglercraftRandom random) {
 
-> CHANGE  4 : 5  @  4 : 5
+> CHANGE  3 : 4  @  3 : 4
 
 ~ 	public void updateTick(World var1, BlockPos var2, IBlockState var3, EaglercraftRandom var4) {
 
-> CHANGE  3 : 4  @  3 : 4
+> CHANGE  2 : 3  @  2 : 3
 
 ~ 	public void randomDisplayTick(World worldIn, BlockPos pos, IBlockState state, EaglercraftRandom rand) {
 
-> CHANGE  19 : 20  @  19 : 20
+> CHANGE  18 : 19  @  18 : 19
 
 ~ 	public int quantityDropped(EaglercraftRandom random) {
 
-> CHANGE  4 : 5  @  4 : 5
+> CHANGE  3 : 4  @  3 : 4
 
 ~ 	public Item getItemDropped(IBlockState var1, EaglercraftRandom var2, int var3) {
 
-> DELETE  16  @  16 : 18
+> DELETE  15  @  15 : 17
 
-> DELETE  1  @  3 : 13
+> DELETE  1  @  1 : 11
 
-> CHANGE  3 : 4  @  13 : 23
+> CHANGE  3 : 4  @  3 : 13
 
 ~ 
 
-> DELETE  4  @  13 : 21
+> DELETE  3  @  3 : 11
 
-> CHANGE  252 : 253  @  260 : 261
+> CHANGE  252 : 253  @  252 : 253
 
 ~ 	public int quantityDroppedWithBonus(int fortune, EaglercraftRandom random) {
 
-> INSERT  137 : 138  @  137
+> INSERT  136 : 137  @  136
 
 + 		bootstrapStates();
 
-> INSERT  469 : 509  @  468
+> INSERT  468 : 508  @  468
 
 + 	public static void bootstrapStates() {
 + 		BlockBed.bootstrapStates();

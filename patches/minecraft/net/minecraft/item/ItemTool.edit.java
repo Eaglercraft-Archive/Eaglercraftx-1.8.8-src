@@ -7,12 +7,12 @@
 
 > DELETE  2  @  2 : 3
 
-> INSERT  1 : 4  @  2
+> INSERT  1 : 4  @  1
 
 + 
 + import com.google.common.collect.Multimap;
 + 
 
-> DELETE  8  @  5 : 7
+> DELETE  5  @  5 : 7
 
 > EOF

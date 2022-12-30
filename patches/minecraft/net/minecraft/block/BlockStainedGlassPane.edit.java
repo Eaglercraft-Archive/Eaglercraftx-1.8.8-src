@@ -9,8 +9,8 @@
 
 ~ 
 
-> DELETE  59  @  60 : 63
+> DELETE  58  @  58 : 61
 
-> DELETE  4  @  7 : 10
+> DELETE  4  @  4 : 7
 
 > EOF

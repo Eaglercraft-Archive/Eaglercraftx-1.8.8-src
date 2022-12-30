@@ -13,23 +13,23 @@
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.WorldRenderer;
 
-> DELETE  8  @  5 : 6
+> DELETE  3  @  3 : 4
 
-> DELETE  1  @  2 : 4
+> DELETE  1  @  1 : 3
 
-> CHANGE  7 : 8  @  9 : 10
+> CHANGE  7 : 8  @  7 : 8
 
 ~ 	private static final EaglercraftRandom field_147527_e = new EaglercraftRandom(31100L);
 
-> CHANGE  35 : 36  @  35 : 36
+> CHANGE  34 : 35  @  34 : 35
 
 ~ 			float f7 = (float) (-(d1 + (double) f3 - 1.25));
 
-> CHANGE  14 : 15  @  14 : 18
+> CHANGE  13 : 14  @  13 : 17
 
 ~ 			GlStateManager.enableTexGen();
 
-> CHANGE  35 : 36  @  38 : 42
+> CHANGE  34 : 35  @  34 : 38
 
 ~ 		GlStateManager.disableTexGen();
 

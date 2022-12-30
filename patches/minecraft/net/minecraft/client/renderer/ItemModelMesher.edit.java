@@ -7,22 +7,22 @@
 
 > DELETE  2  @  2 : 3
 
-> CHANGE  2 : 6  @  3 : 5
+> CHANGE  2 : 6  @  2 : 4
 
 ~ 
 ~ import com.google.common.collect.Maps;
 ~ 
 ~ import net.lax1dude.eaglercraft.v1_8.minecraft.EaglerTextureAtlasSprite;
 
-> CHANGE  20 : 21  @  18 : 19
+> CHANGE  16 : 17  @  16 : 17
 
 ~ 	public EaglerTextureAtlasSprite getParticleIcon(Item item) {
 
-> CHANGE  4 : 5  @  4 : 5
+> CHANGE  3 : 4  @  3 : 4
 
 ~ 	public EaglerTextureAtlasSprite getParticleIcon(Item item, int meta) {
 
-> CHANGE  50 : 51  @  50 : 51
+> CHANGE  49 : 50  @  49 : 50
 
 ~ 			this.simpleShapesCache.put((Integer) entry.getKey(),
 

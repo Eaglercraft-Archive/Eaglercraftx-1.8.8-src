@@ -9,17 +9,17 @@
 
 + 
 
-> DELETE  2  @  1 : 6
+> DELETE  1  @  1 : 6
 
-> CHANGE  49 : 50  @  54 : 55
+> CHANGE  49 : 50  @  49 : 50
 
 ~ 	protected void actionPerformed(GuiButton parGuiButton) {
 
-> CHANGE  17 : 18  @  17 : 18
+> CHANGE  16 : 17  @  16 : 17
 
 ~ 	protected void mouseClicked(int parInt1, int parInt2, int parInt3) {
 
-> CHANGE  18 : 19  @  18 : 19
+> CHANGE  17 : 18  @  17 : 18
 
 ~ 	protected void keyTyped(char parChar1, int parInt1) {
 

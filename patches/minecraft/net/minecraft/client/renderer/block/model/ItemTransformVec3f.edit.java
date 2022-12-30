@@ -14,27 +14,27 @@
 ~ import net.lax1dude.eaglercraft.v1_8.json.JSONTypeDeserializer;
 ~ import net.lax1dude.eaglercraft.v1_8.vector.Vector3f;
 
-> DELETE  7  @  9 : 10
+> DELETE  1  @  1 : 2
 
-> CHANGE  34 : 35  @  35 : 36
+> CHANGE  34 : 35  @  34 : 35
 
 ~ 	public static class Deserializer implements JSONTypeDeserializer<JSONObject, ItemTransformVec3f> {
 
-> CHANGE  5 : 6  @  5 : 8
+> CHANGE  4 : 5  @  4 : 7
 
 ~ 		public ItemTransformVec3f deserialize(JSONObject jsonobject) throws JSONException {
 
-> CHANGE  14 : 15  @  16 : 17
+> CHANGE  13 : 14  @  13 : 14
 
 ~ 		private Vector3f parseVector3f(JSONObject jsonObject, String key, Vector3f defaultValue) {
 
-> CHANGE  4 : 7  @  4 : 7
+> CHANGE  3 : 6  @  3 : 6
 
 ~ 				JSONArray jsonarray = jsonObject.getJSONArray(key);
 ~ 				if (jsonarray.length() != 3) {
 ~ 					throw new JSONException("Expected 3 " + key + " values, found: " + jsonarray.length());
 
-> CHANGE  7 : 8  @  7 : 8
+> CHANGE  4 : 5  @  4 : 5
 
 ~ 						afloat[i] = jsonarray.getFloat(i);
 

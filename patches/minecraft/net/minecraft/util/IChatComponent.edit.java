@@ -7,9 +7,9 @@
 
 > DELETE  2  @  2 : 14
 
-> DELETE  1  @  13 : 21
+> DELETE  1  @  1 : 9
 
-> INSERT  1 : 8  @  9
+> INSERT  1 : 8  @  1
 
 + import org.json.JSONArray;
 + import org.json.JSONException;
@@ -19,11 +19,11 @@
 + import net.lax1dude.eaglercraft.v1_8.json.JSONTypeProvider;
 + 
 
-> CHANGE  26 : 27  @  19 : 21
+> CHANGE  19 : 20  @  19 : 21
 
 ~ 	public static class Serializer implements JSONTypeCodec<IChatComponent, Object> {
 
-> CHANGE  2 : 8  @  3 : 10
+> CHANGE  1 : 7  @  1 : 8
 
 ~ 		public IChatComponent deserialize(Object parJsonElement) throws JSONException {
 ~ 			if (parJsonElement instanceof String) {
@@ -32,138 +32,138 @@
 ~ 				if (parJsonElement instanceof JSONArray) {
 ~ 					JSONArray jsonarray1 = (JSONArray) parJsonElement;
 
-> CHANGE  8 : 10  @  9 : 12
+> CHANGE  2 : 4  @  2 : 5
 
 ~ 					for (Object jsonelement : jsonarray1) {
 ~ 						IChatComponent ichatcomponent1 = this.deserialize(jsonelement);
 
-> CHANGE  11 : 13  @  12 : 14
+> CHANGE  9 : 11  @  9 : 11
 
 ~ 					throw new JSONException("Don\'t know how to turn " + parJsonElement.getClass().getSimpleName()
 ~ 							+ " into a Component");
 
-> CHANGE  4 : 5  @  4 : 5
+> CHANGE  2 : 3  @  2 : 3
 
 ~ 				JSONObject jsonobject = (JSONObject) parJsonElement;
 
-> CHANGE  3 : 4  @  3 : 4
+> CHANGE  2 : 3  @  2 : 3
 
 ~ 					object = new ChatComponentText(jsonobject.getString("text"));
 
-> CHANGE  2 : 3  @  2 : 3
+> CHANGE  1 : 2  @  1 : 2
 
 ~ 					String s = jsonobject.getString("translate");
 
-> CHANGE  2 : 4  @  2 : 4
+> CHANGE  1 : 3  @  1 : 3
 
 ~ 						JSONArray jsonarray = jsonobject.getJSONArray("with");
 ~ 						Object[] aobject = new Object[jsonarray.length()];
 
-> CHANGE  4 : 5  @  4 : 5
+> CHANGE  2 : 3  @  2 : 3
 
 ~ 							aobject[i] = this.deserialize(jsonarray.get(i));
 
-> CHANGE  15 : 16  @  15 : 16
+> CHANGE  14 : 15  @  14 : 15
 
 ~ 					JSONObject jsonobject1 = jsonobject.getJSONObject("score");
 
-> CHANGE  2 : 3  @  2 : 3
+> CHANGE  1 : 2  @  1 : 2
 
 ~ 						throw new JSONException("A score component needs a least a name and an objective");
 
-> CHANGE  3 : 4  @  3 : 5
+> CHANGE  2 : 3  @  2 : 4
 
 ~ 					object = new ChatComponentScore(jsonobject1.getString("name"), jsonobject1.getString("objective"));
 
-> CHANGE  2 : 3  @  3 : 4
+> CHANGE  1 : 2  @  1 : 2
 
 ~ 						((ChatComponentScore) object).setValue(jsonobject1.getString("value"));
 
-> CHANGE  4 : 5  @  4 : 5
+> CHANGE  3 : 4  @  3 : 4
 
 ~ 						throw new JSONException(
 
-> CHANGE  4 : 5  @  4 : 5
+> CHANGE  3 : 4  @  3 : 4
 
 ~ 					object = new ChatComponentSelector(jsonobject.getString("selector"));
 
-> CHANGE  4 : 7  @  4 : 7
+> CHANGE  3 : 6  @  3 : 6
 
 ~ 					JSONArray jsonarray2 = jsonobject.getJSONArray("extra");
 ~ 					if (jsonarray2.length() <= 0) {
 ~ 						throw new JSONException("Unexpected empty array of components");
 
-> CHANGE  5 : 7  @  5 : 8
+> CHANGE  2 : 4  @  2 : 5
 
 ~ 					for (int j = 0; j < jsonarray2.length(); ++j) {
 ~ 						((IChatComponent) object).appendSibling(this.deserialize(jsonarray2.get(j)));
 
-> CHANGE  5 : 6  @  6 : 8
+> CHANGE  3 : 4  @  3 : 5
 
 ~ 				((IChatComponent) object).setChatStyle(JSONTypeProvider.deserialize(parJsonElement, ChatStyle.class));
 
-> CHANGE  5 : 9  @  6 : 14
+> CHANGE  4 : 8  @  4 : 12
 
 ~ 		private void serializeChatStyle(ChatStyle style, JSONObject object) {
 ~ 			JSONObject jsonelement = JSONTypeProvider.serialize(style);
 ~ 			for (String entry : jsonelement.keySet()) {
 ~ 				object.put(entry, jsonelement.get(entry));
 
-> DELETE  5  @  9 : 10
+> DELETE  1  @  1 : 2
 
-> CHANGE  2 : 3  @  3 : 5
+> CHANGE  2 : 3  @  2 : 4
 
 ~ 		public Object serialize(IChatComponent ichatcomponent) {
 
-> CHANGE  3 : 4  @  4 : 5
+> CHANGE  2 : 3  @  2 : 3
 
 ~ 				return ((ChatComponentText) ichatcomponent).getChatComponentText_TextValue();
 
-> CHANGE  2 : 3  @  2 : 3
+> CHANGE  1 : 2  @  1 : 2
 
 ~ 				JSONObject jsonobject = new JSONObject();
 
-> CHANGE  2 : 3  @  2 : 3
+> CHANGE  1 : 2  @  1 : 2
 
 ~ 					this.serializeChatStyle(ichatcomponent.getChatStyle(), jsonobject);
 
-> CHANGE  4 : 5  @  4 : 5
+> CHANGE  3 : 4  @  3 : 4
 
 ~ 					JSONArray jsonarray = new JSONArray();
 
-> CHANGE  3 : 4  @  3 : 5
+> CHANGE  2 : 3  @  2 : 4
 
 ~ 						jsonarray.put(this.serialize(ichatcomponent1));
 
-> CHANGE  3 : 4  @  4 : 5
+> CHANGE  2 : 3  @  2 : 3
 
 ~ 					jsonobject.put("extra", jsonarray);
 
-> CHANGE  4 : 5  @  4 : 6
+> CHANGE  3 : 4  @  3 : 5
 
 ~ 					jsonobject.put("text", ((ChatComponentText) ichatcomponent).getChatComponentText_TextValue());
 
-> CHANGE  3 : 4  @  4 : 5
+> CHANGE  2 : 3  @  2 : 3
 
 ~ 					jsonobject.put("translate", chatcomponenttranslation.getKey());
 
-> CHANGE  3 : 4  @  3 : 4
+> CHANGE  2 : 3  @  2 : 3
 
 ~ 						JSONArray jsonarray1 = new JSONArray();
 
-> CHANGE  4 : 5  @  4 : 6
+> CHANGE  3 : 4  @  3 : 5
 
 ~ 								jsonarray1.put(this.serialize((IChatComponent) object));
 
-> CHANGE  2 : 3  @  3 : 4
+> CHANGE  1 : 2  @  1 : 2
 
 ~ 								jsonarray1.put(String.valueOf(object));
 
-> CHANGE  4 : 5  @  4 : 5
+> CHANGE  3 : 4  @  3 : 4
 
 ~ 						jsonobject.put("with", jsonarray1);
 
-> CHANGE  4 : 9  @  4 : 9
+> CHANGE  3 : 8  @  3 : 8
 
 ~ 					JSONObject jsonobject1 = new JSONObject();
 ~ 					jsonobject1.put("name", chatcomponentscore.getName());
@@ -171,17 +171,17 @@
 ~ 					jsonobject1.put("value", chatcomponentscore.getUnformattedTextForChat());
 ~ 					jsonobject.put("score", jsonobject1);
 
-> CHANGE  12 : 13  @  12 : 13
+> CHANGE  7 : 8  @  7 : 8
 
 ~ 					jsonobject.put("selector", chatcomponentselector.getSelector());
 
-> INSERT  7 : 10  @  7
+> INSERT  6 : 9  @  6
 
 + 		/**
 + 		 * So sorry for this implementation
 + 		 */
 
-> CHANGE  4 : 10  @  1 : 2
+> CHANGE  1 : 7  @  1 : 2
 
 ~ 			if (component instanceof ChatComponentText) {
 ~ 				String escaped = new JSONObject().put("E", component.getUnformattedTextForChat()).toString();
@@ -190,15 +190,15 @@
 ~ 				return JSONTypeProvider.serialize(component).toString();
 ~ 			}
 
-> CHANGE  9 : 10  @  4 : 5
+> CHANGE  3 : 4  @  3 : 4
 
 ~ 			return (IChatComponent) JSONTypeProvider.deserialize(json, IChatComponent.class);
 
-> INSERT  2 : 3  @  2
+> INSERT  1 : 2  @  1
 
 + 	}
 
-> CHANGE  2 : 15  @  1 : 7
+> CHANGE  1 : 14  @  1 : 7
 
 ~ 	public static IChatComponent join(List<IChatComponent> components) {
 ~ 		ChatComponentText chatcomponenttext = new ChatComponentText("");
@@ -214,7 +214,7 @@
 ~ 
 ~ 			chatcomponenttext.appendSibling((IChatComponent) components.get(i));
 
-> INSERT  14 : 16  @  7
+> INSERT  1 : 3  @  1
 
 + 
 + 		return chatcomponenttext;

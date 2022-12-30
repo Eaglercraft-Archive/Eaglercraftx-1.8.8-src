@@ -7,16 +7,16 @@
 
 > DELETE  3  @  3 : 6
 
-> INSERT  1 : 3  @  4
+> INSERT  1 : 3  @  1
 
 + import net.lax1dude.eaglercraft.v1_8.minecraft.EaglerTextureAtlasSprite;
 + 
 
-> CHANGE  3 : 4  @  1 : 2
+> CHANGE  1 : 2  @  1 : 2
 
 ~ 	private final EaglerTextureAtlasSprite texture;
 
-> CHANGE  2 : 3  @  2 : 3
+> CHANGE  1 : 2  @  1 : 2
 
 ~ 	public BreakingFour(BakedQuad parBakedQuad, EaglerTextureAtlasSprite textureIn) {
 

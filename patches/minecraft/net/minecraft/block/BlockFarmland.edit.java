@@ -10,15 +10,15 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
 
-> DELETE  9  @  12 : 13
+> DELETE  7  @  7 : 8
 
-> CHANGE  32 : 33  @  33 : 34
+> CHANGE  32 : 33  @  32 : 33
 
 ~ 	public void updateTick(World world, BlockPos blockpos, IBlockState iblockstate, EaglercraftRandom var4) {
 
-> DELETE  16  @  16 : 24
+> DELETE  15  @  15 : 23
 
-> CHANGE  43 : 44  @  51 : 52
+> CHANGE  43 : 44  @  43 : 44
 
 ~ 	public Item getItemDropped(IBlockState var1, EaglercraftRandom random, int i) {
 

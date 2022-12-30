@@ -7,9 +7,9 @@
 
 > DELETE  2  @  2 : 4
 
-> DELETE  2  @  4 : 7
+> DELETE  2  @  2 : 5
 
-> INSERT  1 : 4  @  4
+> INSERT  1 : 4  @  1
 
 + import com.google.common.collect.BiMap;
 + import com.google.common.collect.HashBiMap;

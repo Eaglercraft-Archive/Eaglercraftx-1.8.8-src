@@ -7,35 +7,35 @@
 
 > DELETE  2  @  2 : 7
 
-> CHANGE  1 : 5  @  6 : 7
+> CHANGE  1 : 5  @  1 : 2
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
 ~ 
 ~ import com.google.common.collect.Sets;
 ~ 
 
-> DELETE  5  @  2 : 3
+> DELETE  1  @  1 : 2
 
-> DELETE  4  @  5 : 13
+> DELETE  4  @  4 : 12
 
-> DELETE  1  @  9 : 12
+> DELETE  1  @  1 : 4
 
-> DELETE  1  @  4 : 5
+> DELETE  1  @  1 : 2
 
-> DELETE  3  @  4 : 5
+> DELETE  3  @  3 : 4
 
-> DELETE  6  @  7 : 8
+> DELETE  6  @  6 : 7
 
-> CHANGE  4 : 6  @  5 : 6
+> CHANGE  4 : 6  @  4 : 5
 
 ~ 	private static final EaglercraftUUID attackingSpeedBoostModifierUUID = EaglercraftUUID
 ~ 			.fromString("020E0DFB-87AE-4653-9556-831010E291A0");
 
-> DELETE  11  @  10 : 25
+> DELETE  9  @  9 : 24
 
-> DELETE  38  @  53 : 69
+> DELETE  38  @  38 : 54
 
-> CHANGE  5 : 12  @  21 : 30
+> CHANGE  5 : 12  @  5 : 14
 
 ~ 		for (int i = 0; i < 2; ++i) {
 ~ 			this.worldObj.spawnParticle(EnumParticleTypes.PORTAL,
@@ -45,18 +45,18 @@
 ~ 					(this.rand.nextDouble() - 0.5D) * 2.0D, -this.rand.nextDouble(),
 ~ 					(this.rand.nextDouble() - 0.5D) * 2.0D, new int[0]);
 
-> DELETE  8  @  10 : 11
+> DELETE  1  @  1 : 2
 
-> DELETE  143  @  144 : 147
+> DELETE  143  @  143 : 146
 
-> CHANGE  2 : 3  @  5 : 11
+> CHANGE  2 : 3  @  2 : 8
 
 ~ 					this.isAggressive = true;
 
-> CHANGE  33 : 34  @  38 : 39
+> CHANGE  32 : 33  @  32 : 33
 
 ~ 	public static void bootstrap() {
 
-> DELETE  17  @  17 : 168
+> DELETE  16  @  16 : 167
 
 > EOF

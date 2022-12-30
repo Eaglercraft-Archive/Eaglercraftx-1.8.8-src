@@ -9,6 +9,6 @@
 
 + import net.lax1dude.eaglercraft.v1_8.vector.Vector3f;
 
-> DELETE  2  @  1 : 2
+> DELETE  1  @  1 : 2
 
 > EOF

@@ -7,7 +7,7 @@
 
 > DELETE  2  @  2 : 7
 
-> CHANGE  39 : 40  @  44 : 45
+> CHANGE  39 : 40  @  39 : 40
 
 ~ 	protected void actionPerformed(GuiButton parGuiButton) {
 

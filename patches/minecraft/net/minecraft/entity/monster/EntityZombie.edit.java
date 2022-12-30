@@ -10,39 +10,39 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
 ~ 
 
-> DELETE  9  @  8 : 18
+> DELETE  7  @  7 : 17
 
-> DELETE  2  @  12 : 13
+> DELETE  2  @  2 : 3
 
-> DELETE  1  @  2 : 6
+> DELETE  1  @  1 : 5
 
-> DELETE  8  @  12 : 13
+> DELETE  8  @  8 : 9
 
-> CHANGE  13 : 15  @  14 : 15
+> CHANGE  13 : 15  @  13 : 14
 
 ~ 	private static final EaglercraftUUID babySpeedBoostUUID = EaglercraftUUID
 ~ 			.fromString("B9766B59-9566-4402-BC1F-2EE2A276D836");
 
-> DELETE  4  @  3 : 4
+> DELETE  2  @  2 : 3
 
-> DELETE  7  @  8 : 16
+> DELETE  7  @  7 : 15
 
-> DELETE  3  @  11 : 21
+> DELETE  3  @  3 : 13
 
-> DELETE  29  @  39 : 51
+> DELETE  29  @  29 : 41
 
-> DELETE  14  @  26 : 34
+> DELETE  14  @  14 : 22
 
-> DELETE  11  @  19 : 51
+> DELETE  11  @  11 : 43
 
-> DELETE  53  @  85 : 97
+> DELETE  53  @  53 : 65
 
-> DELETE  90  @  102 : 104
+> DELETE  90  @  90 : 92
 
-> DELETE  86  @  88 : 89
+> DELETE  86  @  86 : 87
 
-> DELETE  24  @  25 : 26
+> DELETE  24  @  24 : 25
 
-> DELETE  17  @  18 : 22
+> DELETE  17  @  17 : 21
 
 > EOF

@@ -10,25 +10,25 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
 ~ 
 
-> DELETE  3  @  2 : 14
+> DELETE  1  @  1 : 13
 
-> DELETE  17  @  29 : 32
+> DELETE  17  @  17 : 20
 
-> DELETE  7  @  10 : 11
+> DELETE  7  @  7 : 8
 
-> DELETE  4  @  5 : 8
+> DELETE  4  @  4 : 7
 
-> DELETE  1  @  4 : 7
+> DELETE  1  @  1 : 4
 
-> DELETE  1  @  4 : 5
+> DELETE  1  @  1 : 2
 
-> DELETE  10  @  11 : 17
+> DELETE  10  @  10 : 16
 
-> DELETE  1  @  7 : 14
+> DELETE  1  @  1 : 8
 
-> DELETE  7  @  14 : 38
+> DELETE  7  @  7 : 31
 
-> CHANGE  61 : 71  @  85 : 100
+> CHANGE  61 : 71  @  61 : 76
 
 ~ 		for (int i = 0; i < 20; ++i) {
 ~ 			double d0 = this.rand.nextGaussian() * 0.02D;
@@ -41,19 +41,19 @@
 ~ 					this.posZ + (double) (this.rand.nextFloat() * this.width * 2.0F) - (double) this.width - d2 * d3,
 ~ 					d0, d1, d2, new int[0]);
 
-> DELETE  11  @  16 : 17
+> DELETE  1  @  1 : 2
 
-> DELETE  11  @  12 : 20
+> DELETE  11  @  11 : 19
 
-> DELETE  113  @  121 : 137
+> DELETE  113  @  113 : 129
 
-> DELETE  95  @  111 : 139
+> DELETE  95  @  95 : 123
 
-> DELETE  328  @  356 : 364
+> DELETE  328  @  328 : 336
 
-> DELETE  19  @  27 : 32
+> DELETE  19  @  19 : 24
 
-> CHANGE  5 : 7  @  10 : 11
+> CHANGE  5 : 7  @  5 : 6
 
 ~ 				EaglercraftUUID uuid = new EaglercraftUUID(this.leashNBTTag.getLong("UUIDMost"),
 ~ 						this.leashNBTTag.getLong("UUIDLeast"));

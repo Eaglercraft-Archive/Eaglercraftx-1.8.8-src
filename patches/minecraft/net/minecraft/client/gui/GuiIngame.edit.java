@@ -14,50 +14,50 @@
 + import net.lax1dude.eaglercraft.v1_8.minecraft.EaglerTextureAtlasSprite;
 + 
 
-> CHANGE  9 : 12  @  3 : 6
+> CHANGE  3 : 6  @  3 : 6
 
 ~ 
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.WorldRenderer;
 
-> DELETE  5  @  5 : 14
+> DELETE  2  @  2 : 11
 
-> DELETE  2  @  11 : 12
+> DELETE  2  @  2 : 3
 
-> DELETE  1  @  2 : 3
+> DELETE  1  @  1 : 2
 
-> CHANGE  32 : 33  @  33 : 34
+> CHANGE  32 : 33  @  32 : 33
 
 ~ 	private final EaglercraftRandom rand = new EaglercraftRandom();
 
-> DELETE  4  @  4 : 5
+> DELETE  3  @  3 : 4
 
-> DELETE  27  @  28 : 29
+> DELETE  27  @  27 : 28
 
-> CHANGE  95 : 96  @  96 : 99
+> CHANGE  95 : 96  @  95 : 98
 
 ~ 		this.overlayDebug.renderDebugInfo(scaledresolution, partialTicks);
 
-> INSERT  88 : 91  @  90
+> INSERT  87 : 90  @  87
 
 + 		if (this.mc.gameSettings.hudWorld && (mc.currentScreen == null || !(mc.currentScreen instanceof GuiChat))) {
 + 			j -= 10;
 + 		}
 
-> DELETE  169  @  166 : 170
+> DELETE  166  @  166 : 170
 
-> CHANGE  17 : 18  @  21 : 22
+> CHANGE  17 : 18  @  17 : 18
 
 ~ 		for (Score score : (List<Score>) arraylist1) {
 
-> CHANGE  13 : 14  @  13 : 14
+> CHANGE  12 : 13  @  12 : 13
 
 ~ 		for (Score score1 : (List<Score>) arraylist1) {
 
-> CHANGE  344 : 345  @  344 : 345
+> CHANGE  343 : 344  @  343 : 344
 
 ~ 		EaglerTextureAtlasSprite textureatlassprite = this.mc.getBlockRendererDispatcher().getBlockModelShapes()
 
-> DELETE  58  @  58 : 59
+> DELETE  57  @  57 : 58
 
 > EOF

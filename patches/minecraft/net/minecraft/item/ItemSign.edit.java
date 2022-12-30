@@ -7,12 +7,12 @@
 
 > DELETE  2  @  2 : 4
 
-> DELETE  3  @  5 : 10
+> DELETE  3  @  3 : 8
 
-> DELETE  2  @  7 : 8
+> DELETE  2  @  2 : 3
 
-> DELETE  20  @  21 : 23
+> DELETE  20  @  20 : 22
 
-> DELETE  1  @  3 : 20
+> DELETE  1  @  1 : 18
 
 > EOF

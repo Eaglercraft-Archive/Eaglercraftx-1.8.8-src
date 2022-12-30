@@ -7,9 +7,9 @@
 
 > DELETE  2  @  2 : 3
 
-> DELETE  8  @  9 : 10
+> DELETE  8  @  8 : 9
 
-> CHANGE  15 : 16  @  16 : 23
+> CHANGE  15 : 16  @  15 : 22
 
 ~ 		return true;
 

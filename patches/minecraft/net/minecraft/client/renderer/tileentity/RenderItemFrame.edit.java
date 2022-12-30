@@ -12,35 +12,35 @@
 + import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 + import net.lax1dude.eaglercraft.v1_8.opengl.WorldRenderer;
 
-> DELETE  7  @  3 : 4
+> DELETE  3  @  3 : 4
 
-> DELETE  2  @  3 : 4
+> DELETE  2  @  2 : 3
 
-> DELETE  4  @  5 : 6
+> DELETE  4  @  4 : 5
 
-> DELETE  16  @  17 : 18
+> DELETE  16  @  16 : 17
 
-> INSERT  36 : 38  @  37
-
-+ 		GlStateManager.enableLighting();
-+ 		GlStateManager.enableColorMaterial();
-
-> INSERT  9 : 11  @  7
+> INSERT  36 : 38  @  36
 
 + 		GlStateManager.enableLighting();
 + 		GlStateManager.enableColorMaterial();
 
-> DELETE  35  @  33 : 54
+> INSERT  7 : 9  @  7
 
-> CHANGE  5 : 6  @  26 : 27
++ 		GlStateManager.enableLighting();
++ 		GlStateManager.enableColorMaterial();
+
+> DELETE  33  @  33 : 54
+
+> CHANGE  5 : 6  @  5 : 6
 
 ~ 				GlStateManager.pushLightCoords();
 
-> CHANGE  4 : 5  @  4 : 8
+> CHANGE  3 : 4  @  3 : 7
 
 ~ 				GlStateManager.popLightCoords();
 
-> CHANGE  22 : 23  @  25 : 26
+> CHANGE  21 : 22  @  21 : 22
 
 ~ 					EaglercraftGPU.glNormal3f(0.0F, 1.0F, 0.0F);
 

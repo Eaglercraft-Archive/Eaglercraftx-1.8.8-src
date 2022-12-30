@@ -10,28 +10,28 @@
 ~ import org.json.JSONException;
 ~ 
 
-> DELETE  3  @  2 : 3
+> DELETE  1  @  1 : 2
 
-> DELETE  3  @  4 : 5
+> DELETE  3  @  3 : 4
 
-> DELETE  3  @  4 : 6
+> DELETE  3  @  3 : 5
 
-> DELETE  3  @  5 : 6
+> DELETE  3  @  3 : 4
 
-> DELETE  10  @  11 : 12
+> DELETE  10  @  10 : 11
 
-> DELETE  9  @  10 : 11
+> DELETE  9  @  9 : 10
 
-> DELETE  42  @  43 : 45
+> DELETE  42  @  42 : 44
 
-> CHANGE  14 : 15  @  16 : 17
+> CHANGE  14 : 15  @  14 : 15
 
 ~ 			} catch (JSONException var8) {
 
-> DELETE  5  @  5 : 6
+> DELETE  4  @  4 : 5
 
-> DELETE  33  @  34 : 87
+> DELETE  33  @  33 : 86
 
-> DELETE  3  @  56 : 59
+> DELETE  3  @  3 : 6
 
 > EOF

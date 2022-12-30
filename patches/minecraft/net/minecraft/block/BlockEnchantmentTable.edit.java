@@ -10,11 +10,11 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
 
-> CHANGE  29 : 30  @  29 : 30
+> CHANGE  27 : 28  @  27 : 28
 
 ~ 	public void randomDisplayTick(World world, BlockPos blockpos, IBlockState iblockstate, EaglercraftRandom random) {
 
-> CHANGE  44 : 45  @  44 : 54
+> CHANGE  43 : 44  @  43 : 53
 
 ~ 		return true;
 

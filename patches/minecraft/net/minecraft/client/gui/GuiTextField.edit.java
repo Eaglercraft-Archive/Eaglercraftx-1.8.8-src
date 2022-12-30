@@ -11,13 +11,13 @@
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.WorldRenderer;
 
-> DELETE  4  @  6 : 7
+> DELETE  1  @  1 : 2
 
-> CHANGE  11 : 12  @  12 : 13
+> CHANGE  11 : 12  @  11 : 12
 
 ~ 	protected String text = "";
 
-> INSERT  45 : 57  @  45
+> INSERT  44 : 56  @  44
 
 + 	public void updateText(String parString1) {
 + 		if (this.field_175209_y.apply(parString1)) {
@@ -32,15 +32,15 @@
 + 	}
 + 
 
-> CHANGE  365 : 368  @  353 : 354
+> CHANGE  353 : 356  @  353 : 354
 
 ~ 		GlStateManager.color(0.2F, 0.2F, 1.0F, 1.0F);
 ~ 		GlStateManager.enableBlend();
 ~ 		GlStateManager.blendFunc(775, 770);
 
-> DELETE  4  @  2 : 4
+> DELETE  1  @  1 : 3
 
-> CHANGE  6 : 7  @  8 : 9
+> CHANGE  6 : 7  @  6 : 7
 
 ~ 		GlStateManager.disableBlend();
 

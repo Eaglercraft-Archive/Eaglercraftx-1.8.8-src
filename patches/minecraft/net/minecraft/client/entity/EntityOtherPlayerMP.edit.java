@@ -9,6 +9,6 @@
 
 ~ import net.lax1dude.eaglercraft.v1_8.mojang.authlib.GameProfile;
 
-> DELETE  2  @  2 : 3
+> DELETE  1  @  1 : 2
 
 > EOF

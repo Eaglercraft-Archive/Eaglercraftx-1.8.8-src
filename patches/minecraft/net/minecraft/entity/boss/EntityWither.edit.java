@@ -10,24 +10,24 @@
 + import java.util.List;
 + 
 
-> CHANGE  4 : 5  @  2 : 3
+> CHANGE  2 : 3  @  2 : 3
 
 ~ 
 
-> DELETE  4  @  4 : 5
+> DELETE  3  @  3 : 4
 
-> DELETE  4  @  5 : 13
+> DELETE  4  @  4 : 12
 
-> DELETE  8  @  16 : 17
+> DELETE  8  @  8 : 9
 
-> DELETE  1  @  2 : 3
+> DELETE  1  @  1 : 2
 
-> DELETE  28  @  29 : 38
+> DELETE  28  @  28 : 37
 
-> DELETE  35  @  44 : 51
+> DELETE  35  @  35 : 42
 
-> DELETE  1  @  8 : 22
+> DELETE  1  @  1 : 15
 
-> DELETE  311  @  325 : 332
+> DELETE  311  @  311 : 318
 
 > EOF

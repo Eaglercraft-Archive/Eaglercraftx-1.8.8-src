@@ -7,7 +7,7 @@
 
 > DELETE  7  @  7 : 9
 
-> CHANGE  88 : 89  @  90 : 91
+> CHANGE  88 : 89  @  88 : 89
 
 ~ 						.withProperty((IProperty) this.singleSlab.getVariantProperty(), comparable);
 

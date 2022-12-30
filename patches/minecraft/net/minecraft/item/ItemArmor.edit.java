@@ -7,12 +7,12 @@
 
 > DELETE  2  @  2 : 3
 
-> INSERT  1 : 4  @  2
+> INSERT  1 : 4  @  1
 
 + 
 + import com.google.common.base.Predicates;
 + 
 
-> DELETE  12  @  9 : 11
+> DELETE  9  @  9 : 11
 
 > EOF

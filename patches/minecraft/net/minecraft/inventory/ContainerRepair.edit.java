@@ -13,12 +13,12 @@
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 
-> DELETE  11  @  8 : 14
+> DELETE  6  @  6 : 12
 
-> DELETE  3  @  9 : 12
+> DELETE  3  @  3 : 6
 
-> DELETE  60  @  63 : 79
+> DELETE  60  @  60 : 76
 
-> DELETE  219  @  235 : 248
+> DELETE  219  @  219 : 232
 
 > EOF

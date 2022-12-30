@@ -7,18 +7,18 @@
 
 > DELETE  2  @  2 : 3
 
-> CHANGE  1 : 4  @  2 : 4
+> CHANGE  1 : 4  @  1 : 3
 
 ~ 
 ~ import com.google.common.collect.Lists;
 ~ 
 
-> DELETE  7  @  6 : 7
+> DELETE  4  @  4 : 5
 
-> CHANGE  34 : 35  @  35 : 48
+> CHANGE  34 : 35  @  34 : 47
 
 ~ 		return true;
 
-> DELETE  3  @  15 : 26
+> DELETE  2  @  2 : 13
 
 > EOF

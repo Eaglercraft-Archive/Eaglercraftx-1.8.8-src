@@ -10,15 +10,15 @@
 + import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 + import net.lax1dude.eaglercraft.v1_8.opengl.WorldRenderer;
 
-> DELETE  3  @  1 : 4
+> DELETE  1  @  1 : 4
 
-> DELETE  2  @  5 : 6
+> DELETE  2  @  2 : 3
 
-> DELETE  2  @  3 : 4
+> DELETE  2  @  2 : 3
 
-> DELETE  6  @  7 : 11
+> DELETE  6  @  6 : 10
 
-> CHANGE  30 : 31  @  34 : 35
+> CHANGE  30 : 31  @  30 : 31
 
 ~ 			worldrenderer.begin(7, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
 

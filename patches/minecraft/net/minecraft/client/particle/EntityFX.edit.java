@@ -11,13 +11,13 @@
 + import net.lax1dude.eaglercraft.v1_8.minecraft.IAcceleratedParticleEngine;
 + import net.lax1dude.eaglercraft.v1_8.opengl.WorldRenderer;
 
-> DELETE  4  @  1 : 3
+> DELETE  1  @  1 : 3
 
-> CHANGE  18 : 19  @  20 : 21
+> CHANGE  18 : 19  @  18 : 19
 
 ~ 	protected EaglerTextureAtlasSprite particleIcon;
 
-> INSERT  153 : 165  @  153
+> INSERT  152 : 164  @  152
 
 + 	public boolean renderAccelerated(IAcceleratedParticleEngine accelerator, Entity var2, float f, float f1, float f2,
 + 			float f3, float f4, float f5) {
@@ -32,7 +32,7 @@
 + 	}
 + 
 
-> CHANGE  22 : 23  @  10 : 11
+> CHANGE  10 : 11  @  10 : 11
 
 ~ 	public void setParticleIcon(EaglerTextureAtlasSprite icon) {
 

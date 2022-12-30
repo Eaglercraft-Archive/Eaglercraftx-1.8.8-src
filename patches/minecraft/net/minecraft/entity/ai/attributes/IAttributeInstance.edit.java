@@ -9,7 +9,7 @@
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
 
-> CHANGE  15 : 16  @  17 : 18
+> CHANGE  14 : 15  @  14 : 15
 
 ~ 	AttributeModifier getModifier(EaglercraftUUID var1);
 

@@ -10,18 +10,18 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
 
-> CHANGE  16 : 17  @  16 : 18
+> CHANGE  14 : 15  @  14 : 16
 
 ~ 	public static PropertyEnum<BlockStone.EnumType> VARIANT;
 
-> INSERT  8 : 12  @  9
+> INSERT  7 : 11  @  7
 
 + 	public static void bootstrapStates() {
 + 		VARIANT = PropertyEnum.<BlockStone.EnumType>create("variant", BlockStone.EnumType.class);
 + 	}
 + 
 
-> CHANGE  13 : 14  @  9 : 10
+> CHANGE  9 : 10  @  9 : 10
 
 ~ 	public Item getItemDropped(IBlockState iblockstate, EaglercraftRandom var2, int var3) {
 

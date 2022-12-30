@@ -10,42 +10,42 @@
 + import java.io.IOException;
 + 
 
-> CHANGE  4 : 8  @  2 : 15
+> CHANGE  2 : 6  @  2 : 15
 
 ~ 
 ~ import net.lax1dude.eaglercraft.v1_8.Keyboard;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 
-> DELETE  7  @  16 : 18
+> DELETE  3  @  3 : 5
 
-> DELETE  1  @  3 : 6
+> DELETE  1  @  1 : 4
 
-> DELETE  3  @  6 : 7
+> DELETE  3  @  3 : 4
 
-> DELETE  12  @  13 : 15
+> DELETE  12  @  12 : 14
 
-> INSERT  1 : 2  @  3
+> INSERT  1 : 2  @  1
 
 + 	private static long lastRefreshCommit = 0l;
 
-> CHANGE  11 : 12  @  10 : 11
+> CHANGE  10 : 11  @  10 : 11
 
 ~ 			this.savedServerList = ServerList.getServerList();
 
-> DELETE  2  @  2 : 11
+> DELETE  1  @  1 : 10
 
-> CHANGE  35 : 36  @  44 : 51
+> CHANGE  35 : 36  @  35 : 42
 
 ~ 		this.savedServerList.updateServerPing();
 
-> DELETE  5  @  11 : 17
+> DELETE  4  @  4 : 10
 
-> CHANGE  2 : 3  @  8 : 9
+> CHANGE  2 : 3  @  2 : 3
 
 ~ 	protected void actionPerformed(GuiButton parGuiButton) {
 
-> CHANGE  37 : 42  @  37 : 38
+> CHANGE  36 : 41  @  36 : 37
 
 ~ 				long millis = System.currentTimeMillis();
 ~ 				if (millis - lastRefreshCommit > 700l) {
@@ -53,9 +53,17 @@
 ~ 					this.refreshServerList();
 ~ 				}
 
-> CHANGE  10 : 11  @  6 : 7
+> CHANGE  5 : 6  @  5 : 6
 
 ~ 	public void refreshServerList() {
+
+> CHANGE  14 : 19  @  14 : 16
+
+~ 			long millis = System.currentTimeMillis();
+~ 			if (millis - lastRefreshCommit > 700l) {
+~ 				lastRefreshCommit = millis;
+~ 				this.refreshServerList();
+~ 			}
 
 > CHANGE  15 : 20  @  15 : 17
 
@@ -65,7 +73,7 @@
 ~ 				this.refreshServerList();
 ~ 			}
 
-> CHANGE  20 : 25  @  17 : 19
+> CHANGE  10 : 15  @  10 : 12
 
 ~ 			long millis = System.currentTimeMillis();
 ~ 			if (millis - lastRefreshCommit > 700l) {
@@ -73,41 +81,33 @@
 ~ 				this.refreshServerList();
 ~ 			}
 
-> CHANGE  15 : 20  @  12 : 14
+> DELETE  1  @  1 : 2
 
-~ 			long millis = System.currentTimeMillis();
-~ 			if (millis - lastRefreshCommit > 700l) {
-~ 				lastRefreshCommit = millis;
-~ 				this.refreshServerList();
-~ 			}
-
-> DELETE  6  @  3 : 4
-
-> CHANGE  2 : 3  @  3 : 4
+> CHANGE  2 : 3  @  2 : 3
 
 ~ 	protected void keyTyped(char parChar1, int parInt1) {
 
-> DELETE  19  @  19 : 28
+> DELETE  18  @  18 : 27
 
-> CHANGE  11 : 12  @  20 : 21
+> CHANGE  11 : 12  @  11 : 12
 
 ~ 					} else if (i < this.serverListSelector.getSize() - 1) {
 
-> DELETE  3  @  3 : 12
+> DELETE  2  @  2 : 11
 
-> DELETE  33  @  42 : 47
+> DELETE  33  @  33 : 38
 
-> DELETE  1  @  6 : 7
+> DELETE  1  @  1 : 2
 
-> CHANGE  13 : 14  @  14 : 16
+> CHANGE  13 : 14  @  13 : 15
 
 ~ 		if (guilistextended$iguilistentry != null) {
 
-> DELETE  7  @  8 : 9
+> DELETE  6  @  6 : 7
 
-> DELETE  2  @  3 : 7
+> DELETE  2  @  2 : 6
 
-> CHANGE  4 : 5  @  8 : 9
+> CHANGE  4 : 5  @  4 : 5
 
 ~ 	protected void mouseClicked(int parInt1, int parInt2, int parInt3) {
 

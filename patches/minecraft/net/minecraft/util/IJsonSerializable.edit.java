@@ -7,11 +7,11 @@
 
 > DELETE  2  @  2 : 4
 
-> CHANGE  1 : 2  @  3 : 4
+> CHANGE  1 : 2  @  1 : 2
 
 ~ 	void fromJson(Object var1);
 
-> CHANGE  2 : 3  @  2 : 3
+> CHANGE  1 : 2  @  1 : 2
 
 ~ 	Object getSerializableElement();
 

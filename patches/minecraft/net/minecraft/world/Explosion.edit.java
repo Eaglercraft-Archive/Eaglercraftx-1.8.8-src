@@ -7,7 +7,7 @@
 
 > DELETE  2  @  2 : 5
 
-> CHANGE  3 : 9  @  6 : 7
+> CHANGE  3 : 9  @  3 : 4
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
@@ -16,13 +16,13 @@
 ~ import com.google.common.collect.Sets;
 ~ 
 
-> DELETE  21  @  16 : 17
+> DELETE  15  @  15 : 16
 
-> CHANGE  4 : 5  @  5 : 6
+> CHANGE  4 : 5  @  4 : 5
 
 ~ 	private final EaglercraftRandom explosionRNG;
 
-> CHANGE  23 : 24  @  23 : 24
+> CHANGE  22 : 23  @  22 : 23
 
 ~ 		this.explosionRNG = new EaglercraftRandom();
 

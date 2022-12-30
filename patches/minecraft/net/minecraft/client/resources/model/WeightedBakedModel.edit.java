@@ -7,7 +7,7 @@
 
 > DELETE  2  @  2 : 4
 
-> INSERT  2 : 7  @  4
+> INSERT  2 : 7  @  2
 
 + 
 + import com.google.common.collect.ComparisonChain;
@@ -15,9 +15,9 @@
 + 
 + import net.lax1dude.eaglercraft.v1_8.minecraft.EaglerTextureAtlasSprite;
 
-> DELETE  7  @  2 : 4
+> DELETE  2  @  2 : 4
 
-> CHANGE  34 : 35  @  36 : 37
+> CHANGE  34 : 35  @  34 : 35
 
 ~ 	public EaglerTextureAtlasSprite getParticleTexture() {
 

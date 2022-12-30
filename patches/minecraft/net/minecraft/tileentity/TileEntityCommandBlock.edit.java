@@ -9,8 +9,8 @@
 
 ~ import net.lax1dude.eaglercraft.v1_8.netty.ByteBuf;
 
-> DELETE  6  @  7 : 8
+> DELETE  5  @  5 : 6
 
-> DELETE  68  @  69 : 72
+> DELETE  68  @  68 : 71
 
 > EOF

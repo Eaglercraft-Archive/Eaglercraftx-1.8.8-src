@@ -7,7 +7,7 @@
 
 > DELETE  2  @  2 : 5
 
-> INSERT  3 : 8  @  6
+> INSERT  3 : 8  @  3
 
 + 
 + import com.google.common.collect.Lists;
@@ -15,9 +15,9 @@
 + import com.google.common.collect.Sets;
 + 
 
-> DELETE  14  @  9 : 13
+> DELETE  9  @  9 : 13
 
-> CHANGE  146 : 147  @  150 : 151
+> CHANGE  146 : 147  @  146 : 147
 
 ~ 		for (Item item : (HashSet<Item>) hashset) {
 

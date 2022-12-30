@@ -7,23 +7,23 @@
 
 > DELETE  2  @  2 : 3
 
-> CHANGE  1 : 2  @  2 : 4
+> CHANGE  1 : 2  @  1 : 3
 
 ~ 
 
-> INSERT  2 : 3  @  3
+> INSERT  1 : 2  @  1
 
 + import net.minecraft.util.ChatComponentTranslation;
 
-> CHANGE  16 : 17  @  15 : 16
+> CHANGE  15 : 16  @  15 : 16
 
 ~ 	protected void keyTyped(char parChar1, int parInt1) {
 
-> CHANGE  13 : 14  @  13 : 14
+> CHANGE  12 : 13  @  12 : 13
 
 ~ 	protected void actionPerformed(GuiButton parGuiButton) {
 
-> INSERT  21 : 25  @  21
+> INSERT  20 : 24  @  20
 
 + 
 + 	public static GuiScreen createRateLimitKick(GuiScreen prev) {

@@ -9,23 +9,23 @@
 
 ~ import net.lax1dude.eaglercraft.v1_8.internal.PlatformRuntime;
 
-> DELETE  2  @  16 : 17
+> DELETE  1  @  1 : 2
 
-> CHANGE  3 : 4  @  4 : 5
+> CHANGE  3 : 4  @  3 : 4
 
 ~ 	public static void appMain(String[] astring) {
 
-> DELETE  2  @  2 : 46
+> DELETE  1  @  1 : 45
 
-> DELETE  1  @  45 : 95
+> DELETE  1  @  1 : 51
 
-> CHANGE  1 : 5  @  51 : 62
+> CHANGE  1 : 5  @  1 : 12
 
 ~ 				new GameConfiguration.UserInformation(new Session()),
 ~ 				new GameConfiguration.DisplayInformation(854, 480, false, true),
 ~ 				new GameConfiguration.GameInformation(false, "1.8.8"));
 ~ 		PlatformRuntime.setThreadName("Client thread");
 
-> DELETE  6  @  13 : 17
+> DELETE  2  @  2 : 6
 
 > EOF

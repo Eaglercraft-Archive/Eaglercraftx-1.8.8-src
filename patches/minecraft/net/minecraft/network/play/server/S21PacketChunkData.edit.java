@@ -7,21 +7,21 @@
 
 > DELETE  2  @  2 : 3
 
-> INSERT  2 : 5  @  3
+> INSERT  2 : 5  @  2
 
 + 
 + import com.google.common.collect.Lists;
 + 
 
-> CHANGE  77 : 78  @  74 : 75
+> CHANGE  74 : 75  @  74 : 75
 
 ~ 		for (ExtendedBlockStorage extendedblockstorage1 : (ArrayList<ExtendedBlockStorage>) arraylist) {
 
-> CHANGE  9 : 10  @  9 : 10
+> CHANGE  8 : 9  @  8 : 9
 
 ~ 		for (ExtendedBlockStorage extendedblockstorage2 : (ArrayList<ExtendedBlockStorage>) arraylist) {
 
-> CHANGE  6 : 7  @  6 : 7
+> CHANGE  5 : 6  @  5 : 6
 
 ~ 			for (ExtendedBlockStorage extendedblockstorage3 : (ArrayList<ExtendedBlockStorage>) arraylist) {
 

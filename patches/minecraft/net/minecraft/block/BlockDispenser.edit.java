@@ -10,20 +10,20 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
 
-> DELETE  20  @  23 : 24
+> DELETE  18  @  18 : 19
 
-> DELETE  2  @  3 : 4
+> DELETE  2  @  2 : 3
 
-> CHANGE  10 : 11  @  11 : 12
+> CHANGE  10 : 11  @  10 : 11
 
 ~ 	protected EaglercraftRandom rand = new EaglercraftRandom();
 
-> DELETE  13  @  13 : 42
+> DELETE  12  @  12 : 41
 
-> CHANGE  2 : 3  @  31 : 46
+> CHANGE  2 : 3  @  2 : 17
 
 ~ 		return true;
 
-> DELETE  38  @  52 : 59
+> DELETE  37  @  37 : 44
 
 > EOF

@@ -10,13 +10,13 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
 
-> DELETE  7  @  6 : 9
+> DELETE  5  @  5 : 8
 
-> CHANGE  82 : 83  @  85 : 86
+> CHANGE  82 : 83  @  82 : 83
 
 ~ 	public WeightedRandomChestContent getRandom(EaglercraftRandom rand) {
 
-> CHANGE  4 : 5  @  4 : 5
+> CHANGE  3 : 4  @  3 : 4
 
 ~ 	public WeightedRandomChestContent getRandom(EaglercraftRandom rand, int minChance, int maxChance, int weight) {
 

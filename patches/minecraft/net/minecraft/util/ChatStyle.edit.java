@@ -13,9 +13,9 @@
 ~ import net.lax1dude.eaglercraft.v1_8.json.JSONTypeCodec;
 ~ import net.lax1dude.eaglercraft.v1_8.json.JSONTypeProvider;
 
-> DELETE  7  @  11 : 13
+> DELETE  2  @  2 : 4
 
-> CHANGE  330 : 339  @  332 : 344
+> CHANGE  330 : 339  @  330 : 342
 
 ~ 	public static class Serializer implements JSONTypeCodec<ChatStyle, JSONObject> {
 ~ 		public ChatStyle deserialize(JSONObject jsonobject) throws JSONException {
@@ -27,43 +27,43 @@
 ~ 					chatstyle.bold = jsonobject.getBoolean("bold");
 ~ 				}
 
-> CHANGE  10 : 13  @  13 : 16
+> CHANGE  1 : 4  @  1 : 4
 
 ~ 				if (jsonobject.has("italic")) {
 ~ 					chatstyle.italic = jsonobject.getBoolean("italic");
 ~ 				}
 
-> CHANGE  4 : 7  @  4 : 7
+> CHANGE  1 : 4  @  1 : 4
 
 ~ 				if (jsonobject.has("underlined")) {
 ~ 					chatstyle.underlined = jsonobject.getBoolean("underlined");
 ~ 				}
 
-> CHANGE  4 : 7  @  4 : 7
+> CHANGE  1 : 4  @  1 : 4
 
 ~ 				if (jsonobject.has("strikethrough")) {
 ~ 					chatstyle.strikethrough = jsonobject.getBoolean("strikethrough");
 ~ 				}
 
-> CHANGE  4 : 7  @  4 : 7
+> CHANGE  1 : 4  @  1 : 4
 
 ~ 				if (jsonobject.has("obfuscated")) {
 ~ 					chatstyle.obfuscated = jsonobject.getBoolean("obfuscated");
 ~ 				}
 
-> CHANGE  4 : 7  @  4 : 8
+> CHANGE  1 : 4  @  1 : 5
 
 ~ 				if (jsonobject.has("color")) {
 ~ 					chatstyle.color = EnumChatFormatting.getValueByName(jsonobject.getString("color"));
 ~ 				}
 
-> CHANGE  4 : 7  @  5 : 8
+> CHANGE  1 : 4  @  1 : 4
 
 ~ 				if (jsonobject.has("insertion")) {
 ~ 					chatstyle.insertion = jsonobject.getString("insertion");
 ~ 				}
 
-> CHANGE  4 : 14  @  4 : 15
+> CHANGE  1 : 11  @  1 : 12
 
 ~ 				if (jsonobject.has("clickEvent")) {
 ~ 					JSONObject jsonobject1 = jsonobject.getJSONObject("clickEvent");
@@ -76,11 +76,11 @@
 ~ 								&& clickevent$action.shouldAllowInChat()) {
 ~ 							chatstyle.chatClickEvent = new ClickEvent(clickevent$action, jsonprimitive1);
 
-> INSERT  12 : 13  @  13
+> INSERT  2 : 3  @  2
 
 + 				}
 
-> CHANGE  2 : 13  @  1 : 13
+> CHANGE  1 : 12  @  1 : 13
 
 ~ 				if (jsonobject.has("hoverEvent")) {
 ~ 					JSONObject jsonobject2 = jsonobject.getJSONObject("hoverEvent");
@@ -94,57 +94,57 @@
 ~ 								&& hoverevent$action.shouldAllowInChat()) {
 ~ 							chatstyle.chatHoverEvent = new HoverEvent(hoverevent$action, ichatcomponent);
 
-> DELETE  13  @  14 : 16
+> DELETE  2  @  2 : 4
 
-> CHANGE  1 : 3  @  3 : 5
+> CHANGE  1 : 3  @  1 : 3
 
 ~ 
 ~ 				return chatstyle;
 
-> CHANGE  5 : 6  @  5 : 7
+> CHANGE  3 : 4  @  3 : 5
 
 ~ 		public JSONObject serialize(ChatStyle chatstyle) {
 
-> CHANGE  4 : 5  @  5 : 6
+> CHANGE  3 : 4  @  3 : 4
 
 ~ 				JSONObject jsonobject = new JSONObject();
 
-> CHANGE  2 : 3  @  2 : 3
+> CHANGE  1 : 2  @  1 : 2
 
 ~ 					jsonobject.put("bold", chatstyle.bold);
 
-> CHANGE  4 : 5  @  4 : 5
+> CHANGE  3 : 4  @  3 : 4
 
 ~ 					jsonobject.put("italic", chatstyle.italic);
 
-> CHANGE  4 : 5  @  4 : 5
+> CHANGE  3 : 4  @  3 : 4
 
 ~ 					jsonobject.put("underlined", chatstyle.underlined);
 
-> CHANGE  4 : 5  @  4 : 5
+> CHANGE  3 : 4  @  3 : 4
 
 ~ 					jsonobject.put("strikethrough", chatstyle.strikethrough);
 
-> CHANGE  4 : 5  @  4 : 5
+> CHANGE  3 : 4  @  3 : 4
 
 ~ 					jsonobject.put("obfuscated", chatstyle.obfuscated);
 
-> CHANGE  4 : 5  @  4 : 5
+> CHANGE  3 : 4  @  3 : 4
 
 ~ 					jsonobject.put("color", (String) JSONTypeProvider.serialize(chatstyle.color));
 
-> CHANGE  4 : 5  @  4 : 5
+> CHANGE  3 : 4  @  3 : 4
 
 ~ 					jsonobject.put("insertion", chatstyle.insertion);
 
-> CHANGE  4 : 8  @  4 : 8
+> CHANGE  3 : 7  @  3 : 7
 
 ~ 					JSONObject jsonobject1 = new JSONObject();
 ~ 					jsonobject1.put("action", chatstyle.chatClickEvent.getAction().getCanonicalName());
 ~ 					jsonobject1.put("value", chatstyle.chatClickEvent.getValue());
 ~ 					jsonobject.put("clickEvent", jsonobject1);
 
-> CHANGE  7 : 12  @  7 : 11
+> CHANGE  3 : 8  @  3 : 7
 
 ~ 					JSONObject jsonobject2 = new JSONObject();
 ~ 					jsonobject2.put("action", chatstyle.chatHoverEvent.getAction().getCanonicalName());

@@ -9,12 +9,12 @@
 
 ~ import static net.lax1dude.eaglercraft.v1_8.opengl.RealOpenGLEnums.*;
 
-> INSERT  2 : 4  @  4
+> INSERT  1 : 3  @  1
 
 + import net.lax1dude.eaglercraft.v1_8.opengl.EaglercraftGPU;
 + 
 
-> CHANGE  10 : 22  @  8 : 19
+> CHANGE  8 : 20  @  8 : 19
 
 ~ 		if (blur != parFlag || mipmap != parFlag2) {
 ~ 			this.blur = parFlag;
@@ -29,7 +29,7 @@
 ~ 				short1 = 9728;
 ~ 			}
 
-> CHANGE  13 : 16  @  12 : 14
+> CHANGE  1 : 4  @  1 : 3
 
 ~ 			EaglercraftGPU.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, i);
 ~ 			EaglercraftGPU.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, short1);

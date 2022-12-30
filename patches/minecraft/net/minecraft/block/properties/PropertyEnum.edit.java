@@ -11,15 +11,15 @@
 + import java.util.Map;
 + 
 
-> CHANGE  9 : 10  @  6 : 9
+> CHANGE  6 : 7  @  6 : 9
 
 ~ 
 
-> CHANGE  11 : 12  @  13 : 14
+> CHANGE  10 : 11  @  10 : 11
 
 ~ 		for (T oenum : allowedValues) {
 
-> CHANGE  15 : 16  @  15 : 16
+> CHANGE  14 : 15  @  14 : 15
 
 ~ 	public String getName(Object oenum) {
 

@@ -9,11 +9,11 @@
 
 ~ 
 
-> CHANGE  12 : 13  @  12 : 14
+> CHANGE  11 : 12  @  11 : 13
 
 ~ 	public static PropertyEnum<BlockSand.EnumType> VARIANT;
 
-> INSERT  6 : 10  @  7
+> INSERT  5 : 9  @  5
 
 + 	public static void bootstrapStates() {
 + 		VARIANT = PropertyEnum.<BlockSand.EnumType>create("variant", BlockSand.EnumType.class);

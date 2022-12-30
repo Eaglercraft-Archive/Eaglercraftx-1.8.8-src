@@ -7,7 +7,7 @@
 
 > DELETE  2  @  2 : 9
 
-> CHANGE  2 : 13  @  9 : 10
+> CHANGE  2 : 13  @  2 : 3
 
 ~ import java.nio.charset.StandardCharsets;
 ~ 
@@ -21,25 +21,25 @@
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.ImageData;
 
-> DELETE  12  @  2 : 3
+> DELETE  1  @  1 : 2
 
-> DELETE  3  @  4 : 7
+> DELETE  3  @  3 : 6
 
-> CHANGE  3 : 4  @  6 : 7
+> CHANGE  3 : 4  @  3 : 4
 
 ~ 	protected final String resourcePackFile;
 
-> CHANGE  2 : 3  @  2 : 3
+> CHANGE  1 : 2  @  1 : 2
 
 ~ 	public AbstractResourcePack(String resourcePackFileIn) {
 
-> CHANGE  5 : 6  @  5 : 6
+> CHANGE  4 : 5  @  4 : 5
 
 ~ 		return HString.format("%s/%s/%s",
 
-> DELETE  4  @  4 : 8
+> DELETE  3  @  3 : 7
 
-> CHANGE  19 : 27  @  23 : 24
+> CHANGE  19 : 27  @  19 : 20
 
 ~ 		try {
 ~ 			return readMetadata(parIMetadataSerializer, this.getInputStreamByName("pack.mcmeta"), parString1);
@@ -50,25 +50,25 @@
 ~ 			throw e;
 ~ 		}
 
-> CHANGE  12 : 13  @  5 : 7
+> CHANGE  4 : 5  @  4 : 6
 
 ~ 		JSONObject jsonobject = null;
 
-> CHANGE  3 : 6  @  4 : 8
+> CHANGE  2 : 5  @  2 : 6
 
 ~ 			jsonobject = new JSONObject(IOUtils.inputStreamToString(parInputStream, StandardCharsets.UTF_8));
 ~ 		} catch (RuntimeException | IOException runtimeexception) {
 ~ 			throw new JSONException(runtimeexception);
 
-> CHANGE  4 : 5  @  5 : 6
+> CHANGE  1 : 2  @  1 : 2
 
 ~ 			IOUtils.closeQuietly(parInputStream);
 
-> CHANGE  6 : 7  @  6 : 7
+> CHANGE  5 : 6  @  5 : 6
 
 ~ 	public ImageData getPackImage() throws IOException {
 
-> CHANGE  5 : 6  @  5 : 6
+> CHANGE  4 : 5  @  4 : 5
 
 ~ 		return this.resourcePackFile;
 

@@ -7,9 +7,9 @@
 
 > DELETE  5  @  5 : 13
 
-> DELETE  15  @  23 : 30
+> DELETE  15  @  15 : 22
 
-> CHANGE  64 : 71  @  71 : 88
+> CHANGE  64 : 71  @  64 : 81
 
 ~ 		for (int i = 0; i < 2; ++i) {
 ~ 			this.worldObj.spawnParticle(EnumParticleTypes.PORTAL,
@@ -19,6 +19,6 @@
 ~ 					(this.rand.nextDouble() - 0.5D) * 2.0D, -this.rand.nextDouble(),
 ~ 					(this.rand.nextDouble() - 0.5D) * 2.0D, new int[0]);
 
-> DELETE  8  @  18 : 19
+> DELETE  1  @  1 : 2
 
 > EOF

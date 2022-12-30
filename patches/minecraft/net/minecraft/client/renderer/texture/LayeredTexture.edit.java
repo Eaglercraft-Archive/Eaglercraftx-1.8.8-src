@@ -7,7 +7,7 @@
 
 > DELETE  2  @  2 : 5
 
-> CHANGE  3 : 9  @  6 : 8
+> CHANGE  3 : 9  @  3 : 5
 
 ~ 
 ~ import com.google.common.collect.Lists;
@@ -16,21 +16,21 @@
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.ImageData;
 
-> DELETE  8  @  4 : 6
+> DELETE  2  @  2 : 4
 
-> CHANGE  11 : 12  @  13 : 14
+> CHANGE  11 : 12  @  11 : 12
 
 ~ 		ImageData bufferedimage = null;
 
-> CHANGE  6 : 7  @  6 : 7
+> CHANGE  5 : 6  @  5 : 6
 
 ~ 					ImageData bufferedimage1 = TextureUtil.readBufferedImage(inputstream);
 
-> CHANGE  2 : 3  @  2 : 3
+> CHANGE  1 : 2  @  1 : 2
 
 ~ 						bufferedimage = new ImageData(bufferedimage1.width, bufferedimage1.height, true);
 
-> CHANGE  3 : 5  @  3 : 4
+> CHANGE  2 : 4  @  2 : 3
 
 ~ 					bufferedimage.drawLayer(bufferedimage1, 0, 0, bufferedimage1.width, bufferedimage1.height, 0, 0,
 ~ 							bufferedimage1.width, bufferedimage1.height);

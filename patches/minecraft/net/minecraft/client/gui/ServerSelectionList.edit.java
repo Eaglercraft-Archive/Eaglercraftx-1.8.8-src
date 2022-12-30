@@ -7,26 +7,26 @@
 
 > DELETE  2  @  2 : 3
 
-> INSERT  1 : 4  @  2
+> INSERT  1 : 4  @  1
 
 + 
 + import com.google.common.collect.Lists;
 + 
 
-> DELETE  4  @  1 : 6
+> DELETE  1  @  1 : 6
 
-> DELETE  1  @  6 : 7
+> DELETE  1  @  1 : 2
 
-> DELETE  4  @  5 : 7
+> DELETE  4  @  4 : 6
 
-> CHANGE  9 : 10  @  11 : 22
+> CHANGE  9 : 10  @  9 : 20
 
 ~ 		return (GuiListExtended.IGuiListEntry) this.field_148198_l.get(i);
 
-> CHANGE  4 : 5  @  14 : 15
+> CHANGE  3 : 4  @  3 : 4
 
 ~ 		return this.field_148198_l.size();
 
-> DELETE  24  @  24 : 33
+> DELETE  23  @  23 : 32
 
 > EOF

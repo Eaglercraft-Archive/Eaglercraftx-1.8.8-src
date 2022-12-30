@@ -9,11 +9,11 @@
 
 ~ 
 
-> CHANGE  17 : 18  @  17 : 19
+> CHANGE  16 : 17  @  16 : 18
 
 ~ 	public static PropertyEnum<BlockQuartz.EnumType> VARIANT;
 
-> INSERT  8 : 12  @  9
+> INSERT  7 : 11  @  7
 
 + 	public static void bootstrapStates() {
 + 		VARIANT = PropertyEnum.<BlockQuartz.EnumType>create("variant", BlockQuartz.EnumType.class);

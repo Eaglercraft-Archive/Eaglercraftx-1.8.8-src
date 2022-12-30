@@ -7,41 +7,41 @@
 
 > DELETE  2  @  2 : 3
 
-> CHANGE  1 : 3  @  2 : 9
+> CHANGE  1 : 3  @  1 : 8
 
 ~ 
 ~ import net.lax1dude.eaglercraft.v1_8.netty.ByteBuf;
 
-> DELETE  4  @  9 : 10
+> DELETE  2  @  2 : 3
 
-> DELETE  2  @  3 : 4
+> DELETE  2  @  2 : 3
 
-> CHANGE  2 : 3  @  3 : 4
+> CHANGE  2 : 3  @  2 : 3
 
 ~ public abstract class CommandBlockLogic {
 
-> DELETE  7  @  7 : 8
+> DELETE  6  @  6 : 7
 
-> DELETE  17  @  18 : 20
+> DELETE  17  @  17 : 19
 
-> DELETE  16  @  18 : 20
+> DELETE  16  @  16 : 18
 
-> DELETE  16  @  18 : 21
+> DELETE  16  @  16 : 19
 
-> DELETE  1  @  4 : 30
+> DELETE  1  @  1 : 27
 
-> DELETE  15  @  41 : 46
+> DELETE  15  @  15 : 20
 
-> CHANGE  4 : 5  @  9 : 12
+> CHANGE  4 : 5  @  4 : 7
 
 ~ 		return true;
 
-> DELETE  3  @  5 : 9
+> DELETE  2  @  2 : 6
 
-> CHANGE  22 : 23  @  26 : 30
+> CHANGE  22 : 23  @  22 : 26
 
 ~ 			playerIn.openEditCommandBlock(this);
 
-> DELETE  4  @  7 : 11
+> DELETE  3  @  3 : 7
 
 > EOF

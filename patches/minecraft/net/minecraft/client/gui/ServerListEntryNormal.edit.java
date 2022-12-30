@@ -7,32 +7,32 @@
 
 > DELETE  2  @  2 : 10
 
-> CHANGE  1 : 5  @  9 : 11
+> CHANGE  1 : 5  @  1 : 3
 
 ~ 
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 
-> DELETE  5  @  3 : 7
+> DELETE  1  @  1 : 5
 
-> CHANGE  1 : 2  @  5 : 8
+> CHANGE  1 : 2  @  1 : 4
 
 ~ import net.minecraft.client.resources.I18n;
 
-> DELETE  3  @  5 : 8
+> DELETE  2  @  2 : 5
 
-> DELETE  3  @  6 : 8
+> DELETE  3  @  3 : 5
 
-> DELETE  6  @  8 : 9
+> DELETE  6  @  6 : 7
 
-> DELETE  1  @  2 : 3
+> DELETE  1  @  1 : 2
 
-> DELETE  6  @  7 : 9
+> DELETE  6  @  6 : 8
 
-> DELETE  8  @  10 : 27
+> DELETE  8  @  8 : 25
 
-> CHANGE  8 : 18  @  25 : 28
+> CHANGE  8 : 18  @  8 : 11
 
 ~ 		for (int k1 = 0; k1 < 2; ++k1) {
 ~ 			if (k1 < list.size()) {
@@ -45,32 +45,32 @@
 ~ 						j + 32 + 3, k + 12 + this.mc.fontRendererObj.FONT_HEIGHT * k1 + k1, 0x444444);
 ~ 			}
 
-> CHANGE  59 : 63  @  52 : 57
+> CHANGE  49 : 53  @  49 : 54
 
 ~ 		if (this.mc.gameSettings.touchscreen || flag) {
 ~ 			GlStateManager.enableShaderBlendAdd();
 ~ 			GlStateManager.setShaderBlendSrc(0.6f, 0.6f, 0.6f, 1.0f);
 ~ 			GlStateManager.setShaderBlendAdd(0.3f, 0.3f, 0.3f, 0.0f);
 
-> CHANGE  5 : 7  @  6 : 9
+> CHANGE  1 : 3  @  1 : 4
 
 ~ 		if (field_148301_e.iconTextureObject != null) {
 ~ 			this.func_178012_a(j, k, field_148301_e.iconResourceLocation);
 
-> INSERT  5 : 8  @  6
+> INSERT  3 : 6  @  3
 
 + 		if (this.mc.gameSettings.touchscreen || flag) {
 + 			GlStateManager.disableShaderBlendAdd();
 + 		}
 
-> CHANGE  14 : 15  @  11 : 12
+> CHANGE  11 : 12  @  11 : 12
 
 ~ 			// Gui.drawRect(j, k, j + 32, k + 32, -1601138544);
 
-> INSERT  34 : 35  @  34
+> INSERT  33 : 34  @  33
 
 + 		GlStateManager.blendFunc(770, 771);
 
-> DELETE  9  @  8 : 47
+> DELETE  8  @  8 : 47
 
 > EOF

@@ -10,24 +10,24 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
 ~ 
 
-> DELETE  4  @  3 : 6
+> DELETE  2  @  2 : 5
 
-> DELETE  2  @  5 : 7
+> DELETE  2  @  2 : 4
 
-> DELETE  4  @  6 : 7
+> DELETE  4  @  4 : 5
 
-> CHANGE  25 : 26  @  26 : 34
+> CHANGE  25 : 26  @  25 : 33
 
 ~ 		String s = nbttagcompound.getString("OwnerUUID");
 
-> DELETE  5  @  12 : 14
+> DELETE  4  @  4 : 6
 
-> CHANGE  75 : 76  @  77 : 78
+> CHANGE  75 : 76  @  75 : 76
 
 ~ 			EaglercraftUUID uuid = EaglercraftUUID.fromString(this.getOwnerId());
 
-> DELETE  11  @  11 : 15
+> DELETE  10  @  10 : 14
 
-> DELETE  29  @  33 : 42
+> DELETE  29  @  29 : 38
 
 > EOF

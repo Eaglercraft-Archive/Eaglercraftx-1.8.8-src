@@ -7,9 +7,9 @@
 
 > DELETE  2  @  2 : 3
 
-> DELETE  1  @  2 : 3
+> DELETE  1  @  1 : 2
 
-> CHANGE  3 : 13  @  4 : 5
+> CHANGE  3 : 13  @  3 : 4
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
@@ -22,25 +22,25 @@
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.WorldRenderer;
 ~ import net.lax1dude.eaglercraft.v1_8.profile.EaglerProfile;
 
-> DELETE  12  @  3 : 6
+> DELETE  2  @  2 : 5
 
-> DELETE  1  @  4 : 5
+> DELETE  1  @  1 : 2
 
-> DELETE  4  @  5 : 8
+> DELETE  4  @  4 : 7
 
-> CHANGE  28 : 29  @  31 : 32
+> CHANGE  28 : 29  @  28 : 29
 
 ~ 	protected void keyTyped(char parChar1, int parInt1) {
 
-> CHANGE  29 : 30  @  29 : 30
+> CHANGE  28 : 29  @  28 : 29
 
 ~ 				EaglercraftRandom random = new EaglercraftRandom(8124371L);
 
-> CHANGE  5 : 6  @  5 : 6
+> CHANGE  4 : 5  @  4 : 5
 
 ~ 					for (s = s.replaceAll("PLAYERNAME", EaglerProfile.getName()); s
 
-> CHANGE  23 : 24  @  23 : 24
+> CHANGE  22 : 23  @  22 : 23
 
 ~ 					s = s.replaceAll("PLAYERNAME", EaglerProfile.getName());
 

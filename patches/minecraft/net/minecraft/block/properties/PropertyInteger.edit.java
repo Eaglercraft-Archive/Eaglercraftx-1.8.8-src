@@ -7,15 +7,15 @@
 
 > DELETE  2  @  2 : 4
 
-> DELETE  2  @  4 : 5
+> DELETE  2  @  2 : 3
 
-> INSERT  1 : 4  @  2
+> INSERT  1 : 4  @  1
 
 + import com.google.common.collect.ImmutableSet;
 + import com.google.common.collect.Sets;
 + 
 
-> CHANGE  52 : 53  @  49 : 50
+> CHANGE  49 : 50  @  49 : 50
 
 ~ 	public String getName(Object integer) {
 

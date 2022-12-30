@@ -7,17 +7,17 @@
 
 > DELETE  2  @  2 : 17
 
-> DELETE  2  @  17 : 21
+> DELETE  2  @  2 : 6
 
-> DELETE  1  @  5 : 6
+> DELETE  1  @  1 : 2
 
-> CHANGE  2 : 3  @  3 : 7
+> CHANGE  2 : 3  @  2 : 6
 
 ~ import java.util.LinkedList;
 
-> DELETE  2  @  5 : 8
+> DELETE  1  @  1 : 4
 
-> CHANGE  1 : 32  @  4 : 7
+> CHANGE  1 : 32  @  1 : 4
 
 ~ 
 ~ import org.apache.commons.lang3.Validate;
@@ -51,94 +51,94 @@
 ~ import net.lax1dude.eaglercraft.v1_8.socket.EaglercraftNetworkManager;
 ~ import net.lax1dude.eaglercraft.v1_8.socket.RateLimitTracker;
 
-> DELETE  33  @  5 : 7
+> DELETE  2  @  2 : 4
 
-> DELETE  13  @  15 : 17
+> DELETE  13  @  13 : 15
 
-> DELETE  3  @  5 : 6
+> DELETE  3  @  3 : 4
 
-> INSERT  3 : 4  @  4
+> INSERT  3 : 4  @  3
 
 + import net.minecraft.client.multiplayer.ServerAddress;
 
-> INSERT  2 : 3  @  1
+> INSERT  1 : 2  @  1
 
 + import net.minecraft.client.multiplayer.ServerList;
 
-> DELETE  2  @  1 : 2
+> DELETE  1  @  1 : 2
 
-> DELETE  4  @  5 : 6
+> DELETE  4  @  4 : 5
 
-> DELETE  1  @  2 : 3
+> DELETE  1  @  1 : 2
 
-> DELETE  2  @  3 : 4
+> DELETE  2  @  2 : 3
 
-> DELETE  15  @  16 : 17
+> DELETE  15  @  15 : 16
 
-> DELETE  2  @  3 : 4
+> DELETE  2  @  2 : 3
 
-> DELETE  14  @  15 : 16
+> DELETE  14  @  14 : 15
 
-> DELETE  1  @  2 : 4
+> DELETE  1  @  1 : 3
 
-> DELETE  21  @  23 : 27
+> DELETE  21  @  21 : 25
 
-> DELETE  1  @  5 : 7
+> DELETE  1  @  1 : 3
 
-> DELETE  1  @  3 : 5
+> DELETE  1  @  1 : 3
 
-> DELETE  5  @  7 : 8
+> DELETE  5  @  5 : 6
 
-> INSERT  11 : 12  @  12
+> INSERT  11 : 12  @  11
 
 + import net.minecraft.util.StringTranslate;
 
-> DELETE  7  @  6 : 26
+> DELETE  6  @  6 : 26
 
-> CHANGE  1 : 2  @  21 : 22
+> CHANGE  1 : 2  @  1 : 2
 
 ~ public class Minecraft implements IThreadListener {
 
-> CHANGE  3 : 4  @  3 : 10
+> CHANGE  2 : 3  @  2 : 9
 
 ~ 	public static final boolean isRunningOnMac = false;
 
-> DELETE  13  @  19 : 21
+> DELETE  12  @  12 : 14
 
-> DELETE  19  @  21 : 22
+> DELETE  19  @  19 : 20
 
-> DELETE  6  @  7 : 9
+> DELETE  6  @  6 : 8
 
-> DELETE  1  @  3 : 5
+> DELETE  1  @  1 : 3
 
-> CHANGE  11 : 12  @  13 : 14
+> CHANGE  11 : 12  @  11 : 12
 
 ~ 	private EaglercraftNetworkManager myNetworkManager;
 
-> DELETE  10  @  10 : 12
+> DELETE  9  @  9 : 11
 
-> CHANGE  4 : 5  @  6 : 9
+> CHANGE  4 : 5  @  4 : 7
 
 ~ 	private final List<FutureTask<?>> scheduledTasks = new LinkedList();
 
-> INSERT  15 : 17  @  17
+> INSERT  14 : 16  @  14
 
 + 	public int joinWorldTickCounter = 0;
 + 	private int dontPauseTimer = 0;
 
-> CHANGE  5 : 6  @  3 : 6
+> CHANGE  3 : 4  @  3 : 6
 
 ~ 		StringTranslate.doCLINIT();
 
-> CHANGE  2 : 3  @  4 : 12
+> CHANGE  1 : 2  @  1 : 9
 
 ~ 		this.mcDefaultResourcePack = new DefaultResourcePack();
 
-> CHANGE  2 : 3  @  9 : 11
+> CHANGE  1 : 2  @  1 : 3
 
 ~ 		logger.info("Setting user: " + this.session.getProfile().getName());
 
-> CHANGE  8 : 13  @  9 : 13
+> CHANGE  7 : 12  @  7 : 11
 
 ~ 		String serverToJoin = EagRuntime.getConfiguration().getServerToJoin();
 ~ 		if (serverToJoin != null) {
@@ -146,16 +146,16 @@
 ~ 			this.serverName = addr.getIP();
 ~ 			this.serverPort = addr.getPort();
 
-> DELETE  7  @  6 : 7
+> DELETE  2  @  2 : 3
 
-> CHANGE  15 : 17  @  16 : 18
+> CHANGE  15 : 17  @  15 : 17
 
 ~ 		try {
 ~ 			while (true) {
 
-> DELETE  18  @  18 : 35
+> DELETE  16  @  16 : 33
 
-> CHANGE  1 : 16  @  18 : 20
+> CHANGE  1 : 16  @  1 : 3
 
 ~ 		} catch (MinecraftError var12) {
 ~ 			// ??
@@ -173,85 +173,85 @@
 ~ 		} finally {
 ~ 			this.shutdownMinecraftApplet();
 
-> CHANGE  19 : 21  @  6 : 8
+> CHANGE  4 : 6  @  4 : 6
 
 ~ 	private void startGame() throws IOException {
 ~ 		this.gameSettings = new GameSettings(this);
 
-> DELETE  3  @  3 : 4
+> DELETE  1  @  1 : 2
 
-> CHANGE  5 : 6  @  6 : 9
+> CHANGE  5 : 6  @  5 : 8
 
 ~ 		logger.info("EagRuntime Version: " + EagRuntime.getVersion());
 
-> DELETE  2  @  4 : 7
+> DELETE  1  @  1 : 4
 
-> CHANGE  1 : 2  @  4 : 6
+> CHANGE  1 : 2  @  1 : 3
 
 ~ 		this.mcResourcePackRepository = new ResourcePackRepository(this.mcDefaultResourcePack, this.metadataSerializer_,
 
-> DELETE  9  @  10 : 13
+> DELETE  8  @  8 : 11
 
-> CHANGE  3 : 5  @  6 : 8
+> CHANGE  3 : 5  @  3 : 5
 
 ~ 		this.fontRendererObj = new EaglerFontRenderer(this.gameSettings,
 ~ 				new ResourceLocation("textures/font/ascii.png"), this.renderEngine, false);
 
-> CHANGE  7 : 8  @  7 : 8
+> CHANGE  5 : 6  @  5 : 6
 
 ~ 		this.standardGalacticFontRenderer = new EaglerFontRenderer(this.gameSettings,
 
-> CHANGE  9 : 10  @  9 : 10
+> CHANGE  8 : 9  @  8 : 9
 
 ~ 					return HString.format(parString1, new Object[] { GameSettings
 
-> CHANGE  11 : 12  @  11 : 12
+> CHANGE  10 : 11  @  10 : 11
 
 ~ 		GlStateManager.clearDepth(1.0f);
 
-> INSERT  31 : 32  @  31
+> INSERT  30 : 31  @  30
 
 + 		SkinPreviewRenderer.initialize();
 
-> INSERT  3 : 7  @  2
+> INSERT  2 : 6  @  2
 
 + 
 + 		ServerList.initServerList(this);
 + 		EaglerProfile.read();
 + 
 
-> CHANGE  5 : 7  @  1 : 2
+> CHANGE  1 : 3  @  1 : 2
 
 ~ 			this.displayGuiScreen(new GuiScreenEditProfile(
 ~ 					new GuiConnecting(new GuiMainMenu(), this, this.serverName, this.serverPort)));
 
-> CHANGE  3 : 4  @  2 : 3
+> CHANGE  1 : 2  @  1 : 2
 
 ~ 			this.displayGuiScreen(new GuiScreenEditProfile(new GuiMainMenu()));
 
-> DELETE  6  @  6 : 18
+> DELETE  5  @  5 : 17
 
-> CHANGE  16 : 17  @  28 : 36
+> CHANGE  16 : 17  @  16 : 24
 
 ~ 		throw new UnsupportedOperationException("wtf u trying to twitch stream in a browser game?");
 
-> CHANGE  3 : 6  @  10 : 32
+> CHANGE  2 : 5  @  2 : 24
 
 ~ 	private void createDisplay() {
 ~ 		Display.create();
 ~ 		Display.setTitle("Eaglercraft 1.8.8");
 
-> DELETE  5  @  24 : 61
+> DELETE  2  @  2 : 39
 
-> CHANGE  1 : 2  @  38 : 48
+> CHANGE  1 : 2  @  1 : 11
 
 ~ 		return true;
 
-> DELETE  3  @  12 : 16
+> DELETE  2  @  2 : 6
 
-> DELETE  4  @  8 : 25
+> DELETE  4  @  4 : 21
 
-> CHANGE  6 : 18  @  23 : 36
+> CHANGE  6 : 18  @  6 : 19
 
 ~ 		String report = crashReportIn.getCompleteReport();
 ~ 		Bootstrap.printToSYSOUT(report);
@@ -266,76 +266,76 @@
 ~ 			System.err.println(
 ~ 					"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
 
-> DELETE  13  @  14 : 15
+> DELETE  1  @  1 : 2
 
-> INSERT  7 : 9  @  8
+> INSERT  7 : 9  @  7
 
 + 		GlStateManager.recompileShaders();
 + 
 
-> CHANGE  16 : 18  @  14 : 15
+> CHANGE  14 : 16  @  14 : 15
 
 ~ 			logger.info("Caught error stitching, removing all assigned resourcepacks");
 ~ 			logger.info(runtimeexception);
 
-> CHANGE  18 : 21  @  17 : 29
+> CHANGE  16 : 19  @  16 : 28
 
 ~ 	private void updateDisplayMode() {
 ~ 		this.displayWidth = Display.getWidth();
 ~ 		this.displayHeight = Display.getHeight();
 
-> CHANGE  5 : 9  @  14 : 58
+> CHANGE  2 : 6  @  2 : 46
 
 ~ 	private void drawSplashScreen(TextureManager textureManagerInstance) {
 ~ 		Display.update();
 ~ 		updateDisplayMode();
 ~ 		GlStateManager.viewport(0, 0, displayWidth, displayHeight);
 
-> DELETE  6  @  46 : 49
+> DELETE  2  @  2 : 5
 
-> CHANGE  16 : 17  @  19 : 20
+> CHANGE  16 : 17  @  16 : 17
 
 ~ 					new DynamicTexture(ImageData.loadImageFile(inputstream)));
 
-> DELETE  25  @  25 : 27
+> DELETE  24  @  24 : 26
 
-> DELETE  26  @  28 : 32
+> DELETE  26  @  26 : 30
 
-> CHANGE  31 : 32  @  35 : 36
+> CHANGE  31 : 32  @  31 : 32
 
 ~ 	public void checkGLError(String message) {
 
-> CHANGE  2 : 3  @  2 : 3
+> CHANGE  1 : 2  @  1 : 2
 
 ~ 			int i = EaglercraftGPU.glGetError();
 
-> CHANGE  2 : 3  @  2 : 3
+> CHANGE  1 : 2  @  1 : 2
 
 ~ 				String s = EaglercraftGPU.gluErrorString(i);
 
-> DELETE  11  @  11 : 12
+> DELETE  10  @  10 : 11
 
-> CHANGE  10 : 11  @  11 : 12
+> CHANGE  10 : 11  @  10 : 11
 
 ~ 			EagRuntime.destroy();
 
-> CHANGE  2 : 3  @  2 : 3
+> CHANGE  1 : 2  @  1 : 2
 
 ~ 				EagRuntime.exit();
 
-> DELETE  4  @  4 : 6
+> DELETE  3  @  3 : 5
 
-> CHANGE  5 : 6  @  7 : 8
+> CHANGE  5 : 6  @  5 : 6
 
 ~ 		if (Display.isCloseRequested()) {
 
-> CHANGE  15 : 16  @  15 : 16
+> CHANGE  14 : 15  @  14 : 15
 
 ~ 				Util.func_181617_a((FutureTask) this.scheduledTasks.remove(0), logger);
 
-> DELETE  19  @  19 : 27
+> DELETE  18  @  18 : 26
 
-> CHANGE  1 : 11  @  9 : 13
+> CHANGE  1 : 11  @  1 : 5
 
 ~ 		if (!Display.contextLost()) {
 ~ 			GlStateManager.clearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -348,7 +348,7 @@
 ~ 			}
 ~ 
 
-> CHANGE  11 : 16  @  5 : 6
+> CHANGE  1 : 6  @  1 : 2
 
 ~ 			if (!this.skipRenderWorld) {
 ~ 				this.mcProfiler.endStartSection("gameRenderer");
@@ -356,7 +356,7 @@
 ~ 				this.mcProfiler.endSection();
 ~ 			}
 
-> CHANGE  6 : 18  @  2 : 6
+> CHANGE  1 : 13  @  1 : 5
 
 ~ 			this.mcProfiler.endSection();
 ~ 			if (this.gameSettings.showDebugInfo && this.gameSettings.showDebugProfilerChart
@@ -371,72 +371,72 @@
 ~ 				this.mcProfiler.profilingEnabled = false;
 ~ 				this.prevFrameTime = System.nanoTime();
 
-> CHANGE  14 : 16  @  6 : 11
+> CHANGE  2 : 4  @  2 : 7
 
 ~ 			this.guiAchievement.updateAchievementWindow();
 ~ 			GlStateManager.popMatrix();
 
-> DELETE  4  @  7 : 16
+> DELETE  2  @  2 : 11
 
-> DELETE  2  @  11 : 19
+> DELETE  2  @  2 : 10
 
-> INSERT  1 : 2  @  9
+> INSERT  1 : 2  @  1
 
 + 
 
-> CHANGE  2 : 3  @  1 : 3
+> CHANGE  1 : 2  @  1 : 3
 
 ~ 		this.isGamePaused = false;
 
-> CHANGE  7 : 8  @  8 : 9
+> CHANGE  6 : 7  @  6 : 7
 
 ~ 			this.debug = HString.format("%d fps (%d chunk update%s) T: %s%s%s%s",
 
-> CHANGE  6 : 8  @  6 : 10
+> CHANGE  5 : 7  @  5 : 9
 
 ~ 							this.gameSettings.fancyGraphics ? "" : " fast", this.gameSettings.clouds == 0 ? ""
 ~ 									: (this.gameSettings.clouds == 1 ? " fast-clouds" : " fancy-clouds") });
 
-> DELETE  5  @  7 : 11
+> DELETE  3  @  3 : 7
 
-> DELETE  49  @  53 : 60
+> DELETE  49  @  49 : 56
 
-> CHANGE  48 : 49  @  55 : 56
+> CHANGE  48 : 49  @  48 : 49
 
 ~ 			EaglercraftGPU.glLineWidth(1.0F);
 
-> CHANGE  10 : 11  @  10 : 11
+> CHANGE  9 : 10  @  9 : 10
 
 ~ 					(double) ((float) j - (float) short1 * 0.6F - 16.0F), 0.0D).color(0, 0, 0, 100).endVertex();
 
-> CHANGE  2 : 3  @  2 : 3
+> CHANGE  1 : 2  @  1 : 2
 
 ~ 					.color(0, 0, 0, 100).endVertex();
 
-> CHANGE  2 : 3  @  2 : 3
+> CHANGE  1 : 2  @  1 : 2
 
 ~ 					.color(0, 0, 0, 100).endVertex();
 
-> CHANGE  2 : 3  @  2 : 3
+> CHANGE  1 : 2  @  1 : 2
 
 ~ 					(double) ((float) j - (float) short1 * 0.6F - 16.0F), 0.0D).color(0, 0, 0, 100).endVertex();
 
-> DELETE  111  @  111 : 115
+> DELETE  110  @  110 : 114
 
-> CHANGE  108 : 109  @  112 : 152
+> CHANGE  108 : 109  @  108 : 148
 
 ~ 		logger.error("Use F11 to toggle fullscreen!");
 
-> DELETE  12  @  51 : 52
+> DELETE  11  @  11 : 12
 
-> DELETE  2  @  3 : 11
+> DELETE  2  @  2 : 10
 
-> INSERT  9 : 11  @  17
+> INSERT  9 : 11  @  9
 
 + 		RateLimitTracker.tick();
 + 
 
-> INSERT  25 : 31  @  23
+> INSERT  23 : 29  @  23
 
 + 			if (this.currentScreen == null && this.dontPauseTimer <= 0) {
 + 				if (!Mouse.isMouseGrabbed()) {
@@ -445,7 +445,7 @@
 + 				}
 + 			}
 
-> INSERT  13 : 18  @  7
+> INSERT  7 : 12  @  7
 
 + 			this.dontPauseTimer = 6;
 + 		} else {
@@ -453,28 +453,28 @@
 + 				--this.dontPauseTimer;
 + 			}
 
-> CHANGE  15 : 16  @  10 : 11
+> CHANGE  10 : 11  @  10 : 11
 
 ~ 						return Minecraft.this.currentScreen.getClass().getName();
 
-> CHANGE  14 : 15  @  14 : 15
+> CHANGE  13 : 14  @  13 : 14
 
 ~ 							return Minecraft.this.currentScreen.getClass().getName();
 
-> CHANGE  41 : 43  @  41 : 42
+> CHANGE  40 : 42  @  40 : 41
 
 ~ 						if ((!this.inGameHasFocus || !Mouse.isActuallyGrabbed()) && Mouse.getEventButtonState()) {
 ~ 							this.inGameHasFocus = false;
 
-> CHANGE  44 : 45  @  43 : 44
+> CHANGE  42 : 43  @  42 : 43
 
 ~ 						if (k == 1 || (k > -1 && k == this.gameSettings.keyBindClose.getKeyCode())) {
 
-> INSERT  42 : 43  @  42
+> INSERT  41 : 42  @  41
 
 + 							GlStateManager.recompileShaders();
 
-> INSERT  207 : 213  @  206
+> INSERT  206 : 212  @  206
 
 + 		if (this.theWorld != null) {
 + 			++joinWorldTickCounter;
@@ -483,95 +483,95 @@
 + 		}
 + 
 
-> CHANGE  11 : 12  @  5 : 54
+> CHANGE  5 : 6  @  5 : 54
 
 ~ 		throw new UnsupportedOperationException("singleplayer has been removed");
 
-> INSERT  13 : 14  @  61
+> INSERT  12 : 13  @  12
 
 + 			session.reset();
 
-> DELETE  2  @  1 : 7
+> DELETE  1  @  1 : 7
 
-> DELETE  40  @  46 : 47
+> DELETE  40  @  40 : 41
 
-> CHANGE  20 : 21  @  21 : 23
+> CHANGE  20 : 21  @  20 : 22
 
 ~ 		this.thePlayer = this.playerController.func_178892_a(this.theWorld, new StatFileWriter());
 
-> CHANGE  166 : 167  @  167 : 168
+> CHANGE  165 : 166  @  165 : 166
 
 ~ 				return EagRuntime.getVersion();
 
-> CHANGE  5 : 7  @  5 : 6
+> CHANGE  4 : 6  @  4 : 5
 
 ~ 				return EaglercraftGPU.glGetString(7937) + " GL version " + EaglercraftGPU.glGetString(7938) + ", "
 ~ 						+ EaglercraftGPU.glGetString(7936);
 
-> DELETE  4  @  3 : 13
+> DELETE  2  @  2 : 12
 
-> CHANGE  2 : 3  @  12 : 16
+> CHANGE  2 : 3  @  2 : 6
 
 ~ 				return "Definitely Not; You're an eagler";
 
-> DELETE  37  @  40 : 45
+> DELETE  36  @  36 : 41
 
-> INSERT  14 : 16  @  19
+> INSERT  14 : 16  @  14
 
 + 				Minecraft.this.loadingScreen.eaglerShow(I18n.format("resourcePack.load.refreshing"),
 + 						I18n.format("resourcePack.load.pleaseWait"));
 
-> DELETE  7  @  5 : 32
+> DELETE  5  @  5 : 32
 
-> CHANGE  1 : 2  @  28 : 33
+> CHANGE  1 : 2  @  1 : 6
 
 ~ 		return this.currentServerData != null ? "multiplayer" : "out_of_game";
 
-> DELETE  3  @  7 : 224
+> DELETE  2  @  2 : 219
 
-> CHANGE  17 : 18  @  234 : 235
+> CHANGE  17 : 18  @  17 : 18
 
 ~ 		return false;
 
-> DELETE  3  @  3 : 7
+> DELETE  2  @  2 : 6
 
-> DELETE  1  @  5 : 10
+> DELETE  1  @  1 : 6
 
-> DELETE  1  @  6 : 7
+> DELETE  1  @  1 : 2
 
-> DELETE  2  @  3 : 7
+> DELETE  2  @  2 : 6
 
-> CHANGE  1 : 2  @  5 : 6
+> CHANGE  1 : 2  @  1 : 2
 
 ~ 		return System.currentTimeMillis();
 
-> DELETE  11  @  11 : 28
+> DELETE  10  @  10 : 27
 
-> DELETE  44  @  61 : 65
+> DELETE  44  @  44 : 48
 
-> CHANGE  6 : 8  @  10 : 50
+> CHANGE  6 : 8  @  6 : 46
 
 ~ 					if (i == this.gameSettings.keyBindScreenshot.getKeyCode()) {
 ~ 						this.ingameGUI.getChatGUI().printChatMessage(ScreenShotHelper.saveScreenshot());
 
-> DELETE  3  @  41 : 43
+> DELETE  1  @  1 : 3
 
-> DELETE  1  @  3 : 4
+> DELETE  1  @  1 : 2
 
-> DELETE  4  @  5 : 13
+> DELETE  4  @  4 : 12
 
-> CHANGE  11 : 15  @  19 : 31
+> CHANGE  11 : 15  @  11 : 23
 
 ~ 		ListenableFutureTask listenablefuturetask = ListenableFutureTask.create(callableToSchedule);
 ~ 		synchronized (this.scheduledTasks) {
 ~ 			this.scheduledTasks.add(listenablefuturetask);
 ~ 			return listenablefuturetask;
 
-> DELETE  12  @  20 : 24
+> DELETE  8  @  8 : 12
 
-> DELETE  24  @  28 : 36
+> DELETE  24  @  24 : 32
 
-> INSERT  7 : 11  @  15
+> INSERT  7 : 11  @  7
 
 + 
 + 	public static int getGLMaximumTextureSize() {

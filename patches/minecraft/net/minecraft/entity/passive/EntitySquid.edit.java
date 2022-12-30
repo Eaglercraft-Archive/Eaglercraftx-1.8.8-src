@@ -7,16 +7,16 @@
 
 > DELETE  4  @  4 : 6
 
-> DELETE  28  @  30 : 31
+> DELETE  28  @  28 : 29
 
-> CHANGE  57 : 58  @  58 : 68
+> CHANGE  57 : 58  @  57 : 67
 
 ~ 			this.squidRotation = 6.2831855F;
 
-> DELETE  19  @  28 : 34
+> DELETE  18  @  18 : 24
 
-> DELETE  9  @  15 : 22
+> DELETE  9  @  9 : 16
 
-> DELETE  32  @  39 : 64
+> DELETE  32  @  32 : 57
 
 > EOF

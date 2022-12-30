@@ -7,11 +7,11 @@
 
 > DELETE  2  @  2 : 4
 
-> CHANGE  37 : 38  @  39 : 40
+> CHANGE  37 : 38  @  37 : 38
 
 ~ 		this.bipedBody.rotationPointZ = 0.0F;
 
-> CHANGE  53 : 54  @  53 : 54
+> CHANGE  52 : 53  @  52 : 53
 
 ~ 		this.bipedHead.rotationPointZ = 0.0F;
 

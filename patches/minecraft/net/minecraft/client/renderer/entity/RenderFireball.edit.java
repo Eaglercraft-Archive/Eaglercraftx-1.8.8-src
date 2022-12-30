@@ -11,11 +11,11 @@
 + import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 + import net.lax1dude.eaglercraft.v1_8.opengl.WorldRenderer;
 
-> DELETE  4  @  1 : 2
+> DELETE  1  @  1 : 2
 
-> DELETE  1  @  2 : 6
+> DELETE  1  @  1 : 5
 
-> CHANGE  20 : 21  @  24 : 25
+> CHANGE  20 : 21  @  20 : 21
 
 ~ 		EaglerTextureAtlasSprite textureatlassprite = Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
 

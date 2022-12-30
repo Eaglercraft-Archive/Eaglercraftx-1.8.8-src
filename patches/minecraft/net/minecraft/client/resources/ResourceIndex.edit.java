@@ -7,12 +7,12 @@
 
 > DELETE  2  @  2 : 18
 
-> CHANGE  1 : 3  @  17 : 19
+> CHANGE  1 : 3  @  1 : 3
 
 ~ 	// private static final Logger logger = LogManager.getLogger();
 ~ 	// private final Map<String, File> resourceMap = Maps.newHashMap();
 
-> CHANGE  3 : 27  @  3 : 8
+> CHANGE  1 : 25  @  1 : 6
 
 ~ 	// public ResourceIndex(File parFile, String parString1) {
 ~ 	/*
@@ -39,7 +39,7 @@
 ~ 	 */
 ~ 	// }
 
-> CHANGE  25 : 28  @  6 : 35
+> CHANGE  1 : 4  @  1 : 30
 
 ~ 	// public Map<String, File> getResourceMap() {
 ~ 	// return this.resourceMap;

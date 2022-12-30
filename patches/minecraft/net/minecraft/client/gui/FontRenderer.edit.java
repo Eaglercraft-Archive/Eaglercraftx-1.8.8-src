@@ -7,7 +7,7 @@
 
 > DELETE  2  @  2 : 6
 
-> CHANGE  4 : 11  @  8 : 10
+> CHANGE  4 : 11  @  4 : 6
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
@@ -17,18 +17,18 @@
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.ImageData;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.WorldRenderer;
 
-> DELETE  8  @  3 : 4
+> DELETE  1  @  1 : 2
 
-> DELETE  1  @  2 : 3
+> DELETE  1  @  1 : 2
 
-> DELETE  7  @  8 : 10
+> DELETE  7  @  7 : 9
 
-> CHANGE  2 : 4  @  4 : 6
+> CHANGE  2 : 4  @  2 : 4
 
 ~ 	protected static final ResourceLocation[] unicodePageLocations = new ResourceLocation[256];
 ~ 	protected int[] charWidth = new int[256];
 
-> CHANGE  3 : 22  @  3 : 22
+> CHANGE  1 : 20  @  1 : 20
 
 ~ 	public EaglercraftRandom fontRandom = new EaglercraftRandom();
 ~ 	protected byte[] glyphWidth = new byte[65536];
@@ -50,17 +50,17 @@
 ~ 	protected boolean underlineStyle;
 ~ 	protected boolean strikethroughStyle;
 
-> CHANGE  62 : 63  @  62 : 63
+> CHANGE  43 : 44  @  43 : 44
 
 ~ 		ImageData bufferedimage;
 
-> CHANGE  8 : 11  @  8 : 12
+> CHANGE  7 : 10  @  7 : 11
 
 ~ 		int i = bufferedimage.width;
 ~ 		int j = bufferedimage.height;
 ~ 		int[] aint = bufferedimage.pixels;
 
-> CHANGE  71 : 90  @  72 : 82
+> CHANGE  68 : 87  @  68 : 78
 
 ~ 		Tessellator tessellator = Tessellator.getInstance();
 ~ 		WorldRenderer worldrenderer = tessellator.getWorldRenderer();
@@ -82,11 +82,11 @@
 ~ 		tessellator.draw();
 ~ 
 
-> CHANGE  25 : 26  @  16 : 17
+> CHANGE  6 : 7  @  6 : 7
 
 ~ 					HString.format("textures/font/unicode_page_%02x.png", new Object[] { Integer.valueOf(parInt1) }));
 
-> CHANGE  24 : 42  @  24 : 34
+> CHANGE  23 : 41  @  23 : 33
 
 ~ 			Tessellator tessellator = Tessellator.getInstance();
 ~ 			WorldRenderer worldrenderer = tessellator.getWorldRenderer();
@@ -107,7 +107,7 @@
 ~ 			tessellator.draw();
 ~ 
 
-> CHANGE  45 : 53  @  37 : 44
+> CHANGE  27 : 35  @  27 : 34
 
 ~ //		try {
 ~ //			Bidi bidi = new Bidi((new ArabicShaping(8)).shape(parString1), 127);
@@ -118,59 +118,59 @@
 ~ //		}
 ~ 		return parString1;
 
-> CHANGE  10 : 11  @  9 : 10
+> CHANGE  2 : 3  @  2 : 3
 
 ~ 	protected void resetStyles() {
 
-> CHANGE  8 : 9  @  8 : 9
+> CHANGE  7 : 8  @  7 : 8
 
 ~ 	protected void renderStringAtPos(String parString1, boolean parFlag) {
 
-> CHANGE  4 : 5  @  4 : 5
+> CHANGE  3 : 4  @  3 : 4
 
 ~ 				int i1 = "0123456789abcdefklmnor".indexOf(Character.toLowerCase(parString1.charAt(i + 1)));
 
-> CHANGE  134 : 135  @  134 : 135
+> CHANGE  133 : 134  @  133 : 134
 
 ~ 	private int renderStringAligned(String text, int x, int y, int wrapWidth, int color, boolean parFlag) {
 
-> CHANGE  3 : 4  @  3 : 4
+> CHANGE  2 : 3  @  2 : 3
 
 ~ 			x = x + wrapWidth - i;
 
-> CHANGE  3 : 4  @  3 : 4
+> CHANGE  2 : 3  @  2 : 3
 
 ~ 		return this.renderString(text, (float) x, (float) y, color, parFlag);
 
-> CHANGE  5 : 7  @  5 : 6
+> CHANGE  4 : 6  @  4 : 5
 
 ~ 			this.posX = x;
 ~ 			this.posY = y;
 
-> DELETE  23  @  22 : 23
+> DELETE  21  @  21 : 22
 
-> INSERT  1 : 2  @  2
+> INSERT  1 : 2  @  1
 
 + 		return (int) this.posX;
 
-> INSERT  120 : 123  @  119
+> INSERT  119 : 122  @  119
 
 + 		if ((textColor & -67108864) == 0) {
 + 			textColor |= -16777216;
 + 		}
 
-> CHANGE  33 : 34  @  30 : 31
+> CHANGE  30 : 31  @  30 : 31
 
 ~ 		return Arrays.asList(this.wrapFormattedStringToWidth(str, wrapWidth, 0).split("\n"));
 
-> CHANGE  3 : 7  @  3 : 4
+> CHANGE  2 : 6  @  2 : 3
 
 ~ 	String wrapFormattedStringToWidth(String str, int wrapWidth, int depthCheck) { // TODO: fix recursive
 ~ 		if (depthCheck > 20) {
 ~ 			return str;
 ~ 		}
 
-> CHANGE  12 : 13  @  9 : 10
+> CHANGE  8 : 9  @  8 : 9
 
 ~ 			return s + "\n" + this.wrapFormattedStringToWidth(s1, wrapWidth, ++depthCheck);
 

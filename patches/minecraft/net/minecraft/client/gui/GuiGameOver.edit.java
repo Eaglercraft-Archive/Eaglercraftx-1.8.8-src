@@ -9,17 +9,17 @@
 
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 
-> DELETE  2  @  7 : 8
+> DELETE  1  @  1 : 2
 
-> CHANGE  33 : 34  @  34 : 35
+> CHANGE  33 : 34  @  33 : 34
 
 ~ 	protected void keyTyped(char parChar1, int parInt1) {
 
-> CHANGE  3 : 4  @  3 : 4
+> CHANGE  2 : 3  @  2 : 3
 
 ~ 	protected void actionPerformed(GuiButton parGuiButton) {
 
-> INSERT  8 : 10  @  8
+> INSERT  7 : 9  @  7
 
 + 				this.mc.theWorld.sendQuittingDisconnectingPacket();
 + 				this.mc.loadWorld((WorldClient) null);

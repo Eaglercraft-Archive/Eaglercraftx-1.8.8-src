@@ -7,20 +7,20 @@
 
 > DELETE  6  @  6 : 12
 
-> CHANGE  23 : 25  @  29 : 30
+> CHANGE  23 : 25  @  23 : 24
 
 ~ 		for (int k = 0; k < 4; ++k) {
 ~ 			final int k2 = k;
 
-> CHANGE  11 : 12  @  10 : 11
+> CHANGE  9 : 10  @  9 : 10
 
 ~ 											? ((ItemArmor) itemstack.getItem()).armorType == k2
 
-> CHANGE  2 : 3  @  2 : 3
+> CHANGE  1 : 2  @  1 : 2
 
 ~ 													&& itemstack.getItem() != Items.skull ? false : k2 == 0));
 
-> CHANGE  4 : 5  @  4 : 5
+> CHANGE  3 : 4  @  3 : 4
 
 ~ 							return ItemArmor.EMPTY_SLOT_NAMES[k2];
 

@@ -7,16 +7,16 @@
 
 > DELETE  2  @  2 : 5
 
-> DELETE  3  @  6 : 7
+> DELETE  3  @  3 : 4
 
-> INSERT  1 : 5  @  2
+> INSERT  1 : 5  @  1
 
 + import com.google.common.base.Predicates;
 + import com.google.common.collect.Iterators;
 + import com.google.common.collect.Lists;
 + 
 
-> CHANGE  12 : 13  @  8 : 9
+> CHANGE  8 : 9  @  8 : 9
 
 ~ 			this.objectList.add((T) null);
 

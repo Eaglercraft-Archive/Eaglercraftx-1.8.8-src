@@ -9,11 +9,11 @@
 
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.ImageData;
 
-> CHANGE  7 : 8  @  11 : 12
+> CHANGE  6 : 7  @  6 : 7
 
 ~ 	public ImageData parseUserSkin(ImageData bufferedimage) {
 
-> CHANGE  6 : 22  @  6 : 22
+> CHANGE  5 : 21  @  5 : 21
 
 ~ 			ImageData bufferedimage1 = new ImageData(this.imageWidth, this.imageHeight, true);
 ~ 			bufferedimage1.copyPixelsFrom(bufferedimage, 0, 0, bufferedimage.width, bufferedimage.height, 0, 0,
@@ -32,7 +32,7 @@
 ~ 				bufferedimage1.drawLayer(bufferedimage, 44, 52, 40, 64, 40, 20, 44, 32);
 ~ 				bufferedimage1.drawLayer(bufferedimage, 48, 52, 44, 64, 52, 20, 56, 32);
 
-> CHANGE  18 : 19  @  18 : 20
+> CHANGE  2 : 3  @  2 : 4
 
 ~ 			this.imageData = bufferedimage1.pixels;
 

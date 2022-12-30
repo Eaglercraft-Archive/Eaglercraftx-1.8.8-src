@@ -7,15 +7,15 @@
 
 > DELETE  2  @  2 : 3
 
-> INSERT  2 : 5  @  3
+> INSERT  2 : 5  @  2
 
 + 
 + import com.google.common.collect.Maps;
 + 
 
-> DELETE  8  @  5 : 9
+> DELETE  5  @  5 : 9
 
-> CHANGE  21 : 22  @  25 : 34
+> CHANGE  21 : 22  @  21 : 30
 
 ~ 			return true;
 

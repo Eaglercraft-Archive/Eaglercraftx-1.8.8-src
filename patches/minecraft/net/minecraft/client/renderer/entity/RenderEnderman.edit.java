@@ -10,9 +10,9 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
 
-> DELETE  4  @  3 : 5
+> DELETE  2  @  2 : 4
 
-> CHANGE  9 : 10  @  11 : 12
+> CHANGE  9 : 10  @  9 : 10
 
 ~ 	private EaglercraftRandom rnd = new EaglercraftRandom();
 

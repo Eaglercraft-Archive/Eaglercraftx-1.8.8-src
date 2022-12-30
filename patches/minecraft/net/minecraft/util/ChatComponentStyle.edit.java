@@ -11,6 +11,6 @@
 + import java.util.List;
 + 
 
-> DELETE  6  @  3 : 9
+> DELETE  3  @  3 : 9
 
 > EOF

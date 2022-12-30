@@ -7,15 +7,15 @@
 
 > DELETE  2  @  2 : 3
 
-> CHANGE  1 : 4  @  2 : 4
+> CHANGE  1 : 4  @  1 : 3
 
 ~ 
 ~ import com.google.common.base.Predicate;
 ~ 
 
-> DELETE  17  @  16 : 17
+> DELETE  14  @  14 : 15
 
-> CHANGE  77 : 78  @  78 : 89
+> CHANGE  77 : 78  @  77 : 88
 
 ~ 		return true;
 

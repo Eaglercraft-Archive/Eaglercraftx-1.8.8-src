@@ -7,12 +7,12 @@
 
 > DELETE  2  @  2 : 3
 
-> INSERT  4 : 6  @  5
+> INSERT  4 : 6  @  4
 
 + import com.google.common.collect.Maps;
 + 
 
-> CHANGE  11 : 12  @  9 : 10
+> CHANGE  9 : 10  @  9 : 10
 
 ~ 			map.put((K) object, (V) iterator.next());
 

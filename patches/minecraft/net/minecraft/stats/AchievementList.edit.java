@@ -7,15 +7,15 @@
 
 > DELETE  2  @  2 : 3
 
-> INSERT  1 : 4  @  2
+> INSERT  1 : 4  @  1
 
 + 
 + import com.google.common.collect.Lists;
 + 
 
-> DELETE  6  @  3 : 4
+> DELETE  3  @  3 : 4
 
-> CHANGE  7 : 42  @  8 : 77
+> CHANGE  7 : 42  @  7 : 76
 
 ~ 	public static List<Achievement> achievementList;
 ~ 	public static Achievement openInventory;
@@ -53,7 +53,7 @@
 ~ 	public static Achievement exploreAllBiomes;
 ~ 	public static Achievement overpowered;
 
-> INSERT  37 : 100  @  71
+> INSERT  2 : 65  @  2
 
 + 		achievementList = Lists.newArrayList();
 + 		openInventory = (new Achievement("achievement.openInventory", "openInventory", 0, 0, Items.book,

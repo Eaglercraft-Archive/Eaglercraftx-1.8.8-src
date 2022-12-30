@@ -11,13 +11,13 @@
 + import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 + import net.lax1dude.eaglercraft.v1_8.opengl.WorldRenderer;
 
-> DELETE  6  @  3 : 7
+> DELETE  3  @  3 : 7
 
-> INSERT  75 : 76  @  79
+> INSERT  75 : 76  @  75
 
 + 		BlockPos.MutableBlockPos pointer = new BlockPos.MutableBlockPos();
 
-> CHANGE  4 : 5  @  3 : 4
+> CHANGE  3 : 4  @  3 : 4
 
 ~ 				BlockPos blockpos = blockPosIn.offsetEvenFaster(enumfacing, pointer);
 

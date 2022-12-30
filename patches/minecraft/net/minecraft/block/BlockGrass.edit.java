@@ -10,15 +10,15 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
 
-> CHANGE  44 : 45  @  48 : 73
+> CHANGE  42 : 43  @  42 : 67
 
 ~ 	public Item getItemDropped(IBlockState var1, EaglercraftRandom random, int i) {
 
-> CHANGE  9 : 10  @  33 : 34
+> CHANGE  8 : 9  @  8 : 9
 
 ~ 	public boolean canUseBonemeal(World var1, EaglercraftRandom var2, BlockPos var3, IBlockState var4) {
 
-> CHANGE  4 : 5  @  4 : 5
+> CHANGE  3 : 4  @  3 : 4
 
 ~ 	public void grow(World world, EaglercraftRandom random, BlockPos blockpos, IBlockState var4) {
 

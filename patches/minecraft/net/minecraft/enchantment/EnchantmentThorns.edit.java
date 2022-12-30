@@ -10,15 +10,15 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
 
-> CHANGE  32 : 33  @  34 : 35
+> CHANGE  30 : 31  @  30 : 31
 
 ~ 		EaglercraftRandom random = entitylivingbase.getRNG();
 
-> CHANGE  18 : 19  @  18 : 19
+> CHANGE  17 : 18  @  17 : 18
 
 ~ 	public static boolean func_92094_a(int parInt1, EaglercraftRandom parRandom) {
 
-> CHANGE  4 : 5  @  4 : 5
+> CHANGE  3 : 4  @  3 : 4
 
 ~ 	public static int func_92095_b(int parInt1, EaglercraftRandom parRandom) {
 

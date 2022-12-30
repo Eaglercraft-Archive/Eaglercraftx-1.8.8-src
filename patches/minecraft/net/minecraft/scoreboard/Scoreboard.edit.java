@@ -7,24 +7,24 @@
 
 > DELETE  2  @  2 : 4
 
-> INSERT  5 : 9  @  7
+> INSERT  5 : 9  @  5
 
 + 
 + import com.google.common.collect.Lists;
 + import com.google.common.collect.Maps;
 + 
 
-> DELETE  6  @  2 : 6
+> DELETE  2  @  2 : 6
 
-> CHANGE  27 : 28  @  31 : 32
+> CHANGE  27 : 28  @  27 : 28
 
 ~ 					this.scoreObjectiveCriterias.put(criteria, (List<ScoreObjective>) object);
 
-> CHANGE  33 : 34  @  33 : 34
+> CHANGE  32 : 33  @  32 : 33
 
 ~ 				this.entitiesScoreObjectives.put(name, (Map<ScoreObjective, Score>) object);
 
-> CHANGE  62 : 63  @  62 : 63
+> CHANGE  61 : 62  @  61 : 62
 
 ~ 		for (Map map : (Collection<Map>) collection) {
 

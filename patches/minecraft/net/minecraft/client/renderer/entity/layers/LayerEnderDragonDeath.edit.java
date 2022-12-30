@@ -12,9 +12,9 @@
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.WorldRenderer;
 
-> DELETE  6  @  4 : 6
+> DELETE  2  @  2 : 4
 
-> CHANGE  16 : 17  @  18 : 19
+> CHANGE  16 : 17  @  16 : 17
 
 ~ 			EaglercraftRandom random = new EaglercraftRandom(432L);
 

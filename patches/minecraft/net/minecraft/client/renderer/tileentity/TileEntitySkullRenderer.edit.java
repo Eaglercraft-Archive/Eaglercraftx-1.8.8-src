@@ -10,19 +10,19 @@
 ~ import net.lax1dude.eaglercraft.v1_8.mojang.authlib.GameProfile;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 
-> CHANGE  5 : 6  @  8 : 11
+> CHANGE  3 : 4  @  3 : 6
 
 ~ import net.minecraft.client.network.NetHandlerPlayClient;
 
-> DELETE  3  @  5 : 6
+> DELETE  2  @  2 : 3
 
-> CHANGE  55 : 59  @  56 : 65
+> CHANGE  55 : 59  @  55 : 64
 
 ~ 				if (parGameProfile != null && parGameProfile.getId() != null) {
 ~ 					NetHandlerPlayClient netHandler = Minecraft.getMinecraft().getNetHandler();
 ~ 					if (netHandler != null) {
 ~ 						resourcelocation = netHandler.getSkinCache().getSkin(parGameProfile).getResourceLocation();
 
-> DELETE  6  @  11 : 12
+> DELETE  2  @  2 : 3
 
 > EOF

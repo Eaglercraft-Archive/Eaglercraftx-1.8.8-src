@@ -7,14 +7,14 @@
 
 > DELETE  2  @  2 : 3
 
-> CHANGE  4 : 8  @  5 : 6
+> CHANGE  4 : 8  @  4 : 5
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
 ~ 
 ~ import com.google.common.collect.Lists;
 ~ 
 
-> CHANGE  39 : 40  @  36 : 37
+> CHANGE  35 : 36  @  35 : 36
 
 ~ 				EaglercraftUUID uuid = parPacketBuffer.readUuid();
 

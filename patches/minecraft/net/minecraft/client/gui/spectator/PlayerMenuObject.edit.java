@@ -10,13 +10,13 @@
 ~ import net.lax1dude.eaglercraft.v1_8.mojang.authlib.GameProfile;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 
-> DELETE  5  @  4 : 7
+> DELETE  3  @  3 : 6
 
-> DELETE  7  @  10 : 11
+> DELETE  7  @  7 : 8
 
-> DELETE  3  @  4 : 6
+> DELETE  3  @  3 : 5
 
-> CHANGE  11 : 13  @  13 : 14
+> CHANGE  11 : 13  @  11 : 12
 
 ~ 		Minecraft.getMinecraft().getTextureManager().bindTexture(
 ~ 				Minecraft.getMinecraft().getNetHandler().getSkinCache().getSkin(profile).getResourceLocation());

@@ -10,19 +10,19 @@
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.OpenGlHelper;
 
-> DELETE  6  @  5 : 7
+> DELETE  4  @  4 : 6
 
-> DELETE  1  @  3 : 4
+> DELETE  1  @  1 : 2
 
-> INSERT  49 : 50  @  50
+> INSERT  49 : 50  @  49
 
 + 		GlStateManager.enableDepth();
 
-> INSERT  3 : 4  @  2
+> INSERT  2 : 3  @  2
 
 + 		GlStateManager.disableDepth();
 
-> CHANGE  43 : 44  @  42 : 43
+> CHANGE  42 : 43  @  42 : 43
 
 ~ 	protected void actionPerformed(GuiButton parGuiButton) {
 

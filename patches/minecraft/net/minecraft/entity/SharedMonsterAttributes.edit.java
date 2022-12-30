@@ -12,13 +12,13 @@
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 
-> DELETE  11  @  8 : 10
+> DELETE  7  @  7 : 9
 
-> CHANGE  33 : 34  @  35 : 36
+> CHANGE  33 : 34  @  33 : 34
 
 ~ 			for (AttributeModifier attributemodifier : (Collection<AttributeModifier>) collection) {
 
-> CHANGE  58 : 60  @  58 : 59
+> CHANGE  57 : 59  @  57 : 58
 
 ~ 		EaglercraftUUID uuid = new EaglercraftUUID(parNBTTagCompound.getLong("UUIDMost"),
 ~ 				parNBTTagCompound.getLong("UUIDLeast"));

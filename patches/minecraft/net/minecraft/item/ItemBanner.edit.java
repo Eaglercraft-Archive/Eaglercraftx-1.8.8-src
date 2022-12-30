@@ -9,14 +9,14 @@
 
 ~ 
 
-> DELETE  4  @  5 : 9
+> DELETE  3  @  3 : 7
 
-> DELETE  2  @  6 : 7
+> DELETE  2  @  2 : 3
 
-> DELETE  3  @  4 : 5
+> DELETE  3  @  3 : 4
 
-> DELETE  24  @  25 : 27
+> DELETE  24  @  24 : 26
 
-> DELETE  1  @  3 : 19
+> DELETE  1  @  1 : 17
 
 > EOF

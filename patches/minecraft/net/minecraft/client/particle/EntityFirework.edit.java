@@ -10,9 +10,9 @@
 + import net.lax1dude.eaglercraft.v1_8.minecraft.IAcceleratedParticleEngine;
 + import net.lax1dude.eaglercraft.v1_8.opengl.WorldRenderer;
 
-> DELETE  3  @  1 : 5
+> DELETE  1  @  1 : 5
 
-> INSERT  64 : 73  @  68
+> INSERT  64 : 73  @  64
 
 + 
 + 		public boolean renderAccelerated(IAcceleratedParticleEngine accelerator, Entity var2, float f, float f1,
@@ -24,7 +24,7 @@
 + 			return true;
 + 		}
 
-> INSERT  231 : 232  @  222
+> INSERT  222 : 223  @  222
 
 + 				entityfirework$overlayfx.particleAlpha = 0.99f;
 

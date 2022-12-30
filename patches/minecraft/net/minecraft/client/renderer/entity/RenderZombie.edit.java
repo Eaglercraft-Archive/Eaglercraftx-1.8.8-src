@@ -7,15 +7,15 @@
 
 > DELETE  2  @  2 : 3
 
-> INSERT  1 : 4  @  2
+> INSERT  1 : 4  @  1
 
 + 
 + import com.google.common.collect.Lists;
 + 
 
-> DELETE  6  @  3 : 5
+> DELETE  3  @  3 : 5
 
-> CHANGE  25 : 27  @  27 : 29
+> CHANGE  25 : 27  @  25 : 27
 
 ~ 				this.field_177189_c = new ModelZombie(0.5F, false);
 ~ 				this.field_177186_d = new ModelZombie(1.0F, false);

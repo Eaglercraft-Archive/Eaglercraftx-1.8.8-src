@@ -7,15 +7,15 @@
 
 > DELETE  2  @  2 : 5
 
-> DELETE  3  @  6 : 7
+> DELETE  3  @  3 : 4
 
-> INSERT  2 : 3  @  3
+> INSERT  2 : 3  @  2
 
 + import java.nio.charset.StandardCharsets;
 
-> DELETE  3  @  2 : 3
+> DELETE  2  @  2 : 3
 
-> CHANGE  1 : 14  @  2 : 12
+> CHANGE  1 : 14  @  1 : 11
 
 ~ import java.util.Set;
 ~ 
@@ -31,25 +31,25 @@
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 
-> DELETE  20  @  17 : 21
+> DELETE  7  @  7 : 11
 
-> CHANGE  3 : 4  @  7 : 9
+> CHANGE  3 : 4  @  3 : 5
 
 ~ 
 
-> CHANGE  17 : 18  @  18 : 19
+> CHANGE  16 : 17  @  16 : 17
 
 ~ 	private final EaglercraftSoundManager sndManager;
 
-> CHANGE  5 : 6  @  5 : 6
+> CHANGE  4 : 5  @  4 : 5
 
 ~ 		this.sndManager = new EaglercraftSoundManager(gameSettingsIn, this);
 
-> CHANGE  13 : 14  @  13 : 14
+> CHANGE  12 : 13  @  12 : 13
 
 ~ 						for (Entry entry : (Set<Entry>) map.entrySet()) {
 
-> INSERT  15 : 25  @  15
+> INSERT  14 : 24  @  14
 
 + 	public static class SoundMap {
 + 
@@ -62,25 +62,25 @@
 + 	}
 + 
 
-> CHANGE  11 : 12  @  1 : 2
+> CHANGE  1 : 2  @  1 : 2
 
 ~ 		Map<String, SoundList> map = null;
 
-> CHANGE  2 : 6  @  2 : 3
+> CHANGE  1 : 5  @  1 : 2
 
 ~ 			map = JSONTypeProvider.deserialize(IOUtils.inputStreamToString(stream, StandardCharsets.UTF_8),
 ~ 					SoundMap.class).soundMap;
 ~ 		} catch (IOException e) {
 ~ 			throw new RuntimeException("Exception caught reading JSON", e);
 
-> INSERT  126 : 130  @  123
+> INSERT  122 : 126  @  122
 
 + 		if (category == SoundCategory.VOICE) {
 + 			PlatformAudio.setMicVol(volume);
 + 		}
 + 
 
-> CHANGE  17 : 23  @  13 : 15
+> CHANGE  13 : 19  @  13 : 15
 
 ~ 			SoundCategory cat = soundeventaccessorcomposite.getSoundCategory();
 ~ 			for (int i = 0; i < categories.length; ++i) {
@@ -89,7 +89,7 @@
 ~ 					break;
 ~ 				}
 
-> CHANGE  12 : 13  @  8 : 9
+> CHANGE  6 : 7  @  6 : 7
 
 ~ 			return (SoundEventAccessorComposite) arraylist.get((new EaglercraftRandom()).nextInt(arraylist.size()));
 

@@ -7,26 +7,26 @@
 
 > DELETE  2  @  2 : 3
 
-> CHANGE  1 : 5  @  2 : 5
+> CHANGE  1 : 5  @  1 : 4
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
 ~ import com.google.common.collect.Maps;
 ~ 
 
-> CHANGE  122 : 123  @  121 : 122
+> CHANGE  118 : 119  @  118 : 119
 
 ~ 	public int quantityDropped(EaglercraftRandom var1) {
 
-> CHANGE  8 : 9  @  8 : 9
+> CHANGE  7 : 8  @  7 : 8
 
 ~ 	public void updateTick(World world, BlockPos blockpos, IBlockState iblockstate, EaglercraftRandom random) {
 
-> CHANGE  107 : 108  @  107 : 108
+> CHANGE  106 : 107  @  106 : 107
 
 ~ 	private void catchOnFire(World worldIn, BlockPos pos, int chance, EaglercraftRandom random, int age) {
 
-> CHANGE  78 : 79  @  78 : 79
+> CHANGE  77 : 78  @  77 : 78
 
 ~ 	public void randomDisplayTick(World world, BlockPos blockpos, IBlockState var3, EaglercraftRandom random) {
 

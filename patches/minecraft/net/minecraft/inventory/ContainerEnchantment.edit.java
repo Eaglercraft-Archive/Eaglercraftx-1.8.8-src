@@ -10,24 +10,24 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
 
-> DELETE  8  @  7 : 12
+> DELETE  6  @  6 : 11
 
-> DELETE  2  @  7 : 8
+> DELETE  2  @  2 : 3
 
-> CHANGE  7 : 8  @  8 : 9
+> CHANGE  7 : 8  @  7 : 8
 
 ~ 	private EaglercraftRandom rand;
 
-> CHANGE  20 : 21  @  20 : 21
+> CHANGE  19 : 20  @  19 : 20
 
 ~ 		this.rand = new EaglercraftRandom();
 
-> CHANGE  77 : 78  @  77 : 146
+> CHANGE  76 : 77  @  76 : 145
 
 ~ 			if (!(itemstack != null && itemstack.isItemEnchantable())) {
 
-> DELETE  19  @  87 : 119
+> DELETE  18  @  18 : 50
 
-> DELETE  21  @  53 : 66
+> DELETE  21  @  21 : 34
 
 > EOF

@@ -10,9 +10,9 @@
 + 
 + import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 
-> DELETE  3  @  1 : 2
+> DELETE  1  @  1 : 2
 
-> INSERT  44 : 45  @  45
+> INSERT  44 : 45  @  44
 
 + 			GlStateManager.enableAlpha();
 

@@ -7,7 +7,7 @@
 
 > DELETE  2  @  2 : 4
 
-> INSERT  4 : 9  @  6
+> INSERT  4 : 9  @  4
 
 + 
 + import com.google.common.collect.Lists;
@@ -15,11 +15,11 @@
 + 
 + import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 
-> DELETE  7  @  2 : 3
+> DELETE  2  @  2 : 3
 
-> DELETE  1  @  2 : 3
+> DELETE  1  @  1 : 2
 
-> CHANGE  95 : 96  @  96 : 97
+> CHANGE  95 : 96  @  95 : 96
 
 ~ 				for (TileEntityBanner.EnumBannerPattern tileentitybanner$enumbannerpattern : (List<TileEntityBanner.EnumBannerPattern>) list1) {
 

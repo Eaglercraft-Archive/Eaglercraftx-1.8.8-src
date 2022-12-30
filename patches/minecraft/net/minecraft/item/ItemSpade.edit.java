@@ -7,19 +7,19 @@
 
 > DELETE  2  @  2 : 3
 
-> INSERT  1 : 4  @  2
+> INSERT  1 : 4  @  1
 
 + 
 + import com.google.common.collect.Sets;
 + 
 
-> DELETE  5  @  2 : 4
+> DELETE  2  @  2 : 4
 
-> CHANGE  2 : 3  @  4 : 7
+> CHANGE  2 : 3  @  2 : 5
 
 ~ 	private static Set<Block> EFFECTIVE_ON;
 
-> INSERT  2 : 7  @  4
+> INSERT  1 : 6  @  1
 
 + 	public static void bootstrap() {
 + 		EFFECTIVE_ON = Sets.newHashSet(new Block[] { Blocks.clay, Blocks.dirt, Blocks.farmland, Blocks.grass,

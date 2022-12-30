@@ -11,24 +11,24 @@
 ~ 
 ~ import net.lax1dude.eaglercraft.v1_8.json.JSONTypeProvider;
 
-> DELETE  8  @  13 : 15
+> DELETE  5  @  5 : 7
 
-> DELETE  1  @  3 : 9
+> DELETE  1  @  1 : 7
 
-> DELETE  4  @  10 : 12
+> DELETE  4  @  4 : 6
 
-> CHANGE  2 : 3  @  4 : 5
+> CHANGE  2 : 3  @  2 : 3
 
 ~ 	public <T extends IMetadataSection> T parseMetadataSection(String parString1, JSONObject parJsonObject) {
 
-> CHANGE  5 : 6  @  5 : 6
+> CHANGE  4 : 5  @  4 : 5
 
 ~ 		} else if (parJsonObject.optJSONObject(parString1) == null) {
 
-> CHANGE  9 : 10  @  9 : 10
+> CHANGE  8 : 9  @  8 : 9
 
 ~ 				return (T) ((IMetadataSection) JSONTypeProvider.deserialize(parJsonObject.getJSONObject(parString1),
 
-> DELETE  6  @  6 : 14
+> DELETE  5  @  5 : 13
 
 > EOF

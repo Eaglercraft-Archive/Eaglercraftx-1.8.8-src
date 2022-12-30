@@ -7,7 +7,7 @@
 
 > DELETE  2  @  2 : 4
 
-> CHANGE  4 : 10  @  6 : 10
+> CHANGE  4 : 10  @  4 : 8
 
 ~ 
 ~ import com.google.common.collect.Lists;
@@ -16,81 +16,81 @@
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 
-> DELETE  72  @  70 : 72
+> DELETE  66  @  66 : 68
 
-> INSERT  4 : 6  @  6
+> INSERT  4 : 6  @  4
 
 + 	private static final Map<String, EntityConstructor<? extends Entity>> stringToConstructorMapping = Maps
 + 			.newHashMap();
 
-> INSERT  4 : 5  @  2
+> INSERT  2 : 3  @  2
 
 + 	private static final Map<Integer, EntityConstructor<? extends Entity>> idToConstructorMapping = Maps.newHashMap();
 
-> CHANGE  5 : 7  @  4 : 5
+> CHANGE  4 : 6  @  4 : 5
 
 ~ 	private static void addMapping(Class<? extends Entity> entityClass,
 ~ 			EntityConstructor<? extends Entity> entityConstructor, String entityName, int id) {
 
-> INSERT  12 : 13  @  11
+> INSERT  10 : 11  @  10
 
 + 			stringToConstructorMapping.put(entityName, entityConstructor);
 
-> INSERT  3 : 4  @  2
+> INSERT  2 : 3  @  2
 
 + 			idToConstructorMapping.put(Integer.valueOf(id), entityConstructor);
 
-> CHANGE  6 : 8  @  5 : 6
+> CHANGE  5 : 7  @  5 : 6
 
 ~ 	private static void addMapping(Class<? extends Entity> entityClass,
 ~ 			EntityConstructor<? extends Entity> entityConstructor, String entityName, int entityID, int baseColor,
 
-> CHANGE  3 : 4  @  2 : 3
+> CHANGE  1 : 2  @  1 : 2
 
 ~ 		addMapping(entityClass, entityConstructor, entityName, entityID);
 
-> CHANGE  8 : 11  @  8 : 12
+> CHANGE  7 : 10  @  7 : 11
 
 ~ 			EntityConstructor<? extends Entity> constructor = stringToConstructorMapping.get(entityName);
 ~ 			if (constructor != null) {
 ~ 				entity = constructor.createEntity(worldIn);
 
-> CHANGE  5 : 6  @  6 : 7
+> CHANGE  2 : 3  @  2 : 3
 
 ~ 			logger.error("Could not create entity", exception);
 
-> CHANGE  14 : 17  @  14 : 18
+> CHANGE  13 : 16  @  13 : 17
 
 ~ 			EntityConstructor<? extends Entity> constructor = stringToConstructorMapping.get(nbt.getString("id"));
 ~ 			if (constructor != null) {
 ~ 				entity = constructor.createEntity(worldIn);
 
-> CHANGE  5 : 6  @  6 : 7
+> CHANGE  2 : 3  @  2 : 3
 
 ~ 			logger.error("Could not create entity", exception);
 
-> CHANGE  16 : 19  @  16 : 20
+> CHANGE  15 : 18  @  15 : 19
 
 ~ 			EntityConstructor<? extends Entity> constructor = getConstructorFromID(entityID);
 ~ 			if (constructor != null) {
 ~ 				entity = constructor.createEntity(worldIn);
 
-> CHANGE  5 : 6  @  6 : 7
+> CHANGE  2 : 3  @  2 : 3
 
 ~ 			logger.error("Could not create entity", exception);
 
-> INSERT  19 : 23  @  19
+> INSERT  18 : 22  @  18
 
 + 	public static EntityConstructor<? extends Entity> getConstructorFromID(int entityID) {
 + 		return idToConstructorMapping.get(Integer.valueOf(entityID));
 + 	}
 + 
 
-> CHANGE  21 : 22  @  17 : 18
+> CHANGE  17 : 18  @  17 : 18
 
 ~ 		Set<String> set = stringToClassMapping.keySet();
 
-> CHANGE  30 : 99  @  30 : 92
+> CHANGE  29 : 98  @  29 : 91
 
 ~ 		addMapping(EntityItem.class, (w) -> new EntityItem(w), "Item", 1);
 ~ 		addMapping(EntityXPOrb.class, (w) -> new EntityXPOrb(w), "XPOrb", 2);

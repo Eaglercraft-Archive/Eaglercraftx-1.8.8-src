@@ -7,9 +7,9 @@
 
 > DELETE  2  @  2 : 4
 
-> DELETE  6  @  8 : 14
+> DELETE  6  @  6 : 12
 
-> INSERT  1 : 6  @  7
+> INSERT  1 : 6  @  1
 
 + import com.google.common.collect.Iterators;
 + import com.google.common.collect.Lists;
@@ -17,11 +17,11 @@
 + import net.lax1dude.eaglercraft.v1_8.HString;
 + 
 
-> CHANGE  63 : 64  @  58 : 59
+> CHANGE  58 : 59  @  58 : 59
 
 ~ 							HString.format(format.substring(j, k), new Object[0]));
 
-> CHANGE  26 : 27  @  26 : 27
+> CHANGE  25 : 26  @  25 : 26
 
 ~ 						HString.format(format.substring(j), new Object[0]));
 

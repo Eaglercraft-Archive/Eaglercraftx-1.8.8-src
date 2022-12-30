@@ -7,13 +7,13 @@
 
 > DELETE  2  @  2 : 4
 
-> DELETE  24  @  26 : 49
+> DELETE  24  @  24 : 47
 
-> CHANGE  12 : 13  @  35 : 36
+> CHANGE  12 : 13  @  12 : 13
 
 ~ 		return this.dataWatcher.getWatchableObjectByte(12);
 
-> CHANGE  53 : 60  @  53 : 64
+> CHANGE  52 : 59  @  52 : 63
 
 ~ 		if (this.field_175503_c > 0) {
 ~ 			if (this.field_175503_c % 4 == 0) {
@@ -23,11 +23,11 @@
 ~ 						this.posZ + (double) (this.rand.nextFloat() * this.width * 2.0F) - (double) this.width, 0.0D,
 ~ 						0.0D, 0.0D, new int[0]);
 
-> CHANGE  9 : 10  @  13 : 26
+> CHANGE  2 : 3  @  2 : 15
 
 ~ 			--this.field_175503_c;
 
-> INSERT  3 : 4  @  15
+> INSERT  2 : 3  @  2
 
 + 		this.setScaleForAge(this.isChild());
 

@@ -11,6 +11,6 @@
 + import org.apache.commons.lang3.StringUtils;
 + 
 
-> DELETE  7  @  4 : 5
+> DELETE  4  @  4 : 5
 
 > EOF

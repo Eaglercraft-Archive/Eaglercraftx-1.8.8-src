@@ -9,12 +9,12 @@
 
 + 
 
-> DELETE  2  @  1 : 6
+> DELETE  1  @  1 : 6
 
-> DELETE  3  @  8 : 9
+> DELETE  3  @  3 : 4
 
-> DELETE  57  @  58 : 62
+> DELETE  57  @  57 : 61
 
-> DELETE  28  @  32 : 39
+> DELETE  28  @  28 : 35
 
 > EOF

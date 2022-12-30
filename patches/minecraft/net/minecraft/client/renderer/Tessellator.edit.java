@@ -11,7 +11,7 @@
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.WorldRenderer;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.WorldVertexBufferUploader;
 
-> INSERT  7 : 16  @  6
+> INSERT  4 : 13  @  4
 
 + 
 + 	public static final int GL_TRIANGLES = RealOpenGLEnums.GL_TRIANGLES;

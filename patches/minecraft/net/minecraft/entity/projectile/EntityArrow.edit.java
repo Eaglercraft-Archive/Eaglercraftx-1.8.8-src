@@ -9,14 +9,14 @@
 
 + 
 
-> DELETE  10  @  9 : 12
+> DELETE  9  @  9 : 12
 
-> DELETE  1  @  4 : 5
+> DELETE  1  @  1 : 2
 
-> DELETE  250  @  251 : 255
+> DELETE  250  @  250 : 254
 
-> DELETE  17  @  21 : 28
+> DELETE  17  @  17 : 24
 
-> DELETE  141  @  148 : 167
+> DELETE  141  @  141 : 160
 
 > EOF

@@ -9,13 +9,13 @@
 
 ~ 
 
-> DELETE  4  @  4 : 5
+> DELETE  3  @  3 : 4
 
-> CHANGE  3 : 4  @  4 : 5
+> CHANGE  3 : 4  @  3 : 4
 
 ~ 	// private PublicKey publicKey;
 
-> CHANGE  6 : 11  @  6 : 11
+> CHANGE  5 : 10  @  5 : 10
 
 ~ //	public S01PacketEncryptionRequest(String serverId, PublicKey key, byte[] verifyToken) {
 ~ //		this.hashedServerId = serverId;
@@ -23,19 +23,19 @@
 ~ //		this.verifyToken = verifyToken;
 ~ //	}
 
-> CHANGE  8 : 11  @  8 : 9
+> CHANGE  3 : 6  @  3 : 4
 
 ~ 		// this.publicKey =
 ~ 		// CryptManager.decodePublicKey(parPacketBuffer.readByteArray());
 ~ 		parPacketBuffer.readByteArray(); // skip
 
-> CHANGE  7 : 10  @  5 : 8
+> CHANGE  4 : 7  @  4 : 7
 
 ~ //		parPacketBuffer.writeString(this.hashedServerId);
 ~ //		parPacketBuffer.writeByteArray(this.publicKey.getEncoded());
 ~ //		parPacketBuffer.writeByteArray(this.verifyToken);
 
-> CHANGE  13 : 16  @  13 : 16
+> CHANGE  10 : 13  @  10 : 13
 
 ~ //	public PublicKey getPublicKey() {
 ~ //		return this.publicKey;

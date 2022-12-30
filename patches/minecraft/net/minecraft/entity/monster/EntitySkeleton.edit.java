@@ -9,24 +9,24 @@
 
 + 
 
-> DELETE  11  @  10 : 25
+> DELETE  10  @  10 : 25
 
-> DELETE  14  @  29 : 30
+> DELETE  14  @  14 : 15
 
-> DELETE  2  @  3 : 6
+> DELETE  2  @  2 : 5
 
-> DELETE  3  @  6 : 20
+> DELETE  3  @  3 : 17
 
-> DELETE  45  @  59 : 73
+> DELETE  45  @  45 : 59
 
-> CHANGE  1 : 2  @  15 : 25
+> CHANGE  1 : 2  @  1 : 11
 
 ~ 		if (this.getSkeletonType() == 1) {
 
-> DELETE  77  @  86 : 96
+> DELETE  76  @  76 : 86
 
-> DELETE  15  @  25 : 34
+> DELETE  15  @  15 : 24
 
-> DELETE  56  @  65 : 73
+> DELETE  56  @  56 : 64
 
 > EOF

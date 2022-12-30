@@ -12,7 +12,7 @@
 ~ eaglercraft.recording.start=Record Screen...
 ~ eaglercraft.soundCategory.voice=Voice
 
-> INSERT  5 : 72  @  8
+> INSERT  1 : 68  @  1
 
 + eaglercraft.resourcePack.prompt.title=What do you want to do with '%s'?
 + eaglercraft.resourcePack.prompt.text=Tip: Hold Shift to skip this screen when selecting a resource pack!
@@ -82,11 +82,11 @@
 + eaglercraft.auth.continue=Join Server
 + 
 
-> CHANGE  535 : 536  @  468 : 469
+> CHANGE  468 : 469  @  468 : 469
 
 ~ resourcePack.openFolder=Open resource pack
 
-> CHANGE  4 : 5  @  4 : 5
+> CHANGE  3 : 4  @  3 : 4
 
 ~ resourcePack.folderInfo=(Select resource pack files here)
 

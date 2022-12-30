@@ -9,8 +9,8 @@
 
 + 
 
-> DELETE  6  @  5 : 7
+> DELETE  5  @  5 : 7
 
-> DELETE  73  @  75 : 79
+> DELETE  73  @  73 : 77
 
 > EOF

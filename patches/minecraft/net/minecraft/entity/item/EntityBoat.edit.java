@@ -7,26 +7,26 @@
 
 > DELETE  2  @  2 : 3
 
-> DELETE  6  @  7 : 9
+> DELETE  6  @  6 : 8
 
-> DELETE  3  @  5 : 7
+> DELETE  3  @  3 : 5
 
-> DELETE  62  @  64 : 97
+> DELETE  62  @  62 : 95
 
-> CHANGE  109 : 110  @  142 : 143
+> CHANGE  109 : 110  @  109 : 110
 
 ~ 		if (this.isBoatEmpty) {
 
-> CHANGE  94 : 95  @  94 : 108
+> CHANGE  93 : 94  @  93 : 107
 
 ~ 			if (!(this.isCollidedHorizontally && d9 > 0.2975D)) {
 
-> DELETE  25  @  38 : 55
+> DELETE  24  @  24 : 41
 
-> CHANGE  19 : 20  @  36 : 46
+> CHANGE  19 : 20  @  19 : 29
 
 ~ 		return true;
 
-> DELETE  7  @  16 : 29
+> DELETE  6  @  6 : 19
 
 > EOF

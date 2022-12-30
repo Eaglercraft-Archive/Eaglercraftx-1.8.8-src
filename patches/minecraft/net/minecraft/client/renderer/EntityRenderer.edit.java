@@ -9,12 +9,12 @@
 
 ~ import net.lax1dude.eaglercraft.v1_8.internal.buffer.FloatBuffer;
 
-> CHANGE  2 : 4  @  6 : 7
+> CHANGE  1 : 3  @  1 : 2
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ import net.lax1dude.eaglercraft.v1_8.HString;
 
-> INSERT  3 : 16  @  2
+> INSERT  1 : 14  @  1
 
 + 
 + import com.google.common.base.Predicate;
@@ -30,23 +30,23 @@
 + import net.lax1dude.eaglercraft.v1_8.opengl.OpenGlHelper;
 + import net.lax1dude.eaglercraft.v1_8.opengl.WorldRenderer;
 
-> DELETE  23  @  10 : 19
+> DELETE  10  @  10 : 19
 
-> DELETE  7  @  16 : 18
+> DELETE  7  @  7 : 9
 
-> DELETE  7  @  9 : 12
+> DELETE  7  @  7 : 10
 
-> DELETE  20  @  23 : 30
+> DELETE  20  @  20 : 27
 
-> CHANGE  9 : 10  @  16 : 17
+> CHANGE  9 : 10  @  9 : 10
 
 ~ 	private EaglercraftRandom random = new EaglercraftRandom();
 
-> DELETE  44  @  44 : 45
+> DELETE  43  @  43 : 44
 
-> DELETE  30  @  31 : 32
+> DELETE  30  @  30 : 31
 
-> INSERT  1 : 10  @  2
+> INSERT  1 : 10  @  1
 
 + 		GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
 + 		GlStateManager.matrixMode(5890);
@@ -58,51 +58,51 @@
 + 		GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
 + 
 
-> CHANGE  22 : 23  @  13 : 14
+> CHANGE  13 : 14  @  13 : 14
 
 ~ 		return false;
 
-> DELETE  4  @  4 : 10
+> DELETE  3  @  3 : 9
 
-> DELETE  7  @  13 : 28
+> DELETE  7  @  7 : 22
 
-> DELETE  3  @  18 : 33
+> DELETE  3  @  3 : 18
 
-> CHANGE  3 : 4  @  18 : 33
+> CHANGE  3 : 4  @  3 : 18
 
 ~ 		this.useShader = false;
 
-> DELETE  4  @  18 : 29
+> DELETE  3  @  3 : 14
 
-> DELETE  3  @  14 : 18
+> DELETE  3  @  3 : 7
 
-> DELETE  44  @  48 : 52
+> DELETE  44  @  44 : 48
 
-> DELETE  1  @  5 : 12
+> DELETE  1  @  1 : 8
 
-> CHANGE  118 : 119  @  125 : 126
+> CHANGE  118 : 119  @  118 : 119
 
 ~ 				f = this.mc.gameSettings.keyBindZoomCamera.isKeyDown() ? 17.0f : this.mc.gameSettings.fovSetting;
 
-> CHANGE  170 : 171  @  170 : 171
+> CHANGE  169 : 170  @  169 : 170
 
 ~ 		GlStateManager.gluPerspective(this.getFOVModifier(partialTicks, true),
 
-> CHANGE  2 : 3  @  2 : 3
+> CHANGE  1 : 2  @  1 : 2
 
 ~ 				this.farPlaneDistance * 2.0f * MathHelper.SQRT_2);
 
-> CHANGE  58 : 59  @  58 : 59
+> CHANGE  57 : 58  @  57 : 58
 
 ~ 			GlStateManager.gluPerspective(this.getFOVModifier(partialTicks, false),
 
-> DELETE  44  @  44 : 56
+> DELETE  43  @  43 : 55
 
-> CHANGE  121 : 122  @  133 : 134
+> CHANGE  121 : 122  @  121 : 122
 
 ~ 					this.lightmapColors[i] = short1 << 24 | j | k << 8 | l << 16;
 
-> INSERT  4 : 18  @  4
+> INSERT  3 : 17  @  3
 
 + 
 + 				GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
@@ -119,35 +119,35 @@
 + 				GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
 + 
 
-> DELETE  37  @  23 : 28
+> DELETE  23  @  23 : 28
 
-> INSERT  4 : 7  @  9
+> INSERT  4 : 7  @  4
 
 + 			if (this.mc.gameSettings.keyBindZoomCamera.isKeyDown()) {
 + 				f *= 0.7f;
 + 			}
 
-> DELETE  42  @  39 : 52
+> DELETE  39  @  39 : 52
 
-> CHANGE  28 : 29  @  41 : 42
+> CHANGE  28 : 29  @  28 : 29
 
 ~ 							return EntityRenderer.this.mc.currentScreen.getClass().getName();
 
-> CHANGE  5 : 6  @  5 : 6
+> CHANGE  4 : 5  @  4 : 5
 
 ~ 							return HString.format("Scaled: (%d, %d). Absolute: (%d, %d)",
 
-> CHANGE  7 : 8  @  7 : 8
+> CHANGE  6 : 7  @  6 : 7
 
 ~ 							return HString.format("Scaled: (%d, %d). Absolute: (%d, %d). Scale factor of %d",
 
-> DELETE  16  @  16 : 18
+> DELETE  15  @  15 : 17
 
-> CHANGE  32 : 33  @  34 : 35
+> CHANGE  32 : 33  @  32 : 33
 
 ~ 			EaglercraftGPU.glLineWidth(1.0F);
 
-> INSERT  26 : 33  @  26
+> INSERT  25 : 32  @  25
 
 + 
 + 		boolean fxaa = (this.mc.gameSettings.fxaa == 0 && this.mc.gameSettings.fancyGraphics)
@@ -157,76 +157,76 @@
 + 		}
 + 
 
-> INSERT  23 : 27  @  16
+> INSERT  16 : 20  @  16
 
 + 		if (fxaa) {
 + 			EffectPipelineFXAA.end();
 + 		}
 + 
 
-> CHANGE  33 : 35  @  29 : 31
+> CHANGE  29 : 31  @  29 : 31
 
 ~ 			GlStateManager.gluPerspective(this.getFOVModifier(partialTicks, true),
 ~ 					(float) this.mc.displayWidth / (float) this.mc.displayHeight, 0.05F, this.farPlaneDistance * 4.0F);
 
-> CHANGE  6 : 7  @  6 : 7
+> CHANGE  4 : 5  @  4 : 5
 
 ~ 			GlStateManager.gluPerspective(this.getFOVModifier(partialTicks, true),
 
-> INSERT  28 : 29  @  28
+> INSERT  27 : 28  @  27
 
 + 		GlStateManager.disableBlend();
 
-> DELETE  7  @  6 : 7
+> DELETE  6  @  6 : 7
 
-> INSERT  1 : 2  @  2
+> INSERT  1 : 2  @  1
 
 + 		GlStateManager.shadeModel(7424);
 
-> CHANGE  92 : 93  @  91 : 92
+> CHANGE  91 : 92  @  91 : 92
 
 ~ 			GlStateManager.gluPerspective(this.getFOVModifier(partialTicks, true),
 
-> CHANGE  10 : 11  @  10 : 11
+> CHANGE  9 : 10  @  9 : 10
 
 ~ 			GlStateManager.gluPerspective(this.getFOVModifier(partialTicks, true),
 
-> CHANGE  88 : 89  @  88 : 89
+> CHANGE  87 : 88  @  87 : 88
 
 ~ 			EaglercraftGPU.glNormal3f(0.0F, 1.0F, 0.0F);
 
-> CHANGE  48 : 49  @  48 : 49
+> CHANGE  47 : 48  @  47 : 48
 
 ~ 							if (f2 >= 0.15F) {
 
-> CHANGE  237 : 238  @  237 : 238
+> CHANGE  236 : 237  @  236 : 237
 
 ~ 		GlStateManager.clearColor(this.fogColorRed, this.fogColorGreen, this.fogColorBlue, 1.0F);
 
-> CHANGE  10 : 13  @  10 : 12
+> CHANGE  9 : 12  @  9 : 11
 
 ~ 		EaglercraftGPU.glFog(GL_FOG_COLOR,
 ~ 				this.setFogColorBuffer(this.fogColorRed, this.fogColorGreen, this.fogColorBlue, 1.0F));
 ~ 		EaglercraftGPU.glNormal3f(0.0F, -1.0F, 0.0F);
 
-> CHANGE  20 : 21  @  19 : 23
+> CHANGE  17 : 18  @  17 : 21
 
 ~ 			EaglercraftGPU.glFogi('\u855a', '\u855b');
 
-> INSERT  15 : 18  @  18
+> INSERT  14 : 17  @  14
 
 + 		} else if (!this.mc.gameSettings.fog) {
 + 			GlStateManager.setFog(2048);
 + 			GlStateManager.setFogDensity(0.0F);
 
-> INSERT  4 : 5  @  1
+> INSERT  1 : 2  @  1
 
 + 			GlStateManager.setFogDensity(0.001F);
 
-> CHANGE  11 : 12  @  10 : 13
+> CHANGE  10 : 11  @  10 : 13
 
 ~ 			EaglercraftGPU.glFogi('\u855a', '\u855b');
 
-> DELETE  10  @  12 : 13
+> DELETE  9  @  9 : 10
 
 > EOF

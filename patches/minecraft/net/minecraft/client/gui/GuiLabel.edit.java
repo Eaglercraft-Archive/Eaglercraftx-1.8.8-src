@@ -7,13 +7,13 @@
 
 > DELETE  2  @  2 : 3
 
-> INSERT  1 : 5  @  2
+> INSERT  1 : 5  @  1
 
 + 
 + import com.google.common.collect.Lists;
 + 
 + import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 
-> DELETE  5  @  1 : 4
+> DELETE  1  @  1 : 4
 
 > EOF

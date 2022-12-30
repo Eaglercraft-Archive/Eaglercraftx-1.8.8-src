@@ -7,13 +7,13 @@
 
 > DELETE  2  @  2 : 7
 
-> DELETE  1  @  6 : 9
+> DELETE  1  @  1 : 4
 
-> DELETE  13  @  16 : 35
+> DELETE  13  @  13 : 32
 
-> DELETE  19  @  38 : 45
+> DELETE  19  @  19 : 26
 
-> CHANGE  4 : 5  @  11 : 23
+> CHANGE  4 : 5  @  4 : 16
 
 ~ 			this.worldObj.setLastLightningBolt(2);
 

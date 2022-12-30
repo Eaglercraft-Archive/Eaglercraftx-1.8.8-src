@@ -9,11 +9,11 @@
 
 + 
 
-> DELETE  11  @  10 : 13
+> DELETE  10  @  10 : 13
 
-> DELETE  28  @  31 : 35
+> DELETE  28  @  28 : 32
 
-> CHANGE  36 : 37  @  40 : 49
+> CHANGE  36 : 37  @  36 : 45
 
 ~ 			if (igrowable.canGrow(worldIn, target, iblockstate, true)) {
 

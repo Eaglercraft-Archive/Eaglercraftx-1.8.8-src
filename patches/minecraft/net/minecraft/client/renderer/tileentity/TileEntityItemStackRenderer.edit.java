@@ -12,9 +12,9 @@
 ~ import net.lax1dude.eaglercraft.v1_8.mojang.authlib.GameProfile;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 
-> DELETE  5  @  3 : 6
+> DELETE  1  @  1 : 4
 
-> CHANGE  31 : 32  @  34 : 35
+> CHANGE  31 : 32  @  31 : 32
 
 ~ 					gameprofile = new GameProfile((EaglercraftUUID) null, nbttagcompound.getString("SkullOwner"));
 

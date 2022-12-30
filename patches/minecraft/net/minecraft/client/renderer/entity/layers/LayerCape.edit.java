@@ -9,18 +9,18 @@
 
 + import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 
-> CHANGE  2 : 3  @  1 : 2
+> CHANGE  1 : 2  @  1 : 2
 
 ~ import net.minecraft.client.model.ModelPlayer;
 
-> DELETE  2  @  2 : 3
+> DELETE  1  @  1 : 2
 
-> CHANGE  14 : 16  @  15 : 16
+> CHANGE  14 : 16  @  14 : 15
 
 ~ 				&& abstractclientplayer.getLocationCape() != null
 ~ 				&& this.playerRenderer.getMainModel() instanceof ModelPlayer) {
 
-> CHANGE  44 : 45  @  43 : 44
+> CHANGE  42 : 43  @  42 : 43
 
 ~ 			((ModelPlayer) this.playerRenderer.getMainModel()).renderCape(0.0625F);
 

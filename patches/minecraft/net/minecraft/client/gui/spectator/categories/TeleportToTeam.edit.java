@@ -7,7 +7,7 @@
 
 > DELETE  2  @  2 : 3
 
-> CHANGE  1 : 6  @  2 : 3
+> CHANGE  1 : 6  @  1 : 2
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
@@ -15,18 +15,18 @@
 ~ 
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 
-> DELETE  13  @  9 : 10
+> DELETE  8  @  8 : 9
 
-> DELETE  1  @  2 : 3
+> DELETE  1  @  1 : 2
 
-> INSERT  66 : 70  @  67
+> INSERT  66 : 70  @  66
 
 + 			this.field_178677_c = DefaultPlayerSkin.getDefaultSkinLegacy();
 + 
 + 			// TODO: program team skins
 + 
 
-> CHANGE  5 : 10  @  1 : 5
+> CHANGE  1 : 6  @  1 : 5
 
 ~ 				// String s1 = ((NetworkPlayerInfo) this.field_178675_d
 ~ 				// .get((new
@@ -34,7 +34,7 @@
 ~ 				// this.field_178677_c = AbstractClientPlayer.getLocationSkin(s1);
 ~ 				// AbstractClientPlayer.getDownloadImageSkin(this.field_178677_c, s1);
 
-> CHANGE  6 : 7  @  5 : 6
+> CHANGE  1 : 2  @  1 : 2
 
 ~ 				// this.field_178677_c = DefaultPlayerSkin.getDefaultSkinLegacy();
 

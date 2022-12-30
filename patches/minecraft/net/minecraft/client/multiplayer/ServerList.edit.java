@@ -10,7 +10,7 @@
 ~ import java.io.ByteArrayOutputStream;
 ~ import java.util.Iterator;
 
-> INSERT  3 : 16  @  3
+> INSERT  1 : 14  @  1
 
 + 
 + import com.google.common.collect.Lists;
@@ -26,25 +26,25 @@
 + import net.lax1dude.eaglercraft.v1_8.socket.RateLimitTracker;
 + import net.lax1dude.eaglercraft.v1_8.socket.ServerQueryDispatch;
 
-> CHANGE  14 : 15  @  1 : 2
+> CHANGE  1 : 2  @  1 : 2
 
 ~ import net.minecraft.client.renderer.texture.TextureManager;
 
-> CHANGE  4 : 5  @  4 : 6
+> CHANGE  3 : 4  @  3 : 5
 
 ~ import net.minecraft.util.EnumChatFormatting;
 
-> INSERT  5 : 6  @  6
+> INSERT  4 : 5  @  4
 
 + 	private final List<ServerData> allServers = Lists.newArrayList();
 
-> CHANGE  3 : 6  @  2 : 3
+> CHANGE  2 : 5  @  2 : 3
 
 ~ 	private static ServerList instance = null;
 ~ 
 ~ 	private ServerList(Minecraft mcIn) {
 
-> INSERT  7 : 15  @  5
+> INSERT  4 : 12  @  4
 
 + 	public static void initServerList(Minecraft mc) {
 + 		instance = new ServerList(mc);
@@ -55,7 +55,7 @@
 + 	}
 + 
 
-> CHANGE  10 : 17  @  2 : 6
+> CHANGE  2 : 9  @  2 : 6
 
 ~ 			freeServerIcons();
 ~ 
@@ -65,11 +65,11 @@
 ~ 				dat.isDefault = true;
 ~ 				this.allServers.add(dat);
 
-> CHANGE  9 : 10  @  6 : 7
+> CHANGE  2 : 3  @  2 : 3
 
 ~ 			byte[] localStorage = EagRuntime.getStorage("s");
 
-> CHANGE  2 : 15  @  2 : 4
+> CHANGE  1 : 14  @  1 : 3
 
 ~ 			if (localStorage != null) {
 ~ 				NBTTagCompound nbttagcompound = CompressedStreamTools
@@ -85,22 +85,22 @@
 ~ 					this.allServers.add(srv);
 ~ 				}
 
-> INSERT  14 : 15  @  3
+> INSERT  1 : 2  @  1
 
 + 
 
-> INSERT  3 : 5  @  2
+> INSERT  2 : 4  @  2
 
 + 		} finally {
 + 			refreshServerPing();
 
-> CHANGE  11 : 14  @  9 : 10
+> CHANGE  9 : 12  @  9 : 10
 
 ~ 				if (!serverdata.isDefault) {
 ~ 					nbttaglist.appendTag(serverdata.getNBTCompound());
 ~ 				}
 
-> CHANGE  7 : 12  @  5 : 6
+> CHANGE  4 : 9  @  4 : 5
 
 ~ 
 ~ 			ByteArrayOutputStream bao = new ByteArrayOutputStream();
@@ -108,7 +108,7 @@
 ~ 			EagRuntime.setStorage("s", bao.toByteArray());
 ~ 
 
-> CHANGE  16 : 21  @  12 : 13
+> CHANGE  11 : 16  @  11 : 12
 
 ~ 		ServerData data = this.servers.remove(parInt1);
 ~ 		if (data != null && data.iconTextureObject != null) {
@@ -116,7 +116,7 @@
 ~ 			data.iconTextureObject = null;
 ~ 		}
 
-> INSERT  41 : 149  @  37
+> INSERT  36 : 144  @  36
 
 + 
 + 	public void freeServerIcons() {

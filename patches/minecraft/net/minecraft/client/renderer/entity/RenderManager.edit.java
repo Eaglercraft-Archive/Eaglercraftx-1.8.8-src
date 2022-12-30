@@ -7,7 +7,7 @@
 
 > DELETE  2  @  2 : 3
 
-> INSERT  1 : 7  @  2
+> INSERT  1 : 7  @  1
 
 + 
 + import com.google.common.collect.Maps;
@@ -16,22 +16,22 @@
 + import net.lax1dude.eaglercraft.v1_8.opengl.OpenGlHelper;
 + import net.lax1dude.eaglercraft.v1_8.opengl.WorldRenderer;
 
-> DELETE  22  @  16 : 18
+> DELETE  16  @  16 : 18
 
-> DELETE  2  @  4 : 5
+> DELETE  2  @  2 : 3
 
-> DELETE  1  @  2 : 56
+> DELETE  1  @  1 : 55
 
-> CHANGE  163 : 165  @  217 : 218
+> CHANGE  163 : 165  @  163 : 164
 
 ~ 		this.skinMap.put("slim", new RenderPlayer(this, true, false));
 ~ 		this.skinMap.put("zombie", new RenderPlayer(this, false, true));
 
-> CHANGE  13 : 14  @  12 : 13
+> CHANGE  11 : 12  @  11 : 12
 
 ~ 			render = this.getEntityClassRenderObject((Class<? extends Entity>) parClass1.getSuperclass());
 
-> CHANGE  7 : 8  @  7 : 8
+> CHANGE  6 : 7  @  6 : 7
 
 ~ 	public <T extends Entity> Render getEntityRenderObject(Entity entityIn) {
 

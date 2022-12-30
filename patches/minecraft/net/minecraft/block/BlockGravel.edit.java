@@ -10,7 +10,7 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
 
-> CHANGE  8 : 9  @  8 : 9
+> CHANGE  6 : 7  @  6 : 7
 
 ~ 	public Item getItemDropped(IBlockState var1, EaglercraftRandom random, int i) {
 

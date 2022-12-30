@@ -7,12 +7,12 @@
 
 > DELETE  2  @  2 : 7
 
-> CHANGE  6 : 8  @  11 : 12
+> CHANGE  6 : 8  @  6 : 7
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ import net.lax1dude.eaglercraft.v1_8.HString;
 
-> INSERT  4 : 18  @  3
+> INSERT  2 : 16  @  2
 
 + 
 + import com.google.common.collect.Lists;
@@ -29,52 +29,52 @@
 + import net.lax1dude.eaglercraft.v1_8.vector.Vector3f;
 + import net.lax1dude.eaglercraft.v1_8.vector.Vector4f;
 
-> DELETE  26  @  12 : 25
+> DELETE  12  @  12 : 25
 
-> DELETE  4  @  17 : 18
+> DELETE  4  @  4 : 5
 
-> DELETE  6  @  7 : 8
+> DELETE  6  @  6 : 7
 
-> DELETE  4  @  5 : 8
+> DELETE  4  @  4 : 7
 
-> DELETE  2  @  5 : 8
+> DELETE  2  @  2 : 5
 
-> DELETE  29  @  32 : 37
+> DELETE  29  @  29 : 34
 
-> DELETE  20  @  25 : 29
+> DELETE  20  @  20 : 24
 
-> CHANGE  3 : 4  @  7 : 10
+> CHANGE  3 : 4  @  3 : 6
 
 ~ 	private final EaglerTextureAtlasSprite[] destroyBlockIcons = new EaglerTextureAtlasSprite[10];
 
-> CHANGE  12 : 13  @  14 : 15
+> CHANGE  11 : 12  @  11 : 12
 
 ~ 	private final ChunkUpdateManager renderDispatcher = new ChunkUpdateManager();
 
-> CHANGE  23 : 25  @  23 : 25
+> CHANGE  22 : 24  @  22 : 24
 
 ~ 		EaglercraftGPU.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 ~ 		EaglercraftGPU.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-> CHANGE  4 : 7  @  4 : 16
+> CHANGE  2 : 5  @  2 : 14
 
 ~ 		this.vboEnabled = false;
 ~ 		this.renderContainer = new RenderList();
 ~ 		this.renderChunkFactory = new ListChunkFactory();
 
-> DELETE  22  @  31 : 35
+> DELETE  19  @  19 : 23
 
-> DELETE  1  @  5 : 26
+> DELETE  1  @  1 : 22
 
-> DELETE  3  @  24 : 30
+> DELETE  3  @  3 : 9
 
-> CHANGE  4 : 5  @  10 : 12
+> CHANGE  4 : 5  @  4 : 6
 
 ~ 		return false;
 
-> DELETE  6  @  7 : 10
+> DELETE  5  @  5 : 8
 
-> CHANGE  6 : 11  @  9 : 22
+> CHANGE  6 : 11  @  6 : 19
 
 ~ 		this.glSkyList2 = GLAllocation.generateDisplayLists();
 ~ 		EaglercraftGPU.glNewList(this.glSkyList2, GL_COMPILE);
@@ -82,9 +82,9 @@
 ~ 		tessellator.draw();
 ~ 		EaglercraftGPU.glEndList();
 
-> DELETE  11  @  19 : 22
+> DELETE  6  @  6 : 9
 
-> CHANGE  6 : 11  @  9 : 22
+> CHANGE  6 : 11  @  6 : 19
 
 ~ 		this.glSkyList = GLAllocation.generateDisplayLists();
 ~ 		EaglercraftGPU.glNewList(this.glSkyList, GL_COMPILE);
@@ -92,9 +92,9 @@
 ~ 		tessellator.draw();
 ~ 		EaglercraftGPU.glEndList();
 
-> DELETE  34  @  42 : 45
+> DELETE  29  @  29 : 32
 
-> CHANGE  6 : 13  @  9 : 24
+> CHANGE  6 : 13  @  6 : 21
 
 ~ 		this.starGLCallList = GLAllocation.generateDisplayLists();
 ~ 		GlStateManager.pushMatrix();
@@ -104,42 +104,42 @@
 ~ 		EaglercraftGPU.glEndList();
 ~ 		GlStateManager.popMatrix();
 
-> CHANGE  11 : 12  @  19 : 20
+> CHANGE  4 : 5  @  4 : 5
 
 ~ 		EaglercraftRandom random = new EaglercraftRandom(10842L);
 
-> DELETE  71  @  71 : 80
+> DELETE  70  @  70 : 79
 
-> DELETE  1  @  10 : 16
+> DELETE  1  @  1 : 7
 
-> DELETE  28  @  34 : 38
+> DELETE  28  @  28 : 32
 
-> DELETE  1  @  5 : 6
+> DELETE  1  @  1 : 2
 
-> DELETE  41  @  42 : 79
-
-> CHANGE  53 : 54  @  90 : 91
-
-~ 					for (TileEntity tileentity2 : (List<TileEntity>) list1) {
+> DELETE  41  @  41 : 78
 
 > CHANGE  53 : 54  @  53 : 54
 
+~ 					for (TileEntity tileentity2 : (List<TileEntity>) list1) {
+
+> CHANGE  52 : 53  @  52 : 53
+
 ~ 		return HString.format("C: %d/%d %sD: %d, %s",
 
-> DELETE  116  @  116 : 117
+> DELETE  115  @  115 : 116
 
-> CHANGE  2 : 3  @  3 : 4
+> CHANGE  2 : 3  @  2 : 3
 
 ~ 					if ((!flag1 || !renderglobal$containerlocalrenderinformation1.setFacing // TODO:
 
-> DELETE  23  @  23 : 24
+> DELETE  22  @  22 : 23
 
-> CHANGE  7 : 9  @  8 : 9
+> CHANGE  7 : 9  @  7 : 8
 
 ~ 				if (this.mc.gameSettings.chunkFix ? this.isPositionInRenderChunkHack(blockpos1, renderchunk4)
 ~ 						: this.isPositionInRenderChunk(blockpos, renderchunk4)) {
 
-> INSERT  23 : 33  @  22
+> INSERT  21 : 31  @  21
 
 + 	/**
 + 	 * WARNING: use only in the above "build near" logic
@@ -152,49 +152,49 @@
 + 	}
 + 
 
-> INSERT  39 : 40  @  29
+> INSERT  29 : 30  @  29
 
 + 		((ClippingHelperImpl) this.debugFixedClippingHelper).destroy();
 
-> DELETE  95  @  94 : 104
+> DELETE  94  @  94 : 104
 
-> DELETE  1  @  11 : 31
+> DELETE  1  @  1 : 21
 
-> CHANGE  93 : 94  @  113 : 123
+> CHANGE  93 : 94  @  93 : 103
 
 ~ 			GlStateManager.callList(this.glSkyList);
 
-> CHANGE  39 : 40  @  48 : 49
+> CHANGE  38 : 39  @  38 : 39
 
 ~ 							.pos((double) (f12 * 120.0F), (double) (f13 * 120.0F), (double) (f13 * 40.0F * afloat[3]))
 
-> CHANGE  43 : 44  @  43 : 53
+> CHANGE  42 : 43  @  42 : 52
 
 ~ 				GlStateManager.callList(this.starGLCallList);
 
-> CHANGE  14 : 15  @  23 : 33
+> CHANGE  13 : 14  @  13 : 23
 
 ~ 				GlStateManager.callList(this.glSkyList2);
 
-> CHANGE  373 : 374  @  382 : 383
+> CHANGE  372 : 373  @  372 : 373
 
 ~ 		this.displayListEntitiesDirty |= this.renderDispatcher.updateChunks(finishTimeNano);
 
-> DELETE  18  @  18 : 19
+> DELETE  17  @  17 : 18
 
-> CHANGE  175 : 176  @  176 : 177
+> CHANGE  175 : 176  @  175 : 176
 
 ~ 							EaglerTextureAtlasSprite textureatlassprite = this.destroyBlockIcons[i];
 
-> CHANGE  22 : 23  @  22 : 23
+> CHANGE  21 : 22  @  21 : 22
 
 ~ 			EaglercraftGPU.glLineWidth(2.0F);
 
-> CHANGE  241 : 242  @  241 : 242
+> CHANGE  240 : 241  @  240 : 241
 
 ~ 		EaglercraftRandom random = this.theWorld.rand;
 
-> INSERT  230 : 247  @  230
+> INSERT  229 : 246  @  229
 
 + 
 + 	public String getDebugInfoShort() {

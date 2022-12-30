@@ -7,18 +7,18 @@
 
 > DELETE  6  @  6 : 14
 
-> DELETE  1  @  9 : 14
+> DELETE  1  @  1 : 6
 
-> DELETE  6  @  11 : 12
+> DELETE  6  @  6 : 7
 
-> DELETE  25  @  26 : 38
+> DELETE  25  @  25 : 37
 
-> DELETE  3  @  15 : 27
+> DELETE  3  @  3 : 15
 
-> CHANGE  31 : 32  @  43 : 44
+> CHANGE  31 : 32  @  31 : 32
 
 ~ 		float f2 = 0.0F;
 
-> DELETE  64  @  64 : 68
+> DELETE  63  @  63 : 67
 
 > EOF

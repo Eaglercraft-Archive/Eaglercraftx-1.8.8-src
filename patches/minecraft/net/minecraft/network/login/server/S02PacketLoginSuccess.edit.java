@@ -7,17 +7,17 @@
 
 > DELETE  2  @  2 : 3
 
-> CHANGE  1 : 4  @  2 : 3
+> CHANGE  1 : 4  @  1 : 2
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
 ~ 
 ~ import net.lax1dude.eaglercraft.v1_8.mojang.authlib.GameProfile;
 
-> CHANGE  20 : 21  @  18 : 19
+> CHANGE  17 : 18  @  17 : 18
 
 ~ 		EaglercraftUUID uuid = EaglercraftUUID.fromString(s);
 
-> CHANGE  5 : 6  @  5 : 6
+> CHANGE  4 : 5  @  4 : 5
 
 ~ 		EaglercraftUUID uuid = this.profile.getId();
 

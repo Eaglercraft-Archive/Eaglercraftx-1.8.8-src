@@ -7,12 +7,12 @@
 
 > DELETE  2  @  2 : 4
 
-> DELETE  7  @  9 : 10
+> DELETE  7  @  7 : 8
 
-> DELETE  7  @  8 : 9
+> DELETE  7  @  7 : 8
 
-> DELETE  142  @  143 : 172
+> DELETE  142  @  142 : 171
 
-> DELETE  101  @  130 : 140
+> DELETE  101  @  101 : 111
 
 > EOF

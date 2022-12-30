@@ -10,7 +10,7 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
 
-> CHANGE  12 : 13  @  12 : 13
+> CHANGE  10 : 11  @  10 : 11
 
 ~ 	public int quantityDropped(EaglercraftRandom var1) {
 

@@ -7,36 +7,36 @@
 
 > DELETE  3  @  3 : 5
 
-> DELETE  2  @  4 : 5
+> DELETE  2  @  2 : 3
 
-> DELETE  2  @  3 : 18
+> DELETE  2  @  2 : 17
 
-> DELETE  6  @  21 : 24
+> DELETE  6  @  6 : 9
 
-> DELETE  2  @  5 : 8
+> DELETE  2  @  2 : 5
 
-> DELETE  4  @  7 : 8
+> DELETE  4  @  4 : 5
 
-> DELETE  12  @  13 : 29
+> DELETE  12  @  12 : 28
 
-> DELETE  2  @  18 : 23
+> DELETE  2  @  2 : 7
 
-> DELETE  9  @  14 : 19
+> DELETE  9  @  9 : 14
 
-> DELETE  7  @  12 : 13
+> DELETE  7  @  7 : 8
 
-> DELETE  22  @  23 : 78
+> DELETE  22  @  22 : 77
 
-> DELETE  3  @  58 : 80
+> DELETE  3  @  3 : 25
 
-> DELETE  3  @  25 : 29
+> DELETE  3  @  3 : 7
 
-> DELETE  106  @  110 : 121
+> DELETE  106  @  106 : 117
 
-> DELETE  23  @  34 : 38
+> DELETE  23  @  23 : 27
 
-> DELETE  24  @  28 : 141
+> DELETE  24  @  24 : 137
 
-> DELETE  33  @  146 : 193
+> DELETE  33  @  33 : 80
 
 > EOF

@@ -10,21 +10,21 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
 ~ 
 
-> INSERT  4 : 7  @  5
+> INSERT  2 : 5  @  2
 
 + import net.lax1dude.eaglercraft.v1_8.ThreadLocalRandom;
 + import net.minecraft.util.MathHelper;
 + 
 
-> CHANGE  7 : 8  @  4 : 5
+> CHANGE  4 : 5  @  4 : 5
 
 ~ 	private final EaglercraftUUID id;
 
-> CHANGE  7 : 8  @  7 : 8
+> CHANGE  6 : 7  @  6 : 7
 
 ~ 	public AttributeModifier(EaglercraftUUID idIn, String nameIn, double amountIn, int operationIn) {
 
-> CHANGE  10 : 11  @  10 : 11
+> CHANGE  9 : 10  @  9 : 10
 
 ~ 	public EaglercraftUUID getID() {
 

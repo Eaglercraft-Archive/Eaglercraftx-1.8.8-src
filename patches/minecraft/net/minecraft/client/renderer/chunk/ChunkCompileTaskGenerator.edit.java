@@ -7,57 +7,57 @@
 
 > DELETE  2  @  2 : 3
 
-> CHANGE  1 : 4  @  2 : 3
+> CHANGE  1 : 4  @  1 : 2
 
 ~ 
 ~ import com.google.common.collect.Lists;
 ~ 
 
-> CHANGE  4 : 5  @  2 : 4
+> CHANGE  1 : 2  @  1 : 3
 
 ~ import net.minecraft.util.EnumWorldBlockLayer;
 
-> DELETE  4  @  5 : 6
+> DELETE  3  @  3 : 4
 
-> INSERT  6 : 8  @  7
+> INSERT  6 : 8  @  6
 
 + 	public long goddamnFuckingTimeout = 0l;
 + 	public long time = 0;
 
-> CHANGE  33 : 34  @  31 : 39
+> CHANGE  31 : 32  @  31 : 39
 
 ~ 		this.status = statusIn;
 
-> CHANGE  4 : 8  @  11 : 12
+> CHANGE  3 : 7  @  3 : 4
 
 ~ 		if (this.type == ChunkCompileTaskGenerator.Type.REBUILD_CHUNK
 ~ 				&& this.status != ChunkCompileTaskGenerator.Status.DONE) {
 ~ 			this.renderChunk.setNeedsUpdate(true);
 ~ 		}
 
-> CHANGE  5 : 7  @  2 : 7
+> CHANGE  1 : 3  @  1 : 6
 
 ~ 		this.finished = true;
 ~ 		this.status = ChunkCompileTaskGenerator.Status.DONE;
 
-> CHANGE  3 : 5  @  6 : 14
+> CHANGE  1 : 3  @  1 : 9
 
 ~ 		for (Runnable runnable : this.listFinishRunnables) {
 ~ 			runnable.run();
 
-> DELETE  3  @  9 : 10
+> DELETE  1  @  1 : 2
 
-> CHANGE  3 : 6  @  4 : 13
+> CHANGE  3 : 6  @  3 : 12
 
 ~ 		this.listFinishRunnables.add(parRunnable);
 ~ 		if (this.finished) {
 ~ 			parRunnable.run();
 
-> DELETE  4  @  10 : 11
+> DELETE  1  @  1 : 2
 
-> DELETE  2  @  3 : 7
+> DELETE  2  @  2 : 6
 
-> INSERT  8 : 16  @  12
+> INSERT  8 : 16  @  8
 
 + 	public boolean canExecuteYet() {
 + 		if (this.type == ChunkCompileTaskGenerator.Type.RESORT_TRANSPARENCY) {

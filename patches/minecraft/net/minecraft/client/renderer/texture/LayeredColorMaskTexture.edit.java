@@ -7,34 +7,34 @@
 
 > DELETE  2  @  2 : 5
 
-> INSERT  3 : 7  @  6
+> INSERT  3 : 7  @  3
 
 + 
 + import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 + import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 + import net.lax1dude.eaglercraft.v1_8.opengl.ImageData;
 
-> DELETE  5  @  1 : 3
+> DELETE  1  @  1 : 3
 
-> DELETE  4  @  6 : 8
+> DELETE  4  @  4 : 6
 
-> CHANGE  17 : 18  @  19 : 20
+> CHANGE  17 : 18  @  17 : 18
 
 ~ 		ImageData bufferedimage;
 
-> CHANGE  2 : 3  @  2 : 3
+> CHANGE  1 : 2  @  1 : 2
 
 ~ 			ImageData bufferedimage1 = TextureUtil
 
-> DELETE  2  @  2 : 6
+> DELETE  1  @  1 : 5
 
-> CHANGE  1 : 4  @  5 : 8
+> CHANGE  1 : 4  @  1 : 4
 
 ~ 			bufferedimage = new ImageData(bufferedimage1.width, bufferedimage1.height, false);
 ~ 			bufferedimage.drawLayer(bufferedimage1, 0, 0, bufferedimage1.width, bufferedimage1.height, 0, 0,
 ~ 					bufferedimage1.width, bufferedimage1.height);
 
-> CHANGE  9 : 14  @  9 : 16
+> CHANGE  6 : 11  @  6 : 13
 
 ~ 					ImageData bufferedimage2 = TextureUtil.readBufferedImage(inputstream);
 ~ 					if (bufferedimage2.width == bufferedimage.width && bufferedimage2.height == bufferedimage.height) {
@@ -42,14 +42,14 @@
 ~ 							for (int l = 0; l < bufferedimage2.width; ++l) {
 ~ 								int i1 = bufferedimage2.pixels[k * bufferedimage2.width + l];
 
-> CHANGE  7 : 11  @  9 : 12
+> CHANGE  2 : 6  @  2 : 5
 
 ~ 									int k1 = bufferedimage1.pixels[k * bufferedimage1.width + l];
 ~ 									int l1 = MathHelper.func_180188_d(k1, ImageData.swapRB(mapcolor.colorValue))
 ~ 											& 16777215;
 ~ 									bufferedimage2.pixels[k * bufferedimage2.width + l] = j1 | l1;
 
-> CHANGE  8 : 10  @  7 : 8
+> CHANGE  4 : 6  @  4 : 5
 
 ~ 						bufferedimage.drawLayer(bufferedimage2, 0, 0, bufferedimage2.width, bufferedimage2.height, 0, 0,
 ~ 								bufferedimage2.width, bufferedimage2.height);

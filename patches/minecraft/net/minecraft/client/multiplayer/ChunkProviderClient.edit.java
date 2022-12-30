@@ -7,7 +7,7 @@
 
 > DELETE  2  @  2 : 3
 
-> INSERT  1 : 6  @  2
+> INSERT  1 : 6  @  1
 
 + 
 + import com.google.common.collect.Lists;
@@ -15,6 +15,6 @@
 + import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 + import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 
-> DELETE  15  @  10 : 12
+> DELETE  10  @  10 : 12
 
 > EOF

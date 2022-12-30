@@ -9,11 +9,11 @@
 
 + 
 
-> CHANGE  11 : 12  @  10 : 11
+> CHANGE  10 : 11  @  10 : 11
 
 ~ 	private final IBlockState DEFAULT_STATE = Blocks.air.getDefaultState();
 
-> INSERT  42 : 56  @  42
+> INSERT  41 : 55  @  41
 
 + 	/**
 + 	 * only use with a regular "net.minecraft.util.BlockPos"!
@@ -30,7 +30,7 @@
 + 	}
 + 
 
-> INSERT  24 : 37  @  10
+> INSERT  10 : 23  @  10
 
 + 	/**
 + 	 * only use with a regular "net.minecraft.util.BlockPos"!
@@ -46,7 +46,7 @@
 + 	}
 + 
 
-> INSERT  19 : 29  @  6
+> INSERT  6 : 16  @  6
 
 + 
 + 	/**

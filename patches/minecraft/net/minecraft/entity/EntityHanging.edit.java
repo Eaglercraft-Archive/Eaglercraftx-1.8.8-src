@@ -10,18 +10,18 @@
 + import org.apache.commons.lang3.Validate;
 + 
 
-> DELETE  4  @  2 : 3
+> DELETE  2  @  2 : 3
 
-> DELETE  7  @  8 : 9
+> DELETE  7  @  7 : 8
 
-> CHANGE  68 : 69  @  69 : 77
+> CHANGE  68 : 69  @  68 : 76
 
 ~ 		this.tickCounter1++;
 
-> DELETE  47  @  54 : 68
+> DELETE  46  @  46 : 60
 
-> DELETE  1  @  15 : 19
+> DELETE  1  @  1 : 5
 
-> DELETE  4  @  8 : 12
+> DELETE  4  @  4 : 8
 
 > EOF

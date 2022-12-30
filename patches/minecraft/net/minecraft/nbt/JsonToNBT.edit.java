@@ -11,9 +11,9 @@
 + import java.util.regex.Pattern;
 + 
 
-> DELETE  6  @  3 : 19
+> DELETE  3  @  3 : 19
 
-> INSERT  1 : 4  @  17
+> INSERT  1 : 4  @  1
 
 + import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 + import net.lax1dude.eaglercraft.v1_8.log4j.Logger;

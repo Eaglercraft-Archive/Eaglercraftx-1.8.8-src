@@ -9,13 +9,13 @@
 
 ~ import net.lax1dude.eaglercraft.v1_8.internal.PlatformApplication;
 
-> DELETE  3  @  21 : 25
+> DELETE  2  @  2 : 6
 
-> CHANGE  1 : 3  @  5 : 7
+> CHANGE  1 : 3  @  1 : 3
 
 ~ 	public static IChatComponent saveScreenshot() {
 ~ 		return new ChatComponentText("Saved Screenshot As: " + PlatformApplication.saveScreenshot());
 
-> DELETE  3  @  3 : 79
+> DELETE  1  @  1 : 77
 
 > EOF

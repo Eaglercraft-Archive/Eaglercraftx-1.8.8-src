@@ -7,8 +7,8 @@
 
 > DELETE  3  @  3 : 5
 
-> DELETE  34  @  36 : 44
+> DELETE  34  @  34 : 42
 
-> DELETE  1  @  9 : 20
+> DELETE  1  @  1 : 12
 
 > EOF

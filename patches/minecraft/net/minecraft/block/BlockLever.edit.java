@@ -7,18 +7,18 @@
 
 > DELETE  2  @  2 : 4
 
-> CHANGE  17 : 18  @  19 : 21
+> CHANGE  17 : 18  @  17 : 19
 
 ~ 	public static PropertyEnum<BlockLever.EnumOrientation> FACING;
 
-> INSERT  10 : 14  @  11
+> INSERT  9 : 13  @  9
 
 + 	public static void bootstrapStates() {
 + 		FACING = PropertyEnum.<BlockLever.EnumOrientation>create("facing", BlockLever.EnumOrientation.class);
 + 	}
 + 
 
-> CHANGE  125 : 126  @  121 : 134
+> CHANGE  121 : 122  @  121 : 134
 
 ~ 		return true;
 

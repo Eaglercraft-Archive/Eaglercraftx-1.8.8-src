@@ -7,13 +7,13 @@
 
 > DELETE  2  @  2 : 4
 
-> DELETE  15  @  17 : 18
+> DELETE  15  @  15 : 16
 
-> CHANGE  114 : 115  @  115 : 187
+> CHANGE  114 : 115  @  114 : 186
 
 ~ 		return state;
 
-> CHANGE  118 : 119  @  189 : 204
+> CHANGE  117 : 118  @  117 : 132
 
 ~ 		return true;
 

@@ -7,16 +7,16 @@
 
 > DELETE  2  @  2 : 3
 
-> INSERT  1 : 5  @  2
+> INSERT  1 : 5  @  1
 
 + import java.util.function.Supplier;
 + 
 + import com.google.common.collect.Lists;
 + 
 
-> DELETE  13  @  9 : 10
+> DELETE  9  @  9 : 10
 
-> CHANGE  169 : 178  @  170 : 177
+> CHANGE  169 : 178  @  169 : 176
 
 ~ 		BORDER("border", "bo", "###", "# #", "###"),
 ~ 		CURLY_BORDER("curly_border", "cbo", () -> new ItemStack(Blocks.vine)),
@@ -28,27 +28,27 @@
 ~ 				() -> new ItemStack(Blocks.red_flower, 1, BlockFlower.EnumFlowerType.OXEYE_DAISY.getMeta())),
 ~ 		MOJANG("mojang", "moj", () -> new ItemStack(Items.golden_apple, 1, 1));
 
-> INSERT  13 : 14  @  11
+> INSERT  4 : 5  @  4
 
 + 		private Supplier<ItemStack> patternCraftingStackSupplier;
 
-> CHANGE  9 : 10  @  8 : 9
+> CHANGE  8 : 9  @  8 : 9
 
 ~ 		private EnumBannerPattern(String name, String id, Supplier<ItemStack> craftingItem) {
 
-> CHANGE  2 : 3  @  2 : 3
+> CHANGE  1 : 2  @  1 : 2
 
 ~ 			this.patternCraftingStackSupplier = craftingItem;
 
-> CHANGE  23 : 24  @  23 : 24
+> CHANGE  22 : 23  @  22 : 23
 
 ~ 			return this.patternCraftingStackSupplier != null || this.craftingLayers[0] != null;
 
-> CHANGE  4 : 5  @  4 : 5
+> CHANGE  3 : 4  @  3 : 4
 
 ~ 			return this.patternCraftingStackSupplier != null;
 
-> INSERT  4 : 7  @  4
+> INSERT  3 : 6  @  3
 
 + 			if (patternCraftingStack == null) {
 + 				patternCraftingStack = patternCraftingStackSupplier.get();

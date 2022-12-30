@@ -10,13 +10,13 @@
 + import net.lax1dude.eaglercraft.v1_8.minecraft.IAcceleratedParticleEngine;
 + import net.lax1dude.eaglercraft.v1_8.opengl.WorldRenderer;
 
-> DELETE  3  @  1 : 4
+> DELETE  1  @  1 : 4
 
-> INSERT  4 : 5  @  7
+> INSERT  4 : 5  @  4
 
 + import net.minecraft.util.MathHelper;
 
-> INSERT  74 : 87  @  73
+> INSERT  73 : 86  @  73
 
 + 	public boolean renderAccelerated(IAcceleratedParticleEngine accelerator, Entity var2, float f, float f1, float f2,
 + 			float f3, float f4, float f5) {

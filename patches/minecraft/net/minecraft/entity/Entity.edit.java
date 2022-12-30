@@ -11,139 +11,139 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
 ~ import net.lax1dude.eaglercraft.v1_8.HString;
 
-> INSERT  4 : 5  @  3
+> INSERT  1 : 2  @  1
 
 + 
 
-> DELETE  8  @  7 : 10
+> DELETE  7  @  7 : 10
 
-> DELETE  4  @  7 : 10
+> DELETE  4  @  4 : 7
 
-> DELETE  3  @  6 : 7
+> DELETE  3  @  3 : 4
 
-> DELETE  8  @  9 : 10
+> DELETE  8  @  8 : 9
 
-> DELETE  14  @  15 : 16
+> DELETE  14  @  14 : 15
 
-> CHANGE  1 : 2  @  2 : 3
+> CHANGE  1 : 2  @  1 : 2
 
 ~ public abstract class Entity {
 
-> CHANGE  45 : 46  @  45 : 46
+> CHANGE  44 : 45  @  44 : 45
 
 ~ 	protected EaglercraftRandom rand;
 
-> CHANGE  28 : 29  @  28 : 30
+> CHANGE  27 : 28  @  27 : 29
 
 ~ 	protected EaglercraftUUID entityUniqueID;
 
-> CHANGE  21 : 22  @  22 : 23
+> CHANGE  20 : 21  @  20 : 21
 
 ~ 		this.rand = new EaglercraftRandom();
 
-> DELETE  4  @  4 : 5
+> DELETE  3  @  3 : 4
 
-> DELETE  59  @  60 : 63
+> DELETE  59  @  59 : 62
 
-> DELETE  45  @  48 : 63
+> DELETE  45  @  45 : 60
 
-> DELETE  1  @  16 : 38
+> DELETE  1  @  1 : 23
 
-> CHANGE  2 : 3  @  24 : 36
+> CHANGE  2 : 3  @  2 : 14
 
 ~ 		this.fire = 0;
 
-> DELETE  2  @  13 : 17
+> DELETE  1  @  1 : 5
 
-> DELETE  9  @  13 : 17
+> DELETE  9  @  9 : 13
 
-> CHANGE  116 : 117  @  120 : 121
+> CHANGE  116 : 117  @  116 : 117
 
 ~ 			for (AxisAlignedBB axisalignedbb1 : (List<AxisAlignedBB>) list1) {
 
-> CHANGE  7 : 8  @  7 : 8
+> CHANGE  6 : 7  @  6 : 7
 
 ~ 			for (AxisAlignedBB axisalignedbb2 : (List<AxisAlignedBB>) list1) {
 
-> CHANGE  6 : 7  @  6 : 7
+> CHANGE  5 : 6  @  5 : 6
 
 ~ 			for (AxisAlignedBB axisalignedbb13 : (List<AxisAlignedBB>) list1) {
 
-> CHANGE  18 : 19  @  18 : 19
+> CHANGE  17 : 18  @  17 : 18
 
 ~ 				for (AxisAlignedBB axisalignedbb6 : (List<AxisAlignedBB>) list) {
 
-> CHANGE  7 : 8  @  7 : 8
+> CHANGE  6 : 7  @  6 : 7
 
 ~ 				for (AxisAlignedBB axisalignedbb7 : (List<AxisAlignedBB>) list) {
 
-> CHANGE  7 : 8  @  7 : 8
+> CHANGE  6 : 7  @  6 : 7
 
 ~ 				for (AxisAlignedBB axisalignedbb8 : (List<AxisAlignedBB>) list) {
 
-> CHANGE  8 : 9  @  8 : 9
+> CHANGE  7 : 8  @  7 : 8
 
 ~ 				for (AxisAlignedBB axisalignedbb9 : (List<AxisAlignedBB>) list) {
 
-> CHANGE  7 : 8  @  7 : 8
+> CHANGE  6 : 7  @  6 : 7
 
 ~ 				for (AxisAlignedBB axisalignedbb10 : (List<AxisAlignedBB>) list) {
 
-> CHANGE  7 : 8  @  7 : 8
+> CHANGE  6 : 7  @  6 : 7
 
 ~ 				for (AxisAlignedBB axisalignedbb11 : (List<AxisAlignedBB>) list) {
 
-> CHANGE  19 : 20  @  19 : 20
+> CHANGE  18 : 19  @  18 : 19
 
 ~ 				for (AxisAlignedBB axisalignedbb12 : (List<AxisAlignedBB>) list) {
 
-> DELETE  596  @  596 : 597
+> DELETE  595  @  595 : 596
 
-> CHANGE  55 : 57  @  56 : 57
+> CHANGE  55 : 57  @  55 : 56
 
 ~ 				this.entityUniqueID = new EaglercraftUUID(tagCompund.getLong("UUIDMost"),
 ~ 						tagCompund.getLong("UUIDLeast"));
 
-> CHANGE  3 : 4  @  2 : 3
+> CHANGE  1 : 2  @  1 : 2
 
 ~ 				this.entityUniqueID = EaglercraftUUID.fromString(tagCompund.getString("UUID"));
 
-> DELETE  10  @  10 : 11
+> DELETE  9  @  9 : 10
 
-> CHANGE  216 : 217  @  217 : 218
+> CHANGE  216 : 217  @  216 : 217
 
 ~ 			for (AxisAlignedBB axisalignedbb : (List<AxisAlignedBB>) list) {
 
-> DELETE  24  @  24 : 45
+> DELETE  23  @  23 : 44
 
-> CHANGE  28 : 29  @  49 : 50
+> CHANGE  28 : 29  @  28 : 29
 
 ~ 		boolean flag = this.worldObj != null;
 
-> CHANGE  184 : 185  @  184 : 185
+> CHANGE  183 : 184  @  183 : 184
 
 ~ 		return HString.format("%s[\'%s\'/%d, l=\'%s\', x=%.2f, y=%.2f, z=%.2f]",
 
-> DELETE  26  @  26 : 60
+> DELETE  25  @  25 : 59
 
-> CHANGE  30 : 31  @  64 : 65
+> CHANGE  30 : 31  @  30 : 31
 
 ~ 				return EntityList.getEntityString(Entity.this) + " (" + Entity.this.getClass().getName() + ")";
 
-> CHANGE  9 : 10  @  9 : 10
+> CHANGE  8 : 9  @  8 : 9
 
 ~ 		category.addCrashSection("Entity\'s Exact location", HString.format("%.2f, %.2f, %.2f",
 
-> CHANGE  5 : 6  @  5 : 6
+> CHANGE  4 : 5  @  4 : 5
 
 ~ 		category.addCrashSection("Entity\'s Momentum", HString.format("%.2f, %.2f, %.2f", new Object[] {
 
-> CHANGE  18 : 19  @  18 : 19
+> CHANGE  17 : 18  @  17 : 18
 
 ~ 	public EaglercraftUUID getUniqueID() {
 
-> DELETE  63  @  63 : 67
+> DELETE  62  @  62 : 66
 
-> DELETE  51  @  55 : 67
+> DELETE  51  @  51 : 63
 
 > EOF

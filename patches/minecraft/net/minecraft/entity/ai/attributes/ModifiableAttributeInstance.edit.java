@@ -7,34 +7,34 @@
 
 > DELETE  2  @  2 : 5
 
-> INSERT  2 : 3  @  5
+> INSERT  2 : 3  @  2
 
 + import java.util.List;
 
-> CHANGE  3 : 4  @  2 : 7
+> CHANGE  2 : 3  @  2 : 7
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
 
-> INSERT  2 : 6  @  6
+> INSERT  1 : 5  @  1
 
 + import com.google.common.collect.Lists;
 + import com.google.common.collect.Maps;
 + import com.google.common.collect.Sets;
 + 
 
-> CHANGE  9 : 10  @  5 : 6
+> CHANGE  5 : 6  @  5 : 6
 
 ~ 	private final Map<EaglercraftUUID, AttributeModifier> mapByUUID = Maps.newHashMap();
 
-> CHANGE  45 : 46  @  45 : 46
+> CHANGE  44 : 45  @  44 : 45
 
 ~ 	public AttributeModifier getModifier(EaglercraftUUID uuid) {
 
-> CHANGE  12 : 13  @  12 : 13
+> CHANGE  11 : 12  @  11 : 12
 
 ~ 			Set<AttributeModifier> object = (Set) this.mapByName.get(attributemodifier.getName());
 
-> CHANGE  39 : 40  @  39 : 40
+> CHANGE  38 : 39  @  38 : 39
 
 ~ 			for (AttributeModifier attributemodifier : (List<AttributeModifier>) Lists.newArrayList(collection)) {
 

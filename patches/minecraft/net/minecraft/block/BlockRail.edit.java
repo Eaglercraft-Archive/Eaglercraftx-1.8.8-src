@@ -7,11 +7,11 @@
 
 > DELETE  2  @  2 : 4
 
-> CHANGE  8 : 9  @  10 : 12
+> CHANGE  8 : 9  @  8 : 10
 
 ~ 	public static PropertyEnum<BlockRailBase.EnumRailDirection> SHAPE;
 
-> INSERT  8 : 12  @  9
+> INSERT  7 : 11  @  7
 
 + 	public static void bootstrapStates() {
 + 		SHAPE = PropertyEnum.<BlockRailBase.EnumRailDirection>create("shape", BlockRailBase.EnumRailDirection.class);

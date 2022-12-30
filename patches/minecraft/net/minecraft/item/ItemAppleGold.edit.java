@@ -9,12 +9,12 @@
 
 + 
 
-> DELETE  3  @  2 : 8
+> DELETE  2  @  2 : 8
 
-> CHANGE  17 : 18  @  23 : 34
+> CHANGE  17 : 18  @  17 : 28
 
 ~ 		if (itemstack.getMetadata() == 0) {
 
-> DELETE  3  @  13 : 14
+> DELETE  2  @  2 : 3
 
 > EOF

@@ -7,25 +7,25 @@
 
 > DELETE  2  @  2 : 4
 
-> CHANGE  2 : 3  @  4 : 5
+> CHANGE  2 : 3  @  2 : 3
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 
-> CHANGE  2 : 6  @  2 : 5
+> CHANGE  1 : 5  @  1 : 4
 
 ~ 
 ~ import com.google.common.collect.Lists;
 ~ import com.google.common.collect.Sets;
 ~ 
 
-> CHANGE  24 : 28  @  23 : 31
+> CHANGE  20 : 24  @  20 : 28
 
 ~ 	public static PropertyEnum<BlockRedstoneWire.EnumAttachPosition> NORTH;
 ~ 	public static PropertyEnum<BlockRedstoneWire.EnumAttachPosition> EAST;
 ~ 	public static PropertyEnum<BlockRedstoneWire.EnumAttachPosition> SOUTH;
 ~ 	public static PropertyEnum<BlockRedstoneWire.EnumAttachPosition> WEST;
 
-> INSERT  18 : 29  @  22
+> INSERT  14 : 25  @  14
 
 + 	public static void bootstrapStates() {
 + 		NORTH = PropertyEnum.<BlockRedstoneWire.EnumAttachPosition>create("north",
@@ -39,17 +39,17 @@
 + 	}
 + 
 
-> CHANGE  60 : 61  @  49 : 50
+> CHANGE  49 : 50  @  49 : 50
 
 ~ 		ArrayList<BlockPos> arraylist = Lists.newArrayList(this.blocksNeedingUpdate);
 
-> DELETE  81  @  81 : 130
+> DELETE  80  @  80 : 129
 
-> CHANGE  9 : 10  @  58 : 71
+> CHANGE  9 : 10  @  9 : 22
 
 ~ 	public Item getItemDropped(IBlockState var1, EaglercraftRandom var2, int var3) {
 
-> CHANGE  100 : 101  @  112 : 113
+> CHANGE  99 : 100  @  99 : 100
 
 ~ 	public void randomDisplayTick(World world, BlockPos blockpos, IBlockState iblockstate, EaglercraftRandom random) {
 

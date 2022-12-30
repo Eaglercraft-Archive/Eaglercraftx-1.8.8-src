@@ -7,7 +7,7 @@
 
 > DELETE  3  @  3 : 4
 
-> CHANGE  3 : 6  @  4 : 7
+> CHANGE  3 : 6  @  3 : 6
 
 ~ 	public int x;
 ~ 	public int y;

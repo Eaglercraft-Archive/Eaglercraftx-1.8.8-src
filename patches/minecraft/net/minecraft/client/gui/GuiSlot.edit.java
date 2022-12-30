@@ -13,19 +13,19 @@
 + import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 + import net.lax1dude.eaglercraft.v1_8.opengl.WorldRenderer;
 
-> DELETE  6  @  1 : 4
+> DELETE  1  @  1 : 4
 
-> DELETE  1  @  4 : 5
+> DELETE  1  @  1 : 2
 
-> DELETE  2  @  3 : 4
+> DELETE  2  @  2 : 3
 
-> INSERT  2 : 5  @  3
+> INSERT  2 : 5  @  2
 
 + 
 + 	private static final Logger excLogger = LogManager.getLogger("GuiSlotRenderer");
 + 
 
-> CHANGE  384 : 391  @  381 : 382
+> CHANGE  381 : 388  @  381 : 382
 
 ~ 			try {
 ~ 				this.drawSlot(j, mouseXIn, k, l, parInt3, parInt4);

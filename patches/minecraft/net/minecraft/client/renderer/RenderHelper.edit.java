@@ -11,19 +11,19 @@
 ~ 
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 
-> DELETE  4  @  4 : 5
+> DELETE  1  @  1 : 2
 
-> CHANGE  8 : 10  @  9 : 11
+> CHANGE  8 : 10  @  8 : 10
 
 ~ 		GlStateManager.disableMCLight(0);
 ~ 		GlStateManager.disableMCLight(1);
 
-> CHANGE  7 : 10  @  7 : 9
+> CHANGE  5 : 8  @  5 : 7
 
 ~ 		GlStateManager.enableMCLight(0, 0.6f, LIGHT0_POS.xCoord, LIGHT0_POS.yCoord, LIGHT0_POS.zCoord, 0.0D);
 ~ 		GlStateManager.enableMCLight(1, 0.6f, LIGHT1_POS.xCoord, LIGHT1_POS.yCoord, LIGHT1_POS.zCoord, 0.0D);
 ~ 		GlStateManager.setMCLightAmbient(0.4f, 0.4f, 0.4f);
 
-> DELETE  4  @  3 : 17
+> DELETE  1  @  1 : 15
 
 > EOF

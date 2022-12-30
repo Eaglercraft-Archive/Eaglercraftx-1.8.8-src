@@ -10,15 +10,15 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
 ~ 
 
-> CHANGE  12 : 13  @  11 : 12
+> CHANGE  10 : 11  @  10 : 11
 
 ~ 	public static ResourceLocation getDefaultSkin(EaglercraftUUID playerUUID) {
 
-> CHANGE  4 : 5  @  4 : 5
+> CHANGE  3 : 4  @  3 : 4
 
 ~ 	public static String getSkinType(EaglercraftUUID playerUUID) {
 
-> CHANGE  4 : 5  @  4 : 5
+> CHANGE  3 : 4  @  3 : 4
 
 ~ 	private static boolean isSlimSkin(EaglercraftUUID playerUUID) {
 

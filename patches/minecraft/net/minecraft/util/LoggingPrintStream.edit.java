@@ -7,30 +7,30 @@
 
 > DELETE  4  @  4 : 6
 
-> INSERT  1 : 5  @  3
+> INSERT  1 : 5  @  1
 
 + import net.lax1dude.eaglercraft.v1_8.internal.PlatformRuntime;
 + import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 + import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 + 
 
-> DELETE  5  @  1 : 2
+> DELETE  1  @  1 : 2
 
-> INSERT  1 : 3  @  2
+> INSERT  1 : 3  @  1
 
 + 	private final Logger logger;
 + 	private final boolean err;
 
-> CHANGE  3 : 4  @  1 : 2
+> CHANGE  1 : 2  @  1 : 2
 
 ~ 	public LoggingPrintStream(String domainIn, boolean err, OutputStream outStream) {
 
-> INSERT  3 : 5  @  3
+> INSERT  2 : 4  @  2
 
 + 		this.logger = LogManager.getLogger(domainIn);
 + 		this.err = err;
 
-> CHANGE  13 : 27  @  11 : 15
+> CHANGE  11 : 25  @  11 : 15
 
 ~ 		String callingClass = PlatformRuntime.getCallingClass(3);
 ~ 		if (callingClass == null) {

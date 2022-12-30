@@ -7,11 +7,11 @@
 
 > DELETE  6  @  6 : 7
 
-> CHANGE  4 : 5  @  5 : 12
+> CHANGE  4 : 5  @  4 : 11
 
 ~ 	private Object[][] recipeItems;
 
-> INSERT  3 : 11  @  9
+> INSERT  2 : 10  @  2
 
 + 		recipeItems = new Object[][] {
 + 				{ Blocks.planks, Blocks.cobblestone, Items.iron_ingot, Items.diamond, Items.gold_ingot },

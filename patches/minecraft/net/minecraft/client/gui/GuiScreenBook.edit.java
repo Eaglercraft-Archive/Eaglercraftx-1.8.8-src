@@ -7,7 +7,7 @@
 
 > DELETE  2  @  2 : 6
 
-> INSERT  1 : 11  @  5
+> INSERT  1 : 11  @  1
 
 + 
 + import org.json.JSONException;
@@ -20,25 +20,25 @@
 + import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 + import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 
-> DELETE  11  @  1 : 5
+> DELETE  1  @  1 : 5
 
-> DELETE  16  @  20 : 23
+> DELETE  16  @  16 : 19
 
-> CHANGE  139 : 140  @  142 : 143
+> CHANGE  139 : 140  @  139 : 140
 
 ~ 	protected void actionPerformed(GuiButton parGuiButton) {
 
-> CHANGE  39 : 40  @  39 : 41
+> CHANGE  38 : 39  @  38 : 40
 
 ~ 	protected void keyTyped(char parChar1, int parInt1) {
 
-> DELETE  7  @  8 : 9
+> DELETE  6  @  6 : 7
 
-> CHANGE  129 : 130  @  130 : 131
+> CHANGE  129 : 130  @  129 : 130
 
 ~ 					} catch (JSONException var13) {
 
-> CHANGE  35 : 36  @  35 : 36
+> CHANGE  34 : 35  @  34 : 35
 
 ~ 	protected void mouseClicked(int parInt1, int parInt2, int parInt3) {
 

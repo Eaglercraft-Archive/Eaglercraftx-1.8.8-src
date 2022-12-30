@@ -7,15 +7,15 @@
 
 > DELETE  2  @  2 : 3
 
-> INSERT  1 : 4  @  2
+> INSERT  1 : 4  @  1
 
 + 
 + import com.google.common.collect.Maps;
 + 
 
-> DELETE  4  @  1 : 3
+> DELETE  1  @  1 : 3
 
-> CHANGE  4 : 5  @  6 : 7
+> CHANGE  4 : 5  @  4 : 5
 
 ~ 	protected final Map<StatBase, TupleIntJsonSerializable> statsData = Maps.newHashMap();
 

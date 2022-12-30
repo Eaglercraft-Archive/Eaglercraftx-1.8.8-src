@@ -7,7 +7,7 @@
 
 > DELETE  2  @  2 : 3
 
-> INSERT  4 : 10  @  5
+> INSERT  4 : 10  @  4
 
 + 
 + import com.google.common.collect.Lists;
@@ -16,13 +16,13 @@
 + import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 + import net.lax1dude.eaglercraft.v1_8.opengl.WorldRenderer;
 
-> DELETE  12  @  6 : 7
+> DELETE  6  @  6 : 7
 
-> DELETE  2  @  3 : 4
+> DELETE  2  @  2 : 3
 
-> DELETE  11  @  12 : 13
+> DELETE  11  @  11 : 12
 
-> CHANGE  71 : 72  @  72 : 73
+> CHANGE  71 : 72  @  71 : 72
 
 ~ 	protected void actionPerformed(GuiButton parGuiButton) {
 

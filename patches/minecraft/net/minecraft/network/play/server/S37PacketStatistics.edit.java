@@ -7,7 +7,7 @@
 
 > DELETE  2  @  2 : 3
 
-> INSERT  3 : 6  @  4
+> INSERT  3 : 6  @  3
 
 + 
 + import com.google.common.collect.Maps;

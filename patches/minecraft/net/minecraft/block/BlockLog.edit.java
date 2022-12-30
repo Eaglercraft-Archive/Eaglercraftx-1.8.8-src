@@ -7,11 +7,11 @@
 
 > DELETE  2  @  2 : 4
 
-> CHANGE  11 : 12  @  13 : 15
+> CHANGE  11 : 12  @  11 : 13
 
 ~ 	public static PropertyEnum<BlockLog.EnumAxis> LOG_AXIS = null;
 
-> INSERT  9 : 13  @  10
+> INSERT  8 : 12  @  8
 
 + 	public static void bootstrapStates() {
 + 		LOG_AXIS = PropertyEnum.<BlockLog.EnumAxis>create("axis", BlockLog.EnumAxis.class);

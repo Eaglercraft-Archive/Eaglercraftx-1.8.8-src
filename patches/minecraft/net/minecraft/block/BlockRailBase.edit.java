@@ -7,15 +7,15 @@
 
 > DELETE  2  @  2 : 3
 
-> CHANGE  1 : 4  @  2 : 3
+> CHANGE  1 : 4  @  1 : 2
 
 ~ 
 ~ import com.google.common.collect.Lists;
 ~ 
 
-> DELETE  72  @  70 : 113
+> DELETE  69  @  69 : 112
 
-> CHANGE  5 : 6  @  48 : 51
+> CHANGE  5 : 6  @  5 : 8
 
 ~ 		return parIBlockState;
 
