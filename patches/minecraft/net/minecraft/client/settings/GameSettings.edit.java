@@ -83,7 +83,7 @@
 + 	public boolean hud24h = false;
 + 	public boolean chunkFix = true;
 + 	public boolean fog = true;
-+ 	public boolean fxaa = true;
++ 	public int fxaa = 0;
 
 > CHANGE  10 : 11  @  1 : 2
 
@@ -159,13 +159,13 @@
 + 		}
 + 
 + 		if (parOptions == GameSettings.Options.FXAA) {
-+ 			this.fxaa = !this.fxaa;
++ 			this.fxaa = (this.fxaa + parInt1) % 3;
 + 		}
 + 
 
 > DELETE  90  @  54 : 60
 
-> INSERT  12 : 30  @  18
+> INSERT  12 : 28  @  18
 
 + 		case HUD_COORDS:
 + 			return this.hudCoords;
@@ -183,10 +183,8 @@
 + 			return this.chunkFix;
 + 		case FOG:
 + 			return this.fog;
-+ 		case FXAA:
-+ 			return this.fxaa;
 
-> CHANGE  61 : 64  @  43 : 47
+> CHANGE  59 : 62  @  43 : 47
 
 ~ 																	: (parOptions == GameSettings.Options.CHAT_SCALE
 ~ 																			? s + (int) (f * 90.0F + 10.0F) + "%"
@@ -222,7 +220,18 @@
 ~ 																																	+ "%")
 ~ 																													: "yee"))))))))))));
 
-> CHANGE  54 : 56  @  69 : 70
+> INSERT  47 : 55  @  62
+
++ 		} else if (parOptions == GameSettings.Options.FXAA) {
++ 			if (this.fxaa == 0) {
++ 				return s + I18n.format("options.fxaa.auto");
++ 			} else if (this.fxaa == 1) {
++ 				return s + I18n.format("options.on");
++ 			} else {
++ 				return s + I18n.format("options.off");
++ 			}
+
+> CHANGE  15 : 17  @  7 : 8
 
 ~ 			byte[] options = EagRuntime.getStorage("g");
 ~ 			if (options == null) {
@@ -254,7 +263,7 @@
 
 > DELETE  4  @  8 : 12
 
-> INSERT  116 : 152  @  120
+> INSERT  116 : 153  @  120
 
 + 					if (astring[0].equals("hudFps")) {
 + 						this.hudFps = astring[1].equals("true");
@@ -289,11 +298,12 @@
 + 					}
 + 
 + 					if (astring[0].equals("fxaa")) {
-+ 						this.fxaa = astring[1].equals("true");
++ 						this.fxaa = (astring[1].equals("true") || astring[1].equals("false")) ? 0
++ 								: Integer.parseInt(astring[1]);
 + 					}
 + 
 
-> INSERT  42 : 44  @  6
+> INSERT  43 : 45  @  6
 
 + 					Keyboard.setFunctionKeyModifier(keyBindFunction.getKeyCode());
 + 
@@ -366,6 +376,6 @@
 ~ 		HUD_COORDS("options.hud.coords", false, true), HUD_STATS("options.hud.stats", false, true),
 ~ 		HUD_WORLD("options.hud.world", false, true), HUD_PLAYER("options.hud.player", false, true),
 ~ 		HUD_24H("options.hud.24h", false, true), CHUNK_FIX("options.chunkFix", false, true),
-~ 		FOG("options.fog", false, true), FXAA("options.fxaa", false, true);
+~ 		FOG("options.fog", false, true), FXAA("options.fxaa", false, false);
 
 > EOF

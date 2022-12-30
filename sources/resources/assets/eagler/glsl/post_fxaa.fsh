@@ -110,7 +110,7 @@ uniform vec2 u_screenSize2f;
                    GREEN AS LUMA OPTION SUPPORT FUNCTION
 ============================================================================*/
 #if (FXAA_GREEN_AS_LUMA == 0)
-    FxaaFloat FxaaLuma(FxaaFloat4 rgba) { return dot(rgba.xyz, vec3(0.299, 0.587, 0.114)); }
+    FxaaFloat FxaaLuma(FxaaFloat4 rgba) { return dot(rgba.xyz * rgba.xyz, vec3(0.299, 0.587, 0.114)); }
 #else
     FxaaFloat FxaaLuma(FxaaFloat4 rgba) { return rgba.y; }
 #endif    
@@ -277,22 +277,24 @@ FxaaFloat4 FxaaPixelShader(
 }
 /*==========================================================================*/
 
-#define edgeSharpness 4.0
-#define edgeThreshold 0.125
+#define edgeSharpness 3.0
+#define edgeThreshold 0.15
 #define edgeThresholdMin 0.05
 
 void main(){
+	vec2 screenSize05 = 0.5 * u_screenSize2f;
+	
 	vec4 posPos;
-    posPos.xy = v_position2f - (0.5 * u_screenSize2f);
-    posPos.zw = v_position2f + (0.5 * u_screenSize2f);
+    posPos.xy = v_position2f - screenSize05;
+    posPos.zw = v_position2f + screenSize05;
 	
     vec4 rcpFrameOpt;
-    rcpFrameOpt.xy = vec2(-0.50, -0.50) * u_screenSize2f;
-    rcpFrameOpt.zw = vec2( 0.50,  0.50) * u_screenSize2f;
+    rcpFrameOpt.xy = -screenSize05;
+    rcpFrameOpt.zw = screenSize05;
 	
     vec4 rcpFrameOpt2;
     rcpFrameOpt2.xy = vec2(-2.0, -2.0) * u_screenSize2f;
-    rcpFrameOpt2.zw = vec2( 2.0,  2.0) * u_screenSize2f;
+    rcpFrameOpt2.zw = -rcpFrameOpt2.xy;
 	
-	output4f = vec4(FxaaPixelShader(v_position2f, posPos, u_screenTexture, rcpFrameOpt, rcpFrameOpt2, edgeSharpness, edgeThreshold, edgeThresholdMin).rgb, 1.0);
+	output4f = vec4(FxaaPixelShader(v_position2f + screenSize05, posPos, u_screenTexture, rcpFrameOpt, rcpFrameOpt2, edgeSharpness, edgeThreshold, edgeThresholdMin).rgb, 1.0);
 }

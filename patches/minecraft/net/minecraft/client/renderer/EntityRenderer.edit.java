@@ -147,17 +147,19 @@
 
 ~ 			EaglercraftGPU.glLineWidth(1.0F);
 
-> INSERT  26 : 31  @  26
+> INSERT  26 : 33  @  26
 
 + 
-+ 		if (this.mc.gameSettings.fxaa) {
++ 		boolean fxaa = (this.mc.gameSettings.fxaa == 0 && this.mc.gameSettings.fancyGraphics)
++ 				|| this.mc.gameSettings.fxaa == 1;
++ 		if (fxaa) {
 + 			EffectPipelineFXAA.begin(this.mc.displayWidth, this.mc.displayHeight);
 + 		}
 + 
 
-> INSERT  21 : 25  @  16
+> INSERT  23 : 27  @  16
 
-+ 		if (this.mc.gameSettings.fxaa) {
++ 		if (fxaa) {
 + 			EffectPipelineFXAA.end();
 + 		}
 + 
