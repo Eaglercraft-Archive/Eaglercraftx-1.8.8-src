@@ -9,7 +9,7 @@
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 
-> CHANGE  8 : 9  @  10 : 11
+> CHANGE  6 : 7  @  8 : 9
 
 ~ 	public NoiseGeneratorPerlin(EaglercraftRandom parRandom, int parInt1) {
 

@@ -12,41 +12,41 @@
 ~ import net.lax1dude.eaglercraft.v1_8.mojang.authlib.GameProfile;
 ~ import net.lax1dude.eaglercraft.v1_8.profile.EaglerProfile;
 
-> CHANGE  8 : 9  @  9 : 13
+> CHANGE  6 : 7  @  7 : 11
 
 ~ 	private GameProfile profile;
 
-> CHANGE  10 : 11  @  14 : 20
+> CHANGE  2 : 3  @  5 : 11
 
 ~ 	private static final EaglercraftUUID offlineUUID;
 
-> CHANGE  12 : 14  @  21 : 23
+> CHANGE  2 : 4  @  7 : 9
 
 ~ 	public Session() {
 ~ 		reset();
 
-> CHANGE  16 : 18  @  25 : 27
+> CHANGE  4 : 6  @  4 : 6
 
 ~ 	public GameProfile getProfile() {
 ~ 		return profile;
 
-> CHANGE  20 : 22  @  29 : 31
+> CHANGE  4 : 6  @  4 : 6
 
 ~ 	public void update(String serverUsername, EaglercraftUUID uuid) {
 ~ 		profile = new GameProfile(uuid, serverUsername);
 
-> CHANGE  24 : 26  @  33 : 35
+> CHANGE  4 : 6  @  4 : 6
 
 ~ 	public void reset() {
 ~ 		update(EaglerProfile.getName(), offlineUUID);
 
-> CHANGE  28 : 32  @  37 : 44
+> CHANGE  4 : 8  @  4 : 11
 
 ~ 	static {
 ~ 		byte[] bytes = new byte[16];
 ~ 		(new EaglercraftRandom()).nextBytes(bytes);
 ~ 		offlineUUID = new EaglercraftUUID(bytes);
 
-> DELETE  34  @  46 : 71
+> DELETE  6  @  9 : 34
 
 > EOF

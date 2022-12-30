@@ -9,9 +9,9 @@
 
 + import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 
-> DELETE  5  @  4 : 7
+> DELETE  3  @  2 : 5
 
-> CHANGE  20 : 22  @  22 : 24
+> CHANGE  15 : 17  @  18 : 20
 
 ~ 				this.field_177189_c = new ModelZombie(0.5F, false);
 ~ 				this.field_177186_d = new ModelZombie(1.0F, false);

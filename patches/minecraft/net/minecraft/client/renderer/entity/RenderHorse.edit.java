@@ -7,13 +7,13 @@
 
 > DELETE  2  @  2 : 3
 
-> INSERT  3 : 7  @  4
+> INSERT  1 : 5  @  2
 
 + 
 + import com.google.common.collect.Maps;
 + 
 + import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 
-> DELETE  9  @  6 : 9
+> DELETE  6  @  2 : 5
 
 > EOF

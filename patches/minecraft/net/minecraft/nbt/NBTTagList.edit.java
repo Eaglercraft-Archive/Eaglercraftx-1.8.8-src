@@ -7,9 +7,9 @@
 
 > DELETE  2  @  2 : 3
 
-> DELETE  6  @  7 : 16
+> DELETE  4  @  5 : 14
 
-> INSERT  7 : 12  @  17
+> INSERT  1 : 6  @  10
 
 + import com.google.common.collect.Lists;
 + 

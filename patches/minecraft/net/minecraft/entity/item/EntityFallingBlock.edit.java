@@ -7,28 +7,28 @@
 
 > DELETE  2  @  2 : 3
 
-> INSERT  3 : 7  @  4
+> INSERT  1 : 5  @  2
 
 + import java.util.List;
 + 
 + import com.google.common.collect.Lists;
 + 
 
-> DELETE  9  @  6 : 8
+> DELETE  6  @  2 : 4
 
-> DELETE  14  @  13 : 15
+> DELETE  5  @  7 : 9
 
-> DELETE  15  @  16 : 17
+> DELETE  1  @  3 : 4
 
-> DELETE  17  @  19 : 20
+> DELETE  2  @  3 : 4
 
-> DELETE  72  @  75 : 78
+> DELETE  55  @  56 : 59
 
-> DELETE  80  @  86 : 101
+> DELETE  8  @  11 : 26
 
-> DELETE  81  @  102 : 135
+> DELETE  1  @  16 : 49
 
-> CHANGE  94 : 95  @  148 : 149
+> CHANGE  13 : 14  @  46 : 47
 
 ~ 				for (Entity entity : (List<Entity>) arraylist) {
 

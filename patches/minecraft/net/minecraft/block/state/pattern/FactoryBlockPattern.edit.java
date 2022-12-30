@@ -7,11 +7,11 @@
 
 > DELETE  2  @  2 : 7
 
-> CHANGE  7 : 8  @  12 : 15
+> CHANGE  5 : 6  @  10 : 13
 
 ~ 
 
-> INSERT  10 : 18  @  17
+> INSERT  3 : 11  @  5
 
 + import com.google.common.base.Joiner;
 + import com.google.common.base.Predicate;
@@ -22,11 +22,11 @@
 + import net.minecraft.block.state.BlockWorldState;
 + 
 
-> CHANGE  30 : 31  @  29 : 30
+> CHANGE  20 : 21  @  12 : 13
 
 ~ 		if (aisle.length > 0 && !StringUtils.isEmpty(aisle[0])) {
 
-> CHANGE  49 : 50  @  48 : 49
+> CHANGE  19 : 20  @  19 : 20
 
 ~ 							this.symbolMap.put(Character.valueOf(c0), (Predicate<BlockWorldState>) null);
 

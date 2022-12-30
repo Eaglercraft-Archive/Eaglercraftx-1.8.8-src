@@ -7,17 +7,17 @@
 
 > DELETE  2  @  2 : 3
 
-> CHANGE  3 : 6  @  4 : 6
+> CHANGE  1 : 4  @  2 : 4
 
 ~ 
 ~ import com.google.common.base.Predicate;
 ~ 
 
-> CHANGE  24 : 25  @  24 : 33
+> CHANGE  21 : 22  @  20 : 29
 
 ~ 	public static PropertyEnum<BlockRailBase.EnumRailDirection> SHAPE;
 
-> INSERT  34 : 46  @  42
+> INSERT  10 : 22  @  18
 
 + 	public static void bootstrapStates() {
 + 		SHAPE = PropertyEnum.create("shape", BlockRailBase.EnumRailDirection.class,
@@ -32,6 +32,6 @@
 + 	}
 + 
 
-> DELETE  54  @  50 : 67
+> DELETE  20  @  8 : 25
 
 > EOF

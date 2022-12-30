@@ -11,7 +11,7 @@
 ~ 
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 
-> CHANGE  17 : 18  @  18 : 19
+> CHANGE  15 : 16  @  16 : 17
 
 ~ 		EaglercraftRandom random = new EaglercraftRandom(1660L);
 

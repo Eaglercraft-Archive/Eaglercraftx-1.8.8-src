@@ -7,13 +7,13 @@
 
 > DELETE  2  @  2 : 3
 
-> CHANGE  6 : 7  @  7 : 8
+> CHANGE  4 : 5  @  5 : 6
 
 ~ 
 
-> DELETE  8  @  9 : 11
+> DELETE  2  @  2 : 4
 
-> INSERT  9 : 14  @  12
+> INSERT  1 : 6  @  3
 
 + import com.google.common.collect.Maps;
 + 

@@ -11,40 +11,40 @@
 ~ import net.lax1dude.eaglercraft.v1_8.cache.EaglerCacheProvider;
 ~ import net.lax1dude.eaglercraft.v1_8.cache.EaglerLoadingCache;
 
-> CHANGE  45 : 46  @  44 : 45
+> CHANGE  41 : 42  @  40 : 41
 
 ~ 			EaglerLoadingCache<BlockPos, BlockWorldState> lcache) {
 
-> CHANGE  49 : 50  @  48 : 50
+> CHANGE  4 : 5  @  4 : 6
 
 ~ 					if (!this.blockMatches[k][j][i].apply(lcache.get(translateOffset(pos, finger, thumb, i, j, k)))) {
 
-> CHANGE  61 : 62  @  61 : 62
+> CHANGE  12 : 13  @  13 : 14
 
 ~ 		EaglerLoadingCache loadingcache = func_181627_a(worldIn, false);
 
-> CHANGE  81 : 83  @  81 : 83
+> CHANGE  20 : 22  @  20 : 22
 
 ~ 	public static EaglerLoadingCache<BlockPos, BlockWorldState> func_181627_a(World parWorld, boolean parFlag) {
 ~ 		return new EaglerLoadingCache<BlockPos, BlockWorldState>(new BlockPattern.CacheLoader(parWorld, parFlag));
 
-> CHANGE  99 : 100  @  99 : 100
+> CHANGE  18 : 19  @  18 : 19
 
 ~ 	static class CacheLoader implements EaglerCacheProvider<BlockPos, BlockWorldState> {
 
-> CHANGE  108 : 109  @  108 : 109
+> CHANGE  9 : 10  @  9 : 10
 
 ~ 		public BlockWorldState create(BlockPos parBlockPos) {
 
-> CHANGE  117 : 118  @  117 : 118
+> CHANGE  9 : 10  @  9 : 10
 
 ~ 		private final EaglerLoadingCache<BlockPos, BlockWorldState> lcache;
 
-> CHANGE  123 : 124  @  123 : 124
+> CHANGE  6 : 7  @  6 : 7
 
 ~ 				EaglerLoadingCache<BlockPos, BlockWorldState> parLoadingCache, int parInt1, int parInt2, int parInt3) {
 
-> CHANGE  154 : 155  @  154 : 155
+> CHANGE  31 : 32  @  31 : 32
 
 ~ 			return (BlockWorldState) this.lcache.get(BlockPattern.translateOffset(this.pos, this.getFinger(),
 

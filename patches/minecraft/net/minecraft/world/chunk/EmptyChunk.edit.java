@@ -7,16 +7,16 @@
 
 > DELETE  2  @  2 : 3
 
-> CHANGE  3 : 7  @  4 : 5
+> CHANGE  1 : 5  @  2 : 3
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
 ~ import com.google.common.base.Predicate;
 ~ 
 
-> DELETE  15  @  13 : 14
+> DELETE  12  @  9 : 10
 
-> CHANGE  105 : 107  @  104 : 106
+> CHANGE  90 : 92  @  91 : 93
 
 ~ 	public EaglercraftRandom getRandomWithSeed(long seed) {
 ~ 		return new EaglercraftRandom(this.getWorld().getSeed() + (long) (this.xPosition * this.xPosition * 4987142)

@@ -7,7 +7,7 @@
 
 > DELETE  2  @  2 : 5
 
-> INSERT  5 : 10  @  8
+> INSERT  3 : 8  @  6
 
 + 
 + import com.google.common.base.Function;
@@ -15,9 +15,9 @@
 + import com.google.common.collect.Iterables;
 + 
 
-> DELETE  12  @  10 : 11
+> DELETE  7  @  2 : 3
 
-> CHANGE  28 : 29  @  27 : 28
+> CHANGE  16 : 17  @  17 : 18
 
 ~ 				(T) cyclePropertyValue(property.getAllowedValues(), this.getValue(property)));
 

@@ -12,9 +12,9 @@
 + import org.json.JSONArray;
 + 
 
-> DELETE  8  @  4 : 9
+> DELETE  6  @  2 : 7
 
-> CHANGE  12 : 17  @  13 : 17
+> CHANGE  4 : 9  @  9 : 13
 
 ~ 	public void fromJson(Object jsonelement) {
 ~ 		if (jsonelement instanceof JSONArray) {
@@ -22,12 +22,12 @@
 ~ 			for (int i = 0; i < arr.length(); ++i) {
 ~ 				underlyingSet.add(arr.getString(i));
 
-> CHANGE  22 : 24  @  22 : 24
+> CHANGE  10 : 12  @  9 : 11
 
 ~ 	public Object getSerializableElement() {
 ~ 		JSONArray jsonarray = new JSONArray();
 
-> CHANGE  26 : 27  @  26 : 27
+> CHANGE  4 : 5  @  4 : 5
 
 ~ 			jsonarray.put(s);
 

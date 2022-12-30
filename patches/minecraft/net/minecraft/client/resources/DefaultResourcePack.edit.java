@@ -7,9 +7,9 @@
 
 > DELETE  2  @  2 : 6
 
-> DELETE  5  @  9 : 10
+> DELETE  3  @  7 : 8
 
-> INSERT  6 : 11  @  11
+> INSERT  1 : 6  @  2
 
 + 
 + import com.google.common.collect.ImmutableSet;
@@ -17,35 +17,35 @@
 + import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 + import net.lax1dude.eaglercraft.v1_8.opengl.ImageData;
 
-> DELETE  12  @  12 : 14
+> DELETE  6  @  1 : 3
 
-> CHANGE  17 : 18  @  19 : 21
+> CHANGE  5 : 6  @  7 : 9
 
 ~ 	public static final Set<String> defaultResourceDomains = ImmutableSet.of("minecraft", "eagler");
 
-> DELETE  19  @  22 : 26
+> DELETE  2  @  3 : 7
 
-> CHANGE  34 : 35  @  41 : 43
+> CHANGE  15 : 16  @  19 : 21
 
 ~ 		return null;
 
-> CHANGE  38 : 40  @  46 : 48
+> CHANGE  4 : 6  @  5 : 7
 
 ~ 		return EagRuntime
 ~ 				.getResourceStream("/assets/" + location.getResourceDomain() + "/" + location.getResourcePath());
 
-> CHANGE  43 : 44  @  51 : 53
+> CHANGE  5 : 6  @  5 : 7
 
 ~ 		return this.getResourceStream(resourcelocation) != null;
 
-> CHANGE  53 : 55  @  62 : 64
+> CHANGE  10 : 12  @  11 : 13
 
 ~ 			return AbstractResourcePack.readMetadata(parIMetadataSerializer,
 ~ 					EagRuntime.getResourceStream("pack.mcmeta"), parString1);
 
-> DELETE  57  @  66 : 68
+> DELETE  4  @  4 : 6
 
-> CHANGE  60 : 62  @  71 : 74
+> CHANGE  3 : 5  @  5 : 8
 
 ~ 	public ImageData getPackImage() throws IOException {
 ~ 		return TextureUtil.readBufferedImage(EagRuntime.getResourceStream("pack.png"));

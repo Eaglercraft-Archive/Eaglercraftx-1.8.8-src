@@ -10,15 +10,15 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
 
-> CHANGE  108 : 109  @  110 : 111
+> CHANGE  106 : 107  @  108 : 109
 
 ~ 	public Item getItemDropped(IBlockState var1, EaglercraftRandom var2, int var3) {
 
-> CHANGE  112 : 113  @  114 : 115
+> CHANGE  4 : 5  @  4 : 5
 
 ~ 	public int quantityDropped(EaglercraftRandom var1) {
 
-> CHANGE  177 : 178  @  179 : 180
+> CHANGE  65 : 66  @  65 : 66
 
 ~ 	public void randomDisplayTick(World world, BlockPos blockpos, IBlockState iblockstate, EaglercraftRandom random) {
 

@@ -7,15 +7,15 @@
 
 > DELETE  2  @  2 : 3
 
-> INSERT  3 : 6  @  4
+> INSERT  1 : 4  @  2
 
 + 
 + import com.google.common.collect.Lists;
 + 
 
-> DELETE  15  @  13 : 14
+> DELETE  12  @  9 : 10
 
-> CHANGE  62 : 70  @  61 : 131
+> CHANGE  47 : 55  @  48 : 118
 
 ~ 			double d3 = (double) ((float) blockpos.getX() + this.getSpawnerWorld().rand.nextFloat());
 ~ 			double d4 = (double) ((float) blockpos.getY() + this.getSpawnerWorld().rand.nextFloat());
@@ -26,12 +26,12 @@
 ~ 			if (this.spawnDelay > 0) {
 ~ 				--this.spawnDelay;
 
-> INSERT  72 : 74  @  133
+> INSERT  10 : 12  @  72
 
 + 			this.prevMobRotation = this.mobRotation;
 + 			this.mobRotation = (this.mobRotation + (double) (1000.0F / ((float) this.spawnDelay + 200.0F))) % 360.0D;
 
-> CHANGE  230 : 231  @  289 : 290
+> CHANGE  158 : 159  @  156 : 157
 
 ~ 		if (delay == 1) {
 

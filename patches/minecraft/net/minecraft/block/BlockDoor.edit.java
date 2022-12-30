@@ -10,15 +10,15 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
 
-> CHANGE  29 : 30  @  29 : 31
+> CHANGE  27 : 28  @  27 : 29
 
 ~ 	public static PropertyEnum<BlockDoor.EnumHingePosition> HINGE;
 
-> CHANGE  31 : 32  @  32 : 34
+> CHANGE  2 : 3  @  3 : 5
 
 ~ 	public static PropertyEnum<BlockDoor.EnumDoorHalf> HALF;
 
-> INSERT  40 : 45  @  42
+> INSERT  9 : 14  @  10
 
 + 	public static void bootstrapStates() {
 + 		HINGE = PropertyEnum.<BlockDoor.EnumHingePosition>create("hinge", BlockDoor.EnumHingePosition.class);
@@ -26,11 +26,11 @@
 + 	}
 + 
 
-> CHANGE  180 : 181  @  177 : 182
+> CHANGE  140 : 141  @  135 : 140
 
 ~ 			if (!flag1) {
 
-> CHANGE  196 : 197  @  197 : 198
+> CHANGE  16 : 17  @  20 : 21
 
 ~ 	public Item getItemDropped(IBlockState iblockstate, EaglercraftRandom var2, int var3) {
 

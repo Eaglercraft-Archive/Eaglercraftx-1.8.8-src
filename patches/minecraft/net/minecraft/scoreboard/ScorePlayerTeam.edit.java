@@ -7,7 +7,7 @@
 
 > DELETE  2  @  2 : 3
 
-> CHANGE  4 : 7  @  5 : 7
+> CHANGE  2 : 5  @  3 : 5
 
 ~ 
 ~ import com.google.common.collect.Sets;

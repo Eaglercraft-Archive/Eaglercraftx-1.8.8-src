@@ -9,18 +9,18 @@
 
 + import net.lax1dude.eaglercraft.v1_8.minecraft.EaglerTextureAtlasSprite;
 
-> DELETE  4  @  3 : 5
+> DELETE  2  @  1 : 3
 
-> CHANGE  8 : 9  @  9 : 10
+> CHANGE  4 : 5  @  6 : 7
 
 ~ public class TextureCompass extends EaglerTextureAtlasSprite {
 
-> CHANGE  71 : 73  @  72 : 74
+> CHANGE  63 : 65  @  63 : 65
 
 ~ 				animationCache.copyFrameLevelsToTex2D(this.frameCounter, this.originX, this.originY, this.width,
 ~ 						this.height);
 
-> INSERT  77 : 78  @  78
+> INSERT  6 : 7  @  6
 
 + 
 

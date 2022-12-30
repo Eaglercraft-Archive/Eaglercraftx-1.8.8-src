@@ -10,9 +10,9 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
 
-> DELETE  6  @  5 : 6
+> DELETE  4  @  3 : 4
 
-> CHANGE  17 : 18  @  17 : 18
+> CHANGE  11 : 12  @  12 : 13
 
 ~ 	public ItemStack getItemStack(EaglercraftRandom random) {
 

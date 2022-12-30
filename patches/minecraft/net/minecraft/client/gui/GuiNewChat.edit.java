@@ -7,7 +7,7 @@
 
 > DELETE  2  @  2 : 3
 
-> INSERT  4 : 10  @  5
+> INSERT  2 : 8  @  3
 
 + 
 + import com.google.common.collect.Lists;
@@ -16,11 +16,11 @@
 + import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 + import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 
-> DELETE  11  @  6 : 12
+> DELETE  7  @  1 : 7
 
-> DELETE  15  @  16 : 18
+> DELETE  4  @  10 : 12
 
-> CHANGE  123 : 124  @  126 : 127
+> CHANGE  108 : 109  @  110 : 111
 
 ~ 		for (IChatComponent ichatcomponent : (List<IChatComponent>) list) {
 

@@ -7,17 +7,17 @@
 
 > DELETE  2  @  2 : 3
 
-> INSERT  4 : 7  @  5
+> INSERT  2 : 5  @  3
 
 + 
 + import com.google.common.collect.Maps;
 + 
 
-> CHANGE  17 : 18  @  15 : 16
+> CHANGE  13 : 14  @  10 : 11
 
 ~ 	private static FurnaceRecipes smeltingBase;
 
-> INSERT  22 : 25  @  20
+> INSERT  5 : 8  @  5
 
 + 		if (smeltingBase == null) {
 + 			smeltingBase = new FurnaceRecipes();

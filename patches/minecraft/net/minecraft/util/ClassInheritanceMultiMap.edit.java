@@ -7,7 +7,7 @@
 
 > DELETE  2  @  2 : 6
 
-> INSERT  8 : 13  @  12
+> INSERT  6 : 11  @  10
 
 + import com.google.common.collect.Iterators;
 + import com.google.common.collect.Lists;
@@ -15,11 +15,11 @@
 + import com.google.common.collect.Sets;
 + 
 
-> CHANGE  36 : 37  @  35 : 36
+> CHANGE  28 : 29  @  23 : 24
 
 ~ 				this.func_181743_a((T) object, clazz);
 
-> CHANGE  68 : 69  @  67 : 68
+> CHANGE  32 : 33  @  32 : 33
 
 ~ 			this.map.put(parClass1, (List<T>) Lists.newArrayList(new Object[] { parObject }));
 

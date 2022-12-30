@@ -7,9 +7,9 @@
 
 > DELETE  2  @  2 : 11
 
-> DELETE  3  @  12 : 14
+> DELETE  1  @  10 : 12
 
-> INSERT  7 : 22  @  18
+> INSERT  4 : 19  @  6
 
 + 
 + import org.apache.commons.lang3.StringUtils;
@@ -27,24 +27,24 @@
 + import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 + import net.lax1dude.eaglercraft.v1_8.opengl.WorldRenderer;
 
-> CHANGE  23 : 24  @  19 : 27
+> CHANGE  16 : 17  @  1 : 9
 
 ~ import net.minecraft.client.gui.inventory.GuiContainer;
 
-> DELETE  26  @  29 : 30
+> DELETE  3  @  10 : 11
 
-> INSERT  28 : 29  @  32
+> INSERT  2 : 3  @  3
 
 + import net.minecraft.client.resources.I18n;
 
-> DELETE  42  @  45 : 51
+> DELETE  14  @  13 : 19
 
-> CHANGE  59 : 61  @  68 : 69
+> CHANGE  17 : 19  @  23 : 24
 
 ~ 	private String clickedLinkURI;
 ~ 	protected long showingCloseKey = 0;
 
-> INSERT  71 : 101  @  79
+> INSERT  12 : 42  @  11
 
 + 		long millis = System.currentTimeMillis();
 + 		long closeKeyTimeout = millis - showingCloseKey;
@@ -77,7 +77,7 @@
 + 		}
 + 
 
-> CHANGE  103 : 115  @  81 : 83
+> CHANGE  32 : 44  @  2 : 4
 
 ~ 	protected int getCloseKey() {
 ~ 		if (this instanceof GuiContainer) {
@@ -92,26 +92,26 @@
 ~ 				|| parInt1 == this.mc.gameSettings.keyBindClose.getKeyCode()
 ~ 				|| (parInt1 == 1 && this.mc.gameSettings.keyBindClose.getKeyCode() == 0)) {
 
-> INSERT  119 : 121  @  87
+> INSERT  16 : 18  @  6
 
 + 		} else if (parInt1 == 1) {
 + 			showingCloseKey = System.currentTimeMillis();
 
-> DELETE  122  @  88 : 89
+> DELETE  3  @  1 : 2
 
-> CHANGE  125 : 126  @  92 : 102
+> CHANGE  3 : 4  @  4 : 14
 
 ~ 		return EagRuntime.getClipboard();
 
-> CHANGE  130 : 131  @  106 : 113
+> CHANGE  5 : 6  @  14 : 21
 
 ~ 			EagRuntime.setClipboard(copyText);
 
-> INSERT  307 : 308  @  289
+> INSERT  177 : 178  @  183
 
 + 					String uri = clickevent.getValue();
 
-> CHANGE  309 : 314  @  290 : 311
+> CHANGE  2 : 7  @  1 : 22
 
 ~ 					if (this.mc.gameSettings.chatLinksPrompt) {
 ~ 						this.clickedLinkURI = uri;
@@ -119,11 +119,11 @@
 ~ 					} else {
 ~ 						this.openWebLink(uri);
 
-> CHANGE  316 : 317  @  313 : 315
+> CHANGE  7 : 8  @  23 : 25
 
 ~ 					// rip
 
-> CHANGE  322 : 329  @  320 : 326
+> CHANGE  6 : 13  @  7 : 13
 
 ~ 					/*
 ~ 					 * ChatUserInfo chatuserinfo =
@@ -133,15 +133,15 @@
 ~ 					 */
 ~ 					LOGGER.error("Tried to handle twitch user but couldn\'t find them!");
 
-> CHANGE  352 : 353  @  349 : 350
+> CHANGE  30 : 31  @  29 : 30
 
 ~ 	protected void mouseClicked(int parInt1, int parInt2, int parInt3) {
 
-> CHANGE  377 : 378  @  374 : 375
+> CHANGE  25 : 26  @  25 : 26
 
 ~ 	protected void actionPerformed(GuiButton parGuiButton) {
 
-> CHANGE  497 : 499  @  494 : 503
+> CHANGE  120 : 122  @  120 : 129
 
 ~ 	private void openWebLink(String parURI) {
 ~ 		EagRuntime.openLink(parURI);

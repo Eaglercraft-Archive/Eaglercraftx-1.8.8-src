@@ -7,7 +7,7 @@
 
 > DELETE  2  @  2 : 4
 
-> INSERT  7 : 12  @  9
+> INSERT  5 : 10  @  7
 
 + import java.util.Set;
 + 
@@ -15,9 +15,9 @@
 + import com.google.common.collect.Maps;
 + 
 
-> DELETE  16  @  13 : 14
+> DELETE  9  @  4 : 5
 
-> CHANGE  78 : 79  @  76 : 77
+> CHANGE  62 : 63  @  63 : 64
 
 ~ 					for (Entry entry1 : (Set<Entry>) map.entrySet()) {
 

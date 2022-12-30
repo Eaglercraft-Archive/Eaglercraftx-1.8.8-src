@@ -11,34 +11,34 @@
 ~ import net.lax1dude.eaglercraft.v1_8.internal.buffer.FloatBuffer;
 ~ import net.lax1dude.eaglercraft.v1_8.internal.buffer.IntBuffer;
 
-> CHANGE  6 : 8  @  9 : 18
+> CHANGE  4 : 6  @  7 : 16
 
 ~ import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.EaglercraftGPU;
 
-> CHANGE  9 : 12  @  19 : 24
+> CHANGE  3 : 6  @  10 : 15
 
 ~ public class GLAllocation {
 ~ 	public static int generateDisplayLists() {
 ~ 		return EaglercraftGPU.glGenLists();
 
-> CHANGE  14 : 16  @  26 : 28
+> CHANGE  5 : 7  @  7 : 9
 
 ~ 	public static void deleteDisplayLists(int list) {
 ~ 		EaglercraftGPU.glDeleteLists(list);
 
-> CHANGE  18 : 20  @  30 : 32
+> CHANGE  4 : 6  @  4 : 6
 
 ~ 	public static ByteBuffer createDirectByteBuffer(int capacity) {
 ~ 		return EagRuntime.allocateByteBuffer(capacity);
 
-> DELETE  22  @  34 : 38
+> DELETE  4  @  4 : 8
 
-> CHANGE  23 : 24  @  39 : 40
+> CHANGE  1 : 2  @  5 : 6
 
 ~ 		return EagRuntime.allocateIntBuffer(capacity);
 
-> CHANGE  27 : 28  @  43 : 44
+> CHANGE  4 : 5  @  4 : 5
 
 ~ 		return EagRuntime.allocateFloatBuffer(capacity);
 

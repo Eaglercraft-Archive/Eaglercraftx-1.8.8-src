@@ -10,16 +10,16 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
 ~ 
 
-> DELETE  8  @  8 : 9
+> DELETE  5  @  5 : 6
 
-> CHANGE  10 : 11  @  11 : 12
+> CHANGE  2 : 3  @  3 : 4
 
 ~ 	private EaglercraftUUID id;
 
-> CHANGE  15 : 16  @  16 : 17
+> CHANGE  5 : 6  @  5 : 6
 
 ~ 	public C18PacketSpectate(EaglercraftUUID id) {
 
-> DELETE  31  @  32 : 35
+> DELETE  16  @  16 : 19
 
 > EOF

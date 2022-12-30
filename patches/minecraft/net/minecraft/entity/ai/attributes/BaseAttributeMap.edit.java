@@ -7,7 +7,7 @@
 
 > DELETE  2  @  2 : 5
 
-> CHANGE  5 : 10  @  8 : 11
+> CHANGE  3 : 8  @  6 : 9
 
 ~ 
 ~ import com.google.common.collect.HashMultimap;

@@ -7,6 +7,6 @@
 
 > DELETE  2  @  2 : 3
 
-> DELETE  144  @  145 : 149
+> DELETE  142  @  143 : 147
 
 > EOF

@@ -7,23 +7,23 @@
 
 > DELETE  2  @  2 : 3
 
-> INSERT  3 : 6  @  4
+> INSERT  1 : 4  @  2
 
 + 
 + import com.google.common.collect.Maps;
 + 
 
-> DELETE  14  @  12 : 19
+> DELETE  11  @  8 : 15
 
-> DELETE  18  @  23 : 24
+> DELETE  4  @  11 : 12
 
-> DELETE  29  @  35 : 36
+> DELETE  11  @  12 : 13
 
-> CHANGE  114 : 115  @  121 : 148
+> CHANGE  85 : 86  @  86 : 113
 
 ~ 		return true;
 
-> CHANGE  157 : 168  @  190 : 245
+> CHANGE  43 : 54  @  69 : 124
 
 ~ 		if (this.turnProgress > 0) {
 ~ 			double d4 = this.posX + (this.minecartX - this.posX) / (double) this.turnProgress;
@@ -37,14 +37,14 @@
 ~ 			this.setPosition(d4, d5, d6);
 ~ 			this.setRotation(this.rotationYaw, this.rotationPitch);
 
-> CHANGE  169 : 170  @  246 : 286
+> CHANGE  12 : 13  @  56 : 96
 
 ~ 			this.setPosition(this.posX, this.posY, this.posZ);
 
-> DELETE  171  @  287 : 304
+> DELETE  2  @  41 : 58
 
-> DELETE  522  @  655 : 665
+> DELETE  351  @  368 : 378
 
-> DELETE  523  @  666 : 733
+> DELETE  1  @  11 : 78
 
 > EOF

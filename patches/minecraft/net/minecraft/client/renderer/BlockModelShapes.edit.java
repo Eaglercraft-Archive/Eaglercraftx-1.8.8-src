@@ -7,33 +7,33 @@
 
 > DELETE  2  @  2 : 3
 
-> INSERT  5 : 9  @  6
+> INSERT  3 : 7  @  4
 
 + 
 + import com.google.common.collect.Maps;
 + 
 + import net.lax1dude.eaglercraft.v1_8.minecraft.EaglerTextureAtlasSprite;
 
-> DELETE  54  @  51 : 52
+> DELETE  49  @  45 : 46
 
-> CHANGE  75 : 76  @  73 : 74
+> CHANGE  21 : 22  @  22 : 23
 
 ~ 	public EaglerTextureAtlasSprite getTexture(IBlockState state) {
 
-> CHANGE  130 : 131  @  128 : 129
+> CHANGE  55 : 56  @  55 : 56
 
 ~ 			this.bakedModelStore.put((IBlockState) entry.getKey(),
 
-> CHANGE  306 : 307  @  304 : 305
+> CHANGE  176 : 177  @  176 : 177
 
 ~ 				String s = BlockDirt.VARIANT.getName((BlockDirt.DirtType) linkedhashmap.remove(BlockDirt.VARIANT));
 
-> CHANGE  317 : 319  @  315 : 316
+> CHANGE  11 : 13  @  11 : 12
 
 ~ 				String s = BlockStoneSlab.VARIANT
 ~ 						.getName((BlockStoneSlab.EnumType) linkedhashmap.remove(BlockStoneSlab.VARIANT));
 
-> CHANGE  328 : 329  @  325 : 326
+> CHANGE  11 : 12  @  10 : 11
 
 ~ 						.getName((BlockStoneSlabNew.EnumType) linkedhashmap.remove(BlockStoneSlabNew.VARIANT));
 

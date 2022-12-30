@@ -7,16 +7,16 @@
 
 > DELETE  2  @  2 : 3
 
-> CHANGE  4 : 8  @  5 : 7
+> CHANGE  2 : 6  @  3 : 5
 
 ~ 
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.ImageData;
 
-> DELETE  12  @  11 : 13
+> DELETE  8  @  6 : 8
 
-> CHANGE  28 : 29  @  29 : 30
+> CHANGE  16 : 17  @  18 : 19
 
 ~ 			ImageData bufferedimage = TextureUtil.readBufferedImage(inputstream);
 

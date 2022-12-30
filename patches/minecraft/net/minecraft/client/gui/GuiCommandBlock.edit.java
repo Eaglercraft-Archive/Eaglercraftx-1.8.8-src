@@ -12,17 +12,17 @@
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 
-> DELETE  11  @  12 : 15
+> DELETE  9  @  10 : 13
 
-> CHANGE  55 : 56  @  59 : 60
+> CHANGE  44 : 45  @  47 : 48
 
 ~ 	protected void actionPerformed(GuiButton parGuiButton) {
 
-> CHANGE  80 : 81  @  84 : 85
+> CHANGE  25 : 26  @  25 : 26
 
 ~ 	protected void keyTyped(char parChar1, int parInt1) {
 
-> CHANGE  94 : 95  @  98 : 99
+> CHANGE  14 : 15  @  14 : 15
 
 ~ 	protected void mouseClicked(int parInt1, int parInt2, int parInt3) {
 

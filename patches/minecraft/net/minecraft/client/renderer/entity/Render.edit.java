@@ -12,24 +12,24 @@
 + import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 + import net.lax1dude.eaglercraft.v1_8.opengl.WorldRenderer;
 
-> DELETE  9  @  5 : 6
+> DELETE  7  @  3 : 4
 
-> DELETE  10  @  7 : 8
+> DELETE  1  @  2 : 3
 
-> DELETE  11  @  9 : 11
+> DELETE  1  @  2 : 4
 
-> DELETE  21  @  21 : 22
+> DELETE  10  @  12 : 13
 
-> CHANGE  82 : 84  @  83 : 85
+> CHANGE  61 : 63  @  62 : 64
 
 ~ 		EaglerTextureAtlasSprite textureatlassprite = texturemap.getAtlasSprite("minecraft:blocks/fire_layer_0");
 ~ 		EaglerTextureAtlasSprite textureatlassprite1 = texturemap.getAtlasSprite("minecraft:blocks/fire_layer_1");
 
-> CHANGE  102 : 103  @  103 : 104
+> CHANGE  20 : 21  @  20 : 21
 
 ~ 			EaglerTextureAtlasSprite textureatlassprite2 = i % 2 == 0 ? textureatlassprite : textureatlassprite1;
 
-> CHANGE  282 : 283  @  283 : 284
+> CHANGE  180 : 181  @  180 : 181
 
 ~ 			EaglercraftGPU.glNormal3f(0.0F, 1.0F, 0.0F);
 

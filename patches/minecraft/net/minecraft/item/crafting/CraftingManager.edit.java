@@ -7,20 +7,20 @@
 
 > DELETE  2  @  2 : 4
 
-> INSERT  7 : 11  @  9
+> INSERT  5 : 9  @  7
 
 + 
 + import com.google.common.collect.Lists;
 + import com.google.common.collect.Maps;
 + 
 
-> DELETE  23  @  21 : 38
+> DELETE  16  @  12 : 29
 
-> CHANGE  26 : 27  @  41 : 42
+> CHANGE  3 : 4  @  20 : 21
 
 ~ 	private static CraftingManager instance;
 
-> INSERT  30 : 33  @  45
+> INSERT  4 : 7  @  4
 
 + 		if (instance == null) {
 + 			instance = new CraftingManager();

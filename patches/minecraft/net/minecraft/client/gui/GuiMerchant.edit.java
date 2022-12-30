@@ -12,13 +12,13 @@
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 
-> DELETE  7  @  5 : 6
+> DELETE  5  @  3 : 4
 
-> DELETE  8  @  7 : 8
+> DELETE  1  @  2 : 3
 
-> DELETE  21  @  21 : 23
+> DELETE  13  @  14 : 16
 
-> CHANGE  65 : 66  @  67 : 68
+> CHANGE  44 : 45  @  46 : 47
 
 ~ 	protected void actionPerformed(GuiButton parGuiButton) {
 

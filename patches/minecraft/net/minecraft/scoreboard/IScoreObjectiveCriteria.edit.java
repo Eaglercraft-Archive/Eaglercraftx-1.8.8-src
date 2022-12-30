@@ -7,12 +7,12 @@
 
 > DELETE  2  @  2 : 3
 
-> INSERT  4 : 7  @  5
+> INSERT  2 : 5  @  3
 
 + 
 + import com.google.common.collect.Maps;
 + 
 
-> DELETE  8  @  6 : 9
+> DELETE  4  @  1 : 4
 
 > EOF

@@ -7,12 +7,12 @@
 
 > DELETE  2  @  2 : 3
 
-> INSERT  5 : 7  @  6
+> INSERT  3 : 5  @  4
 
 + 
 + import net.lax1dude.eaglercraft.v1_8.opengl.ImageData;
 
-> CHANGE  20 : 21  @  19 : 20
+> CHANGE  15 : 16  @  13 : 14
 
 ~ 	ImageData getPackImage() throws IOException;
 

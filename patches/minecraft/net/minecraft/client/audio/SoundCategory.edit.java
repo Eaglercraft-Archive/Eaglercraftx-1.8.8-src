@@ -7,12 +7,12 @@
 
 > DELETE  2  @  2 : 3
 
-> INSERT  4 : 6  @  5
+> INSERT  2 : 4  @  3
 
 + import com.google.common.collect.Maps;
 + 
 
-> CHANGE  8 : 9  @  7 : 8
+> CHANGE  4 : 5  @  2 : 3
 
 ~ 	MOBS("hostile", 5), ANIMALS("neutral", 6), PLAYERS("player", 7), AMBIENT("ambient", 8), VOICE("voice", 9);
 

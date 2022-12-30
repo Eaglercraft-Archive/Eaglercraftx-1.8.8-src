@@ -10,27 +10,27 @@
 + import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 + 
 
-> CHANGE  5 : 6  @  3 : 8
+> CHANGE  3 : 4  @  1 : 6
 
 ~ 
 
-> DELETE  16  @  18 : 19
+> DELETE  11  @  15 : 16
 
-> CHANGE  58 : 59  @  61 : 62
+> CHANGE  42 : 43  @  43 : 44
 
 ~ 	public void updateTick(World world, BlockPos blockpos, IBlockState iblockstate, EaglercraftRandom random) {
 
-> DELETE  119  @  122 : 139
+> DELETE  61  @  61 : 78
 
-> CHANGE  124 : 125  @  144 : 145
+> CHANGE  5 : 6  @  22 : 23
 
 ~ 	public Item getItemDropped(IBlockState var1, EaglercraftRandom var2, int var3) {
 
-> CHANGE  137 : 138  @  157 : 158
+> CHANGE  13 : 14  @  13 : 14
 
 ~ 	public boolean canUseBonemeal(World var1, EaglercraftRandom var2, BlockPos var3, IBlockState var4) {
 
-> CHANGE  141 : 142  @  161 : 162
+> CHANGE  4 : 5  @  4 : 5
 
 ~ 	public void grow(World world, EaglercraftRandom var2, BlockPos blockpos, IBlockState iblockstate) {
 

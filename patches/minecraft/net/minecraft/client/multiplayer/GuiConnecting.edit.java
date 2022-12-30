@@ -18,32 +18,32 @@
 ~ import net.lax1dude.eaglercraft.v1_8.socket.EaglercraftNetworkManager;
 ~ import net.lax1dude.eaglercraft.v1_8.socket.RateLimitTracker;
 
-> CHANGE  17 : 18  @  10 : 14
+> CHANGE  14 : 15  @  7 : 11
 
 ~ import net.minecraft.client.network.NetHandlerPlayClient;
 
-> DELETE  20  @  16 : 19
+> DELETE  3  @  6 : 9
 
-> DELETE  21  @  20 : 23
+> DELETE  1  @  4 : 7
 
-> DELETE  23  @  25 : 26
+> DELETE  2  @  5 : 6
 
-> CHANGE  24 : 28  @  27 : 28
+> CHANGE  1 : 5  @  2 : 3
 
 ~ 	private EaglercraftNetworkManager networkManager;
 ~ 	private String currentAddress;
 ~ 	private String currentPassword;
 ~ 	private boolean allowPlaintext;
 
-> INSERT  29 : 30  @  29
+> INSERT  5 : 6  @  2
 
 + 	private boolean hasOpened;
 
-> INSERT  31 : 32  @  30
+> INSERT  2 : 3  @  1
 
 + 	private int timer = 0;
 
-> INSERT  34 : 47  @  32
+> INSERT  3 : 16  @  2
 
 + 		this(parGuiScreen, mcIn, parServerData, false);
 + 	}
@@ -59,11 +59,11 @@
 + 	public GuiConnecting(GuiScreen parGuiScreen, Minecraft mcIn, ServerData parServerData, String password,
 + 			boolean allowPlaintext) {
 
-> CHANGE  49 : 50  @  34 : 35
+> CHANGE  15 : 16  @  2 : 3
 
 ~ 		String serveraddress = AddressResolver.resolveURI(parServerData);
 
-> CHANGE  52 : 57  @  37 : 38
+> CHANGE  3 : 8  @  3 : 4
 
 ~ 		if (RateLimitTracker.isLockedOut(serveraddress)) {
 ~ 			logger.error("Server locked this client out on a previous connection, will not attempt to reconnect");
@@ -71,7 +71,7 @@
 ~ 			this.connect(serveraddress, password, allowPlaintext);
 ~ 		}
 
-> INSERT  60 : 73  @  41
+> INSERT  8 : 21  @  4
 
 + 		this(parGuiScreen, mcIn, hostName, port, false);
 + 	}
@@ -87,17 +87,17 @@
 + 	public GuiConnecting(GuiScreen parGuiScreen, Minecraft mcIn, String hostName, int port, String password,
 + 			boolean allowPlaintext) {
 
-> CHANGE  76 : 77  @  44 : 45
+> CHANGE  16 : 17  @  3 : 4
 
 ~ 		this.connect(hostName, password, allowPlaintext);
 
-> CHANGE  79 : 82  @  47 : 52
+> CHANGE  3 : 6  @  3 : 8
 
 ~ 	public GuiConnecting(GuiConnecting previous, String password) {
 ~ 		this(previous, password, false);
 ~ 	}
 
-> CHANGE  83 : 88  @  53 : 57
+> CHANGE  4 : 9  @  6 : 10
 
 ~ 	public GuiConnecting(GuiConnecting previous, String password, boolean allowPlaintext) {
 ~ 		this.mc = previous.mc;
@@ -105,7 +105,7 @@
 ~ 		this.connect(previous.currentAddress, password, allowPlaintext);
 ~ 	}
 
-> CHANGE  89 : 94  @  58 : 72
+> CHANGE  6 : 11  @  5 : 19
 
 ~ 	private void connect(String ip, String password, boolean allowPlaintext) {
 ~ 		this.currentAddress = ip;
@@ -113,7 +113,7 @@
 ~ 		this.allowPlaintext = allowPlaintext;
 ~ 	}
 
-> CHANGE  95 : 131  @  73 : 80
+> CHANGE  6 : 42  @  15 : 22
 
 ~ 	public void updateScreen() {
 ~ 		++timer;
@@ -152,13 +152,13 @@
 ~ 							return;
 ~ 						}
 
-> CHANGE  132 : 135  @  81 : 87
+> CHANGE  37 : 40  @  8 : 14
 
 ~ 					try {
 ~ 						this.networkManager.processReceivedPackets();
 ~ 					} catch (IOException ex) {
 
-> CHANGE  136 : 164  @  88 : 92
+> CHANGE  4 : 32  @  7 : 11
 
 ~ 				} else {
 ~ 					if (PlatformNetworking.playConnectionState() == EnumEaglerConnectionState.FAILED) {
@@ -189,28 +189,28 @@
 ~ 						}
 ~ 					}
 
-> DELETE  165  @  93 : 94
+> DELETE  29  @  5 : 6
 
-> DELETE  166  @  95 : 105
+> DELETE  1  @  2 : 12
 
-> CHANGE  170 : 171  @  109 : 110
+> CHANGE  4 : 5  @  14 : 15
 
 ~ 	protected void keyTyped(char parChar1, int parInt1) {
 
-> CHANGE  175 : 177  @  114 : 116
+> CHANGE  5 : 7  @  5 : 7
 
 ~ 		this.buttonList.add(
 ~ 				new GuiButton(0, this.width / 2 - 100, this.height / 2 - 10, I18n.format("gui.cancel", new Object[0])));
 
-> CHANGE  179 : 180  @  118 : 119
+> CHANGE  4 : 5  @  4 : 5
 
 ~ 	protected void actionPerformed(GuiButton parGuiButton) {
 
-> CHANGE  193 : 194  @  132 : 133
+> CHANGE  14 : 15  @  14 : 15
 
 ~ 		if (this.networkManager == null || !this.networkManager.isChannelOpen()) {
 
-> INSERT  203 : 217  @  142
+> INSERT  10 : 24  @  10
 
 + 
 + 	private void checkLowLevelRatelimit() {

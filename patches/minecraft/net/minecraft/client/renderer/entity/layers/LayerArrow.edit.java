@@ -11,11 +11,11 @@
 ~ 
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 
-> DELETE  7  @  5 : 6
+> DELETE  5  @  3 : 4
 
-> DELETE  9  @  8 : 9
+> DELETE  2  @  3 : 4
 
-> CHANGE  26 : 27  @  26 : 27
+> CHANGE  17 : 18  @  18 : 19
 
 ~ 			EaglercraftRandom random = new EaglercraftRandom((long) entitylivingbase.getEntityId());
 

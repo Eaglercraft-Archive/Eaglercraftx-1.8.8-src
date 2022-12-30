@@ -7,15 +7,15 @@
 
 > DELETE  2  @  2 : 7
 
-> CHANGE  3 : 6  @  8 : 11
+> CHANGE  1 : 4  @  6 : 9
 
 ~ import java.io.ByteArrayOutputStream;
 ~ import java.io.InputStreamReader;
 ~ import java.io.OutputStreamWriter;
 
-> DELETE  7  @  12 : 14
+> DELETE  4  @  4 : 6
 
-> INSERT  10 : 28  @  17
+> INSERT  3 : 21  @  5
 
 + 
 + import org.json.JSONArray;
@@ -36,29 +36,29 @@
 + import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 + import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 
-> DELETE  33  @  22 : 24
+> DELETE  23  @  5 : 7
 
-> DELETE  38  @  29 : 35
+> DELETE  5  @  7 : 13
 
-> DELETE  41  @  38 : 43
+> DELETE  3  @  9 : 14
 
-> DELETE  42  @  44 : 52
+> DELETE  1  @  6 : 14
 
-> CHANGE  65 : 68  @  75 : 78
+> CHANGE  23 : 26  @  31 : 34
 
 ~ 	public int clouds = 1;
 ~ 	public boolean fancyGraphics = false;
 ~ 	public int ambientOcclusion = 0;
 
-> DELETE  76  @  86 : 87
+> DELETE  11  @  11 : 12
 
-> DELETE  77  @  88 : 89
+> DELETE  1  @  2 : 3
 
-> CHANGE  113 : 114  @  125 : 126
+> CHANGE  36 : 37  @  37 : 38
 
 ~ 	public KeyBinding keyBindSprint = new KeyBinding("key.sprint", KeyboardConstants.KEY_R, "key.categories.movement");
 
-> CHANGE  124 : 130  @  136 : 143
+> CHANGE  11 : 17  @  11 : 18
 
 ~ 	public KeyBinding keyBindSmoothCamera = new KeyBinding("key.smoothCamera", KeyboardConstants.KEY_M,
 ~ 			"key.categories.misc");
@@ -67,13 +67,13 @@
 ~ 	public KeyBinding keyBindFunction = new KeyBinding("key.function", KeyboardConstants.KEY_F, "key.categories.misc");
 ~ 	public KeyBinding keyBindClose = new KeyBinding("key.close", KeyboardConstants.KEY_GRAVE, "key.categories.misc");
 
-> DELETE  142  @  155 : 156
+> DELETE  18  @  19 : 20
 
-> CHANGE  154 : 155  @  168 : 169
+> CHANGE  12 : 13  @  13 : 14
 
 ~ 	public int guiScale = 3;
 
-> INSERT  158 : 167  @  172
+> INSERT  4 : 13  @  4
 
 + 	public boolean hudFps = true;
 + 	public boolean hudCoords = true;
@@ -85,46 +85,46 @@
 + 	public boolean fog = true;
 + 	public boolean fxaa = true;
 
-> CHANGE  168 : 169  @  173 : 174
+> CHANGE  10 : 11  @  1 : 2
 
 ~ 	public GameSettings(Minecraft mcIn) {
 
-> CHANGE  173 : 175  @  178 : 181
+> CHANGE  5 : 7  @  5 : 8
 
 ~ 				this.keyBindTogglePerspective, this.keyBindSmoothCamera, this.keyBindZoomCamera, this.keyBindFunction,
 ~ 				this.keyBindClose }, this.keyBindsHotbar);
 
-> CHANGE  178 : 180  @  184 : 185
+> CHANGE  5 : 7  @  6 : 7
 
 ~ 		this.gammaSetting = 1.0F;
 ~ 		this.language = EagRuntime.getConfiguration().getDefaultLocale();
 
-> CHANGE  182 : 183  @  187 : 193
+> CHANGE  4 : 5  @  3 : 9
 
 ~ 		GameSettings.Options.RENDER_DISTANCE.setValueMax(18.0F);
 
-> CHANGE  184 : 185  @  194 : 195
+> CHANGE  2 : 3  @  7 : 8
 
 ~ 		this.renderDistanceChunks = 4;
 
-> DELETE  188  @  198 : 213
+> DELETE  4  @  4 : 19
 
-> CHANGE  191 : 192  @  216 : 217
+> CHANGE  3 : 4  @  18 : 19
 
 ~ 						: HString.format("%c", new Object[] { Character.valueOf((char) (parInt1 - 256)) })
 
-> DELETE  275  @  300 : 301
+> DELETE  84  @  84 : 85
 
-> DELETE  279  @  305 : 306
+> DELETE  4  @  5 : 6
 
-> INSERT  324 : 326  @  351
+> INSERT  45 : 47  @  46
 
 + 			this.mc.loadingScreen.eaglerShow(I18n.format("resourcePack.load.refreshing"),
 + 					I18n.format("resourcePack.load.pleaseWait"));
 
-> DELETE  384  @  409 : 426
+> DELETE  60  @  58 : 75
 
-> INSERT  397 : 433  @  439
+> INSERT  13 : 49  @  30
 
 + 		if (parOptions == GameSettings.Options.HUD_FPS) {
 + 			this.hudFps = !this.hudFps;
@@ -163,9 +163,9 @@
 + 		}
 + 
 
-> DELETE  487  @  493 : 499
+> DELETE  90  @  54 : 60
 
-> INSERT  499 : 517  @  511
+> INSERT  12 : 30  @  18
 
 + 		case HUD_COORDS:
 + 			return this.hudCoords;
@@ -186,21 +186,21 @@
 + 		case FXAA:
 + 			return this.fxaa;
 
-> CHANGE  560 : 563  @  554 : 558
+> CHANGE  61 : 64  @  43 : 47
 
 ~ 																	: (parOptions == GameSettings.Options.CHAT_SCALE
 ~ 																			? s + (int) (f * 90.0F + 10.0F) + "%"
 ~ 																			: (parOptions == GameSettings.Options.CHAT_HEIGHT_UNFOCUSED
 
-> CHANGE  566 : 567  @  561 : 562
+> CHANGE  6 : 7  @  7 : 8
 
 ~ 																					: (parOptions == GameSettings.Options.CHAT_HEIGHT_FOCUSED
 
-> CHANGE  568 : 569  @  563 : 564
+> CHANGE  2 : 3  @  2 : 3
 
 ~ 																									.calculateChatboxHeight(
 
-> CHANGE  571 : 590  @  566 : 600
+> CHANGE  3 : 22  @  3 : 37
 
 ~ 																							: (parOptions == GameSettings.Options.CHAT_WIDTH
 ~ 																									? s + GuiNewChat
@@ -222,17 +222,17 @@
 ~ 																																	+ "%")
 ~ 																													: "yee"))))))))))));
 
-> CHANGE  625 : 627  @  635 : 636
+> CHANGE  54 : 56  @  69 : 70
 
 ~ 			byte[] options = EagRuntime.getStorage("g");
 ~ 			if (options == null) {
 
-> CHANGE  630 : 632  @  639 : 640
+> CHANGE  5 : 7  @  4 : 5
 
 ~ 			BufferedReader bufferedreader = new BufferedReader(
 ~ 					new InputStreamReader(EaglerZLIB.newGZIPInputStream(new EaglerInputStream(options))));
 
-> CHANGE  715 : 721  @  723 : 724
+> CHANGE  85 : 91  @  84 : 85
 
 ~ 						this.resourcePacks.clear();
 ~ 						for (Object o : (new JSONArray(s.substring(s.indexOf(58) + 1))).toList()) {
@@ -241,7 +241,7 @@
 ~ 							}
 ~ 						}
 
-> CHANGE  727 : 733  @  730 : 731
+> CHANGE  12 : 18  @  7 : 8
 
 ~ 						this.field_183018_l.clear();
 ~ 						for (Object o : (new JSONArray(s.substring(s.indexOf(58) + 1))).toList()) {
@@ -250,11 +250,11 @@
 ~ 							}
 ~ 						}
 
-> DELETE  771  @  769 : 773
+> DELETE  44  @  39 : 43
 
-> DELETE  775  @  777 : 781
+> DELETE  4  @  8 : 12
 
-> INSERT  891 : 927  @  897
+> INSERT  116 : 152  @  120
 
 + 					if (astring[0].equals("hudFps")) {
 + 						this.hudFps = astring[1].equals("true");
@@ -293,28 +293,28 @@
 + 					}
 + 
 
-> INSERT  933 : 935  @  903
+> INSERT  42 : 44  @  6
 
 + 					Keyboard.setFunctionKeyModifier(keyBindFunction.getKeyCode());
 + 
 
-> DELETE  952  @  920 : 921
+> DELETE  19  @  17 : 18
 
-> CHANGE  964 : 966  @  933 : 934
+> CHANGE  12 : 14  @  13 : 14
 
 ~ 			ByteArrayOutputStream bao = new ByteArrayOutputStream();
 ~ 			PrintWriter printwriter = new PrintWriter(new OutputStreamWriter(EaglerZLIB.newGZIPOutputStream(bao)));
 
-> CHANGE  992 : 994  @  960 : 962
+> CHANGE  28 : 30  @  27 : 29
 
 ~ 			printwriter.println("resourcePacks:" + toJSONArray(this.resourcePacks));
 ~ 			printwriter.println("incompatibleResourcePacks:" + toJSONArray(this.field_183018_l));
 
-> DELETE  1002  @  970 : 971
+> DELETE  10  @  10 : 11
 
-> DELETE  1003  @  972 : 973
+> DELETE  1  @  2 : 3
 
-> INSERT  1032 : 1041  @  1002
+> INSERT  29 : 38  @  30
 
 + 			printwriter.println("hudFps:" + this.hudFps);
 + 			printwriter.println("hudWorld:" + this.hudWorld);
@@ -326,21 +326,21 @@
 + 			printwriter.println("fog:" + this.fog);
 + 			printwriter.println("fxaa:" + this.fxaa);
 
-> INSERT  1046 : 1048  @  1007
+> INSERT  14 : 16  @  5
 
 + 			Keyboard.setFunctionKeyModifier(keyBindFunction.getKeyCode());
 + 
 
-> INSERT  1059 : 1061  @  1018
+> INSERT  13 : 15  @  11
 
 + 
 + 			EagRuntime.setStorage("g", bao.toByteArray());
 
-> CHANGE  1071 : 1072  @  1028 : 1029
+> CHANGE  12 : 13  @  10 : 11
 
 ~ 				: (parSoundCategory == SoundCategory.VOICE ? 0.0F : 1.0F);
 
-> INSERT  1125 : 1133  @  1082
+> INSERT  54 : 62  @  54
 
 + 	private String toJSONArray(List<String> e) {
 + 		JSONArray arr = new JSONArray();
@@ -351,16 +351,16 @@
 + 	}
 + 
 
-> CHANGE  1137 : 1138  @  1086 : 1087
+> CHANGE  12 : 13  @  4 : 5
 
 ~ 		RENDER_DISTANCE("options.renderDistance", true, false, 1.0F, 16.0F, 1.0F),
 
-> CHANGE  1146 : 1148  @  1095 : 1099
+> CHANGE  9 : 11  @  9 : 13
 
 ~ 		TOUCHSCREEN("options.touchscreen", false, true), CHAT_SCALE("options.chat.scale", true, false),
 ~ 		CHAT_WIDTH("options.chat.width", true, false), CHAT_HEIGHT_FOCUSED("options.chat.height.focused", true, false),
 
-> CHANGE  1162 : 1167  @  1113 : 1114
+> CHANGE  16 : 21  @  18 : 19
 
 ~ 		ENTITY_SHADOWS("options.entityShadows", false, true), HUD_FPS("options.hud.fps", false, true),
 ~ 		HUD_COORDS("options.hud.coords", false, true), HUD_STATS("options.hud.stats", false, true),

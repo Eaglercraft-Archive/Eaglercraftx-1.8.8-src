@@ -9,7 +9,7 @@
 
 + 
 
-> CHANGE  78 : 79  @  77 : 79
+> CHANGE  75 : 76  @  74 : 76
 
 ~ 		if (this.worldObj.isBlockLoaded(new BlockPos(this))) {
 

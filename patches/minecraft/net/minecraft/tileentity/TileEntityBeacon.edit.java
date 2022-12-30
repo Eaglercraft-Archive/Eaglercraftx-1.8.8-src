@@ -7,18 +7,18 @@
 
 > DELETE  2  @  2 : 3
 
-> INSERT  4 : 7  @  5
+> INSERT  2 : 5  @  3
 
 + 
 + import com.google.common.collect.Lists;
 + 
 
-> DELETE  25  @  23 : 27
+> DELETE  21  @  18 : 22
 
-> DELETE  54  @  56 : 62
+> DELETE  29  @  33 : 39
 
-> DELETE  55  @  63 : 82
+> DELETE  1  @  7 : 26
 
-> DELETE  137  @  164 : 172
+> DELETE  82  @  101 : 109
 
 > EOF

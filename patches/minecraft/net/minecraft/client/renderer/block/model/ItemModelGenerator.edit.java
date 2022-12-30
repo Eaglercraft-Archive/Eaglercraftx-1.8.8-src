@@ -7,7 +7,7 @@
 
 > DELETE  2  @  2 : 4
 
-> CHANGE  5 : 11  @  7 : 13
+> CHANGE  3 : 9  @  5 : 11
 
 ~ 
 ~ import com.google.common.collect.Lists;
@@ -16,24 +16,24 @@
 ~ import net.lax1dude.eaglercraft.v1_8.minecraft.EaglerTextureAtlasSprite;
 ~ import net.lax1dude.eaglercraft.v1_8.vector.Vector3f;
 
-> DELETE  14  @  16 : 17
+> DELETE  9  @  9 : 10
 
-> CHANGE  31 : 33  @  34 : 35
+> CHANGE  17 : 19  @  18 : 19
 
 ~ 			EaglerTextureAtlasSprite textureatlassprite = textureMapIn
 ~ 					.getAtlasSprite((new ResourceLocation(s1)).toString());
 
-> CHANGE  45 : 47  @  47 : 48
+> CHANGE  14 : 16  @  13 : 14
 
 ~ 	private List<BlockPart> func_178394_a(int parInt1, String parString1,
 ~ 			EaglerTextureAtlasSprite parTextureAtlasSprite) {
 
-> CHANGE  59 : 61  @  60 : 61
+> CHANGE  14 : 16  @  13 : 14
 
 ~ 	private List<BlockPart> func_178397_a(EaglerTextureAtlasSprite parTextureAtlasSprite, String parString1,
 ~ 			int parInt1) {
 
-> CHANGE  163 : 164  @  163 : 164
+> CHANGE  104 : 105  @  103 : 104
 
 ~ 	private List<ItemModelGenerator.Span> func_178393_a(EaglerTextureAtlasSprite parTextureAtlasSprite) {
 

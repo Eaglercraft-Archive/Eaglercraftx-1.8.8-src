@@ -9,9 +9,9 @@
 
 ~ 		if (this.fireworkAge % 2 < 2) {
 
-> DELETE  105  @  105 : 110
+> DELETE  6  @  6 : 11
 
-> CHANGE  108 : 109  @  113 : 114
+> CHANGE  3 : 4  @  8 : 9
 
 ~ 		if (b0 == 17) {
 

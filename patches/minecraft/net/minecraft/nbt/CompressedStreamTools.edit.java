@@ -7,22 +7,22 @@
 
 > DELETE  8  @  8 : 11
 
-> CHANGE  11 : 13  @  14 : 16
+> CHANGE  3 : 5  @  6 : 8
 
 ~ 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglerZLIB;
 
-> DELETE  15  @  18 : 22
+> DELETE  4  @  4 : 8
 
-> CHANGE  19 : 21  @  26 : 27
+> CHANGE  4 : 6  @  8 : 9
 
 ~ 		DataInputStream datainputstream = new DataInputStream(
 ~ 				new BufferedInputStream(EaglerZLIB.newGZIPInputStream(is)));
 
-> CHANGE  34 : 35  @  40 : 41
+> CHANGE  15 : 16  @  14 : 15
 
 ~ 				new BufferedOutputStream(EaglerZLIB.newGZIPOutputStream(parOutputStream)));
 
-> DELETE  44  @  50 : 96
+> DELETE  10  @  10 : 56
 
 > EOF

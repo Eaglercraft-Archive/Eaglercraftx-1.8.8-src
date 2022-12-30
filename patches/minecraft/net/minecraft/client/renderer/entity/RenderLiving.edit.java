@@ -11,10 +11,10 @@
 + import net.lax1dude.eaglercraft.v1_8.opengl.OpenGlHelper;
 + import net.lax1dude.eaglercraft.v1_8.opengl.WorldRenderer;
 
-> DELETE  6  @  3 : 5
+> DELETE  4  @  1 : 3
 
-> DELETE  7  @  6 : 7
+> DELETE  1  @  3 : 4
 
-> DELETE  8  @  8 : 10
+> DELETE  1  @  2 : 4
 
 > EOF

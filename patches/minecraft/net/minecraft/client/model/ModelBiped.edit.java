@@ -9,7 +9,7 @@
 
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 
-> CHANGE  74 : 75  @  76 : 77
+> CHANGE  72 : 73  @  74 : 75
 
 ~ 			if (entity != null && entity.isSneaking()) {
 

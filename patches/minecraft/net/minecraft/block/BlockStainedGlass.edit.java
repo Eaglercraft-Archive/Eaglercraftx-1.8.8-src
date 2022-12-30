@@ -10,12 +10,12 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
 
-> CHANGE  48 : 49  @  49 : 50
+> CHANGE  45 : 46  @  46 : 47
 
 ~ 	public int quantityDropped(EaglercraftRandom var1) {
 
-> DELETE  65  @  66 : 69
+> DELETE  17  @  17 : 20
 
-> DELETE  69  @  73 : 76
+> DELETE  4  @  7 : 10
 
 > EOF

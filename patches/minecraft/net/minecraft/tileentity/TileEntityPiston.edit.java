@@ -7,12 +7,12 @@
 
 > DELETE  2  @  2 : 3
 
-> INSERT  3 : 6  @  4
+> INSERT  1 : 4  @  2
 
 + 
 + import com.google.common.collect.Lists;
 + 
 
-> DELETE  11  @  9 : 10
+> DELETE  8  @  5 : 6
 
 > EOF

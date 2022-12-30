@@ -10,7 +10,7 @@
 + import net.lax1dude.eaglercraft.v1_8.HString;
 + 
 
-> CHANGE  26 : 27  @  24 : 25
+> CHANGE  24 : 25  @  22 : 23
 
 ~ 		return HString.format("%s (%s)", new Object[] { this.name, this.region });
 

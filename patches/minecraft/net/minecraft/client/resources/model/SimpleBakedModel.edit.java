@@ -7,45 +7,45 @@
 
 > DELETE  2  @  2 : 3
 
-> INSERT  3 : 7  @  4
+> INSERT  1 : 5  @  2
 
 + 
 + import com.google.common.collect.Lists;
 + 
 + import net.lax1dude.eaglercraft.v1_8.minecraft.EaglerTextureAtlasSprite;
 
-> DELETE  11  @  8 : 10
+> DELETE  8  @  4 : 6
 
-> CHANGE  18 : 19  @  17 : 18
+> CHANGE  7 : 8  @  9 : 10
 
 ~ 	protected final EaglerTextureAtlasSprite texture;
 
-> CHANGE  22 : 23  @  21 : 22
+> CHANGE  4 : 5  @  4 : 5
 
 ~ 			EaglerTextureAtlasSprite parTextureAtlasSprite, ItemCameraTransforms parItemCameraTransforms) {
 
-> CHANGE  51 : 52  @  50 : 51
+> CHANGE  29 : 30  @  29 : 30
 
 ~ 	public EaglerTextureAtlasSprite getParticleTexture() {
 
-> CHANGE  63 : 64  @  62 : 63
+> CHANGE  12 : 13  @  12 : 13
 
 ~ 		private EaglerTextureAtlasSprite builderTexture;
 
-> CHANGE  71 : 72  @  70 : 71
+> CHANGE  8 : 9  @  8 : 9
 
 ~ 		public Builder(IBakedModel parIBakedModel, EaglerTextureAtlasSprite parTextureAtlasSprite) {
 
-> CHANGE  83 : 84  @  82 : 83
+> CHANGE  12 : 13  @  12 : 13
 
 ~ 		private void addFaceBreakingFours(IBakedModel parIBakedModel, EaglerTextureAtlasSprite parTextureAtlasSprite,
 
-> CHANGE  91 : 93  @  90 : 91
+> CHANGE  8 : 10  @  8 : 9
 
 ~ 		private void addGeneralBreakingFours(IBakedModel parIBakedModel,
 ~ 				EaglerTextureAtlasSprite parTextureAtlasSprite) {
 
-> CHANGE  122 : 123  @  120 : 121
+> CHANGE  31 : 32  @  30 : 31
 
 ~ 		public SimpleBakedModel.Builder setTexture(EaglerTextureAtlasSprite parTextureAtlasSprite) {
 

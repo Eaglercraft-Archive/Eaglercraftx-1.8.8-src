@@ -9,11 +9,11 @@
 
 ~ 
 
-> CHANGE  13 : 14  @  14 : 23
+> CHANGE  10 : 11  @  11 : 20
 
 ~ 	public static PropertyEnum<BlockRailBase.EnumRailDirection> SHAPE;
 
-> INSERT  23 : 35  @  32
+> INSERT  10 : 22  @  18
 
 + 	public static void bootstrapStates() {
 + 		SHAPE = PropertyEnum.create("shape", BlockRailBase.EnumRailDirection.class,

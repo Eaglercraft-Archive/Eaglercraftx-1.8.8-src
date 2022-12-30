@@ -13,24 +13,24 @@
 ~ import net.lax1dude.eaglercraft.v1_8.json.JSONTypeSerializer;
 ~ import net.lax1dude.eaglercraft.v1_8.json.JSONTypeProvider;
 
-> DELETE  8  @  12 : 13
+> DELETE  6  @  10 : 11
 
-> CHANGE  10 : 14  @  15 : 21
+> CHANGE  2 : 6  @  3 : 9
 
 ~ 		implements JSONTypeSerializer<PackMetadataSection, JSONObject> {
 ~ 	public PackMetadataSection deserialize(JSONObject jsonobject) throws JSONException {
 ~ 		IChatComponent ichatcomponent = JSONTypeProvider.deserialize(jsonobject.get("description"),
 ~ 				IChatComponent.class);
 
-> CHANGE  15 : 16  @  22 : 23
+> CHANGE  5 : 6  @  7 : 8
 
 ~ 			throw new JSONException("Invalid/missing description!");
 
-> CHANGE  17 : 18  @  24 : 25
+> CHANGE  2 : 3  @  2 : 3
 
 ~ 			int i = jsonobject.getInt("pack_format");
 
-> CHANGE  22 : 27  @  29 : 34
+> CHANGE  5 : 10  @  5 : 10
 
 ~ 	public JSONObject serialize(PackMetadataSection packmetadatasection) {
 ~ 		JSONObject jsonobject = new JSONObject();

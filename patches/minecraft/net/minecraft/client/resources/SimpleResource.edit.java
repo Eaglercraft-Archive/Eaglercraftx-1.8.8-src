@@ -9,11 +9,11 @@
 
 ~ import java.io.IOException;
 
-> CHANGE  4 : 5  @  7 : 8
+> CHANGE  2 : 3  @  5 : 6
 
 ~ import java.nio.charset.StandardCharsets;
 
-> CHANGE  6 : 13  @  9 : 10
+> CHANGE  2 : 9  @  2 : 3
 
 ~ 
 ~ import org.json.JSONException;
@@ -23,22 +23,22 @@
 ~ 
 ~ import net.lax1dude.eaglercraft.v1_8.IOUtils;
 
-> DELETE  16  @  13 : 14
+> DELETE  10  @  4 : 5
 
-> CHANGE  25 : 26  @  23 : 24
+> CHANGE  9 : 10  @  10 : 11
 
 ~ 	private JSONObject mcmetaJson;
 
-> DELETE  55  @  53 : 54
+> DELETE  30  @  30 : 31
 
-> CHANGE  57 : 61  @  56 : 58
+> CHANGE  2 : 6  @  3 : 5
 
 ~ 					this.mcmetaJson = new JSONObject(
 ~ 							IOUtils.inputStreamToString(this.mcmetaInputStream, StandardCharsets.UTF_8));
 ~ 				} catch (IOException e) {
 ~ 					throw new JSONException(e);
 
-> CHANGE  62 : 63  @  59 : 60
+> CHANGE  5 : 6  @  3 : 4
 
 ~ 					IOUtils.closeQuietly(this.mcmetaInputStream);
 

@@ -7,7 +7,7 @@
 
 > DELETE  2  @  2 : 4
 
-> INSERT  3 : 11  @  5
+> INSERT  1 : 9  @  3
 
 + 
 + import com.google.common.collect.Sets;
@@ -18,37 +18,37 @@
 + import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 + import net.lax1dude.eaglercraft.v1_8.opengl.OpenGlHelper;
 
-> DELETE  13  @  7 : 9
+> DELETE  10  @  2 : 4
 
-> DELETE  14  @  10 : 11
+> DELETE  1  @  3 : 4
 
-> DELETE  22  @  19 : 20
+> DELETE  8  @  9 : 10
 
-> INSERT  103 : 104  @  101
+> INSERT  81 : 82  @  82
 
 + 			GlStateManager.enableAlpha();
 
-> CHANGE  211 : 212  @  208 : 209
+> CHANGE  108 : 109  @  107 : 108
 
 ~ 				EaglerTextureAtlasSprite textureatlassprite = this.mc.getTextureMapBlocks().getAtlasSprite(s1);
 
-> CHANGE  268 : 269  @  265 : 266
+> CHANGE  57 : 58  @  57 : 58
 
 ~ 	protected void mouseClicked(int parInt1, int parInt2, int parInt3) {
 
-> CHANGE  504 : 508  @  501 : 503
+> CHANGE  236 : 240  @  236 : 238
 
 ~ 	protected void keyTyped(char parChar1, int parInt1) {
 ~ 		if (parInt1 == this.mc.gameSettings.keyBindClose.getKeyCode()
 ~ 				|| parInt1 == this.mc.gameSettings.keyBindInventory.getKeyCode()
 ~ 				|| (parInt1 == 1 && this.mc.gameSettings.keyBindClose.getKeyCode() == 0)) {
 
-> CHANGE  509 : 511  @  504 : 512
+> CHANGE  5 : 7  @  3 : 11
 
 ~ 			if (this.mc.currentScreen == null) {
 ~ 				this.mc.setIngameFocus();
 
-> INSERT  512 : 523  @  513
+> INSERT  3 : 14  @  9
 
 + 		} else if (parInt1 == 1) {
 + 			showingCloseKey = System.currentTimeMillis();
@@ -62,6 +62,6 @@
 + 				}
 + 			}
 
-> DELETE  524  @  514 : 515
+> DELETE  12  @  1 : 2
 
 > EOF

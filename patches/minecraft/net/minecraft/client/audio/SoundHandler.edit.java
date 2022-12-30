@@ -7,15 +7,15 @@
 
 > DELETE  2  @  2 : 5
 
-> DELETE  5  @  8 : 9
+> DELETE  3  @  6 : 7
 
-> INSERT  7 : 8  @  11
+> INSERT  2 : 3  @  3
 
 + import java.nio.charset.StandardCharsets;
 
-> DELETE  10  @  13 : 14
+> DELETE  3  @  2 : 3
 
-> CHANGE  11 : 24  @  15 : 25
+> CHANGE  1 : 14  @  2 : 12
 
 ~ import java.util.Set;
 ~ 
@@ -31,25 +31,25 @@
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 
-> DELETE  31  @  32 : 36
+> DELETE  20  @  17 : 21
 
-> CHANGE  34 : 35  @  39 : 41
+> CHANGE  3 : 4  @  7 : 9
 
 ~ 
 
-> CHANGE  51 : 52  @  57 : 58
+> CHANGE  17 : 18  @  18 : 19
 
 ~ 	private final EaglercraftSoundManager sndManager;
 
-> CHANGE  56 : 57  @  62 : 63
+> CHANGE  5 : 6  @  5 : 6
 
 ~ 		this.sndManager = new EaglercraftSoundManager(gameSettingsIn, this);
 
-> CHANGE  69 : 70  @  75 : 76
+> CHANGE  13 : 14  @  13 : 14
 
 ~ 						for (Entry entry : (Set<Entry>) map.entrySet()) {
 
-> INSERT  84 : 94  @  90
+> INSERT  15 : 25  @  15
 
 + 	public static class SoundMap {
 + 
@@ -62,25 +62,25 @@
 + 	}
 + 
 
-> CHANGE  95 : 96  @  91 : 92
+> CHANGE  11 : 12  @  1 : 2
 
 ~ 		Map<String, SoundList> map = null;
 
-> CHANGE  97 : 101  @  93 : 94
+> CHANGE  2 : 6  @  2 : 3
 
 ~ 			map = JSONTypeProvider.deserialize(IOUtils.inputStreamToString(stream, StandardCharsets.UTF_8),
 ~ 					SoundMap.class).soundMap;
 ~ 		} catch (IOException e) {
 ~ 			throw new RuntimeException("Exception caught reading JSON", e);
 
-> INSERT  223 : 227  @  216
+> INSERT  126 : 130  @  123
 
 + 		if (category == SoundCategory.VOICE) {
 + 			PlatformAudio.setMicVol(volume);
 + 		}
 + 
 
-> CHANGE  240 : 246  @  229 : 231
+> CHANGE  17 : 23  @  13 : 15
 
 ~ 			SoundCategory cat = soundeventaccessorcomposite.getSoundCategory();
 ~ 			for (int i = 0; i < categories.length; ++i) {
@@ -89,7 +89,7 @@
 ~ 					break;
 ~ 				}
 
-> CHANGE  252 : 253  @  237 : 238
+> CHANGE  12 : 13  @  8 : 9
 
 ~ 			return (SoundEventAccessorComposite) arraylist.get((new EaglercraftRandom()).nextInt(arraylist.size()));
 

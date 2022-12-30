@@ -9,47 +9,47 @@
 
 + 
 
-> DELETE  11  @  10 : 18
+> DELETE  8  @  7 : 15
 
-> DELETE  14  @  21 : 22
+> DELETE  3  @  11 : 12
 
-> DELETE  24  @  32 : 33
+> DELETE  10  @  11 : 12
 
-> DELETE  25  @  34 : 35
+> DELETE  1  @  2 : 3
 
-> DELETE  84  @  94 : 103
+> DELETE  59  @  60 : 69
 
-> CHANGE  296 : 297  @  315 : 319
+> CHANGE  212 : 213  @  221 : 225
 
 ~ 
 
-> DELETE  358  @  380 : 386
+> DELETE  62  @  65 : 71
 
-> DELETE  573  @  601 : 606
+> DELETE  215  @  221 : 226
 
-> DELETE  719  @  752 : 755
+> DELETE  146  @  151 : 154
 
-> DELETE  753  @  789 : 797
+> DELETE  34  @  37 : 45
 
-> DELETE  759  @  803 : 829
+> DELETE  6  @  14 : 40
 
-> CHANGE  763 : 764  @  833 : 834
+> CHANGE  4 : 5  @  30 : 31
 
 ~ 		if (this.dataWatcher.hasObjectChanged()) {
 
-> DELETE  773  @  843 : 848
+> DELETE  10  @  10 : 15
 
-> DELETE  829  @  904 : 908
+> DELETE  56  @  61 : 65
 
-> DELETE  854  @  933 : 937
+> DELETE  25  @  29 : 33
 
-> DELETE  872  @  955 : 962
+> DELETE  18  @  22 : 29
 
-> DELETE  873  @  963 : 964
+> DELETE  1  @  8 : 9
 
-> DELETE  921  @  1012 : 1017
+> DELETE  48  @  49 : 54
 
-> CHANGE  991 : 992  @  1087 : 1095
+> CHANGE  70 : 71  @  75 : 83
 
 ~ 		String s = nbttagcompound.getString("OwnerUUID");
 

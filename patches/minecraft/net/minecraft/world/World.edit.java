@@ -7,15 +7,15 @@
 
 > DELETE  2  @  2 : 5
 
-> CHANGE  7 : 8  @  10 : 11
+> CHANGE  5 : 6  @  8 : 9
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 
-> CHANGE  9 : 10  @  12 : 13
+> CHANGE  2 : 3  @  2 : 3
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
 
-> INSERT  11 : 16  @  14
+> INSERT  2 : 7  @  2
 
 + 
 + import com.google.common.base.Predicate;
@@ -23,93 +23,93 @@
 + import com.google.common.collect.Sets;
 + 
 
-> DELETE  34  @  32 : 33
+> DELETE  23  @  18 : 19
 
-> DELETE  46  @  45 : 60
+> DELETE  12  @  13 : 28
 
-> DELETE  47  @  61 : 62
+> DELETE  1  @  16 : 17
 
-> DELETE  50  @  65 : 66
+> DELETE  3  @  4 : 5
 
-> CHANGE  68 : 69  @  84 : 85
+> CHANGE  18 : 19  @  19 : 20
 
 ~ 	protected int updateLCG = (new EaglercraftRandom()).nextInt();
 
-> CHANGE  75 : 76  @  91 : 92
+> CHANGE  7 : 8  @  7 : 8
 
 ~ 	public final EaglercraftRandom rand = new EaglercraftRandom();
 
-> DELETE  83  @  99 : 100
+> DELETE  8  @  8 : 9
 
-> DELETE  86  @  103 : 104
+> DELETE  3  @  4 : 5
 
-> INSERT  96 : 99  @  114
+> INSERT  10 : 13  @  11
 
 + 		if (!client) {
 + 			throw new IllegalStateException("Singleplayer is unavailable because all of it's code was deleted");
 + 		}
 
-> DELETE  107  @  122 : 123
+> DELETE  11  @  8 : 9
 
-> CHANGE  119 : 120  @  135 : 136
+> CHANGE  12 : 13  @  13 : 14
 
 ~ 				return chunk.getBiome(pos);
 
-> CHANGE  131 : 132  @  147 : 148
+> CHANGE  12 : 13  @  12 : 13
 
 ~ 			return BiomeGenBase.plains;
 
-> DELETE  135  @  151 : 155
+> DELETE  4  @  4 : 8
 
-> DELETE  189  @  209 : 217
+> DELETE  54  @  58 : 66
 
-> DELETE  225  @  253 : 255
+> DELETE  36  @  44 : 46
 
-> CHANGE  240 : 241  @  270 : 271
+> CHANGE  15 : 16  @  17 : 18
 
 ~ 				if ((flags & 2) != 0 && ((flags & 4) == 0) && chunk.isPopulated()) {
 
-> DELETE  244  @  274 : 281
+> DELETE  4  @  4 : 11
 
-> CHANGE  280 : 281  @  317 : 321
+> CHANGE  36 : 37  @  43 : 47
 
 ~ 		this.notifyNeighborsOfStateChange(pos, blockType);
 
-> DELETE  348  @  388 : 390
+> DELETE  68  @  71 : 73
 
-> DELETE  349  @  391 : 411
+> DELETE  1  @  3 : 23
 
-> DELETE  1753  @  1815 : 1873
+> DELETE  1404  @  1424 : 1482
 
-> DELETE  1793  @  1913 : 1937
+> DELETE  40  @  98 : 122
 
-> CHANGE  1801 : 1802  @  1945 : 1946
+> CHANGE  8 : 9  @  32 : 33
 
 ~ 	public void forceBlockUpdateTick(Block blockType, BlockPos pos, EaglercraftRandom random) {
 
-> DELETE  2033  @  2177 : 2181
+> DELETE  232  @  232 : 236
 
-> CHANGE  2061 : 2062  @  2209 : 2210
+> CHANGE  28 : 29  @  32 : 33
 
 ~ 			if (entityType.isAssignableFrom(entity.getClass()) && filter.apply((T) entity)) {
 
-> CHANGE  2072 : 2074  @  2220 : 2222
+> CHANGE  11 : 13  @  11 : 13
 
 ~ 		for (EntityPlayer entity : this.playerEntities) {
 ~ 			if (playerType.isAssignableFrom(entity.getClass()) && filter.apply((T) entity)) {
 
-> CHANGE  2306 : 2307  @  2454 : 2455
+> CHANGE  234 : 235  @  234 : 235
 
 ~ 	public EntityPlayer getPlayerEntityByUUID(EaglercraftUUID uuid) {
 
-> CHANGE  2504 : 2505  @  2652 : 2653
+> CHANGE  198 : 199  @  198 : 199
 
 ~ 	public EaglercraftRandom setRandomSeed(int parInt1, int parInt2, int parInt3) {
 
-> CHANGE  2557 : 2558  @  2705 : 2706
+> CHANGE  53 : 54  @  53 : 54
 
 ~ 			this.theCalendar.setTimeInMillis(System.currentTimeMillis());
 
-> DELETE  2625  @  2773 : 2777
+> DELETE  68  @  68 : 72
 
 > EOF

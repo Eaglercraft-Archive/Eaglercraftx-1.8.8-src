@@ -13,52 +13,52 @@
 ~ import net.lax1dude.eaglercraft.v1_8.minecraft.EaglerTextureAtlasSprite;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 
-> DELETE  13  @  10 : 11
+> DELETE  11  @  8 : 9
 
-> DELETE  14  @  12 : 13
+> DELETE  1  @  2 : 3
 
-> DELETE  24  @  23 : 24
+> DELETE  10  @  11 : 12
 
-> CHANGE  67 : 68  @  67 : 68
+> CHANGE  43 : 44  @  44 : 45
 
 ~ 	protected void actionPerformed(GuiButton parGuiButton) {
 
-> CHANGE  76 : 78  @  76 : 84
+> CHANGE  9 : 11  @  9 : 17
 
 ~ 	protected int getCloseKey() {
 ~ 		return this.mc.gameSettings.keyBindInventory.getKeyCode();
 
-> CHANGE  154 : 155  @  160 : 161
+> CHANGE  78 : 79  @  84 : 85
 
 ~ 			GlStateManager.disableLighting();
 
-> INSERT  216 : 220  @  222
+> INSERT  62 : 66  @  62
 
 + 		GlStateManager.enableDepth();
 + 		GlStateManager.clearDepth(0.0f);
 + 		GlStateManager.clear(256);
 + 		GlStateManager.clearDepth(1.0f);
 
-> CHANGE  237 : 238  @  239 : 240
+> CHANGE  21 : 22  @  17 : 18
 
 ~ 		EaglercraftRandom random = new EaglercraftRandom();
 
-> CHANGE  246 : 248  @  248 : 249
+> CHANGE  9 : 11  @  9 : 10
 
 ~ 				random.setSeed(
 ~ 						(long) (this.mc.getSession().getProfile().getId().hashCode() + k1 + l2 + (l1 + k2) * 16));
 
-> CHANGE  249 : 250  @  250 : 251
+> CHANGE  3 : 4  @  2 : 3
 
 ~ 				EaglerTextureAtlasSprite textureatlassprite = this.func_175371_a(Blocks.sand);
 
-> DELETE  276  @  277 : 278
+> DELETE  27  @  27 : 28
 
-> CHANGE  434 : 435  @  436 : 437
+> CHANGE  158 : 159  @  159 : 160
 
 ~ 		GlStateManager.disableBlend();
 
-> CHANGE  438 : 439  @  440 : 441
+> CHANGE  4 : 5  @  4 : 5
 
 ~ 	private EaglerTextureAtlasSprite func_175371_a(Block parBlock) {
 

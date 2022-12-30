@@ -7,7 +7,7 @@
 
 > DELETE  2  @  2 : 4
 
-> CHANGE  14 : 15  @  16 : 17
+> CHANGE  12 : 13  @  14 : 15
 
 ~ 	protected void keyTyped(char parChar1, int parInt1) {
 

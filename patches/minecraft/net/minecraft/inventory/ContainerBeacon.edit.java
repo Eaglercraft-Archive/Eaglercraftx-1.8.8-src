@@ -7,6 +7,6 @@
 
 > DELETE  4  @  4 : 8
 
-> DELETE  41  @  45 : 56
+> DELETE  37  @  41 : 52
 
 > EOF

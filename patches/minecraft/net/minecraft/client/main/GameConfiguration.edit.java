@@ -7,28 +7,28 @@
 
 > DELETE  2  @  2 : 5
 
-> DELETE  7  @  10 : 11
+> DELETE  5  @  8 : 9
 
-> DELETE  8  @  12 : 13
+> DELETE  1  @  2 : 3
 
-> CHANGE  10 : 11  @  15 : 17
+> CHANGE  2 : 3  @  3 : 5
 
 ~ 			GameConfiguration.DisplayInformation displayInfoIn, GameConfiguration.GameInformation gameInfoIn) {
 
-> DELETE  13  @  19 : 20
+> DELETE  3  @  4 : 5
 
-> DELETE  14  @  21 : 22
+> DELETE  1  @  2 : 3
 
-> DELETE  30  @  38 : 52
+> DELETE  16  @  17 : 31
 
-> DELETE  40  @  62 : 72
+> DELETE  10  @  24 : 34
 
-> DELETE  42  @  74 : 77
+> DELETE  2  @  12 : 15
 
-> CHANGE  43 : 44  @  78 : 80
+> CHANGE  1 : 2  @  4 : 6
 
 ~ 		public UserInformation(Session parSession) {
 
-> DELETE  45  @  81 : 84
+> DELETE  2  @  3 : 6
 
 > EOF

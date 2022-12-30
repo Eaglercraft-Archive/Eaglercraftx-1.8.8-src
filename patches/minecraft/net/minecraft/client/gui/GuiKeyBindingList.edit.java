@@ -10,8 +10,8 @@
 + 
 + import net.lax1dude.eaglercraft.v1_8.ArrayUtils;
 
-> DELETE  6  @  4 : 7
+> DELETE  3  @  1 : 4
 
-> DELETE  10  @  11 : 12
+> DELETE  4  @  7 : 8
 
 > EOF

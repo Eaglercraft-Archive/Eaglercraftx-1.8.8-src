@@ -7,7 +7,7 @@
 
 > DELETE  2  @  2 : 3
 
-> INSERT  3 : 8  @  4
+> INSERT  1 : 6  @  2
 
 + 
 + import com.google.common.collect.Maps;
@@ -15,6 +15,6 @@
 + import net.lax1dude.eaglercraft.v1_8.vector.Matrix4f;
 + import net.lax1dude.eaglercraft.v1_8.vector.Vector3f;
 
-> DELETE  10  @  6 : 8
+> DELETE  7  @  2 : 4
 
 > EOF

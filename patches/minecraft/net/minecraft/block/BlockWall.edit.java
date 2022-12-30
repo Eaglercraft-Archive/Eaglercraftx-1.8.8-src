@@ -9,11 +9,11 @@
 
 ~ 
 
-> CHANGE  28 : 29  @  29 : 31
+> CHANGE  25 : 26  @  26 : 28
 
 ~ 	public static PropertyEnum<BlockWall.EnumType> VARIANT;
 
-> INSERT  42 : 46  @  44
+> INSERT  14 : 18  @  15
 
 + 	public static void bootstrapStates() {
 + 		VARIANT = PropertyEnum.<BlockWall.EnumType>create("variant", BlockWall.EnumType.class);

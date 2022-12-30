@@ -10,7 +10,7 @@
 + import net.lax1dude.eaglercraft.v1_8.HString;
 + 
 
-> CHANGE  9 : 10  @  7 : 8
+> CHANGE  4 : 5  @  2 : 3
 
 ~ 		super(HString.format("\'%s\' in ResourcePack \'%s\'", new Object[] { parString1, parFile }));
 

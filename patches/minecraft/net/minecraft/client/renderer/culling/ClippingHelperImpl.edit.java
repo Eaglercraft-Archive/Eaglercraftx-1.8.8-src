@@ -12,22 +12,22 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 
-> DELETE  7  @  4 : 6
+> DELETE  5  @  2 : 4
 
-> DELETE  11  @  10 : 13
+> DELETE  4  @  6 : 9
 
-> INSERT  14 : 15  @  16
+> INSERT  3 : 4  @  6
 
 + 		instance.destroy();
 
-> DELETE  28  @  29 : 34
+> DELETE  14  @  13 : 18
 
-> CHANGE  30 : 32  @  36 : 40
+> CHANGE  2 : 4  @  7 : 11
 
 ~ 		GlStateManager.getFloat(2983, afloat);
 ~ 		GlStateManager.getFloat(2982, afloat1);
 
-> INSERT  101 : 105  @  109
+> INSERT  71 : 75  @  73
 
 + 
 + 	public void destroy() {

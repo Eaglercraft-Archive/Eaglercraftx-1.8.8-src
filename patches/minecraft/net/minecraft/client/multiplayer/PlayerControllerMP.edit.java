@@ -11,13 +11,13 @@
 + 
 + import net.lax1dude.eaglercraft.v1_8.socket.EaglercraftNetworkManager;
 
-> DELETE  11  @  8 : 9
+> DELETE  9  @  6 : 7
 
-> INSERT  27 : 28  @  25
+> INSERT  16 : 17  @  17
 
 + import net.minecraft.util.ChatComponentText;
 
-> CHANGE  256 : 267  @  253 : 254
+> CHANGE  229 : 240  @  228 : 229
 
 ~ 			try {
 ~ 				this.netClientHandler.getNetworkManager().processReceivedPackets();
@@ -31,7 +31,7 @@
 ~ 			}
 ~ 			this.netClientHandler.getSkinCache().flush();
 
-> CHANGE  363 : 365  @  350 : 352
+> CHANGE  107 : 109  @  97 : 99
 
 ~ 	public EntityPlayerSP func_178892_a(World worldIn, StatFileWriter statWriter) {
 ~ 		return new EntityPlayerSP(this.mc, worldIn, this.netClientHandler, statWriter);

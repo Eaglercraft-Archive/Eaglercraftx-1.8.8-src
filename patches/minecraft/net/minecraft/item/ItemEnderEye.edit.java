@@ -7,14 +7,14 @@
 
 > DELETE  5  @  5 : 6
 
-> DELETE  7  @  8 : 11
+> DELETE  2  @  3 : 6
 
-> DELETE  9  @  13 : 15
+> DELETE  2  @  5 : 7
 
-> CHANGE  22 : 23  @  28 : 111
+> CHANGE  13 : 14  @  15 : 98
 
 ~ 			return true;
 
-> DELETE  28  @  116 : 144
+> DELETE  6  @  88 : 116
 
 > EOF

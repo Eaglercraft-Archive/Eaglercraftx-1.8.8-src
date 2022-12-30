@@ -7,18 +7,18 @@
 
 > DELETE  2  @  2 : 3
 
-> DELETE  6  @  7 : 8
+> DELETE  4  @  5 : 6
 
-> INSERT  7 : 8  @  9
+> INSERT  1 : 2  @  2
 
 + import java.util.Set;
 
-> INSERT  9 : 12  @  10
+> INSERT  2 : 5  @  1
 
 + 
 + import com.google.common.collect.Maps;
 + 
 
-> DELETE  14  @  12 : 24
+> DELETE  5  @  2 : 14
 
 > EOF

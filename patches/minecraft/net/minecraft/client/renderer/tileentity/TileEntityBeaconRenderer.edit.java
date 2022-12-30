@@ -12,11 +12,11 @@
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.WorldRenderer;
 
-> DELETE  8  @  5 : 7
+> DELETE  5  @  2 : 4
 
-> DELETE  12  @  11 : 12
+> DELETE  4  @  6 : 7
 
-> CHANGE  31 : 33  @  31 : 33
+> CHANGE  19 : 21  @  20 : 22
 
 ~ 				EaglercraftGPU.glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, 10497.0F);
 ~ 				EaglercraftGPU.glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, 10497.0F);

@@ -7,7 +7,7 @@
 
 > DELETE  2  @  2 : 4
 
-> CHANGE  7 : 14  @  9 : 15
+> CHANGE  5 : 12  @  7 : 13
 
 ~ 
 ~ import com.google.common.collect.Lists;
@@ -17,9 +17,9 @@
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 
-> DELETE  20  @  21 : 23
+> DELETE  13  @  12 : 14
 
-> CHANGE  33 : 41  @  36 : 41
+> CHANGE  13 : 21  @  15 : 20
 
 ~ 		if (resource.cachedPointer != null) {
 ~ 			TextureUtil.bindTexture(((ITextureObject) resource.cachedPointer).getGlTextureId()); // unsafe, lol
@@ -30,29 +30,29 @@
 ~ 				this.loadTexture(resource, (ITextureObject) object);
 ~ 			}
 
-> CHANGE  42 : 45  @  42 : 43
+> CHANGE  9 : 12  @  6 : 7
 
 ~ 			resource.cachedPointer = object;
 ~ 			TextureUtil.bindTexture(((ITextureObject) object).getGlTextureId());
 ~ 		}
 
-> CHANGE  56 : 57  @  54 : 55
+> CHANGE  14 : 15  @  12 : 13
 
 ~ 	public boolean loadTexture(ResourceLocation textureLocation, ITextureObject textureObj) {
 
-> INSERT  70 : 71  @  68
+> INSERT  14 : 15  @  14
 
 + 			final ITextureObject textureObj2 = textureObj;
 
-> CHANGE  73 : 74  @  70 : 71
+> CHANGE  3 : 4  @  2 : 3
 
 ~ 					return textureObj2.getClass().getName();
 
-> INSERT  79 : 80  @  76
+> INSERT  6 : 7  @  6
 
 + 		textureLocation.cachedPointer = textureObj;
 
-> CHANGE  85 : 90  @  81 : 82
+> CHANGE  6 : 11  @  5 : 6
 
 ~ 		if (textureLocation.cachedPointer != null) {
 ~ 			return (ITextureObject) textureLocation.cachedPointer;
@@ -60,14 +60,14 @@
 ~ 			return (ITextureObject) (textureLocation.cachedPointer = this.mapTextureObjects.get(textureLocation));
 ~ 		}
 
-> CHANGE  102 : 103  @  94 : 95
+> CHANGE  17 : 18  @  13 : 14
 
 ~ 				HString.format("dynamic/%s_%d", new Object[] { name, integer }));
 
-> CHANGE  115 : 116  @  107 : 108
+> CHANGE  13 : 14  @  13 : 14
 
 ~ 		ITextureObject itextureobject = this.mapTextureObjects.remove(textureLocation);
 
-> DELETE  119  @  111 : 112
+> DELETE  4  @  4 : 5
 
 > EOF

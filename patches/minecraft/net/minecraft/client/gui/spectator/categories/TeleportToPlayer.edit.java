@@ -7,7 +7,7 @@
 
 > DELETE  2  @  2 : 5
 
-> INSERT  5 : 10  @  8
+> INSERT  3 : 8  @  6
 
 + 
 + import com.google.common.collect.ComparisonChain;

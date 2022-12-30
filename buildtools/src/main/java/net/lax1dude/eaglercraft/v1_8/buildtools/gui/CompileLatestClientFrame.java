@@ -45,6 +45,9 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.awt.event.ActionEvent;
 import javax.swing.event.HyperlinkListener;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Element;
+import javax.swing.text.html.HTMLDocument;
 
 import net.lax1dude.eaglercraft.v1_8.buildtools.gui.TeaVMBinaries.MissingJARsException;
 import net.lax1dude.eaglercraft.v1_8.buildtools.task.init.FFMPEG;
@@ -1155,7 +1158,7 @@ public class CompileLatestClientFrame {
 		txtpnLogOutput.setAutoscrolls(false);
 		txtpnLogOutput.setMargin(new Insets(10, 10, 10, 10));
 		txtpnLogOutput.setContentType("text/html");
-		txtpnLogOutput.setText("<html><head><title>shit</title></head><body></body></html>");
+		txtpnLogOutput.setText("<html><head><title>shit</title><style type=\"text/css\">pre{font-family:\"Consolas\",\"Andale Mono\",monospace;}</style></head><body id=\"logContainer\" style=\"margin:0px;\"><pre></pre></body></html>");
 		txtpnLogOutput.setEditable(false);
 		scrollPane.setViewportView(txtpnLogOutput);
 		
@@ -1192,18 +1195,30 @@ public class CompileLatestClientFrame {
 		panel_29.setLayout(null);
 	}
 
-	private final StringBuilder logAccum = new StringBuilder();
+	private StringBuilder logAccumPrev = new StringBuilder();
+	private StringBuilder logAccum = new StringBuilder();
+	private Element logAccumBody = null;
 	private volatile boolean logDirty = false;
 	private volatile boolean isError = false;
 
 	public void logInfo(String line) {
 		line = htmlentities2(line);
 		synchronized(logAccum) {
-			if(isError) {
-				isError = false;
-				logAccum.append("</pre><pre>");
+			if(logAccum.length() > 0) {
+				if(isError) {
+					isError = false;
+					logAccum.append("</pre><pre>");
+				}
+				logAccum.append(line);
+			}else {
+				if(isError) {
+					isError = false;
+					logAccum.append("<pre>");
+					logAccum.append(line);
+				}else {
+					logAccumPrev.append(line);
+				}
 			}
-			logAccum.append(line);
 			logDirty = true;
 		}
 	}
@@ -1211,11 +1226,21 @@ public class CompileLatestClientFrame {
 	public void logError(String line) {
 		line = htmlentities2(line);
 		synchronized(logAccum) {
-			if(!isError) {
-				isError = true;
-				logAccum.append("</pre><pre style=\"color:#BB0000;\">");
+			if(logAccum.length() > 0) {
+				if(!isError) {
+					isError = true;
+					logAccum.append("</pre><pre style=\"color:#BB0000;\">");
+				}
+				logAccum.append(line);
+			}else {
+				if(!isError) {
+					isError = true;
+					logAccum.append("<pre style=\"color:#BB0000;\">");
+					logAccum.append(line);
+				}else {
+					logAccumPrev.append(line);
+				}
 			}
-			logAccum.append(line);
 			logDirty = true;
 		}
 	}
@@ -1226,12 +1251,31 @@ public class CompileLatestClientFrame {
 			public void run() {
 				while(true) {
 					try {
-						Thread.sleep(150l);
+						Thread.sleep(100l);
 						synchronized(logAccum) {
 							if(logDirty) {
 								EventQueue.invokeAndWait(new Runnable() {
 									public void run() {
-										txtpnLogOutput.setText("<html><head><title>shit</title><style type=\"text/css\">pre{font-family:\"Consolas\",\"Andale Mono\",monospace;}</style></head><body><p style=\"margin:0px;\"><pre>" + logAccum + "</pre></p></body></html>");
+										HTMLDocument ee = ((HTMLDocument)txtpnLogOutput.getDocument());
+										if(logAccumBody == null) {
+											logAccumBody = ee.getElement("logContainer");
+										}
+										if(logAccumPrev.length() > 0) {
+											try {
+												ee.insertString(logAccumBody.getElement(logAccumBody.getElementCount() - 1).getEndOffset() - 1, logAccumPrev.toString(), null);
+											} catch (BadLocationException e) {
+											}
+											logAccumPrev = new StringBuilder();
+										}
+										if(logAccum.length() > 0) {
+											logAccum.append("</pre>");
+											try {
+												ee.insertBeforeEnd(logAccumBody, logAccum.toString());
+											} catch (BadLocationException e) {
+											} catch (IOException e) {
+											}
+											logAccum = new StringBuilder();
+										}
 									}
 								});
 								EventQueue.invokeAndWait(new Runnable() {

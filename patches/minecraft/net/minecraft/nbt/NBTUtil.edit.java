@@ -15,25 +15,25 @@
 ~ import net.lax1dude.eaglercraft.v1_8.mojang.authlib.GameProfile;
 ~ import net.lax1dude.eaglercraft.v1_8.mojang.authlib.Property;
 
-> CHANGE  26 : 27  @  25 : 26
+> CHANGE  24 : 25  @  23 : 24
 
 ~ 			EaglercraftUUID uuid;
 
-> CHANGE  28 : 29  @  27 : 28
+> CHANGE  2 : 3  @  2 : 3
 
 ~ 				uuid = EaglercraftUUID.fromString(s1);
 
-> CHANGE  33 : 34  @  32 : 33
+> CHANGE  5 : 6  @  5 : 6
 
 ~ 			Multimap<String, Property> propertiesMap = MultimapBuilder.hashKeys().arrayListValues().build();
 
-> DELETE  36  @  35 : 36
+> DELETE  3  @  3 : 4
 
-> CHANGE  38 : 39  @  38 : 40
+> CHANGE  2 : 3  @  3 : 5
 
 ~ 					for (int i = 0, l = nbttaglist.tagCount(); i < l; ++i) {
 
-> CHANGE  40 : 48  @  41 : 47
+> CHANGE  2 : 10  @  3 : 9
 
 ~ 						String value = nbttagcompound1.getString("Value");
 ~ 						if (!StringUtils.isNullOrEmpty(value)) {
@@ -44,17 +44,17 @@
 ~ 								propertiesMap.put(s2, new Property(s2, value));
 ~ 							}
 
-> CHANGE  53 : 54  @  52 : 53
+> CHANGE  13 : 14  @  11 : 12
 
 ~ 			return new GameProfile(uuid, s, propertiesMap);
 
-> CHANGE  66 : 68  @  65 : 66
+> CHANGE  13 : 15  @  13 : 14
 
 ~ 		Multimap<String, Property> propertiesMap = profile.getProperties();
 ~ 		if (!propertiesMap.isEmpty()) {
 
-> DELETE  69  @  67 : 68
+> DELETE  3  @  2 : 3
 
-> DELETE  84  @  83 : 85
+> DELETE  15  @  16 : 18
 
 > EOF

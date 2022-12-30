@@ -7,25 +7,25 @@
 
 > DELETE  2  @  2 : 4
 
-> INSERT  4 : 8  @  6
+> INSERT  2 : 6  @  4
 
 + 
 + import com.google.common.collect.Lists;
 + import com.google.common.collect.Maps;
 + 
 
-> DELETE  9  @  7 : 12
+> DELETE  5  @  1 : 6
 
-> CHANGE  43 : 44  @  46 : 47
+> CHANGE  34 : 35  @  39 : 40
 
 ~ 	protected void actionPerformed(GuiButton parGuiButton) {
 
-> INSERT  100 : 102  @  103
+> INSERT  57 : 59  @  57
 
 + 			this.mc.loadingScreen.eaglerShow(I18n.format("resourcePack.load.refreshing"),
 + 					I18n.format("resourcePack.load.pleaseWait"));
 
-> INSERT  111 : 112  @  112
+> INSERT  11 : 12  @  9
 
 + 			GuiLanguage.this.mc.displayGuiScreen(GuiLanguage.this);
 

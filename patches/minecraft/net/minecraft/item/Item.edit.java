@@ -13,18 +13,18 @@
 + import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
 + 
 
-> CHANGE  11 : 12  @  6 : 10
+> CHANGE  9 : 10  @  4 : 8
 
 ~ 
 
-> DELETE  35  @  33 : 101
+> DELETE  24  @  27 : 95
 
-> CHANGE  51 : 53  @  117 : 118
+> CHANGE  16 : 18  @  84 : 85
 
 ~ 	protected static final EaglercraftUUID itemModifierUUID = EaglercraftUUID
 ~ 			.fromString("CB3F55D3-645C-4F38-A497-9C13A33DB5CF");
 
-> CHANGE  54 : 55  @  119 : 120
+> CHANGE  3 : 4  @  2 : 3
 
 ~ 	protected static EaglercraftRandom itemRand = new EaglercraftRandom();
 

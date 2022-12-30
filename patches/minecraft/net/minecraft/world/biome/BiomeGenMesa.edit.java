@@ -10,26 +10,26 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
 
-> DELETE  14  @  13 : 14
+> DELETE  11  @  10 : 11
 
-> DELETE  16  @  16 : 17
+> DELETE  2  @  3 : 4
 
-> DELETE  35  @  36 : 41
+> DELETE  19  @  20 : 25
 
-> DELETE  36  @  42 : 46
+> DELETE  1  @  6 : 10
 
-> DELETE  38  @  48 : 52
+> DELETE  2  @  6 : 10
 
-> CHANGE  46 : 48  @  60 : 65
+> CHANGE  8 : 10  @  12 : 17
 
 ~ 	public void genTerrainBlocks(World world, EaglercraftRandom random, ChunkPrimer chunkprimer, int i, int j,
 ~ 			double d0) {
 
-> CHANGE  53 : 54  @  70 : 71
+> CHANGE  7 : 8  @  10 : 11
 
 ~ 			EaglercraftRandom random1 = new EaglercraftRandom(this.field_150622_aD);
 
-> CHANGE  165 : 166  @  182 : 183
+> CHANGE  112 : 113  @  112 : 113
 
 ~ 		EaglercraftRandom random = new EaglercraftRandom(parLong1);
 

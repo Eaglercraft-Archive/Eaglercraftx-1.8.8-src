@@ -7,9 +7,9 @@
 
 > DELETE  2  @  2 : 3
 
-> DELETE  3  @  4 : 6
+> DELETE  1  @  2 : 4
 
-> INSERT  4 : 9  @  7
+> INSERT  1 : 6  @  3
 
 + import java.util.Set;
 + import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
@@ -17,13 +17,13 @@
 + import com.google.common.collect.Maps;
 + 
 
-> DELETE  17  @  15 : 20
+> DELETE  13  @  8 : 13
 
-> CHANGE  140 : 141  @  143 : 146
+> CHANGE  123 : 124  @  128 : 131
 
 ~ 			// multiplayer only
 
-> CHANGE  242 : 244  @  247 : 249
+> CHANGE  102 : 104  @  104 : 106
 
 ~ 		AttributeModifier attributemodifier = new AttributeModifier(EaglercraftUUID.fromString(parString1),
 ~ 				this.getName(), parDouble1, parInt1);

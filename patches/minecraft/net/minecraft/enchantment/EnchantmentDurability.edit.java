@@ -10,7 +10,7 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
 
-> CHANGE  30 : 31  @  31 : 32
+> CHANGE  28 : 29  @  29 : 30
 
 ~ 	public static boolean negateDamage(ItemStack parItemStack, int parInt1, EaglercraftRandom parRandom) {
 

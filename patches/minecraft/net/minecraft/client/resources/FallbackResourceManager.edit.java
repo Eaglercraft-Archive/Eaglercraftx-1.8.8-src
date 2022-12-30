@@ -7,9 +7,9 @@
 
 > DELETE  2  @  2 : 4
 
-> DELETE  5  @  7 : 8
+> DELETE  3  @  5 : 6
 
-> CHANGE  8 : 13  @  11 : 15
+> CHANGE  3 : 8  @  4 : 8
 
 ~ 
 ~ import com.google.common.collect.Lists;
@@ -17,12 +17,12 @@
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 
-> DELETE  15  @  17 : 19
+> DELETE  7  @  6 : 8
 
-> CHANGE  58 : 59  @  62 : 67
+> CHANGE  43 : 44  @  45 : 50
 
 ~ 		return resourcePack.getInputStream(location);
 
-> DELETE  86  @  94 : 125
+> DELETE  28  @  32 : 63
 
 > EOF

@@ -11,11 +11,11 @@
 + import net.lax1dude.eaglercraft.v1_8.opengl.EaglercraftGPU;
 + import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 
-> DELETE  10  @  7 : 9
+> DELETE  7  @  4 : 6
 
-> DELETE  14  @  13 : 14
+> DELETE  4  @  6 : 7
 
-> CHANGE  69 : 70  @  69 : 70
+> CHANGE  55 : 56  @  56 : 57
 
 ~ 		EaglercraftGPU.glNormal3f(0.0F, 0.0F, -1.0F * f3);
 

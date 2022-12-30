@@ -10,60 +10,60 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 ~ import net.lax1dude.eaglercraft.v1_8.vfs.SYS;
 
-> DELETE  8  @  7 : 24
+> DELETE  6  @  5 : 22
 
-> DELETE  10  @  26 : 27
+> DELETE  2  @  19 : 20
 
-> INSERT  22 : 24  @  39
+> INSERT  12 : 14  @  13
 
 + 	private GuiButton notSoSuperSecret;
 + 	private GuiButton broadcastSettings;
 
-> CHANGE  70 : 72  @  85 : 87
+> CHANGE  48 : 50  @  46 : 48
 
 ~ 		this.buttonList.add(notSoSuperSecret = new GuiButton(8675309, this.width / 2 + 5, this.height / 6 + 48 - 6, 150,
 ~ 				20, "Super Secret Settings...") {
 
-> CHANGE  85 : 88  @  100 : 102
+> CHANGE  15 : 18  @  15 : 17
 
 ~ 		this.buttonList.add(broadcastSettings = new GuiButton(107, this.width / 2 + 5, this.height / 6 + 72 - 6, 150,
 ~ 				20, I18n.format(EagRuntime.getRecText(), new Object[0])));
 ~ 		broadcastSettings.enabled = EagRuntime.recSupported();
 
-> CHANGE  96 : 98  @  110 : 111
+> CHANGE  11 : 13  @  10 : 11
 
 ~ 		GuiButton rp;
 ~ 		this.buttonList.add(rp = new GuiButton(105, this.width / 2 - 155, this.height / 6 + 144 - 6, 150, 20,
 
-> CHANGE  99 : 101  @  112 : 113
+> CHANGE  3 : 5  @  2 : 3
 
 ~ 		GuiButton b;
 ~ 		this.buttonList.add(b = new GuiButton(104, this.width / 2 + 5, this.height / 6 + 144 - 6, 150, 20,
 
-> INSERT  102 : 103  @  114
+> INSERT  3 : 4  @  2
 
 + 		b.enabled = false;
 
-> INSERT  105 : 107  @  116
+> INSERT  3 : 5  @  2
 
 + 
 + 		rp.enabled = SYS.VFS != null;
 
-> CHANGE  129 : 130  @  138 : 139
+> CHANGE  24 : 25  @  22 : 23
 
 ~ 	protected void actionPerformed(GuiButton parGuiButton) {
 
-> CHANGE  162 : 163  @  171 : 172
+> CHANGE  33 : 34  @  33 : 34
 
 ~ 				notSoSuperSecret.displayString = "Nope!";
 
-> DELETE  185  @  194 : 199
+> DELETE  23  @  23 : 28
 
-> CHANGE  201 : 203  @  215 : 222
+> CHANGE  16 : 18  @  21 : 28
 
 ~ 				EagRuntime.toggleRec();
 ~ 				broadcastSettings.displayString = I18n.format(EagRuntime.getRecText(), new Object[0]);
 
-> DELETE  204  @  223 : 224
+> DELETE  3  @  8 : 9
 
 > EOF

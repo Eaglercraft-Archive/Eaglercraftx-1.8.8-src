@@ -10,9 +10,9 @@
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.EaglercraftGPU;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 
-> DELETE  7  @  7 : 8
+> DELETE  5  @  5 : 6
 
-> CHANGE  15 : 16  @  16 : 17
+> CHANGE  8 : 9  @  9 : 10
 
 ~ 				EaglercraftGPU.glCallList(
 

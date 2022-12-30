@@ -7,37 +7,37 @@
 
 > DELETE  2  @  2 : 12
 
-> INSERT  3 : 6  @  13
+> INSERT  1 : 4  @  11
 
 + import org.json.JSONArray;
 + import org.json.JSONException;
 + import org.json.JSONObject;
 
-> CHANGE  7 : 11  @  14 : 18
+> CHANGE  4 : 8  @  1 : 5
 
 ~ import net.lax1dude.eaglercraft.v1_8.json.JSONTypeDeserializer;
 ~ 
 ~ public class SoundListSerializer implements JSONTypeDeserializer<JSONObject, SoundList> {
 ~ 	public SoundList deserialize(JSONObject jsonobject) throws JSONException {
 
-> CHANGE  12 : 13  @  19 : 20
+> CHANGE  5 : 6  @  5 : 6
 
 ~ 		soundlist.setReplaceExisting(jsonobject.optBoolean("replace", false));
 
-> CHANGE  14 : 15  @  21 : 22
+> CHANGE  2 : 3  @  2 : 3
 
 ~ 				.getCategory(jsonobject.optString("category", SoundCategory.MASTER.getCategoryName()));
 
-> CHANGE  18 : 19  @  25 : 26
+> CHANGE  4 : 5  @  4 : 5
 
 ~ 			JSONArray jsonarray = jsonobject.getJSONArray("sounds");
 
-> CHANGE  20 : 22  @  27 : 29
+> CHANGE  2 : 4  @  2 : 4
 
 ~ 			for (int i = 0; i < jsonarray.length(); ++i) {
 ~ 				Object jsonelement = jsonarray.get(i);
 
-> CHANGE  23 : 28  @  30 : 35
+> CHANGE  3 : 8  @  3 : 8
 
 ~ 				if (jsonelement instanceof String) {
 ~ 					soundlist$soundentry.setSoundEntryName((String) jsonelement);
@@ -45,23 +45,23 @@
 ~ 					JSONObject jsonobject1 = (JSONObject) jsonelement;
 ~ 					soundlist$soundentry.setSoundEntryName(jsonobject1.getString("name"));
 
-> CHANGE  30 : 31  @  37 : 38
+> CHANGE  7 : 8  @  7 : 8
 
 ~ 								.getType(jsonobject1.getString("type"));
 
-> CHANGE  36 : 37  @  43 : 44
+> CHANGE  6 : 7  @  6 : 7
 
 ~ 						float f = jsonobject1.getFloat("volume");
 
-> CHANGE  42 : 43  @  49 : 50
+> CHANGE  6 : 7  @  6 : 7
 
 ~ 						float f1 = jsonobject1.getFloat("pitch");
 
-> CHANGE  48 : 49  @  55 : 56
+> CHANGE  6 : 7  @  6 : 7
 
 ~ 						int j = jsonobject1.getInt("weight");
 
-> CHANGE  54 : 55  @  61 : 62
+> CHANGE  6 : 7  @  6 : 7
 
 ~ 						soundlist$soundentry.setStreaming(jsonobject1.getBoolean("stream"));
 

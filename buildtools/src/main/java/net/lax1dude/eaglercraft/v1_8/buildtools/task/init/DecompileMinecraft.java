@@ -209,6 +209,7 @@ public class DecompileMinecraft {
 			ApplyPatchesToZip.applyPatches(formatOut, null, new File(EaglerBuildTools.repositoryRoot, "patches/minecraft"), patchOut, true, true);
 		}catch(Throwable t) {
 			System.err.println("ERROR: Could not apply 'patches' directory to: " + patchOut.getName());
+			t.printStackTrace();
 			return false;
 		}
 		

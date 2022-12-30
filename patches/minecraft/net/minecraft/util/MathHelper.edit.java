@@ -10,23 +10,23 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
 
-> CHANGE  103 : 104  @  104 : 105
+> CHANGE  101 : 102  @  102 : 103
 
 ~ 	public static int getRandomIntegerInRange(EaglercraftRandom parRandom, int parInt1, int parInt2) {
 
-> CHANGE  107 : 108  @  108 : 109
+> CHANGE  4 : 5  @  4 : 5
 
 ~ 	public static float randomFloatClamp(EaglercraftRandom parRandom, float parFloat1, float parFloat2) {
 
-> CHANGE  111 : 112  @  112 : 113
+> CHANGE  4 : 5  @  4 : 5
 
 ~ 	public static double getRandomDoubleInRange(EaglercraftRandom parRandom, double parDouble1, double parDouble2) {
 
-> CHANGE  259 : 260  @  260 : 261
+> CHANGE  148 : 149  @  148 : 149
 
 ~ 	public static EaglercraftUUID getRandomUuid(EaglercraftRandom rand) {
 
-> CHANGE  262 : 263  @  263 : 264
+> CHANGE  3 : 4  @  3 : 4
 
 ~ 		return new EaglercraftUUID(i, j);
 

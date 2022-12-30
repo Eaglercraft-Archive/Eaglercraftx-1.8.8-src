@@ -7,7 +7,7 @@
 
 > DELETE  2  @  2 : 11
 
-> INSERT  9 : 19  @  18
+> INSERT  7 : 17  @  16
 
 + 
 + import org.json.JSONArray;
@@ -20,73 +20,73 @@
 + import net.lax1dude.eaglercraft.v1_8.json.JSONTypeDeserializer;
 + import net.lax1dude.eaglercraft.v1_8.json.JSONTypeProvider;
 
-> DELETE  20  @  19 : 20
+> DELETE  11  @  1 : 2
 
-> CHANGE  23 : 24  @  23 : 27
+> CHANGE  3 : 4  @  4 : 8
 
 ~ 
 
-> CHANGE  27 : 28  @  30 : 31
+> CHANGE  4 : 5  @  7 : 8
 
 ~ 		return (ModelBlockDefinition) JSONTypeProvider.deserialize(parReader, ModelBlockDefinition.class);
 
-> CHANGE  69 : 73  @  72 : 78
+> CHANGE  42 : 46  @  42 : 48
 
 ~ 	public static class Deserializer implements JSONTypeDeserializer<JSONObject, ModelBlockDefinition> {
 ~ 		public ModelBlockDefinition deserialize(JSONObject jsonobject) throws JSONException {
 ~ 			List list = this.parseVariantsList(jsonobject);
 ~ 			return new ModelBlockDefinition((Collection<ModelBlockDefinition.Variants>) list);
 
-> CHANGE  75 : 77  @  80 : 83
+> CHANGE  6 : 8  @  8 : 11
 
 ~ 		protected List<ModelBlockDefinition.Variants> parseVariantsList(JSONObject parJsonObject) {
 ~ 			JSONObject jsonobject = parJsonObject.getJSONObject("variants");
 
-> CHANGE  79 : 81  @  85 : 87
+> CHANGE  4 : 6  @  5 : 7
 
 ~ 			for (String entry : jsonobject.keySet()) {
 ~ 				arraylist.add(this.parseVariants(entry, jsonobject.get(entry)));
 
-> CHANGE  86 : 87  @  92 : 95
+> CHANGE  7 : 8  @  7 : 10
 
 ~ 		protected ModelBlockDefinition.Variants parseVariants(String s, Object jsonelement) {
 
-> CHANGE  88 : 91  @  96 : 101
+> CHANGE  2 : 5  @  4 : 9
 
 ~ 			if (jsonelement instanceof JSONArray) {
 ~ 				for (Object jsonelement1 : (JSONArray) jsonelement) {
 ~ 					arraylist.add(JSONTypeProvider.deserialize(jsonelement1, ModelBlockDefinition.Variant.class));
 
-> CHANGE  93 : 94  @  103 : 105
+> CHANGE  5 : 6  @  7 : 9
 
 ~ 				arraylist.add(JSONTypeProvider.deserialize(jsonelement, ModelBlockDefinition.Variant.class));
 
-> CHANGE  153 : 155  @  164 : 168
+> CHANGE  60 : 62  @  61 : 65
 
 ~ 		public static class Deserializer implements JSONTypeDeserializer<JSONObject, ModelBlockDefinition.Variant> {
 ~ 			public ModelBlockDefinition.Variant deserialize(JSONObject jsonobject) throws JSONException {
 
-> CHANGE  169 : 171  @  182 : 184
+> CHANGE  16 : 18  @  18 : 20
 
 ~ 			private boolean parseUvLock(JSONObject parJsonObject) {
 ~ 				return parJsonObject.optBoolean("uvlock", false);
 
-> CHANGE  173 : 176  @  186 : 189
+> CHANGE  4 : 7  @  4 : 7
 
 ~ 			protected ModelRotation parseRotation(JSONObject parJsonObject) {
 ~ 				int i = parJsonObject.optInt("x", 0);
 ~ 				int j = parJsonObject.optInt("y", 0);
 
-> CHANGE  178 : 179  @  191 : 192
+> CHANGE  5 : 6  @  5 : 6
 
 ~ 					throw new JSONException("Invalid BlockModelRotation x: " + i + ", y: " + j);
 
-> CHANGE  184 : 186  @  197 : 199
+> CHANGE  6 : 8  @  6 : 8
 
 ~ 			protected String parseModel(JSONObject parJsonObject) {
 ~ 				return parJsonObject.getString("model");
 
-> CHANGE  188 : 190  @  201 : 203
+> CHANGE  4 : 6  @  4 : 6
 
 ~ 			protected int parseWeight(JSONObject parJsonObject) {
 ~ 				return parJsonObject.optInt("weight", 1);

@@ -7,21 +7,21 @@
 
 > DELETE  2  @  2 : 4
 
-> CHANGE  3 : 6  @  5 : 9
+> CHANGE  1 : 4  @  3 : 7
 
 ~ 
 ~ import com.google.common.collect.Lists;
 ~ 
 
-> INSERT  17 : 18  @  20
+> INSERT  14 : 15  @  15
 
 + 	private boolean opaqueBackground = false;
 
-> CHANGE  46 : 47  @  48 : 49
+> CHANGE  29 : 30  @  28 : 29
 
 ~ 	protected void actionPerformed(GuiButton parGuiButton) {
 
-> CHANGE  51 : 56  @  53 : 54
+> CHANGE  5 : 10  @  5 : 6
 
 ~ 		if (opaqueBackground) {
 ~ 			this.drawBackground(0);
@@ -29,7 +29,7 @@
 ~ 			this.drawDefaultBackground();
 ~ 		}
 
-> INSERT  85 : 90  @  83
+> INSERT  34 : 39  @  30
 
 + 
 + 	public GuiYesNo withOpaqueBackground() {

@@ -7,9 +7,9 @@
 
 > DELETE  2  @  2 : 8
 
-> DELETE  6  @  12 : 14
+> DELETE  4  @  10 : 12
 
-> INSERT  7 : 19  @  15
+> INSERT  1 : 13  @  3
 
 + import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 + import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
@@ -24,203 +24,203 @@
 + import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 + import net.lax1dude.eaglercraft.v1_8.mojang.authlib.GameProfile;
 
-> DELETE  33  @  29 : 31
+> DELETE  26  @  14 : 16
 
-> DELETE  42  @  40 : 41
+> DELETE  9  @  11 : 12
 
-> DELETE  47  @  46 : 49
+> DELETE  5  @  6 : 9
 
-> DELETE  94  @  96 : 97
+> DELETE  47  @  50 : 51
 
-> DELETE  96  @  99 : 100
+> DELETE  2  @  3 : 4
 
-> DELETE  174  @  178 : 179
+> DELETE  78  @  79 : 80
 
-> DELETE  206  @  211 : 213
+> DELETE  32  @  33 : 35
 
-> CHANGE  209 : 210  @  216 : 217
+> CHANGE  3 : 4  @  5 : 6
 
 ~ 	private final EaglercraftNetworkManager netManager;
 
-> CHANGE  215 : 216  @  222 : 223
+> CHANGE  6 : 7  @  6 : 7
 
 ~ 	private final Map<EaglercraftUUID, NetworkPlayerInfo> playerInfoMap = Maps.newHashMap();
 
-> CHANGE  218 : 220  @  225 : 226
+> CHANGE  3 : 5  @  3 : 4
 
 ~ 	private final EaglercraftRandom avRandomizer = new EaglercraftRandom();
 ~ 	private final ServerSkinCache skinCache;
 
-> CHANGE  221 : 222  @  227 : 228
+> CHANGE  3 : 4  @  2 : 3
 
 ~ 	public NetHandlerPlayClient(Minecraft mcIn, GuiScreen parGuiScreen, EaglercraftNetworkManager parNetworkManager,
 
-> INSERT  227 : 228  @  233
+> INSERT  6 : 7  @  6
 
 + 		this.skinCache = new ServerSkinCache(parNetworkManager, mcIn.getTextureManager());
 
-> INSERT  232 : 233  @  237
+> INSERT  5 : 6  @  4
 
 + 		this.skinCache.destroy();
 
-> INSERT  235 : 239  @  239
+> INSERT  3 : 7  @  2
 
 + 	public ServerSkinCache getSkinCache() {
 + 		return this.skinCache;
 + 	}
 + 
 
-> DELETE  240  @  240 : 241
+> DELETE  5  @  1 : 2
 
-> DELETE  259  @  260 : 261
+> DELETE  19  @  20 : 21
 
-> DELETE  364  @  366 : 367
+> DELETE  105  @  106 : 107
 
-> DELETE  376  @  379 : 380
+> DELETE  12  @  13 : 14
 
-> DELETE  397  @  401 : 402
+> DELETE  21  @  22 : 23
 
-> DELETE  403  @  408 : 409
+> DELETE  6  @  7 : 8
 
-> DELETE  411  @  417 : 418
+> DELETE  8  @  9 : 10
 
-> DELETE  419  @  426 : 427
+> DELETE  8  @  9 : 10
 
-> DELETE  450  @  458 : 459
+> DELETE  31  @  32 : 33
 
-> DELETE  472  @  481 : 482
+> DELETE  22  @  23 : 24
 
-> DELETE  480  @  490 : 491
+> DELETE  8  @  9 : 10
 
-> DELETE  497  @  508 : 509
+> DELETE  17  @  18 : 19
 
-> DELETE  505  @  517 : 519
+> DELETE  8  @  9 : 11
 
-> DELETE  512  @  526 : 527
+> DELETE  7  @  9 : 10
 
-> DELETE  559  @  574 : 576
+> DELETE  47  @  48 : 50
 
-> DELETE  568  @  585 : 586
+> DELETE  9  @  11 : 12
 
-> DELETE  590  @  608 : 609
+> DELETE  22  @  23 : 24
 
-> CHANGE  598 : 601  @  617 : 618
+> CHANGE  8 : 11  @  9 : 10
 
 ~ 		if (this.gameController.theWorld != null) {
 ~ 			this.gameController.loadWorld((WorldClient) null);
 ~ 		}
 
-> CHANGE  602 : 604  @  619 : 627
+> CHANGE  4 : 6  @  2 : 10
 
 ~ 			this.gameController
 ~ 					.displayGuiScreen(new GuiDisconnected(this.guiScreenServer, "disconnect.lost", ichatcomponent));
 
-> DELETE  608  @  631 : 632
+> DELETE  6  @  12 : 13
 
-> DELETE  615  @  639 : 640
+> DELETE  7  @  8 : 9
 
-> DELETE  638  @  663 : 664
+> DELETE  23  @  24 : 25
 
-> DELETE  647  @  673 : 674
+> DELETE  9  @  10 : 11
 
-> DELETE  667  @  694 : 695
+> DELETE  20  @  21 : 22
 
-> DELETE  671  @  699 : 700
+> DELETE  4  @  5 : 6
 
-> DELETE  706  @  735 : 736
+> DELETE  35  @  36 : 37
 
-> DELETE  711  @  741 : 742
+> DELETE  5  @  6 : 7
 
-> DELETE  716  @  747 : 748
+> DELETE  5  @  6 : 7
 
-> DELETE  755  @  787 : 788
+> DELETE  39  @  40 : 41
 
-> DELETE  767  @  800 : 801
+> DELETE  12  @  13 : 14
 
-> DELETE  773  @  807 : 808
+> DELETE  6  @  7 : 8
 
-> DELETE  778  @  813 : 814
+> DELETE  5  @  6 : 7
 
-> DELETE  795  @  831 : 832
+> DELETE  17  @  18 : 19
 
-> DELETE  804  @  841 : 842
+> DELETE  9  @  10 : 11
 
-> DELETE  831  @  869 : 870
+> DELETE  27  @  28 : 29
 
-> DELETE  858  @  897 : 898
+> DELETE  27  @  28 : 29
 
-> DELETE  874  @  914 : 915
+> DELETE  16  @  17 : 18
 
-> DELETE  884  @  925 : 926
+> DELETE  10  @  11 : 12
 
-> DELETE  895  @  937 : 938
+> DELETE  11  @  12 : 13
 
-> DELETE  917  @  960 : 961
+> DELETE  22  @  23 : 24
 
-> DELETE  933  @  977 : 978
+> DELETE  16  @  17 : 18
 
-> DELETE  941  @  986 : 987
+> DELETE  8  @  9 : 10
 
-> DELETE  949  @  995 : 996
+> DELETE  8  @  9 : 10
 
-> DELETE  953  @  1000 : 1001
+> DELETE  4  @  5 : 6
 
-> DELETE  958  @  1006 : 1007
+> DELETE  5  @  6 : 7
 
-> DELETE  963  @  1012 : 1014
+> DELETE  5  @  6 : 8
 
-> DELETE  981  @  1032 : 1033
+> DELETE  18  @  20 : 21
 
-> CHANGE  1002 : 1005  @  1054 : 1073
+> CHANGE  21 : 24  @  22 : 41
 
 ~ 
 ~ 			// minecraft demo screen
 ~ 
 
-> DELETE  1023  @  1091 : 1092
+> DELETE  21  @  37 : 38
 
-> DELETE  1029  @  1098 : 1099
+> DELETE  6  @  7 : 8
 
-> DELETE  1040  @  1110 : 1111
+> DELETE  11  @  12 : 13
 
-> DELETE  1049  @  1120 : 1121
+> DELETE  9  @  10 : 11
 
-> DELETE  1074  @  1146 : 1147
+> DELETE  25  @  26 : 27
 
-> DELETE  1084  @  1157 : 1173
+> DELETE  10  @  11 : 27
 
-> INSERT  1085 : 1087  @  1174
+> INSERT  1 : 3  @  17
 
 + 		// used by twitch stream
 + 
 
-> DELETE  1090  @  1177 : 1178
+> DELETE  5  @  3 : 4
 
-> CHANGE  1095 : 1096  @  1183 : 1184
+> CHANGE  5 : 6  @  6 : 7
 
 ~ 
 
-> DELETE  1104  @  1192 : 1193
+> DELETE  9  @  9 : 10
 
-> DELETE  1108  @  1197 : 1198
+> DELETE  4  @  5 : 6
 
-> DELETE  1144  @  1234 : 1235
+> DELETE  36  @  37 : 38
 
-> DELETE  1152  @  1243 : 1245
+> DELETE  8  @  9 : 11
 
-> CHANGE  1154 : 1157  @  1247 : 1248
+> CHANGE  2 : 5  @  4 : 5
 
 ~ 				EaglercraftUUID uuid = s38packetplayerlistitem$addplayerdata.getProfile().getId();
 ~ 				this.playerInfoMap.remove(uuid);
 ~ 				this.skinCache.evictSkin(uuid);
 
-> DELETE  1191  @  1282 : 1283
+> DELETE  37  @  35 : 36
 
-> DELETE  1201  @  1293 : 1294
+> DELETE  10  @  11 : 12
 
-> DELETE  1210  @  1303 : 1304
+> DELETE  9  @  10 : 11
 
-> CHANGE  1218 : 1240  @  1312 : 1335
+> CHANGE  8 : 30  @  9 : 32
 
 ~ 			this.netManager
 ~ 					.sendPacket(new C19PacketResourcePackStatus(s1, C19PacketResourcePackStatus.Action.DECLINED));
@@ -245,7 +245,7 @@
 ~ 			this.netManager
 ~ 					.sendPacket(new C19PacketResourcePackStatus(s1, C19PacketResourcePackStatus.Action.DECLINED));
 
-> CHANGE  1241 : 1249  @  1336 : 1346
+> CHANGE  23 : 31  @  24 : 34
 
 ~ 			NetHandlerPlayClient.this.gameController.displayGuiScreen(new GuiYesNo(new GuiYesNoCallback() {
 ~ 				public void confirmClicked(boolean flag, int var2) {
@@ -256,7 +256,7 @@
 ~ 									.setResourceMode(ServerData.ServerResourceMode.ENABLED);
 ~ 						}
 
-> CHANGE  1250 : 1260  @  1347 : 1366
+> CHANGE  9 : 19  @  11 : 30
 
 ~ 						NetHandlerPlayClient.this.netManager.sendPacket(
 ~ 								new C19PacketResourcePackStatus(s1, C19PacketResourcePackStatus.Action.ACCEPTED));
@@ -269,7 +269,7 @@
 ~ 										NetHandlerPlayClient.this.netManager.sendPacket(new C19PacketResourcePackStatus(
 ~ 												s1, C19PacketResourcePackStatus.Action.FAILED_DOWNLOAD));
 
-> INSERT  1261 : 1267  @  1367
+> INSERT  11 : 17  @  20
 
 + 								});
 + 					} else {
@@ -278,14 +278,14 @@
 + 									.setResourceMode(ServerData.ServerResourceMode.DISABLED);
 + 						}
 
-> CHANGE  1268 : 1270  @  1368 : 1401
+> CHANGE  7 : 9  @  1 : 34
 
 ~ 						NetHandlerPlayClient.this.netManager.sendPacket(
 ~ 								new C19PacketResourcePackStatus(s1, C19PacketResourcePackStatus.Action.DECLINED));
 
-> DELETE  1271  @  1402 : 1404
+> DELETE  3  @  34 : 36
 
-> INSERT  1272 : 1277  @  1405
+> INSERT  1 : 6  @  3
 
 + 					ServerList.func_147414_b(NetHandlerPlayClient.this.gameController.getCurrentServerData());
 + 					NetHandlerPlayClient.this.gameController.displayGuiScreen((GuiScreen) null);
@@ -293,15 +293,15 @@
 + 			}, I18n.format("multiplayer.texturePrompt.line1", new Object[0]),
 + 					I18n.format("multiplayer.texturePrompt.line2", new Object[0]), 0));
 
-> DELETE  1281  @  1409 : 1410
+> DELETE  9  @  4 : 5
 
-> DELETE  1289  @  1418 : 1419
+> DELETE  8  @  9 : 10
 
-> DELETE  1291  @  1421 : 1422
+> DELETE  2  @  3 : 4
 
-> DELETE  1302  @  1433 : 1435
+> DELETE  11  @  12 : 14
 
-> INSERT  1311 : 1318  @  1444
+> INSERT  9 : 16  @  11
 
 + 		} else if ("EAG|Skins-1.8".equals(packetIn.getChannelName())) {
 + 			try {
@@ -311,23 +311,23 @@
 + 				logger.error(e);
 + 			}
 
-> DELETE  1323  @  1449 : 1450
+> DELETE  12  @  5 : 6
 
-> DELETE  1342  @  1469 : 1470
+> DELETE  19  @  20 : 21
 
-> DELETE  1358  @  1486 : 1487
+> DELETE  16  @  17 : 18
 
-> DELETE  1369  @  1498 : 1499
+> DELETE  11  @  12 : 13
 
-> DELETE  1408  @  1538 : 1539
+> DELETE  39  @  40 : 41
 
-> DELETE  1443  @  1574 : 1575
+> DELETE  35  @  36 : 37
 
-> CHANGE  1472 : 1473  @  1604 : 1605
+> CHANGE  29 : 30  @  30 : 31
 
 ~ 	public EaglercraftNetworkManager getNetworkManager() {
 
-> CHANGE  1480 : 1481  @  1612 : 1613
+> CHANGE  8 : 9  @  8 : 9
 
 ~ 	public NetworkPlayerInfo getPlayerInfo(EaglercraftUUID parUUID) {
 

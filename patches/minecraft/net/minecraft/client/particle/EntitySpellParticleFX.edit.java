@@ -10,7 +10,7 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.WorldRenderer;
 
-> CHANGE  9 : 10  @  11 : 12
+> CHANGE  7 : 8  @  9 : 10
 
 ~ 	private static final EaglercraftRandom RANDOM = new EaglercraftRandom();
 

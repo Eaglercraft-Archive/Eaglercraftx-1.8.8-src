@@ -9,11 +9,11 @@
 
 ~ 
 
-> CHANGE  21 : 22  @  21 : 23
+> CHANGE  18 : 19  @  18 : 20
 
 ~ 	public static PropertyEnum<BlockDirt.DirtType> VARIANT;
 
-> INSERT  31 : 35  @  32
+> INSERT  10 : 14  @  11
 
 + 	public static void bootstrapStates() {
 + 		VARIANT = PropertyEnum.<BlockDirt.DirtType>create("variant", BlockDirt.DirtType.class);

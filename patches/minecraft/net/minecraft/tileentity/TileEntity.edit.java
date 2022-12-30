@@ -7,7 +7,7 @@
 
 > DELETE  2  @  2 : 3
 
-> INSERT  4 : 10  @  5
+> INSERT  2 : 8  @  3
 
 + 
 + import com.google.common.collect.Maps;
@@ -16,27 +16,27 @@
 + import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 + import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 
-> DELETE  17  @  12 : 32
+> DELETE  13  @  7 : 27
 
-> DELETE  19  @  34 : 36
+> DELETE  2  @  22 : 24
 
-> CHANGE  77 : 78  @  94 : 95
+> CHANGE  58 : 59  @  60 : 61
 
 ~ 			logger.error("Could not create TileEntity", exception);
 
-> CHANGE  162 : 163  @  179 : 180
+> CHANGE  85 : 86  @  85 : 86
 
 ~ 						+ TileEntity.this.getClass().getName();
 
-> CHANGE  173 : 174  @  190 : 191
+> CHANGE  11 : 12  @  11 : 12
 
 ~ 						return HString.format("ID #%d (%s // %s)",
 
-> CHANGE  175 : 176  @  192 : 193
+> CHANGE  2 : 3  @  2 : 3
 
 ~ 										Block.getBlockById(i).getClass().getName() });
 
-> CHANGE  188 : 190  @  205 : 207
+> CHANGE  13 : 15  @  13 : 15
 
 ~ 						String s = HString.format("%4s", new Object[] { Integer.toBinaryString(i) }).replace(" ", "0");
 ~ 						return HString.format("%1$d / 0x%1$X / 0b%2$s", new Object[] { Integer.valueOf(i), s });

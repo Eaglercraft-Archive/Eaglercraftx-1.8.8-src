@@ -7,12 +7,12 @@
 
 > DELETE  2  @  2 : 3
 
-> CHANGE  3 : 5  @  4 : 6
+> CHANGE  1 : 3  @  2 : 4
 
 ~ 
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.ImageData;
 
-> CHANGE  12 : 15  @  13 : 17
+> CHANGE  9 : 12  @  9 : 13
 
 ~ 	public DynamicTexture(ImageData bufferedImage) {
 ~ 		this(bufferedImage.width, bufferedImage.height);

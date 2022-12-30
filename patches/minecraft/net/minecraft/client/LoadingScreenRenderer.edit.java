@@ -10,23 +10,23 @@
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.WorldRenderer;
 
-> DELETE  6  @  5 : 7
+> DELETE  4  @  3 : 5
 
-> DELETE  7  @  8 : 9
+> DELETE  1  @  3 : 4
 
-> DELETE  8  @  10 : 11
+> DELETE  1  @  2 : 3
 
-> DELETE  18  @  21 : 22
+> DELETE  10  @  11 : 12
 
-> DELETE  22  @  26 : 28
+> DELETE  4  @  5 : 7
 
-> CHANGE  44 : 47  @  50 : 60
+> CHANGE  22 : 25  @  24 : 34
 
 ~ 			ScaledResolution scaledresolution = new ScaledResolution(this.mc);
 ~ 			GlStateManager.ortho(0.0D, scaledresolution.getScaledWidth_double(),
 ~ 					scaledresolution.getScaledHeight_double(), 0.0D, 100.0D, 300.0D);
 
-> INSERT  66 : 80  @  79
+> INSERT  22 : 36  @  29
 
 + 	public void eaglerShow(String line1, String line2) {
 + 		if (!this.mc.running) {
@@ -43,15 +43,15 @@
 + 	}
 + 
 
-> CHANGE  93 : 94  @  92 : 99
+> CHANGE  27 : 28  @  13 : 20
 
 ~ 				GlStateManager.clear(256);
 
-> CHANGE  101 : 103  @  106 : 109
+> CHANGE  8 : 10  @  14 : 17
 
 ~ 				GlStateManager.clear(16640);
 ~ 				GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 
-> DELETE  147  @  153 : 158
+> DELETE  46  @  47 : 52
 
 > EOF

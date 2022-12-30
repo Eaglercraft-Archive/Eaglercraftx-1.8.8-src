@@ -7,19 +7,19 @@
 
 > DELETE  5  @  5 : 6
 
-> DELETE  56  @  57 : 58
+> DELETE  51  @  52 : 53
 
-> INSERT  78 : 79  @  80
+> INSERT  22 : 23  @  23
 
 + 	private StatFileWriter statWriter;
 
-> CHANGE  80 : 81  @  81 : 82
+> CHANGE  2 : 3  @  1 : 2
 
 ~ 	public EntityPlayerSP(Minecraft mcIn, World worldIn, NetHandlerPlayClient netHandler, StatFileWriter statWriter) {
 
-> DELETE  83  @  84 : 85
+> DELETE  3  @  3 : 4
 
-> INSERT  85 : 86  @  87
+> INSERT  2 : 3  @  3
 
 + 		this.statWriter = statWriter;
 

@@ -11,94 +11,94 @@
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 ~ import net.lax1dude.eaglercraft.v1_8.minecraft.ChunkUpdateManager;
 
-> DELETE  7  @  11 : 15
+> DELETE  5  @  9 : 13
 
-> DELETE  9  @  17 : 19
+> DELETE  2  @  6 : 8
 
-> CHANGE  10 : 11  @  20 : 21
+> CHANGE  1 : 2  @  3 : 4
 
 ~ public class ChunkRenderWorker {
 
-> CHANGE  12 : 13  @  22 : 23
+> CHANGE  2 : 3  @  2 : 3
 
 ~ 	private final ChunkUpdateManager chunkRenderDispatcher;
 
-> CHANGE  15 : 16  @  25 : 26
+> CHANGE  3 : 4  @  3 : 4
 
 ~ 	public ChunkRenderWorker(ChunkUpdateManager parChunkRenderDispatcher) {
 
-> CHANGE  19 : 20  @  29 : 30
+> CHANGE  4 : 5  @  4 : 5
 
 ~ 	public ChunkRenderWorker(ChunkUpdateManager chunkRenderDispatcherIn,
 
-> DELETE  25  @  35 : 51
+> DELETE  6  @  6 : 22
 
-> CHANGE  26 : 30  @  52 : 62
+> CHANGE  1 : 5  @  17 : 27
 
 ~ 		if (generator.getStatus() != ChunkCompileTaskGenerator.Status.PENDING) {
 ~ 			if (!generator.isFinished()) {
 ~ 				LOGGER.warn("Chunk render task was " + generator.getStatus()
 ~ 						+ " when I expected it to be pending; ignoring task");
 
-> CHANGE  32 : 33  @  64 : 67
+> CHANGE  6 : 7  @  12 : 15
 
 ~ 			return;
 
-> INSERT  35 : 37  @  69
+> INSERT  3 : 5  @  5
 
 + 		generator.setStatus(ChunkCompileTaskGenerator.Status.COMPILING);
 + 
 
-> CHANGE  52 : 56  @  84 : 95
+> CHANGE  17 : 21  @  15 : 26
 
 ~ 			if (generator.getStatus() != ChunkCompileTaskGenerator.Status.COMPILING) {
 ~ 				if (!generator.isFinished()) {
 ~ 					LOGGER.warn("Chunk render task was " + generator.getStatus()
 ~ 							+ " when I expected it to be compiling; aborting task");
 
-> CHANGE  58 : 60  @  97 : 100
+> CHANGE  6 : 8  @  13 : 16
 
 ~ 				this.freeRenderBuilder(generator);
 ~ 				return;
 
-> INSERT  62 : 64  @  102
+> INSERT  4 : 6  @  5
 
 + 			generator.setStatus(ChunkCompileTaskGenerator.Status.UPLOADING);
 + 
 
-> CHANGE  65 : 68  @  103 : 104
+> CHANGE  3 : 6  @  1 : 2
 
 ~ 			if (compiledchunk == null) {
 ~ 				System.out.println(chunkcompiletaskgenerator$type);
 ~ 			}
 
-> CHANGE  70 : 72  @  106 : 108
+> CHANGE  5 : 7  @  3 : 5
 
 ~ 					if (!compiledchunk.isLayerEmpty(enumworldblocklayer)) {
 ~ 						this.chunkRenderDispatcher.uploadChunk(enumworldblocklayer,
 
-> CHANGE  73 : 76  @  109 : 110
+> CHANGE  3 : 6  @  3 : 4
 
 ~ 								generator.getRenderChunk(), compiledchunk);
 ~ 						generator.getRenderChunk().setCompiledChunk(compiledchunk);
 ~ 						generator.setStatus(ChunkCompileTaskGenerator.Status.DONE);
 
-> CHANGE  79 : 80  @  113 : 114
+> CHANGE  6 : 7  @  4 : 5
 
 ~ 				this.chunkRenderDispatcher.uploadChunk(
 
-> CHANGE  82 : 85  @  116 : 117
+> CHANGE  3 : 6  @  3 : 4
 
 ~ 						generator.getRenderChunk(), compiledchunk);
 ~ 				generator.getRenderChunk().setCompiledChunk(compiledchunk);
 ~ 				generator.setStatus(ChunkCompileTaskGenerator.Status.DONE);
 
-> DELETE  87  @  119 : 159
+> DELETE  5  @  3 : 43
 
-> CHANGE  91 : 92  @  163 : 165
+> CHANGE  4 : 5  @  44 : 46
 
 ~ 		return this.regionRenderCacheBuilder;
 
-> DELETE  95  @  168 : 171
+> DELETE  4  @  5 : 8
 
 > EOF

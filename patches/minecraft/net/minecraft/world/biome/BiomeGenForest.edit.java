@@ -10,21 +10,21 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
 
-> DELETE  8  @  8 : 15
+> DELETE  6  @  6 : 13
 
-> DELETE  11  @  18 : 21
+> DELETE  3  @  10 : 13
 
-> DELETE  15  @  25 : 32
+> DELETE  4  @  7 : 14
 
-> DELETE  28  @  45 : 49
+> DELETE  13  @  20 : 24
 
-> CHANGE  44 : 45  @  65 : 71
+> CHANGE  16 : 17  @  20 : 26
 
 ~ 	public BlockFlower.EnumFlowerType pickRandomFlower(EaglercraftRandom random, BlockPos blockpos) {
 
-> DELETE  59  @  85 : 135
+> DELETE  15  @  20 : 70
 
-> CHANGE  74 : 76  @  150 : 160
+> CHANGE  15 : 17  @  65 : 75
 
 ~ 					&& this.biomeID != BiomeGenBase.birchForestHills.biomeID ? new BiomeGenMutated(i, this)
 ~ 							: new BiomeGenMutated(i, this);

@@ -10,15 +10,15 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
 
-> CHANGE  32 : 33  @  35 : 36
+> CHANGE  30 : 31  @  33 : 34
 
 ~ 	public void updateTick(World world, BlockPos blockpos, IBlockState iblockstate, EaglercraftRandom var4) {
 
-> CHANGE  150 : 151  @  153 : 154
+> CHANGE  118 : 119  @  118 : 119
 
 ~ 	public boolean canUseBonemeal(World var1, EaglercraftRandom var2, BlockPos var3, IBlockState var4) {
 
-> CHANGE  154 : 155  @  157 : 158
+> CHANGE  4 : 5  @  4 : 5
 
 ~ 	public void grow(World world, EaglercraftRandom var2, BlockPos blockpos, IBlockState iblockstate) {
 

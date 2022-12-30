@@ -7,7 +7,7 @@
 
 > DELETE  2  @  2 : 6
 
-> CHANGE  4 : 10  @  8 : 9
+> CHANGE  2 : 8  @  6 : 7
 
 ~ 
 ~ import com.google.common.base.Objects;
@@ -16,9 +16,9 @@
 ~ import net.lax1dude.eaglercraft.v1_8.mojang.authlib.GameProfile;
 ~ import net.lax1dude.eaglercraft.v1_8.mojang.authlib.Property;
 
-> DELETE  23  @  22 : 44
+> DELETE  19  @  14 : 36
 
-> CHANGE  81 : 82  @  102 : 155
+> CHANGE  58 : 59  @  80 : 133
 
 ~ 		// server only
 

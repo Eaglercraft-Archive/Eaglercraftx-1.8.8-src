@@ -12,11 +12,11 @@
 ~ import net.lax1dude.eaglercraft.v1_8.mojang.authlib.GameProfile;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 
-> DELETE  8  @  6 : 7
+> DELETE  6  @  4 : 5
 
-> DELETE  9  @  8 : 9
+> DELETE  1  @  2 : 3
 
-> CHANGE  78 : 79  @  78 : 79
+> CHANGE  69 : 70  @  70 : 71
 
 ~ 							gameprofile = TileEntitySkull.updateGameprofile(new GameProfile((EaglercraftUUID) null, s));
 

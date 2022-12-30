@@ -9,10 +9,10 @@
 
 ~ import net.lax1dude.eaglercraft.v1_8.mojang.authlib.GameProfile;
 
-> DELETE  5  @  6 : 10
+> DELETE  3  @  4 : 8
 
-> DELETE  11  @  16 : 17
+> DELETE  6  @  10 : 11
 
-> DELETE  55  @  61 : 79
+> DELETE  44  @  45 : 63
 
 > EOF

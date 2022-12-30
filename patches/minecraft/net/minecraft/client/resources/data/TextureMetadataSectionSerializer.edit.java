@@ -7,9 +7,9 @@
 
 > DELETE  2  @  2 : 9
 
-> DELETE  3  @  10 : 13
+> DELETE  1  @  8 : 11
 
-> INSERT  4 : 10  @  14
+> INSERT  1 : 7  @  4
 
 + import org.json.JSONArray;
 + import org.json.JSONException;
@@ -18,36 +18,36 @@
 + import com.google.common.collect.Lists;
 + 
 
-> CHANGE  11 : 14  @  15 : 20
+> CHANGE  7 : 10  @  1 : 6
 
 ~ 	public TextureMetadataSection deserialize(JSONObject jsonobject) throws JSONException {
 ~ 		boolean flag = jsonobject.optBoolean("blur", false);
 ~ 		boolean flag1 = jsonobject.optBoolean("clamp", false);
 
-> CHANGE  17 : 18  @  23 : 24
+> CHANGE  6 : 7  @  8 : 9
 
 ~ 				JSONArray jsonarray = jsonobject.getJSONArray("mipmaps");
 
-> CHANGE  19 : 22  @  25 : 28
+> CHANGE  2 : 5  @  2 : 5
 
 ~ 				for (int i = 0; i < jsonarray.length(); ++i) {
 ~ 					Object jsonelement = jsonarray.get(i);
 ~ 					if (jsonelement instanceof Number) {
 
-> CHANGE  23 : 24  @  29 : 30
+> CHANGE  4 : 5  @  4 : 5
 
 ~ 							arraylist.add(((Number) jsonelement).intValue());
 
-> CHANGE  25 : 26  @  31 : 32
+> CHANGE  2 : 3  @  2 : 3
 
 ~ 							throw new JSONException(
 
-> CHANGE  29 : 31  @  35 : 37
+> CHANGE  4 : 6  @  4 : 6
 
 ~ 					} else if (jsonelement instanceof JSONObject) {
 ~ 						throw new JSONException(
 
-> CHANGE  35 : 36  @  41 : 43
+> CHANGE  6 : 7  @  6 : 8
 
 ~ 				throw new JSONException("Invalid texture->mipmaps: expected array, was " + jsonobject.get("mipmaps"),
 

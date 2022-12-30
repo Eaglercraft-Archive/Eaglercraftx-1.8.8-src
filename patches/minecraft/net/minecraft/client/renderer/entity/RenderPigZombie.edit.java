@@ -7,7 +7,7 @@
 
 > DELETE  3  @  3 : 5
 
-> CHANGE  17 : 19  @  19 : 21
+> CHANGE  14 : 16  @  16 : 18
 
 ~ 				this.field_177189_c = new ModelZombie(0.5F, false);
 ~ 				this.field_177186_d = new ModelZombie(1.0F, false);

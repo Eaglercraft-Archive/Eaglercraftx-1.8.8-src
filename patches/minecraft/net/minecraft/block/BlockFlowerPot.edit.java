@@ -10,18 +10,18 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
 
-> CHANGE  29 : 30  @  33 : 35
+> CHANGE  27 : 28  @  31 : 33
 
 ~ 	public static PropertyEnum<BlockFlowerPot.EnumFlowerType> CONTENTS;
 
-> INSERT  38 : 42  @  43
+> INSERT  9 : 13  @  10
 
 + 	public static void bootstrapStates() {
 + 		CONTENTS = PropertyEnum.<BlockFlowerPot.EnumFlowerType>create("contents", BlockFlowerPot.EnumFlowerType.class);
 + 	}
 + 
 
-> CHANGE  166 : 167  @  167 : 168
+> CHANGE  128 : 129  @  124 : 125
 
 ~ 	public Item getItemDropped(IBlockState var1, EaglercraftRandom var2, int var3) {
 

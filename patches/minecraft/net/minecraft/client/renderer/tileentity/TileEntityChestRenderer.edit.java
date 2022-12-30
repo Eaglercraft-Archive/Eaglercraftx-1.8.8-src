@@ -10,22 +10,22 @@
 + 
 + import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 
-> DELETE  9  @  7 : 9
+> DELETE  6  @  4 : 6
 
-> INSERT  58 : 59  @  58
+> INSERT  49 : 50  @  51
 
 + 				isChristams = true;
 
-> DELETE  66  @  65 : 67
+> DELETE  8  @  7 : 9
 
-> INSERT  68 : 70  @  69
+> INSERT  2 : 4  @  4
 
 + 				} else if (tileentitychest.getChestType() == 1) {
 + 					this.bindTexture(textureTrapped);
 
-> DELETE  82  @  81 : 83
+> DELETE  14  @  12 : 14
 
-> INSERT  84 : 86  @  85
+> INSERT  2 : 4  @  4
 
 + 				} else if (tileentitychest.getChestType() == 1) {
 + 					this.bindTexture(textureTrappedDouble);

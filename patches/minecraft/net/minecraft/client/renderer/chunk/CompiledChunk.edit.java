@@ -7,14 +7,14 @@
 
 > DELETE  2  @  2 : 3
 
-> CHANGE  3 : 7  @  4 : 6
+> CHANGE  1 : 5  @  2 : 4
 
 ~ 
 ~ import com.google.common.collect.Lists;
 ~ 
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.WorldRenderer;
 
-> CHANGE  22 : 23  @  21 : 22
+> CHANGE  19 : 20  @  17 : 18
 
 ~ 			return true;
 

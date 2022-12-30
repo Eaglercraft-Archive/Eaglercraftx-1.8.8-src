@@ -7,9 +7,9 @@
 
 > DELETE  2  @  2 : 10
 
-> DELETE  8  @  16 : 18
+> DELETE  6  @  14 : 16
 
-> CHANGE  9 : 18  @  19 : 20
+> CHANGE  1 : 10  @  3 : 4
 
 ~ import java.nio.charset.StandardCharsets;
 ~ 
@@ -21,26 +21,26 @@
 ~ import net.lax1dude.eaglercraft.v1_8.netty.ByteBufInputStream;
 ~ import net.lax1dude.eaglercraft.v1_8.netty.ByteBufOutputStream;
 
-> CHANGE  116 : 117  @  118 : 119
+> CHANGE  107 : 108  @  99 : 100
 
 ~ 	public void writeUuid(EaglercraftUUID uuid) {
 
-> CHANGE  121 : 123  @  123 : 125
+> CHANGE  5 : 7  @  5 : 7
 
 ~ 	public EaglercraftUUID readUuid() {
 ~ 		return new EaglercraftUUID(this.readLong(), this.readLong());
 
-> CHANGE  205 : 206  @  207 : 208
+> CHANGE  84 : 85  @  84 : 85
 
 ~ 			String s = new String(this.readBytes(i).array(), StandardCharsets.UTF_8);
 
-> CHANGE  216 : 217  @  218 : 219
+> CHANGE  11 : 12  @  11 : 12
 
 ~ 		byte[] abyte = string.getBytes(StandardCharsets.UTF_8);
 
-> DELETE  238  @  240 : 244
+> DELETE  22  @  22 : 26
 
-> CHANGE  391 : 396  @  397 : 398
+> CHANGE  153 : 158  @  157 : 158
 
 ~ 		if (parByteBuf instanceof PacketBuffer) {
 ~ 			return this.buf.getBytes(parInt1, ((PacketBuffer) parByteBuf).buf);
@@ -48,7 +48,7 @@
 ~ 			return this.buf.getBytes(parInt1, parByteBuf);
 ~ 		}
 
-> CHANGE  399 : 404  @  401 : 402
+> CHANGE  8 : 13  @  4 : 5
 
 ~ 		if (bytebuf instanceof PacketBuffer) {
 ~ 			return this.buf.getBytes(i, ((PacketBuffer) bytebuf).buf, j);
@@ -56,7 +56,7 @@
 ~ 			return this.buf.getBytes(i, bytebuf, j);
 ~ 		}
 
-> CHANGE  407 : 412  @  405 : 406
+> CHANGE  8 : 13  @  4 : 5
 
 ~ 		if (bytebuf instanceof PacketBuffer) {
 ~ 			return this.buf.getBytes(i, ((PacketBuffer) bytebuf).buf, j, k);
@@ -64,9 +64,9 @@
 ~ 			return this.buf.getBytes(i, bytebuf, j, k);
 ~ 		}
 
-> DELETE  430  @  424 : 428
+> DELETE  23  @  19 : 23
 
-> CHANGE  471 : 476  @  469 : 470
+> CHANGE  41 : 46  @  45 : 46
 
 ~ 		if (bytebuf instanceof PacketBuffer) {
 ~ 			return this.buf.setBytes(i, ((PacketBuffer) bytebuf).buf, j);
@@ -74,7 +74,7 @@
 ~ 			return this.buf.setBytes(i, bytebuf, j);
 ~ 		}
 
-> CHANGE  479 : 484  @  473 : 474
+> CHANGE  8 : 13  @  4 : 5
 
 ~ 		if (bytebuf instanceof PacketBuffer) {
 ~ 			return this.buf.setBytes(i, ((PacketBuffer) bytebuf).buf, j, k);
@@ -82,9 +82,9 @@
 ~ 			return this.buf.setBytes(i, bytebuf, j, k);
 ~ 		}
 
-> DELETE  502  @  492 : 496
+> DELETE  23  @  19 : 23
 
-> CHANGE  567 : 572  @  561 : 562
+> CHANGE  65 : 70  @  69 : 70
 
 ~ 		if (bytebuf instanceof PacketBuffer) {
 ~ 			return this.buf.readBytes(((PacketBuffer) bytebuf).buf);
@@ -92,7 +92,7 @@
 ~ 			return this.buf.readBytes(bytebuf);
 ~ 		}
 
-> CHANGE  575 : 580  @  565 : 566
+> CHANGE  8 : 13  @  4 : 5
 
 ~ 		if (bytebuf instanceof PacketBuffer) {
 ~ 			return this.buf.readBytes(((PacketBuffer) bytebuf).buf, i);
@@ -100,7 +100,7 @@
 ~ 			return this.buf.readBytes(bytebuf, i);
 ~ 		}
 
-> CHANGE  583 : 588  @  569 : 570
+> CHANGE  8 : 13  @  4 : 5
 
 ~ 		if (bytebuf instanceof PacketBuffer) {
 ~ 			return this.buf.readBytes(((PacketBuffer) bytebuf).buf, i, j);
@@ -108,9 +108,9 @@
 ~ 			return this.buf.readBytes(bytebuf, i, j);
 ~ 		}
 
-> DELETE  606  @  588 : 592
+> DELETE  23  @  19 : 23
 
-> CHANGE  647 : 652  @  633 : 634
+> CHANGE  41 : 46  @  45 : 46
 
 ~ 		if (parByteBuf instanceof PacketBuffer) {
 ~ 			return this.buf.writeBytes(((PacketBuffer) parByteBuf).buf);
@@ -118,7 +118,7 @@
 ~ 			return this.buf.writeBytes(parByteBuf);
 ~ 		}
 
-> CHANGE  655 : 660  @  637 : 638
+> CHANGE  8 : 13  @  4 : 5
 
 ~ 		if (bytebuf instanceof PacketBuffer) {
 ~ 			return this.buf.writeBytes(((PacketBuffer) bytebuf).buf, i);
@@ -126,7 +126,7 @@
 ~ 			return this.buf.writeBytes(bytebuf, i);
 ~ 		}
 
-> CHANGE  663 : 668  @  641 : 642
+> CHANGE  8 : 13  @  4 : 5
 
 ~ 		if (bytebuf instanceof PacketBuffer) {
 ~ 			return this.buf.writeBytes(((PacketBuffer) bytebuf).buf, i, j);
@@ -134,10 +134,10 @@
 ~ 			return this.buf.writeBytes(bytebuf, i, j);
 ~ 		}
 
-> DELETE  686  @  660 : 664
+> DELETE  23  @  19 : 23
 
-> DELETE  706  @  684 : 700
+> DELETE  20  @  24 : 40
 
-> DELETE  794  @  788 : 807
+> DELETE  88  @  104 : 123
 
 > EOF

@@ -10,20 +10,20 @@
 + import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 + import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 
-> DELETE  9  @  7 : 8
+> DELETE  7  @  5 : 6
 
-> DELETE  11  @  10 : 11
+> DELETE  2  @  3 : 4
 
-> DELETE  16  @  16 : 18
+> DELETE  5  @  6 : 8
 
-> DELETE  84  @  86 : 90
+> DELETE  68  @  70 : 74
 
-> DELETE  105  @  111 : 114
+> DELETE  21  @  25 : 28
 
-> DELETE  241  @  250 : 259
+> DELETE  136  @  139 : 148
 
-> DELETE  242  @  260 : 295
+> DELETE  1  @  10 : 45
 
-> DELETE  253  @  306 : 314
+> DELETE  11  @  46 : 54
 
 > EOF

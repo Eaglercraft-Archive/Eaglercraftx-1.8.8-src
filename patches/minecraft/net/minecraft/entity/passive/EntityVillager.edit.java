@@ -10,27 +10,27 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
 
-> DELETE  7  @  6 : 7
+> DELETE  5  @  4 : 5
 
-> DELETE  8  @  8 : 10
+> DELETE  1  @  2 : 4
 
-> DELETE  12  @  14 : 30
+> DELETE  4  @  6 : 22
 
-> DELETE  15  @  33 : 36
+> DELETE  3  @  19 : 22
 
-> DELETE  24  @  45 : 48
+> DELETE  9  @  12 : 15
 
-> DELETE  28  @  52 : 53
+> DELETE  4  @  7 : 8
 
-> DELETE  34  @  59 : 60
+> DELETE  6  @  7 : 8
 
-> DELETE  41  @  67 : 68
+> DELETE  7  @  8 : 9
 
-> CHANGE  53 : 54  @  80 : 232
+> CHANGE  12 : 13  @  13 : 165
 
 ~ 	private static EntityVillager.ITradeList[][][][] DEFAULT_TRADE_LIST_MAP = null;
 
-> INSERT  55 : 220  @  233
+> INSERT  2 : 167  @  153
 
 + 	public static void bootstrap() {
 + 		DEFAULT_TRADE_LIST_MAP = new EntityVillager.ITradeList[][][][] {
@@ -198,51 +198,51 @@
 + 	}
 + 
 
-> DELETE  229  @  242 : 258
+> DELETE  174  @  9 : 25
 
-> DELETE  232  @  261 : 281
+> DELETE  3  @  19 : 39
 
-> DELETE  237  @  286 : 329
+> DELETE  5  @  25 : 68
 
-> DELETE  241  @  333 : 338
+> DELETE  4  @  47 : 52
 
-> DELETE  298  @  395 : 396
+> DELETE  57  @  62 : 63
 
-> DELETE  340  @  438 : 477
+> DELETE  42  @  43 : 82
 
-> DELETE  413  @  550 : 558
+> DELETE  73  @  112 : 120
 
-> DELETE  553  @  698 : 699
+> DELETE  140  @  148 : 149
 
-> DELETE  572  @  718 : 728
+> DELETE  19  @  20 : 30
 
-> DELETE  573  @  729 : 732
+> DELETE  1  @  11 : 14
 
-> CHANGE  667 : 668  @  826 : 827
+> CHANGE  94 : 95  @  97 : 98
 
 ~ 		public void modifyMerchantRecipeList(MerchantRecipeList recipeList, EaglercraftRandom random) {
 
-> CHANGE  678 : 679  @  837 : 838
+> CHANGE  11 : 12  @  11 : 12
 
 ~ 		void modifyMerchantRecipeList(MerchantRecipeList var1, EaglercraftRandom var2);
 
-> CHANGE  695 : 696  @  854 : 855
+> CHANGE  17 : 18  @  17 : 18
 
 ~ 		public void modifyMerchantRecipeList(MerchantRecipeList merchantrecipelist, EaglercraftRandom random) {
 
-> CHANGE  714 : 715  @  873 : 874
+> CHANGE  19 : 20  @  19 : 20
 
 ~ 		public void modifyMerchantRecipeList(MerchantRecipeList merchantrecipelist, EaglercraftRandom random) {
 
-> CHANGE  738 : 739  @  897 : 898
+> CHANGE  24 : 25  @  24 : 25
 
 ~ 		public void modifyMerchantRecipeList(MerchantRecipeList merchantrecipelist, EaglercraftRandom random) {
 
-> CHANGE  765 : 766  @  924 : 925
+> CHANGE  27 : 28  @  27 : 28
 
 ~ 		public void modifyMerchantRecipeList(MerchantRecipeList merchantrecipelist, EaglercraftRandom random) {
 
-> CHANGE  790 : 791  @  949 : 950
+> CHANGE  25 : 26  @  25 : 26
 
 ~ 		public int getPrice(EaglercraftRandom rand) {
 

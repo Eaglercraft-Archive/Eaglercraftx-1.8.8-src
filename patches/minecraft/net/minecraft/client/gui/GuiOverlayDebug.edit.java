@@ -9,16 +9,16 @@
 
 ~ import java.text.SimpleDateFormat;
 
-> INSERT  4 : 6  @  5
+> INSERT  2 : 4  @  3
 
 + import java.util.Calendar;
 + import java.util.Iterator;
 
-> INSERT  7 : 8  @  6
+> INSERT  3 : 4  @  1
 
 + import java.util.Locale;
 
-> INSERT  9 : 21  @  7
+> INSERT  2 : 14  @  1
 
 + import java.util.TimeZone;
 + 
@@ -33,30 +33,30 @@
 + import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 + import net.lax1dude.eaglercraft.v1_8.opengl.OpenGlHelper;
 
-> CHANGE  26 : 29  @  12 : 17
+> CHANGE  17 : 20  @  5 : 10
 
 ~ import net.minecraft.client.renderer.RenderHelper;
 ~ import net.minecraft.client.renderer.entity.RenderManager;
 ~ import net.minecraft.client.resources.I18n;
 
-> CHANGE  30 : 32  @  18 : 19
+> CHANGE  4 : 6  @  6 : 7
 
 ~ import net.minecraft.entity.EntityLivingBase;
 ~ import net.minecraft.potion.PotionEffect;
 
-> CHANGE  40 : 41  @  27 : 28
+> CHANGE  10 : 11  @  9 : 10
 
 ~ import net.minecraft.world.biome.BiomeGenBase;
 
-> DELETE  42  @  29 : 31
+> DELETE  2  @  2 : 4
 
-> CHANGE  52 : 55  @  41 : 42
+> CHANGE  10 : 13  @  12 : 13
 
 ~ 	public void renderDebugInfo(ScaledResolution scaledResolutionIn, float partialTicks) {
 ~ 		int ww = scaledResolutionIn.getScaledWidth();
 ~ 		int hh = scaledResolutionIn.getScaledHeight();
 
-> CHANGE  56 : 79  @  43 : 49
+> CHANGE  4 : 27  @  2 : 8
 
 ~ 		if (this.mc.gameSettings.showDebugInfo) {
 ~ 			GlStateManager.pushMatrix();
@@ -82,7 +82,7 @@
 ~ 				drawPlayer(ww - 3, 3, partialTicks);
 ~ 			}
 
-> INSERT  81 : 105  @  51
+> INSERT  25 : 49  @  8
 
 + 		if (this.mc.currentScreen == null || !(this.mc.currentScreen instanceof GuiChat)) {
 + 			if (this.mc.gameSettings.hudStats) {
@@ -109,7 +109,7 @@
 + 		}
 + 
 
-> INSERT  108 : 300  @  54
+> INSERT  27 : 219  @  3
 
 + 	private void drawFPS(int x, int y) {
 + 		this.fontRenderer.drawStringWithShadow(this.mc.renderGlobal.getDebugInfoShort(), x, y, 0xFFFFFF);
@@ -304,7 +304,7 @@
 + 	}
 + 
 
-> INSERT  339 : 346  @  93
+> INSERT  231 : 238  @  39
 
 + 		if (!this.mc.gameSettings.showDebugInfo) {
 + 			BlockPos blockpos = new BlockPos(this.mc.getRenderViewEntity().posX,
@@ -314,41 +314,41 @@
 + 		}
 + 
 
-> CHANGE  356 : 357  @  103 : 104
+> CHANGE  17 : 18  @  10 : 11
 
 ~ 					HString.format("Chunk-relative: %d %d %d", new Object[] { Integer.valueOf(blockpos.getX() & 15),
 
-> CHANGE  382 : 383  @  129 : 130
+> CHANGE  26 : 27  @  26 : 27
 
 ~ 					HString.format("XYZ: %.3f / %.5f / %.3f",
 
-> CHANGE  386 : 387  @  133 : 134
+> CHANGE  4 : 5  @  4 : 5
 
 ~ 					HString.format("Block: %d %d %d",
 
-> CHANGE  389 : 390  @  136 : 137
+> CHANGE  3 : 4  @  3 : 4
 
 ~ 					HString.format("Chunk: %d %d %d in %d %d %d",
 
-> CHANGE  393 : 394  @  140 : 141
+> CHANGE  4 : 5  @  4 : 5
 
 ~ 					HString.format("Facing: %s (%s) (%.1f / %.1f)",
 
-> CHANGE  399 : 400  @  146 : 147
+> CHANGE  6 : 7  @  6 : 7
 
 ~ 				arraylist.add("Biome: " + chunk.getBiome(blockpos).biomeName);
 
-> CHANGE  404 : 405  @  151 : 161
+> CHANGE  5 : 6  @  5 : 15
 
 ~ 				arraylist.add(HString.format("Local Difficulty: %.2f (Day %d)",
 
-> DELETE  409  @  165 : 169
+> DELETE  5  @  14 : 18
 
-> CHANGE  413 : 414  @  173 : 174
+> CHANGE  4 : 5  @  8 : 9
 
 ~ 				arraylist.add(HString.format("Looking at: %d %d %d", new Object[] { Integer.valueOf(blockpos1.getX()),
 
-> CHANGE  422 : 450  @  182 : 199
+> CHANGE  9 : 37  @  9 : 26
 
 ~ 		ArrayList arraylist;
 ~ 		if (EagRuntime.getPlatformType() != EnumPlatformType.JAVASCRIPT) {
@@ -379,6 +379,6 @@
 ~ 							EaglercraftGPU.glGetString(7937), EaglercraftGPU.glGetString(7938) });
 ~ 		}
 
-> DELETE  458  @  207 : 211
+> DELETE  36  @  25 : 29
 
 > EOF

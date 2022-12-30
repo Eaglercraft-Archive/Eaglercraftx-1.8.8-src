@@ -10,32 +10,32 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
 
-> DELETE  10  @  11 : 12
+> DELETE  8  @  9 : 10
 
-> DELETE  14  @  16 : 17
+> DELETE  4  @  5 : 6
 
-> DELETE  19  @  22 : 23
+> DELETE  5  @  6 : 7
 
-> CHANGE  21 : 22  @  25 : 27
+> CHANGE  2 : 3  @  3 : 5
 
 ~ 	public static PropertyEnum<BlockBed.EnumPartType> PART;
 
-> INSERT  31 : 35  @  36
+> INSERT  10 : 14  @  11
 
 + 	public static void bootstrapStates() {
 + 		PART = PropertyEnum.<BlockBed.EnumPartType>create("part", BlockBed.EnumPartType.class);
 + 	}
 + 
 
-> CHANGE  37 : 38  @  38 : 90
+> CHANGE  6 : 7  @  2 : 54
 
 ~ 		return true;
 
-> DELETE  40  @  92 : 102
+> DELETE  3  @  54 : 64
 
-> DELETE  60  @  122 : 125
+> DELETE  20  @  30 : 33
 
-> CHANGE  64 : 65  @  129 : 130
+> CHANGE  4 : 5  @  7 : 8
 
 ~ 	public Item getItemDropped(IBlockState iblockstate, EaglercraftRandom var2, int var3) {
 

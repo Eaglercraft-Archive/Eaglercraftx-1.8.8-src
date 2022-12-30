@@ -10,23 +10,23 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
 ~ 
 
-> DELETE  6  @  9 : 10
+> DELETE  4  @  7 : 8
 
-> CHANGE  10 : 12  @  14 : 15
+> CHANGE  4 : 6  @  5 : 6
 
 ~ 	public static final EaglercraftUUID FLEEING_SPEED_MODIFIER_UUID = EaglercraftUUID
 ~ 			.fromString("E199AD21-BA8A-4C53-8D13-6182D5C69D3A");
 
-> DELETE  16  @  19 : 20
+> DELETE  6  @  5 : 6
 
-> CHANGE  32 : 33  @  36 : 37
+> CHANGE  16 : 17  @  17 : 18
 
 ~ 		return false;
 
-> DELETE  81  @  85 : 90
+> DELETE  49  @  49 : 54
 
-> DELETE  85  @  94 : 98
+> DELETE  4  @  9 : 13
 
-> DELETE  99  @  112 : 117
+> DELETE  14  @  18 : 23
 
 > EOF

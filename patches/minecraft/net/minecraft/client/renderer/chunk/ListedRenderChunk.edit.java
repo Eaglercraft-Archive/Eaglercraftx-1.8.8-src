@@ -9,30 +9,30 @@
 
 + import net.lax1dude.eaglercraft.v1_8.opengl.EaglercraftGPU;
 
-> DELETE  5  @  4 : 6
+> DELETE  3  @  2 : 4
 
-> CHANGE  10 : 11  @  11 : 12
+> CHANGE  5 : 6  @  7 : 8
 
 ~ 	private final int[] baseDisplayList;
 
-> INSERT  14 : 18  @  15
+> INSERT  4 : 8  @  4
 
 + 		this.baseDisplayList = new int[EnumWorldBlockLayer.values().length];
 + 		for (int i = 0; i < this.baseDisplayList.length; ++i) {
 + 			this.baseDisplayList[i] = GLAllocation.generateDisplayLists();
 + 		}
 
-> CHANGE  21 : 22  @  18 : 19
+> CHANGE  7 : 8  @  3 : 4
 
 ~ 		return !parCompiledChunk.isLayerEmpty(layer) ? this.baseDisplayList[layer.ordinal()] : -1;
 
-> CHANGE  26 : 29  @  23 : 24
+> CHANGE  5 : 8  @  5 : 6
 
 ~ 		for (int i = 0; i < this.baseDisplayList.length; ++i) {
 ~ 			GLAllocation.deleteDisplayLists(this.baseDisplayList[i]);
 ~ 		}
 
-> INSERT  30 : 40  @  25
+> INSERT  4 : 14  @  2
 
 + 
 + 	public void rebuildChunk(float x, float y, float z, ChunkCompileTaskGenerator generator) {

@@ -11,139 +11,139 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
 ~ import net.lax1dude.eaglercraft.v1_8.HString;
 
-> INSERT  7 : 8  @  6
+> INSERT  4 : 5  @  3
 
 + 
 
-> DELETE  15  @  13 : 16
+> DELETE  8  @  7 : 10
 
-> DELETE  19  @  20 : 23
+> DELETE  4  @  7 : 10
 
-> DELETE  22  @  26 : 27
+> DELETE  3  @  6 : 7
 
-> DELETE  30  @  35 : 36
+> DELETE  8  @  9 : 10
 
-> DELETE  44  @  50 : 51
+> DELETE  14  @  15 : 16
 
-> CHANGE  45 : 46  @  52 : 53
+> CHANGE  1 : 2  @  2 : 3
 
 ~ public abstract class Entity {
 
-> CHANGE  90 : 91  @  97 : 98
+> CHANGE  45 : 46  @  45 : 46
 
 ~ 	protected EaglercraftRandom rand;
 
-> CHANGE  118 : 119  @  125 : 127
+> CHANGE  28 : 29  @  28 : 30
 
 ~ 	protected EaglercraftUUID entityUniqueID;
 
-> CHANGE  139 : 140  @  147 : 148
+> CHANGE  21 : 22  @  22 : 23
 
 ~ 		this.rand = new EaglercraftRandom();
 
-> DELETE  143  @  151 : 152
+> DELETE  4  @  4 : 5
 
-> DELETE  202  @  211 : 214
+> DELETE  59  @  60 : 63
 
-> DELETE  247  @  259 : 274
+> DELETE  45  @  48 : 63
 
-> DELETE  248  @  275 : 297
+> DELETE  1  @  16 : 38
 
-> CHANGE  250 : 251  @  299 : 311
+> CHANGE  2 : 3  @  24 : 36
 
 ~ 		this.fire = 0;
 
-> DELETE  252  @  312 : 316
+> DELETE  2  @  13 : 17
 
-> DELETE  261  @  325 : 329
+> DELETE  9  @  13 : 17
 
-> CHANGE  377 : 378  @  445 : 446
+> CHANGE  116 : 117  @  120 : 121
 
 ~ 			for (AxisAlignedBB axisalignedbb1 : (List<AxisAlignedBB>) list1) {
 
-> CHANGE  384 : 385  @  452 : 453
+> CHANGE  7 : 8  @  7 : 8
 
 ~ 			for (AxisAlignedBB axisalignedbb2 : (List<AxisAlignedBB>) list1) {
 
-> CHANGE  390 : 391  @  458 : 459
+> CHANGE  6 : 7  @  6 : 7
 
 ~ 			for (AxisAlignedBB axisalignedbb13 : (List<AxisAlignedBB>) list1) {
 
-> CHANGE  408 : 409  @  476 : 477
+> CHANGE  18 : 19  @  18 : 19
 
 ~ 				for (AxisAlignedBB axisalignedbb6 : (List<AxisAlignedBB>) list) {
 
-> CHANGE  415 : 416  @  483 : 484
+> CHANGE  7 : 8  @  7 : 8
 
 ~ 				for (AxisAlignedBB axisalignedbb7 : (List<AxisAlignedBB>) list) {
 
-> CHANGE  422 : 423  @  490 : 491
+> CHANGE  7 : 8  @  7 : 8
 
 ~ 				for (AxisAlignedBB axisalignedbb8 : (List<AxisAlignedBB>) list) {
 
-> CHANGE  430 : 431  @  498 : 499
+> CHANGE  8 : 9  @  8 : 9
 
 ~ 				for (AxisAlignedBB axisalignedbb9 : (List<AxisAlignedBB>) list) {
 
-> CHANGE  437 : 438  @  505 : 506
+> CHANGE  7 : 8  @  7 : 8
 
 ~ 				for (AxisAlignedBB axisalignedbb10 : (List<AxisAlignedBB>) list) {
 
-> CHANGE  444 : 445  @  512 : 513
+> CHANGE  7 : 8  @  7 : 8
 
 ~ 				for (AxisAlignedBB axisalignedbb11 : (List<AxisAlignedBB>) list) {
 
-> CHANGE  463 : 464  @  531 : 532
+> CHANGE  19 : 20  @  19 : 20
 
 ~ 				for (AxisAlignedBB axisalignedbb12 : (List<AxisAlignedBB>) list) {
 
-> DELETE  1059  @  1127 : 1128
+> DELETE  596  @  596 : 597
 
-> CHANGE  1114 : 1116  @  1183 : 1184
+> CHANGE  55 : 57  @  56 : 57
 
 ~ 				this.entityUniqueID = new EaglercraftUUID(tagCompund.getLong("UUIDMost"),
 ~ 						tagCompund.getLong("UUIDLeast"));
 
-> CHANGE  1117 : 1118  @  1185 : 1186
+> CHANGE  3 : 4  @  2 : 3
 
 ~ 				this.entityUniqueID = EaglercraftUUID.fromString(tagCompund.getString("UUID"));
 
-> DELETE  1127  @  1195 : 1196
+> DELETE  10  @  10 : 11
 
-> CHANGE  1343 : 1344  @  1412 : 1413
+> CHANGE  216 : 217  @  217 : 218
 
 ~ 			for (AxisAlignedBB axisalignedbb : (List<AxisAlignedBB>) list) {
 
-> DELETE  1367  @  1436 : 1457
+> DELETE  24  @  24 : 45
 
-> CHANGE  1395 : 1396  @  1485 : 1486
+> CHANGE  28 : 29  @  49 : 50
 
 ~ 		boolean flag = this.worldObj != null;
 
-> CHANGE  1579 : 1580  @  1669 : 1670
+> CHANGE  184 : 185  @  184 : 185
 
 ~ 		return HString.format("%s[\'%s\'/%d, l=\'%s\', x=%.2f, y=%.2f, z=%.2f]",
 
-> DELETE  1605  @  1695 : 1729
+> DELETE  26  @  26 : 60
 
-> CHANGE  1635 : 1636  @  1759 : 1760
+> CHANGE  30 : 31  @  64 : 65
 
 ~ 				return EntityList.getEntityString(Entity.this) + " (" + Entity.this.getClass().getName() + ")";
 
-> CHANGE  1644 : 1645  @  1768 : 1769
+> CHANGE  9 : 10  @  9 : 10
 
 ~ 		category.addCrashSection("Entity\'s Exact location", HString.format("%.2f, %.2f, %.2f",
 
-> CHANGE  1649 : 1650  @  1773 : 1774
+> CHANGE  5 : 6  @  5 : 6
 
 ~ 		category.addCrashSection("Entity\'s Momentum", HString.format("%.2f, %.2f, %.2f", new Object[] {
 
-> CHANGE  1667 : 1668  @  1791 : 1792
+> CHANGE  18 : 19  @  18 : 19
 
 ~ 	public EaglercraftUUID getUniqueID() {
 
-> DELETE  1730  @  1854 : 1858
+> DELETE  63  @  63 : 67
 
-> DELETE  1781  @  1909 : 1921
+> DELETE  51  @  55 : 67
 
 > EOF

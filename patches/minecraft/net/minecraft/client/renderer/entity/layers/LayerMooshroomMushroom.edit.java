@@ -9,8 +9,8 @@
 
 + import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 
-> DELETE  6  @  5 : 6
+> DELETE  4  @  3 : 4
 
-> DELETE  7  @  7 : 8
+> DELETE  1  @  2 : 3
 
 > EOF

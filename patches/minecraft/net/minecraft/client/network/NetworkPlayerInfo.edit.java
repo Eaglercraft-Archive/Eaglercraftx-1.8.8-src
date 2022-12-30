@@ -11,27 +11,27 @@
 ~ import net.lax1dude.eaglercraft.v1_8.mojang.authlib.GameProfile;
 ~ import net.lax1dude.eaglercraft.v1_8.profile.EaglerProfile;
 
-> DELETE  8  @  8 : 9
+> DELETE  5  @  5 : 6
 
-> DELETE  18  @  19 : 22
+> DELETE  10  @  11 : 14
 
-> CHANGE  58 : 59  @  62 : 63
+> CHANGE  40 : 41  @  43 : 44
 
 ~ 		return true;
 
-> CHANGE  62 : 64  @  66 : 67
+> CHANGE  4 : 6  @  4 : 5
 
 ~ 		return Minecraft.getMinecraft().getNetHandler().getSkinCache().getSkin(this.gameProfile)
 ~ 				.getSkinModel().profileSkinType;
 
-> CHANGE  67 : 68  @  70 : 76
+> CHANGE  5 : 6  @  4 : 10
 
 ~ 		return Minecraft.getMinecraft().getNetHandler().getSkinCache().getSkin(this.gameProfile).getResourceLocation();
 
-> CHANGE  71 : 72  @  79 : 84
+> CHANGE  4 : 5  @  9 : 14
 
 ~ 		return null;
 
-> DELETE  78  @  90 : 117
+> DELETE  7  @  11 : 38
 
 > EOF

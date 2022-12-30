@@ -10,9 +10,9 @@
 + 
 + import net.lax1dude.eaglercraft.v1_8.minecraft.EaglerTextureAtlasSprite;
 
-> DELETE  7  @  5 : 7
+> DELETE  4  @  2 : 4
 
-> CHANGE  36 : 37  @  36 : 37
+> CHANGE  29 : 30  @  31 : 32
 
 ~ 	public EaglerTextureAtlasSprite getParticleTexture() {
 

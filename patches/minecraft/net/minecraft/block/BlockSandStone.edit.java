@@ -9,11 +9,11 @@
 
 ~ 
 
-> CHANGE  16 : 17  @  16 : 18
+> CHANGE  13 : 14  @  13 : 15
 
 ~ 	public static PropertyEnum<BlockSandStone.EnumType> TYPE;
 
-> INSERT  24 : 28  @  25
+> INSERT  8 : 12  @  9
 
 + 	public static void bootstrapStates() {
 + 		TYPE = PropertyEnum.<BlockSandStone.EnumType>create("type", BlockSandStone.EnumType.class);

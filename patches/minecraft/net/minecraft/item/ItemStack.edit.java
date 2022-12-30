@@ -7,9 +7,9 @@
 
 > DELETE  2  @  2 : 5
 
-> DELETE  5  @  8 : 9
+> DELETE  3  @  6 : 7
 
-> INSERT  6 : 14  @  10
+> INSERT  1 : 9  @  2
 
 + import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 + import net.lax1dude.eaglercraft.v1_8.HString;
@@ -20,21 +20,21 @@
 + import com.google.common.collect.Multimap;
 + 
 
-> DELETE  27  @  23 : 27
+> DELETE  21  @  13 : 17
 
-> CHANGE  212 : 213  @  212 : 213
+> CHANGE  185 : 186  @  189 : 190
 
 ~ 	public boolean attemptDamageItem(int amount, EaglercraftRandom rand) {
 
-> CHANGE  462 : 463  @  462 : 463
+> CHANGE  250 : 251  @  250 : 251
 
 ~ 				s = s + HString.format("#%04d/%d%s",
 
-> CHANGE  465 : 466  @  465 : 466
+> CHANGE  3 : 4  @  3 : 4
 
 ~ 				s = s + HString.format("#%04d%s", new Object[] { Integer.valueOf(i), s1 });
 
-> CHANGE  522 : 523  @  522 : 523
+> CHANGE  57 : 58  @  57 : 58
 
 ~ 			for (Entry entry : (Set<Entry>) multimap.entries()) {
 

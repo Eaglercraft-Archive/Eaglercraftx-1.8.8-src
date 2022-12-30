@@ -7,18 +7,18 @@
 
 > DELETE  2  @  2 : 3
 
-> CHANGE  5 : 9  @  6 : 8
+> CHANGE  3 : 7  @  4 : 6
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
 ~ import com.google.common.collect.Lists;
 ~ 
 
-> CHANGE  61 : 62  @  60 : 61
+> CHANGE  56 : 57  @  54 : 55
 
 ~ 		ArrayList<BlockPos> arraylist = Lists.newArrayList();
 
-> CHANGE  111 : 112  @  110 : 111
+> CHANGE  50 : 51  @  50 : 51
 
 ~ 	public void randomDisplayTick(World world, BlockPos blockpos, IBlockState iblockstate, EaglercraftRandom random) {
 

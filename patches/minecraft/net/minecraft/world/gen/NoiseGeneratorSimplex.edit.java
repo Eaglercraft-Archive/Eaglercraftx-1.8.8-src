@@ -9,11 +9,11 @@
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 
-> CHANGE  17 : 18  @  17 : 18
+> CHANGE  15 : 16  @  15 : 16
 
 ~ 		this(new EaglercraftRandom());
 
-> CHANGE  20 : 21  @  20 : 21
+> CHANGE  3 : 4  @  3 : 4
 
 ~ 	public NoiseGeneratorSimplex(EaglercraftRandom parRandom) {
 

@@ -10,21 +10,21 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
 
-> DELETE  5  @  4 : 6
+> DELETE  3  @  2 : 4
 
-> DELETE  8  @  9 : 21
+> DELETE  3  @  5 : 17
 
-> DELETE  10  @  23 : 25
+> DELETE  2  @  14 : 16
 
-> DELETE  21  @  36 : 46
+> DELETE  11  @  13 : 23
 
-> DELETE  27  @  52 : 56
+> DELETE  6  @  16 : 20
 
-> DELETE  32  @  61 : 69
+> DELETE  5  @  9 : 17
 
-> DELETE  129  @  166 : 197
+> DELETE  97  @  105 : 136
 
-> CHANGE  132 : 133  @  200 : 201
+> CHANGE  3 : 4  @  34 : 35
 
 ~ 		public void func_111104_a(EaglercraftRandom rand) {
 

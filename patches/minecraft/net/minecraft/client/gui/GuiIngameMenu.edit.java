@@ -9,29 +9,29 @@
 
 ~ import net.lax1dude.eaglercraft.v1_8.Mouse;
 
-> DELETE  7  @  13 : 14
+> DELETE  5  @  11 : 12
 
-> DELETE  9  @  16 : 18
+> DELETE  2  @  3 : 5
 
-> DELETE  11  @  20 : 21
+> DELETE  2  @  4 : 5
 
-> CHANGE  31 : 32  @  41 : 42
+> CHANGE  20 : 21  @  21 : 22
 
 ~ 		guibutton.enabled = false;
 
-> CHANGE  34 : 35  @  44 : 45
+> CHANGE  3 : 4  @  3 : 4
 
 ~ 	protected void actionPerformed(GuiButton parGuiButton) {
 
-> DELETE  41  @  51 : 52
+> DELETE  7  @  7 : 8
 
-> DELETE  46  @  57 : 60
+> DELETE  5  @  6 : 9
 
-> CHANGE  64 : 65  @  78 : 79
+> CHANGE  18 : 19  @  21 : 22
 
 ~ 			break;
 
-> CHANGE  71 : 74  @  85 : 86
+> CHANGE  7 : 10  @  7 : 8
 
 ~ 		if (Mouse.isActuallyGrabbed()) {
 ~ 			Mouse.setGrabbed(false);

@@ -9,19 +9,19 @@
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 
-> INSERT  5 : 8  @  6
+> INSERT  3 : 6  @  4
 
 + 
 + import com.google.common.collect.Sets;
 + 
 
-> DELETE  13  @  11 : 12
+> DELETE  8  @  5 : 6
 
-> CHANGE  224 : 225  @  223 : 224
+> CHANGE  211 : 212  @  212 : 213
 
 ~ 		EaglercraftRandom random = new EaglercraftRandom();
 
-> CHANGE  308 : 309  @  307 : 309
+> CHANGE  84 : 85  @  84 : 86
 
 ~ 				return "Non-integrated multiplayer server";
 

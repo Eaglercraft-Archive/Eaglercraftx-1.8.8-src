@@ -9,9 +9,9 @@
 
 ~ 
 
-> DELETE  55  @  55 : 64
+> DELETE  52  @  52 : 61
 
-> INSERT  96 : 101  @  105
+> INSERT  41 : 46  @  50
 
 + 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
 + 			EnumFacing side, float hitX, float hitY, float hitZ) {

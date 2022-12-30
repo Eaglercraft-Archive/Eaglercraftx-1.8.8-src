@@ -7,13 +7,13 @@
 
 > DELETE  2  @  2 : 8
 
-> INSERT  8 : 9  @  14
+> INSERT  6 : 7  @  12
 
 + import java.nio.charset.StandardCharsets;
 
-> DELETE  17  @  22 : 23
+> DELETE  9  @  8 : 9
 
-> INSERT  18 : 30  @  24
+> INSERT  1 : 13  @  2
 
 + import java.util.Set;
 + 
@@ -28,108 +28,108 @@
 + import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 + import net.lax1dude.eaglercraft.v1_8.minecraft.EaglerTextureAtlasSprite;
 
-> DELETE  39  @  33 : 34
+> DELETE  21  @  9 : 10
 
-> DELETE  42  @  37 : 43
+> DELETE  3  @  4 : 10
 
-> DELETE  49  @  50 : 53
+> DELETE  7  @  13 : 16
 
-> CHANGE  69 : 70  @  73 : 74
+> CHANGE  20 : 21  @  23 : 24
 
 ~ 	private final Map<ResourceLocation, EaglerTextureAtlasSprite> sprites = Maps.newHashMap();
 
-> INSERT  130 : 131  @  134
+> INSERT  61 : 62  @  61
 
 + 					LOGGER.warn(var6);
 
-> CHANGE  133 : 135  @  136 : 137
+> CHANGE  3 : 5  @  2 : 3
 
 ~ 				LOGGER.warn("Unable to load definition " + modelresourcelocation);
 ~ 				LOGGER.warn(exception);
 
-> CHANGE  174 : 175  @  176 : 177
+> CHANGE  41 : 42  @  40 : 41
 
 ~ 			modelblockdefinition = new ModelBlockDefinition((ArrayList<ModelBlockDefinition>) arraylist);
 
-> CHANGE  197 : 199  @  199 : 200
+> CHANGE  23 : 25  @  23 : 24
 
 ~ 								+ modelresourcelocation + "\'");
 ~ 						LOGGER.warn(exception);
 
-> CHANGE  217 : 218  @  218 : 219
+> CHANGE  20 : 21  @  19 : 20
 
 ~ 			String str;
 
-> CHANGE  220 : 222  @  221 : 223
+> CHANGE  3 : 5  @  3 : 5
 
 ~ 				str = (String) BUILT_IN_MODELS.get(s1);
 ~ 				if (str == null) {
 
-> DELETE  224  @  225 : 227
+> DELETE  4  @  4 : 6
 
-> CHANGE  226 : 229  @  229 : 230
+> CHANGE  2 : 5  @  4 : 5
 
 ~ 				try (InputStream is = iresource.getInputStream()) {
 ~ 					str = IOUtils.inputStreamToString(is, StandardCharsets.UTF_8);
 ~ 				}
 
-> CHANGE  231 : 233  @  232 : 240
+> CHANGE  5 : 7  @  3 : 11
 
 ~ 			ModelBlock modelblock = ModelBlock.deserialize(str);
 ~ 			modelblock.name = parResourceLocation.toString();
 
-> CHANGE  234 : 235  @  241 : 242
+> CHANGE  3 : 4  @  9 : 10
 
 ~ 			return modelblock;
 
-> CHANGE  256 : 258  @  263 : 264
+> CHANGE  22 : 24  @  22 : 23
 
 ~ 								+ Item.itemRegistry.getNameForObject(item) + "\'");
 ~ 						LOGGER.warn(exception);
 
-> CHANGE  446 : 447  @  452 : 453
+> CHANGE  190 : 191  @  189 : 190
 
 ~ 		for (ModelResourceLocation modelresourcelocation : (List<ModelResourceLocation>) arraylist) {
 
-> CHANGE  466 : 467  @  472 : 473
+> CHANGE  20 : 21  @  20 : 21
 
 ~ 		EaglerTextureAtlasSprite textureatlassprite = (EaglerTextureAtlasSprite) this.sprites
 
-> CHANGE  474 : 475  @  480 : 481
+> CHANGE  8 : 9  @  8 : 9
 
 ~ 				EaglerTextureAtlasSprite textureatlassprite1 = (EaglerTextureAtlasSprite) this.sprites
 
-> CHANGE  491 : 492  @  497 : 498
+> CHANGE  17 : 18  @  17 : 18
 
 ~ 			EaglerTextureAtlasSprite parTextureAtlasSprite, EnumFacing parEnumFacing, ModelRotation parModelRotation,
 
-> CHANGE  509 : 510  @  515 : 516
+> CHANGE  18 : 19  @  18 : 19
 
 ~ 		List arraydeque = Lists.newLinkedList();
 
-> CHANGE  521 : 522  @  527 : 528
+> CHANGE  12 : 13  @  12 : 13
 
 ~ 			ResourceLocation resourcelocation2 = (ResourceLocation) arraydeque.remove(0);
 
-> CHANGE  536 : 538  @  542 : 543
+> CHANGE  15 : 17  @  15 : 16
 
 ~ 						+ "; unable to load model: \'" + resourcelocation2 + "\'");
 ~ 				LOGGER.warn(exception);
 
-> CHANGE  588 : 590  @  593 : 595
+> CHANGE  52 : 54  @  51 : 53
 
 ~ 				for (ResourceLocation resourcelocation : (Set<ResourceLocation>) set) {
 ~ 					EaglerTextureAtlasSprite textureatlassprite = texturemap.registerSprite(resourcelocation);
 
-> CHANGE  611 : 612  @  616 : 617
+> CHANGE  23 : 24  @  23 : 24
 
 ~ 							EaglerTextureAtlasSprite.setLocationNameCompass(resourcelocation2.toString());
 
-> CHANGE  614 : 615  @  619 : 620
+> CHANGE  3 : 4  @  3 : 4
 
 ~ 							EaglerTextureAtlasSprite.setLocationNameClock(resourcelocation2.toString());
 
-> CHANGE  667 : 668  @  672 : 673
+> CHANGE  53 : 54  @  53 : 54
 
 ~ 		for (EaglerTextureAtlasSprite textureatlassprite : this.sprites.values()) {
 

@@ -10,11 +10,11 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
 ~ 
 
-> CHANGE  17 : 18  @  16 : 17
+> CHANGE  13 : 14  @  12 : 13
 
 ~ 	private EaglercraftUUID playerId;
 
-> CHANGE  83 : 84  @  82 : 83
+> CHANGE  66 : 67  @  66 : 67
 
 ~ 	public EaglercraftUUID getPlayer() {
 

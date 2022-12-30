@@ -10,15 +10,15 @@
 ~ import net.lax1dude.eaglercraft.v1_8.Keyboard;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 
-> DELETE  8  @  7 : 8
+> DELETE  6  @  5 : 6
 
-> DELETE  15  @  15 : 16
+> DELETE  7  @  8 : 9
 
-> CHANGE  49 : 50  @  50 : 51
+> CHANGE  34 : 35  @  35 : 36
 
 ~ 	protected void actionPerformed(GuiButton parGuiButton) {
 
-> CHANGE  59 : 60  @  60 : 61
+> CHANGE  10 : 11  @  10 : 11
 
 ~ 	protected void keyTyped(char parChar1, int parInt1) {
 

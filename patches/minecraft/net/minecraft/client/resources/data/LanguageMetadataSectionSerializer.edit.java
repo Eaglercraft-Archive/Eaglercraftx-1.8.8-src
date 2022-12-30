@@ -7,7 +7,7 @@
 
 > DELETE  2  @  2 : 8
 
-> CHANGE  3 : 9  @  9 : 10
+> CHANGE  1 : 7  @  7 : 8
 
 ~ 
 ~ import org.json.JSONException;
@@ -16,13 +16,13 @@
 ~ import com.google.common.collect.Sets;
 ~ 
 
-> DELETE  10  @  11 : 14
+> DELETE  7  @  2 : 5
 
-> CHANGE  12 : 13  @  16 : 19
+> CHANGE  2 : 3  @  5 : 8
 
 ~ 	public LanguageMetadataSection deserialize(JSONObject jsonobject) throws JSONException {
 
-> CHANGE  15 : 20  @  21 : 27
+> CHANGE  3 : 8  @  5 : 11
 
 ~ 		for (String s : jsonobject.keySet()) {
 ~ 			JSONObject jsonobject1 = jsonobject.getJSONObject(s);
@@ -30,15 +30,15 @@
 ~ 			String s2 = jsonobject1.getString("name");
 ~ 			boolean flag = jsonobject1.optBoolean("bidirectional", false);
 
-> CHANGE  21 : 22  @  28 : 29
+> CHANGE  6 : 7  @  7 : 8
 
 ~ 				throw new JSONException("Invalid language->\'" + s + "\'->region: empty value");
 
-> CHANGE  25 : 26  @  32 : 33
+> CHANGE  4 : 5  @  4 : 5
 
 ~ 				throw new JSONException("Invalid language->\'" + s + "\'->name: empty value");
 
-> CHANGE  29 : 30  @  36 : 37
+> CHANGE  4 : 5  @  4 : 5
 
 ~ 				throw new JSONException("Duplicate language->\'" + s + "\' defined");
 

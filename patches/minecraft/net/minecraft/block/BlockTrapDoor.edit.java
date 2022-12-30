@@ -7,17 +7,17 @@
 
 > DELETE  2  @  2 : 5
 
-> CHANGE  26 : 27  @  29 : 31
+> CHANGE  24 : 25  @  27 : 29
 
 ~ 	public static PropertyEnum<BlockTrapDoor.DoorHalf> HALF;
 
-> INSERT  38 : 42  @  42
+> INSERT  12 : 16  @  13
 
 + 	public static void bootstrapStates() {
 + 		HALF = PropertyEnum.<BlockTrapDoor.DoorHalf>create("half", BlockTrapDoor.DoorHalf.class);
 + 	}
 + 
 
-> DELETE  119  @  119 : 139
+> DELETE  81  @  77 : 97
 
 > EOF

@@ -7,7 +7,7 @@
 
 > DELETE  2  @  2 : 4
 
-> CHANGE  3 : 8  @  5 : 8
+> CHANGE  1 : 6  @  3 : 6
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
@@ -15,33 +15,33 @@
 ~ 
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 
-> DELETE  10  @  10 : 11
+> DELETE  7  @  5 : 6
 
-> DELETE  23  @  24 : 25
+> DELETE  13  @  14 : 15
 
-> CHANGE  31 : 32  @  33 : 34
+> CHANGE  8 : 9  @  9 : 10
 
 ~ 	private EaglercraftRandom random = new EaglercraftRandom();
 
-> CHANGE  61 : 62  @  63 : 64
+> CHANGE  30 : 31  @  30 : 31
 
 ~ 	protected void mouseClicked(int parInt1, int parInt2, int parInt3) {
 
-> CHANGE  87 : 90  @  89 : 92
+> CHANGE  26 : 29  @  26 : 29
 
 ~ 		GlStateManager.viewport((scaledresolution.getScaledWidth() - 290 - 110) / 2 * scaledresolution.getScaleFactor(),
 ~ 				(scaledresolution.getScaledHeight() - 220 + 60) / 2 * scaledresolution.getScaleFactor(),
 ~ 				290 * scaledresolution.getScaleFactor(), 220 * scaledresolution.getScaleFactor());
 
-> CHANGE  91 : 92  @  93 : 94
+> CHANGE  4 : 5  @  4 : 5
 
 ~ 		GlStateManager.gluPerspective(90.0F, 1.3333334F, 9.0F, 80.0F);
 
-> INSERT  128 : 129  @  130
+> INSERT  37 : 38  @  37
 
 + 		GlStateManager.enableDepth();
 
-> INSERT  130 : 131  @  131
+> INSERT  2 : 3  @  1
 
 + 		GlStateManager.disableDepth();
 

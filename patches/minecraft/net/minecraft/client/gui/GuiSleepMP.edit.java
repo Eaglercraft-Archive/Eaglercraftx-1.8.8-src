@@ -7,11 +7,11 @@
 
 > DELETE  2  @  2 : 5
 
-> CHANGE  13 : 14  @  16 : 17
+> CHANGE  11 : 12  @  14 : 15
 
 ~ 	protected void keyTyped(char parChar1, int parInt1) {
 
-> CHANGE  30 : 31  @  33 : 34
+> CHANGE  17 : 18  @  17 : 18
 
 ~ 	protected void actionPerformed(GuiButton parGuiButton) {
 

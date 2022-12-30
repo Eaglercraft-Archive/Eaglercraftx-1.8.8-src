@@ -7,7 +7,7 @@
 
 > DELETE  2  @  2 : 5
 
-> INSERT  4 : 10  @  7
+> INSERT  2 : 8  @  5
 
 + 
 + import com.google.common.collect.ComparisonChain;
@@ -16,35 +16,35 @@
 + import net.lax1dude.eaglercraft.v1_8.mojang.authlib.GameProfile;
 + import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 
-> DELETE  11  @  8 : 10
+> DELETE  7  @  1 : 3
 
-> DELETE  13  @  12 : 13
+> DELETE  2  @  4 : 5
 
-> CHANGE  59 : 60  @  59 : 60
+> CHANGE  46 : 47  @  47 : 48
 
 ~ 		for (NetworkPlayerInfo networkplayerinfo : (List<NetworkPlayerInfo>) list) {
 
-> CHANGE  80 : 81  @  80 : 82
+> CHANGE  21 : 22  @  21 : 23
 
 ~ 		boolean flag = true;
 
-> CHANGE  101 : 102  @  102 : 103
+> CHANGE  21 : 22  @  22 : 23
 
 ~ 			for (String s : (List<String>) list1) {
 
-> CHANGE  109 : 110  @  110 : 111
+> CHANGE  8 : 9  @  8 : 9
 
 ~ 			for (String s2 : (List<String>) list2) {
 
-> CHANGE  118 : 119  @  119 : 120
+> CHANGE  9 : 10  @  9 : 10
 
 ~ 			for (String s3 : (List<String>) list1) {
 
-> CHANGE  151 : 152  @  152 : 153
+> CHANGE  33 : 34  @  33 : 34
 
 ~ 					if (entityplayer == null || entityplayer.isWearing(EnumPlayerModelParts.HAT)) {
 
-> CHANGE  185 : 186  @  186 : 187
+> CHANGE  34 : 35  @  34 : 35
 
 ~ 			for (String s4 : (List<String>) list2) {
 

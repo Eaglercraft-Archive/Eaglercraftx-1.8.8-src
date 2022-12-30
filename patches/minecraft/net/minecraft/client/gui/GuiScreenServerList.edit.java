@@ -10,9 +10,9 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 ~ import net.lax1dude.eaglercraft.v1_8.Keyboard;
 
-> DELETE  6  @  8 : 9
+> DELETE  4  @  6 : 7
 
-> CHANGE  28 : 34  @  31 : 32
+> CHANGE  22 : 28  @  23 : 24
 
 ~ 		if (EagRuntime.requireSSL()) {
 ~ 			this.field_146302_g = new GuiTextField(2, this.fontRendererObj, this.width / 2 - 100, this.height / 4 + 35,
@@ -21,31 +21,31 @@
 ~ 			this.field_146302_g = new GuiTextField(2, this.fontRendererObj, this.width / 2 - 100, 116, 200, 20);
 ~ 		}
 
-> CHANGE  37 : 38  @  35 : 37
+> CHANGE  9 : 10  @  4 : 6
 
 ~ 		((GuiButton) this.buttonList.get(0)).enabled = this.field_146302_g.getText().trim().length() > 0;
 
-> CHANGE  46 : 47  @  45 : 46
+> CHANGE  9 : 10  @  10 : 11
 
 ~ 	protected void actionPerformed(GuiButton parGuiButton) {
 
-> CHANGE  51 : 52  @  50 : 51
+> CHANGE  5 : 6  @  5 : 6
 
 ~ 				this.field_146301_f.serverIP = this.field_146302_g.getText().trim();
 
-> CHANGE  58 : 59  @  57 : 58
+> CHANGE  7 : 8  @  7 : 8
 
 ~ 	protected void keyTyped(char parChar1, int parInt1) {
 
-> CHANGE  60 : 61  @  59 : 61
+> CHANGE  2 : 3  @  2 : 4
 
 ~ 			((GuiButton) this.buttonList.get(0)).enabled = this.field_146302_g.getText().trim().length() > 0;
 
-> CHANGE  67 : 68  @  67 : 68
+> CHANGE  7 : 8  @  8 : 9
 
 ~ 	protected void mouseClicked(int parInt1, int parInt2, int parInt3) {
 
-> CHANGE  76 : 87  @  76 : 78
+> CHANGE  9 : 20  @  9 : 11
 
 ~ 		if (EagRuntime.requireSSL()) {
 ~ 			this.drawString(this.fontRendererObj, I18n.format("addServer.enterIp", new Object[0]), this.width / 2 - 100,

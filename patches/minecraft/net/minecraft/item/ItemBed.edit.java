@@ -7,11 +7,11 @@
 
 > DELETE  2  @  2 : 5
 
-> DELETE  4  @  7 : 10
+> DELETE  2  @  5 : 8
 
-> DELETE  6  @  12 : 13
+> DELETE  2  @  5 : 6
 
-> CHANGE  15 : 16  @  22 : 62
+> CHANGE  9 : 10  @  10 : 50
 
 ~ 		return true;
 

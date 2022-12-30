@@ -9,24 +9,24 @@
 
 ~ 
 
-> DELETE  7  @  7 : 8
+> DELETE  4  @  4 : 5
 
-> DELETE  8  @  9 : 14
+> DELETE  1  @  2 : 7
 
-> DELETE  12  @  18 : 19
+> DELETE  4  @  9 : 10
 
-> DELETE  13  @  20 : 21
+> DELETE  1  @  2 : 3
 
-> DELETE  16  @  24 : 25
+> DELETE  3  @  4 : 5
 
-> DELETE  264  @  273 : 336
+> DELETE  248  @  249 : 312
 
-> DELETE  269  @  341 : 368
+> DELETE  5  @  68 : 95
 
-> CHANGE  270 : 271  @  369 : 424
+> CHANGE  1 : 2  @  28 : 83
 
 ~ 		return false;
 
-> DELETE  283  @  436 : 476
+> DELETE  13  @  67 : 107
 
 > EOF

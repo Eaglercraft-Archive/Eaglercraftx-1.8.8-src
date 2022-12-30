@@ -7,20 +7,20 @@
 
 > DELETE  4  @  4 : 14
 
-> DELETE  6  @  16 : 17
+> DELETE  2  @  12 : 13
 
-> DELETE  8  @  19 : 20
+> DELETE  2  @  3 : 4
 
-> DELETE  18  @  30 : 37
+> DELETE  10  @  11 : 18
 
-> CHANGE  57 : 61  @  76 : 81
+> CHANGE  39 : 43  @  46 : 51
 
 ~ 		if (this.rand.nextInt(24) == 0 && !this.isSilent()) {
 ~ 			this.worldObj.playSound(this.posX + 0.5D, this.posY + 0.5D, this.posZ + 0.5D, "fire.fire",
 ~ 					1.0F + this.rand.nextFloat(), this.rand.nextFloat() * 0.7F + 0.3F, false);
 ~ 		}
 
-> CHANGE  62 : 67  @  82 : 89
+> CHANGE  5 : 10  @  6 : 13
 
 ~ 		for (int i = 0; i < 2; ++i) {
 ~ 			this.worldObj.spawnParticle(EnumParticleTypes.SMOKE_LARGE,
@@ -28,6 +28,6 @@
 ~ 					this.posY + this.rand.nextDouble() * (double) this.height,
 ~ 					this.posZ + (this.rand.nextDouble() - 0.5D) * (double) this.width, 0.0D, 0.0D, 0.0D, new int[0]);
 
-> DELETE  134  @  156 : 234
+> DELETE  72  @  74 : 152
 
 > EOF

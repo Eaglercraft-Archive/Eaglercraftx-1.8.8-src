@@ -10,18 +10,18 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
 
-> CHANGE  21 : 22  @  21 : 23
+> CHANGE  18 : 19  @  18 : 20
 
 ~ 	public static PropertyEnum<BlockSlab.EnumBlockHalf> HALF;
 
-> INSERT  34 : 38  @  35
+> INSERT  13 : 17  @  14
 
 + 	public static void bootstrapStates() {
 + 		HALF = PropertyEnum.<BlockSlab.EnumBlockHalf>create("half", BlockSlab.EnumBlockHalf.class);
 + 	}
 + 
 
-> CHANGE  86 : 87  @  83 : 84
+> CHANGE  52 : 53  @  48 : 49
 
 ~ 	public int quantityDropped(EaglercraftRandom var1) {
 

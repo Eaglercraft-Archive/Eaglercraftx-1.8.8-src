@@ -11,19 +11,19 @@
 ~ import net.lax1dude.eaglercraft.v1_8.cache.EaglerLoadingCache;
 ~ 
 
-> CHANGE  34 : 35  @  35 : 36
+> CHANGE  32 : 33  @  33 : 34
 
 ~ 	public void updateTick(World world, BlockPos blockpos, IBlockState iblockstate, EaglercraftRandom random) {
 
-> CHANGE  154 : 155  @  155 : 156
+> CHANGE  120 : 121  @  120 : 121
 
 ~ 	public int quantityDropped(EaglercraftRandom var1) {
 
-> CHANGE  169 : 170  @  170 : 171
+> CHANGE  15 : 16  @  15 : 16
 
 ~ 	public void randomDisplayTick(World world, BlockPos blockpos, IBlockState var3, EaglercraftRandom random) {
 
-> CHANGE  216 : 217  @  217 : 218
+> CHANGE  47 : 48  @  47 : 48
 
 ~ 		EaglerLoadingCache loadingcache = BlockPattern.func_181627_a(parWorld, true);
 

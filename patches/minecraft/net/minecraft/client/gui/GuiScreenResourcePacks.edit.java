@@ -9,9 +9,9 @@
 
 ~ import java.io.ByteArrayInputStream;
 
-> DELETE  4  @  5 : 6
+> DELETE  2  @  3 : 4
 
-> CHANGE  7 : 15  @  9 : 14
+> CHANGE  3 : 11  @  4 : 9
 
 ~ 
 ~ import com.google.common.collect.Lists;
@@ -22,43 +22,43 @@
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 
-> DELETE  20  @  19 : 23
+> DELETE  13  @  10 : 14
 
-> CHANGE  35 : 37  @  38 : 39
+> CHANGE  15 : 17  @  19 : 20
 
 ~ 		GuiButton btn;
 ~ 		this.buttonList.add(btn = new GuiOptionButton(2, this.width / 2 - 154, this.height - 48,
 
-> INSERT  38 : 39  @  40
+> INSERT  3 : 4  @  2
 
 + 		btn.enabled = SYS.VFS != null;
 
-> CHANGE  49 : 50  @  50 : 51
+> CHANGE  11 : 12  @  10 : 11
 
 ~ 			for (ResourcePackRepository.Entry resourcepackrepository$entry : (List<ResourcePackRepository.Entry>) arraylist) {
 
-> CHANGE  94 : 95  @  95 : 96
+> CHANGE  45 : 46  @  45 : 46
 
 ~ 	protected void actionPerformed(GuiButton parGuiButton) {
 
-> CHANGE  97 : 100  @  98 : 135
+> CHANGE  3 : 6  @  3 : 40
 
 ~ 				if (SYS.VFS == null)
 ~ 					return;
 ~ 				EagRuntime.displayFileChooser("application/zip", "zip");
 
-> CHANGE  115 : 116  @  150 : 151
+> CHANGE  18 : 19  @  52 : 53
 
 ~ 					for (ResourcePackRepository.Entry resourcepackrepository$entry : (List<ResourcePackRepository.Entry>) arraylist) {
 
-> INSERT  122 : 124  @  157
+> INSERT  7 : 9  @  7
 
 + 					this.mc.loadingScreen.eaglerShow(I18n.format("resourcePack.load.refreshing"),
 + 							I18n.format("resourcePack.load.pleaseWait"));
 
-> DELETE  127  @  160 : 161
+> DELETE  5  @  3 : 4
 
-> CHANGE  133 : 173  @  167 : 168
+> CHANGE  6 : 46  @  7 : 8
 
 ~ 	public void updateScreen() {
 ~ 		FileChooserResult packFile = null;

@@ -7,21 +7,21 @@
 
 > DELETE  2  @  2 : 3
 
-> CHANGE  5 : 9  @  6 : 7
+> CHANGE  3 : 7  @  4 : 5
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
 ~ import com.google.common.collect.Lists;
 ~ 
 
-> DELETE  13  @  11 : 12
+> DELETE  8  @  5 : 6
 
-> CHANGE  34 : 36  @  33 : 35
+> CHANGE  21 : 23  @  22 : 24
 
 ~ 	public static void generateChestContents(EaglercraftRandom random, List<WeightedRandomChestContent> listIn,
 ~ 			IInventory inv, int max) {
 
-> CHANGE  56 : 57  @  55 : 56
+> CHANGE  22 : 23  @  22 : 23
 
 ~ 	public static void generateDispenserContents(EaglercraftRandom random, List<WeightedRandomChestContent> listIn,
 

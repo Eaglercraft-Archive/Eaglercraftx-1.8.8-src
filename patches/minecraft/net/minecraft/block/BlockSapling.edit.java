@@ -10,31 +10,31 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
 
-> DELETE  11  @  16 : 17
+> DELETE  8  @  13 : 14
 
-> DELETE  16  @  22 : 31
+> DELETE  5  @  6 : 15
 
-> CHANGE  18 : 19  @  33 : 35
+> CHANGE  2 : 3  @  11 : 13
 
 ~ 	public static PropertyEnum<BlockPlanks.EnumType> TYPE;
 
-> INSERT  29 : 33  @  45
+> INSERT  11 : 15  @  12
 
 + 	public static void bootstrapStates() {
 + 		TYPE = PropertyEnum.<BlockPlanks.EnumType>create("type", BlockPlanks.EnumType.class);
 + 	}
 + 
 
-> CHANGE  38 : 39  @  50 : 58
+> CHANGE  9 : 10  @  5 : 13
 
 ~ 	public void updateTick(World world, BlockPos blockpos, IBlockState iblockstate, EaglercraftRandom random) {
 
-> DELETE  41  @  60 : 161
+> DELETE  3  @  10 : 111
 
-> CHANGE  69 : 70  @  189 : 190
+> CHANGE  28 : 29  @  129 : 130
 
 ~ 	public boolean canUseBonemeal(World world, EaglercraftRandom var2, BlockPos var3, IBlockState var4) {
 
-> DELETE  73  @  193 : 197
+> DELETE  4  @  4 : 8
 
 > EOF

@@ -9,7 +9,7 @@
 
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.VertexFormat;
 
-> CHANGE  5 : 17  @  6 : 74
+> CHANGE  3 : 15  @  4 : 72
 
 ~ 	public static final VertexFormat BLOCK = VertexFormat.BLOCK;
 ~ 	public static final VertexFormat ITEM = VertexFormat.ITEM;

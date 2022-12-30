@@ -9,11 +9,11 @@
 
 ~ import java.util.ArrayList;
 
-> CHANGE  6 : 7  @  8 : 9
+> CHANGE  4 : 5  @  6 : 7
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 
-> CHANGE  8 : 14  @  10 : 11
+> CHANGE  2 : 8  @  2 : 3
 
 ~ 
 ~ import com.google.common.base.Predicate;
@@ -22,21 +22,21 @@
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 
-> DELETE  32  @  29 : 30
+> DELETE  24  @  19 : 20
 
-> DELETE  33  @  31 : 35
+> DELETE  1  @  2 : 6
 
-> DELETE  34  @  36 : 39
+> DELETE  1  @  5 : 8
 
-> CHANGE  58 : 59  @  63 : 64
+> CHANGE  24 : 25  @  27 : 28
 
 ~ 	private List<BlockPos> tileEntityPosQueue;
 
-> CHANGE  67 : 68  @  72 : 73
+> CHANGE  9 : 10  @  9 : 10
 
 ~ 		this.tileEntityPosQueue = new ArrayList();
 
-> CHANGE  410 : 419  @  415 : 419
+> CHANGE  343 : 352  @  343 : 347
 
 ~ 		try {
 ~ 			if (pos.getY() >= 0 && pos.getY() >> 4 < this.storageArrays.length) {
@@ -48,7 +48,7 @@
 ~ 					return extendedblockstorage.get(j, k, i);
 ~ 				}
 
-> CHANGE  421 : 428  @  421 : 436
+> CHANGE  11 : 18  @  6 : 21
 
 ~ 			return Blocks.air.getDefaultState();
 ~ 		} catch (Throwable throwable) {
@@ -58,14 +58,14 @@
 ~ 				public String call() throws Exception {
 ~ 					return CrashReportCategory.getCoordinateInfo(pos);
 
-> INSERT  429 : 433  @  437
+> INSERT  8 : 12  @  16
 
 + 			});
 + 			throw new ReportedException(crashreport);
 + 		}
 + 	}
 
-> CHANGE  434 : 447  @  438 : 448
+> CHANGE  5 : 18  @  1 : 11
 
 ~ 	/**
 ~ 	 * only use with a regular "net.minecraft.util.BlockPos"!
@@ -81,7 +81,7 @@
 ~ 					return extendedblockstorage.get(j, k, i);
 ~ 				}
 
-> INSERT  448 : 459  @  449
+> INSERT  14 : 25  @  11
 
 + 
 + 			return Blocks.air.getDefaultState();
@@ -95,34 +95,34 @@
 + 			});
 + 			throw new ReportedException(crashreport);
 
-> CHANGE  505 : 506  @  495 : 498
+> CHANGE  57 : 58  @  46 : 49
 
 ~ 				if (block1 instanceof ITileEntityProvider) {
 
-> DELETE  539  @  531 : 535
+> DELETE  34  @  36 : 40
 
-> CHANGE  790 : 792  @  786 : 788
+> CHANGE  251 : 253  @  255 : 257
 
 ~ 						&& (predicate == null || predicate.apply((T) entity))) {
 ~ 					list.add((T) entity);
 
-> CHANGE  810 : 812  @  806 : 808
+> CHANGE  20 : 22  @  20 : 22
 
 ~ 	public EaglercraftRandom getRandomWithSeed(long i) {
 ~ 		return new EaglercraftRandom(this.worldObj.getSeed() + (long) (this.xPosition * this.xPosition * 4987142)
 
-> CHANGE  895 : 896  @  891 : 892
+> CHANGE  85 : 86  @  85 : 86
 
 ~ 			this.recheckGaps(true);
 
-> CHANGE  904 : 905  @  900 : 901
+> CHANGE  9 : 10  @  9 : 10
 
 ~ 			BlockPos blockpos = (BlockPos) this.tileEntityPosQueue.remove(0);
 
-> CHANGE  1014 : 1015  @  1010 : 1011
+> CHANGE  110 : 111  @  110 : 111
 
 ~ 	public BiomeGenBase getBiome(BlockPos pos) {
 
-> DELETE  1018  @  1014 : 1020
+> DELETE  4  @  4 : 10
 
 > EOF

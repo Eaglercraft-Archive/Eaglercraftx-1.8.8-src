@@ -10,14 +10,14 @@
 ~ import org.json.JSONException;
 ~ import org.json.JSONObject;
 
-> INSERT  5 : 9  @  11
+> INSERT  3 : 7  @  9
 
 + import net.lax1dude.eaglercraft.v1_8.json.JSONTypeDeserializer;
 + import net.lax1dude.eaglercraft.v1_8.json.JSONTypeProvider;
 + import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 + 
 
-> CHANGE  90 : 98  @  92 : 108
+> CHANGE  85 : 93  @  81 : 97
 
 ~ 	public static class Deserializer implements JSONTypeDeserializer<JSONObject, ItemCameraTransforms> {
 ~ 		public ItemCameraTransforms deserialize(JSONObject jsonobject) throws JSONException {
@@ -28,11 +28,11 @@
 ~ 			ItemTransformVec3f itemtransformvec3f4 = this.func_181683_a(jsonobject, "ground");
 ~ 			ItemTransformVec3f itemtransformvec3f5 = this.func_181683_a(jsonobject, "fixed");
 
-> CHANGE  102 : 103  @  112 : 114
+> CHANGE  12 : 13  @  20 : 22
 
 ~ 		private ItemTransformVec3f func_181683_a(JSONObject parJsonObject, String parString1) {
 
-> CHANGE  104 : 105  @  115 : 117
+> CHANGE  2 : 3  @  3 : 5
 
 ~ 					? JSONTypeProvider.deserialize(parJsonObject.get(parString1), ItemTransformVec3f.class)
 

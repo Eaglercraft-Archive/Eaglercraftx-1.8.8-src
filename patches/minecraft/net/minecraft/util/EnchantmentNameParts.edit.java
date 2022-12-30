@@ -9,7 +9,7 @@
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 
-> CHANGE  6 : 7  @  6 : 7
+> CHANGE  4 : 5  @  4 : 5
 
 ~ 	private EaglercraftRandom rand = new EaglercraftRandom();
 

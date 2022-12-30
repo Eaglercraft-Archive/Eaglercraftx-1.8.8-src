@@ -7,11 +7,11 @@
 
 > DELETE  2  @  2 : 3
 
-> CHANGE  7 : 8  @  8 : 9
+> CHANGE  5 : 6  @  6 : 7
 
 ~ 		this(0.0F, true);
 
-> CHANGE  15 : 16  @  16 : 17
+> CHANGE  8 : 9  @  8 : 9
 
 ~ 		super(modelSize, 0.0F, 64, parFlag ? 64 : 32);
 

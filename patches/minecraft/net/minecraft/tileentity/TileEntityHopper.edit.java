@@ -9,18 +9,18 @@
 
 + 
 
-> DELETE  6  @  5 : 6
+> DELETE  3  @  2 : 3
 
-> DELETE  17  @  17 : 21
+> DELETE  11  @  12 : 16
 
-> DELETE  153  @  157 : 165
+> DELETE  136  @  140 : 148
 
-> CHANGE  156 : 157  @  168 : 190
+> CHANGE  3 : 4  @  11 : 33
 
 ~ 		return false;
 
-> DELETE  159  @  192 : 240
+> DELETE  3  @  24 : 72
 
-> DELETE  347  @  428 : 435
+> DELETE  188  @  236 : 243
 
 > EOF

@@ -10,14 +10,14 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
 
-> DELETE  7  @  7 : 9
+> DELETE  5  @  5 : 7
 
-> DELETE  16  @  18 : 21
+> DELETE  9  @  11 : 14
 
-> CHANGE  18 : 19  @  23 : 24
+> CHANGE  2 : 3  @  5 : 6
 
 ~ 	public BlockFlower.EnumFlowerType pickRandomFlower(EaglercraftRandom random, BlockPos blockpos) {
 
-> DELETE  43  @  48 : 81
+> DELETE  25  @  25 : 58
 
 > EOF

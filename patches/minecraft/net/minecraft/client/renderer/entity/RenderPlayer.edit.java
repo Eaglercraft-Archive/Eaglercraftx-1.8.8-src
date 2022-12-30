@@ -9,41 +9,41 @@
 
 + import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 
-> INSERT  5 : 6  @  4
+> INSERT  3 : 4  @  2
 
 + import net.minecraft.client.model.ModelBiped;
 
-> CHANGE  7 : 8  @  5 : 8
+> CHANGE  2 : 3  @  1 : 4
 
 ~ import net.minecraft.client.model.ModelZombie;
 
-> INSERT  24 : 25  @  24
+> INSERT  17 : 18  @  19
 
 + 	private boolean zombieModel;
 
-> CHANGE  27 : 28  @  26 : 27
+> CHANGE  3 : 4  @  2 : 3
 
 ~ 		this(renderManager, false, false);
 
-> CHANGE  30 : 32  @  29 : 31
+> CHANGE  3 : 5  @  3 : 5
 
 ~ 	public RenderPlayer(RenderManager renderManager, boolean useSmallArms, boolean zombieModel) {
 ~ 		super(renderManager, zombieModel ? new ModelZombie(0.0F, true) : new ModelPlayer(0.0F, useSmallArms), 0.5F);
 
-> INSERT  33 : 34  @  32
+> INSERT  3 : 4  @  3
 
 + 		this.zombieModel = zombieModel;
 
-> CHANGE  42 : 44  @  40 : 42
+> CHANGE  9 : 11  @  8 : 10
 
 ~ 	public ModelBiped getMainModel() {
 ~ 		return (ModelBiped) super.getMainModel();
 
-> CHANGE  60 : 61  @  58 : 59
+> CHANGE  18 : 19  @  18 : 19
 
 ~ 		ModelBiped modelplayer = this.getMainModel();
 
-> CHANGE  69 : 77  @  67 : 72
+> CHANGE  9 : 17  @  9 : 14
 
 ~ 			if (!zombieModel) {
 ~ 				ModelPlayer modelplayer_ = (ModelPlayer) modelplayer;
@@ -54,7 +54,7 @@
 ~ 				modelplayer_.bipedRightArmwear.showModel = clientPlayer.isWearing(EnumPlayerModelParts.RIGHT_SLEEVE);
 ~ 			}
 
-> CHANGE  127 : 137  @  122 : 130
+> CHANGE  58 : 68  @  55 : 63
 
 ~ 		if (!zombieModel) {
 ~ 			float f = 1.0F;
@@ -67,7 +67,7 @@
 ~ 			((ModelPlayer) modelplayer).renderRightArm();
 ~ 		}
 
-> CHANGE  140 : 150  @  133 : 141
+> CHANGE  13 : 23  @  11 : 19
 
 ~ 		if (!zombieModel) {
 ~ 			float f = 1.0F;

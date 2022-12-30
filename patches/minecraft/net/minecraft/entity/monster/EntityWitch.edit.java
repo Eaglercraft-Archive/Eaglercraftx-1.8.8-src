@@ -10,21 +10,21 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
 ~ 
 
-> DELETE  7  @  8 : 15
+> DELETE  5  @  6 : 13
 
-> DELETE  8  @  16 : 19
+> DELETE  1  @  8 : 11
 
-> DELETE  11  @  22 : 23
+> DELETE  3  @  6 : 7
 
-> DELETE  12  @  24 : 25
+> DELETE  1  @  2 : 3
 
-> CHANGE  18 : 20  @  31 : 32
+> CHANGE  6 : 8  @  7 : 8
 
 ~ 	private static final EaglercraftUUID MODIFIER_UUID = EaglercraftUUID
 ~ 			.fromString("5CD17E52-A79A-43D3-A529-90FDE04B181E");
 
-> DELETE  29  @  41 : 48
+> DELETE  11  @  10 : 17
 
-> DELETE  62  @  81 : 138
+> DELETE  33  @  40 : 97
 
 > EOF

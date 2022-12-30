@@ -10,25 +10,25 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
 
-> DELETE  10  @  13 : 14
+> DELETE  8  @  11 : 12
 
-> CHANGE  24 : 25  @  28 : 29
+> CHANGE  14 : 15  @  15 : 16
 
 ~ 	public static PropertyEnum<BlockPistonExtension.EnumPistonType> TYPE;
 
-> INSERT  33 : 37  @  37
+> INSERT  9 : 13  @  9
 
 + 	public static void bootstrapStates() {
 + 		TYPE = BlockPistonExtension.TYPE;
 + 	}
 + 
 
-> CHANGE  82 : 83  @  82 : 93
+> CHANGE  49 : 50  @  45 : 56
 
 ~ 	public Item getItemDropped(IBlockState var1, EaglercraftRandom var2, int var3) {
 
-> DELETE  86  @  96 : 106
+> DELETE  4  @  14 : 24
 
-> DELETE  90  @  110 : 117
+> DELETE  4  @  14 : 21
 
 > EOF

@@ -7,13 +7,13 @@
 
 > DELETE  2  @  2 : 6
 
-> INSERT  5 : 6  @  9
+> INSERT  3 : 4  @  7
 
 + import java.util.regex.Matcher;
 
-> DELETE  7  @  10 : 12
+> DELETE  2  @  1 : 3
 
-> INSERT  8 : 17  @  13
+> INSERT  1 : 10  @  3
 
 + import com.google.common.base.Charsets;
 + import com.google.common.base.Splitter;
@@ -25,12 +25,12 @@
 + import net.lax1dude.eaglercraft.v1_8.IOUtils;
 + 
 
-> CHANGE  25 : 27  @  21 : 23
+> CHANGE  17 : 19  @  8 : 10
 
 ~ 		this.lastUpdateTimeInMilliseconds = System.currentTimeMillis();
 ~ 	}
 
-> CHANGE  28 : 40  @  24 : 32
+> CHANGE  3 : 15  @  3 : 11
 
 ~ 	public static void doCLINIT() {
 ~ 		InputStream inputstream = EagRuntime.getResourceStream("/assets/minecraft/lang/en_US.lang");
@@ -45,13 +45,13 @@
 ~ 																								// (why?)
 ~ 					instance.languageList.put(s1, s2);
 
-> DELETE  42  @  34 : 38
+> DELETE  14  @  10 : 14
 
-> INSERT  44 : 45  @  40
+> INSERT  2 : 3  @  6
 
 + 		instance.lastUpdateTimeInMilliseconds = System.currentTimeMillis();
 
-> CHANGE  65 : 66  @  60 : 61
+> CHANGE  21 : 22  @  20 : 21
 
 ~ 			return HString.format(s, format);
 

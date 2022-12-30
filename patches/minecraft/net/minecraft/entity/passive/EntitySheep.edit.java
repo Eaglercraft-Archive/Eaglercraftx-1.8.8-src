@@ -7,30 +7,30 @@
 
 > DELETE  2  @  2 : 3
 
-> CHANGE  3 : 7  @  4 : 5
+> CHANGE  1 : 5  @  2 : 3
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
 ~ import com.google.common.collect.Maps;
 ~ 
 
-> DELETE  11  @  9 : 20
+> DELETE  8  @  5 : 16
 
-> DELETE  21  @  30 : 31
+> DELETE  10  @  21 : 22
 
-> DELETE  34  @  44 : 45
+> DELETE  13  @  14 : 15
 
-> DELETE  42  @  53 : 63
+> DELETE  8  @  9 : 19
 
-> DELETE  46  @  67 : 72
+> DELETE  4  @  14 : 19
 
-> CHANGE  47 : 48  @  73 : 77
+> CHANGE  1 : 2  @  6 : 10
 
 ~ 		this.sheepTimer = Math.max(0, this.sheepTimer - 1);
 
-> DELETE  112  @  141 : 155
+> DELETE  65  @  68 : 82
 
-> CHANGE  170 : 171  @  213 : 214
+> CHANGE  58 : 59  @  72 : 73
 
 ~ 	public static EnumDyeColor getRandomSheepColor(EaglercraftRandom random) {
 

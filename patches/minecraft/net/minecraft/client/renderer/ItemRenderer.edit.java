@@ -13,33 +13,33 @@
 + import net.lax1dude.eaglercraft.v1_8.opengl.OpenGlHelper;
 + import net.lax1dude.eaglercraft.v1_8.opengl.WorldRenderer;
 
-> DELETE  13  @  8 : 13
+> DELETE  11  @  6 : 11
 
-> DELETE  18  @  18 : 19
+> DELETE  5  @  10 : 11
 
-> DELETE  30  @  31 : 32
+> DELETE  12  @  13 : 14
 
-> CHANGE  56 : 59  @  58 : 61
+> CHANGE  26 : 29  @  27 : 30
 
 ~ //				if (this.isBlockTranslucent(block)) { //TODO: figure out why this code exists, it breaks slime blocks
 ~ //					GlStateManager.depthMask(false);
 ~ //				}
 
-> CHANGE  62 : 65  @  64 : 67
+> CHANGE  6 : 9  @  6 : 9
 
 ~ //			if (this.isBlockTranslucent(block)) {
 ~ //				GlStateManager.depthMask(true);
 ~ //			}
 
-> CHANGE  166 : 167  @  168 : 169
+> CHANGE  104 : 105  @  104 : 105
 
 ~ 		EaglercraftGPU.glNormal3f(0.0F, 0.0F, -1.0F);
 
-> CHANGE  361 : 362  @  363 : 364
+> CHANGE  195 : 196  @  195 : 196
 
 ~ 	private void func_178108_a(float parFloat1, EaglerTextureAtlasSprite parTextureAtlasSprite) {
 
-> CHANGE  427 : 428  @  429 : 430
+> CHANGE  66 : 67  @  66 : 67
 
 ~ 			EaglerTextureAtlasSprite textureatlassprite = this.mc.getTextureMapBlocks()
 

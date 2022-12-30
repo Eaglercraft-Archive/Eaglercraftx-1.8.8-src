@@ -11,9 +11,9 @@
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.WorldRenderer;
 
-> DELETE  6  @  5 : 7
+> DELETE  4  @  3 : 5
 
-> CHANGE  141 : 142  @  142 : 143
+> CHANGE  135 : 136  @  137 : 138
 
 ~ 	public void drawTexturedModalRect(int xCoord, int yCoord, EaglerTextureAtlasSprite textureSprite, int widthIn,
 

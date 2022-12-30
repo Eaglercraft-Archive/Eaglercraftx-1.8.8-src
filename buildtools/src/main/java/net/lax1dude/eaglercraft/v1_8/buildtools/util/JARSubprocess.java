@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Copyright (c) 2022 LAX1DUDE. All Rights Reserved.
@@ -26,6 +28,10 @@ public class JARSubprocess {
 	static {
 		classPathSeperator = System.getProperty("os.name").toLowerCase().contains("windows") ? ';' : ':';
 	}
+
+	private static final List<Process> activeProcesses = new ArrayList();
+
+	private static boolean shutdownThreadStarted = false;
 
 	public static int runJava(File directory, String[] javaExeArguments, String logPrefix) throws IOException {
 		if(logPrefix.length() > 0 && !logPrefix.endsWith(" ")) {
@@ -60,6 +66,28 @@ public class JARSubprocess {
 		exec.directory(directory);
 		
 		Process ps = exec.start();
+		
+		synchronized(activeProcesses) {
+			if(!shutdownThreadStarted) {
+				Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+					public void run() {
+						synchronized(activeProcesses) {
+							for(Process proc : activeProcesses) {
+								try {
+									if(proc.isAlive()) {
+										proc.destroy();
+									}
+								}catch(Throwable t) {
+								}
+							}
+						}
+					}
+				}, "Subprocess Exit Thread"));
+				shutdownThreadStarted = true;
+			}
+			activeProcesses.add(ps);
+		}
+		
 		InputStream is = ps.getInputStream();
 		InputStream ise = ps.getErrorStream();
 		BufferedReader isb = new BufferedReader(new InputStreamReader(is));

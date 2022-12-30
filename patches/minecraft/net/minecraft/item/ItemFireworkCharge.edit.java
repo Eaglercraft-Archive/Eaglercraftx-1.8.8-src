@@ -9,6 +9,6 @@
 
 + 
 
-> DELETE  5  @  4 : 8
+> DELETE  2  @  1 : 5
 
 > EOF

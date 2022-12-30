@@ -7,11 +7,11 @@
 
 > DELETE  2  @  2 : 5
 
-> CHANGE  5 : 6  @  8 : 9
+> CHANGE  3 : 4  @  6 : 7
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 
-> INSERT  7 : 14  @  10
+> INSERT  2 : 9  @  2
 
 + 
 + import com.google.common.collect.Lists;
@@ -21,13 +21,13 @@
 + import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 + import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 
-> DELETE  16  @  12 : 13
+> DELETE  9  @  2 : 3
 
-> DELETE  41  @  38 : 57
+> DELETE  25  @  26 : 45
 
-> DELETE  43  @  59 : 68
+> DELETE  2  @  21 : 30
 
-> CHANGE  62 : 107  @  87 : 178
+> CHANGE  19 : 64  @  28 : 119
 
 ~ 	public static BiomeGenBase ocean;
 ~ 	public static BiomeGenBase plains;
@@ -75,33 +75,33 @@
 ~ 	protected static final NoiseGeneratorPerlin GRASS_COLOR_NOISE = new NoiseGeneratorPerlin(
 ~ 			new EaglercraftRandom(2345L), 1);
 
-> DELETE  118  @  189 : 190
+> DELETE  56  @  102 : 103
 
-> DELETE  125  @  197 : 200
+> DELETE  7  @  8 : 11
 
-> DELETE  137  @  212 : 215
+> DELETE  12  @  15 : 18
 
-> DELETE  139  @  217 : 218
+> DELETE  2  @  5 : 6
 
-> DELETE  155  @  234 : 238
+> DELETE  16  @  17 : 21
 
-> CHANGE  176 : 177  @  259 : 268
+> CHANGE  21 : 22  @  25 : 34
 
 ~ 	public BlockFlower.EnumFlowerType pickRandomFlower(EaglercraftRandom rand, BlockPos pos) {
 
-> DELETE  271  @  362 : 366
+> DELETE  95  @  103 : 107
 
-> CHANGE  287 : 289  @  382 : 384
+> CHANGE  16 : 18  @  20 : 22
 
 ~ 	public void genTerrainBlocks(World worldIn, EaglercraftRandom rand, ChunkPrimer chunkPrimerIn, int parInt1,
 ~ 			int parInt2, double parDouble1) {
 
-> CHANGE  292 : 294  @  387 : 389
+> CHANGE  5 : 7  @  5 : 7
 
 ~ 	public final void generateBiomeTerrain(World worldIn, EaglercraftRandom rand, ChunkPrimer chunkPrimerIn,
 ~ 			int parInt1, int parInt2, double parDouble1) {
 
-> CHANGE  395 : 508  @  490 : 491
+> CHANGE  103 : 216  @  103 : 104
 
 ~ 	public static class Height {
 ~ 		public float rootHeight;
@@ -217,8 +217,8 @@
 ~ 		field_180279_ad = ocean;
 ~ 
 
-> DELETE  549  @  532 : 535
+> DELETE  154  @  42 : 45
 
-> DELETE  551  @  537 : 573
+> DELETE  2  @  5 : 41
 
 > EOF

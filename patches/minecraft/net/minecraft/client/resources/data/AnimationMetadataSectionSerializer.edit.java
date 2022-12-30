@@ -7,55 +7,55 @@
 
 > DELETE  2  @  2 : 12
 
-> CHANGE  3 : 4  @  13 : 17
+> CHANGE  1 : 2  @  11 : 15
 
 ~ 
 
-> INSERT  5 : 8  @  18
+> INSERT  2 : 5  @  5
 
 + import org.json.JSONArray;
 + import org.json.JSONException;
 + import org.json.JSONObject;
 
-> INSERT  9 : 13  @  19
+> INSERT  4 : 8  @  1
 
 + import com.google.common.collect.Lists;
 + 
 + import net.lax1dude.eaglercraft.v1_8.json.JSONTypeSerializer;
 + 
 
-> CHANGE  14 : 16  @  20 : 23
+> CHANGE  5 : 7  @  1 : 4
 
 ~ 		implements JSONTypeSerializer<AnimationMetadataSection, JSONObject> {
 ~ 	public AnimationMetadataSection deserialize(JSONObject jsonobject) throws JSONException {
 
-> CHANGE  17 : 18  @  24 : 26
+> CHANGE  3 : 4  @  4 : 6
 
 ~ 		int i = jsonobject.optInt("frametime", 1);
 
-> CHANGE  24 : 25  @  32 : 33
+> CHANGE  7 : 8  @  8 : 9
 
 ~ 				JSONArray jsonarray = jsonobject.getJSONArray("frames");
 
-> CHANGE  26 : 28  @  34 : 37
+> CHANGE  2 : 4  @  2 : 5
 
 ~ 				for (int j = 0; j < jsonarray.length(); ++j) {
 ~ 					AnimationFrame animationframe = this.parseAnimationFrame(j, jsonarray.get(j));
 
-> CHANGE  33 : 34  @  42 : 44
+> CHANGE  7 : 8  @  8 : 10
 
 ~ 				throw new JSONException("Invalid animation->frames: expected array, was " + jsonobject.get("frames"),
 
-> CHANGE  38 : 40  @  48 : 50
+> CHANGE  5 : 7  @  6 : 8
 
 ~ 		int k = jsonobject.optInt("width", -1);
 ~ 		int l = jsonobject.optInt("height", -1);
 
-> CHANGE  48 : 49  @  58 : 59
+> CHANGE  10 : 11  @  10 : 11
 
 ~ 		boolean flag = jsonobject.optBoolean("interpolate", false);
 
-> CHANGE  52 : 58  @  62 : 68
+> CHANGE  4 : 10  @  4 : 10
 
 ~ 	private AnimationFrame parseAnimationFrame(int parInt1, Object parJsonElement) {
 ~ 		if (parJsonElement instanceof Number) {
@@ -64,40 +64,40 @@
 ~ 			JSONObject jsonobject = (JSONObject) parJsonElement;
 ~ 			int i = jsonobject.optInt("time", -1);
 
-> CHANGE  62 : 63  @  72 : 73
+> CHANGE  10 : 11  @  10 : 11
 
 ~ 			int j = jsonobject.getInt(getSectionName());
 
-> CHANGE  70 : 73  @  80 : 84
+> CHANGE  8 : 11  @  8 : 12
 
 ~ 	public JSONObject serialize(AnimationMetadataSection animationmetadatasection) {
 ~ 		JSONObject jsonobject = new JSONObject();
 ~ 		jsonobject.put("frametime", Integer.valueOf(animationmetadatasection.getFrameTime()));
 
-> CHANGE  74 : 75  @  85 : 86
+> CHANGE  4 : 5  @  5 : 6
 
 ~ 			jsonobject.put("width", Integer.valueOf(animationmetadatasection.getFrameWidth()));
 
-> CHANGE  78 : 79  @  89 : 90
+> CHANGE  4 : 5  @  4 : 5
 
 ~ 			jsonobject.put("height", Integer.valueOf(animationmetadatasection.getFrameHeight()));
 
-> CHANGE  82 : 83  @  93 : 94
+> CHANGE  4 : 5  @  4 : 5
 
 ~ 			JSONArray jsonarray = new JSONArray();
 
-> CHANGE  86 : 90  @  97 : 101
+> CHANGE  4 : 8  @  4 : 8
 
 ~ 					JSONObject jsonobject1 = new JSONObject();
 ~ 					jsonobject1.put("index", Integer.valueOf(animationmetadatasection.getFrameIndex(i)));
 ~ 					jsonobject1.put("time", Integer.valueOf(animationmetadatasection.getFrameTimeSingle(i)));
 ~ 					jsonarray.put(jsonobject1);
 
-> CHANGE  91 : 92  @  102 : 103
+> CHANGE  5 : 6  @  5 : 6
 
 ~ 					jsonarray.put(Integer.valueOf(animationmetadatasection.getFrameIndex(i)));
 
-> CHANGE  95 : 96  @  106 : 107
+> CHANGE  4 : 5  @  4 : 5
 
 ~ 			jsonobject.put("frames", jsonarray);
 

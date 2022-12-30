@@ -10,15 +10,15 @@
 + import net.lax1dude.eaglercraft.v1_8.minecraft.EaglerTextureAtlasSprite;
 + import net.lax1dude.eaglercraft.v1_8.opengl.WorldRenderer;
 
-> DELETE  6  @  4 : 11
+> DELETE  4  @  2 : 9
 
-> DELETE  18  @  23 : 24
+> DELETE  12  @  19 : 20
 
-> CHANGE  35 : 36  @  41 : 42
+> CHANGE  17 : 18  @  18 : 19
 
 ~ 	public void renderBlockDamage(IBlockState state, BlockPos pos, EaglerTextureAtlasSprite texture,
 
-> CHANGE  91 : 95  @  97 : 103
+> CHANGE  56 : 60  @  56 : 62
 
 ~ 
 ~ 		try {

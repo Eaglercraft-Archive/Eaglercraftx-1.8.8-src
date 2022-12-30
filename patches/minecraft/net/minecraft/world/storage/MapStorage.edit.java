@@ -7,30 +7,30 @@
 
 > DELETE  2  @  2 : 10
 
-> CHANGE  4 : 8  @  12 : 16
+> CHANGE  2 : 6  @  10 : 14
 
 ~ 
 ~ import com.google.common.collect.Lists;
 ~ import com.google.common.collect.Maps;
 ~ 
 
-> DELETE  9  @  17 : 18
+> DELETE  5  @  5 : 6
 
-> CHANGE  22 : 23  @  31 : 63
+> CHANGE  13 : 14  @  14 : 46
 
 ~ 		return (WorldSavedData) this.loadedDataMap.get(s);
 
-> CHANGE  36 : 37  @  76 : 81
+> CHANGE  14 : 15  @  45 : 50
 
 ~ 			((WorldSavedData) this.loadedDataList.get(i)).setDirty(false);
 
-> DELETE  41  @  85 : 105
+> DELETE  5  @  9 : 29
 
-> CHANGE  42 : 43  @  106 : 131
+> CHANGE  1 : 2  @  21 : 46
 
 ~ 		this.idCounts.clear();
 
-> CHANGE  54 : 55  @  142 : 165
+> CHANGE  12 : 13  @  36 : 59
 
 ~ 		return oshort.shortValue();
 

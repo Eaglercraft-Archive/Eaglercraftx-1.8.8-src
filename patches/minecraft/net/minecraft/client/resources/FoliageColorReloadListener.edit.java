@@ -9,9 +9,9 @@
 
 + 
 
-> DELETE  5  @  4 : 6
+> DELETE  2  @  1 : 3
 
-> CHANGE  13 : 15  @  14 : 15
+> CHANGE  8 : 10  @  10 : 11
 
 ~ 			ColorizerFoliage.setFoliageBiomeColorizer(
 ~ 					TextureUtil.convertComponentOrder(TextureUtil.readImageData(iresourcemanager, LOC_FOLIAGE_PNG)));

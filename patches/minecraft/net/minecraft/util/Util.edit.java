@@ -12,7 +12,7 @@
 ~ import net.lax1dude.eaglercraft.v1_8.futures.FutureTask;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 
-> CHANGE  9 : 10  @  8 : 15
+> CHANGE  7 : 8  @  6 : 13
 
 ~ 		return EagRuntime.getPlatformOS().getMinecraftEnum();
 

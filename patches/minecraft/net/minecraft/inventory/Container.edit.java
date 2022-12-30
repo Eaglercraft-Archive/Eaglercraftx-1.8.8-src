@@ -7,16 +7,16 @@
 
 > DELETE  2  @  2 : 4
 
-> INSERT  5 : 9  @  7
+> INSERT  3 : 7  @  5
 
 + 
 + import com.google.common.collect.Lists;
 + import com.google.common.collect.Sets;
 + 
 
-> DELETE  11  @  9 : 12
+> DELETE  6  @  2 : 5
 
-> CHANGE  30 : 31  @  31 : 32
+> CHANGE  19 : 20  @  22 : 23
 
 ~ 		this.inventoryItemStacks.add((ItemStack) null);
 

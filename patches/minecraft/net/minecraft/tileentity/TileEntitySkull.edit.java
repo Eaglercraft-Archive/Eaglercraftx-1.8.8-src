@@ -11,13 +11,13 @@
 ~ 
 ~ import net.lax1dude.eaglercraft.v1_8.mojang.authlib.GameProfile;
 
-> DELETE  9  @  10 : 12
+> DELETE  7  @  8 : 10
 
-> CHANGE  38 : 39  @  41 : 42
+> CHANGE  29 : 30  @  31 : 32
 
 ~ 					this.playerProfile = new GameProfile((EaglercraftUUID) null, s);
 
-> CHANGE  73 : 74  @  76 : 100
+> CHANGE  35 : 36  @  35 : 59
 
 ~ 		return input;
 

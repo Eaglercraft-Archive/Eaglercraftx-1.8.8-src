@@ -12,13 +12,13 @@
 + import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 + 
 
-> DELETE  9  @  5 : 11
+> DELETE  7  @  3 : 9
 
-> CHANGE  180 : 181  @  182 : 183
+> CHANGE  171 : 172  @  177 : 178
 
 ~ 	public static EnumFacing random(EaglercraftRandom rand) {
 
-> CHANGE  321 : 322  @  323 : 324
+> CHANGE  141 : 142  @  141 : 142
 
 ~ 		public EnumFacing random(EaglercraftRandom rand) {
 

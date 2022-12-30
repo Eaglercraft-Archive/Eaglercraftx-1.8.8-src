@@ -10,12 +10,12 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
 
-> CHANGE  30 : 32  @  30 : 34
+> CHANGE  26 : 28  @  26 : 30
 
 ~ 	public static PropertyEnum<BlockStairs.EnumHalf> HALF;
 ~ 	public static PropertyEnum<BlockStairs.EnumShape> SHAPE;
 
-> INSERT  52 : 57  @  54
+> INSERT  22 : 27  @  24
 
 + 	public static void bootstrapStates() {
 + 		HALF = PropertyEnum.<BlockStairs.EnumHalf>create("half", BlockStairs.EnumHalf.class);
@@ -23,11 +23,11 @@
 + 	}
 + 
 
-> CHANGE  401 : 402  @  398 : 399
+> CHANGE  349 : 350  @  344 : 345
 
 ~ 	public void randomDisplayTick(World world, BlockPos blockpos, IBlockState iblockstate, EaglercraftRandom random) {
 
-> CHANGE  462 : 463  @  459 : 460
+> CHANGE  61 : 62  @  61 : 62
 
 ~ 	public void updateTick(World world, BlockPos blockpos, IBlockState iblockstate, EaglercraftRandom random) {
 

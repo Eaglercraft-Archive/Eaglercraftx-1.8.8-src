@@ -7,7 +7,7 @@
 
 > DELETE  2  @  2 : 4
 
-> CHANGE  4 : 9  @  6 : 9
+> CHANGE  2 : 7  @  4 : 7
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
@@ -15,7 +15,7 @@
 ~ import com.google.common.collect.Maps;
 ~ 
 
-> CHANGE  30 : 31  @  30 : 31
+> CHANGE  26 : 27  @  24 : 25
 
 ~ 	public ModelRenderer getRandomModelBox(EaglercraftRandom rand) {
 

@@ -10,14 +10,14 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
 
-> DELETE  17  @  21 : 23
+> DELETE  14  @  18 : 20
 
-> CHANGE  25 : 27  @  31 : 35
+> CHANGE  8 : 10  @  10 : 14
 
 ~ 	public static PropertyEnum<BlockDoublePlant.EnumPlantType> VARIANT;
 ~ 	public static PropertyEnum<BlockDoublePlant.EnumBlockHalf> HALF;
 
-> INSERT  40 : 45  @  48
+> INSERT  15 : 20  @  17
 
 + 	public static void bootstrapStates() {
 + 		VARIANT = PropertyEnum.<BlockDoublePlant.EnumPlantType>create("variant", BlockDoublePlant.EnumPlantType.class);
@@ -25,21 +25,21 @@
 + 	}
 + 
 
-> CHANGE  105 : 106  @  108 : 109
+> CHANGE  65 : 66  @  60 : 61
 
 ~ 	public Item getItemDropped(IBlockState iblockstate, EaglercraftRandom random, int var3) {
 
-> DELETE  145  @  148 : 158
+> DELETE  40  @  40 : 50
 
-> DELETE  155  @  168 : 176
+> DELETE  10  @  20 : 28
 
-> DELETE  169  @  190 : 206
+> DELETE  14  @  22 : 38
 
-> CHANGE  186 : 187  @  223 : 224
+> CHANGE  17 : 18  @  33 : 34
 
 ~ 	public boolean canUseBonemeal(World var1, EaglercraftRandom var2, BlockPos var3, IBlockState var4) {
 
-> CHANGE  190 : 191  @  227 : 228
+> CHANGE  4 : 5  @  4 : 5
 
 ~ 	public void grow(World world, EaglercraftRandom var2, BlockPos blockpos, IBlockState var4) {
 

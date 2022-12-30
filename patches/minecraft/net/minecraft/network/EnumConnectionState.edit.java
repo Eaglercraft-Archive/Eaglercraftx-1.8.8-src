@@ -11,18 +11,18 @@
 + import java.util.Map;
 + 
 
-> CHANGE  8 : 10  @  5 : 8
+> CHANGE  6 : 8  @  3 : 6
 
 ~ 
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 
-> DELETE  115  @  113 : 114
+> DELETE  107  @  108 : 109
 
-> CHANGE  262 : 263  @  261 : 262
+> CHANGE  147 : 148  @  148 : 149
 
 ~ 			this.directionMaps.put(direction, (BiMap<Integer, Class<? extends Packet>>) object);
 
-> CHANGE  308 : 310  @  307 : 308
+> CHANGE  46 : 48  @  46 : 47
 
 ~ 				for (Class oclass : (Collection<Class>) ((BiMap) enumconnectionstate.directionMaps
 ~ 						.get(enumpacketdirection)).values()) {

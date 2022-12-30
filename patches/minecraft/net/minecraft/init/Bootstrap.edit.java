@@ -7,76 +7,76 @@
 
 > DELETE  2  @  2 : 3
 
-> CHANGE  3 : 7  @  4 : 6
+> CHANGE  1 : 5  @  2 : 4
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 
-> INSERT  29 : 31  @  28
+> INSERT  26 : 28  @  24
 
 + import net.minecraft.entity.monster.EntityEnderman;
 + import net.minecraft.entity.passive.EntityVillager;
 
-> DELETE  36  @  33 : 35
+> DELETE  7  @  5 : 7
 
-> INSERT  38 : 39  @  37
+> INSERT  2 : 3  @  4
 
 + import net.minecraft.item.ItemAxe;
 
-> INSERT  42 : 43  @  40
+> INSERT  4 : 5  @  3
 
 + import net.minecraft.item.ItemPickaxe;
 
-> INSERT  44 : 45  @  41
+> INSERT  2 : 3  @  1
 
 + import net.minecraft.item.ItemSpade;
 
-> DELETE  46  @  42 : 44
+> DELETE  2  @  1 : 3
 
-> DELETE  47  @  45 : 46
+> DELETE  1  @  3 : 4
 
-> DELETE  48  @  47 : 48
+> DELETE  1  @  2 : 3
 
-> DELETE  51  @  51 : 52
+> DELETE  3  @  4 : 5
 
-> CHANGE  52 : 53  @  53 : 55
+> CHANGE  1 : 2  @  2 : 4
 
 ~ import net.minecraft.world.biome.BiomeGenBase;
 
-> CHANGE  155 : 156  @  157 : 158
+> CHANGE  103 : 104  @  104 : 105
 
 ~ 				EaglercraftRandom random = world.rand;
 
-> CHANGE  294 : 295  @  296 : 301
+> CHANGE  139 : 140  @  139 : 144
 
 ~ 					if (!ItemDye.applyBonemeal(itemstack, world, blockpos)) {
 
-> CHANGE  335 : 336  @  341 : 375
+> CHANGE  41 : 42  @  45 : 79
 
 ~ 				if (!(world.isAirBlock(blockpos) && blockskull.canDispenserPlace(world, blockpos, itemstack))) {
 
-> DELETE  361  @  400 : 404
+> DELETE  26  @  59 : 63
 
-> INSERT  388 : 390  @  431
+> INSERT  27 : 29  @  31
 
 + 			Blocks.doBootstrap();
 + 			BiomeGenBase.bootstrap();
 
-> INSERT  391 : 395  @  432
+> INSERT  3 : 7  @  1
 
 + 			EntityEnderman.bootstrap();
 + 			ItemAxe.bootstrap();
 + 			ItemPickaxe.bootstrap();
 + 			ItemSpade.bootstrap();
 
-> INSERT  396 : 398  @  433
+> INSERT  5 : 7  @  1
 
 + 			Items.doBootstrap();
 + 			EntityVillager.bootstrap();
 
-> CHANGE  404 : 406  @  439 : 441
+> CHANGE  8 : 10  @  6 : 8
 
 ~ 		System.setErr(new LoggingPrintStream("STDERR", true, System.err));
 ~ 		System.setOut(new LoggingPrintStream("STDOUT", false, SYSOUT));

@@ -7,23 +7,23 @@
 
 > DELETE  2  @  2 : 5
 
-> CHANGE  3 : 4  @  6 : 9
+> CHANGE  1 : 2  @  4 : 7
 
 ~ 
 
-> DELETE  6  @  11 : 12
+> DELETE  3  @  5 : 6
 
-> DELETE  8  @  14 : 16
+> DELETE  2  @  3 : 5
 
-> DELETE  9  @  17 : 18
+> DELETE  1  @  3 : 4
 
-> DELETE  11  @  20 : 23
+> DELETE  2  @  3 : 6
 
-> DELETE  13  @  25 : 26
+> DELETE  2  @  5 : 6
 
-> DELETE  15  @  28 : 30
+> DELETE  2  @  3 : 5
 
-> CHANGE  86 : 91  @  101 : 108
+> CHANGE  71 : 76  @  73 : 80
 
 ~ 		float f = MathHelper.cos(this.animTime * 3.1415927F * 2.0F);
 ~ 		float f1 = MathHelper.cos(this.prevAnimTime * 3.1415927F * 2.0F);
@@ -31,7 +31,7 @@
 ~ 			this.worldObj.playSound(this.posX, this.posY, this.posZ, "mob.enderdragon.wings", 5.0F,
 ~ 					0.8F + this.rand.nextFloat() * 0.3F, false);
 
-> CHANGE  129 : 142  @  146 : 240
+> CHANGE  43 : 56  @  45 : 139
 
 ~ 				if (this.newPosRotationIncrements > 0) {
 ~ 					double d10 = this.posX + (this.newPosX - this.posX) / (double) this.newPosRotationIncrements;
@@ -47,26 +47,26 @@
 ~ 					this.setPosition(d10, d0, d1);
 ~ 					this.setRotation(this.rotationYaw, this.rotationPitch);
 
-> DELETE  171  @  269 : 279
+> DELETE  42  @  123 : 133
 
-> DELETE  208  @  316 : 321
+> DELETE  37  @  47 : 52
 
-> DELETE  215  @  328 : 333
+> DELETE  7  @  12 : 17
 
-> CHANGE  228 : 229  @  346 : 347
+> CHANGE  13 : 14  @  18 : 19
 
 ~ 			for (EntityEnderCrystal entityendercrystal1 : (List<EntityEnderCrystal>) list) {
 
-> DELETE  241  @  359 : 421
+> DELETE  13  @  13 : 75
 
-> DELETE  245  @  425 : 466
+> DELETE  4  @  66 : 107
 
-> DELETE  290  @  511 : 529
+> DELETE  45  @  86 : 104
 
-> DELETE  292  @  531 : 534
+> DELETE  2  @  20 : 23
 
-> DELETE  293  @  535 : 547
+> DELETE  1  @  4 : 16
 
-> DELETE  295  @  549 : 592
+> DELETE  2  @  14 : 57
 
 > EOF

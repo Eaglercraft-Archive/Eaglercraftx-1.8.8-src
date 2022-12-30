@@ -7,14 +7,14 @@
 
 > DELETE  2  @  2 : 3
 
-> CHANGE  3 : 7  @  4 : 9
+> CHANGE  1 : 5  @  2 : 7
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
 ~ import com.google.common.collect.Lists;
 ~ 
 
-> CHANGE  11 : 12  @  13 : 14
+> CHANGE  8 : 9  @  9 : 10
 
 ~ 	private final EaglercraftRandom rnd = new EaglercraftRandom();
 

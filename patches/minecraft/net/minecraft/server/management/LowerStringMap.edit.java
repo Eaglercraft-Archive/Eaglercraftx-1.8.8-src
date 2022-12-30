@@ -7,14 +7,14 @@
 
 > DELETE  2  @  2 : 3
 
-> DELETE  5  @  6 : 7
+> DELETE  3  @  4 : 5
 
-> INSERT  6 : 8  @  8
+> INSERT  1 : 3  @  2
 
 + import com.google.common.collect.Maps;
 + 
 
-> CHANGE  41 : 42  @  41 : 42
+> CHANGE  35 : 36  @  33 : 34
 
 ~ 			this.put((String) entry.getKey(), (V) entry.getValue());
 

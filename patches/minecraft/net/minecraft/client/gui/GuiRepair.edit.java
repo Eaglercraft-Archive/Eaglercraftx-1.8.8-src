@@ -7,24 +7,24 @@
 
 > DELETE  2  @  2 : 4
 
-> INSERT  3 : 7  @  5
+> INSERT  1 : 5  @  3
 
 + 
 + import net.lax1dude.eaglercraft.v1_8.netty.Unpooled;
 + import net.lax1dude.eaglercraft.v1_8.Keyboard;
 + import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 
-> DELETE  8  @  6 : 7
+> DELETE  5  @  1 : 2
 
-> DELETE  9  @  8 : 9
+> DELETE  1  @  2 : 3
 
-> DELETE  21  @  21 : 22
+> DELETE  12  @  13 : 14
 
-> CHANGE  91 : 92  @  92 : 93
+> CHANGE  70 : 71  @  71 : 72
 
 ~ 	protected void keyTyped(char parChar1, int parInt1) {
 
-> CHANGE  113 : 114  @  114 : 115
+> CHANGE  22 : 23  @  22 : 23
 
 ~ 	protected void mouseClicked(int parInt1, int parInt2, int parInt3) {
 

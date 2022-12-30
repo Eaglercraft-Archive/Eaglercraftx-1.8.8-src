@@ -10,11 +10,11 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
 
-> CHANGE  30 : 31  @  31 : 32
+> CHANGE  28 : 29  @  29 : 30
 
 ~ 	public void updateTick(World world, BlockPos blockpos, IBlockState var3, EaglercraftRandom var4) {
 
-> CHANGE  75 : 88  @  76 : 94
+> CHANGE  45 : 58  @  45 : 63
 
 ~ 					for (int j = 0; j < 128; ++j) {
 ~ 						double d0 = worldIn.rand.nextDouble();
@@ -30,6 +30,6 @@
 ~ 						worldIn.spawnParticle(EnumParticleTypes.PORTAL, d1, d2, d3, (double) f, (double) f1,
 ~ 								(double) f2, new int[0]);
 
-> DELETE  89  @  95 : 96
+> DELETE  14  @  19 : 20
 
 > EOF

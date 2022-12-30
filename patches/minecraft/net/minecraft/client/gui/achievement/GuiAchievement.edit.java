@@ -9,9 +9,9 @@
 
 + import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 
-> DELETE  6  @  5 : 6
+> DELETE  4  @  3 : 4
 
-> INSERT  120 : 152  @  120
+> INSERT  114 : 146  @  115
 
 + 	public int getHeight() {
 + 		if (this.theAchievement != null && this.notificationTime != 0L && Minecraft.getMinecraft().thePlayer != null) {

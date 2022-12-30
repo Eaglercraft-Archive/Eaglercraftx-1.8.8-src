@@ -7,17 +7,17 @@
 
 > DELETE  2  @  2 : 3
 
-> CHANGE  3 : 6  @  4 : 6
+> CHANGE  1 : 4  @  2 : 4
 
 ~ 
 ~ import com.google.common.base.Predicate;
 ~ 
 
-> CHANGE  16 : 17  @  16 : 22
+> CHANGE  13 : 14  @  12 : 18
 
 ~ 	public static PropertyEnum<BlockPlanks.EnumType> VARIANT;
 
-> INSERT  23 : 31  @  28
+> INSERT  7 : 15  @  12
 
 + 	public static void bootstrapStates() {
 + 		VARIANT = PropertyEnum.create("variant", BlockPlanks.EnumType.class, new Predicate<BlockPlanks.EnumType>() {

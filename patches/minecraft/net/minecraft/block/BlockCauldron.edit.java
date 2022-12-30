@@ -10,19 +10,19 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
 
-> DELETE  12  @  12 : 13
+> DELETE  9  @  9 : 10
 
-> DELETE  13  @  14 : 15
+> DELETE  1  @  2 : 3
 
-> DELETE  15  @  17 : 22
+> DELETE  2  @  3 : 8
 
-> DELETE  57  @  64 : 74
+> DELETE  42  @  47 : 57
 
-> CHANGE  59 : 60  @  76 : 164
+> CHANGE  2 : 3  @  12 : 100
 
 ~ 		return true;
 
-> CHANGE  77 : 78  @  181 : 182
+> CHANGE  18 : 19  @  105 : 106
 
 ~ 	public Item getItemDropped(IBlockState var1, EaglercraftRandom var2, int var3) {
 

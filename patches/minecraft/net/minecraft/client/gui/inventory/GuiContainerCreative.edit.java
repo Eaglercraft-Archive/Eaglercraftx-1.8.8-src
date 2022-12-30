@@ -7,7 +7,7 @@
 
 > DELETE  2  @  2 : 3
 
-> INSERT  6 : 12  @  7
+> INSERT  4 : 10  @  5
 
 + 
 + import com.google.common.collect.Lists;
@@ -16,21 +16,21 @@
 + import net.lax1dude.eaglercraft.v1_8.Mouse;
 + import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 
-> DELETE  16  @  11 : 14
+> DELETE  10  @  4 : 7
 
-> DELETE  35  @  33 : 35
+> DELETE  19  @  22 : 24
 
-> CHANGE  221 : 222  @  221 : 222
+> CHANGE  186 : 187  @  188 : 189
 
 ~ 	protected void keyTyped(char parChar1, int parInt1) {
 
-> CHANGE  235 : 238  @  235 : 236
+> CHANGE  14 : 17  @  14 : 15
 
 ~ 			if (parInt1 == getCloseKey()) {
 ~ 				mc.displayGuiScreen(null);
 ~ 			} else if (!this.checkHotbarKeys(parInt1)) {
 
-> INSERT  248 : 253  @  246
+> INSERT  13 : 18  @  11
 
 + 	protected int getCloseKey() {
 + 		return selectedTabIndex != CreativeTabs.tabAllSearch.getTabIndex() ? super.getCloseKey()
@@ -38,11 +38,11 @@
 + 	}
 + 
 
-> CHANGE  302 : 303  @  295 : 296
+> CHANGE  54 : 55  @  49 : 50
 
 ~ 	protected void mouseClicked(int parInt1, int parInt2, int parInt3) {
 
-> CHANGE  625 : 626  @  618 : 619
+> CHANGE  323 : 324  @  323 : 324
 
 ~ 	protected void actionPerformed(GuiButton parGuiButton) {
 

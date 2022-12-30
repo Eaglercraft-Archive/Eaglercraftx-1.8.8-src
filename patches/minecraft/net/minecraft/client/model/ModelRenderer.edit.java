@@ -10,7 +10,7 @@
 ~ import static net.lax1dude.eaglercraft.v1_8.opengl.RealOpenGLEnums.*;
 ~ 
 
-> CHANGE  5 : 11  @  4 : 7
+> CHANGE  3 : 9  @  2 : 5
 
 ~ 
 ~ import com.google.common.collect.Lists;
@@ -19,16 +19,16 @@
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.WorldRenderer;
 
-> DELETE  12  @  8 : 9
+> DELETE  7  @  4 : 5
 
-> DELETE  13  @  10 : 12
+> DELETE  1  @  2 : 4
 
-> CHANGE  227 : 229  @  226 : 228
+> CHANGE  214 : 216  @  216 : 218
 
 ~ 		this.displayList = GLAllocation.generateDisplayLists();
 ~ 		EaglercraftGPU.glNewList(this.displayList, GL_COMPILE);
 
-> CHANGE  235 : 236  @  234 : 235
+> CHANGE  8 : 9  @  8 : 9
 
 ~ 		EaglercraftGPU.glEndList();
 

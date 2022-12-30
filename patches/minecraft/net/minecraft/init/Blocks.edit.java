@@ -7,7 +7,7 @@
 
 > DELETE  34  @  34 : 35
 
-> CHANGE  37 : 235  @  38 : 236
+> CHANGE  3 : 201  @  4 : 202
 
 ~ 	public static Block air;
 ~ 	public static Block stone;
@@ -208,7 +208,7 @@
 ~ 	public static BlockSlab double_stone_slab2;
 ~ 	public static BlockSlab stone_slab2;
 
-> CHANGE  240 : 241  @  241 : 242
+> CHANGE  203 : 204  @  203 : 204
 
 ~ 	static void doBootstrap() {
 

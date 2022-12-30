@@ -10,11 +10,11 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
 
-> CHANGE  22 : 23  @  22 : 24
+> CHANGE  19 : 20  @  19 : 21
 
 ~ 	public static PropertyEnum<BlockStoneSlab.EnumType> VARIANT;
 
-> CHANGE  37 : 42  @  38 : 39
+> CHANGE  15 : 20  @  16 : 17
 
 ~ 	public static void bootstrapStates() {
 ~ 		VARIANT = PropertyEnum.<BlockStoneSlab.EnumType>create("variant", BlockStoneSlab.EnumType.class);

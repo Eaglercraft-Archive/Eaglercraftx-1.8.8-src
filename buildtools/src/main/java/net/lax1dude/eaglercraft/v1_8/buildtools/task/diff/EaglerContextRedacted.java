@@ -41,7 +41,9 @@ public class EaglerContextRedacted {
 		output.println("# Version: 1.0");
 		output.println("# Author: lax1dude");
 		output.println();
-		
+
+		int lastSourcePos = 0;
+		int lastTargetPos = 0;
 		List<AbstractDelta<String>> deltas = patch.getDeltas();
 		delta_itr: for(int i = 0, l = deltas.size(); i < l; ++i) {
 			AbstractDelta<String> delta = deltas.get(i);
@@ -72,13 +74,17 @@ public class EaglerContextRedacted {
 			int sourcePos = source.getPosition();
 			int sourceLen = source.getLines().size();
 			
+			int sourcePosRelative = sourcePos - lastSourcePos;
+			
 			Chunk<String> target = delta.getTarget();
 			int targetPos = target.getPosition();
 			List<String> linesToWrite = target.getLines();
 			int targetLen = linesToWrite.size();
 			
-			output.println(blockType + "  " + targetPos + (targetLen > 0 ? " : " + (targetPos + targetLen) : "") + "  @  "
-					+ sourcePos + (sourceLen > 0 ? " : " + (sourcePos + sourceLen) : ""));
+			int targetPosRelative = targetPos - lastTargetPos;
+			
+			output.println(blockType + "  " + targetPosRelative + (targetLen > 0 ? " : " + (targetPosRelative + targetLen) : "") + "  @  "
+					+ sourcePosRelative + (sourceLen > 0 ? " : " + (sourcePosRelative + sourceLen) : ""));
 			
 			output.println();
 			
@@ -89,6 +95,9 @@ public class EaglerContextRedacted {
 				
 				output.println();
 			}
+			
+			lastSourcePos = sourcePos;
+			lastTargetPos = targetPos;
 		}
 		
 		output.println("> EOF");
@@ -104,6 +113,8 @@ public class EaglerContextRedacted {
 		int targetLen = 0;
 		List<String> targetLines = null;
 		
+		int lastSourcePos = 0;
+		int lastTargetPos = 0;
 		String line;
 		readLinesLoop: while((line = reader.readLine()) != null) {
 			if(line.length() < 2) {
@@ -145,7 +156,9 @@ public class EaglerContextRedacted {
 				}
 				
 				if(currentDeltaType != null) {
-					newPatch.addDelta(makeDelta(currentDeltaType, sourceStart, sourceLen, targetStart, targetLen, context, targetLines));
+					lastSourcePos += sourceStart;
+					lastTargetPos += targetStart;
+					newPatch.addDelta(makeDelta(currentDeltaType, lastSourcePos, sourceLen, lastTargetPos, targetLen, context, targetLines));
 				}
 				
 				switch(split[0]) {
@@ -214,7 +227,9 @@ public class EaglerContextRedacted {
 		}
 		
 		if(currentDeltaType != null) {
-			newPatch.addDelta(makeDelta(currentDeltaType, sourceStart, sourceLen, targetStart, targetLen, context, targetLines));
+			lastSourcePos += sourceStart;
+			lastTargetPos += targetStart;
+			newPatch.addDelta(makeDelta(currentDeltaType, lastSourcePos, sourceLen, lastTargetPos, targetLen, context, targetLines));
 		}
 		
 		return newPatch;

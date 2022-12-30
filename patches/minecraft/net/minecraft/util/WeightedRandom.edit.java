@@ -9,11 +9,11 @@
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 
-> CHANGE  16 : 17  @  16 : 17
+> CHANGE  13 : 14  @  13 : 14
 
 ~ 	public static <T extends WeightedRandom.Item> T getRandomItem(EaglercraftRandom random, Collection<T> collection,
 
-> CHANGE  37 : 38  @  37 : 38
+> CHANGE  21 : 22  @  21 : 22
 
 ~ 	public static <T extends WeightedRandom.Item> T getRandomItem(EaglercraftRandom random, Collection<T> collection) {
 

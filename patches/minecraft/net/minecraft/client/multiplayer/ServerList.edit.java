@@ -10,7 +10,7 @@
 ~ import java.io.ByteArrayOutputStream;
 ~ import java.util.Iterator;
 
-> INSERT  5 : 18  @  5
+> INSERT  3 : 16  @  3
 
 + 
 + import com.google.common.collect.Lists;
@@ -26,25 +26,25 @@
 + import net.lax1dude.eaglercraft.v1_8.socket.RateLimitTracker;
 + import net.lax1dude.eaglercraft.v1_8.socket.ServerQueryDispatch;
 
-> CHANGE  19 : 20  @  6 : 7
+> CHANGE  14 : 15  @  1 : 2
 
 ~ import net.minecraft.client.renderer.texture.TextureManager;
 
-> CHANGE  23 : 24  @  10 : 12
+> CHANGE  4 : 5  @  4 : 6
 
 ~ import net.minecraft.util.EnumChatFormatting;
 
-> INSERT  28 : 29  @  16
+> INSERT  5 : 6  @  6
 
 + 	private final List<ServerData> allServers = Lists.newArrayList();
 
-> CHANGE  31 : 34  @  18 : 19
+> CHANGE  3 : 6  @  2 : 3
 
 ~ 	private static ServerList instance = null;
 ~ 
 ~ 	private ServerList(Minecraft mcIn) {
 
-> INSERT  38 : 46  @  23
+> INSERT  7 : 15  @  5
 
 + 	public static void initServerList(Minecraft mc) {
 + 		instance = new ServerList(mc);
@@ -55,7 +55,7 @@
 + 	}
 + 
 
-> CHANGE  48 : 55  @  25 : 29
+> CHANGE  10 : 17  @  2 : 6
 
 ~ 			freeServerIcons();
 ~ 
@@ -65,11 +65,11 @@
 ~ 				dat.isDefault = true;
 ~ 				this.allServers.add(dat);
 
-> CHANGE  57 : 58  @  31 : 32
+> CHANGE  9 : 10  @  6 : 7
 
 ~ 			byte[] localStorage = EagRuntime.getStorage("s");
 
-> CHANGE  59 : 72  @  33 : 35
+> CHANGE  2 : 15  @  2 : 4
 
 ~ 			if (localStorage != null) {
 ~ 				NBTTagCompound nbttagcompound = CompressedStreamTools
@@ -85,22 +85,22 @@
 ~ 					this.allServers.add(srv);
 ~ 				}
 
-> INSERT  73 : 74  @  36
+> INSERT  14 : 15  @  3
 
 + 
 
-> INSERT  76 : 78  @  38
+> INSERT  3 : 5  @  2
 
 + 		} finally {
 + 			refreshServerPing();
 
-> CHANGE  87 : 90  @  47 : 48
+> CHANGE  11 : 14  @  9 : 10
 
 ~ 				if (!serverdata.isDefault) {
 ~ 					nbttaglist.appendTag(serverdata.getNBTCompound());
 ~ 				}
 
-> CHANGE  94 : 99  @  52 : 53
+> CHANGE  7 : 12  @  5 : 6
 
 ~ 
 ~ 			ByteArrayOutputStream bao = new ByteArrayOutputStream();
@@ -108,7 +108,7 @@
 ~ 			EagRuntime.setStorage("s", bao.toByteArray());
 ~ 
 
-> CHANGE  110 : 115  @  64 : 65
+> CHANGE  16 : 21  @  12 : 13
 
 ~ 		ServerData data = this.servers.remove(parInt1);
 ~ 		if (data != null && data.iconTextureObject != null) {
@@ -116,7 +116,7 @@
 ~ 			data.iconTextureObject = null;
 ~ 		}
 
-> INSERT  151 : 259  @  101
+> INSERT  41 : 149  @  37
 
 + 
 + 	public void freeServerIcons() {

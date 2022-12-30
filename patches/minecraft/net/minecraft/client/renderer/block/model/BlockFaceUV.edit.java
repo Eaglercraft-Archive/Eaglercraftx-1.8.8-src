@@ -11,36 +11,36 @@
 ~ import org.json.JSONException;
 ~ import org.json.JSONObject;
 
-> INSERT  6 : 8  @  11
+> INSERT  4 : 6  @  9
 
 + import net.lax1dude.eaglercraft.v1_8.json.JSONTypeDeserializer;
 + 
 
-> CHANGE  50 : 52  @  53 : 57
+> CHANGE  44 : 46  @  42 : 46
 
 ~ 	public static class Deserializer implements JSONTypeDeserializer<JSONObject, BlockFaceUV> {
 ~ 		public BlockFaceUV deserialize(JSONObject jsonobject) throws JSONException {
 
-> CHANGE  57 : 59  @  62 : 64
+> CHANGE  7 : 9  @  9 : 11
 
 ~ 		protected int parseRotation(JSONObject parJsonObject) {
 ~ 			int i = parJsonObject.optInt("rotation", 0);
 
-> CHANGE  62 : 63  @  67 : 68
+> CHANGE  5 : 6  @  5 : 6
 
 ~ 				throw new JSONException("Invalid rotation " + i + " found, only 0/90/180/270 allowed");
 
-> CHANGE  66 : 67  @  71 : 72
+> CHANGE  4 : 5  @  4 : 5
 
 ~ 		private float[] parseUV(JSONObject parJsonObject) {
 
-> CHANGE  70 : 73  @  75 : 78
+> CHANGE  4 : 7  @  4 : 7
 
 ~ 				JSONArray jsonarray = parJsonObject.getJSONArray("uv");
 ~ 				if (jsonarray.length() != 4) {
 ~ 					throw new JSONException("Expected 4 uv values, found: " + jsonarray.length());
 
-> CHANGE  77 : 78  @  82 : 83
+> CHANGE  7 : 8  @  7 : 8
 
 ~ 						afloat[i] = jsonarray.getFloat(i);
 

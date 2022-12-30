@@ -7,7 +7,7 @@
 
 > DELETE  2  @  2 : 3
 
-> CHANGE  15 : 202  @  16 : 203
+> CHANGE  13 : 200  @  14 : 201
 
 ~ 	public static Item iron_shovel;
 ~ 	public static Item iron_pickaxe;
@@ -197,7 +197,7 @@
 ~ 	public static Item prismarine_crystals;
 ~ 	public static Item banner;
 
-> CHANGE  207 : 208  @  208 : 209
+> CHANGE  192 : 193  @  192 : 193
 
 ~ 	static void doBootstrap() {
 

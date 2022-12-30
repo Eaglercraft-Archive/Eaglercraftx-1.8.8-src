@@ -9,15 +9,15 @@
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 
-> CHANGE  5 : 6  @  5 : 8
+> CHANGE  2 : 3  @  2 : 5
 
 ~ 
 
-> CHANGE  26 : 27  @  28 : 29
+> CHANGE  21 : 22  @  23 : 24
 
 ~ 	public void updateTick(World world, BlockPos blockpos, IBlockState iblockstate, EaglercraftRandom random) {
 
-> CHANGE  102 : 103  @  104 : 105
+> CHANGE  76 : 77  @  76 : 77
 
 ~ 			Set<EnumFacing> set = this.getPossibleFlowDirections(world, blockpos);
 

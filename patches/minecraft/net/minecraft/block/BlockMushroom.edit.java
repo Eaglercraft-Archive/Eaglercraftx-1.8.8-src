@@ -10,18 +10,18 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
 
-> DELETE  8  @  11 : 12
+> DELETE  6  @  9 : 10
 
-> CHANGE  16 : 17  @  20 : 21
+> CHANGE  8 : 9  @  9 : 10
 
 ~ 	public void updateTick(World world, BlockPos blockpos, IBlockState var3, EaglercraftRandom random) {
 
-> DELETE  69  @  73 : 90
+> DELETE  53  @  53 : 70
 
-> CHANGE  73 : 74  @  94 : 95
+> CHANGE  4 : 5  @  21 : 22
 
 ~ 	public boolean canUseBonemeal(World var1, EaglercraftRandom random, BlockPos var3, IBlockState var4) {
 
-> DELETE  76  @  97 : 101
+> DELETE  3  @  3 : 7
 
 > EOF

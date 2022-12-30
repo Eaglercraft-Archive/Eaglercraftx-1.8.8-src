@@ -10,15 +10,15 @@
 + import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 + 
 
-> CHANGE  5 : 6  @  3 : 6
+> CHANGE  3 : 4  @  1 : 4
 
 ~ 
 
-> CHANGE  173 : 174  @  173 : 174
+> CHANGE  168 : 169  @  170 : 171
 
 ~ 	public void randomTick(World var1, BlockPos var2, IBlockState var3, EaglercraftRandom var4) {
 
-> CHANGE  176 : 177  @  176 : 177
+> CHANGE  3 : 4  @  3 : 4
 
 ~ 	public void updateTick(World world, BlockPos blockpos, IBlockState iblockstate, EaglercraftRandom var4) {
 
