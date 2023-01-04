@@ -69,4 +69,12 @@ public class Display {
 		return PlatformInput.wasResized();
 	}
 
+	public static boolean isFullscreen() {
+		return PlatformInput.isFullscreen();
+	}
+
+	public static void toggleFullscreen() {
+		PlatformInput.toggleFullscreen();
+	}
+
 }

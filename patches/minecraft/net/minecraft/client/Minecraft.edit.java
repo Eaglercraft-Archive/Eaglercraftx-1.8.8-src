@@ -20,6 +20,7 @@
 > CHANGE  1 : 32  @  1 : 4
 
 ~ 
+~ import net.lax1dude.eaglercraft.v1_8.internal.PlatformInput;
 ~ import org.apache.commons.lang3.Validate;
 ~ 
 ~ import com.google.common.collect.Lists;
@@ -32,7 +33,6 @@
 ~ import net.lax1dude.eaglercraft.v1_8.Mouse;
 ~ import net.lax1dude.eaglercraft.v1_8.futures.Executors;
 ~ import net.lax1dude.eaglercraft.v1_8.futures.FutureTask;
-~ import net.lax1dude.eaglercraft.v1_8.futures.Futures;
 ~ import net.lax1dude.eaglercraft.v1_8.futures.ListenableFuture;
 ~ import net.lax1dude.eaglercraft.v1_8.futures.ListenableFutureTask;
 ~ import net.lax1dude.eaglercraft.v1_8.internal.EnumPlatformType;
@@ -77,9 +77,7 @@
 
 > DELETE  2  @  2 : 3
 
-> DELETE  14  @  14 : 15
-
-> DELETE  1  @  1 : 3
+> DELETE  14  @  14 : 18
 
 > DELETE  21  @  21 : 25
 
@@ -425,7 +423,7 @@
 
 > CHANGE  108 : 109  @  108 : 148
 
-~ 		logger.error("Use F11 to toggle fullscreen!");
+~ 		Display.toggleFullscreen();
 
 > DELETE  11  @  11 : 12
 
@@ -466,7 +464,13 @@
 ~ 						if ((!this.inGameHasFocus || !Mouse.isActuallyGrabbed()) && Mouse.getEventButtonState()) {
 ~ 							this.inGameHasFocus = false;
 
-> CHANGE  42 : 43  @  42 : 43
+> INSERT  16 : 19  @  16
+
++ 				if (k == 0x1D && (areKeysLocked() || isFullScreen())) {
++ 					KeyBinding.setKeyBindState(gameSettings.keyBindSprint.getKeyCode(), Keyboard.getEventKeyState());
++ 				}
+
+> CHANGE  26 : 27  @  26 : 27
 
 ~ 						if (k == 1 || (k > -1 && k == this.gameSettings.keyBindClose.getKeyCode())) {
 
@@ -545,7 +549,11 @@
 
 ~ 		return System.currentTimeMillis();
 
-> DELETE  10  @  10 : 27
+> CHANGE  3 : 4  @  3 : 4
+
+~ 		return Display.isFullscreen();
+
+> DELETE  6  @  6 : 23
 
 > DELETE  44  @  44 : 48
 
@@ -571,11 +579,15 @@
 
 > DELETE  24  @  24 : 32
 
-> INSERT  7 : 11  @  7
+> INSERT  7 : 15  @  7
 
 + 
 + 	public static int getGLMaximumTextureSize() {
 + 		return EaglercraftGPU.glGetInteger(GL_MAX_TEXTURE_SIZE);
++ 	}
++ 
++ 	public boolean areKeysLocked() {
++ 		return PlatformInput.lockKeys;
 + 	}
 
 > EOF

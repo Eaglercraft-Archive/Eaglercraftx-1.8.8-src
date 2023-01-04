@@ -124,7 +124,7 @@
 
 > DELETE  58  @  58 : 75
 
-> INSERT  13 : 49  @  13
+> INSERT  13 : 53  @  13
 
 + 		if (parOptions == GameSettings.Options.HUD_FPS) {
 + 			this.hudFps = !this.hudFps;
@@ -162,10 +162,14 @@
 + 			this.fxaa = (this.fxaa + parInt1) % 3;
 + 		}
 + 
++ 		if (parOptions == GameSettings.Options.FULLSCREEN) {
++ 			this.mc.toggleFullscreen();
++ 		}
++ 
 
 > DELETE  54  @  54 : 60
 
-> INSERT  12 : 28  @  12
+> INSERT  12 : 30  @  12
 
 + 		case HUD_COORDS:
 + 			return this.hudCoords;
@@ -183,6 +187,8 @@
 + 			return this.chunkFix;
 + 		case FOG:
 + 			return this.fog;
++ 		case FULLSCREEN:
++ 			return this.mc.isFullScreen();
 
 > CHANGE  43 : 46  @  43 : 47
 
@@ -370,12 +376,13 @@
 ~ 		TOUCHSCREEN("options.touchscreen", false, true), CHAT_SCALE("options.chat.scale", true, false),
 ~ 		CHAT_WIDTH("options.chat.width", true, false), CHAT_HEIGHT_FOCUSED("options.chat.height.focused", true, false),
 
-> CHANGE  14 : 19  @  14 : 15
+> CHANGE  14 : 20  @  14 : 15
 
 ~ 		ENTITY_SHADOWS("options.entityShadows", false, true), HUD_FPS("options.hud.fps", false, true),
 ~ 		HUD_COORDS("options.hud.coords", false, true), HUD_STATS("options.hud.stats", false, true),
 ~ 		HUD_WORLD("options.hud.world", false, true), HUD_PLAYER("options.hud.player", false, true),
 ~ 		HUD_24H("options.hud.24h", false, true), CHUNK_FIX("options.chunkFix", false, true),
-~ 		FOG("options.fog", false, true), FXAA("options.fxaa", false, false);
+~ 		FOG("options.fog", false, true), FXAA("options.fxaa", false, false),
+~ 		FULLSCREEN("options.fullscreen", false, true);
 
 > EOF

@@ -49,6 +49,8 @@ public class PlatformInput {
 	private static boolean enableRepeatEvents = false;
 	private static int functionKeyModifier = GLFW_KEY_F;
 
+	public static boolean lockKeys = false;
+
 	private static final List<Character> keyboardCharList = new LinkedList();
 	
 	private static class KeyboardEvent {
@@ -369,6 +371,14 @@ public class PlatformInput {
 
 	public static void setFunctionKeyModifier(int key) {
 		functionKeyModifier = KeyboardConstants.getGLFWKeyFromEagler(key);
+	}
+
+	public static void toggleFullscreen() {
+		//
+	}
+
+	public static boolean isFullscreen() {
+		return false;
 	}
 	
 }

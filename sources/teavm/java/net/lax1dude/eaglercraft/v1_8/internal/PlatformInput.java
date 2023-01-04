@@ -3,14 +3,18 @@ package net.lax1dude.eaglercraft.v1_8.internal;
 import java.util.LinkedList;
 import java.util.List;
 
+import net.lax1dude.eaglercraft.v1_8.internal.teavm.TeaVMUtils;
 import org.teavm.jso.JSBody;
+import org.teavm.jso.JSObject;
 import org.teavm.jso.browser.TimerHandler;
 import org.teavm.jso.browser.Window;
+import org.teavm.jso.dom.events.Event;
 import org.teavm.jso.dom.events.EventListener;
 import org.teavm.jso.dom.events.KeyboardEvent;
 import org.teavm.jso.dom.events.MouseEvent;
 import org.teavm.jso.dom.events.WheelEvent;
 import org.teavm.jso.dom.html.HTMLCanvasElement;
+import org.teavm.jso.dom.html.HTMLElement;
 import org.teavm.jso.webgl.WebGLFramebuffer;
 import org.teavm.jso.webgl.WebGLRenderbuffer;
 
@@ -88,6 +92,11 @@ public class PlatformInput {
 	private static long mouseGrabTimer = 0l;
 	private static int mouseUngrabTimeout = -1;
 	private static boolean pointerLockFlag = false;
+
+	private static JSObject fullscreenQuery = null;
+
+	public static boolean keyboardLockSupported = false;
+	public static boolean lockKeys = false;
 	
 	@JSBody(params = { }, script = "window.onbeforeunload = () => {return false;};")
 	private static native void onBeforeCloseRegister();
@@ -153,7 +162,9 @@ public class PlatformInput {
 			@Override
 			public void handleEvent(KeyboardEvent evt) {
 				int w = getWhich(evt);
-				if (w == 122) return; // F11
+				if (w == 122) { // F11
+					toggleFullscreen();
+				}
 				evt.preventDefault();
 				evt.stopPropagation();
 				if(!enableRepeatEvents && evt.isRepeat()) return;
@@ -166,7 +177,6 @@ public class PlatformInput {
 			@Override
 			public void handleEvent(KeyboardEvent evt) {
 				int w = getWhich(evt);
-				if (w == 122) return; // F11
 				evt.preventDefault();
 				evt.stopPropagation();
 				if(!enableRepeatEvents && evt.isRepeat()) return;
@@ -230,6 +240,19 @@ public class PlatformInput {
 			}
 		});
 		onBeforeCloseRegister();
+
+		fullscreenQuery = fullscreenMediaQuery();
+		if (keyboardLockSupported = checkKeyboardLockSupported()) {
+			TeaVMUtils.addEventListener(fullscreenQuery, "change", new EventListener<Event>() {
+				@Override
+				public void handleEvent(Event evt) {
+					if (!mediaQueryMatches(evt)) {
+						unlockKeys();
+						lockKeys = false;
+					}
+				}
+			});
+		}
 	}
 
 	@JSBody(params = { }, script = "if(window.navigator.userActivation){return window.navigator.userActivation.hasBeenActive;}else{return false;}")
@@ -526,5 +549,46 @@ public class PlatformInput {
 		mouseEvents.clear();
 		keyEvents.clear();
 	}
+
+	@JSBody(params = {}, script = "return window.matchMedia('(display-mode: fullscreen)');")
+	private static native JSObject fullscreenMediaQuery();
+
+	@JSBody(params = { "mediaQuery" }, script = "return mediaQuery.matches;")
+	private static native boolean mediaQueryMatches(JSObject mediaQuery);
+
+	public static void toggleFullscreen() {
+		if (isFullscreen()) {
+			if (keyboardLockSupported) {
+				unlockKeys();
+				lockKeys = false;
+			}
+			exitFullscreen();
+		} else {
+			if (keyboardLockSupported) {
+				lockKeys();
+				lockKeys = true;
+			}
+			requestFullscreen(canvas);
+		}
+	}
+
+	public static boolean isFullscreen() {
+		return mediaQueryMatches(fullscreenQuery);
+	}
+
+	@JSBody(params = { }, script = "window.navigator.keyboard.lock();")
+	private static native void lockKeys();
+
+	@JSBody(params = { }, script = "window.navigator.keyboard.unlock();")
+	private static native void unlockKeys();
+
+	@JSBody(params = { }, script = "return 'keyboard' in window.navigator && 'lock' in window.navigator.keyboard;")
+	private static native boolean checkKeyboardLockSupported();
+
+	@JSBody(params = { }, script = "document.exitFullscreen();")
+	private static native void exitFullscreen();
+
+	@JSBody(params = { "element" }, script = "element.requestFullscreen();")
+	private	 static native void requestFullscreen(HTMLElement element);
 	
 }

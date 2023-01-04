@@ -26,7 +26,7 @@
 
 > CHANGE  13 : 16  @  13 : 14
 
-~ 			if (parInt1 == getCloseKey()) {
+~ 			if (parInt1 == getCloseKey() || (parInt1 == 1 && this.mc.areKeysLocked())) {
 ~ 				mc.displayGuiScreen(null);
 ~ 			} else if (!this.checkHotbarKeys(parInt1)) {
 

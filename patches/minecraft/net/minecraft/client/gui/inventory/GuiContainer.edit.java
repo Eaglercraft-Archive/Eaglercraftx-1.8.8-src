@@ -41,7 +41,7 @@
 ~ 	protected void keyTyped(char parChar1, int parInt1) {
 ~ 		if (parInt1 == this.mc.gameSettings.keyBindClose.getKeyCode()
 ~ 				|| parInt1 == this.mc.gameSettings.keyBindInventory.getKeyCode()
-~ 				|| (parInt1 == 1 && this.mc.gameSettings.keyBindClose.getKeyCode() == 0)) {
+~ 				|| (parInt1 == 1 && (this.mc.gameSettings.keyBindClose.getKeyCode() == 0 || this.mc.areKeysLocked()))) {
 
 > CHANGE  1 : 3  @  1 : 9
 
