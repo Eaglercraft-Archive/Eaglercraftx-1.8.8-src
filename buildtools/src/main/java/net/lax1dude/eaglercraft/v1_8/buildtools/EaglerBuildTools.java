@@ -12,7 +12,7 @@ import net.lax1dude.eaglercraft.v1_8.buildtools.task.init.SetupWorkspace;
 import net.lax1dude.eaglercraft.v1_8.buildtools.task.init.TaskClean;
 
 /**
- * Copyright (c) 2022 LAX1DUDE. All Rights Reserved.
+ * Copyright (c) 2023 LAX1DUDE. All Rights Reserved.
  * 
  * WITH THE EXCEPTION OF PATCH FILES, MINIFIED JAVASCRIPT, AND ALL FILES
  * NORMALLY FOUND IN AN UNMODIFIED MINECRAFT RESOURCE PACK, YOU ARE NOT ALLOWED
@@ -30,7 +30,7 @@ public class EaglerBuildTools {
 
 	public static void main(String[] args) {
 		System.out.println("Eaglercraft 1.8 Build Tools");
-		System.out.println("Copyright (c) 2022 LAX1DUDE");
+		System.out.println("Copyright (c) 2023 LAX1DUDE");
 		System.out.println();
 		
 		if(!System.getProperty("eaglercraft.isJava11", "false").equalsIgnoreCase("true")) {
