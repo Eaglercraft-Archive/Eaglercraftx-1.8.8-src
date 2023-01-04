@@ -52,14 +52,17 @@ public class EaglerInitialHandler extends InitialHandler {
 	public final SimpleRateLimiter skinLookupRateLimiter;
 	public final SimpleRateLimiter skinUUIDLookupRateLimiter;
 	public final SimpleRateLimiter skinTextureDownloadRateLimiter;
+	public final String origin;
 
 	public EaglerInitialHandler(BungeeCord bungee, ListenerInfo listener, final ChannelWrapper ch,
-			int gameProtocolVersion, String username, UUID playerUUID, InetSocketAddress address, String host) {
+			int gameProtocolVersion, String username, UUID playerUUID, InetSocketAddress address, String host,
+			String origin) {
 		super(bungee, listener);
 		this.gameProtocolVersion = gameProtocolVersion;
 		this.username = username;
 		this.playerUUID = playerUUID;
 		this.eaglerAddress = address;
+		this.origin = origin;
 		this.skinLookupRateLimiter = new SimpleRateLimiter();
 		this.skinUUIDLookupRateLimiter = new SimpleRateLimiter();
 		this.skinTextureDownloadRateLimiter = new SimpleRateLimiter();

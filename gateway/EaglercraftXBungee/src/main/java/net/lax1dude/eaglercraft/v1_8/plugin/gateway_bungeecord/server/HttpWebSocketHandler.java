@@ -701,7 +701,8 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 			ch.setRemoteAddress(baseAddress);
 		}
 		final EaglerInitialHandler initialHandler = new EaglerInitialHandler(bungee, conf, ch, gameProtocolVersion,
-				usernameStr, clientUUID, baseAddress, ctx.channel().attr(EaglerPipeline.HOST).get());
+				usernameStr, clientUUID, baseAddress, ctx.channel().attr(EaglerPipeline.HOST).get(),
+				ctx.channel().attr(EaglerPipeline.ORIGIN).get());
 		final Callback<LoginEvent> complete = (Callback<LoginEvent>) new Callback<LoginEvent>() {
 			public void done(final LoginEvent result, final Throwable error) {
 				if (result.isCancelled()) {

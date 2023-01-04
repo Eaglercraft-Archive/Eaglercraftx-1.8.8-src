@@ -17,6 +17,7 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.auth.DefaultAuthSystem;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.command.CommandConfirmCode;
+import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.command.CommandDomain;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.command.CommandEaglerPurge;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.command.CommandEaglerRegister;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.command.CommandRatelimit;
@@ -104,6 +105,7 @@ public class EaglerXBungee extends Plugin {
 		mgr.registerListener(this, new EaglerPacketEventListener(this));
 		mgr.registerCommand(this, new CommandRatelimit());
 		mgr.registerCommand(this, new CommandConfirmCode());
+		mgr.registerCommand(this, new CommandDomain());
 		EaglerAuthConfig authConf = conf.getAuthConfig();
 		if(authConf.isEnableAuthentication() && authConf.isUseBuiltInAuthentication()) {
 			if(!BungeeCord.getInstance().getConfig().isOnlineMode()) {
