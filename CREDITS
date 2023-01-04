@@ -131,7 +131,7 @@
  Project Author: Timothy Lottes, NVIDIA
  Project URL: https://gist.github.com/kosua20/0c506b81b3812ac900048059d2383126 
  
- Used For: generating and applying patch files in build system
+ Used For: in-game hardware accelerated FXAA antialiasing (when enabled)
  
  * ==============================================================================
  * 
@@ -159,7 +159,7 @@
  Project Author: Google, forked by wumpz
  Project URL: https://java-diff-utils.github.io/java-diff-utils/
  
- Used For: in-game hardware accelerated FXAA antialiasing (when enabled)
+ Used For: generating and applying patch files in build system
  
  * Copyright 2009-2017 java-diff-utils.
  *
