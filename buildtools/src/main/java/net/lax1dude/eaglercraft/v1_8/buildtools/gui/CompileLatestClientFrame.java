@@ -66,7 +66,7 @@ import java.awt.ComponentOrientation;
 import javax.swing.JTextArea;
 
 /**
- * Copyright (c) 2023 LAX1DUDE. All Rights Reserved.
+ * Copyright (c) 2022-2023 LAX1DUDE. All Rights Reserved.
  * 
  * WITH THE EXCEPTION OF PATCH FILES, MINIFIED JAVASCRIPT, AND ALL FILES
  * NORMALLY FOUND IN AN UNMODIFIED MINECRAFT RESOURCE PACK, YOU ARE NOT ALLOWED
@@ -427,7 +427,7 @@ public class CompileLatestClientFrame {
 		lblNewLabel_1.setFont(new Font("Dialog", Font.BOLD, 14));
 		panel_2.add(lblNewLabel_1, BorderLayout.NORTH);
 		
-		JLabel lblNewLabel_2 = new JLabel("Copyright (c) 2023 lax1dude");
+		JLabel lblNewLabel_2 = new JLabel("Copyright (c) 2022-2023 lax1dude");
 		lblNewLabel_2.setVerticalAlignment(SwingConstants.TOP);
 		lblNewLabel_2.setPreferredSize(new Dimension(27, 24));
 		lblNewLabel_2.setFont(new Font("Dialog", Font.PLAIN, 14));
