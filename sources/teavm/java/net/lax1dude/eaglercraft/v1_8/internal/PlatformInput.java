@@ -168,8 +168,8 @@ public class PlatformInput {
 				evt.preventDefault();
 				evt.stopPropagation();
 				if(!enableRepeatEvents && evt.isRepeat()) return;
-				w = processFunctionKeys(w);
-				keyStates[KeyboardConstants.getEaglerKeyFromBrowser(w, evt.getLocation())] = true;
+				int ww = processFunctionKeys(w);
+				keyStates[KeyboardConstants.getEaglerKeyFromBrowser(ww, ww == w ? evt.getLocation() : 0)] = true;
 				keyEvents.add(evt);
 			}
 		});
@@ -180,8 +180,14 @@ public class PlatformInput {
 				evt.preventDefault();
 				evt.stopPropagation();
 				if(!enableRepeatEvents && evt.isRepeat()) return;
-				w = processFunctionKeys(w);
-				keyStates[KeyboardConstants.getEaglerKeyFromBrowser(w, evt.getLocation())] = false;
+				int ww = processFunctionKeys(w);
+				int eagKey = KeyboardConstants.getEaglerKeyFromBrowser(ww, ww == w ? evt.getLocation() : 0);
+				keyStates[eagKey] = false;
+				if(eagKey == functionKeyModifier) {
+					for(int key = KeyboardConstants.KEY_F1; key <= KeyboardConstants.KEY_F10; ++key) {
+						keyStates[key] = false;
+					}
+				}
 				keyEvents.add(evt);
 			}
 		});
