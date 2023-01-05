@@ -15,8 +15,13 @@
 
 > DELETE  2  @  2 : 3
 
-> CHANGE  17 : 18  @  17 : 18
+> CHANGE  17 : 19  @  17 : 19
 
 ~ 			EaglercraftRandom random = new EaglercraftRandom((long) entitylivingbase.getEntityId());
+~ 			GlStateManager.disableLighting();
+
+> CHANGE  32 : 33  @  32 : 33
+
+~ 			GlStateManager.enableLighting();
 
 > EOF
