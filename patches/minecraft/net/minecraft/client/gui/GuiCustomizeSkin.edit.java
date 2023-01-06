@@ -11,4 +11,12 @@
 
 ~ 	protected void actionPerformed(GuiButton parGuiButton) {
 
+> CHANGE  27 : 32  @  27 : 28
+
+~ 		/*
+~ 		 * TODO: I changed this to getUnformattedText() from getFormattedText() because
+~ 		 * the latter was returning a pink formatting code at the end for no reason
+~ 		 */
+~ 		return playerModelParts.func_179326_d().getUnformattedText() + ": " + s;
+
 > EOF

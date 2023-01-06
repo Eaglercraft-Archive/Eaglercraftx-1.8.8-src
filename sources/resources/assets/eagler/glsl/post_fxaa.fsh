@@ -283,16 +283,12 @@ void main(){
 	vec2 screenSize05 = 0.5 * u_screenSize2f;
 
 	vec4 posPos;
-	posPos.xy = v_position2f - screenSize05;
-	posPos.zw = v_position2f + screenSize05;
+	posPos.xy = v_position2f;
+	posPos.zw = v_position2f + u_screenSize2f;
 
 	vec4 rcpFrameOpt;
 	rcpFrameOpt.xy = -screenSize05;
 	rcpFrameOpt.zw = screenSize05;
 
-	vec4 rcpFrameOpt2;
-	rcpFrameOpt2.xy = -2.0 * u_screenSize2f;
-	rcpFrameOpt2.zw = -rcpFrameOpt2.xy;
-
-	output4f = vec4(FxaaPixelShader(v_position2f + screenSize05, posPos, u_screenTexture, rcpFrameOpt, rcpFrameOpt2, edgeSharpness, edgeThreshold, edgeThresholdMin).rgb, 1.0);
+	output4f = vec4(FxaaPixelShader(v_position2f + screenSize05, posPos, u_screenTexture, rcpFrameOpt, rcpFrameOpt * 4.0, edgeSharpness, edgeThreshold, edgeThresholdMin).rgb, 1.0);
 }
