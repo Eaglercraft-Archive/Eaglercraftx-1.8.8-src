@@ -30,6 +30,9 @@ public class SimpleRateLimiter {
 		if(decr > 0) {
 			timer += decr * t;
 			count -= decr;
+			if(count < 0) {
+				count = 0;
+			}
 		}
 		if(count >= maxPerMinute) {
 			return false;
