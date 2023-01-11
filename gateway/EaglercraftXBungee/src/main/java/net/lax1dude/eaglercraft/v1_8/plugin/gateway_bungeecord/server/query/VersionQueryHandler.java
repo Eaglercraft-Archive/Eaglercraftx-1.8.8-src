@@ -26,6 +26,7 @@ public class VersionQueryHandler extends EaglerQuerySimpleHandler {
 		JsonObject responseObj = new JsonObject();
 		JsonArray handshakeVersions = new JsonArray();
 		handshakeVersions.add(2);
+		handshakeVersions.add(3);
 		responseObj.add("handshakeVersions", handshakeVersions);
 		JsonArray protocolVersions = new JsonArray();
 		protocolVersions.add(47);

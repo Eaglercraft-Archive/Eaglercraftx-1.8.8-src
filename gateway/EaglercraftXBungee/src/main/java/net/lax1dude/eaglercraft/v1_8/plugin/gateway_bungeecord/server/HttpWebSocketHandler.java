@@ -93,6 +93,7 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 
 	private int clientLoginState = HandshakePacketTypes.STATE_OPENED;
 	private int clientProtocolVersion = -1;
+	private boolean isProtocolExchanged = false;
 	private int gameProtocolVersion = -1;
 	private CharSequence clientBrandString;
 	private CharSequence clientVersionString;
@@ -239,10 +240,10 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 							return;
 						}
 					}else if(eaglerLegacyProtocolVersion == 2) {
-						
 						int minProtVers = Integer.MAX_VALUE;
 						int maxProtVers = -1;
 						boolean hasV2InList = false;
+						boolean hasV3InList = false;
 						
 						int minGameVers = Integer.MAX_VALUE;
 						int maxGameVers = -1;
@@ -253,6 +254,9 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 							int j = buffer.readUnsignedShort();
 							if(j == 2) {
 								hasV2InList = true;
+							}
+							if(j == 3) {
+								hasV3InList = true;
 							}
 							if(j > maxProtVers) {
 								maxProtVers = j;
@@ -283,9 +287,9 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 						boolean versMisMatch = false;
 						boolean isServerProbablyOutdated = false;
 						boolean isClientProbablyOutdated = false;
-						if(!hasV2InList) {
+						if(!hasV2InList && !hasV3InList) {
 							versMisMatch = true;
-							isServerProbablyOutdated = minProtVers > 2 && maxProtVers > 2; //make sure to update VersionQueryHandler too
+							isServerProbablyOutdated = minProtVers > 3 && maxProtVers > 3; //make sure to update VersionQueryHandler too
 							isClientProbablyOutdated = minProtVers < 2 && maxProtVers < 2;
 						}else if(!has47InList) {
 							versMisMatch = true;
@@ -293,13 +297,16 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 							isClientProbablyOutdated = minGameVers < minecraftProtocolVersion && maxGameVers < minecraftProtocolVersion;
 						}
 						
+						clientProtocolVersion = hasV3InList ? 3 : 2;
+						
 						if(versMisMatch) {
 							clientLoginState = HandshakePacketTypes.STATE_CLIENT_COMPLETE;
 							ByteBuf buf = Unpooled.buffer();
 							buf.writeByte(HandshakePacketTypes.PROTOCOL_VERSION_MISMATCH);
 							
-							buf.writeShort(1);
-							buf.writeShort(2); // want version 2
+							buf.writeShort(2);
+							buf.writeShort(2); // want v2 or v3
+							buf.writeShort(3);
 							
 							buf.writeShort(1);
 							buf.writeShort(minecraftProtocolVersion); // want game version 47
@@ -333,6 +340,7 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 					
 					boolean useSnapshotFallbackProtocol = false;
 					if(eaglerLegacyProtocolVersion == 1 && !authConfig.isEnableAuthentication()) {
+						clientProtocolVersion = 2;
 						useSnapshotFallbackProtocol = true;
 						clientAuth = false;
 						clientAuthUsername = null;
@@ -348,11 +356,9 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 						}
 					}
 
-					final int final_eaglerProtocolVersion = 2;
 					final boolean final_useSnapshotFallbackProtocol = useSnapshotFallbackProtocol;
 					Runnable continueThread = () -> {
 						clientLoginState = HandshakePacketTypes.STATE_CLIENT_VERSION;
-						clientProtocolVersion = final_eaglerProtocolVersion;
 						gameProtocolVersion = 47;
 						clientBrandString = eaglerBrand;
 						clientVersionString = eaglerVersionString;
@@ -363,7 +369,7 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 						if(final_useSnapshotFallbackProtocol) {
 							buf.writeByte(1);
 						}else {
-							buf.writeShort(final_eaglerProtocolVersion);
+							buf.writeShort(clientProtocolVersion);
 							buf.writeShort(minecraftProtocolVersion);
 						}
 						
@@ -400,6 +406,7 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 						}
 						
 						ctx.writeAndFlush(new BinaryWebSocketFrame(buf));
+						isProtocolExchanged = true;
 					};
 					
 					authRequireEvent = null;
@@ -996,12 +1003,21 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 	}
 	
 	private ChannelFuture sendLoginDenied(ChannelHandlerContext ctx, String reason) {
+		if((!isProtocolExchanged || clientProtocolVersion == 2) && reason.length() > 255) {
+			reason = reason.substring(0, 256);
+		}else if(reason.length() > 65535) {
+			reason = reason.substring(0, 65536);
+		}
 		clientLoginState = HandshakePacketTypes.STATE_CLIENT_COMPLETE;
 		connectionClosed = true;
 		ByteBuf buf = Unpooled.buffer();
 		buf.writeByte(HandshakePacketTypes.PROTOCOL_SERVER_DENY_LOGIN);
 		byte[] msg = reason.getBytes(StandardCharsets.UTF_8);
-		buf.writeByte(msg.length);
+		if(!isProtocolExchanged || clientProtocolVersion == 2) {
+			buf.writeByte(msg.length);
+		}else {
+			buf.writeShort(msg.length);
+		}
 		buf.writeBytes(msg);
 		return ctx.writeAndFlush(new BinaryWebSocketFrame(buf));
 	}
@@ -1011,13 +1027,22 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 	}
 	
 	private ChannelFuture sendErrorCode(ChannelHandlerContext ctx, int code, String str) {
+		if((!isProtocolExchanged || clientProtocolVersion == 2) && str.length() > 255) {
+			str = str.substring(0, 256);
+		}else if(str.length() > 65535) {
+			str = str.substring(0, 65536);
+		}
 		clientLoginState = HandshakePacketTypes.STATE_CLIENT_COMPLETE;
 		connectionClosed = true;
 		ByteBuf buf = Unpooled.buffer();
 		buf.writeByte(HandshakePacketTypes.PROTOCOL_SERVER_ERROR);
 		buf.writeByte(code);
 		byte[] msg = str.getBytes(StandardCharsets.UTF_8);
-		buf.writeByte(msg.length);
+		if(!isProtocolExchanged || clientProtocolVersion == 2) {
+			buf.writeByte(msg.length);
+		}else {
+			buf.writeShort(msg.length);
+		}
 		buf.writeBytes(msg);
 		return ctx.writeAndFlush(new BinaryWebSocketFrame(buf));
 	}
