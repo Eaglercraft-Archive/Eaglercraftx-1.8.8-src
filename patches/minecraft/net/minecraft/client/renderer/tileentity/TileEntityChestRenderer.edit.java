@@ -14,7 +14,7 @@
 
 > INSERT  49 : 50  @  49
 
-+ 				isChristams = true;
++ 
 
 > DELETE  7  @  7 : 9
 

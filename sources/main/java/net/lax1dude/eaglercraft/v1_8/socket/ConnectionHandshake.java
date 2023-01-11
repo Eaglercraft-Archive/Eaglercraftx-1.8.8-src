@@ -22,6 +22,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.GuiConnecting;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
 
 /**
  * Copyright (c) 2022-2023 LAX1DUDE. All Rights Reserved.
@@ -39,8 +40,9 @@ import net.minecraft.util.EnumChatFormatting;
 public class ConnectionHandshake {
 
 	private static final long baseTimeout = 15000l;
-	
-	private static final int baseVersion = 2; // ProtocolVersions.V_02
+
+	private static final int protocolV2 = 2;
+	private static final int protocolV3 = 3;
 	
 	private static final Logger logger = LogManager.getLogger();
 	
@@ -53,8 +55,9 @@ public class ConnectionHandshake {
 			
 			d.writeByte(2); // legacy protocol version
 			
-			d.writeShort(1); // supported eagler protocols count
-			d.writeShort(baseVersion); // client supports v2
+			d.writeShort(2); // supported eagler protocols count
+			d.writeShort(protocolV2); // client supports v2
+			d.writeShort(protocolV3); // client supports v3
 
 			d.writeShort(1); // supported game protocols count
 			d.writeShort(47); // client supports 1.8 protocol
@@ -119,9 +122,9 @@ public class ConnectionHandshake {
 			}else if(type == HandshakePacketTypes.PROTOCOL_SERVER_VERSION) {
 				int serverVers = di.readShort();
 				
-				if(serverVers != baseVersion) {
+				if(serverVers != protocolV2 && serverVers != protocolV3) {
 					logger.info("Incompatible server version: {}", serverVers);
-					mc.displayGuiScreen(new GuiDisconnected(ret, "connect.failed", new ChatComponentText(serverVers < baseVersion ? "Outdated Server" : "Outdated Client")));
+					mc.displayGuiScreen(new GuiDisconnected(ret, "connect.failed", new ChatComponentText(serverVers < protocolV2 ? "Outdated Server" : "Outdated Client")));
 					return false;
 				}
 				
@@ -297,26 +300,30 @@ public class ConnectionHandshake {
 					if(type == HandshakePacketTypes.PROTOCOL_SERVER_FINISH_LOGIN) {
 						return true;
 					}else if(type == HandshakePacketTypes.PROTOCOL_SERVER_ERROR) {
-						showError(mc, connecting, ret, di);
+						showError(mc, connecting, ret, di, serverVers == protocolV2);
 						return false;
 					}else {
 						return false;
 					}
 				}else if(type == HandshakePacketTypes.PROTOCOL_SERVER_DENY_LOGIN) {
-					msgLen = di.read();
+					if(serverVers == protocolV2) {
+						msgLen = di.read();
+					}else {
+						msgLen = di.readUnsignedShort();
+					}
 					dat = new byte[msgLen];
 					di.read(dat);
 					String errStr = new String(dat, StandardCharsets.UTF_8);
-					mc.displayGuiScreen(new GuiDisconnected(ret, "connect.failed", new ChatComponentText(errStr)));
+					mc.displayGuiScreen(new GuiDisconnected(ret, "connect.failed", IChatComponent.Serializer.jsonToComponent(errStr)));
 					return false;
 				}else if(type == HandshakePacketTypes.PROTOCOL_SERVER_ERROR) {
-					showError(mc, connecting, ret, di);
+					showError(mc, connecting, ret, di, serverVers == protocolV2);
 					return false;
 				}else {
 					return false;
 				}
 			}else if(type == HandshakePacketTypes.PROTOCOL_SERVER_ERROR) {
-				showError(mc, connecting, ret, di);
+				showError(mc, connecting, ret, di, true);
 				return false;
 			}else {
 				return false;
@@ -348,9 +355,9 @@ public class ConnectionHandshake {
 		return b;
 	}
 	
-	private static void showError(Minecraft mc, GuiConnecting connecting, GuiScreen scr, DataInputStream err) throws IOException {
+	private static void showError(Minecraft mc, GuiConnecting connecting, GuiScreen scr, DataInputStream err, boolean v2) throws IOException {
 		int errorCode = err.read();
-		int msgLen = err.read();
+		int msgLen = v2 ? err.read() : err.readUnsignedShort();
 		byte[] dat = new byte[msgLen];
 		err.read(dat);
 		String errStr = new String(dat, StandardCharsets.UTF_8);
@@ -362,7 +369,7 @@ public class ConnectionHandshake {
 			RateLimitTracker.registerLockOut(PlatformNetworking.getCurrentURI());
 			mc.displayGuiScreen(GuiDisconnected.createRateLimitKick(scr));
 		}else if(errorCode == HandshakePacketTypes.SERVER_ERROR_CUSTOM_MESSAGE) {
-			mc.displayGuiScreen(new GuiDisconnected(scr, "connect.failed", new ChatComponentText(errStr)));
+			mc.displayGuiScreen(new GuiDisconnected(scr, "connect.failed", IChatComponent.Serializer.jsonToComponent(errStr)));
 		}else if(connecting != null && errorCode == HandshakePacketTypes.SERVER_ERROR_AUTHENTICATION_REQUIRED) {
 			mc.displayGuiScreen(new GuiAuthenticationScreen(connecting, scr, errStr));
 		}else {
