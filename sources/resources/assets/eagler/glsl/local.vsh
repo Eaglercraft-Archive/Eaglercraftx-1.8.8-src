@@ -18,7 +18,7 @@ precision lowp int;
 precision lowp float;
 precision lowp sampler2D;
 
-in vec2 a_position2f;
+layout(location = 0) in vec2 a_position2f;
 
 out vec2 v_position2f;
 

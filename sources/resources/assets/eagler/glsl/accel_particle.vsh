@@ -15,16 +15,16 @@
  */
 
 precision lowp int;
-precision highp float;
+precision lowp float;
 precision lowp sampler2D;
 
-in vec2 a_position2f;
+layout(location = 0) in vec2 a_position2f;
 
-in vec3 p_position3f;
-in vec2 p_texCoords2i;
-in vec2 p_lightMap2f;
-in vec2 p_particleSize_texCoordsSize_2i;
-in vec4 p_color4f;
+layout(location = 1) in vec3 p_position3f;
+layout(location = 2) in vec2 p_texCoords2i;
+layout(location = 3) in vec2 p_lightMap2f;
+layout(location = 4) in vec2 p_particleSize_texCoordsSize_2i;
+layout(location = 5) in vec4 p_color4f;
 
 out vec2 v_texCoord2f;
 out vec4 v_color4f;

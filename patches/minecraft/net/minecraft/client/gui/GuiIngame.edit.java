@@ -14,17 +14,20 @@
 + import net.lax1dude.eaglercraft.v1_8.minecraft.EaglerTextureAtlasSprite;
 + 
 
-> CHANGE  3 : 6  @  3 : 6
+> CHANGE  3 : 7  @  3 : 6
 
 ~ 
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
+~ import net.lax1dude.eaglercraft.v1_8.opengl.OpenGlHelper;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.WorldRenderer;
 
 > DELETE  2  @  2 : 11
 
 > DELETE  2  @  2 : 3
 
-> DELETE  1  @  1 : 2
+> CHANGE  1 : 2  @  1 : 2
+
+~ import net.minecraft.client.renderer.entity.RenderManager;
 
 > CHANGE  32 : 33  @  32 : 33
 
@@ -34,9 +37,15 @@
 
 > DELETE  27  @  27 : 28
 
-> CHANGE  95 : 96  @  95 : 98
+> CHANGE  16 : 17  @  16 : 21
 
-~ 		this.overlayDebug.renderDebugInfo(scaledresolution, partialTicks);
+~ 		GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
+
+> DELETE  21  @  21 : 30
+
+> CHANGE  44 : 45  @  44 : 47
+
+~ 		this.overlayDebug.renderDebugInfo(scaledresolution);
 
 > INSERT  87 : 90  @  87
 
@@ -44,7 +53,21 @@
 + 			j -= 10;
 + 		}
 
-> DELETE  166  @  166 : 170
+> INSERT  19 : 30  @  19
+
++ 	public void renderGameOverlayCrosshairs(int scaledResWidth, int scaledResHeight) {
++ 		if (this.showCrosshair()) {
++ 			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
++ 			this.mc.getTextureManager().bindTexture(icons);
++ 			GlStateManager.enableBlend();
++ 			GlStateManager.tryBlendFuncSeparate(775, 769, 1, 0);
++ 			GlStateManager.enableAlpha();
++ 			this.drawTexturedModalRect(scaledResWidth / 2 - 7, scaledResHeight / 2 - 7, 0, 0, 16, 16);
++ 		}
++ 	}
++ 
+
+> DELETE  147  @  147 : 151
 
 > CHANGE  17 : 18  @  17 : 18
 
@@ -54,10 +77,80 @@
 
 ~ 		for (Score score1 : (List<Score>) arraylist1) {
 
-> CHANGE  343 : 344  @  343 : 344
+> INSERT  64 : 65  @  64
+
++ 			this.mc.getTextureManager().bindTexture(icons);
+
+> CHANGE  224 : 225  @  224 : 225
+
+~ 	public void renderVignette(float parFloat1, int scaledWidth, int scaledHeight) {
+
+> CHANGE  29 : 32  @  29 : 33
+
+~ 		worldrenderer.pos(0.0D, (double) scaledHeight, -90.0D).tex(0.0D, 1.0D).endVertex();
+~ 		worldrenderer.pos((double) scaledWidth, scaledHeight, -90.0D).tex(1.0D, 1.0D).endVertex();
+~ 		worldrenderer.pos((double) scaledWidth, 0.0D, -90.0D).tex(1.0D, 0.0D).endVertex();
+
+> CHANGE  21 : 22  @  21 : 22
 
 ~ 		EaglerTextureAtlasSprite textureatlassprite = this.mc.getBlockRendererDispatcher().getBlockModelShapes()
 
 > DELETE  57  @  57 : 58
+
+> INSERT  60 : 113  @  60
+
++ 	public void drawEaglerPlayerOverlay(int x, int y, float partialTicks) {
++ 		Entity e = mc.getRenderViewEntity();
++ 		if (e != null && e instanceof EntityLivingBase) {
++ 			EntityLivingBase ent = (EntityLivingBase) e;
++ 			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
++ 			GlStateManager.enableDepth();
++ 			GlStateManager.enableColorMaterial();
++ 			GlStateManager.pushMatrix();
++ 			GlStateManager.translate((float) x - 10, (float) y + 36, 50.0F);
++ 			GlStateManager.scale(-17.0F, 17.0F, 17.0F);
++ 			GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
++ 			float f = ent.renderYawOffset;
++ 			float f1 = ent.rotationYaw;
++ 			float f2 = ent.prevRotationYaw;
++ 			float f3 = ent.prevRotationYawHead;
++ 			float f4 = ent.rotationYawHead;
++ 			float f5 = ent.prevRenderYawOffset;
++ 			GlStateManager.rotate(115.0F, 0.0F, 1.0F, 0.0F);
++ 			RenderHelper.enableStandardItemLighting();
++ 			float f6 = ent.prevRenderYawOffset + (ent.renderYawOffset - ent.prevRenderYawOffset) * partialTicks;
++ 			ent.rotationYawHead -= f6;
++ 			ent.prevRotationYawHead -= f6;
++ 			ent.rotationYawHead *= 0.5f;
++ 			ent.prevRotationYawHead *= 0.5f;
++ 			ent.renderYawOffset = 0.0f;
++ 			ent.prevRenderYawOffset = 0.0f;
++ 			ent.prevRotationYaw = 0.0f;
++ 			ent.rotationYaw = 0.0f;
++ 			GlStateManager.rotate(-135.0F
++ 					- (ent.prevRotationYawHead + (ent.rotationYawHead - ent.prevRotationYawHead) * partialTicks) * 0.5F,
++ 					0.0F, 1.0F, 0.0F);
++ 			GlStateManager.rotate(ent.rotationPitch * 0.2f, 1.0F, 0.0F, 0.0F);
++ 			RenderManager rendermanager = Minecraft.getMinecraft().getRenderManager();
++ 			rendermanager.setPlayerViewY(180.0F);
++ 			rendermanager.setRenderShadow(false);
++ 			rendermanager.renderEntityWithPosYaw(ent, 0.0D, 0.0D, 0.0D, 0.0F, partialTicks);
++ 			rendermanager.setRenderShadow(true);
++ 			ent.renderYawOffset = f;
++ 			ent.rotationYaw = f1;
++ 			ent.prevRotationYaw = f2;
++ 			ent.prevRotationYawHead = f3;
++ 			ent.rotationYawHead = f4;
++ 			ent.prevRenderYawOffset = f5;
++ 			GlStateManager.popMatrix();
++ 			RenderHelper.disableStandardItemLighting();
++ 			GlStateManager.disableDepth();
++ 			GlStateManager.disableRescaleNormal();
++ 			GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
++ 			GlStateManager.disableTexture2D();
++ 			GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
++ 		}
++ 	}
++ 
 
 > EOF

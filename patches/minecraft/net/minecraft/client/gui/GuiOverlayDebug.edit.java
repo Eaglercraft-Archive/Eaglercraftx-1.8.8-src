@@ -50,13 +50,12 @@
 
 > DELETE  1  @  1 : 3
 
-> CHANGE  10 : 13  @  10 : 11
+> INSERT  11 : 13  @  11
 
-~ 	public void renderDebugInfo(ScaledResolution scaledResolutionIn, float partialTicks) {
-~ 		int ww = scaledResolutionIn.getScaledWidth();
-~ 		int hh = scaledResolutionIn.getScaledHeight();
++ 		int ww = scaledResolutionIn.getScaledWidth();
++ 		int hh = scaledResolutionIn.getScaledHeight();
 
-> CHANGE  1 : 24  @  1 : 7
+> CHANGE  1 : 20  @  1 : 7
 
 ~ 		if (this.mc.gameSettings.showDebugInfo) {
 ~ 			GlStateManager.pushMatrix();
@@ -76,10 +75,6 @@
 ~ 
 ~ 			if (this.mc.gameSettings.hudCoords) {
 ~ 				drawXYZ(2, i);
-~ 			}
-~ 
-~ 			if (this.mc.gameSettings.hudPlayer) {
-~ 				drawPlayer(ww - 3, 3, partialTicks);
 ~ 			}
 
 > INSERT  2 : 26  @  2
@@ -109,7 +104,7 @@
 + 		}
 + 
 
-> INSERT  3 : 195  @  3
+> INSERT  3 : 142  @  3
 
 + 	private void drawFPS(int x, int y) {
 + 		this.fontRenderer.drawStringWithShadow(this.mc.renderGlobal.getDebugInfoShort(), x, y, 0xFFFFFF);
@@ -244,59 +239,6 @@
 + 		this.fontRenderer.drawStringWithShadow("Biome: " + EnumChatFormatting.AQUA + biome.biomeName, x, y - 19,
 + 				0xFFFFFF);
 + 		this.fontRenderer.drawStringWithShadow(lightString + " " + tempString, x, y - 8, 0xFFFFFF);
-+ 	}
-+ 
-+ 	private void drawPlayer(int x, int y, float partialTicks) {
-+ 		Entity e = mc.getRenderViewEntity();
-+ 		if (e != null && e instanceof EntityLivingBase) {
-+ 			EntityLivingBase ent = (EntityLivingBase) e;
-+ 			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
-+ 			GlStateManager.enableDepth();
-+ 			GlStateManager.enableColorMaterial();
-+ 			GlStateManager.pushMatrix();
-+ 			GlStateManager.translate((float) x - 10, (float) y + 36, 50.0F);
-+ 			GlStateManager.scale(-17.0F, 17.0F, 17.0F);
-+ 			GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
-+ 			float f = ent.renderYawOffset;
-+ 			float f1 = ent.rotationYaw;
-+ 			float f2 = ent.prevRotationYaw;
-+ 			float f3 = ent.prevRotationYawHead;
-+ 			float f4 = ent.rotationYawHead;
-+ 			float f5 = ent.prevRenderYawOffset;
-+ 			GlStateManager.rotate(115.0F, 0.0F, 1.0F, 0.0F);
-+ 			RenderHelper.enableStandardItemLighting();
-+ 			float f6 = ent.prevRenderYawOffset + (ent.renderYawOffset - ent.prevRenderYawOffset) * partialTicks;
-+ 			ent.rotationYawHead -= f6;
-+ 			ent.prevRotationYawHead -= f6;
-+ 			ent.rotationYawHead *= 0.5f;
-+ 			ent.prevRotationYawHead *= 0.5f;
-+ 			ent.renderYawOffset = 0.0f;
-+ 			ent.prevRenderYawOffset = 0.0f;
-+ 			ent.prevRotationYaw = 0.0f;
-+ 			ent.rotationYaw = 0.0f;
-+ 			GlStateManager.rotate(-135.0F
-+ 					- (ent.prevRotationYawHead + (ent.rotationYawHead - ent.prevRotationYawHead) * partialTicks) * 0.5F,
-+ 					0.0F, 1.0F, 0.0F);
-+ 			GlStateManager.rotate(ent.rotationPitch * 0.2f, 1.0F, 0.0F, 0.0F);
-+ 			RenderManager rendermanager = Minecraft.getMinecraft().getRenderManager();
-+ 			rendermanager.setPlayerViewY(180.0F);
-+ 			rendermanager.setRenderShadow(false);
-+ 			rendermanager.renderEntityWithPosYaw(ent, 0.0D, 0.0D, 0.0D, 0.0F, partialTicks);
-+ 			rendermanager.setRenderShadow(true);
-+ 			ent.renderYawOffset = f;
-+ 			ent.rotationYaw = f1;
-+ 			ent.prevRotationYaw = f2;
-+ 			ent.prevRotationYawHead = f3;
-+ 			ent.rotationYawHead = f4;
-+ 			ent.prevRenderYawOffset = f5;
-+ 			GlStateManager.popMatrix();
-+ 			RenderHelper.disableStandardItemLighting();
-+ 			GlStateManager.disableDepth();
-+ 			GlStateManager.disableRescaleNormal();
-+ 			GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
-+ 			GlStateManager.disableTexture2D();
-+ 			GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
-+ 		}
 + 	}
 + 
 + 	private void drawHideHUD(int x, int y, int fade) {

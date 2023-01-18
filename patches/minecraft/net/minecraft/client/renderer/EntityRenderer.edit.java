@@ -14,7 +14,7 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ import net.lax1dude.eaglercraft.v1_8.HString;
 
-> INSERT  1 : 14  @  1
+> INSERT  1 : 15  @  1
 
 + 
 + import com.google.common.base.Predicate;
@@ -26,6 +26,7 @@
 + import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 + import net.lax1dude.eaglercraft.v1_8.opengl.EaglercraftGPU;
 + import net.lax1dude.eaglercraft.v1_8.opengl.EffectPipelineFXAA;
++ import net.lax1dude.eaglercraft.v1_8.opengl.GameOverlayFramebuffer;
 + import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 + import net.lax1dude.eaglercraft.v1_8.opengl.OpenGlHelper;
 + import net.lax1dude.eaglercraft.v1_8.opengl.WorldRenderer;
@@ -42,9 +43,17 @@
 
 ~ 	private EaglercraftRandom random = new EaglercraftRandom();
 
-> DELETE  43  @  43 : 44
+> DELETE  43  @  43 : 61
 
-> DELETE  30  @  30 : 31
+> INSERT  1 : 2  @  1
+
++ 	private GameOverlayFramebuffer overlayFramebuffer;
+
+> DELETE  2  @  2 : 4
+
+> CHANGE  8 : 9  @  8 : 9
+
+~ 		this.overlayFramebuffer = new GameOverlayFramebuffer();
 
 > INSERT  1 : 10  @  1
 
@@ -64,13 +73,13 @@
 
 > DELETE  3  @  3 : 9
 
-> DELETE  7  @  7 : 22
+> DELETE  3  @  3 : 4
 
 > DELETE  3  @  3 : 18
 
-> CHANGE  3 : 4  @  3 : 18
+> DELETE  3  @  3 : 18
 
-~ 		this.useShader = false;
+> DELETE  3  @  3 : 18
 
 > DELETE  3  @  3 : 14
 
@@ -129,7 +138,47 @@
 
 > DELETE  39  @  39 : 52
 
-> CHANGE  28 : 29  @  28 : 29
+> CHANGE  4 : 41  @  4 : 5
+
+~ 					long framebufferAge = this.overlayFramebuffer.getAge();
+~ 					if (framebufferAge == -1l || framebufferAge > (Minecraft.getDebugFPS() < 25 ? 125l : 75l)) {
+~ 						this.overlayFramebuffer.beginRender(mc.displayWidth, mc.displayHeight);
+~ 						GlStateManager.colorMask(true, true, true, true);
+~ 						GlStateManager.clearColor(0.0f, 0.0f, 0.0f, 0.0f);
+~ 						GlStateManager.clear(16640);
+~ 						this.mc.ingameGUI.renderGameOverlay(parFloat1);
+~ 						this.overlayFramebuffer.endRender();
+~ 					}
+~ 					this.setupOverlayRendering();
+~ 					GlStateManager.enableBlend();
+~ 					if (Minecraft.isFancyGraphicsEnabled()) {
+~ 						this.mc.ingameGUI.renderVignette(parFloat1, l, i1);
+~ 					}
+~ 					this.mc.ingameGUI.renderGameOverlayCrosshairs(l, i1);
+~ 					GlStateManager.bindTexture(this.overlayFramebuffer.getTexture());
+~ 					GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
+~ 					GlStateManager.enableBlend();
+~ 					GlStateManager.blendFunc(770, 771);
+~ 					GlStateManager.disableAlpha();
+~ 					GlStateManager.disableDepth();
+~ 					GlStateManager.depthMask(false);
+~ 					Tessellator tessellator = Tessellator.getInstance();
+~ 					WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+~ 					worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX);
+~ 					worldrenderer.pos(0.0D, (double) i1, -90.0D).tex(0.0D, 0.0D).endVertex();
+~ 					worldrenderer.pos((double) l, (double) i1, -90.0D).tex(1.0D, 0.0D).endVertex();
+~ 					worldrenderer.pos((double) l, 0.0D, -90.0D).tex(1.0D, 1.0D).endVertex();
+~ 					worldrenderer.pos(0.0D, 0.0D, -90.0D).tex(0.0D, 1.0D).endVertex();
+~ 					tessellator.draw();
+~ 					GlStateManager.depthMask(true);
+~ 					GlStateManager.enableDepth();
+~ 					GlStateManager.enableAlpha();
+~ 					GlStateManager.disableBlend();
+~ 					if (this.mc.gameSettings.hudPlayer) { // give the player model HUD good fps
+~ 						this.mc.ingameGUI.drawEaglerPlayerOverlay(l - 3, 3, parFloat1);
+~ 					}
+
+> CHANGE  23 : 24  @  23 : 24
 
 ~ 							return EntityRenderer.this.mc.currentScreen.getClass().getName();
 

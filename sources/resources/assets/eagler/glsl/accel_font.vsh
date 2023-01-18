@@ -15,14 +15,14 @@
  */
 
 precision lowp int;
-precision highp float;
+precision lowp float;
 precision lowp sampler2D;
 
-in vec3 a_position3f;
+layout(location = 0) in vec3 a_position3f;
 
-in vec2 c_position2i;
-in vec2 c_coords2i;
-in vec4 c_color4f;
+layout(location = 1) in vec2 c_position2i;
+layout(location = 2) in vec2 c_coords2i;
+layout(location = 3) in vec4 c_color4f;
 
 out vec2 v_texCoord2f;
 out vec4 v_color4f;

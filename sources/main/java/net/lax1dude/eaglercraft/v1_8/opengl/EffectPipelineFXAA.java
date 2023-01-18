@@ -78,8 +78,6 @@ public class EffectPipelineFXAA {
 		_wglAttachShader(shaderProgram, SpriteLevelMixer.vshLocal);
 		_wglAttachShader(shaderProgram, frag);
 
-		_wglBindAttribLocation(shaderProgram, 0, "a_position2f");
-
 		_wglLinkProgram(shaderProgram);
 
 		_wglDetachShader(shaderProgram, SpriteLevelMixer.vshLocal);

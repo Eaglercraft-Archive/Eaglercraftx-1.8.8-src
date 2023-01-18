@@ -124,11 +124,6 @@ public class InstancedFontRenderer {
 		_wglAttachShader(shaderProgram, vert);
 		_wglAttachShader(shaderProgram, frag);
 
-		_wglBindAttribLocation(shaderProgram, 0, "a_position2f");
-		_wglBindAttribLocation(shaderProgram, 1, "c_position2i");
-		_wglBindAttribLocation(shaderProgram, 2, "c_coords2i");
-		_wglBindAttribLocation(shaderProgram, 3, "c_color4f");
-
 		_wglLinkProgram(shaderProgram);
 
 		_wglDetachShader(shaderProgram, vert);

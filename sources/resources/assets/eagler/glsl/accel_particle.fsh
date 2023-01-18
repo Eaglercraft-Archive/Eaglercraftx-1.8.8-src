@@ -15,13 +15,13 @@
  */
 
 precision lowp int;
-precision highp float;
-precision highp sampler2D;
+precision lowp float;
+precision lowp sampler2D;
 
 in vec2 v_texCoord2f;
 in vec4 v_color4f;
 
-out vec4 output4f;
+layout(location = 0) out vec4 output4f;
 
 uniform sampler2D u_inputTexture;
 

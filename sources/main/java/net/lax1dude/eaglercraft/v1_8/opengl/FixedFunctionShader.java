@@ -22,7 +22,7 @@ class FixedFunctionShader {
 		static final String FILENAME_FSH = "/assets/eagler/glsl/core.fsh";
 
 		static final String PRECISION_INT = "lowp";
-		static final String PRECISION_FLOAT = "highp";
+		static final String PRECISION_FLOAT = "mediump";
 		static final String PRECISION_SAMPLER = "lowp";
 		
 		static final String MACRO_ATTRIB_TEXTURE = "COMPILE_TEXTURE_ATTRIB";

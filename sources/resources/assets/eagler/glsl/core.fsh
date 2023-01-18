@@ -87,7 +87,7 @@ uniform mat4 u_textureMat4f01;
 uniform vec2 u_textureAnisotropicFix;
 #endif
 
-out vec4 output4f;
+layout(location = 0) out vec4 output4f;
 
 void main() {
 

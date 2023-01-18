@@ -125,13 +125,6 @@ public class InstancedParticleRenderer {
 		_wglAttachShader(shaderProgram, vert);
 		_wglAttachShader(shaderProgram, frag);
 
-		_wglBindAttribLocation(shaderProgram, 0, "a_position2f");
-		_wglBindAttribLocation(shaderProgram, 1, "p_position3f");
-		_wglBindAttribLocation(shaderProgram, 2, "p_texCoords2i");
-		_wglBindAttribLocation(shaderProgram, 3, "p_lightMap2f");
-		_wglBindAttribLocation(shaderProgram, 4, "p_particleSize_texCoordsSize_2i");
-		_wglBindAttribLocation(shaderProgram, 5, "p_color4f");
-
 		_wglLinkProgram(shaderProgram);
 
 		_wglDetachShader(shaderProgram, vert);
