@@ -77,7 +77,12 @@
 
 ~ 		for (Score score1 : (List<Score>) arraylist1) {
 
-> INSERT  64 : 65  @  64
+> INSERT  40 : 42  @  40
+
++ 			GlStateManager.enableBlend();
++ 			GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
+
+> INSERT  24 : 25  @  24
 
 + 			this.mc.getTextureManager().bindTexture(icons);
 

@@ -138,7 +138,7 @@
 
 > DELETE  39  @  39 : 52
 
-> CHANGE  4 : 41  @  4 : 5
+> CHANGE  4 : 43  @  4 : 5
 
 ~ 					long framebufferAge = this.overlayFramebuffer.getAge();
 ~ 					if (framebufferAge == -1l || framebufferAge > (Minecraft.getDebugFPS() < 25 ? 125l : 75l)) {
@@ -146,7 +146,9 @@
 ~ 						GlStateManager.colorMask(true, true, true, true);
 ~ 						GlStateManager.clearColor(0.0f, 0.0f, 0.0f, 0.0f);
 ~ 						GlStateManager.clear(16640);
+~ 						GlStateManager.enableOverlayFramebufferBlending();
 ~ 						this.mc.ingameGUI.renderGameOverlay(parFloat1);
+~ 						GlStateManager.disableOverlayFramebufferBlending();
 ~ 						this.overlayFramebuffer.endRender();
 ~ 					}
 ~ 					this.setupOverlayRendering();
@@ -158,7 +160,7 @@
 ~ 					GlStateManager.bindTexture(this.overlayFramebuffer.getTexture());
 ~ 					GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 ~ 					GlStateManager.enableBlend();
-~ 					GlStateManager.blendFunc(770, 771);
+~ 					GlStateManager.blendFunc(1, 771);
 ~ 					GlStateManager.disableAlpha();
 ~ 					GlStateManager.disableDepth();
 ~ 					GlStateManager.depthMask(false);

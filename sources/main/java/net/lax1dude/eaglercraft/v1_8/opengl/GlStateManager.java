@@ -59,7 +59,8 @@ public class GlStateManager {
 	static int stateBlendEquation = -1;
 	static int stateBlendSRC = -1;
 	static int stateBlendDST = -1;
-	
+	static boolean stateEnableOverlayFramebufferBlending = false;
+
 	static boolean stateAlphaTest = false;
 	static float stateAlphaTestRef = 0.1f;
 
@@ -336,6 +337,10 @@ public class GlStateManager {
 	}
 
 	public static final void blendFunc(int srcFactor, int dstFactor) {
+		if(stateEnableOverlayFramebufferBlending) {
+			tryBlendFuncSeparate(srcFactor, dstFactor, 0, 1);
+			return;
+		}
 		int srcBits = (srcFactor | (srcFactor << 16));
 		int dstBits = (dstFactor | (dstFactor << 16));
 		if(srcBits != stateBlendSRC || dstBits != stateBlendDST) {
@@ -346,6 +351,10 @@ public class GlStateManager {
 	}
 
 	public static final void tryBlendFuncSeparate(int srcFactor, int dstFactor, int srcFactorAlpha, int dstFactorAlpha) {
+		if(stateEnableOverlayFramebufferBlending) { // game overlay framebuffer in EntityRenderer.java
+			srcFactorAlpha = GL_ONE;
+			dstFactorAlpha = GL_ONE_MINUS_SRC_ALPHA;
+		}
 		int srcBits = (srcFactor | (srcFactorAlpha << 16));
 		int dstBits = (dstFactor | (dstFactorAlpha << 16));
 		if(srcBits != stateBlendSRC || dstBits != stateBlendDST) {
@@ -353,6 +362,14 @@ public class GlStateManager {
 			stateBlendSRC = srcBits;
 			stateBlendDST = dstBits;
 		}
+	}
+
+	public static final void enableOverlayFramebufferBlending() {
+		stateEnableOverlayFramebufferBlending = true;
+	}
+
+	public static final void disableOverlayFramebufferBlending() {
+		stateEnableOverlayFramebufferBlending = false;
 	}
 
 	public static final void setShaderBlendSrc(float r, float g, float b, float a) {
