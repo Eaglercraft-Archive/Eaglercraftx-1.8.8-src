@@ -72,7 +72,7 @@ void main() {
 		u_textureMat4f01[2].xyw,
 		u_textureMat4f01[3].xyw
 	);
-	vec3 v_textureTmp3f = texMat4x3 * vec4(a_texture2f, 1.0, 1.0);
+	vec3 v_textureTmp3f = texMat4x3 * vec4(a_texture2f, 0.0, 1.0);
 	v_texture2f = v_textureTmp3f.xy / v_textureTmp3f.z;
 #endif
 	
@@ -95,7 +95,7 @@ void main() {
 		u_textureMat4f02[2].xyw,
 		u_textureMat4f02[3].xyw
 	);
-	vec3 v_lightmapTmp3f = texMat4x3 * vec4(a_lightmap2f, 1.0, 1.0);
+	vec3 v_lightmapTmp3f = texMat4x3 * vec4(a_lightmap2f, 0.0, 1.0);
 	v_lightmap2f = v_lightmapTmp3f.xy / v_lightmapTmp3f.z;
 #endif
 

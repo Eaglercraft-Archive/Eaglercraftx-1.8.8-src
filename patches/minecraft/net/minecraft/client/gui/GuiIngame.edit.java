@@ -77,7 +77,16 @@
 
 ~ 		for (Score score1 : (List<Score>) arraylist1) {
 
-> INSERT  40 : 42  @  40
+> CHANGE  7 : 9  @  7 : 9
+
+~ 			this.getFontRenderer().drawString(s1, k1, k, 0xFFFFFFFF);
+~ 			this.getFontRenderer().drawString(s2, l - this.getFontRenderer().getStringWidth(s2), k, 0xFFFFFFFF);
+
+> CHANGE  5 : 6  @  5 : 6
+
+~ 						k - this.getFontRenderer().FONT_HEIGHT, 0xFFFFFFFF);
+
+> INSERT  25 : 27  @  25
 
 + 			GlStateManager.enableBlend();
 + 			GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
