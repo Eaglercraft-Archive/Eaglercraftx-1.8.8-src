@@ -41,7 +41,9 @@
 
 ~ 		GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
 
-> DELETE  21  @  21 : 30
+> DELETE  21  @  21 : 22
+
+> DELETE  1  @  1 : 8
 
 > CHANGE  44 : 45  @  44 : 47
 
@@ -91,11 +93,7 @@
 + 			GlStateManager.enableBlend();
 + 			GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
 
-> INSERT  24 : 25  @  24
-
-+ 			this.mc.getTextureManager().bindTexture(icons);
-
-> CHANGE  224 : 225  @  224 : 225
+> CHANGE  248 : 249  @  248 : 249
 
 ~ 	public void renderVignette(float parFloat1, int scaledWidth, int scaledHeight) {
 
