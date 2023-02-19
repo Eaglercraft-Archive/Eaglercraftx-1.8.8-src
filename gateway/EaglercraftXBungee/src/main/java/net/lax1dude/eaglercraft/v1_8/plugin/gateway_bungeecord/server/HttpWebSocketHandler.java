@@ -135,7 +135,7 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 	
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
 		if (ctx.channel().isActive()) {
-			EaglerXBungee.logger().warning("[" + ctx.channel().remoteAddress() + "]: Exception Caught: " + cause.toString());
+			EaglerXBungee.logger().warning("[Yee][" + ctx.channel().remoteAddress() + "]: Exception Caught: " + cause.toString());
 		}
 	}
 	
@@ -152,6 +152,31 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 			}
 			hasFirstPacket = true;
 			hasBinaryConnection = true;
+			
+			BungeeCord bungus = BungeeCord.getInstance();
+			int limit = bungus.config.getPlayerLimit();
+			if (limit > 0 && bungus.getOnlineCount() >= limit) {
+				sendErrorCode(ctx, HandshakePacketTypes.SERVER_ERROR_CUSTOM_MESSAGE, bungus.getTranslation("proxy_full"))
+					.addListener(ChannelFutureListener.CLOSE);
+				connectionClosed = true;
+				return;
+			}
+			
+			if(conf.getMaxPlayer() > 0) {
+				int i = 0;
+				for(ProxiedPlayer p : bungus.getPlayers()) {
+					if(p.getPendingConnection().getListener() == conf) {
+						++i;
+					}
+				}
+				
+				if (i >= conf.getMaxPlayer()) {
+					sendErrorCode(ctx, HandshakePacketTypes.SERVER_ERROR_CUSTOM_MESSAGE, bungus.getTranslation("proxy_full"))
+						.addListener(ChannelFutureListener.CLOSE);
+					connectionClosed = true;
+					return;
+				}
+			}
 			
 			SocketAddress localSocketAddr = ctx.channel().remoteAddress();
 			InetAddress addr = ctx.channel().attr(EaglerPipeline.REAL_ADDRESS).get();
@@ -692,6 +717,32 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 	
 	private void finish(final ChannelHandlerContext ctx) {
 		final BungeeCord bungee = BungeeCord.getInstance();
+		
+		// verify player counts a second time after handshake just to be safe
+		int limit = bungee.config.getPlayerLimit();
+		if (limit > 0 && bungee.getOnlineCount() >= limit) {
+			sendErrorCode(ctx, HandshakePacketTypes.SERVER_ERROR_CUSTOM_MESSAGE, bungee.getTranslation("proxy_full"))
+				.addListener(ChannelFutureListener.CLOSE);
+			connectionClosed = true;
+			return;
+		}
+		
+		if(conf.getMaxPlayer() > 0) {
+			int i = 0;
+			for(ProxiedPlayer p : bungee.getPlayers()) {
+				if(p.getPendingConnection().getListener() == conf) {
+					++i;
+				}
+			}
+			
+			if (i >= conf.getMaxPlayer()) {
+				sendErrorCode(ctx, HandshakePacketTypes.SERVER_ERROR_CUSTOM_MESSAGE, bungee.getTranslation("proxy_full"))
+					.addListener(ChannelFutureListener.CLOSE);
+				connectionClosed = true;
+				return;
+			}
+		}
+		
 		final String usernameStr = clientUsername.toString();
 		final ProxiedPlayer oldName = bungee.getPlayer(usernameStr);
 		if (oldName != null) {

@@ -1,6 +1,7 @@
 package net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.handlers;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 
 import org.apache.commons.codec.binary.Base64;
@@ -19,6 +20,7 @@ import net.md_5.bungee.UserConnection;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.api.connection.Server;
 import net.md_5.bungee.api.event.PlayerDisconnectEvent;
 import net.md_5.bungee.api.event.PluginMessageEvent;
 import net.md_5.bungee.api.event.PostLoginEvent;
@@ -69,6 +71,16 @@ public class EaglerPacketEventListener implements Listener {
 					});
 				}else {
 					event.getSender().disconnect(new TextComponent("Cannot send \"" + SkinService.CHANNEL + "\" on a non-eagler connection!"));
+				}
+			}
+		}else if(event.getSender() instanceof Server && event.getReceiver() instanceof UserConnection) {
+			UserConnection player = (UserConnection)event.getReceiver();
+			if("EAG|GetDomain".equals(event.getTag()) && player.getPendingConnection() instanceof EaglerInitialHandler) {
+				String domain = ((EaglerInitialHandler)player.getPendingConnection()).getOrigin();
+				if(domain == null) {
+					((Server)event.getSender()).sendData("EAG|Domain", new byte[] { 0 });
+				}else {
+					((Server)event.getSender()).sendData("EAG|Domain", domain.getBytes(StandardCharsets.UTF_8));
 				}
 			}
 		}

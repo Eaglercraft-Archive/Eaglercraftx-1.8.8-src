@@ -223,4 +223,8 @@ public class EaglerInitialHandler extends InitialHandler {
 		return eaglerUnsafe;
 	}
 
+	public String getOrigin() {
+		return origin;
+	}
+
 }

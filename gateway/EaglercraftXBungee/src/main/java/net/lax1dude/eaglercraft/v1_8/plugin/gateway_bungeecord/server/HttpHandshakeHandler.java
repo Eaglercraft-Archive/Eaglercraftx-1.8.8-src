@@ -5,6 +5,7 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
+import java.util.logging.Level;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelFuture;
@@ -167,7 +168,7 @@ public class HttpHandshakeHandler extends ChannelInboundHandlerAdapter {
 	
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
 		if (ctx.channel().isActive()) {
-			EaglerXBungee.logger().severe("[" + ctx.channel().remoteAddress() + "]: Exception Caught: " + cause.toString());
+			EaglerXBungee.logger().log(Level.WARNING, "[Pre][" + ctx.channel().remoteAddress() + "]: Exception Caught: " + cause.toString(), cause);
 			ctx.close();
 		}
 	}
