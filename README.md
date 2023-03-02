@@ -2,7 +2,7 @@
 
 ### Play real Minecraft 1.8 in your browser, currently only supports multiplayer
 
-![EaglercraftX 1.8 Screenshot Main Menu](https://media.discordapp.net/attachments/1042594789943689327/1057655404454223932/eaglerx-480p.png)
+![EaglercraftX 1.8 Screenshot Main Menu](https://media.discordapp.net/attachments/1042594789943689327/1080697078583394355/eaglerx-480p.png)
 
 ## ATTENTION MOJANG/MICROSOFT EMPLOYEE ASSIGNED TO STALK ME:
 
@@ -14,7 +14,6 @@
 
  - **Utilities to decompile Minecraft 1.8 and apply patch files to it**
  - **Source code to provide the LWJGL keyboard, mouse, and OpenGL APIs in a browser**
- - **Source code for an OpenGL 1.3 emulator built on top of WebGL 2.0**
  - **Patch files to mod the Minecraft 1.8 source code to make it browser compatible**
  - **Browser-modified portions of Minecraft 1.8's open-source dependencies**
  - **Plugins for Minecraft servers to allow the eagler client to connect to them**
@@ -24,7 +23,7 @@
  - **Any portion of the decompiled Minecraft 1.8 source code or resources**
  - **Any portion of Mod Coder Pack and it's config files**
  - **Data that can be used alone to reconstruct portions of the game's source code**
- - **Code configured by default to allow users to play without owning a copy of Minecraft**
+ - **Software configured by default to allow users to play without owning a copy of Minecraft**
 
 ## Getting Started:
 
@@ -44,7 +43,7 @@
 5. Type `./CompileLatestClient.sh` and hit enter, a GUI resembling a classic windows installer should open
 6. Follow the steps shown to you in the new window to finish compiling
 
-## Making a Server:
+## Making a TOS compliant Server:
 
 **EaglercraftX 1.8's server is a BungeeCord/Waterfall PLUGIN, not an entire "fork" of bungeecord like the 1.5 Eaglerbungee was, and I can't believe I have to clarify this too but the EaglerXBungee 1.8 plugin is not compatible with the old 1.5 bungee, you must migrate to the latest version of official BungeeCord/Waterfall to use it**
 
@@ -54,9 +53,9 @@ Then to actually log in to the server with Eaglercraft, first join your server u
 
 Set your EaglercraftX username to the same username as the vanilla minecraft account you set the password with, then when you try to join your server it will present you with a login screen where you can enter the password you set. If the password is correct it will let you join the server.
 
-**NOTE: If you set `online_mode` to `false` on BungeeCord/Waterfall's config.yml, the password system will be disabled and you will be able to join with any username without setting a password like Eaglercraft 1.5. This should only ever be used for testing.**
+If it is required for testing purposes, you can set `online_mode` to `false` on BungeeCord/Waterfall's config.yml to disable password system and join the server without setting a password like the old Eaglercraft. This should never be used in production because it allows you to play without owning a Minecraft account which violates the TOS.
 
-A config guide will be added here too eventually
+A detailed plugin config guide will be added here too eventually
 
 ## Contributing:
 

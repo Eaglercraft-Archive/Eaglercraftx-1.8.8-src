@@ -205,7 +205,11 @@
 
 ~ 		if (this.isDefault || (double) this.updateCounter < 1.0E-4D) {
 
-> INSERT  10 : 23  @  10
+> CHANGE  4 : 5  @  4 : 5
+
+~ 			this.drawTexturedModalRect(k + 154, b0 + 0, 0, 45, 155, 44);
+
+> INSERT  5 : 18  @  5
 
 + 		boolean isForkLabel = ((this.openGLWarning1 != null && this.openGLWarning1.length() > 0)
 + 				|| (this.openGLWarning2 != null && this.openGLWarning2.length() > 0));
