@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
+import java.util.logging.Logger;
 
 import org.apache.commons.codec.binary.Base64;
 
@@ -858,7 +859,7 @@ public class SkinService implements ISkinService {
 		int cooldownPeriod = 60000 / EaglerXBungee.getEagler().getConfig().getAntagonistsRateLimit();
 		int elapsedCooldown = (int)(millis - antagonistCooldown);
 		elapsedCooldown /= cooldownPeriod;
-		if(cooldownPeriod > 0) {
+		if(elapsedCooldown > 0) {
 			antagonistCooldown += elapsedCooldown * cooldownPeriod;
 			synchronized(antagonists) {
 				Iterator<UUID> itr = antagonists.keySet().iterator();

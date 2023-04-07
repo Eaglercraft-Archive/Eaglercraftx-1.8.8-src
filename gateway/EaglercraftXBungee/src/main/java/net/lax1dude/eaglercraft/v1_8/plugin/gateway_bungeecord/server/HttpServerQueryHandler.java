@@ -9,6 +9,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -197,13 +198,13 @@ public abstract class HttpServerQueryHandler extends ChannelInboundHandlerAdapte
 	}
 
 	public void sendBinaryResponse(byte[] bytes) {
-		ByteBuf buf = context.alloc().buffer(bytes.length, bytes.length);
+		ByteBuf buf = Unpooled.buffer(bytes.length, bytes.length);
 		buf.writeBytes(bytes);
 		context.writeAndFlush(new BinaryWebSocketFrame(buf));
 	}
 
 	public void sendBinaryResponseAndClose(byte[] bytes) {
-		ByteBuf buf = context.alloc().buffer(bytes.length, bytes.length);
+		ByteBuf buf = Unpooled.buffer(bytes.length, bytes.length);
 		buf.writeBytes(bytes);
 		context.writeAndFlush(new BinaryWebSocketFrame(buf)).addListener(ChannelFutureListener.CLOSE);
 	}
