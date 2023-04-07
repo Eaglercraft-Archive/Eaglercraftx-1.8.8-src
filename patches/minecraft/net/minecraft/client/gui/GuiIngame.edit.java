@@ -37,9 +37,11 @@
 
 > DELETE  27  @  27 : 28
 
-> CHANGE  16 : 17  @  16 : 21
+> CHANGE  16 : 19  @  16 : 21
 
 ~ 		GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
+~ 		GlStateManager.enableDepth();
+~ 		GlStateManager.disableLighting();
 
 > DELETE  21  @  21 : 22
 

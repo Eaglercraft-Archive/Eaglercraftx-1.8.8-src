@@ -20,10 +20,9 @@
 
 ~ 	protected void actionPerformed(GuiButton parGuiButton) {
 
-> INSERT  56 : 58  @  56
+> INSERT  56 : 57  @  56
 
-+ 			this.mc.loadingScreen.eaglerShow(I18n.format("resourcePack.load.refreshing"),
-+ 					I18n.format("resourcePack.load.pleaseWait"));
++ 			this.mc.loadingScreen.eaglerShowRefreshResources();
 
 > INSERT  9 : 10  @  9
 

@@ -18,4 +18,19 @@
 
 ~ 			return true;
 
+> INSERT  8 : 9  @  8
+
++ 	private WorldRenderer.State stateWater;
+
+> INSERT  45 : 53  @  45
+
++ 
++ 	public WorldRenderer.State getStateRealisticWater() {
++ 		return this.stateWater;
++ 	}
++ 
++ 	public void setStateRealisticWater(WorldRenderer.State stateIn) {
++ 		this.stateWater = stateIn;
++ 	}
+
 > EOF

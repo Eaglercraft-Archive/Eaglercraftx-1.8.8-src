@@ -14,6 +14,7 @@ import net.lax1dude.eaglercraft.v1_8.internal.buffer.FloatBuffer;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 import net.lax1dude.eaglercraft.v1_8.opengl.FixedFunctionShader.FixedFunctionConstants;
+import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.DeferredStateManager;
 import net.lax1dude.eaglercraft.v1_8.vector.Matrix4f;
 import net.lax1dude.eaglercraft.v1_8.vector.Vector4f;
 
@@ -276,7 +277,7 @@ public class InstancedFontRenderer {
 			_wglUniformMatrix4fv(u_matrixTransform, false, matrixCopyBuffer);
 		}
 		
-		if(!fogEnabled) {
+		if(!fogEnabled || DeferredStateManager.isInDeferredPass()) {
 			int serial = GlStateManager.stateColorSerial;
 			if(stateColorSerial != serial) {
 				stateColorSerial = serial;

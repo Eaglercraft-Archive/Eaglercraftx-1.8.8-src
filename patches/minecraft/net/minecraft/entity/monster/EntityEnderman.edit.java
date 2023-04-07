@@ -7,16 +7,21 @@
 
 > DELETE  2  @  2 : 7
 
-> CHANGE  1 : 5  @  1 : 2
+> CHANGE  1 : 6  @  1 : 2
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
+~ import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.DynamicLightManager;
 ~ 
 ~ import com.google.common.collect.Sets;
 ~ 
 
 > DELETE  1  @  1 : 2
 
-> DELETE  4  @  4 : 12
+> INSERT  1 : 2  @  1
+
++ import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
+
+> DELETE  3  @  3 : 11
 
 > DELETE  1  @  1 : 4
 

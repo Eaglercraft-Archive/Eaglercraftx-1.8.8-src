@@ -1,10 +1,16 @@
 package net.lax1dude.eaglercraft.v1_8.internal;
 
+import org.teavm.jso.webgl.WebGLUniformLocation;
+
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.ByteBuffer;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.EaglerArrayBufferAllocator;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.FloatBuffer;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.IntBuffer;
 import net.lax1dude.eaglercraft.v1_8.internal.teavm.WebGL2RenderingContext;
+import net.lax1dude.eaglercraft.v1_8.log4j.Level;
+import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
+import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
+import net.lax1dude.eaglercraft.v1_8.opengl.EaglercraftGPU;
 
 /**
  * Copyright (c) 2022-2023 LAX1DUDE. All Rights Reserved.
@@ -21,13 +27,19 @@ import net.lax1dude.eaglercraft.v1_8.internal.teavm.WebGL2RenderingContext;
  */
 public class PlatformOpenGL {
 	
-	static WebGL2RenderingContext ctx = null;
+	private static final Logger logger = LogManager.getLogger("PlatformOpenGL");
 	
+	static WebGL2RenderingContext ctx = null;
+
 	static boolean hasDebugRenderInfoExt = false;
+	static boolean hasFramebufferHDR16FSupport = false;
+	static boolean hasFramebufferHDR32FSupport = false;
 	
 	static void setCurrentContext(WebGL2RenderingContext context) {
 		ctx = context;
 		hasDebugRenderInfoExt = ctx.getExtension("WEBGL_debug_renderer_info") != null;
+		hasFramebufferHDR16FSupport = ctx.getExtension("EXT_color_buffer_half_float") != null;
+		hasFramebufferHDR32FSupport = ctx.getExtension("EXT_color_buffer_float") != null;
 		_wglClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	}
 
@@ -78,6 +90,10 @@ public class PlatformOpenGL {
 	
 	public static final void _wglBlendEquation(int glEnum) {
 		ctx.blendEquation(glEnum);
+	}
+	
+	public static final void _wglBlendColor(float r, float g, float b, float a) {
+		ctx.blendColor(r, g, b, a);
 	}
 	
 	public static final void _wglColorMask(boolean r, boolean g, boolean b, boolean a) {
@@ -236,11 +252,23 @@ public class PlatformOpenGL {
 	public static final void _wglTexParameteri(int target, int param, int value) {
 		ctx.texParameteri(target, param, value);
 	}
+
+	public static final void _wglTexImage3D(int target, int level, int internalFormat, int width, int height, int depth,
+			int border, int format, int type, ByteBuffer data) {
+		ctx.texImage3D(target, level, internalFormat, width, height, depth, border, format, type,
+				data == null ? null : EaglerArrayBufferAllocator.getDataViewStupid(data));
+	}
 	
 	public static final void _wglTexImage2D(int target, int level, int internalFormat, int width,
 			int height, int border, int format, int type, ByteBuffer data) {
 		ctx.texImage2D(target, level, internalFormat, width, height, border, format, type,
 				data == null ? null : EaglerArrayBufferAllocator.getDataViewStupid(data));
+	}
+	
+	public static final void _wglTexImage2Du16(int target, int level, int internalFormat, int width,
+			int height, int border, int format, int type, ByteBuffer data) {
+		ctx.texImage2D(target, level, internalFormat, width, height, border, format, type,
+				data == null ? null : EaglerArrayBufferAllocator.getDataViewStupid16(data));
 	}
 	
 	public static final void _wglTexImage2D(int target, int level, int internalFormat, int width,
@@ -261,6 +289,12 @@ public class PlatformOpenGL {
 				data == null ? null : EaglerArrayBufferAllocator.getDataViewStupid(data));
 	}
 	
+	public static final void _wglTexSubImage2Du16(int target, int level, int xoffset, int yoffset,
+			int width, int height, int format, int type, ByteBuffer data) {
+		ctx.texSubImage2D(target, level, xoffset, yoffset, width, height, format, type,
+				data == null ? null : EaglerArrayBufferAllocator.getDataViewStupid16(data));
+	}
+	
 	public static final void _wglTexSubImage2D(int target, int level, int xoffset, int yoffset,
 			int width, int height, int format, int type, IntBuffer data) {
 		ctx.texSubImage2D(target, level, xoffset, yoffset, width, height, format, type,
@@ -277,7 +311,11 @@ public class PlatformOpenGL {
 			int x, int y, int width, int height) {
 		ctx.copyTexSubImage2D(target, level, xoffset, yoffset, x, y, width, height);
 	}
-	
+
+	public static final void _wglTexStorage2D(int target, int levels, int internalFormat, int w, int h) {
+		ctx.texStorage2D(target, levels, internalFormat, w, h);
+	}
+
 	public static final void _wglPixelStorei(int pname, int value) {
 		ctx.pixelStorei(pname, value);
 	}
@@ -338,74 +376,118 @@ public class PlatformOpenGL {
 	
 	public static final void _wglDrawArrays(int mode, int first, int count) {
 		ctx.drawArrays(mode, first, count);
+		//checkErr("_wglDrawArrays(" + mode + ", " + first + ", " + count + ");");
 	}
 
 	public static final void _wglDrawArraysInstanced(int mode, int first, int count, int instanced) {
 		ctx.drawArraysInstanced(mode, first, count, instanced);
+		//checkErr("_wglDrawArraysInstanced(" + mode + ", " + first + ", " + count + ", " + instanced + ");");
 	}
 	
 	public static final void _wglDrawElements(int mode, int count, int type, int offset) {
 		ctx.drawElements(mode, count, type, offset);
+		//checkErr("_wglDrawElements(" + mode + ", " + count + ", " + type + ", " + offset + ");");
 	}
 	
 	public static final void _wglDrawElementsInstanced(int mode, int count, int type, int offset, int instanced) {
 		ctx.drawElementsInstanced(mode, count, type, offset, instanced);
+		//checkErr("_wglDrawElementsInstanced(" + mode + ", " + count + ", " + type + ", " + offset + ", " + instanced + ");");
 	}
 	
 	public static final IUniformGL _wglGetUniformLocation(IProgramGL obj, String name) {
-		return new OpenGLObjects.UniformGL(ctx.getUniformLocation(obj == null ? null : ((OpenGLObjects.ProgramGL)obj).ptr, name));
+		WebGLUniformLocation loc = ctx.getUniformLocation(((OpenGLObjects.ProgramGL)obj).ptr, name);
+		if(loc != null) {
+			return new OpenGLObjects.UniformGL(loc);
+		}else {
+			return null;
+		}
+	}
+	
+	public static final int _wglGetUniformBlockIndex(IProgramGL obj, String name) {
+		int i = ctx.getUniformBlockIndex(((OpenGLObjects.ProgramGL)obj).ptr, name);
+		if(i == 0xFFFFFFFFl) {
+			i = -1;
+		}
+		return i;
+	}
+	
+	public static final void _wglBindBufferRange(int target, int index, IBufferGL buffer, int offset, int size) {
+		ctx.bindBufferRange(target, index, ((OpenGLObjects.BufferGL)buffer).ptr, offset, size);
+	}
+
+	public static final void _wglUniformBlockBinding(IProgramGL obj, int blockIndex, int bufferIndex) {
+		ctx.uniformBlockBinding(((OpenGLObjects.ProgramGL)obj).ptr, blockIndex, bufferIndex);
 	}
 	
 	public static final void _wglUniform1f(IUniformGL obj, float x) {
-		ctx.uniform1f(obj == null ? null : ((OpenGLObjects.UniformGL)obj).ptr, x);
+		if(obj != null) ctx.uniform1f(((OpenGLObjects.UniformGL)obj).ptr, x);
 	}
 	
 	public static final void _wglUniform2f(IUniformGL obj, float x, float y) {
-		ctx.uniform2f(obj == null ? null : ((OpenGLObjects.UniformGL)obj).ptr, x, y);
+		if(obj != null) ctx.uniform2f(((OpenGLObjects.UniformGL)obj).ptr, x, y);
 	}
 	
 	public static final void _wglUniform3f(IUniformGL obj, float x, float y, float z) {
-		ctx.uniform3f(obj == null ? null : ((OpenGLObjects.UniformGL)obj).ptr, x, y, z);
+		if(obj != null) ctx.uniform3f(((OpenGLObjects.UniformGL)obj).ptr, x, y, z);
 	}
 	
 	public static final void _wglUniform4f(IUniformGL obj, float x, float y, float z, float w) {
-		ctx.uniform4f(obj == null ? null : ((OpenGLObjects.UniformGL)obj).ptr, x, y, z, w);
+		if(obj != null) ctx.uniform4f(((OpenGLObjects.UniformGL)obj).ptr, x, y, z, w);
 	}
 	
 	public static final void _wglUniform1i(IUniformGL obj, int x) {
-		ctx.uniform1i(obj == null ? null : ((OpenGLObjects.UniformGL)obj).ptr, x);
+		if(obj != null) ctx.uniform1i(((OpenGLObjects.UniformGL)obj).ptr, x);
 	}
 	
 	public static final void _wglUniform2i(IUniformGL obj, int x, int y) {
-		ctx.uniform2i(obj == null ? null : ((OpenGLObjects.UniformGL)obj).ptr, x, y);
+		if(obj != null) ctx.uniform2i(((OpenGLObjects.UniformGL)obj).ptr, x, y);
 	}
 	
 	public static final void _wglUniform3i(IUniformGL obj, int x, int y, int z) {
-		ctx.uniform3i(obj == null ? null : ((OpenGLObjects.UniformGL)obj).ptr, x, y, z);
+		if(obj != null) ctx.uniform3i(((OpenGLObjects.UniformGL)obj).ptr, x, y, z);
 	}
 	
 	public static final void _wglUniform4i(IUniformGL obj, int x, int y, int z, int w) {
-		ctx.uniform4i(obj == null ? null : ((OpenGLObjects.UniformGL)obj).ptr, x, y, z, w);
+		if(obj != null) ctx.uniform4i(((OpenGLObjects.UniformGL)obj).ptr, x, y, z, w);
 	}
 	
 	public static final void _wglUniformMatrix2fv(IUniformGL obj, boolean transpose, FloatBuffer mat) {
-		ctx.uniformMatrix2fv(obj == null ? null : ((OpenGLObjects.UniformGL)obj).ptr, transpose,
+		if(obj != null) ctx.uniformMatrix2fv(((OpenGLObjects.UniformGL)obj).ptr, transpose,
 				mat == null ? null : EaglerArrayBufferAllocator.getFloatArrayStupid(mat));
 	}
 	
 	public static final void _wglUniformMatrix3fv(IUniformGL obj, boolean transpose, FloatBuffer mat) {
-		ctx.uniformMatrix3fv(obj == null ? null : ((OpenGLObjects.UniformGL)obj).ptr, transpose,
+		if(obj != null) ctx.uniformMatrix3fv(((OpenGLObjects.UniformGL)obj).ptr, transpose,
+				mat == null ? null : EaglerArrayBufferAllocator.getFloatArrayStupid(mat));
+	}
+	
+	public static final void _wglUniformMatrix3x2fv(IUniformGL obj, boolean transpose, FloatBuffer mat) {
+		if(obj != null) ctx.uniformMatrix3x2fv(((OpenGLObjects.UniformGL)obj).ptr, transpose,
 				mat == null ? null : EaglerArrayBufferAllocator.getFloatArrayStupid(mat));
 	}
 	
 	public static final void _wglUniformMatrix4fv(IUniformGL obj, boolean transpose, FloatBuffer mat) {
-		ctx.uniformMatrix4fv(obj == null ? null : ((OpenGLObjects.UniformGL)obj).ptr, transpose,
+		if(obj != null) ctx.uniformMatrix4fv(((OpenGLObjects.UniformGL)obj).ptr, transpose,
+				mat == null ? null : EaglerArrayBufferAllocator.getFloatArrayStupid(mat));
+	}
+	
+	public static final void _wglUniformMatrix4x2fv(IUniformGL obj, boolean transpose, FloatBuffer mat) {
+		if(obj != null) ctx.uniformMatrix4x2fv(((OpenGLObjects.UniformGL)obj).ptr, transpose,
+				mat == null ? null : EaglerArrayBufferAllocator.getFloatArrayStupid(mat));
+	}
+	
+	public static final void _wglUniformMatrix4x3fv(IUniformGL obj, boolean transpose, FloatBuffer mat) {
+		if(obj != null) ctx.uniformMatrix4x3fv(((OpenGLObjects.UniformGL)obj).ptr, transpose,
 				mat == null ? null : EaglerArrayBufferAllocator.getFloatArrayStupid(mat));
 	}
 	
 	public static final void _wglBindFramebuffer(int target, IFramebufferGL framebuffer) {
-		ctx.bindFramebuffer(target, framebuffer == null ? PlatformRuntime.mainFramebuffer
-				: ((OpenGLObjects.FramebufferGL) framebuffer).ptr);
+		if(framebuffer == null) {
+			ctx.bindFramebuffer(target, PlatformRuntime.mainFramebuffer);
+			ctx.drawBuffers(new int[] { WebGL2RenderingContext.COLOR_ATTACHMENT0 });
+		}else {
+			ctx.bindFramebuffer(target, ((OpenGLObjects.FramebufferGL) framebuffer).ptr);
+		}
 	}
 	
 	public static final int _wglCheckFramebufferStatus(int target) {
@@ -416,6 +498,11 @@ public class PlatformOpenGL {
 			ITextureGL texture, int level) {
 		ctx.framebufferTexture2D(target, attachment, texTarget,
 				texture == null ? null : ((OpenGLObjects.TextureGL)texture).ptr, level);
+	}
+	
+	public static final void _wglFramebufferTextureLayer(int target, int attachment, ITextureGL texture, int level, int layer) {
+		ctx.framebufferTextureLayer(target, attachment,
+				texture == null ? null : ((OpenGLObjects.TextureGL) texture).ptr, level, layer);
 	}
 	
 	public static final void _wglBlitFramebuffer(int srcX0, int srcY0, int srcX1, int srcY1,
@@ -470,5 +557,32 @@ public class PlatformOpenGL {
 	public static final int _wglGetError() {
 		return ctx.getError();
 	}
+	
+	public static final boolean checkHDRFramebufferSupport(int bits) {
+		switch(bits) {
+		case 16:
+			return hasFramebufferHDR16FSupport;
+		case 32:
+			return hasFramebufferHDR32FSupport;
+		default:
+			return false;
+		}
+	}
 
+	private static final void checkErr(String name) {
+		int i = ctx.getError();
+		if(i != 0) {
+			logger.error("########## GL ERROR ##########");
+			logger.error("@ {}", name);
+			do {
+				logger.error("#{} - {}", i, EaglercraftGPU.gluErrorString(i));
+			}while((i = ctx.getError()) != 0);
+			try {
+				throw new RuntimeException("GL Error Detected!");
+			}catch(Throwable t) {
+				logger.log(Level.ERROR, t);
+			}
+			logger.error("##############################");
+		}
+	}
 }

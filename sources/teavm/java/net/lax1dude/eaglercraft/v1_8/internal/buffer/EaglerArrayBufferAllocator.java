@@ -3,6 +3,7 @@ package net.lax1dude.eaglercraft.v1_8.internal.buffer;
 import org.teavm.jso.typedarrays.ArrayBuffer;
 import org.teavm.jso.typedarrays.DataView;
 import org.teavm.jso.typedarrays.Float32Array;
+import org.teavm.jso.typedarrays.Uint16Array;
 import org.teavm.jso.typedarrays.Uint8Array;
 
 /**
@@ -63,6 +64,19 @@ public class EaglerArrayBufferAllocator {
 			int l = b.limit;
 			int i = d.getByteOffset();
 			return Uint8Array.create(d.getBuffer(), i + p, l - p);
+		}else {
+			throw notEagler(buffer);
+		}
+	}
+	
+	public static Uint16Array getDataViewStupid16(ByteBuffer buffer) {
+		if(buffer instanceof EaglerArrayByteBuffer) {
+			EaglerArrayByteBuffer b = (EaglerArrayByteBuffer)buffer;
+			DataView d = b.dataView;
+			int p = b.position;
+			int l = b.limit;
+			int i = d.getByteOffset();
+			return Uint16Array.create(d.getBuffer(), i + p, (l - p) >> 1);
 		}else {
 			throw notEagler(buffer);
 		}

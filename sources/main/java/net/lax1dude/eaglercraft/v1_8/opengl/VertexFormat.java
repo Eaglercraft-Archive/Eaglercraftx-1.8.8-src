@@ -18,6 +18,7 @@ import static net.lax1dude.eaglercraft.v1_8.opengl.RealOpenGLEnums.*;
 public enum VertexFormat {
 
 	BLOCK(true, true, false, true),
+	BLOCK_SHADERS(true, true, true, true),
 	ITEM(true, true, true, false),
 	OLDMODEL_POSITION_TEX_NORMAL(true, false, true, false),
 	PARTICLE_POSITION_TEX_COLOR_LMAP(true, true, true, true),
@@ -107,7 +108,6 @@ public enum VertexFormat {
 		attribPositionFormat = COMPONENT_POSITION_FORMAT;
 		attribPositionNormalized = false;
 		attribPositionSize = COMPONENT_POSITION_SIZE;
-		attribPositionStride = COMPONENT_POSITION_STRIDE;
 		bytes += COMPONENT_POSITION_STRIDE;
 		
 		if(color) {
@@ -117,7 +117,6 @@ public enum VertexFormat {
 			attribColorFormat = COMPONENT_COLOR_FORMAT;
 			attribColorNormalized = true;
 			attribColorSize = COMPONENT_COLOR_SIZE;
-			attribColorStride = COMPONENT_COLOR_STRIDE;
 			bytes += COMPONENT_COLOR_STRIDE;
 			bitfield |= EaglercraftGPU.ATTRIB_COLOR;
 		}else {
@@ -127,7 +126,6 @@ public enum VertexFormat {
 			attribColorFormat = -1;
 			attribColorNormalized = false;
 			attribColorSize = -1;
-			attribColorStride = -1;
 		}
 
 		if(texture) {
@@ -137,7 +135,6 @@ public enum VertexFormat {
 			attribTextureFormat = COMPONENT_TEX_FORMAT;
 			attribTextureNormalized = false;
 			attribTextureSize = COMPONENT_TEX_SIZE;
-			attribTextureStride = COMPONENT_TEX_STRIDE;
 			bytes += COMPONENT_TEX_STRIDE;
 			bitfield |= EaglercraftGPU.ATTRIB_TEXTURE;
 		}else {
@@ -147,7 +144,6 @@ public enum VertexFormat {
 			attribTextureFormat = -1;
 			attribTextureNormalized = false;
 			attribTextureSize = -1;
-			attribTextureStride = -1;
 		}
 		
 		if(normal) {
@@ -157,7 +153,6 @@ public enum VertexFormat {
 			attribNormalFormat = COMPONENT_NORMAL_FORMAT;
 			attribNormalNormalized = true;
 			attribNormalSize = COMPONENT_NORMAL_SIZE;
-			attribNormalStride = COMPONENT_NORMAL_STRIDE;
 			bytes += COMPONENT_NORMAL_STRIDE;
 			bitfield |= EaglercraftGPU.ATTRIB_NORMAL;
 		}else {
@@ -167,7 +162,6 @@ public enum VertexFormat {
 			attribNormalFormat = -1;
 			attribNormalNormalized = false;
 			attribNormalSize = -1;
-			attribNormalStride = -1;
 		}
 		
 		if(lightmap) {
@@ -177,7 +171,6 @@ public enum VertexFormat {
 			attribLightmapFormat = COMPONENT_LIGHTMAP_FORMAT;
 			attribLightmapNormalized = false;
 			attribLightmapSize = COMPONENT_LIGHTMAP_SIZE;
-			attribLightmapStride = COMPONENT_LIGHTMAP_STRIDE;
 			bytes += COMPONENT_LIGHTMAP_STRIDE;
 			bitfield |= EaglercraftGPU.ATTRIB_LIGHTMAP;
 		}else {
@@ -187,11 +180,14 @@ public enum VertexFormat {
 			attribLightmapFormat = -1;
 			attribLightmapNormalized = false;
 			attribLightmapSize = -1;
-			attribLightmapStride = -1;
 		}
 		
 		attribCount = index;
-		attribStride = bytes;
+		attribStride = attribPositionStride =  bytes;
+		attribColorStride = color ? bytes : -1;
+		attribTextureStride = texture ? bytes : -1;
+		attribNormalStride = normal ? bytes : -1;
+		attribLightmapStride = lightmap ? bytes : -1;
 		eaglercraftAttribBits = bitfield;
 		
 	}

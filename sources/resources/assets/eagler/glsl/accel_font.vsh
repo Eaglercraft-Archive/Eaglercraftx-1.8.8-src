@@ -15,8 +15,8 @@
  */
 
 precision lowp int;
-precision lowp float;
-precision lowp sampler2D;
+precision highp float;
+precision mediump sampler2D;
 
 layout(location = 0) in vec3 a_position3f;
 

@@ -5,7 +5,10 @@
 # Version: 1.0
 # Author: lax1dude
 
-> DELETE  2  @  2 : 17
+> CHANGE  2 : 4  @  2 : 17
+
+~ import static net.lax1dude.eaglercraft.v1_8.internal.PlatformOpenGL._wglBindFramebuffer;
+~ 
 
 > DELETE  2  @  2 : 6
 
@@ -17,7 +20,7 @@
 
 > DELETE  1  @  1 : 4
 
-> CHANGE  1 : 32  @  1 : 4
+> CHANGE  1 : 41  @  1 : 4
 
 ~ 
 ~ import net.lax1dude.eaglercraft.v1_8.internal.PlatformInput;
@@ -44,6 +47,15 @@
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.ImageData;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.WorldRenderer;
+~ import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.BlockVertexIDs;
+~ import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.DebugFramebufferView;
+~ import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.EaglerDeferredPipeline;
+~ import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.ShaderPackInfoReloadListener;
+~ import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.program.ShaderSource;
+~ import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.texture.EmissiveItems;
+~ import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.texture.MetalsLUT;
+~ import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.texture.PBRTextureMapUtils;
+~ import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.texture.TemperaturesLUT;
 ~ import net.lax1dude.eaglercraft.v1_8.profile.EaglerProfile;
 ~ import net.lax1dude.eaglercraft.v1_8.profile.GuiScreenEditProfile;
 ~ import net.lax1dude.eaglercraft.v1_8.profile.SkinPreviewRenderer;
@@ -85,7 +97,9 @@
 
 > DELETE  1  @  1 : 3
 
-> DELETE  5  @  5 : 6
+> INSERT  6 : 7  @  6
+
++ import net.minecraft.util.EnumChatFormatting;
 
 > INSERT  11 : 12  @  11
 
@@ -119,10 +133,12 @@
 
 ~ 	private final List<FutureTask<?>> scheduledTasks = new LinkedList();
 
-> INSERT  14 : 16  @  14
+> INSERT  14 : 18  @  14
 
 + 	public int joinWorldTickCounter = 0;
 + 	private int dontPauseTimer = 0;
++ 	public int bungeeOutdatedMsgTimer = 0;
++ 	public String bungeeOutdatedMsgVer = null;
 
 > CHANGE  3 : 4  @  3 : 6
 
@@ -199,7 +215,16 @@
 
 ~ 		this.standardGalacticFontRenderer = new EaglerFontRenderer(this.gameSettings,
 
-> CHANGE  8 : 9  @  8 : 9
+> INSERT  5 : 11  @  5
+
++ 		this.mcResourceManager.registerReloadListener(new ShaderPackInfoReloadListener());
++ 		this.mcResourceManager.registerReloadListener(PBRTextureMapUtils.blockMaterialConstants);
++ 		this.mcResourceManager.registerReloadListener(new TemperaturesLUT());
++ 		this.mcResourceManager.registerReloadListener(new MetalsLUT());
++ 		this.mcResourceManager.registerReloadListener(new EmissiveItems());
++ 		this.mcResourceManager.registerReloadListener(new BlockVertexIDs());
+
+> CHANGE  3 : 4  @  3 : 4
 
 ~ 					return HString.format(parString1, new Object[] { GameSettings
 
@@ -207,7 +232,11 @@
 
 ~ 		GlStateManager.clearDepth(1.0f);
 
-> INSERT  30 : 31  @  30
+> INSERT  10 : 11  @  10
+
++ 		this.textureMapBlocks.setEnablePBREagler(gameSettings.shaders);
+
+> INSERT  20 : 21  @  20
 
 + 		SkinPreviewRenderer.initialize();
 
@@ -276,7 +305,12 @@
 ~ 			logger.info("Caught error stitching, removing all assigned resourcepacks");
 ~ 			logger.info(runtimeexception);
 
-> CHANGE  16 : 19  @  16 : 28
+> INSERT  9 : 11  @  9
+
++ 		ShaderSource.clearCache();
++ 
+
+> CHANGE  7 : 10  @  7 : 19
 
 ~ 	private void updateDisplayMode() {
 ~ 		this.displayWidth = Display.getWidth();
@@ -333,9 +367,16 @@
 
 > DELETE  18  @  18 : 26
 
-> CHANGE  1 : 11  @  1 : 5
+> CHANGE  1 : 4  @  1 : 5
 
 ~ 		if (!Display.contextLost()) {
+~ 			this.mcProfiler.startSection("EaglercraftGPU_optimize");
+~ 			EaglercraftGPU.optimize();
+
+> CHANGE  1 : 11  @  1 : 2
+
+~ 			_wglBindFramebuffer(0x8D40, null);
+~ 			GlStateManager.viewport(0, 0, this.displayWidth, this.displayHeight);
 ~ 			GlStateManager.clearColor(0.0f, 0.0f, 0.0f, 1.0f);
 ~ 			GlStateManager.pushMatrix();
 ~ 			GlStateManager.clear(16640);
@@ -344,17 +385,16 @@
 ~ 			if (this.thePlayer != null && this.thePlayer.isEntityInsideOpaqueBlock()) {
 ~ 				this.gameSettings.thirdPersonView = 0;
 ~ 			}
-~ 
 
-> CHANGE  1 : 6  @  1 : 2
+> CHANGE  1 : 6  @  1 : 5
 
+~ 			this.mcProfiler.endSection();
 ~ 			if (!this.skipRenderWorld) {
 ~ 				this.mcProfiler.endStartSection("gameRenderer");
 ~ 				this.entityRenderer.func_181560_a(this.timer.renderPartialTicks, i);
 ~ 				this.mcProfiler.endSection();
-~ 			}
 
-> CHANGE  1 : 13  @  1 : 5
+> CHANGE  2 : 18  @  2 : 7
 
 ~ 			this.mcProfiler.endSection();
 ~ 			if (this.gameSettings.showDebugInfo && this.gameSettings.showDebugProfilerChart
@@ -368,9 +408,8 @@
 ~ 			} else {
 ~ 				this.mcProfiler.profilingEnabled = false;
 ~ 				this.prevFrameTime = System.nanoTime();
-
-> CHANGE  2 : 4  @  2 : 7
-
+~ 			}
+~ 
 ~ 			this.guiAchievement.updateAchievementWindow();
 ~ 			GlStateManager.popMatrix();
 
@@ -434,7 +473,11 @@
 + 		RateLimitTracker.tick();
 + 
 
-> INSERT  23 : 29  @  23
+> INSERT  15 : 16  @  15
+
++ 			GlStateManager.viewport(0, 0, displayWidth, displayHeight); // to be safe
+
+> INSERT  8 : 14  @  8
 
 + 			if (this.currentScreen == null && this.dontPauseTimer <= 0) {
 + 				if (!Mouse.isMouseGrabbed()) {
@@ -470,18 +513,64 @@
 + 					KeyBinding.setKeyBindState(gameSettings.keyBindSprint.getKeyCode(), Keyboard.getEventKeyState());
 + 				}
 
-> CHANGE  26 : 27  @  26 : 27
+> CHANGE  19 : 27  @  19 : 21
+
+~ 					if (EaglerDeferredPipeline.instance != null) {
+~ 						if (k == 62) {
+~ 							DebugFramebufferView.toggleDebugView();
+~ 						} else if (k == 0xCB || k == 0xC8) {
+~ 							DebugFramebufferView.switchView(-1);
+~ 						} else if (k == 0xCD || k == 0xD0) {
+~ 							DebugFramebufferView.switchView(1);
+~ 						}
+
+> CHANGE  5 : 6  @  5 : 6
 
 ~ 						if (k == 1 || (k > -1 && k == this.gameSettings.keyBindClose.getKeyCode())) {
 
-> INSERT  41 : 42  @  41
+> INSERT  11 : 18  @  11
+
++ 						if (k == 19 && Keyboard.isKeyDown(61)) { // F3+R
++ 							if (gameSettings.shaders) {
++ 								ShaderSource.clearCache();
++ 								this.renderGlobal.loadRenderers();
++ 							}
++ 						}
++ 
+
+> INSERT  30 : 31  @  30
 
 + 							GlStateManager.recompileShaders();
 
-> INSERT  206 : 212  @  206
+> INSERT  206 : 237  @  206
 
 + 		if (this.theWorld != null) {
 + 			++joinWorldTickCounter;
++ 			if (bungeeOutdatedMsgTimer > 0) {
++ 				if (--bungeeOutdatedMsgTimer == 0) {
++ 					String pfx = EnumChatFormatting.GOLD + "[EagX]" + EnumChatFormatting.AQUA;
++ 					ingameGUI.getChatGUI()
++ 							.printChatMessage(new ChatComponentText(pfx + " ---------------------------------------"));
++ 					ingameGUI.getChatGUI().printChatMessage(new ChatComponentText(
++ 							pfx + EnumChatFormatting.GREEN + EnumChatFormatting.BOLD + " MESSAGE FROM LAX:"));
++ 					ingameGUI.getChatGUI().printChatMessage(new ChatComponentText(pfx));
++ 					ingameGUI.getChatGUI()
++ 							.printChatMessage(new ChatComponentText(
++ 									pfx + " This server appears to be using version " + EnumChatFormatting.YELLOW
++ 											+ bungeeOutdatedMsgVer + EnumChatFormatting.AQUA + " of"));
++ 					ingameGUI.getChatGUI().printChatMessage(
++ 							new ChatComponentText(pfx + " the EaglerXBungee plugin which has memory leaks"));
++ 					ingameGUI.getChatGUI().printChatMessage(new ChatComponentText(pfx));
++ 					ingameGUI.getChatGUI()
++ 							.printChatMessage(new ChatComponentText(pfx + " If you are the admin update to "
++ 									+ EnumChatFormatting.YELLOW + "1.0.6" + EnumChatFormatting.AQUA + " or newer"));
++ 					ingameGUI.getChatGUI().printChatMessage(new ChatComponentText(pfx));
++ 					ingameGUI.getChatGUI().printChatMessage(new ChatComponentText(pfx + EnumChatFormatting.GREEN
++ 							+ " https://ftp.deev.is/EaglerXBungee-1.0.6-MemleakFix.jar"));
++ 					ingameGUI.getChatGUI()
++ 							.printChatMessage(new ChatComponentText(pfx + " ---------------------------------------"));
++ 				}
++ 			}
 + 		} else {
 + 			joinWorldTickCounter = 0;
 + 		}
@@ -503,7 +592,14 @@
 
 ~ 		this.thePlayer = this.playerController.func_178892_a(this.theWorld, new StatFileWriter());
 
-> CHANGE  165 : 166  @  165 : 166
+> CHANGE  34 : 38  @  34 : 35
+
+~ 		if (theMinecraft == null)
+~ 			return false;
+~ 		GameSettings g = theMinecraft.gameSettings;
+~ 		return g.ambientOcclusion != 0 && !g.shadersAODisable;
+
+> CHANGE  130 : 131  @  130 : 131
 
 ~ 				return EagRuntime.getVersion();
 
@@ -579,7 +675,7 @@
 
 > DELETE  24  @  24 : 32
 
-> INSERT  7 : 15  @  7
+> INSERT  7 : 19  @  7
 
 + 
 + 	public static int getGLMaximumTextureSize() {
@@ -588,6 +684,10 @@
 + 
 + 	public boolean areKeysLocked() {
 + 		return PlatformInput.lockKeys;
++ 	}
++ 
++ 	public ModelManager getModelManager() {
++ 		return modelManager;
 + 	}
 
 > EOF

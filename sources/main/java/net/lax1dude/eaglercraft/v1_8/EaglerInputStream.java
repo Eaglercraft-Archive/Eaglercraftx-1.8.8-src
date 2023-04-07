@@ -29,6 +29,9 @@ public class EaglerInputStream extends ByteArrayInputStream {
 	}
 	
 	public static byte[] inputStreamToBytesQuiet(InputStream is) {
+		if(is == null) {
+			return null;
+		}
 		try {
 			return inputStreamToBytes(is);
 		}catch(IOException ex) {

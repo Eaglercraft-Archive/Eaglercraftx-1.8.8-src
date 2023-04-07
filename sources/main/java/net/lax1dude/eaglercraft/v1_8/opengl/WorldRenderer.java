@@ -10,6 +10,7 @@ import java.util.Comparator;
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformBufferFunctions;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
+import net.lax1dude.eaglercraft.v1_8.vector.Vector3f;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.util.MathHelper;
 
@@ -150,9 +151,6 @@ public class WorldRenderer {
 		return new WorldRenderer.State(aint, fmt);
 	}
 
-	/**
-	 * MOST LIKELY A SLOW AND RETARDED WAY TO GET THE DISTANCE TO A QUAD
-	 */
 	private static float func_181665_a(FloatBuffer parFloatBuffer, float parFloat1, float parFloat2, float parFloat3,
 			int parInt1, int parInt2) {
 		float f = parFloatBuffer.get(parInt2 + parInt1 * 0 + 0);
@@ -379,6 +377,20 @@ public class WorldRenderer {
 		this.byteBuffer.putInt(j1 + i1 * 3, l);
 	}
 
+	public void putNormal(float x, float y, float z, int id) {
+		int i = (byte) ((int) (x * 127.0F)) & 255;
+		int j = (byte) ((int) (y * 127.0F)) & 255;
+		int k = (byte) ((int) (z * 127.0F)) & 255;
+		int l = i | j << 8 | k << 16 | ((byte)id) << 24;
+		VertexFormat fmt = this.vertexFormat;
+		int i1 = fmt.attribStride;
+		int j1 = (this.vertexCount - 4) * i1 + fmt.attribNormalOffset;
+		this.byteBuffer.putInt(j1, l);
+		this.byteBuffer.putInt(j1 + i1, l);
+		this.byteBuffer.putInt(j1 + i1 * 2, l);
+		this.byteBuffer.putInt(j1 + i1 * 3, l);
+	}
+
 	/**
 	 * set normal of current vertex
 	 */
@@ -389,6 +401,67 @@ public class WorldRenderer {
 		this.byteBuffer.put(i + 1, (byte) ((int) parFloat2 * 127 & 255));
 		this.byteBuffer.put(i + 2, (byte) ((int) parFloat3 * 127 & 255));
 		return this;
+	}
+
+	private final Vector3f tmpVec1 = new Vector3f();
+	private final Vector3f tmpVec2 = new Vector3f();
+	private final Vector3f tmpVec3 = new Vector3f();
+	private final Vector3f tmpVec4 = new Vector3f();
+	private final Vector3f tmpVec5 = new Vector3f();
+	private final Vector3f tmpVec6 = new Vector3f();
+
+	public void genNormals(boolean b, int vertId) {
+		VertexFormat fmt = this.vertexFormat;
+		int i1 = fmt.attribStride;
+		int j1 = (this.vertexCount - 4) * i1;
+		tmpVec1.x = this.byteBuffer.getFloat(j1);
+		tmpVec1.y = this.byteBuffer.getFloat(j1 + 4);
+		tmpVec1.z = this.byteBuffer.getFloat(j1 + 8);
+		j1 += i1;
+		tmpVec2.x = this.byteBuffer.getFloat(j1);
+		tmpVec2.y = this.byteBuffer.getFloat(j1 + 4);
+		tmpVec2.z = this.byteBuffer.getFloat(j1 + 8);
+		j1 += i1 * 2;
+		tmpVec3.x = this.byteBuffer.getFloat(j1);
+		tmpVec3.y = this.byteBuffer.getFloat(j1 + 4);
+		tmpVec3.z = this.byteBuffer.getFloat(j1 + 8);
+		Vector3f.sub(tmpVec1, tmpVec2, tmpVec4);
+		Vector3f.sub(tmpVec3, tmpVec2, tmpVec5);
+		Vector3f.cross(tmpVec5, tmpVec4, tmpVec6);
+		float f = (float) Math
+				.sqrt((double) (tmpVec6.x * tmpVec6.x + tmpVec6.y * tmpVec6.y + tmpVec6.z * tmpVec6.z));
+		tmpVec6.x /= f;
+		tmpVec6.y /= f;
+		tmpVec6.z /= f;
+		int i = (byte) ((int) (tmpVec6.x * 127.0F)) & 255;
+		int j = (byte) ((int) (tmpVec6.y * 127.0F)) & 255;
+		int k = (byte) ((int) (tmpVec6.z * 127.0F)) & 255;
+		int l = i | j << 8 | k << 16 | vertId << 24;
+		int jj1 = (this.vertexCount - 4) * i1 + fmt.attribNormalOffset;
+		this.byteBuffer.putInt(jj1, l);
+		this.byteBuffer.putInt(jj1 + i1, l);
+		if(!b) {
+			this.byteBuffer.putInt(jj1 + i1 * 2, l);
+		}
+		this.byteBuffer.putInt(jj1 + i1 * 3, l);
+		if(b) {
+			j1 = (this.vertexCount - 2) * i1;
+			tmpVec1.x = this.byteBuffer.getFloat(j1);
+			tmpVec1.y = this.byteBuffer.getFloat(j1 + 4);
+			tmpVec1.z = this.byteBuffer.getFloat(j1 + 8);
+			Vector3f.sub(tmpVec2, tmpVec1, tmpVec4);
+			Vector3f.sub(tmpVec3, tmpVec1, tmpVec5);
+			Vector3f.cross(tmpVec5, tmpVec4, tmpVec6);
+			f = (float) Math.sqrt((double) (tmpVec6.x * tmpVec6.x + tmpVec6.y * tmpVec6.y + tmpVec6.z * tmpVec6.z));
+			tmpVec6.x /= f;
+			tmpVec6.y /= f;
+			tmpVec6.z /= f;
+			i = (byte) ((int) (tmpVec6.x * 127.0F)) & 255;
+			j = (byte) ((int) (tmpVec6.y * 127.0F)) & 255;
+			k = (byte) ((int) (tmpVec6.z * 127.0F)) & 255;
+			l = i | j << 8 | k << 16 | vertId << 24;
+			this.byteBuffer.putInt(jj1 + i1 * 2, l);
+		}
 	}
 
 	/**

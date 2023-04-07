@@ -53,12 +53,11 @@
 ~ 			EaglercraftGPU.glTexParameterf(GL_TEXTURE_2D, '\u813b', (float) parInt2);
 ~ 			// EaglercraftGPU.glTexParameterf(GL_TEXTURE_2D, '\u8501', 0.0F);
 
-> CHANGE  3 : 5  @  3 : 4
+> CHANGE  1 : 2  @  1 : 6
 
-~ 			EaglercraftGPU.glTexImage2D(GL_TEXTURE_2D, i, GL_RGBA, parInt3 >> i, parInt4 >> i, 0, GL_RGBA,
-~ 					GL_UNSIGNED_BYTE, (IntBuffer) null);
+~ 		EaglercraftGPU.glTexStorage2D(GL_TEXTURE_2D, parInt2 + 1, GL_RGBA8, parInt3, parInt4);
 
-> CHANGE  4 : 5  @  4 : 5
+> CHANGE  2 : 3  @  2 : 3
 
 ~ 	public static int uploadTextureImageSub(int textureId, ImageData parBufferedImage, int parInt2, int parInt3,
 

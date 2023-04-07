@@ -11,4 +11,8 @@
 
 > DELETE  1  @  1 : 4
 
+> CHANGE  5 : 6  @  5 : 6
+
+~ 	public static final ResourceLocation slimeTextures = new ResourceLocation("textures/entity/slime/slime.png");
+
 > EOF

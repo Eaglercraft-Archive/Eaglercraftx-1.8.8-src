@@ -7,4 +7,8 @@
 
 > DELETE  8  @  8 : 12
 
+> CHANGE  77 : 78  @  77 : 78
+
+~ 			return Chunk.getNoSkyLightValue();
+
 > EOF

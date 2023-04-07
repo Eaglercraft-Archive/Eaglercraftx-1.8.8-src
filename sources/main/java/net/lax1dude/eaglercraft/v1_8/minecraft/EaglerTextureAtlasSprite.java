@@ -9,6 +9,9 @@ import java.util.concurrent.Callable;
 import com.google.common.collect.Lists;
 
 import net.lax1dude.eaglercraft.v1_8.HString;
+import net.lax1dude.eaglercraft.v1_8.internal.IFramebufferGL;
+import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
+import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 import net.lax1dude.eaglercraft.v1_8.opengl.ImageData;
 import net.minecraft.client.renderer.texture.TextureClock;
 import net.minecraft.client.renderer.texture.TextureCompass;
@@ -34,24 +37,26 @@ import net.minecraft.util.ResourceLocation;
  * 
  */
 public class EaglerTextureAtlasSprite {
-	private final String iconName;
+
+	private static final Logger logger = LogManager.getLogger("EaglerTextureAtlasSprite");
+
+	protected final String iconName;
 	protected List<int[][]> framesTextureData = Lists.newArrayList();
 	protected int[][] interpolatedFrameData;
-	private AnimationMetadataSection animationMetadata;
-	private int cacheInterpolateSteps;
+	protected AnimationMetadataSection animationMetadata;
 	protected boolean rotated;
 	protected int originX;
 	protected int originY;
 	protected int width;
 	protected int height;
-	private float minU;
-	private float maxU;
-	private float minV;
-	private float maxV;
+	protected float minU;
+	protected float maxU;
+	protected float minV;
+	protected float maxV;
 	protected int frameCounter;
 	protected int tickCounter;
-	private static String locationNameClock = "builtin/clock";
-	private static String locationNameCompass = "builtin/compass";
+	protected static String locationNameClock = "builtin/clock";
+	protected static String locationNameCompass = "builtin/compass";
 
 	protected TextureAnimationCache animationCache = null;
 
@@ -143,7 +148,7 @@ public class EaglerTextureAtlasSprite {
 		return this.iconName;
 	}
 
-	public void updateAnimation() {
+	public void updateAnimation(IFramebufferGL[] copyColorFramebuffer) {
 		if(animationCache == null) {
 			throw new IllegalStateException("Animation cache for '" + this.iconName + "' was never baked!");
 		}
@@ -156,7 +161,7 @@ public class EaglerTextureAtlasSprite {
 			this.tickCounter = 0;
 			int k = this.animationMetadata.getFrameIndex(this.frameCounter);
 			if (i != k && k >= 0 && k < this.framesTextureData.size()) {
-				animationCache.copyFrameLevelsToTex2D(k, this.originX, this.originY, this.width, this.height);
+				animationCache.copyFrameLevelsToTex2D(k, this.originX, this.originY, this.width, this.height, copyColorFramebuffer);
 			}
 		} else if (this.animationMetadata.isInterpolate()) {
 			float f = 1.0f - (float) this.tickCounter / (float) this.animationMetadata.getFrameTimeSingle(this.frameCounter);
@@ -165,7 +170,7 @@ public class EaglerTextureAtlasSprite {
 					: this.animationMetadata.getFrameCount();
 			int k = this.animationMetadata.getFrameIndex((this.frameCounter + 1) % j);
 			if (i != k && k >= 0 && k < this.framesTextureData.size()) {
-				animationCache.copyInterpolatedFrameLevelsToTex2D(i, k, f, this.originX, this.originY, this.width, this.height);
+				animationCache.copyInterpolatedFrameLevelsToTex2D(i, k, f, this.originX, this.originY, this.width, this.height, copyColorFramebuffer);
 			}
 		}
 	}
@@ -292,20 +297,19 @@ public class EaglerTextureAtlasSprite {
 			if(animationCache == null) {
 				animationCache = new TextureAnimationCache(width, height, mipLevels);
 			}
-			animationCache.initialize(framesTextureData, animationMetadata.isInterpolate());
+			animationCache.initialize(framesTextureData);
 		}
 	}
 
-	private void allocateFrameTextureData(int index) {
+	protected void allocateFrameTextureData(int index) {
 		if (this.framesTextureData.size() <= index) {
 			for (int i = this.framesTextureData.size(); i <= index; ++i) {
 				this.framesTextureData.add((int[][]) null);
 			}
-
 		}
 	}
 
-	private static int[][] getFrameTextureData(int[][] data, int rows, int columns, int parInt3) {
+	protected static int[][] getFrameTextureData(int[][] data, int rows, int columns, int parInt3) {
 		int[][] aint = new int[data.length][];
 
 		for (int i = 0; i < data.length; ++i) {
@@ -335,7 +339,7 @@ public class EaglerTextureAtlasSprite {
 		this.framesTextureData = newFramesTextureData;
 	}
 
-	private void resetSprite() {
+	protected void resetSprite() {
 		this.animationMetadata = null;
 		this.setFramesTextureData(Lists.newArrayList());
 		this.frameCounter = 0;
@@ -351,5 +355,24 @@ public class EaglerTextureAtlasSprite {
 				+ ", rotated=" + this.rotated + ", x=" + this.originX + ", y=" + this.originY + ", height="
 				+ this.height + ", width=" + this.width + ", u0=" + this.minU + ", u1=" + this.maxU + ", v0="
 				+ this.minV + ", v1=" + this.maxV + '}';
+	}
+
+	public void loadSpritePBR(ImageData[][] imageDatas, AnimationMetadataSection animationmetadatasection,
+			boolean dontAnimateNormals, boolean dontAnimateMaterial) {
+		Throwable t = new UnsupportedOperationException("PBR is not enabled");
+		try {
+			throw t;
+		}catch(Throwable tt) {
+			logger.error(t);
+		}
+	}
+
+	public void updateAnimationPBR(IFramebufferGL[] copyColorFramebuffer, IFramebufferGL[] copyMaterialFramebuffer, int materialTexOffset) {
+		Throwable t = new UnsupportedOperationException("PBR is not enabled");
+		try {
+			throw t;
+		}catch(Throwable tt) {
+			logger.error(t);
+		}
 	}
 }

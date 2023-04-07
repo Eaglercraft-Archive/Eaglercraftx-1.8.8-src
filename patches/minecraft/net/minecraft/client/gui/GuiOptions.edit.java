@@ -5,26 +5,25 @@
 # Version: 1.0
 # Author: lax1dude
 
-> CHANGE  2 : 4  @  2 : 3
+> CHANGE  2 : 7  @  2 : 24
 
 ~ import net.lax1dude.eaglercraft.v1_8.EagRuntime;
+~ import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.EaglerDeferredPipeline;
+~ import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.gui.GuiShaderConfig;
+~ import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.gui.GuiShadersNotSupported;
 ~ import net.lax1dude.eaglercraft.v1_8.vfs.SYS;
-
-> DELETE  4  @  4 : 21
 
 > DELETE  2  @  2 : 3
 
-> INSERT  12 : 14  @  12
+> INSERT  12 : 13  @  12
 
-+ 	private GuiButton notSoSuperSecret;
 + 	private GuiButton broadcastSettings;
 
-> CHANGE  46 : 48  @  46 : 48
+> CHANGE  47 : 48  @  47 : 59
 
-~ 		this.buttonList.add(notSoSuperSecret = new GuiButton(8675309, this.width / 2 + 5, this.height / 6 + 48 - 6, 150,
-~ 				20, "Super Secret Settings...") {
+~ 				I18n.format("shaders.gui.optionsButton")));
 
-> CHANGE  13 : 16  @  13 : 15
+> CHANGE  2 : 5  @  2 : 4
 
 ~ 		this.buttonList.add(broadcastSettings = new GuiButton(107, this.width / 2 + 5, this.height / 6 + 72 - 6, 150,
 ~ 				20, I18n.format(EagRuntime.getRecText(), new Object[0])));
@@ -53,9 +52,14 @@
 
 ~ 	protected void actionPerformed(GuiButton parGuiButton) {
 
-> CHANGE  32 : 33  @  32 : 33
+> CHANGE  32 : 38  @  32 : 33
 
-~ 				notSoSuperSecret.displayString = "Nope!";
+~ 				if (EaglerDeferredPipeline.isSupported()) {
+~ 					this.mc.displayGuiScreen(new GuiShaderConfig(this));
+~ 				} else {
+~ 					this.mc.displayGuiScreen(new GuiShadersNotSupported(this,
+~ 							I18n.format(EaglerDeferredPipeline.getReasonUnsupported())));
+~ 				}
 
 > DELETE  22  @  22 : 27
 

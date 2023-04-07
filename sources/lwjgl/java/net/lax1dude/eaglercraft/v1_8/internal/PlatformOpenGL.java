@@ -70,6 +70,10 @@ public class PlatformOpenGL {
 		glBlendEquation(glEnum);
 	}
 
+	public static final void _wglBlendColor(float r, float g, float b, float a) {
+		glBlendColor(r, g, b, a);
+	}
+
 	public static final void _wglColorMask(boolean r, boolean g, boolean b, boolean a) {
 		glColorMask(r, g, b, a);
 	}
@@ -233,6 +237,12 @@ public class PlatformOpenGL {
 		glTexParameteri(target, param, value);
 	}
 
+	public static final void _wglTexImage3D(int target, int level, int internalFormat, int width, int height, int depth,
+			int border, int format, int type, ByteBuffer data) {
+		nglTexImage3D(target, level, internalFormat, width, height, depth, border, format, type,
+				data == null ? 0l : EaglerLWJGLAllocator.getAddress(data));
+	}
+
 	public static final void _wglTexImage2D(int target, int level, int internalFormat, int width, int height,
 			int border, int format, int type, ByteBuffer data) {
 		nglTexImage2D(target, level, internalFormat, width, height, border, format, type,
@@ -251,15 +261,21 @@ public class PlatformOpenGL {
 				data == null ? 0l : EaglerLWJGLAllocator.getAddress(data));
 	}
 
+	public static final void _wglTexImage2Du16(int target, int level, int internalFormat, int width, int height,
+			int border, int format, int type, ByteBuffer data) {
+		nglTexImage2D(target, level, internalFormat, width, height, border, format, type,
+				data == null ? 0l : EaglerLWJGLAllocator.getAddress(data));
+	}
+
 	public static final void _wglTexSubImage2D(int target, int level, int xoffset, int yoffset, int width, int height,
 			int format, int type, ByteBuffer data) {
-		glTexSubImage2D(target, level, xoffset, yoffset, width, height, format, type,
+		nglTexSubImage2D(target, level, xoffset, yoffset, width, height, format, type,
 				data == null ? 0l : EaglerLWJGLAllocator.getAddress(data));
 	}
 
 	public static final void _wglTexSubImage2D(int target, int level, int xoffset, int yoffset, int width, int height,
 			int format, int type, IntBuffer data) {
-		glTexSubImage2D(target, level, xoffset, yoffset, width, height, format, type,
+		nglTexSubImage2D(target, level, xoffset, yoffset, width, height, format, type,
 				data == null ? 0l : EaglerLWJGLAllocator.getAddress(data));
 	}
 
@@ -269,9 +285,19 @@ public class PlatformOpenGL {
 				data == null ? 0l : EaglerLWJGLAllocator.getAddress(data));
 	}
 
+	public static final void _wglTexSubImage2Du16(int target, int level, int xoffset, int yoffset, int width, int height,
+			int format, int type, ByteBuffer data) {
+		nglTexSubImage2D(target, level, xoffset, yoffset, width, height, format, type,
+				data == null ? 0l : EaglerLWJGLAllocator.getAddress(data));
+	}
+
 	public static final void _wglCopyTexSubImage2D(int target, int level, int xoffset, int yoffset, int x, int y,
 			int width, int height) {
 		glCopyTexSubImage2D(target, level, xoffset, yoffset, x, y, width, height);
+	}
+
+	public static final void _wglTexStorage2D(int target, int levels, int internalFormat, int w, int h) {
+		glTexStorage2D(target, levels, internalFormat, w, h);
 	}
 
 	public static final void _wglPixelStorei(int pname, int value) {
@@ -351,6 +377,18 @@ public class PlatformOpenGL {
 		return loc < 0 ? null : new OpenGLObjects.UniformGL(loc);
 	}
 
+	public static final int _wglGetUniformBlockIndex(IProgramGL obj, String name) {
+		return glGetUniformBlockIndex(((OpenGLObjects.ProgramGL) obj).ptr, name);
+	}
+
+	public static final void _wglBindBufferRange(int target, int index, IBufferGL buffer, int offset, int size) {
+		glBindBufferRange(target, index, ((OpenGLObjects.BufferGL) buffer).ptr, offset, size);
+	}
+
+	public static final void _wglUniformBlockBinding(IProgramGL obj, int blockIndex, int bufferIndex) {
+		glUniformBlockBinding(((OpenGLObjects.ProgramGL) obj).ptr, blockIndex, bufferIndex);
+	}
+
 	public static final void _wglUniform1f(IUniformGL obj, float x) {
 		if (obj != null)
 			glUniform1f(((OpenGLObjects.UniformGL) obj).ptr, x);
@@ -403,14 +441,36 @@ public class PlatformOpenGL {
 					EaglerLWJGLAllocator.getAddress(mat));
 	}
 
+	public static final void _wglUniformMatrix3x2fv(IUniformGL obj, boolean transpose, FloatBuffer mat) {
+		if (obj != null)
+			nglUniformMatrix3x2fv(((OpenGLObjects.UniformGL) obj).ptr, mat.remaining() / 6, transpose,
+					EaglerLWJGLAllocator.getAddress(mat));
+	}
+
 	public static final void _wglUniformMatrix4fv(IUniformGL obj, boolean transpose, FloatBuffer mat) {
 		if (obj != null)
 			nglUniformMatrix4fv(((OpenGLObjects.UniformGL) obj).ptr, mat.remaining() >> 4, transpose,
 					EaglerLWJGLAllocator.getAddress(mat));
 	}
 
+	public static final void _wglUniformMatrix4x2fv(IUniformGL obj, boolean transpose, FloatBuffer mat) {
+		if (obj != null)
+			nglUniformMatrix4x2fv(((OpenGLObjects.UniformGL) obj).ptr, mat.remaining() >> 3, transpose,
+					EaglerLWJGLAllocator.getAddress(mat));
+	}
+
+	public static final void _wglUniformMatrix4x3fv(IUniformGL obj, boolean transpose, FloatBuffer mat) {
+		if (obj != null)
+			nglUniformMatrix4x3fv(((OpenGLObjects.UniformGL) obj).ptr, mat.remaining() / 12, transpose,
+					EaglerLWJGLAllocator.getAddress(mat));
+	}
+
 	public static final void _wglBindFramebuffer(int target, IFramebufferGL framebuffer) {
-		glBindFramebuffer(target, framebuffer == null ? 0 : ((OpenGLObjects.FramebufferGL) framebuffer).ptr);
+		if(framebuffer == null) {
+			glBindFramebuffer(target, 0);
+		}else {
+			glBindFramebuffer(target, ((OpenGLObjects.FramebufferGL) framebuffer).ptr);
+		}
 	}
 
 	public static final int _wglCheckFramebufferStatus(int target) {
@@ -420,6 +480,10 @@ public class PlatformOpenGL {
 	public static final void _wglFramebufferTexture2D(int target, int attachment, int texTarget, ITextureGL texture,
 			int level) {
 		glFramebufferTexture2D(target, attachment, texTarget, ((OpenGLObjects.TextureGL) texture).ptr, level);
+	}
+
+	public static final void _wglFramebufferTextureLayer(int target, int attachment, ITextureGL texture, int level, int layer) {
+		glFramebufferTextureLayer(target, attachment, ((OpenGLObjects.TextureGL) texture).ptr, level, layer);
 	}
 
 	public static final void _wglBlitFramebuffer(int srcX0, int srcY0, int srcX1, int srcY1, int dstX0, int dstY0,
@@ -451,6 +515,10 @@ public class PlatformOpenGL {
 
 	public static final int _wglGetError() {
 		return glGetError();
+	}
+
+	public static final boolean checkHDRFramebufferSupport(int bits) {
+		return true;
 	}
 
 }

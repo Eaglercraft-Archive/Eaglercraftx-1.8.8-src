@@ -143,11 +143,11 @@ import org.apache.commons.lang3.StringUtils;
  * </p>
  *
  * @since 2.2
- * @deprecated as of 3.6, use commons-text <a href=
+ * @!deprecated as of 3.6, use commons-text <a href=
  *             "https://commons.apache.org/proper/commons-text/javadocs/api-release/org/apache/commons/text/StringSubstitutor.html">
  *             StringSubstitutor</a> instead
  */
-@Deprecated
+//@Deprecated
 public class StrSubstitutor {
 
 	/**

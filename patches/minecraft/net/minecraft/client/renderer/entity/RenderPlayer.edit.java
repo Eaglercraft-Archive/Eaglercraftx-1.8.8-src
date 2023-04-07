@@ -80,4 +80,8 @@
 ~ 			((ModelPlayer) modelplayer).renderLeftArm();
 ~ 		}
 
+> CHANGE  2 : 3  @  2 : 3
+
+~ 	public void renderLivingAt(AbstractClientPlayer abstractclientplayer, double d0, double d1, double d2) {
+
 > EOF

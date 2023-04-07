@@ -12,7 +12,7 @@
 ~ eaglercraft.recording.start=Record Screen...
 ~ eaglercraft.soundCategory.voice=Voice
 
-> INSERT  1 : 68  @  1
+> INSERT  1 : 179  @  1
 
 + eaglercraft.resourcePack.prompt.title=What do you want to do with '%s'?
 + eaglercraft.resourcePack.prompt.text=Tip: Hold Shift to skip this screen when selecting a resource pack!
@@ -71,6 +71,10 @@
 + eaglercraft.options.fog=Fog
 + eaglercraft.options.fxaa=FXAA Antialiasing
 + eaglercraft.options.fxaa.auto=Auto
++ eaglercraft.options.fastMath=Fast Math
++ eaglercraft.options.fastMath.0=OFF
++ eaglercraft.options.fastMath.1=Low
++ eaglercraft.options.fastMath.2=High
 + 
 + eaglercraft.key.function=Function
 + eaglercraft.key.zoomCamera=Zoom Camera
@@ -80,6 +84,113 @@
 + 
 + eaglercraft.auth.required=Authentication Required
 + eaglercraft.auth.continue=Join Server
++ 
++ eaglercraft.shaders.gui.optionsButton=Shaders
++ eaglercraft.shaders.gui.title=Shaders
++ eaglercraft.shaders.gui.enable=Enable Shaders
++ eaglercraft.shaders.gui.headerTier1=Simple Effects (fast)
++ eaglercraft.shaders.gui.headerTier2=Intermediate Effects (not as fast)
++ 
++ 
++ eaglercraft.shaders.gui.option.WAVING_BLOCKS.label=Waving Grass
++ 
++ eaglercraft.shaders.gui.option.WAVING_BLOCKS.desc.0=The classic vanilla shader that make grass and leaf blocks move with the wind
++ eaglercraft.shaders.gui.option.WAVING_BLOCKS.desc.2=ON: slower, complex control flow
++ eaglercraft.shaders.gui.option.WAVING_BLOCKS.desc.3=OFF: faster, simple control flow
++ 
++ eaglercraft.shaders.gui.option.DYNAMIC_LIGHTS.label=Dynamic Lights
++ 
++ eaglercraft.shaders.gui.option.DYNAMIC_LIGHTS.desc.0=Items like torches, glowstone, jack o'lanterns, etc. light up the area around them when they are held or dropped
++ eaglercraft.shaders.gui.option.DYNAMIC_LIGHTS.desc.2=This feature usually does not affect FPS unless there is a large number of dynamic light sources close to the player
++ eaglercraft.shaders.gui.option.DYNAMIC_LIGHTS.desc.4=ON: enable dynamic lights
++ eaglercraft.shaders.gui.option.DYNAMIC_LIGHTS.desc.5=OFF: disable dynamic lights
++ 
++ eaglercraft.shaders.gui.option.GLOBAL_AMBIENT_OCCLUSION.label=Global SSAO
++ 
++ eaglercraft.shaders.gui.option.GLOBAL_AMBIENT_OCCLUSION.desc.0=Applies realistic screenspace ambient occlusion (SSAO) to areas of the screen that vanilla Minecraft's default "Smooth Lighting" feature cannot
++ eaglercraft.shaders.gui.option.GLOBAL_AMBIENT_OCCLUSION.desc.2=This effect can greatly reduce lag spikes caused by chunk updates in exchange for a decreased maximum FPS when standing still
++ eaglercraft.shaders.gui.option.GLOBAL_AMBIENT_OCCLUSION.desc.4=ON: use SSAO
++ eaglercraft.shaders.gui.option.GLOBAL_AMBIENT_OCCLUSION.desc.5=OFF: use vanilla
++ 
++ eaglercraft.shaders.gui.option.SHADOWS_SUN.label=Sun Shadow Dist
++ 
++ eaglercraft.shaders.gui.option.SHADOWS_SUN.desc.0=Makes the sun and moon cast shadows on the world, you almost definitely want to enable this
++ eaglercraft.shaders.gui.option.SHADOWS_SUN.desc.2=0: off
++ eaglercraft.shaders.gui.option.SHADOWS_SUN.desc.3=1: 16 blocks
++ eaglercraft.shaders.gui.option.SHADOWS_SUN.desc.4=2: 32 blocks
++ eaglercraft.shaders.gui.option.SHADOWS_SUN.desc.5=3: 64 blocks
++ eaglercraft.shaders.gui.option.SHADOWS_SUN.desc.6=4: 128 blocks
++ 
++ eaglercraft.shaders.gui.option.SHADOWS_COLORED.label=Color Shadow
++ 
++ eaglercraft.shaders.gui.option.SHADOWS_COLORED.desc.0=Makes blocks like stained glass cast colored shadows
++ eaglercraft.shaders.gui.option.SHADOWS_COLORED.desc.2=ON: colored shadows (slower)
++ eaglercraft.shaders.gui.option.SHADOWS_COLORED.desc.3=OFF: grayscale shadows (faster)
++ 
++ eaglercraft.shaders.gui.option.SHADOWS_SMOOTHED.label=Smooth Shadow
++ 
++ eaglercraft.shaders.gui.option.SHADOWS_SMOOTHED.desc.0=Smooths out the edges of sun and dynamic light shadows to get rid of aliasing
++ eaglercraft.shaders.gui.option.SHADOWS_SMOOTHED.desc.2=ON: smooth shadows (slower)
++ eaglercraft.shaders.gui.option.SHADOWS_SMOOTHED.desc.3=OFF: aliased shadows (faster)
++ 
++ eaglercraft.shaders.gui.option.REFLECTIONS_PARABOLOID.label=Env. Mapping
++ 
++ eaglercraft.shaders.gui.option.REFLECTIONS_PARABOLOID.desc.0=Renders an environment map, allows transparent blocks and moving entities to reflect their surroundings
++ eaglercraft.shaders.gui.option.REFLECTIONS_PARABOLOID.desc.2=Uses dual paraboloid mapping, only 2 render passes are required to render all reflections, instead of a full 6 render passes like a conventional cube map
++ eaglercraft.shaders.gui.option.REFLECTIONS_PARABOLOID.desc.4=ON: render env. map (slower)
++ eaglercraft.shaders.gui.option.REFLECTIONS_PARABOLOID.desc.5=OFF: disable env. map (faster)
++ 
++ eaglercraft.shaders.gui.option.REALISTIC_WATER.label=Realistic Water
++ 
++ eaglercraft.shaders.gui.option.REALISTIC_WATER.desc.0=Makes water realistic, adds reflection and refraction effects, uses raytracing
++ eaglercraft.shaders.gui.option.REALISTIC_WATER.desc.2=ON: render realistic water (slower)
++ eaglercraft.shaders.gui.option.REALISTIC_WATER.desc.3=OFF: render vanilla water (faster)
++ 
++ eaglercraft.shaders.gui.option.LIGHT_SHAFTS.label=God Rays
++ 
++ eaglercraft.shaders.gui.option.LIGHT_SHAFTS.desc.0=Render god rays (light shafts) for sunlight and moonlight shadows
++ eaglercraft.shaders.gui.option.LIGHT_SHAFTS.desc.2=ON: render god rays (slower)
++ eaglercraft.shaders.gui.option.LIGHT_SHAFTS.desc.3=OFF: disable god rays (faster)
++ 
++ eaglercraft.shaders.gui.option.SCREEN_SPACE_REFLECTIONS.label=Raytracing
++ 
++ eaglercraft.shaders.gui.option.SCREEN_SPACE_REFLECTIONS.desc.0=Renders raytraced reflections off of blocks
++ eaglercraft.shaders.gui.option.SCREEN_SPACE_REFLECTIONS.desc.2=Thanks to some advanced optimizations, this feature only has a small impact on FPS and is compatible with old hardware
++ eaglercraft.shaders.gui.option.SCREEN_SPACE_REFLECTIONS.desc.4=Both raymarching and raytracing are employed, raymarching is initially used to locate and track groups of pixels on the screen to reflect, then raytracing is used to reproject that data between multiple frames so the raymarching process only has to be repeated once or twice every few seconds
++ eaglercraft.shaders.gui.option.SCREEN_SPACE_REFLECTIONS.desc.6=ON: enable raytracing (slower)
++ eaglercraft.shaders.gui.option.SCREEN_SPACE_REFLECTIONS.desc.7=OFF: disable raytracing (faster)
++ 
++ eaglercraft.shaders.gui.option.LIGHT_SHAFTS.desc.0=Render god rays (light shafts) for sunlight and moonlight shadows
++ eaglercraft.shaders.gui.option.LIGHT_SHAFTS.desc.2=ON: render god rays (slower)
++ eaglercraft.shaders.gui.option.LIGHT_SHAFTS.desc.3=OFF: disable god rays (faster)
++ 
++ eaglercraft.shaders.gui.option.POST_LENS_DISTORION.label=Lens Distort
++ 
++ eaglercraft.shaders.gui.option.POST_LENS_DISTORION.desc.0=Renders chromatic abberation and lens distorion
++ eaglercraft.shaders.gui.option.POST_LENS_DISTORION.desc.2=ON: render lens distortion (slower)
++ eaglercraft.shaders.gui.option.POST_LENS_DISTORION.desc.3=OFF: disable lens distortion (faster)
++ 
++ eaglercraft.shaders.gui.option.POST_LENS_FLARES.label=Lens Flares
++ 
++ eaglercraft.shaders.gui.option.POST_LENS_FLARES.desc.0=Renders filmic lens flares for the sun
++ eaglercraft.shaders.gui.option.POST_LENS_FLARES.desc.2=ON: render lens flares (slower)
++ eaglercraft.shaders.gui.option.POST_LENS_FLARES.desc.3=OFF: disable lens flares (faster)
++ 
++ eaglercraft.shaders.gui.option.POST_BLOOM.label=Bloom
++ 
++ eaglercraft.shaders.gui.option.POST_BLOOM.desc.0=Renders bloom for emissive textures and sunlight
++ eaglercraft.shaders.gui.option.POST_BLOOM.desc.2=ON: render bloom (slower)
++ eaglercraft.shaders.gui.option.POST_BLOOM.desc.3=OFF: disable bloom (faster)
++ 
++ eaglercraft.shaders.gui.option.POST_FXAA.label=FXAA
++ 
++ eaglercraft.shaders.gui.option.POST_FXAA.desc.0=Applies FXAA antialiasing in post processing
++ eaglercraft.shaders.gui.option.POST_FXAA.desc.2=This is the preferred antialiasing method for minecraft, as classical MSAA cannot antialias the pixels of upscaled textures
++ eaglercraft.shaders.gui.option.POST_FXAA.desc.4=ON: enable fxaa (slower)
++ eaglercraft.shaders.gui.option.POST_FXAA.desc.5=OFF: disable fxaa (faster)
++ 
++ eaglercraft.shaders.gui.unsupported.title=Shaders are unavailable on this device!
++ eaglercraft.shaders.gui.unsupported.reason.hdrFramebuffer=Reason: No HDR render target support
 + 
 
 > CHANGE  468 : 469  @  468 : 469

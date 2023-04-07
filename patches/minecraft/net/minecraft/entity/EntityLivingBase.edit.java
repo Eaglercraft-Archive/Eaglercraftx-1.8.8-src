@@ -17,7 +17,9 @@
 ~ import com.google.common.collect.Maps;
 ~ 
 
-> DELETE  2  @  2 : 3
+> CHANGE  2 : 3  @  2 : 3
+
+~ import net.minecraft.client.Minecraft;
 
 > DELETE  1  @  1 : 5
 
@@ -107,5 +109,19 @@
 > CHANGE  31 : 32  @  31 : 32
 
 ~ 		return false;
+
+> INSERT  60 : 71  @  60
+
++ 
++ 	protected void renderDynamicLightsEaglerAt(double entityX, double entityY, double entityZ, double renderX,
++ 			double renderY, double renderZ, float partialTicks, boolean isInFrustum) {
++ 		super.renderDynamicLightsEaglerAt(entityX, entityY, entityZ, renderX, renderY, renderZ, partialTicks,
++ 				isInFrustum);
++ 		Minecraft mc = Minecraft.getMinecraft();
++ 		if (mc.gameSettings.thirdPersonView != 0 || !(mc.getRenderViewEntity() == this)) {
++ 			Minecraft.getMinecraft().entityRenderer.renderHeldItemLight(this, 1.0f);
++ 		}
++ 	}
++ 
 
 > EOF

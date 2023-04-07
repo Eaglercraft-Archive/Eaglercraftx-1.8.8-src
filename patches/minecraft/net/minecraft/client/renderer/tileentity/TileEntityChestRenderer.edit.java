@@ -12,11 +12,7 @@
 
 > DELETE  4  @  4 : 6
 
-> INSERT  49 : 50  @  49
-
-+ 
-
-> DELETE  7  @  7 : 9
+> DELETE  56  @  56 : 58
 
 > INSERT  2 : 4  @  2
 

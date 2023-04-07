@@ -5,17 +5,21 @@
 # Version: 1.0
 # Author: lax1dude
 
-> CHANGE  3 : 6  @  3 : 5
+> CHANGE  3 : 8  @  3 : 5
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
 ~ import net.lax1dude.eaglercraft.v1_8.HString;
+~ import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.DynamicLightManager;
+~ 
 
 > INSERT  1 : 2  @  1
 
 + 
 
-> DELETE  7  @  7 : 10
+> CHANGE  7 : 8  @  7 : 10
+
+~ import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 
 > DELETE  4  @  4 : 7
 
@@ -145,5 +149,34 @@
 > DELETE  62  @  62 : 66
 
 > DELETE  51  @  51 : 63
+
+> INSERT  22 : 48  @  22
+
++ 
++ 	public void renderDynamicLightsEagler(float partialTicks, boolean isInFrustum) {
++ 		double entityX = prevPosX + (posX - prevPosX) * (double) partialTicks;
++ 		double entityY = prevPosY + (posY - prevPosY) * (double) partialTicks;
++ 		double entityZ = prevPosZ + (posZ - prevPosZ) * (double) partialTicks;
++ 		double entityX2 = entityX - TileEntityRendererDispatcher.staticPlayerX;
++ 		double entityY2 = entityY - TileEntityRendererDispatcher.staticPlayerY;
++ 		double entityZ2 = entityZ - TileEntityRendererDispatcher.staticPlayerZ;
++ 		if (Math.sqrt(entityX2 * entityX2 + entityY2 * entityY2 + entityZ2 * entityZ2) < 48.0 * 48.0) {
++ 			renderDynamicLightsEaglerAt(entityX, entityY, entityZ, entityX2, entityY2, entityZ2, partialTicks,
++ 					isInFrustum);
++ 		}
++ 	}
++ 
++ 	protected void renderDynamicLightsEaglerAt(double entityX, double entityY, double entityZ, double renderX,
++ 			double renderY, double renderZ, float partialTicks, boolean isInFrustum) {
++ 		if (this.isBurning()) {
++ 			float size = Math.max(width, height);
++ 			if (size < 1.0f && !isInFrustum) {
++ 				return;
++ 			}
++ 			float mag = 5.0f * size;
++ 			DynamicLightManager.renderDynamicLight("entity_" + entityId + "_fire", entityX, entityY + height * 0.75,
++ 					entityZ, mag, 0.487f * mag, 0.1411f * mag, false);
++ 		}
++ 	}
 
 > EOF

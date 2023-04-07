@@ -8,7 +8,7 @@
 > CHANGE  2 : 4  @  2 : 6
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
-~ 
+~ import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.DeferredStateManager;
 
 > CHANGE  104 : 105  @  104 : 105
 
@@ -18,7 +18,14 @@
 
 ~ 	public int quantityDropped(EaglercraftRandom var1) {
 
-> CHANGE  64 : 65  @  64 : 65
+> CHANGE  61 : 65  @  61 : 62
+
+~ 		return this.blockMaterial == Material.water
+~ 				? (DeferredStateManager.isRenderingRealisticWater() ? EnumWorldBlockLayer.REALISTIC_WATER
+~ 						: EnumWorldBlockLayer.TRANSLUCENT)
+~ 				: EnumWorldBlockLayer.SOLID;
+
+> CHANGE  2 : 3  @  2 : 3
 
 ~ 	public void randomDisplayTick(World world, BlockPos blockpos, IBlockState iblockstate, EaglercraftRandom random) {
 

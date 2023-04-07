@@ -12,8 +12,9 @@
 
 > DELETE  3  @  3 : 4
 
-> CHANGE  8 : 9  @  8 : 9
+> CHANGE  7 : 9  @  7 : 9
 
+~ 				this.preRenderChunk(renderchunk, enumworldblocklayer);
 ~ 				EaglercraftGPU.glCallList(
 
 > EOF

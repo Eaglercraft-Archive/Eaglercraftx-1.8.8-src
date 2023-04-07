@@ -54,7 +54,8 @@ public class PlatformApplication {
 	}
 	
 	public static String getClipboard() {
-		return glfwGetClipboardString(win);
+		String str = glfwGetClipboardString(win);
+		return str == null ? "" : str;
 	}
 	
 	public static void setLocalStorage(String name, byte[] data) {

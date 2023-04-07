@@ -12,11 +12,16 @@
 
 > DELETE  3  @  3 : 6
 
-> INSERT  3 : 4  @  3
+> INSERT  3 : 5  @  3
 
++ import net.minecraft.util.EnumWorldBlockLayer;
 + import net.minecraft.util.MathHelper;
 
-> INSERT  90 : 103  @  90
+> INSERT  15 : 16  @  15
+
++ 		this.particleAlpha = state.getBlock().getBlockLayer() == EnumWorldBlockLayer.TRANSLUCENT ? 0.999f : 1.0f;
+
+> INSERT  75 : 88  @  75
 
 + 	public boolean renderAccelerated(IAcceleratedParticleEngine accelerator, Entity var2, float f, float f1, float f2,
 + 			float f3, float f4, float f5) {

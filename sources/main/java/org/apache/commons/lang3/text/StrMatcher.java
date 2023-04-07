@@ -29,11 +29,11 @@ import org.apache.commons.lang3.StringUtils;
  * suffice, you can subclass and implement your own matcher.
  *
  * @since 2.2
- * @deprecated as of 3.6, use commons-text <a href=
+ * @!deprecated as of 3.6, use commons-text <a href=
  *             "https://commons.apache.org/proper/commons-text/javadocs/api-release/org/apache/commons/text/matcher/StringMatcherFactory.html">
  *             StringMatcherFactory</a> instead
  */
-@Deprecated
+//@Deprecated
 public abstract class StrMatcher {
 
 	/**

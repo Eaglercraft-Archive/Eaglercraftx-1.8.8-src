@@ -18,6 +18,7 @@ import org.teavm.jso.webgl.WebGLRenderingContext;
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.EaglercraftVersion;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformRuntime;
+import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.DeferredStateManager;
 import net.lax1dude.eaglercraft.v1_8.profile.EaglerProfile;
 import net.minecraft.client.main.Main;
 
@@ -89,6 +90,8 @@ public class MainClass {
 				if(configLocalesFolder.endsWith("/")) {
 					configLocalesFolder = configLocalesFolder.substring(0, configLocalesFolder.length() - 1);
 				}
+				
+				DeferredStateManager.doCheckErrors = eaglercraftOpts.optBoolean("checkShaderGLErrors", false);
 				
 				((TeaVMClientConfigAdapter)TeaVMClientConfigAdapter.instance).loadJSON(eaglercraftOpts);
 				
@@ -317,10 +320,13 @@ public class MainClass {
 				ret.append("webgl.renderer = ").append(ctx.getParameterString(/* UNMASKED_RENDERER_WEBGL */ 0x9246)).append('\n');
 				ret.append("webgl.vendor = ").append(ctx.getParameterString(/* UNMASKED_VENDOR_WEBGL */ 0x9245)).append('\n');
 			}else {
-				ret.append("webgl.renderer = ").append("" + ctx.getParameterString(WebGLRenderingContext.RENDERER) + " [masked]").append('\n');
-				ret.append("webgl.vendor = ").append("" + ctx.getParameterString(WebGLRenderingContext.VENDOR) + " [masked]").append('\n');
+				ret.append("webgl.renderer = ").append(ctx.getParameterString(WebGLRenderingContext.RENDERER) + " [masked]").append('\n');
+				ret.append("webgl.vendor = ").append(ctx.getParameterString(WebGLRenderingContext.VENDOR) + " [masked]").append('\n');
 			}
-			//ret.append("\nwebgl.anisotropicGlitch = ").append(DetectAnisotropicGlitch.hasGlitch()).append('\n'); //TODO
+			//ret.append('\n').append("\nwebgl.anisotropicGlitch = ").append(DetectAnisotropicGlitch.hasGlitch()).append('\n'); //TODO
+			ret.append('\n').append("webgl.ext.HDR16f = ").append(ctx.getExtension("EXT_color_buffer_half_float") != null).append('\n');
+			ret.append("webgl.ext.HDR32f = ").append(ctx.getExtension("EXT_color_buffer_float") != null).append('\n');
+			
 		}else {
 			ret.append("Failed to query GPU info!\n");
 		}

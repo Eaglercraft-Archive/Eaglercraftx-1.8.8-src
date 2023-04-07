@@ -8,7 +8,7 @@ public class EaglercraftVersion {
 	/// Customize these to fit your fork:
 	
 	public static final String projectForkName = "EaglercraftX";
-	public static final String projectForkVersion = "u17";
+	public static final String projectForkVersion = "u18";
 	public static final String projectForkVendor = "lax1dude";
 	
 	public static final String projectForkURL = "https://gitlab.com/lax1dude/eaglercraftx-1.8";
@@ -23,7 +23,7 @@ public class EaglercraftVersion {
 	public static final String projectOriginName = "EaglercraftX";
 	public static final String projectOriginAuthor = "lax1dude";
 	public static final String projectOriginRevision = "1.8";
-	public static final String projectOriginVersion = "u17";
+	public static final String projectOriginVersion = "u18";
 	
 	public static final String projectOriginURL = "https://gitlab.com/lax1dude/eaglercraftx-1.8";
 	
@@ -32,15 +32,16 @@ public class EaglercraftVersion {
 
 	public static final String mainMenuStringA = "Minecraft 1.8.8";
 	public static final String mainMenuStringB = projectOriginName + " " +
-			projectOriginRevision + "-" + projectOriginVersion;
-	public static final String mainMenuStringC = null;
+			projectOriginRevision + "-" + projectOriginVersion + " ultimate";
+	public static final String mainMenuStringC = "";
 	public static final String mainMenuStringD = "Resources Copyright Mojang AB";
 
 	public static final String mainMenuStringE = projectForkName + " " + projectForkVersion;
 	public static final String mainMenuStringF = "Made by " + projectForkVendor;
 
-	public static final boolean mainMenuEnableGithubButton = true;
-	
-	
+	public static final String mainMenuStringG = "Collector's Edition";
+	public static final String mainMenuStringH = "PBR Shaders";
+
+	public static final boolean mainMenuEnableGithubButton = false;
 
 }

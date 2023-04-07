@@ -17,6 +17,10 @@ import net.minecraft.entity.Entity;
  */
 public interface IAcceleratedParticleEngine {
 
+	void begin(float partialTicks);
+
+	void draw(float texCoordWidth, float texCoordHeight);
+
 	void drawParticle(Entity entityIn, int particleIndexX, int particleIndexY,
 			int lightMapData, int texSize, float particleSize, float r, float g, float b, float a);
 

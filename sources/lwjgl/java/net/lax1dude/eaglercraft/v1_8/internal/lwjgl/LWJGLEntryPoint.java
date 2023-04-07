@@ -7,6 +7,7 @@ import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.EagUtils;
 import net.lax1dude.eaglercraft.v1_8.internal.EnumPlatformANGLE;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformRuntime;
+import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.program.ShaderSource;
 import net.minecraft.client.main.Main;
 
 /**
@@ -44,6 +45,12 @@ public class LWJGLEntryPoint {
 		lr.dispose();
 		
 		getANGLEPlatformFromArgs(args);
+		
+		for(int i = 0; i < args.length; ++i) {
+			if(args[i].equalsIgnoreCase("highp")) {
+				ShaderSource.setHighP(true);
+			}
+		}
 		
 		EagRuntime.create();
 		

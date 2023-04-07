@@ -32,6 +32,8 @@
 package net.lax1dude.eaglercraft.v1_8.vector;
 
 import java.io.Serializable;
+
+import net.lax1dude.eaglercraft.v1_8.internal.buffer.ByteBuffer;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.FloatBuffer;
 
 /**
@@ -284,6 +286,29 @@ public class Matrix4f extends Matrix implements Serializable {
 		buf.put(m31);
 		buf.put(m32);
 		buf.put(m33);
+		return this;
+	}
+
+	/**
+	 * eagler
+	 */
+	public Matrix store(ByteBuffer buf) {
+		buf.putFloat(m00);
+		buf.putFloat(m01);
+		buf.putFloat(m02);
+		buf.putFloat(m03);
+		buf.putFloat(m10);
+		buf.putFloat(m11);
+		buf.putFloat(m12);
+		buf.putFloat(m13);
+		buf.putFloat(m20);
+		buf.putFloat(m21);
+		buf.putFloat(m22);
+		buf.putFloat(m23);
+		buf.putFloat(m30);
+		buf.putFloat(m31);
+		buf.putFloat(m32);
+		buf.putFloat(m33);
 		return this;
 	}
 	

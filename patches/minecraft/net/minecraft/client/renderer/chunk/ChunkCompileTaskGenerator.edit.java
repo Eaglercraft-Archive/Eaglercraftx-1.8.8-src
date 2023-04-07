@@ -7,11 +7,12 @@
 
 > DELETE  2  @  2 : 3
 
-> CHANGE  1 : 4  @  1 : 2
+> CHANGE  1 : 5  @  1 : 2
 
 ~ 
 ~ import com.google.common.collect.Lists;
 ~ 
+~ import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.DeferredStateManager;
 
 > CHANGE  1 : 2  @  1 : 3
 
@@ -57,11 +58,17 @@
 
 > DELETE  2  @  2 : 6
 
-> INSERT  8 : 16  @  8
+> INSERT  8 : 22  @  8
 
 + 	public boolean canExecuteYet() {
 + 		if (this.type == ChunkCompileTaskGenerator.Type.RESORT_TRANSPARENCY) {
-+ 			return !this.renderChunk.getCompiledChunk().isLayerEmpty(EnumWorldBlockLayer.TRANSLUCENT);
++ 			CompiledChunk ch = this.renderChunk.getCompiledChunk();
++ 			if (DeferredStateManager.isRenderingRealisticWater()) {
++ 				return !ch.isLayerEmpty(EnumWorldBlockLayer.TRANSLUCENT)
++ 						|| !ch.isLayerEmpty(EnumWorldBlockLayer.REALISTIC_WATER);
++ 			} else {
++ 				return !ch.isLayerEmpty(EnumWorldBlockLayer.TRANSLUCENT);
++ 			}
 + 		} else {
 + 			return true;
 + 		}

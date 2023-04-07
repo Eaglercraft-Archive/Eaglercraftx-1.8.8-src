@@ -5,9 +5,11 @@
  lax1dude:
  
   - Creator of Eaglercraft
-  - Wrote HW accelerated OpenGL 1.3 emulator
-  - Wrote all desktop emulation code
   - Ported the Minecraft 1.8 client src to TeaVM
+  - Wrote HW accelerated OpenGL 1.3 emulator
+  - Wrote the default shader pack
+  - Made the integrated PBR resource pack
+  - Wrote all desktop emulation code
   - Wrote EaglercraftXBungee
   - Wrote the patch and build system
  

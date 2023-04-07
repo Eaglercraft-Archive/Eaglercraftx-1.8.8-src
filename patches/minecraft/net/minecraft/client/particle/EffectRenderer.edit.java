@@ -7,13 +7,14 @@
 
 > DELETE  2  @  2 : 4
 
-> CHANGE  3 : 6  @  3 : 4
+> CHANGE  3 : 7  @  3 : 4
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ import net.lax1dude.eaglercraft.v1_8.minecraft.AcceleratedEffectRenderer;
+~ import net.lax1dude.eaglercraft.v1_8.minecraft.IAcceleratedParticleEngine;
 ~ 
 
-> INSERT  1 : 7  @  1
+> INSERT  1 : 9  @  1
 
 + 
 + import com.google.common.collect.Lists;
@@ -21,6 +22,8 @@
 + 
 + import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 + import net.lax1dude.eaglercraft.v1_8.opengl.WorldRenderer;
++ import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.DeferredStateManager;
++ import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.GBufferAcceleratedEffectRenderer;
 
 > DELETE  3  @  3 : 36
 
@@ -28,19 +31,48 @@
 
 > DELETE  1  @  1 : 2
 
-> CHANGE  20 : 21  @  20 : 21
+> INSERT  16 : 18  @  16
+
++ 	private static final ResourceLocation particleMaterialsTextures = new ResourceLocation(
++ 			"eagler:glsl/deferred/particles_s.png");
+
+> CHANGE  4 : 5  @  4 : 5
 
 ~ 	private EaglercraftRandom rand = new EaglercraftRandom();
 
-> INSERT  2 : 4  @  2
+> INSERT  2 : 5  @  2
 
-+ 	private AcceleratedEffectRenderer acceleratedParticleRenderer = new AcceleratedEffectRenderer();
++ 	public static final AcceleratedEffectRenderer vanillaAcceleratedParticleRenderer = new AcceleratedEffectRenderer();
++ 	public IAcceleratedParticleEngine acceleratedParticleRenderer = vanillaAcceleratedParticleRenderer;
 + 
 
-> CHANGE  170 : 172  @  170 : 172
+> CHANGE  157 : 167  @  157 : 158
+
+~ 	public boolean hasParticlesInAlphaLayer() {
+~ 		for (int i = 0; i < 3; ++i) {
+~ 			if (!this.fxLayers[i][0].isEmpty()) {
+~ 				return true;
+~ 			}
+~ 		}
+~ 		return false;
+~ 	}
+~ 
+~ 	public void renderParticles(Entity entityIn, float partialTicks, int pass) {
+
+> CHANGE  8 : 12  @  8 : 10
+
+~ 		if (!DeferredStateManager.isDeferredRenderer()) {
+~ 			GlStateManager.enableBlend();
+~ 			GlStateManager.blendFunc(770, 771);
+~ 		}
+
+> CHANGE  2 : 7  @  2 : 4
 
 ~ 		for (int i = 0; i < 3; ++i) {
 ~ 			for (int j = 1; j >= 0; --j) {
+~ 				if (pass != 2 && j != pass) {
+~ 					continue;
+~ 				}
 
 > CHANGE  1 : 8  @  1 : 8
 
@@ -57,11 +89,24 @@
 + 					float texCoordWidth = 0.001f;
 + 					float texCoordHeight = 0.001f;
 
-> INSERT  4 : 5  @  4
+> INSERT  3 : 4  @  3
 
++ 						GBufferAcceleratedEffectRenderer.isMaterialNormalTexture = false;
+
+> INSERT  1 : 7  @  1
+
++ 						if (DeferredStateManager.isDeferredRenderer()) {
++ 							GlStateManager.setActiveTexture(33986);
++ 							this.renderer.bindTexture(particleMaterialsTextures);
++ 							GlStateManager.setActiveTexture(33984);
++ 						}
 + 						texCoordWidth = texCoordHeight = 1.0f / 256.0f;
 
-> INSERT  3 : 6  @  3
+> INSERT  2 : 3  @  2
+
++ 						GBufferAcceleratedEffectRenderer.isMaterialNormalTexture = true;
+
+> INSERT  1 : 4  @  1
 
 + 						TextureMap blockMap = (TextureMap) this.renderer.getTexture(TextureMap.locationBlocksTexture);
 + 						texCoordWidth = 1.0f / blockMap.getWidth();

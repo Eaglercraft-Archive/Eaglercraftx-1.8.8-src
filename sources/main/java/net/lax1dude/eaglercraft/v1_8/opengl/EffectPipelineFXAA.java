@@ -75,12 +75,12 @@ public class EffectPipelineFXAA {
 
 		shaderProgram = _wglCreateProgram();
 
-		_wglAttachShader(shaderProgram, SpriteLevelMixer.vshLocal);
+		_wglAttachShader(shaderProgram, DrawUtils.vshLocal);
 		_wglAttachShader(shaderProgram, frag);
 
 		_wglLinkProgram(shaderProgram);
 
-		_wglDetachShader(shaderProgram, SpriteLevelMixer.vshLocal);
+		_wglDetachShader(shaderProgram, DrawUtils.vshLocal);
 		_wglDetachShader(shaderProgram, frag);
 
 		_wglDeleteShader(frag);
@@ -144,14 +144,13 @@ public class EffectPipelineFXAA {
 	public static void end() {
 		_wglBindFramebuffer(_GL_FRAMEBUFFER, null);
 
-		EaglercraftGPU.bindGLBufferArray(SpriteLevelMixer.vertexArray);
 		EaglercraftGPU.bindGLShaderProgram(shaderProgram);
 
 		GlStateManager.bindTexture(framebufferColor);
 
 		_wglUniform2f(u_screenSize2f, 1.0f / currentWidth, 1.0f / currentHeight);
 
-		_wglDrawArrays(GL_TRIANGLES, 0, 6);
+		DrawUtils.drawStandardQuad2D();
 	}
 
 }

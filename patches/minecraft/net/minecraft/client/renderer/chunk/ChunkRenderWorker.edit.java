@@ -5,11 +5,12 @@
 # Version: 1.0
 # Author: lax1dude
 
-> CHANGE  2 : 5  @  2 : 9
+> CHANGE  2 : 6  @  2 : 9
 
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 ~ import net.lax1dude.eaglercraft.v1_8.minecraft.ChunkUpdateManager;
+~ import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.DeferredStateManager;
 
 > DELETE  2  @  2 : 6
 
@@ -66,11 +67,7 @@
 + 			generator.setStatus(ChunkCompileTaskGenerator.Status.UPLOADING);
 + 
 
-> CHANGE  1 : 4  @  1 : 2
-
-~ 			if (compiledchunk == null) {
-~ 				System.out.println(chunkcompiletaskgenerator$type);
-~ 			}
+> DELETE  1  @  1 : 2
 
 > CHANGE  2 : 4  @  2 : 4
 
@@ -87,9 +84,15 @@
 
 ~ 				this.chunkRenderDispatcher.uploadChunk(
 
-> CHANGE  2 : 5  @  2 : 3
+> CHANGE  2 : 11  @  2 : 3
 
 ~ 						generator.getRenderChunk(), compiledchunk);
+~ 				if (DeferredStateManager.isRenderingRealisticWater()) {
+~ 					this.chunkRenderDispatcher.uploadChunk(
+~ 							EnumWorldBlockLayer.REALISTIC_WATER, generator.getRegionRenderCacheBuilder()
+~ 									.getWorldRendererByLayer(EnumWorldBlockLayer.REALISTIC_WATER),
+~ 							generator.getRenderChunk(), compiledchunk);
+~ 				}
 ~ 				generator.getRenderChunk().setCompiledChunk(compiledchunk);
 ~ 				generator.setStatus(ChunkCompileTaskGenerator.Status.DONE);
 

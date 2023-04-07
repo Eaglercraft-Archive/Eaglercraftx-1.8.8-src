@@ -2,9 +2,11 @@ package net.lax1dude.eaglercraft.v1_8.internal;
 
 import java.net.URI;
 import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
 
 import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.drafts.Draft;
+import org.java_websocket.drafts.Draft_6455;
+import org.java_websocket.extensions.permessage_deflate.PerMessageDeflateExtension;
 import org.java_websocket.handshake.ServerHandshake;
 
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
@@ -24,12 +26,15 @@ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
  * 
  */
 class WebSocketPlayClient extends WebSocketClient {
+
+	private static final Draft perMessageDeflateDraft = new Draft_6455(new PerMessageDeflateExtension());
 	
 	public static final Logger logger = LogManager.getLogger("WebSocket");
 
 	WebSocketPlayClient(URI serverUri) {
-		super(serverUri);
+		super(serverUri, perMessageDeflateDraft);
 		this.setConnectionLostTimeout(15);
+		this.setTcpNoDelay(true);
 	}
 
 	@Override

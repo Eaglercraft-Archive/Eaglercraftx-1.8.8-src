@@ -227,6 +227,35 @@ public class PlatformAudio {
 			return null;
 		}
 	}
+
+	public static interface IAudioCacheLoader {
+		byte[] loadFile(String filename);
+	}
+
+	public static IAudioResource loadAudioDataNew(String filename, boolean holdInCache, IAudioCacheLoader loader) {
+		BrowserAudioResource buffer;
+		synchronized(soundCache) {
+			buffer = soundCache.get(filename);
+		}
+		if(buffer == null) {
+			byte[] file = loader.loadFile(filename);
+			if(file == null) return null;
+			Uint8Array buf = Uint8Array.create(file.length);
+			buf.set(file);
+			buffer = new BrowserAudioResource(decodeAudioAsync(buf.getBuffer(), filename));
+			if(holdInCache) {
+				synchronized(soundCache) {
+					soundCache.put(filename, buffer);
+				}
+			}
+		}
+		if(buffer.buffer != null) {
+			buffer.cacheHit = System.currentTimeMillis();
+			return buffer;
+		}else {
+			return null;
+		}
+	}
 	
 	@Async
 	public static native AudioBuffer decodeAudioAsync(ArrayBuffer buffer, String errorFileName);
@@ -258,6 +287,12 @@ public class PlatformAudio {
 					}
 				}
 			}
+		}
+	}
+
+	public static void flushAudioCache() {
+		synchronized(soundCache) {
+			soundCache.clear();
 		}
 	}
 	

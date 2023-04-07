@@ -15,8 +15,8 @@
  */
 
 precision lowp int;
-precision lowp float;
-precision lowp sampler2D;
+precision highp float;
+precision highp sampler2D;
 
 in vec2 v_position2f;
 

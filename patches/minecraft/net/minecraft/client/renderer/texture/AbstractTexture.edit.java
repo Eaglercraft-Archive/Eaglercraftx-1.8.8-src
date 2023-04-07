@@ -14,25 +14,20 @@
 + import net.lax1dude.eaglercraft.v1_8.opengl.EaglercraftGPU;
 + 
 
-> CHANGE  8 : 20  @  8 : 19
+> CHANGE  8 : 16  @  8 : 10
 
 ~ 		if (blur != parFlag || mipmap != parFlag2) {
 ~ 			this.blur = parFlag;
 ~ 			this.mipmap = parFlag2;
-~ 			int i = -1;
-~ 			short short1 = -1;
-~ 			if (parFlag) {
-~ 				i = parFlag2 ? 9987 : 9729;
-~ 				short1 = 9729;
-~ 			} else {
-~ 				i = parFlag2 ? 9986 : 9728;
-~ 				short1 = 9728;
-~ 			}
-
-> CHANGE  1 : 4  @  1 : 3
-
-~ 			EaglercraftGPU.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, i);
-~ 			EaglercraftGPU.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, short1);
+~ 			setBlurMipmapDirect0(parFlag, parFlag2);
 ~ 		}
+~ 	}
+~ 
+~ 	protected void setBlurMipmapDirect0(boolean parFlag, boolean parFlag2) {
+
+> CHANGE  10 : 12  @  10 : 12
+
+~ 		EaglercraftGPU.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, i);
+~ 		EaglercraftGPU.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, short1);
 
 > EOF

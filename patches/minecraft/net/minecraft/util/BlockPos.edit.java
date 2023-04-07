@@ -15,9 +15,87 @@
 
 > DELETE  1  @  1 : 5
 
-> INSERT  103 : 120  @  103
+> INSERT  55 : 65  @  55
 
-+ 	public BlockPos offsetFaster(EnumFacing facing, MutableBlockPos ret) {
++ 	/**
++ 	 * eagler
++ 	 */
++ 	public BlockPos up(BlockPos dst) {
++ 		dst.x = x;
++ 		dst.y = y + 1;
++ 		dst.z = z;
++ 		return dst;
++ 	}
++ 
+
+> INSERT  8 : 18  @  8
+
++ 	/**
++ 	 * eagler
++ 	 */
++ 	public BlockPos down(BlockPos dst) {
++ 		dst.x = x;
++ 		dst.y = y - 1;
++ 		dst.z = z;
++ 		return dst;
++ 	}
++ 
+
+> INSERT  8 : 18  @  8
+
++ 	/**
++ 	 * eagler
++ 	 */
++ 	public BlockPos north(BlockPos dst) {
++ 		dst.x = x;
++ 		dst.y = y;
++ 		dst.z = z - 1;
++ 		return dst;
++ 	}
++ 
+
+> INSERT  8 : 18  @  8
+
++ 	/**
++ 	 * eagler
++ 	 */
++ 	public BlockPos south(BlockPos dst) {
++ 		dst.x = x;
++ 		dst.y = y;
++ 		dst.z = z + 1;
++ 		return dst;
++ 	}
++ 
+
+> INSERT  12 : 22  @  12
+
++ 	/**
++ 	 * eagler
++ 	 */
++ 	public BlockPos west(BlockPos dst) {
++ 		dst.x = x - 1;
++ 		dst.y = y;
++ 		dst.z = z;
++ 		return dst;
++ 	}
++ 
+
+> INSERT  8 : 18  @  8
+
++ 	/**
++ 	 * eagler
++ 	 */
++ 	public BlockPos east(BlockPos dst) {
++ 		dst.x = x + 1;
++ 		dst.y = y;
++ 		dst.z = z;
++ 		return dst;
++ 	}
++ 
+
+> INSERT  4 : 21  @  4
+
++ 	public BlockPos offsetFaster(EnumFacing facing, BlockPos ret) {
 + 		ret.x = this.getX() + facing.getFrontOffsetX();
 + 		ret.y = this.getY() + facing.getFrontOffsetY();
 + 		ret.z = this.getZ() + facing.getFrontOffsetZ();
@@ -27,7 +105,7 @@
 + 	/**
 + 	 * only use with a regular "net.minecraft.util.BlockPos"!
 + 	 */
-+ 	public BlockPos offsetEvenFaster(EnumFacing facing, MutableBlockPos ret) {
++ 	public BlockPos offsetEvenFaster(EnumFacing facing, BlockPos ret) {
 + 		ret.x = this.x + facing.getFrontOffsetX();
 + 		ret.y = this.y + facing.getFrontOffsetY();
 + 		ret.z = this.z + facing.getFrontOffsetZ();
@@ -35,7 +113,12 @@
 + 	}
 + 
 
-> DELETE  108  @  108 : 111
+> CHANGE  2 : 4  @  2 : 4
+
+~ 				: new BlockPos(this.x + facing.getFrontOffsetX() * n, this.y + facing.getFrontOffsetY() * n,
+~ 						this.z + facing.getFrontOffsetZ() * n);
+
+> DELETE  104  @  104 : 107
 
 > CHANGE  6 : 7  @  6 : 10
 

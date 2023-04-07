@@ -1,0 +1,24 @@
+{
+	"name": "§eHigh Performance PBR",
+	"desc": "Pack made from scratch specifically for this client, designed to give what I call the best balance between quality and performance possible in a browser but obviously that's just my opinion",
+	"vers": "1.0.0",
+	"author": "lax1dude",
+	"api_vers": 1,
+	"features": [
+		"WAVING_BLOCKS",
+		"DYNAMIC_LIGHTS",
+		"GLOBAL_AMBIENT_OCCLUSION",
+		"SHADOWS_SUN",
+		"SHADOWS_COLORED",
+		"SHADOWS_SMOOTHED",
+		"REFLECTIONS_PARABOLOID",
+		"REFLECTIONS_ROUGHNESS",
+		"REALISTIC_WATER",
+		"LIGHT_SHAFTS",
+		"SCREEN_SPACE_REFLECTIONS",
+		"POST_LENS_DISTORION",
+		"POST_LENS_FLARES",
+		"POST_BLOOM",
+		"POST_FXAA"
+	]
+}

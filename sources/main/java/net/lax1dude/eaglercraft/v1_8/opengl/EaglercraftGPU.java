@@ -3,6 +3,9 @@ package net.lax1dude.eaglercraft.v1_8.opengl;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.ByteBuffer;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.FloatBuffer;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.IntBuffer;
+import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
+import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,7 +40,9 @@ public class EaglercraftGPU {
 	static final GLObjectMap<ITextureGL> mapTexturesGL = new GLObjectMap(32767);
 	static final GLObjectMap<IQueryGL> mapQueriesGL = new GLObjectMap(32767);
 	static final GLObjectMap<DisplayList> mapDisplayListsGL = new GLObjectMap(32767);
-	
+
+	static final Logger logger = LogManager.getLogger("EaglercraftGPU");
+
 	public static final String gluErrorString(int i) {
 		switch(i) {
 		case GL_INVALID_ENUM: return "GL_INVALID_ENUM";
@@ -123,6 +128,7 @@ public class EaglercraftGPU {
 				_wglDeleteBuffers(dp.vertexBuffer);
 				dp.vertexBuffer = null;
 			}
+			currentList = null;
 			return;
 		}
 		
@@ -239,6 +245,10 @@ public class EaglercraftGPU {
 			int type, IntBuffer pixels) {
 		_wglTexSubImage2D(target, level, x, y, w, h, format, type, pixels);
 	}
+
+	public static final void glTexStorage2D(int target, int levels, int internalFormat, int w, int h) {
+		_wglTexStorage2D(target, levels, internalFormat, w, h);
+	}
 	
 	public static final void glLineWidth(float f) {
 		_wglLineWidth(f);
@@ -293,28 +303,51 @@ public class EaglercraftGPU {
 	
 	private static IBufferArrayGL currentBufferArray = null;
 	
-	static final void bindGLBufferArray(IBufferArrayGL buffer) {
+	public static final void bindGLBufferArray(IBufferArrayGL buffer) {
 		if(currentBufferArray != buffer) {
-			PlatformOpenGL._wglBindVertexArray(buffer);
+			_wglBindVertexArray(buffer);
 			currentBufferArray = buffer;
 		}
 	}
 	
 	private static IBufferGL currentArrayBuffer = null;
 	
-	static final void bindGLArrayBuffer(IBufferGL buffer) {
+	public static final void bindGLArrayBuffer(IBufferGL buffer) {
 		if(currentArrayBuffer != buffer) {
-			PlatformOpenGL._wglBindBuffer(GL_ARRAY_BUFFER, buffer);
+			_wglBindBuffer(GL_ARRAY_BUFFER, buffer);
 			currentArrayBuffer = buffer;
+		}
+	}
+	
+	private static IBufferGL currentUniformBuffer = null;
+	
+	public static final void bindGLUniformBuffer(IBufferGL buffer) {
+		if(currentUniformBuffer != buffer) {
+			_wglBindBuffer(0x8A11, buffer);
+			currentUniformBuffer = buffer;
 		}
 	}
 	
 	private static IProgramGL currentShaderProgram = null;
 	
-	static final void bindGLShaderProgram(IProgramGL prog) {
+	public static final void bindGLShaderProgram(IProgramGL prog) {
 		if(currentShaderProgram != prog) {
-			PlatformOpenGL._wglUseProgram(prog);
+			_wglUseProgram(prog);
 			currentShaderProgram = prog;
+		}
+	}
+	
+	private static final IBufferGL[] currentUniformBlockBindings = new IBufferGL[16];
+	private static final int[] currentUniformBlockBindingOffset = new int[16];
+	private static final int[] currentUniformBlockBindingSize = new int[16];
+	
+	public static final void bindUniformBufferRange(int index, IBufferGL buffer, int offset, int size) {
+		if(currentUniformBlockBindings[index] != buffer || currentUniformBlockBindingOffset[index] != offset
+				|| currentUniformBlockBindingSize[index] != size) {
+			_wglBindBufferRange(0x8A11, index, buffer, offset, size);
+			currentUniformBlockBindings[index] = buffer;
+			currentUniformBlockBindingOffset[index] = offset;
+			currentUniformBlockBindingSize[index] = size;
 		}
 	}
 	
@@ -349,6 +382,10 @@ public class EaglercraftGPU {
 		}
 	}
 
+	public static final void optimize() {
+		FixedFunctionPipeline.optimize();
+	}
+
 	private static FixedFunctionPipeline lastRender = null;
 	private static int lastMode = 0;
 	private static int lastCount = 0;
@@ -367,7 +404,7 @@ public class EaglercraftGPU {
 	private static IBufferGL quad32EmulationBuffer = null;
 	private static int quad32EmulationBufferSize = 0;
 	
-	static final void attachQuad16EmulationBuffer(int vertexCount, boolean bind) {
+	public static final void attachQuad16EmulationBuffer(int vertexCount, boolean bind) {
 		IBufferGL buf = quad16EmulationBuffer;
 		if(buf == null) {
 			quad16EmulationBuffer = buf = _wglGenBuffers();
@@ -392,7 +429,7 @@ public class EaglercraftGPU {
 		}
 	}
 	
-	static final void attachQuad32EmulationBuffer(int vertexCount, boolean bind) {
+	public static final void attachQuad32EmulationBuffer(int vertexCount, boolean bind) {
 		IBufferGL buf = quad32EmulationBuffer;
 		if(buf == null) {
 			quad32EmulationBuffer = buf = _wglGenBuffers();
@@ -445,19 +482,132 @@ public class EaglercraftGPU {
 		EagRuntime.freeIntBuffer(buf);
 	}
 
-	public static final void warmUpCache() {
-		EaglercraftGPU.glGetString(7936);
-		EaglercraftGPU.glGetString(7937);
-		EaglercraftGPU.glGetString(7938);
-		SpriteLevelMixer.initialize();
-		InstancedFontRenderer.initialize();
-		InstancedParticleRenderer.initialize();
-		EffectPipelineFXAA.initialize();
-		SpriteLevelMixer.vshLocal.free();
-	}
-
 	public static final ITextureGL getNativeTexture(int tex) {
 		return mapTexturesGL.get(tex);
 	}
 
+	static boolean hasFramebufferHDR16FSupport = false;
+	static boolean hasFramebufferHDR32FSupport = false;
+
+	public static void createFramebufferHDR16FTexture(int target, int level, int w, int h, int format, boolean allow32bitFallback) {
+		createFramebufferHDR16FTexture(target, level, w, h, format, allow32bitFallback, null);
+	}
+
+	public static void createFramebufferHDR16FTexture(int target, int level, int w, int h, int format, ByteBuffer pixelData) {
+		createFramebufferHDR16FTexture(target, level, w, h, format, false, pixelData);
+	}
+
+	private static void createFramebufferHDR16FTexture(int target, int level, int w, int h, int format, boolean allow32bitFallback, ByteBuffer pixelData) {
+		if(hasFramebufferHDR16FSupport) {
+			int internalFormat;
+			switch(format) {
+			case GL_RED:
+				internalFormat = 0x822D; // GL_R16F
+				break;
+			case 0x8227: // GL_RG
+				internalFormat = 0x822F; // GL_RG16F
+			case GL_RGB:
+				throw new UnsupportedOperationException("GL_RGB16F isn't supported specifically in WebGL 2.0 for some goddamn reason");
+			case GL_RGBA:
+				internalFormat = 0x881A; // GL_RGBA16F
+				break;
+			default:
+				throw new UnsupportedOperationException("Unknown format: " + format);
+			}
+			_wglTexImage2Du16(target, level, internalFormat, w, h, 0, format, 0x140B, pixelData);
+		}else {
+			if(allow32bitFallback) {
+				if(hasFramebufferHDR32FSupport) {
+					createFramebufferHDR32FTexture(target, level, w, h, format, false, null);
+				}else {
+					throw new UnsupportedOperationException("No fallback 32-bit HDR (floating point) texture support is available on this device");
+				}
+			}else {
+				throw new UnsupportedOperationException("16-bit HDR (floating point) textures are not supported on this device");
+			}
+		}
+	}
+
+	public static void createFramebufferHDR32FTexture(int target, int level, int w, int h, int format, boolean allow16bitFallback) {
+		createFramebufferHDR32FTexture(target, level, w, h, format, allow16bitFallback, null);
+	}
+
+	public static void createFramebufferHDR32FTexture(int target, int level, int w, int h, int format, ByteBuffer pixelData) {
+		createFramebufferHDR32FTexture(target, level, w, h, format, false, pixelData);
+	}
+
+	private static void createFramebufferHDR32FTexture(int target, int level, int w, int h, int format, boolean allow16bitFallback, ByteBuffer pixelData) {
+		if(hasFramebufferHDR32FSupport) {
+			int internalFormat;
+			switch(format) {
+			case GL_RED:
+				internalFormat = 0x822E; // GL_R32F
+				break;
+			case 0x8227: // GL_RG
+				internalFormat = 0x822F; // GL_RG32F
+			case GL_RGB:
+				throw new UnsupportedOperationException("GL_RGB32F isn't supported specifically in WebGL 2.0 for some goddamn reason");
+			case GL_RGBA:
+				internalFormat = 0x8814; //GL_RGBA32F
+				break;
+			default:
+				throw new UnsupportedOperationException("Unknown format: " + format);
+			}
+			_wglTexImage2D(target, level, internalFormat, w, h, 0, format, GL_FLOAT, pixelData);
+		}else {
+			if(allow16bitFallback) {
+				if(hasFramebufferHDR16FSupport) {
+					createFramebufferHDR16FTexture(target, level, w, h, format, false);
+				}else {
+					throw new UnsupportedOperationException("No fallback 16-bit HDR (floating point) texture support is available on this device");
+				}
+			}else {
+				throw new UnsupportedOperationException("32-bit HDR (floating point) textures are not supported on this device");
+			}
+		}
+	}
+
+	public static final void warmUpCache() {
+		EaglercraftGPU.glGetString(7936);
+		EaglercraftGPU.glGetString(7937);
+		EaglercraftGPU.glGetString(7938);
+		hasFramebufferHDR16FSupport = PlatformOpenGL.checkHDRFramebufferSupport(16);
+		if(hasFramebufferHDR16FSupport) {
+			logger.info("16-bit HDR render target support: true");
+		}else {
+			logger.error("16-bit HDR render target support: false");
+		}
+		hasFramebufferHDR32FSupport = PlatformOpenGL.checkHDRFramebufferSupport(32);
+		if(hasFramebufferHDR32FSupport) {
+			logger.info("32-bit HDR render target support: true");
+		}else {
+			logger.error("32-bit HDR render target support: false");
+		}
+		if(!checkHasHDRFramebufferSupport()) {
+			logger.error("No HDR render target support was detected! Shaders will be disabled.");
+		}
+		DrawUtils.init();
+		SpriteLevelMixer.initialize();
+		InstancedFontRenderer.initialize();
+		InstancedParticleRenderer.initialize();
+		EffectPipelineFXAA.initialize();
+		TextureCopyUtil.initialize();
+		DrawUtils.vshLocal.free();
+		DrawUtils.vshLocal = null;
+	}
+
+	public static final boolean checkHDRFramebufferSupport(int bits) {
+		switch(bits) {
+		case 16:
+			return hasFramebufferHDR16FSupport;
+		case 32:
+			return hasFramebufferHDR32FSupport;
+		default:
+			return false;
+		}
+	}
+
+	public static final boolean checkHasHDRFramebufferSupport() {
+		return hasFramebufferHDR16FSupport || hasFramebufferHDR32FSupport;
+	}
 }

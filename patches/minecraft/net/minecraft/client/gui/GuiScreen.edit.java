@@ -107,7 +107,13 @@
 
 ~ 			EagRuntime.setClipboard(copyText);
 
-> INSERT  176 : 177  @  176
+> CHANGE  68 : 71  @  68 : 69
+
+~ 				if (s1.length() > 0) {
+~ 					this.fontRendererObj.drawStringWithShadow(s1, (float) j2, (float) k2, -1);
+~ 				}
+
+> INSERT  107 : 108  @  107
 
 + 					String uri = clickevent.getValue();
 

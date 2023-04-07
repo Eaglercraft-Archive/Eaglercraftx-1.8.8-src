@@ -32,13 +32,8 @@ public class SpriteLevelMixer {
 
 	private static final Logger LOGGER = LogManager.getLogger("SpriteLevelMixer");
 
-	public static final String vertexShaderPath = "/assets/eagler/glsl/local.vsh";
 	public static final String fragmentShaderPath = "/assets/eagler/glsl/texture_mix.fsh";
 
-	public static IShaderGL vshLocal = null;
-
-	private static IBufferGL vertexBuffer = null;
-	public static IBufferArrayGL vertexArray = null;
 	private static IProgramGL shaderProgram = null;
 
 	private static IUniformGL u_textureLod1f = null;
@@ -67,33 +62,12 @@ public class SpriteLevelMixer {
 
 	static void initialize() {
 
-		String vertexSource = EagRuntime.getResourceString(vertexShaderPath);
-		if(vertexSource == null) {
-			throw new RuntimeException("SpriteLevelMixer shader \"" + vertexShaderPath + "\" is missing!");
-		}
-
 		String fragmentSource = EagRuntime.getResourceString(fragmentShaderPath);
 		if(fragmentSource == null) {
 			throw new RuntimeException("SpriteLevelMixer shader \"" + fragmentShaderPath + "\" is missing!");
 		}
 
-		vshLocal = _wglCreateShader(GL_VERTEX_SHADER);
 		IShaderGL frag = _wglCreateShader(GL_FRAGMENT_SHADER);
-
-		_wglShaderSource(vshLocal, FixedFunctionConstants.VERSION + "\n" + vertexSource);
-		_wglCompileShader(vshLocal);
-
-		if(_wglGetShaderi(vshLocal, GL_COMPILE_STATUS) != GL_TRUE) {
-			LOGGER.error("Failed to compile GL_VERTEX_SHADER \"" + vertexShaderPath + "\" for SpriteLevelMixer!");
-			String log = _wglGetShaderInfoLog(vshLocal);
-			if(log != null) {
-				String[] lines = log.split("(\\r\\n|\\r|\\n)");
-				for(int i = 0; i < lines.length; ++i) {
-					LOGGER.error("[VERT] {}", lines[i]);
-				}
-			}
-			throw new IllegalStateException("Vertex shader \"" + vertexShaderPath + "\" could not be compiled!");
-		}
 
 		_wglShaderSource(frag, FixedFunctionConstants.VERSION + "\n" + fragmentSource);
 		_wglCompileShader(frag);
@@ -112,12 +86,12 @@ public class SpriteLevelMixer {
 
 		shaderProgram = _wglCreateProgram();
 
-		_wglAttachShader(shaderProgram, vshLocal);
+		_wglAttachShader(shaderProgram, DrawUtils.vshLocal);
 		_wglAttachShader(shaderProgram, frag);
 
 		_wglLinkProgram(shaderProgram);
 
-		_wglDetachShader(shaderProgram, vshLocal);
+		_wglDetachShader(shaderProgram, DrawUtils.vshLocal);
 		_wglDetachShader(shaderProgram, frag);
 
 		_wglDeleteShader(frag);
@@ -144,26 +118,6 @@ public class SpriteLevelMixer {
 		u_matrixTransform = _wglGetUniformLocation(shaderProgram, "u_matrixTransform");
 
 		_wglUniform1i(_wglGetUniformLocation(shaderProgram, "u_inputTexture"), 0);
-
-		vertexArray = _wglGenVertexArrays();
-		vertexBuffer = _wglGenBuffers();
-
-		FloatBuffer verts = EagRuntime.allocateFloatBuffer(12);
-		verts.put(new float[] {
-				0.0f, 0.0f,  1.0f, 0.0f,  0.0f, 1.0f,
-				1.0f, 0.0f,  1.0f, 1.0f,  0.0f, 1.0f
-		});
-		verts.flip();
-
-		EaglercraftGPU.bindGLBufferArray(vertexArray);
-
-		EaglercraftGPU.bindGLArrayBuffer(vertexBuffer);
-		_wglBufferData(GL_ARRAY_BUFFER, verts, GL_STATIC_DRAW);
-
-		EagRuntime.freeFloatBuffer(verts);
-
-		_wglEnableVertexAttribArray(0);
-		_wglVertexAttribPointer(0, 2, GL_FLOAT, false, 8, 0);
 
 	}
 
@@ -206,7 +160,7 @@ public class SpriteLevelMixer {
 		if(blendColorChanged) {
 			_wglUniform4f(u_blendFactor4f, blendColorR, blendColorG, blendColorB, blendColorA);
 			blendColorChanged = false;
-		}		
+		}
 		
 		if(biasColorChanged) {
 			_wglUniform4f(u_blendBias4f, biasColorR, biasColorG, biasColorB, biasColorA);
@@ -221,9 +175,7 @@ public class SpriteLevelMixer {
 			matrixChanged = false;
 		}
 		
-		EaglercraftGPU.bindGLBufferArray(vertexArray);
-		
-		_wglDrawArrays(GL_TRIANGLES, 0, 6);
+		DrawUtils.drawStandardQuad2D();
 	}
 
 }

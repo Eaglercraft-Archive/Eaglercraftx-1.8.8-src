@@ -58,7 +58,8 @@ public class ChunkUpdateManager {
 			RenderChunk r = generator.getRenderChunk();
 			try {
 				r.resortTransparency(f, f1, f2, generator);
-				if(generator.getCompiledChunk().isLayerEmpty(EnumWorldBlockLayer.TRANSLUCENT)) {
+				CompiledChunk ch = generator.getCompiledChunk();
+				if(ch.isLayerEmpty(EnumWorldBlockLayer.TRANSLUCENT) && ch.isLayerEmpty(EnumWorldBlockLayer.REALISTIC_WATER)) {
 					throw new EmptyBlockLayerException();
 				}
 			}catch(EmptyBlockLayerException ex) {
@@ -82,9 +83,16 @@ public class ChunkUpdateManager {
 			}
 			generator.getRenderChunk().setCompiledChunk(compiledchunk);
 		} else if (chunkcompiletaskgenerator$type == ChunkCompileTaskGenerator.Type.RESORT_TRANSPARENCY) {
-			this.uploadChunk(EnumWorldBlockLayer.TRANSLUCENT, generator.getRegionRenderCacheBuilder()
-							.getWorldRendererByLayer(EnumWorldBlockLayer.TRANSLUCENT),
-					generator.getRenderChunk(), compiledchunk);
+			if(!compiledchunk.isLayerEmpty(EnumWorldBlockLayer.TRANSLUCENT)) {
+				this.uploadChunk(EnumWorldBlockLayer.TRANSLUCENT, generator.getRegionRenderCacheBuilder()
+								.getWorldRendererByLayer(EnumWorldBlockLayer.TRANSLUCENT),
+						generator.getRenderChunk(), compiledchunk);
+			}
+			if(!compiledchunk.isLayerEmpty(EnumWorldBlockLayer.REALISTIC_WATER)) {
+				this.uploadChunk(EnumWorldBlockLayer.REALISTIC_WATER, generator.getRegionRenderCacheBuilder()
+								.getWorldRendererByLayer(EnumWorldBlockLayer.REALISTIC_WATER),
+						generator.getRenderChunk(), compiledchunk);
+			}
 			generator.getRenderChunk().setCompiledChunk(compiledchunk);
 			generator.setStatus(ChunkCompileTaskGenerator.Status.DONE);
 		}

@@ -187,7 +187,10 @@ public class EaglerArrayByteBuffer implements ByteBuffer {
 	@Override
 	public ByteBuffer put(byte[] src) {
 		if(position + src.length > limit) throw new ArrayIndexOutOfBoundsException(position + src.length - 1);
-		dataView.set(src, position);
+		//dataView.set(src, position); // doesn't work
+		for(int i = 0; i < src.length; ++i) {
+			dataView.setInt8(position + i, src[i]);
+		}
 		position += src.length;
 		return this;
 	}

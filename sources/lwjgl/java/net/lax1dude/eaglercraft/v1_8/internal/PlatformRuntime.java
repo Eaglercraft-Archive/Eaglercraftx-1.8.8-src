@@ -232,6 +232,7 @@ public class PlatformRuntime {
 
 		logger.info("Initializing Hooks...");
 		PlatformInput.initHooks(windowHandle);
+		PlatformApplication.initHooks(windowHandle);
 	}
 	
 	public static void destroy() {

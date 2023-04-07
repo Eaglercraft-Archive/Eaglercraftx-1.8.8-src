@@ -93,4 +93,11 @@
 + 	}
 + 
 
+> INSERT  43 : 47  @  43
+
++ 
++ 	public boolean eaglerShadersShouldRenderGlassHighlights() {
++ 		return false;
++ 	}
+
 > EOF

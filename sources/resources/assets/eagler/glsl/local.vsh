@@ -15,7 +15,7 @@
  */
 
 precision lowp int;
-precision lowp float;
+precision highp float;
 precision lowp sampler2D;
 
 layout(location = 0) in vec2 a_position2f;
@@ -23,6 +23,6 @@ layout(location = 0) in vec2 a_position2f;
 out vec2 v_position2f;
 
 void main() {
-	v_position2f = a_position2f;
-	gl_Position = vec4(a_position2f * 2.0 - 1.0, 0.0, 1.0);
+	v_position2f = a_position2f * 0.5 + 0.5;
+	gl_Position = vec4(a_position2f, 0.0, 1.0);
 }

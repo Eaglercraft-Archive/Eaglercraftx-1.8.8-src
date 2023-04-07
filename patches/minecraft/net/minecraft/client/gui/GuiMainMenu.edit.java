@@ -254,19 +254,51 @@
 + 		s1 = EaglercraftVersion.mainMenuStringD;
 + 		this.drawString(this.fontRendererObj, s1, this.width - this.fontRendererObj.getStringWidth(s1) - 2,
 
-> CHANGE  1 : 9  @  1 : 7
+> CHANGE  1 : 10  @  1 : 7
 
 ~ 
-~ 		String lbl = "CREDITS.txt";
-~ 		int w = fontRendererObj.getStringWidth(lbl) * 3 / 4;
-~ 
-~ 		if (i >= (this.width - w - 4) && i <= this.width && j >= 0 && j <= 9) {
-~ 			drawRect((this.width - w - 4), 0, this.width, 10, 0x55000099);
-~ 		} else {
-~ 			drawRect((this.width - w - 4), 0, this.width, 10, 0x55200000);
+~ 		GlStateManager.pushMatrix();
+~ 		GlStateManager.scale(0.75f, 0.75f, 0.75f);
+~ 		int www = 0;
+~ 		int hhh = 0;
+~ 		s1 = EaglercraftVersion.mainMenuStringG;
+~ 		if (s1 != null) {
+~ 			www = this.fontRendererObj.getStringWidth(s1);
+~ 			hhh += 10;
 
-> INSERT  2 : 8  @  2
+> INSERT  1 : 20  @  1
 
++ 		s1 = EaglercraftVersion.mainMenuStringH;
++ 		if (s1 != null) {
++ 			www = Math.max(www, this.fontRendererObj.getStringWidth(s1));
++ 			hhh += 10;
++ 		}
++ 		if (www > 0) {
++ 			drawRect(0, 0, www + 6, hhh + 4, 0x55200000);
++ 			s1 = EaglercraftVersion.mainMenuStringG;
++ 			if (s1 != null) {
++ 				www = this.fontRendererObj.getStringWidth(s1);
++ 				this.drawString(this.fontRendererObj, s1, 3, 3, 0xFFFFFF99);
++ 			}
++ 			s1 = EaglercraftVersion.mainMenuStringH;
++ 			if (s1 != null) {
++ 				www = Math.max(www, this.fontRendererObj.getStringWidth(s1));
++ 				this.drawString(this.fontRendererObj, s1, 3, 13, 0xFFFFFF99);
++ 			}
++ 		}
++ 		GlStateManager.popMatrix();
+
+> INSERT  1 : 16  @  1
+
++ 		String lbl = "CREDITS.txt";
++ 		int w = fontRendererObj.getStringWidth(lbl) * 3 / 4;
++ 
++ 		if (i >= (this.width - w - 4) && i <= this.width && j >= 0 && j <= 9) {
++ 			drawRect((this.width - w - 4), 0, this.width, 10, 0x55000099);
++ 		} else {
++ 			drawRect((this.width - w - 4), 0, this.width, 10, 0x55200000);
++ 		}
++ 
 + 		GlStateManager.pushMatrix();
 + 		GlStateManager.translate((this.width - w - 2), 2.0f, 0.0f);
 + 		GlStateManager.scale(0.75f, 0.75f, 0.75f);

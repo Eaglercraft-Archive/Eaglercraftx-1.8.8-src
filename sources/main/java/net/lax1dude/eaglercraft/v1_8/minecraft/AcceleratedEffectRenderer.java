@@ -29,6 +29,7 @@ public class AcceleratedEffectRenderer implements IAcceleratedParticleEngine {
 	private float f4;
 	private float f5;
 
+	@Override
 	public void begin(float partialTicks) {
 		this.partialTicks = partialTicks;
 		InstancedParticleRenderer.begin();
@@ -42,6 +43,7 @@ public class AcceleratedEffectRenderer implements IAcceleratedParticleEngine {
 		}
 	}
 
+	@Override
 	public void draw(float texCoordWidth, float texCoordHeight) {
 		InstancedParticleRenderer.render(texCoordWidth, texCoordHeight, 0.0625f, f1, f5, f2, f3, f4);
 	}

@@ -146,9 +146,17 @@ public class ConnectionHandshake {
 				dat = new byte[msgLen];
 				di.read(dat);
 				String versionStr = ArrayUtils.asciiString(dat);
-
+				
 				logger.info("Server version: {}", versionStr);
 				logger.info("Server brand: {}", brandStr);
+				
+				if(versionStr.equals("1.0.0") || versionStr.equals("1.0.1") || versionStr.equals("1.0.2")
+						|| versionStr.equals("1.0.3") || versionStr.equals("1.0.4") || versionStr.equals("1.0.5")) {
+					mc.bungeeOutdatedMsgTimer = 80;
+					mc.bungeeOutdatedMsgVer = versionStr;
+				}else {
+					mc.bungeeOutdatedMsgTimer = 0;
+				}
 				
 				int authType = di.read();
 				int saltLength = (int)di.readShort() & 0xFFFF;

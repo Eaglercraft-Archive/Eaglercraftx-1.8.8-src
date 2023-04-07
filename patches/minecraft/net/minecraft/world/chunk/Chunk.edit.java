@@ -13,7 +13,7 @@
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 
-> CHANGE  1 : 7  @  1 : 2
+> CHANGE  1 : 8  @  1 : 2
 
 ~ 
 ~ import com.google.common.base.Predicate;
@@ -21,6 +21,7 @@
 ~ 
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
+~ import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.DeferredStateManager;
 
 > DELETE  18  @  18 : 19
 
@@ -101,7 +102,32 @@
 
 > DELETE  33  @  33 : 37
 
-> CHANGE  251 : 253  @  251 : 253
+> CHANGE  24 : 26  @  24 : 25
+
+~ 		return extendedblockstorage == null
+~ 				? (this.canSeeSky(blockpos) ? enumskyblock.defaultLightValue : getNoSkyLightValue())
+
+> CHANGE  1 : 2  @  1 : 2
+
+~ 						? (this.worldObj.provider.getHasNoSky() ? getNoSkyLightValue()
+
+> CHANGE  35 : 36  @  35 : 36
+
+~ 					: getNoSkyLightValue();
+
+> CHANGE  1 : 3  @  1 : 2
+
+~ 			int i1 = this.worldObj.provider.getHasNoSky() ? getNoSkyLightValue()
+~ 					: extendedblockstorage.getExtSkylightValue(j, k & 15, l);
+
+> INSERT  10 : 14  @  10
+
++ 	public static int getNoSkyLightValue() {
++ 		return DeferredStateManager.isDeferredRenderer() ? 5 : 0;
++ 	}
++ 
+
+> CHANGE  176 : 178  @  176 : 178
 
 ~ 						&& (predicate == null || predicate.apply((T) entity))) {
 ~ 					list.add((T) entity);

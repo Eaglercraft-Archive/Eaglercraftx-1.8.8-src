@@ -141,6 +141,10 @@ void main() {
 #endif
 #endif
 
+#ifdef COMPILE_BLEND_ADD
+	color = color * u_colorBlendSrc4f + u_colorBlendAdd4f;
+#endif
+
 #ifdef COMPILE_ENABLE_ALPHA_TEST
 	if(color.a < u_alphaTestRef1f) discard;
 #endif
@@ -154,15 +158,12 @@ void main() {
 	vec3 normal = u_uniformNormal3f;
 #endif
 	float diffuse = 0.0;
+	vec4 light;
 	for(int i = 0; i < u_lightsEnabled1i; ++i) {
-		vec4 light = u_lightsDirections4fv[i];
+		light = u_lightsDirections4fv[i];
 		diffuse += max(dot(light.xyz, normal), 0.0) * light.w;
 	}
 	color.rgb *= min(u_lightsAmbient3f + vec3(diffuse), 1.0);
-#endif
-
-#ifdef COMPILE_BLEND_ADD
-	color.rgba = color.rgba * u_colorBlendSrc4f + u_colorBlendAdd4f;
 #endif
 
 #ifdef COMPILE_ENABLE_FOG
@@ -171,7 +172,7 @@ void main() {
 	float fogDensity = u_fogParameters4f.y;
 	float fogStart = u_fogParameters4f.z;
 	float fogEnd = u_fogParameters4f.w;
-	float f = u_fogParameters4f.x > 0.0 ? 1.0 - pow(2.718, -(fogDensity * dist)) :
+	float f = u_fogParameters4f.x > 0.0 ? 1.0 - exp(-fogDensity * dist) :
 		(dist - fogStart) / (fogEnd - fogStart);
 	color.rgb = mix(color.rgb, u_fogColor4f.rgb, clamp(f, 0.0, 1.0) * u_fogColor4f.a);
 #endif

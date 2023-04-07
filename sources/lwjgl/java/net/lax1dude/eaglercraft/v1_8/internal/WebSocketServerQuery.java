@@ -6,6 +6,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.drafts.Draft;
+import org.java_websocket.drafts.Draft_6455;
+import org.java_websocket.extensions.permessage_deflate.PerMessageDeflateExtension;
 import org.java_websocket.handshake.ServerHandshake;
 import org.json.JSONObject;
 
@@ -27,6 +30,8 @@ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
  */
 class WebSocketServerQuery extends WebSocketClient implements IServerQuery {
 
+	private static final Draft perMessageDeflateDraft = new Draft_6455(new PerMessageDeflateExtension());
+
 	public static final Logger logger = LogManager.getLogger("WebSocketQuery");
 
 	private final List<QueryResponse> queryResponses = new LinkedList();
@@ -39,7 +44,7 @@ class WebSocketServerQuery extends WebSocketClient implements IServerQuery {
 	private EnumServerRateLimit rateLimit = EnumServerRateLimit.OK;
 
 	WebSocketServerQuery(String type, URI serverUri) {
-		super(serverUri);
+		super(serverUri, perMessageDeflateDraft);
 		this.type = type;
 		this.setConnectionLostTimeout(5);
 		this.setTcpNoDelay(true);

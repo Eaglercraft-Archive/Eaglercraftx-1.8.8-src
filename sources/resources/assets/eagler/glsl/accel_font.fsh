@@ -15,8 +15,8 @@
  */
 
 precision lowp int;
-precision lowp float;
-precision lowp sampler2D;
+precision mediump float;
+precision mediump sampler2D;
 
 in vec2 v_texCoord2f;
 in vec4 v_color4f;

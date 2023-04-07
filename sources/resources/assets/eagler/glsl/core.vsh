@@ -50,29 +50,29 @@ out vec2 v_lightmap2f;
 uniform mat4 u_textureMat4f02;
 #endif
 
+#ifdef _COMPILE_VARYING_POSITION
 uniform mat4 u_modelviewMat4f;
 uniform mat4 u_projectionMat4f;
+#else
+uniform mat4 u_modelviewProjMat4f;
+#ifdef COMPILE_NORMAL_ATTRIB
+uniform mat4 u_modelviewMat4f;
+#endif
+#endif
+
+#define TEX_MAT3(mat4In) mat3(mat4In[0].xyw,mat4In[1].xyw,mat4In[3].xyw)
 
 void main() {
-	
 #ifdef COMPILE_ENABLE_TEX_GEN
 	v_objectPosition3f = a_position3f;
 #endif
 
-	vec4 pos = u_modelviewMat4f * vec4(a_position3f, 1.0);
-	
 #ifdef _COMPILE_VARYING_POSITION
-	v_position4f = pos;
+	v_position4f = u_modelviewMat4f * vec4(a_position3f, 1.0);
 #endif
 
 #ifdef COMPILE_TEXTURE_ATTRIB
-	mat4x3 texMat4x3 = mat4x3(
-		u_textureMat4f01[0].xyw,
-		u_textureMat4f01[1].xyw,
-		u_textureMat4f01[2].xyw,
-		u_textureMat4f01[3].xyw
-	);
-	vec3 v_textureTmp3f = texMat4x3 * vec4(a_texture2f, 0.0, 1.0);
+	vec3 v_textureTmp3f = TEX_MAT3(u_textureMat4f01) * vec3(a_texture2f, 1.0);
 	v_texture2f = v_textureTmp3f.xy / v_textureTmp3f.z;
 #endif
 	
@@ -85,19 +85,13 @@ void main() {
 #endif
 	
 #ifdef COMPILE_LIGHTMAP_ATTRIB
-#ifdef COMPILE_TEXTURE_ATTRIB
-	texMat4x3 = mat4x3(
-#else
-	mat4x3 texMat4x3 = mat4x3(
-#endif
-		u_textureMat4f02[0].xyw,
-		u_textureMat4f02[1].xyw,
-		u_textureMat4f02[2].xyw,
-		u_textureMat4f02[3].xyw
-	);
-	vec3 v_lightmapTmp3f = texMat4x3 * vec4(a_lightmap2f, 0.0, 1.0);
+	vec3 v_lightmapTmp3f = TEX_MAT3(u_textureMat4f02) * vec3(a_lightmap2f, 1.0);
 	v_lightmap2f = v_lightmapTmp3f.xy / v_lightmapTmp3f.z;
 #endif
 
-	gl_Position = u_projectionMat4f * pos;
+#ifdef _COMPILE_VARYING_POSITION
+	gl_Position = u_projectionMat4f * v_position4f;
+#else
+	gl_Position = u_modelviewProjMat4f * vec4(a_position3f, 1.0);
+#endif
 }

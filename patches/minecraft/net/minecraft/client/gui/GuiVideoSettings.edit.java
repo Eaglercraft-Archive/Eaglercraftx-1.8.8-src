@@ -15,7 +15,7 @@
 ~ 			GameSettings.Options.BLOCK_ALTERNATIVES, GameSettings.Options.ENTITY_SHADOWS, GameSettings.Options.FOG,
 ~ 			GameSettings.Options.FULLSCREEN, GameSettings.Options.HUD_FPS, GameSettings.Options.HUD_COORDS,
 ~ 			GameSettings.Options.HUD_PLAYER, GameSettings.Options.HUD_STATS, GameSettings.Options.HUD_WORLD,
-~ 			GameSettings.Options.HUD_24H, GameSettings.Options.CHUNK_FIX };
+~ 			GameSettings.Options.HUD_24H, GameSettings.Options.CHUNK_FIX, GameSettings.Options.FAST_MATH };
 
 > CHANGE  11 : 13  @  11 : 14
 

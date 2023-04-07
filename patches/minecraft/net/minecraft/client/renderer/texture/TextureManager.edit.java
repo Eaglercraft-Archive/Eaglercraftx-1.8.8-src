@@ -5,9 +5,12 @@
 # Version: 1.0
 # Author: lax1dude
 
-> DELETE  2  @  2 : 4
+> CHANGE  2 : 4  @  2 : 4
 
-> CHANGE  5 : 12  @  5 : 11
+~ import static net.lax1dude.eaglercraft.v1_8.opengl.RealOpenGLEnums.*;
+~ 
+
+> CHANGE  5 : 15  @  5 : 11
 
 ~ 
 ~ import com.google.common.collect.Lists;
@@ -16,13 +19,17 @@
 ~ import net.lax1dude.eaglercraft.v1_8.HString;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
+~ import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
+~ import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.DeferredStateManager;
+~ import net.minecraft.client.Minecraft;
 
 > DELETE  6  @  6 : 8
 
-> CHANGE  13 : 21  @  13 : 18
+> CHANGE  13 : 22  @  13 : 18
 
+~ 		int glTex;
 ~ 		if (resource.cachedPointer != null) {
-~ 			TextureUtil.bindTexture(((ITextureObject) resource.cachedPointer).getGlTextureId()); // unsafe, lol
+~ 			TextureUtil.bindTexture(glTex = ((ITextureObject) resource.cachedPointer).getGlTextureId()); // unsafe, lol
 ~ 		} else {
 ~ 			Object object = (ITextureObject) this.mapTextureObjects.get(resource);
 ~ 			if (object == null) {
@@ -30,10 +37,21 @@
 ~ 				this.loadTexture(resource, (ITextureObject) object);
 ~ 			}
 
-> CHANGE  1 : 4  @  1 : 2
+> CHANGE  1 : 15  @  1 : 2
 
 ~ 			resource.cachedPointer = object;
-~ 			TextureUtil.bindTexture(((ITextureObject) object).getGlTextureId());
+~ 			TextureUtil.bindTexture(glTex = ((ITextureObject) object).getGlTextureId());
+~ 		}
+~ 		if (DeferredStateManager.isInDeferredPass()) {
+~ 			TextureMap blocksTex = Minecraft.getMinecraft().getTextureMapBlocks();
+~ 			if (blocksTex != null) {
+~ 				if (blocksTex.getGlTextureId() == glTex) {
+~ 					DeferredStateManager.enableMaterialTexture();
+~ 					GlStateManager.quickBindTexture(GL_TEXTURE2, blocksTex.eaglerPBRMaterialTexture);
+~ 				} else {
+~ 					DeferredStateManager.disableMaterialTexture();
+~ 				}
+~ 			}
 ~ 		}
 
 > CHANGE  11 : 12  @  11 : 12

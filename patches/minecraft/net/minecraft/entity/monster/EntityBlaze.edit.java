@@ -5,7 +5,11 @@
 # Version: 1.0
 # Author: lax1dude
 
-> DELETE  4  @  4 : 14
+> INSERT  2 : 3  @  2
+
++ import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.DynamicLightManager;
+
+> DELETE  2  @  2 : 12
 
 > DELETE  2  @  2 : 3
 
@@ -28,6 +32,12 @@
 ~ 					this.posY + this.rand.nextDouble() * (double) this.height,
 ~ 					this.posZ + (this.rand.nextDouble() - 0.5D) * (double) this.width, 0.0D, 0.0D, 0.0D, new int[0]);
 
-> DELETE  67  @  67 : 145
+> CHANGE  67 : 72  @  67 : 144
+
+~ 	protected void renderDynamicLightsEaglerAt(double entityX, double entityY, double entityZ, double renderX,
+~ 			double renderY, double renderZ, float partialTicks, boolean isInFrustum) {
+~ 		float mag = 5.0f;
+~ 		DynamicLightManager.renderDynamicLight("entity_" + getEntityId() + "_blaze", entityX, entityY + 0.75, entityZ,
+~ 				mag, 0.487f * mag, 0.1411f * mag, false);
 
 > EOF

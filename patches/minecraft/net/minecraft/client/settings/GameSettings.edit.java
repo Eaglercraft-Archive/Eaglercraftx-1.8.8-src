@@ -15,7 +15,7 @@
 
 > DELETE  1  @  1 : 3
 
-> INSERT  3 : 21  @  3
+> INSERT  3 : 22  @  3
 
 + 
 + import org.json.JSONArray;
@@ -35,6 +35,7 @@
 + import net.lax1dude.eaglercraft.v1_8.internal.KeyboardConstants;
 + import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 + import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
++ import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.EaglerDeferredConfig;
 
 > DELETE  5  @  5 : 7
 
@@ -44,8 +45,9 @@
 
 > DELETE  1  @  1 : 9
 
-> CHANGE  23 : 26  @  23 : 26
+> CHANGE  22 : 26  @  22 : 26
 
+~ 	public int limitFramerate = 260;
 ~ 	public int clouds = 1;
 ~ 	public boolean fancyGraphics = false;
 ~ 	public int ambientOcclusion = 0;
@@ -54,7 +56,9 @@
 
 > DELETE  1  @  1 : 2
 
-> CHANGE  36 : 37  @  36 : 37
+> DELETE  17  @  17 : 28
+
+> CHANGE  8 : 9  @  8 : 9
 
 ~ 	public KeyBinding keyBindSprint = new KeyBinding("key.sprint", KeyboardConstants.KEY_R, "key.categories.movement");
 
@@ -73,7 +77,7 @@
 
 ~ 	public int guiScale = 3;
 
-> INSERT  3 : 12  @  3
+> INSERT  3 : 16  @  3
 
 + 	public boolean hudFps = true;
 + 	public boolean hudCoords = true;
@@ -84,6 +88,10 @@
 + 	public boolean chunkFix = true;
 + 	public boolean fog = true;
 + 	public int fxaa = 0;
++ 	public boolean shaders = false;
++ 	public boolean shadersAODisable = false;
++ 	public EaglerDeferredConfig deferredShaderConf = new EaglerDeferredConfig();
++ 	public int fastMath = 1;
 
 > CHANGE  1 : 2  @  1 : 2
 
@@ -113,18 +121,18 @@
 
 ~ 						: HString.format("%c", new Object[] { Character.valueOf((char) (parInt1 - 256)) })
 
-> DELETE  83  @  83 : 84
+> DELETE  76  @  76 : 99
 
-> DELETE  4  @  4 : 5
-
-> INSERT  45 : 47  @  45
+> INSERT  35 : 37  @  35
 
 + 			this.mc.loadingScreen.eaglerShow(I18n.format("resourcePack.load.refreshing"),
 + 					I18n.format("resourcePack.load.pleaseWait"));
 
-> DELETE  58  @  58 : 75
+> DELETE  18  @  18 : 38
 
-> INSERT  13 : 53  @  13
+> DELETE  20  @  20 : 37
+
+> INSERT  13 : 57  @  13
 
 + 		if (parOptions == GameSettings.Options.HUD_FPS) {
 + 			this.hudFps = !this.hudFps;
@@ -166,10 +174,20 @@
 + 			this.mc.toggleFullscreen();
 + 		}
 + 
++ 		if (parOptions == GameSettings.Options.FAST_MATH) {
++ 			this.fastMath = (this.fastMath + parInt1) % 3;
++ 		}
++ 
 
-> DELETE  54  @  54 : 60
+> CHANGE  23 : 24  @  23 : 34
 
-> INSERT  12 : 30  @  12
+~ 																										: 0.0F)))))))))));
+
+> DELETE  20  @  20 : 26
+
+> DELETE  2  @  2 : 4
+
+> INSERT  8 : 26  @  8
 
 + 		case HUD_COORDS:
 + 			return this.hudCoords;
@@ -226,7 +244,9 @@
 ~ 																																	+ "%")
 ~ 																													: "yee"))))))))))));
 
-> INSERT  28 : 36  @  28
+> DELETE  11  @  11 : 19
+
+> INSERT  9 : 19  @  9
 
 + 		} else if (parOptions == GameSettings.Options.FXAA) {
 + 			if (this.fxaa == 0) {
@@ -236,6 +256,8 @@
 + 			} else {
 + 				return s + I18n.format("options.off");
 + 			}
++ 		} else if (parOptions == GameSettings.Options.FAST_MATH) {
++ 			return s + I18n.format("options.fastMath." + this.fastMath);
 
 > CHANGE  7 : 9  @  7 : 8
 
@@ -269,52 +291,99 @@
 
 > DELETE  4  @  4 : 8
 
-> INSERT  116 : 153  @  116
+> CHANGE  52 : 54  @  52 : 54
 
-+ 					if (astring[0].equals("hudFps")) {
-+ 						this.hudFps = astring[1].equals("true");
-+ 					}
-+ 
-+ 					if (astring[0].equals("hudWorld")) {
-+ 						this.hudWorld = astring[1].equals("true");
-+ 					}
-+ 
-+ 					if (astring[0].equals("hudCoords")) {
-+ 						this.hudCoords = astring[1].equals("true");
-+ 					}
-+ 
-+ 					if (astring[0].equals("hudPlayer")) {
-+ 						this.hudPlayer = astring[1].equals("true");
-+ 					}
-+ 
-+ 					if (astring[0].equals("hudStats")) {
-+ 						this.hudStats = astring[1].equals("true");
-+ 					}
-+ 
-+ 					if (astring[0].equals("hud24h")) {
-+ 						this.hud24h = astring[1].equals("true");
-+ 					}
-+ 
-+ 					if (astring[0].equals("chunkFix")) {
-+ 						this.chunkFix = astring[1].equals("true");
-+ 					}
-+ 
-+ 					if (astring[0].equals("fog")) {
-+ 						this.fog = astring[1].equals("true");
-+ 					}
-+ 
-+ 					if (astring[0].equals("fxaa")) {
-+ 						this.fxaa = (astring[1].equals("true") || astring[1].equals("false")) ? 0
-+ 								: Integer.parseInt(astring[1]);
-+ 					}
-+ 
+~ 					if (astring[0].equals("forceUnicodeFont")) {
+~ 						this.forceUnicodeFont = astring[1].equals("true");
 
-> INSERT  6 : 8  @  6
+> CHANGE  2 : 4  @  2 : 4
 
+~ 					if (astring[0].equals("allowBlockAlternatives")) {
+~ 						this.allowBlockAlternatives = astring[1].equals("true");
+
+> CHANGE  2 : 4  @  2 : 4
+
+~ 					if (astring[0].equals("reducedDebugInfo")) {
+~ 						this.reducedDebugInfo = astring[1].equals("true");
+
+> CHANGE  2 : 4  @  2 : 4
+
+~ 					if (astring[0].equals("useNativeTransport")) {
+~ 						this.field_181150_U = astring[1].equals("true");
+
+> CHANGE  2 : 4  @  2 : 4
+
+~ 					if (astring[0].equals("entityShadows")) {
+~ 						this.field_181151_V = astring[1].equals("true");
+
+> CHANGE  2 : 4  @  2 : 4
+
+~ 					if (astring[0].equals("hudFps")) {
+~ 						this.hudFps = astring[1].equals("true");
+
+> CHANGE  2 : 4  @  2 : 4
+
+~ 					if (astring[0].equals("hudWorld")) {
+~ 						this.hudWorld = astring[1].equals("true");
+
+> CHANGE  2 : 4  @  2 : 4
+
+~ 					if (astring[0].equals("hudCoords")) {
+~ 						this.hudCoords = astring[1].equals("true");
+
+> CHANGE  2 : 4  @  2 : 4
+
+~ 					if (astring[0].equals("hudPlayer")) {
+~ 						this.hudPlayer = astring[1].equals("true");
+
+> CHANGE  2 : 4  @  2 : 4
+
+~ 					if (astring[0].equals("hudStats")) {
+~ 						this.hudStats = astring[1].equals("true");
+
+> CHANGE  2 : 4  @  2 : 4
+
+~ 					if (astring[0].equals("hud24h")) {
+~ 						this.hud24h = astring[1].equals("true");
+
+> CHANGE  2 : 4  @  2 : 4
+
+~ 					if (astring[0].equals("chunkFix")) {
+~ 						this.chunkFix = astring[1].equals("true");
+
+> CHANGE  2 : 4  @  2 : 4
+
+~ 					if (astring[0].equals("fog")) {
+~ 						this.fog = astring[1].equals("true");
+
+> CHANGE  2 : 5  @  2 : 4
+
+~ 					if (astring[0].equals("fxaa")) {
+~ 						this.fxaa = (astring[1].equals("true") || astring[1].equals("false")) ? 0
+~ 								: Integer.parseInt(astring[1]);
+
+> CHANGE  2 : 4  @  2 : 4
+
+~ 					if (astring[0].equals("fastMath")) {
+~ 						this.fastMath = Integer.parseInt(astring[1]);
+
+> DELETE  2  @  2 : 6
+
+> INSERT  6 : 12  @  6
+
++ 					if (astring[0].equals("shaders")) {
++ 						this.shaders = astring[1].equals("true");
++ 					}
++ 
 + 					Keyboard.setFunctionKeyModifier(keyBindFunction.getKeyCode());
 + 
 
-> DELETE  17  @  17 : 18
+> INSERT  11 : 13  @  11
+
++ 
++ 					deferredShaderConf.readOption(astring[0], astring[1]);
+
+> DELETE  6  @  6 : 7
 
 > CHANGE  12 : 14  @  12 : 13
 
@@ -330,7 +399,9 @@
 
 > DELETE  1  @  1 : 2
 
-> INSERT  29 : 38  @  29
+> DELETE  13  @  13 : 24
+
+> INSERT  5 : 16  @  5
 
 + 			printwriter.println("hudFps:" + this.hudFps);
 + 			printwriter.println("hudWorld:" + this.hudWorld);
@@ -341,13 +412,20 @@
 + 			printwriter.println("chunkFix:" + this.chunkFix);
 + 			printwriter.println("fog:" + this.fog);
 + 			printwriter.println("fxaa:" + this.fxaa);
++ 			printwriter.println("fastMath:" + this.fastMath);
++ 			printwriter.println("shaders:" + this.shaders);
 
 > INSERT  5 : 7  @  5
 
 + 			Keyboard.setFunctionKeyModifier(keyBindFunction.getKeyCode());
 + 
 
-> INSERT  11 : 13  @  11
+> INSERT  10 : 12  @  10
+
++ 			deferredShaderConf.writeOptions(printwriter);
++ 
+
+> INSERT  1 : 3  @  1
 
 + 
 + 			EagRuntime.setStorage("g", bao.toByteArray());
@@ -383,6 +461,6 @@
 ~ 		HUD_WORLD("options.hud.world", false, true), HUD_PLAYER("options.hud.player", false, true),
 ~ 		HUD_24H("options.hud.24h", false, true), CHUNK_FIX("options.chunkFix", false, true),
 ~ 		FOG("options.fog", false, true), FXAA("options.fxaa", false, false),
-~ 		FULLSCREEN("options.fullscreen", false, true);
+~ 		FULLSCREEN("options.fullscreen", false, true), FAST_MATH("options.fastMath", false, false);
 
 > EOF

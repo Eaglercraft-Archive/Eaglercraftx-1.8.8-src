@@ -22,7 +22,6 @@ import org.teavm.jso.typedarrays.ArrayBuffer;
 import org.teavm.jso.typedarrays.Int8Array;
 
 import net.lax1dude.eaglercraft.v1_8.Base64;
-import net.lax1dude.eaglercraft.v1_8.internal.teavm.MainClass;
 
 /**
  * Copyright (c) 2022-2023 LAX1DUDE. All Rights Reserved.
@@ -40,7 +39,7 @@ import net.lax1dude.eaglercraft.v1_8.internal.teavm.MainClass;
 public class PlatformApplication {
 
 	public static void openLink(String url) {
-		Window.current().open(url, "_blank");
+		Window.current().open(url, "_blank", "noopener,noreferrer");
 	}
 
 	public static void setClipboard(String text) {

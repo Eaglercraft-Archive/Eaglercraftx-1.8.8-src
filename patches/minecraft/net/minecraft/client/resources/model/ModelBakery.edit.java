@@ -7,13 +7,13 @@
 
 > DELETE  2  @  2 : 8
 
-> INSERT  6 : 7  @  6
+> CHANGE  4 : 5  @  4 : 7
 
-+ import java.nio.charset.StandardCharsets;
+~ import java.nio.charset.StandardCharsets;
 
-> DELETE  8  @  8 : 9
+> DELETE  7  @  7 : 8
 
-> INSERT  1 : 13  @  1
+> INSERT  1 : 17  @  1
 
 + import java.util.Set;
 + 
@@ -27,6 +27,10 @@
 + import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 + import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 + import net.lax1dude.eaglercraft.v1_8.minecraft.EaglerTextureAtlasSprite;
++ import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.BlockVertexIDs;
++ import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.DeferredStateManager;
++ import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.VertexMarkerState;
++ import net.minecraft.client.Minecraft;
 
 > DELETE  9  @  9 : 10
 
@@ -87,7 +91,39 @@
 ~ 								+ Item.itemRegistry.getNameForObject(item) + "\'");
 ~ 						LOGGER.warn(exception);
 
-> CHANGE  188 : 189  @  188 : 189
+> INSERT  132 : 133  @  132
+
++ 		boolean deferred = Minecraft.getMinecraft().gameSettings.shaders;
+
+> INSERT  9 : 34  @  9
+
++ 					if (deferred) {
++ 						ModelBlock currentBlockModel = modelblock;
++ 						ResourceLocation currentResourceLocation = modelblockdefinition$variant.getModelLocation();
++ 						Integer blockId = null;
++ 						do {
++ 							blockId = BlockVertexIDs.modelToID.get(currentResourceLocation.toString());
++ 							if (blockId != null) {
++ 								break;
++ 							}
++ 							currentResourceLocation = currentBlockModel.getParentLocation();
++ 							currentBlockModel = models.get(currentResourceLocation);
++ 						} while (currentBlockModel != null);
++ 						if (blockId != null) {
++ 							VertexMarkerState.markId = blockId.intValue();
++ 							try {
++ 								weightedbakedmodel$builder.add(
++ 										this.bakeModel(modelblock, modelblockdefinition$variant.getRotation(),
++ 												modelblockdefinition$variant.isUvLocked()),
++ 										modelblockdefinition$variant.getWeight());
++ 							} finally {
++ 								VertexMarkerState.markId = 0;
++ 							}
++ 							continue;
++ 						}
++ 					}
+
+> CHANGE  47 : 48  @  47 : 48
 
 ~ 		for (ModelResourceLocation modelresourcelocation : (List<ModelResourceLocation>) arraylist) {
 

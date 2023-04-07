@@ -39,11 +39,11 @@ import net.lax1dude.eaglercraft.v1_8.HString;
  * </p>
  *
  * @since 3.0
- * @deprecated as of 3.6, use commons-text <a href=
+ * @!deprecated as of 3.6, use commons-text <a href=
  *             "https://commons.apache.org/proper/commons-text/javadocs/api-release/org/apache/commons/text/FormattableUtils.html">
  *             FormattableUtils</a> instead
  */
-@Deprecated
+//@Deprecated
 public class FormattableUtils {
 
 	/**

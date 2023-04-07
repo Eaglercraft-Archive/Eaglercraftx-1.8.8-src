@@ -2,6 +2,7 @@ package net.lax1dude.eaglercraft.v1_8.internal;
 
 import java.net.URL;
 
+import net.lax1dude.eaglercraft.v1_8.internal.PlatformAudio.IAudioCacheLoader;
 import net.lax1dude.eaglercraft.v1_8.internal.paulscode.lwjgl3.LibraryLWJGLOpenAL;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
@@ -105,6 +106,18 @@ public class PlatformAudio {
 	
 	public static void clearAudioCache() {
 		// browser only
+	}
+
+	public static void flushAudioCache() {
+		
+	}
+
+	public static interface IAudioCacheLoader {
+		byte[] loadFile(String filename);
+	}
+
+	public static IAudioResource loadAudioDataNew(String filename, boolean holdInCache, IAudioCacheLoader loader) {
+		throw new UnsupportedOperationException("Browser only!");
 	}
 	
 	private static final Logger logger = LogManager.getLogger("EaglercraftPlatformAudio");

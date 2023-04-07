@@ -4,11 +4,13 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import net.lax1dude.eaglercraft.v1_8.internal.EnumPlatformType;
 import net.lax1dude.eaglercraft.v1_8.internal.IAudioHandle;
 import net.lax1dude.eaglercraft.v1_8.internal.IAudioResource;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformAudio;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.ISound;
 import net.minecraft.client.audio.ISound.AttenuationType;
 import net.minecraft.client.audio.ITickableSound;
@@ -137,7 +139,7 @@ public class EaglercraftSoundManager {
 	}
 	
 	public void reloadSoundSystem() {
-		// irrelevant
+		PlatformAudio.flushAudioCache();
 	}
 	
 	public void setSoundCategoryVolume(SoundCategory category, float volume) {
@@ -282,6 +284,15 @@ public class EaglercraftSoundManager {
 		}
 	}
 
+	private final PlatformAudio.IAudioCacheLoader browserResourcePackLoader = filename -> {
+		try {
+			return EaglerInputStream.inputStreamToBytesQuiet(Minecraft.getMinecraft().getResourceManager()
+					.getResource(new ResourceLocation(filename)).getInputStream());
+		}catch(Throwable t) {
+			return null;
+		}
+	};
+
 	public void playSound(ISound sound) {
 		if(!PlatformAudio.available()) {
 			return;
@@ -296,8 +307,13 @@ public class EaglercraftSoundManager {
 					logger.warn("Unable to play empty soundEvent(2): {}", etr.getSoundPoolEntryLocation().toString());
 				}else {
 					ResourceLocation lc = etr.getSoundPoolEntryLocation();
-					IAudioResource trk = PlatformAudio.loadAudioData(
-							"/assets/" + lc.getResourceDomain() + "/" + lc.getResourcePath(), !etr.isStreamingSound());
+					IAudioResource trk;
+					if(EagRuntime.getPlatformType() != EnumPlatformType.DESKTOP) {
+						trk = PlatformAudio.loadAudioDataNew(lc.toString(), !etr.isStreamingSound(), browserResourcePackLoader);
+					}else {
+						trk = PlatformAudio.loadAudioData(
+								"/assets/" + lc.getResourceDomain() + "/" + lc.getResourcePath(), !etr.isStreamingSound());
+					}
 					if(trk == null) {
 						logger.warn("Unable to play unknown soundEvent(3): {}", sound.getSoundLocation().toString());
 					}else {
