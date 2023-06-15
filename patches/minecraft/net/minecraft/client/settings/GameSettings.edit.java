@@ -77,7 +77,7 @@
 
 ~ 	public int guiScale = 3;
 
-> INSERT  3 : 16  @  3
+> INSERT  3 : 15  @  3
 
 + 	public boolean hudFps = true;
 + 	public boolean hudCoords = true;
@@ -91,7 +91,6 @@
 + 	public boolean shaders = false;
 + 	public boolean shadersAODisable = false;
 + 	public EaglerDeferredConfig deferredShaderConf = new EaglerDeferredConfig();
-+ 	public int fastMath = 1;
 
 > CHANGE  1 : 2  @  1 : 2
 
@@ -132,7 +131,7 @@
 
 > DELETE  20  @  20 : 37
 
-> INSERT  13 : 57  @  13
+> INSERT  13 : 53  @  13
 
 + 		if (parOptions == GameSettings.Options.HUD_FPS) {
 + 			this.hudFps = !this.hudFps;
@@ -172,10 +171,6 @@
 + 
 + 		if (parOptions == GameSettings.Options.FULLSCREEN) {
 + 			this.mc.toggleFullscreen();
-+ 		}
-+ 
-+ 		if (parOptions == GameSettings.Options.FAST_MATH) {
-+ 			this.fastMath = (this.fastMath + parInt1) % 3;
 + 		}
 + 
 
@@ -246,7 +241,7 @@
 
 > DELETE  11  @  11 : 19
 
-> INSERT  9 : 19  @  9
+> INSERT  9 : 17  @  9
 
 + 		} else if (parOptions == GameSettings.Options.FXAA) {
 + 			if (this.fxaa == 0) {
@@ -256,8 +251,6 @@
 + 			} else {
 + 				return s + I18n.format("options.off");
 + 			}
-+ 		} else if (parOptions == GameSettings.Options.FAST_MATH) {
-+ 			return s + I18n.format("options.fastMath." + this.fastMath);
 
 > CHANGE  7 : 9  @  7 : 8
 
@@ -362,12 +355,7 @@
 ~ 						this.fxaa = (astring[1].equals("true") || astring[1].equals("false")) ? 0
 ~ 								: Integer.parseInt(astring[1]);
 
-> CHANGE  2 : 4  @  2 : 4
-
-~ 					if (astring[0].equals("fastMath")) {
-~ 						this.fastMath = Integer.parseInt(astring[1]);
-
-> DELETE  2  @  2 : 6
+> DELETE  2  @  2 : 10
 
 > INSERT  6 : 12  @  6
 
@@ -401,7 +389,7 @@
 
 > DELETE  13  @  13 : 24
 
-> INSERT  5 : 16  @  5
+> INSERT  5 : 15  @  5
 
 + 			printwriter.println("hudFps:" + this.hudFps);
 + 			printwriter.println("hudWorld:" + this.hudWorld);
@@ -412,7 +400,6 @@
 + 			printwriter.println("chunkFix:" + this.chunkFix);
 + 			printwriter.println("fog:" + this.fog);
 + 			printwriter.println("fxaa:" + this.fxaa);
-+ 			printwriter.println("fastMath:" + this.fastMath);
 + 			printwriter.println("shaders:" + this.shaders);
 
 > INSERT  5 : 7  @  5

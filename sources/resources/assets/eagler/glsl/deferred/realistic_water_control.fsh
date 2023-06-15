@@ -69,6 +69,11 @@ void main() {
 	}
 
 	float gbufferDepth = textureLod(u_gbufferDepthTexture, v_position2f2, 0.0).r;
+
+	if(gbufferDepth < 0.000001) {
+		return;
+	}
+
 	vec4 gbufferDepthClipSpace4f = vec4(v_position2f2, gbufferDepth, 1.0);
 	gbufferDepthClipSpace4f.xyz *= 2.0;
 	gbufferDepthClipSpace4f.xyz -= 1.0;
