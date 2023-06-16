@@ -1,0 +1,10 @@
+buildtools_config.json
+MinecraftSrc.zip
+/MinecraftSrc/*
+/pullrequest_merged_*
+/patches.*
+/mcp918/*
+!/mcp918/readme.txt
+!/mcp918/assetsIndexTransformer.json
+/rundir/*
+/##TEAVM.TMP##/*

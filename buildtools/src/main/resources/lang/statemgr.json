@@ -1,0 +1,20 @@
+{
+	"statemgr_mappings": {
+		"GlStateManager.alphaFunc": "GL11.glAlphaFunc",
+		"GlStateManager.colorMaterial": "GL11.glColorMaterial",
+		"GlStateManager.depthFunc": "GL11.glDepthFunc",
+		"GlStateManager.blendFunc": "GL11.glBlendFunc",
+		"GlStateManager.tryBlendFuncSeparate": "GL14.glBlendFuncSeparate",
+		"GlStateManager.setFog": "GL11.glFogi",
+		"GlStateManager.cullFace": "GL11.glCullFace",
+		"GlStateManager.doPolygonOffset": "GL11.glPolygonOffset",
+		"GlStateManager.colorLogicOp": "GL11.glLogicOp",
+		"GlStateManager.texGen": "GL11.glTexGeni",
+		"GlStateManager.func_179105_a": "GL11.glTexGen",
+		"GlStateManager.setActiveTexture": "GL13.glActiveTexture",
+		"GlStateManager.shadeModel": "GL11.glShadeModel",
+		"GlStateManager.clear": "GL11.glClear",
+		"GlStateManager.matrixMode": "GL11.glMatrixMode",
+		"GlStateManager.getFloat": "GL11.glGetFloat"
+	}
+}

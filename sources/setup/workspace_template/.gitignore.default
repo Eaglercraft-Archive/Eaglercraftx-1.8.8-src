@@ -1,0 +1,14 @@
+.gradle
+.settings
+.classpath
+.project
+build
+bin
+proxyServer/bin
+proxyServer/rundir
+desktopRuntime/_eagstorage*
+desktopRuntime/eclipseProject/bin*
+desktopRuntime/hs_err_*
+desktopRuntime/crash-reports/*
+desktopRuntime/options.txt
+desktopRuntime/_eagstorage*

@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Main-Class: net.lax1dude.eaglercraft.v1_8.buildtools.EaglerBuildTools
+Class-Path: Java11Check.jar deps/asm-signature.jar deps/commons-csv-1.9.0.jar deps/commons-io-2.11.0.jar deps/eclipse-formatter.jar deps/java-diff-utils-4.11.jar deps/json-20220320.jar
+

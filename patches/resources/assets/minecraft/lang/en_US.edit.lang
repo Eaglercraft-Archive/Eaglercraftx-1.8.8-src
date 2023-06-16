@@ -1,0 +1,93 @@
+
+# Eagler Context Redacted Diff
+# Copyright (c) 2023 lax1dude. All rights reserved.
+
+# Version: 1.0
+# Author: lax1dude
+
+> CHANGE  17 : 21  @  17 : 24
+
+~ eaglercraft.recording.unsupported=Recording Unsupported!
+~ eaglercraft.recording.stop=Stop Recording
+~ eaglercraft.recording.start=Record Screen...
+~ eaglercraft.soundCategory.voice=Voice
+
+> INSERT  1 : 68  @  1
+
++ eaglercraft.resourcePack.prompt.title=What do you want to do with '%s'?
++ eaglercraft.resourcePack.prompt.text=Tip: Hold Shift to skip this screen when selecting a resource pack!
++ eaglercraft.resourcePack.prompt.delete=Delete this resource pack
++ eaglercraft.resourcePack.prompt.add=Select this resource pack
++ eaglercraft.resourcePack.load.refreshing=Refreshing Resources...
++ eaglercraft.resourcePack.load.pleaseWait=Please Wait.
++ eaglercraft.resourcePack.load.loading=Loading resource pack...
++ eaglercraft.resourcePack.load.deleting=Deleting resource pack...
++ 
++ eaglercraft.gui.exitKey=Use '%s' to close this screen!
++ eaglercraft.gui.exitKeyRetarded=Use Backtick (`) to close this screen!
++ 
++ eaglercraft.menu.forkOnGitlab=Fork on GitLab
++ eaglercraft.menu.editProfile=Edit Profile
++ 
++ eaglercraft.editProfile.title=Edit Profile
++ eaglercraft.editProfile.username=Username
++ eaglercraft.editProfile.playerSkin=Player Skin
++ eaglercraft.editProfile.addSkin=Add Skin
++ eaglercraft.editProfile.clearSkin=Clear List
++ 
++ eaglercraft.addServer.SSLWarn1=you are on an https: page!
++ eaglercraft.addServer.SSLWarn2=html5 will only allow wss://
++ 
++ eaglercraft.chat.exit=Exit Chat
++ 
++ eaglercraft.handshakeApprove.plaintext.title=Protocol Warning
++ 
++ eaglercraft.handshakeApprove.plaintext.body.0=§eThis server's 3rd party login system is 
++ eaglercraft.handshakeApprove.plaintext.body.1=§eusing insecure plain-text password login
++ 
++ eaglercraft.handshakeApprove.plaintext.body.3=This means your password can be stolen
++ eaglercraft.handshakeApprove.plaintext.body.4=by who is running this server, and also
++ eaglercraft.handshakeApprove.plaintext.body.5=any proxy you use to connect to it with
++ 
++ eaglercraft.handshakeApprove.plaintext.body.7=§7Would you like to continue?
++ 
++ eaglercraft.handshakeApprove.unsupportedAuth.title=Protocol Unsupported
++ 
++ eaglercraft.handshakeApprove.unsupportedAuth.body.0=§cThis server's login system is using a
++ eaglercraft.handshakeApprove.unsupportedAuth.body.1=§cprotocol not supported by this client
++ 
++ eaglercraft.handshakeApprove.unsupportedAuth.body.3=Please make sure you are using the
++ eaglercraft.handshakeApprove.unsupportedAuth.body.4=latest version of EaglercraftX or
++ eaglercraft.handshakeApprove.unsupportedAuth.body.5=another fork made for this server
++ 
++ eaglercraft.options.hud.fps=Show FPS
++ eaglercraft.options.hud.coords=Show XYZ
++ eaglercraft.options.hud.stats=Show Stats HUD
++ eaglercraft.options.hud.world=Show World HUD
++ eaglercraft.options.hud.player=Show Player
++ eaglercraft.options.hud.note=Check 'Video Settings' for the option to hide XYZ
++ eaglercraft.options.hud.24h=24h Day
++ eaglercraft.options.chunkFix=Chunk Lag Fix
++ eaglercraft.options.fog=Fog
++ eaglercraft.options.fxaa=FXAA Antialiasing
++ eaglercraft.options.fxaa.auto=Auto
++ 
++ eaglercraft.key.function=Function
++ eaglercraft.key.zoomCamera=Zoom Camera
++ eaglercraft.key.close=Close Screen
++ 
++ eaglercraft.disconnect.tooManyRequests=Too Many Requests!
++ 
++ eaglercraft.auth.required=Authentication Required
++ eaglercraft.auth.continue=Join Server
++ 
+
+> CHANGE  468 : 469  @  468 : 469
+
+~ resourcePack.openFolder=Open resource pack
+
+> CHANGE  3 : 4  @  3 : 4
+
+~ resourcePack.folderInfo=(Select resource pack files here)
+
+> EOF

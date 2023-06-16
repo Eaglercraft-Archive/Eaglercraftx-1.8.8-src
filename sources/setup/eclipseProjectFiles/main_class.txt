@@ -1,0 +1,1 @@
+src_main_java/net/lax1dude/eaglercraft/v1_8/internal/lwjgl/MainClass.java

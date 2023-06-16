@@ -1,0 +1,13 @@
+{ 
+    "server_host": "0.0.0.0",
+    "server_port": 8081,
+    "server_icon": "server-icon.png",
+    "server_motd": [ 
+    	"1.8 is still under construction"
+    ],
+    "server_name": "EaglercraftX 1.8 Server",
+    "server_uuid": "${random_uuid}",
+    "client_timeout": 3000,
+    "kick_message": "This EaglercraftX 1.8 server is still under construction!",
+    "redirect_legacy": null
+}
