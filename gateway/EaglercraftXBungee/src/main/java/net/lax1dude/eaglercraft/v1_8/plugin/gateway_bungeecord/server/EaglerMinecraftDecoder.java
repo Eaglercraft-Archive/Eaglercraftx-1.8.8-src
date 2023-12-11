@@ -1,5 +1,7 @@
 package net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.server;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import io.netty.buffer.ByteBuf;
@@ -14,6 +16,7 @@ import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.server.bungeeprot
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.server.bungeeprotocol.EaglerProtocolAccessProxy;
 import net.md_5.bungee.protocol.DefinedPacket;
 import net.md_5.bungee.protocol.PacketWrapper;
+import net.md_5.bungee.protocol.Protocol;
 import net.md_5.bungee.protocol.ProtocolConstants.Direction;
 
 /**
@@ -33,6 +36,7 @@ public class EaglerMinecraftDecoder extends MessageToMessageDecoder<WebSocketFra
 	private EaglerBungeeProtocol protocol;
 	private final boolean server;
 	private int protocolVersion;
+	private static Constructor<PacketWrapper> packetWrapperConstructor = null;
 
 	@Override
 	protected void decode(ChannelHandlerContext ctx, WebSocketFrame frame, List<Object> out) throws Exception {
@@ -46,16 +50,30 @@ public class EaglerMinecraftDecoder extends MessageToMessageDecoder<WebSocketFra
 			ByteBuf buf = in.content();
 			int pktId = DefinedPacket.readVarInt(buf);
 			DefinedPacket pkt = EaglerProtocolAccessProxy.createPacket(protocol, protocolVersion, pktId, server);
+			Protocol bungeeProtocol = null;
+			switch(this.protocol) {
+				case GAME:
+					bungeeProtocol = Protocol.GAME;
+					break;
+				case HANDSHAKE:
+					bungeeProtocol = Protocol.HANDSHAKE;
+					break;
+				case LOGIN:
+					bungeeProtocol = Protocol.LOGIN;
+					break;
+				case STATUS:
+					bungeeProtocol = Protocol.STATUS;
+			}
 			if(pkt != null) {
 				pkt.read(buf, server ? Direction.TO_CLIENT : Direction.TO_SERVER, protocolVersion);
 				if(buf.isReadable()) {
 					EaglerXBungee.logger().severe("[DECODER][" + ctx.channel().remoteAddress() + "] Packet "  +
 							pkt.getClass().getSimpleName() + " had extra bytes! (" + buf.readableBytes() + ")");
 				}else {
-					out.add(new PacketWrapper(pkt, buf.copy(0, buf.writerIndex())));
+					out.add(this.wrapPacket(pkt, buf, bungeeProtocol));
 				}
 			}else {
-				out.add(new PacketWrapper(null, buf.copy(0, buf.writerIndex())));
+				out.add(this.wrapPacket(null, buf, bungeeProtocol));
 			}
 		}else if(frame instanceof PingWebSocketFrame) {
 			if(millis - con.lastClientPingPacket > 500l) {
@@ -82,5 +100,47 @@ public class EaglerMinecraftDecoder extends MessageToMessageDecoder<WebSocketFra
 	public void setProtocolVersion(final int protocolVersion) {
 		this.protocolVersion = protocolVersion;
 	}
-	
+
+
+
+	private PacketWrapper wrapPacket(DefinedPacket packet, ByteBuf buf, Protocol protocol) {
+		ByteBuf cbuf = null;
+
+		PacketWrapper var7;
+		try {
+			cbuf = buf.copy(0, buf.writerIndex());
+			PacketWrapper pkt;
+			if (packetWrapperConstructor != null) {
+				try {
+					pkt = packetWrapperConstructor.newInstance(packet, cbuf);
+					cbuf = null;
+					return pkt;
+				} catch (IllegalAccessException | InvocationTargetException | InstantiationException var14) {
+					throw new RuntimeException(var14);
+				}
+			}
+
+			try {
+				pkt = new PacketWrapper(packet, cbuf, protocol);
+				cbuf = null;
+				return pkt;
+			} catch (NoSuchMethodError var15) {
+				try {
+					packetWrapperConstructor = PacketWrapper.class.getDeclaredConstructor(DefinedPacket.class, ByteBuf.class);
+					pkt = packetWrapperConstructor.newInstance(packet, cbuf);
+					cbuf = null;
+					var7 = pkt;
+				} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | InstantiationException var13) {
+					throw new RuntimeException(var13);
+				}
+			}
+		} finally {
+			if (cbuf != null) {
+				cbuf.release();
+			}
+
+		}
+
+		return var7;
+	}
 }

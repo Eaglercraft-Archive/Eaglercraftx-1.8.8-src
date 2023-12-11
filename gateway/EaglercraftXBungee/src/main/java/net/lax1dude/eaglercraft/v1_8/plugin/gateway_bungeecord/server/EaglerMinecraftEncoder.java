@@ -36,7 +36,12 @@ public class EaglerMinecraftEncoder extends MessageToMessageEncoder<DefinedPacke
 		ByteBuf buf = Unpooled.buffer();
 		int pk = EaglerProtocolAccessProxy.getPacketId(protocol, protocolVersion, msg, server);
 		DefinedPacket.writeVarInt(pk, buf);
-		msg.write(buf, server ? Direction.TO_CLIENT : Direction.TO_SERVER, protocolVersion);
+		try {
+			msg.write(buf, server ? Direction.TO_CLIENT : Direction.TO_SERVER, protocolVersion);
+		} catch (Exception e) {
+			buf.release();
+			buf = Unpooled.EMPTY_BUFFER;
+		}
 		out.add(new BinaryWebSocketFrame(buf));
 	}
 
@@ -53,5 +58,9 @@ public class EaglerMinecraftEncoder extends MessageToMessageEncoder<DefinedPacke
 	public void setProtocolVersion(final int protocolVersion) {
 		this.protocolVersion = protocolVersion;
 	}
-	
+
+	public EaglerBungeeProtocol getProtocol() {
+		return this.protocol;
+	}
+
 }

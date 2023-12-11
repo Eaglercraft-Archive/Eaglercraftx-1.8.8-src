@@ -787,7 +787,15 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 						
 						final UserConnection userCon = eaglerCon.userConnection = new UserConnection(bungee, ch, usernameStr, initialHandler);
 						userCon.setCompressionThreshold(-1);
-						userCon.init();
+						try {
+							if (!userCon.init()) {
+								userCon.disconnect(bungee.getTranslation("already_connected_proxy"));
+								EaglerPipeline.closeChannel(ctx.channel());
+								return;
+							}
+						} catch (NoSuchMethodError e) {
+							UserConnection.class.getDeclaredMethod("init").invoke(userCon);
+						}
 						
 						ChannelPipeline pp = ctx.channel().pipeline();
 						
