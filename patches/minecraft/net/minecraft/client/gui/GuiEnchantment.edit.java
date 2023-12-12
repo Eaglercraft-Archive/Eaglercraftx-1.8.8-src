@@ -1,15 +1,17 @@
 
 # Eagler Context Redacted Diff
-# Copyright (c) 2023 lax1dude. All rights reserved.
+# Copyright (c) 2024 lax1dude. All rights reserved.
 
 # Version: 1.0
 # Author: lax1dude
 
 > DELETE  2  @  2 : 4
 
-> CHANGE  1 : 6  @  1 : 4
+> CHANGE  1 : 8  @  1 : 4
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
+~ import net.lax1dude.eaglercraft.v1_8.Mouse;
+~ import net.lax1dude.eaglercraft.v1_8.internal.EnumCursorType;
 ~ 
 ~ import com.google.common.collect.Lists;
 ~ 
@@ -29,8 +31,8 @@
 
 > CHANGE  25 : 28  @  25 : 28
 
-~ 		GlStateManager.viewport((scaledresolution.getScaledWidth() - 290 - 110) / 2 * scaledresolution.getScaleFactor(),
-~ 				(scaledresolution.getScaledHeight() - 220 + 60) / 2 * scaledresolution.getScaleFactor(),
+~ 		GlStateManager.viewport((scaledresolution.getScaledWidth() - 290 - 12) / 2 * scaledresolution.getScaleFactor(),
+~ 				(scaledresolution.getScaledHeight() - 220 + 10) / 2 * scaledresolution.getScaleFactor(),
 ~ 				290 * scaledresolution.getScaleFactor(), 220 * scaledresolution.getScaleFactor());
 
 > CHANGE  1 : 2  @  1 : 2
@@ -44,5 +46,9 @@
 > INSERT  1 : 2  @  1
 
 + 		GlStateManager.disableDepth();
+
+> INSERT  105 : 106  @  105
+
++ 				Mouse.showCursor(EnumCursorType.HAND);
 
 > EOF

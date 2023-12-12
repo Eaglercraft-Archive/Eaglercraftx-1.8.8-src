@@ -1,5 +1,6 @@
 package net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.server;
 
+import java.lang.reflect.Method;
 import java.util.List;
 
 import io.netty.buffer.ByteBuf;
@@ -10,19 +11,22 @@ import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.server.bungeeprotocol.EaglerBungeeProtocol;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.server.bungeeprotocol.EaglerProtocolAccessProxy;
 import net.md_5.bungee.protocol.DefinedPacket;
+import net.md_5.bungee.protocol.Protocol;
 import net.md_5.bungee.protocol.ProtocolConstants.Direction;
 
 /**
- * Copyright (c) 2022-2023 LAX1DUDE. All Rights Reserved.
+ * Copyright (c) 2022-2023 lax1dude. All Rights Reserved.
  * 
- * WITH THE EXCEPTION OF PATCH FILES, MINIFIED JAVASCRIPT, AND ALL FILES
- * NORMALLY FOUND IN AN UNMODIFIED MINECRAFT RESOURCE PACK, YOU ARE NOT ALLOWED
- * TO SHARE, DISTRIBUTE, OR REPURPOSE ANY FILE USED BY OR PRODUCED BY THE
- * SOFTWARE IN THIS REPOSITORY WITHOUT PRIOR PERMISSION FROM THE PROJECT AUTHOR.
- * 
- * NOT FOR COMMERCIAL OR MALICIOUS USE
- * 
- * (please read the 'LICENSE' file this repo's root directory for more info)
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ * IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
 public class EaglerMinecraftEncoder extends MessageToMessageEncoder<DefinedPacket> {
@@ -30,14 +34,39 @@ public class EaglerMinecraftEncoder extends MessageToMessageEncoder<DefinedPacke
 	private EaglerBungeeProtocol protocol;
 	private boolean server;
 	private int protocolVersion;
+	private static Method meth = null;
 	
 	@Override
 	protected void encode(ChannelHandlerContext ctx, DefinedPacket msg, List<Object> out) throws Exception {
+		Protocol bungeeProtocol = null;
+		switch(this.protocol) {
+			case GAME:
+				bungeeProtocol = Protocol.GAME;
+				break;
+			case HANDSHAKE:
+				bungeeProtocol = Protocol.HANDSHAKE;
+				break;
+			case LOGIN:
+				bungeeProtocol = Protocol.LOGIN;
+				break;
+			case STATUS:
+				bungeeProtocol = Protocol.STATUS;
+		}
 		ByteBuf buf = Unpooled.buffer();
 		int pk = EaglerProtocolAccessProxy.getPacketId(protocol, protocolVersion, msg, server);
 		DefinedPacket.writeVarInt(pk, buf);
 		try {
-			msg.write(buf, server ? Direction.TO_CLIENT : Direction.TO_SERVER, protocolVersion);
+			msg.write(buf, bungeeProtocol, server ? Direction.TO_CLIENT : Direction.TO_SERVER, protocolVersion);
+		} catch (NoSuchMethodError e) {
+			try {
+				if (meth == null) {
+					meth = DefinedPacket.class.getDeclaredMethod("write", ByteBuf.class, Direction.class, int.class);
+				}
+				meth.invoke(msg, buf, server ? Direction.TO_CLIENT : Direction.TO_SERVER, protocolVersion);
+			} catch (Exception e1) {
+				buf.release();
+				buf = Unpooled.EMPTY_BUFFER;
+			}
 		} catch (Exception e) {
 			buf.release();
 			buf = Unpooled.EMPTY_BUFFER;

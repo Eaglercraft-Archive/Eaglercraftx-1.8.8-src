@@ -1,16 +1,17 @@
 
 # Eagler Context Redacted Diff
-# Copyright (c) 2023 lax1dude. All rights reserved.
+# Copyright (c) 2024 lax1dude. All rights reserved.
 
 # Version: 1.0
 # Author: lax1dude
 
-> CHANGE  2 : 6  @  2 : 7
+> CHANGE  2 : 7  @  2 : 7
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
 ~ import net.lax1dude.eaglercraft.v1_8.mojang.authlib.GameProfile;
 ~ import net.lax1dude.eaglercraft.v1_8.profile.EaglerProfile;
+~ import net.lax1dude.eaglercraft.v1_8.sp.server.classes.net.minecraft.entity.player.EntityPlayer;
 
 > CHANGE  2 : 3  @  2 : 6
 
@@ -40,13 +41,18 @@
 ~ 	public void reset() {
 ~ 		update(EaglerProfile.getName(), offlineUUID);
 
-> CHANGE  2 : 6  @  2 : 9
+> CHANGE  2 : 4  @  2 : 9
+
+~ 	public void setLAN() {
+~ 		update(EaglerProfile.getName(), EntityPlayer.getOfflineUUID(EaglerProfile.getName()));
+
+> CHANGE  2 : 6  @  2 : 4
 
 ~ 	static {
 ~ 		byte[] bytes = new byte[16];
 ~ 		(new EaglercraftRandom()).nextBytes(bytes);
 ~ 		offlineUUID = new EaglercraftUUID(bytes);
 
-> DELETE  2  @  2 : 27
+> DELETE  2  @  2 : 23
 
 > EOF

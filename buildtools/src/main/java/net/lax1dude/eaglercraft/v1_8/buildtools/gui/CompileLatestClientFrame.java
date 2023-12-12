@@ -66,16 +66,18 @@ import java.awt.ComponentOrientation;
 import javax.swing.JTextArea;
 
 /**
- * Copyright (c) 2022-2023 LAX1DUDE. All Rights Reserved.
+ * Copyright (c) 2022-2023 lax1dude. All Rights Reserved.
  * 
- * WITH THE EXCEPTION OF PATCH FILES, MINIFIED JAVASCRIPT, AND ALL FILES
- * NORMALLY FOUND IN AN UNMODIFIED MINECRAFT RESOURCE PACK, YOU ARE NOT ALLOWED
- * TO SHARE, DISTRIBUTE, OR REPURPOSE ANY FILE USED BY OR PRODUCED BY THE
- * SOFTWARE IN THIS REPOSITORY WITHOUT PRIOR PERMISSION FROM THE PROJECT AUTHOR.
- * 
- * NOT FOR COMMERCIAL OR MALICIOUS USE
- * 
- * (please read the 'LICENSE' file this repo's root directory for more info)
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ * IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
 public class CompileLatestClientFrame {
@@ -427,7 +429,7 @@ public class CompileLatestClientFrame {
 		lblNewLabel_1.setFont(new Font("Dialog", Font.BOLD, 14));
 		panel_2.add(lblNewLabel_1, BorderLayout.NORTH);
 		
-		JLabel lblNewLabel_2 = new JLabel("Copyright (c) 2022-2023 lax1dude");
+		JLabel lblNewLabel_2 = new JLabel("Copyright (c) 2022-2024 lax1dude");
 		lblNewLabel_2.setVerticalAlignment(SwingConstants.TOP);
 		lblNewLabel_2.setPreferredSize(new Dimension(27, 24));
 		lblNewLabel_2.setFont(new Font("Dialog", Font.PLAIN, 14));
@@ -830,7 +832,7 @@ public class CompileLatestClientFrame {
 		
 		JTextPane txtpnfuckOffeaglercraftx = new JTextPane();
 		txtpnfuckOffeaglercraftx.setContentType("text/html");
-		txtpnfuckOffeaglercraftx.setText("<html>\r\n<head><title>fuck off</title></head>\r\n<body style=\"font-family:sans-serif;margin:0px;\">\r\n<p style=\"font-size:17px;\">TeaVM Java to JavaScript Compiler</p>\r\n<p style=\"font-size:11px;\">EaglercraftX 1.8 uses TeaVM 0.6.1 to compile java to javascript. It's not included in the eagler repository to save space, so it must be downloaded from a public maven repository via HTTP, or loaded from a temporary local directory</p>\r\n</body>\r\n</html>");
+		txtpnfuckOffeaglercraftx.setText("<html>\r\n<head><title>fuck off</title></head>\r\n<body style=\"font-family:sans-serif;margin:0px;\">\r\n<p style=\"font-size:17px;\">TeaVM Java to JavaScript Compiler</p>\r\n<p style=\"font-size:11px;\">EaglercraftX 1.8 uses TeaVM 0.9.2 to compile java to javascript. It's not included in the eagler repository to save space, so it must be downloaded from a public maven repository via HTTP, or loaded from a temporary local directory</p>\r\n</body>\r\n</html>");
 		txtpnfuckOffeaglercraftx.setEditable(false);
 		txtpnfuckOffeaglercraftx.setMargin(new Insets(10, 10, 10, 10));
 		pageMavenRepo.add(txtpnfuckOffeaglercraftx, BorderLayout.NORTH);

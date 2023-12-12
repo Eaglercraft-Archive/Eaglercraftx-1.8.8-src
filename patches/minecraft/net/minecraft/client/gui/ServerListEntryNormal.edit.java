@@ -1,6 +1,6 @@
 
 # Eagler Context Redacted Diff
-# Copyright (c) 2023 lax1dude. All rights reserved.
+# Copyright (c) 2024 lax1dude. All rights reserved.
 
 # Version: 1.0
 # Author: lax1dude
@@ -26,9 +26,11 @@
 
 > DELETE  6  @  6 : 7
 
-> DELETE  1  @  1 : 2
+> CHANGE  1 : 2  @  1 : 3
 
-> DELETE  6  @  6 : 8
+~ 	long field_148298_f;
+
+> DELETE  5  @  5 : 7
 
 > DELETE  8  @  8 : 25
 

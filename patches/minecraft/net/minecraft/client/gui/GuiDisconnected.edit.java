@@ -1,15 +1,18 @@
 
 # Eagler Context Redacted Diff
-# Copyright (c) 2023 lax1dude. All rights reserved.
+# Copyright (c) 2024 lax1dude. All rights reserved.
 
 # Version: 1.0
 # Author: lax1dude
 
 > DELETE  2  @  2 : 3
 
-> CHANGE  1 : 2  @  1 : 3
+> CHANGE  1 : 5  @  1 : 3
 
 ~ 
+~ import net.lax1dude.eaglercraft.v1_8.sp.SingleplayerServerController;
+~ import net.lax1dude.eaglercraft.v1_8.sp.gui.GuiScreenIntegratedServerBusy;
+~ import net.lax1dude.eaglercraft.v1_8.sp.ipc.IPCPacket15Crashed;
 
 > INSERT  1 : 2  @  1
 
@@ -23,8 +26,16 @@
 
 ~ 	protected void actionPerformed(GuiButton parGuiButton) {
 
-> INSERT  20 : 24  @  20
+> INSERT  20 : 32  @  20
 
++ 
++ 	public void updateScreen() {
++ 		IPCPacket15Crashed[] pkt = SingleplayerServerController.worldStatusErrors();
++ 		if (pkt != null && pkt.length > 0) {
++ 			mc.displayGuiScreen(
++ 					GuiScreenIntegratedServerBusy.createException(this, "singleplayer.failed.serverCrash", pkt));
++ 		}
++ 	}
 + 
 + 	public static GuiScreen createRateLimitKick(GuiScreen prev) {
 + 		return new GuiDisconnected(prev, "connect.failed", new ChatComponentTranslation("disconnect.tooManyRequests"));

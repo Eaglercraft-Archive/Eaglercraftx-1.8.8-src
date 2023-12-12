@@ -1,20 +1,8 @@
-
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-
-    dependencies {
-        classpath 'io.github.zebalu:teavm-gradle-plugin:1.0.0'
-    }
+plugins {
+    id 'java'
+    id 'eclipse'
+    id 'org.teavm' version '0.9.2'
 }
-
-apply plugin: 'java'
-apply plugin: 'eclipse'
-apply plugin: 'io.github.zebalu.teavm-gradle-plugin'
-
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
 
 sourceSets {
     main {
@@ -30,57 +18,22 @@ repositories {
 }
 
 dependencies {
-    /** we use 0.6.1 due to performance issues on 7.0.0 */
-    implementation 'org.teavm:teavm-platform:0.6.1'
-    implementation('org.teavm:teavm-classlib:0.6.1') {
-    	exclude group: 'com.google.code.gson', module: 'gson'
-    }
+    teavm(teavm.libs.jso)
+    teavm(teavm.libs.jsoApis)
 }
 
-teavm {
-   
-   compileScopes = null;
-   minifying = true;
-   maxTopLevelNames = 10000;
-   properties = null;
-   debugInformationGenerated = false;
-   sourceMapsGenerated = true;
-   sourceFilesCopied = false;
-   incremental = false;
-   transformers = null;
-   
-   /** Where to save the result */
-   targetDirectory = file("javascript");
-   
-   /** The directory to monitor to decide if compile is up-to-date or not */
-   sourceDirectory = file("src");
-   
-   /** How to name the result file. */
-   targetFileName = "classes.js";
-   
-   /** Which class holds your public static void main(Strin[] args) method */
-   mainClass = 'net.lax1dude.eaglercraft.v1_8.internal.teavm.MainClass';
-   
-   /** This will be the name of your main method after compilation. */
-   entryPointName = 'main';
-   
-   classesToPreserve = null;
-   stopOnErrors = false;
-   optimizationLevel = "ADVANCED"; //org.teavm.vm.TeaVMOptimizationLevel.SIMPLE;
-   fastGlobalAnalysis = false;
-   targetType = "JAVASCRIPT"; //org.teavm.tooling.TeaVMTargetType.JAVASCRIPT;
-   cacheDirectory = null;
-   wasmVersion = "V_0x1"; //org.teavm.backend.wasm.render.WasmBinaryVersion.V_0x1;
-   minHeapSize = 4;
-   maxHeapSize = 128;
-   outOfProcess = false;
-   processMemory = 512;
-   longjmpSupported = true;
-   heapDump = false;
-   
-   /** Add name of configurations here where to look for jarfiles. */
-   includeJarsFrom = [];
-   
-   /** By default teavmc taskd epends on javaCompile task, unless this varaibale is true. */
-   skipJavaCompile = false;       
+teavm.js {
+    obfuscated = true
+    sourceMap = true
+    targetFileName = "../classes.js"
+    // optimization = OptimizationLevel.ADVANCED
+    outOfProcess = false
+    fastGlobalAnalysis = false
+    processMemory = 512
+    entryPointName = 'main'
+    mainClass = 'net.lax1dude.eaglercraft.v1_8.internal.teavm.MainClass'
+    outputDir = file("javascript")
+    properties = null
+    sourceMap = true
+    debugInformation = false
 }

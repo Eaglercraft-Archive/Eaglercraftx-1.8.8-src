@@ -2,6 +2,7 @@ package net.lax1dude.eaglercraft.v1_8.internal;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -11,16 +12,18 @@ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 
 /**
- * Copyright (c) 2022-2023 LAX1DUDE. All Rights Reserved.
+ * Copyright (c) 2022-2023 lax1dude, ayunami2000. All Rights Reserved.
  * 
- * WITH THE EXCEPTION OF PATCH FILES, MINIFIED JAVASCRIPT, AND ALL FILES
- * NORMALLY FOUND IN AN UNMODIFIED MINECRAFT RESOURCE PACK, YOU ARE NOT ALLOWED
- * TO SHARE, DISTRIBUTE, OR REPURPOSE ANY FILE USED BY OR PRODUCED BY THE
- * SOFTWARE IN THIS REPOSITORY WITHOUT PRIOR PERMISSION FROM THE PROJECT AUTHOR.
- * 
- * NOT FOR COMMERCIAL OR MALICIOUS USE
- * 
- * (please read the 'LICENSE' file this repo's root directory for more info)
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ * IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
 public class PlatformNetworking {
@@ -86,7 +89,19 @@ public class PlatformNetworking {
 			return playPackets.size() > 0 ? playPackets.remove(0) : null;
 		}
 	}
-
+	
+	public static List<byte[]> readAllPacket() {
+		synchronized(playPackets) {
+			if(!playPackets.isEmpty()) {
+				List<byte[]> ret = new ArrayList<>(playPackets);
+				playPackets.clear();
+				return ret;
+			}else {
+				return null;
+			}
+		}
+	}
+	
 	public static int countAvailableReadData() {
 		int total = 0;
 		synchronized(playPackets) {

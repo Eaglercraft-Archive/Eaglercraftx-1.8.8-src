@@ -11,40 +11,43 @@ import java.util.Iterator;
 import java.util.List;
 
 import net.lax1dude.eaglercraft.v1_8.EaglerInputStream;
+import net.lax1dude.eaglercraft.v1_8.internal.teavm.TeaVMUtils;
+
 import org.teavm.interop.Async;
 import org.teavm.interop.AsyncCallback;
 import org.teavm.jso.JSBody;
 import org.teavm.jso.JSObject;
 import org.teavm.jso.dom.events.EventListener;
-import net.lax1dude.eaglercraft.v1_8.internal.indexeddb.EventHandler;
-import net.lax1dude.eaglercraft.v1_8.internal.indexeddb.IDBCountRequest;
-import net.lax1dude.eaglercraft.v1_8.internal.indexeddb.IDBCursor;
-import net.lax1dude.eaglercraft.v1_8.internal.indexeddb.IDBCursorRequest;
-import net.lax1dude.eaglercraft.v1_8.internal.indexeddb.IDBDatabase;
-import net.lax1dude.eaglercraft.v1_8.internal.indexeddb.IDBFactory;
-import net.lax1dude.eaglercraft.v1_8.internal.indexeddb.IDBGetRequest;
-import net.lax1dude.eaglercraft.v1_8.internal.indexeddb.IDBObjectStoreParameters;
-import net.lax1dude.eaglercraft.v1_8.internal.indexeddb.IDBOpenDBRequest;
-import net.lax1dude.eaglercraft.v1_8.internal.indexeddb.IDBRequest;
-import net.lax1dude.eaglercraft.v1_8.internal.indexeddb.IDBTransaction;
-import net.lax1dude.eaglercraft.v1_8.internal.indexeddb.IDBVersionChangeEvent;
+import org.teavm.jso.indexeddb.EventHandler;
+import org.teavm.jso.indexeddb.IDBCountRequest;
+import org.teavm.jso.indexeddb.IDBCursor;
+import org.teavm.jso.indexeddb.IDBCursorRequest;
+import org.teavm.jso.indexeddb.IDBDatabase;
+import org.teavm.jso.indexeddb.IDBFactory;
+import org.teavm.jso.indexeddb.IDBGetRequest;
+import org.teavm.jso.indexeddb.IDBObjectStoreParameters;
+import org.teavm.jso.indexeddb.IDBOpenDBRequest;
+import org.teavm.jso.indexeddb.IDBRequest;
+import org.teavm.jso.indexeddb.IDBTransaction;
+import org.teavm.jso.indexeddb.IDBVersionChangeEvent;
 import org.teavm.jso.typedarrays.ArrayBuffer;
 import org.teavm.jso.typedarrays.Uint8Array;
 
 /**
- * Copyright (c) 2022-2023 LAX1DUDE. All Rights Reserved.
- *
- * WITH THE EXCEPTION OF PATCH FILES, MINIFIED JAVASCRIPT, AND ALL FILES
- * NORMALLY FOUND IN AN UNMODIFIED MINECRAFT RESOURCE PACK, YOU ARE NOT ALLOWED
- * TO SHARE, DISTRIBUTE, OR REPURPOSE ANY FILE USED BY OR PRODUCED BY THE
- * SOFTWARE IN THIS REPOSITORY WITHOUT PRIOR PERMISSION FROM THE PROJECT AUTHOR.
- *
- * NOT FOR COMMERCIAL OR MALICIOUS USE
- *
- * (please read the 'LICENSE' file this repo's root directory for more info)
- *
+ * Copyright (c) 2022 lax1dude. All Rights Reserved.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ * IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ * 
  */
-
 public class VirtualFilesystem {
 	
 	protected static class VirtualOutputStream extends ByteArrayOutputStream {
@@ -203,10 +206,7 @@ public class VirtualFilesystem {
 				}
 				Uint8Array a = Uint8Array.create(b);
 				this.fileSize = a.getByteLength();
-				byte[] array = new byte[fileSize];
-				for(int i = 0; i < a.getByteLength(); ++i) {
-					array[i] = (byte)a.get(i);
-				}
+				byte[] array = TeaVMUtils.wrapUnsignedByteArray(a);
 				if(cacheEnabled) {
 					if(copy) {
 						cache = new byte[fileSize];
@@ -242,10 +242,7 @@ public class VirtualFilesystem {
 				cache = copz;
 				return sync();
 			}else {
-				ArrayBuffer a = ArrayBuffer.create(bytes.length);
-				Uint8Array ar = Uint8Array.create(a);
-				ar.set(bytes);
-				boolean s = AsyncHandlers.writeWholeFile(virtualFilesystem.indexeddb, filePath, a).bool;
+				boolean s = AsyncHandlers.writeWholeFile(virtualFilesystem.indexeddb, filePath, TeaVMUtils.unwrapUnsignedByteArray(bytes).getBuffer()).bool;
 				hasBeenAccessed = true;
 				exists = exists || s;
 				return s;
@@ -255,10 +252,7 @@ public class VirtualFilesystem {
 		public boolean sync() {
 			if(cacheEnabled && cache != null && !hasBeenDeleted) {
 				cacheHit = System.currentTimeMillis();
-				ArrayBuffer a = ArrayBuffer.create(cache.length);
-				Uint8Array ar = Uint8Array.create(a);
-				ar.set(cache);
-				boolean tryWrite = AsyncHandlers.writeWholeFile(virtualFilesystem.indexeddb, filePath, a).bool;
+				boolean tryWrite = AsyncHandlers.writeWholeFile(virtualFilesystem.indexeddb, filePath, TeaVMUtils.unwrapUnsignedByteArray(cache).getBuffer()).bool;
 				hasBeenAccessed = true;
 				exists = exists || tryWrite;
 				return tryWrite;

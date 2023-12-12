@@ -1,6 +1,6 @@
 
 # Eagler Context Redacted Diff
-# Copyright (c) 2023 lax1dude. All rights reserved.
+# Copyright (c) 2024 lax1dude. All rights reserved.
 
 # Version: 1.0
 # Author: lax1dude
@@ -10,7 +10,7 @@
 ~ import java.io.ByteArrayOutputStream;
 ~ import java.util.Iterator;
 
-> INSERT  1 : 14  @  1
+> INSERT  1 : 15  @  1
 
 + 
 + import com.google.common.collect.Lists;
@@ -25,6 +25,7 @@
 + import net.lax1dude.eaglercraft.v1_8.socket.AddressResolver;
 + import net.lax1dude.eaglercraft.v1_8.socket.RateLimitTracker;
 + import net.lax1dude.eaglercraft.v1_8.socket.ServerQueryDispatch;
++ import net.lax1dude.eaglercraft.v1_8.sp.relay.RelayManager;
 
 > CHANGE  1 : 2  @  1 : 2
 

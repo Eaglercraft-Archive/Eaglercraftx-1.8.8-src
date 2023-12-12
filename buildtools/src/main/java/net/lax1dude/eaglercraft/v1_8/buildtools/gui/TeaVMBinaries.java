@@ -16,71 +16,67 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 
 /**
- * Copyright (c) 2022-2023 LAX1DUDE. All Rights Reserved.
+ * Copyright (c) 2022-2023 lax1dude. All Rights Reserved.
  * 
- * WITH THE EXCEPTION OF PATCH FILES, MINIFIED JAVASCRIPT, AND ALL FILES
- * NORMALLY FOUND IN AN UNMODIFIED MINECRAFT RESOURCE PACK, YOU ARE NOT ALLOWED
- * TO SHARE, DISTRIBUTE, OR REPURPOSE ANY FILE USED BY OR PRODUCED BY THE
- * SOFTWARE IN THIS REPOSITORY WITHOUT PRIOR PERMISSION FROM THE PROJECT AUTHOR.
- * 
- * NOT FOR COMMERCIAL OR MALICIOUS USE
- * 
- * (please read the 'LICENSE' file this repo's root directory for more info)
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ * IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
 public class TeaVMBinaries {
 
-	public static final String teavmCoreJar = "teavm-core-0.6.1.jar";
-	public static final String teavmCoreMaven = "org/teavm/teavm-core/0.6.1/teavm-core-0.6.1.jar";
-	public static File teavmCore = null;
+	public static class MavenJAREntry {
+		public final String jar;
+		public final String maven;
+		public File file;
+		private MavenJAREntry(String maven) {
+			this.jar = maven.substring(maven.lastIndexOf('/') + 1);
+			this.maven = maven;
+		}
+	}
 
-	public static final String teavmCliJar = "teavm-cli-0.6.1.jar";
-	public static final String teavmCliMaven = "org/teavm/teavm-cli/0.6.1/teavm-cli-0.6.1.jar";
-	public static File teavmCli = null;
+	public static final MavenJAREntry teavmCore = new MavenJAREntry("org/teavm/teavm-core/0.9.2/teavm-core-0.9.2.jar");
+	public static final MavenJAREntry teavmCli = new MavenJAREntry("org/teavm/teavm-cli/0.9.2/teavm-cli-0.9.2.jar");
+	public static final MavenJAREntry teavmTooling = new MavenJAREntry("org/teavm/teavm-tooling/0.9.2/teavm-tooling-0.9.2.jar");
+	public static final MavenJAREntry teavmPlatform = new MavenJAREntry("org/teavm/teavm-platform/0.9.2/teavm-platform-0.9.2.jar");
+	public static final MavenJAREntry teavmClasslib = new MavenJAREntry("org/teavm/teavm-classlib/0.9.2/teavm-classlib-0.9.2.jar");
+	public static final MavenJAREntry teavmInterop = new MavenJAREntry("org/teavm/teavm-interop/0.9.2/teavm-interop-0.9.2.jar");
+	public static final MavenJAREntry teavmJSO = new MavenJAREntry("org/teavm/teavm-jso/0.9.2/teavm-jso-0.9.2.jar");
+	public static final MavenJAREntry teavmJSOApis = new MavenJAREntry("org/teavm/teavm-jso-apis/0.9.2/teavm-jso-apis-0.9.2.jar");
+	public static final MavenJAREntry teavmJSOImpl = new MavenJAREntry("org/teavm/teavm-jso-impl/0.9.2/teavm-jso-impl-0.9.2.jar");
+	public static final MavenJAREntry teavmRelocatedLibsASM = new MavenJAREntry("org/teavm/teavm-relocated-libs-asm/0.9.2/teavm-relocated-libs-asm-0.9.2.jar");
+	public static final MavenJAREntry teavmRelocatedLibsASMAnalysis = new MavenJAREntry("org/teavm/teavm-relocated-libs-asm-analysis/0.9.2/teavm-relocated-libs-asm-analysis-0.9.2.jar");
+	public static final MavenJAREntry teavmRelocatedLibsASMCommons = new MavenJAREntry("org/teavm/teavm-relocated-libs-asm-commons/0.9.2/teavm-relocated-libs-asm-commons-0.9.2.jar");
+	public static final MavenJAREntry teavmRelocatedLibsASMTree = new MavenJAREntry("org/teavm/teavm-relocated-libs-asm-tree/0.9.2/teavm-relocated-libs-asm-tree-0.9.2.jar");
+	public static final MavenJAREntry teavmRelocatedLibsASMUtil = new MavenJAREntry("org/teavm/teavm-relocated-libs-asm-util/0.9.2/teavm-relocated-libs-asm-util-0.9.2.jar");
+	public static final MavenJAREntry teavmRelocatedLibsHPPC = new MavenJAREntry("org/teavm/teavm-relocated-libs-hppc/0.9.2/teavm-relocated-libs-hppc-0.9.2.jar");
+	public static final MavenJAREntry teavmRelocatedLibsRhino = new MavenJAREntry("org/teavm/teavm-relocated-libs-rhino/0.9.2/teavm-relocated-libs-rhino-0.9.2.jar");
+	public static final MavenJAREntry asm = new MavenJAREntry("org/ow2/asm/asm/9.5/asm-9.5.jar");
+	public static final MavenJAREntry asmAnalysis = new MavenJAREntry("org/ow2/asm/asm-analysis/9.5/asm-analysis-9.5.jar");
+	public static final MavenJAREntry asmCommons = new MavenJAREntry("org/ow2/asm/asm-commons/9.5/asm-commons-9.5.jar");
+	public static final MavenJAREntry asmTree = new MavenJAREntry("org/ow2/asm/asm-tree/9.5/asm-tree-9.5.jar");
+	public static final MavenJAREntry asmUtil = new MavenJAREntry("org/ow2/asm/asm-util/9.5/asm-util-9.5.jar");
+	public static final MavenJAREntry hppc = new MavenJAREntry("com/carrotsearch/hppc/0.9.1/hppc-0.9.1.jar");
+	public static final MavenJAREntry rhino = new MavenJAREntry("org/mozilla/rhino/1.7.14/rhino-1.7.14.jar");
+	public static final MavenJAREntry teavmMetaprogrammingAPI = new MavenJAREntry("org/teavm/teavm-metaprogramming-api/0.9.2/teavm-metaprogramming-api-0.9.2.jar");
+	public static final MavenJAREntry teavmMetaprogrammingImpl = new MavenJAREntry("org/teavm/teavm-metaprogramming-impl/0.9.2/teavm-metaprogramming-impl-0.9.2.jar");
+	public static final MavenJAREntry teavmJodaTime = new MavenJAREntry("joda-time/joda-time/2.12.2/joda-time-2.12.2.jar");
+	public static final MavenJAREntry teavmJZLIB = new MavenJAREntry("com/jcraft/jzlib/1.1.3/jzlib-1.1.3.jar");
 
-	public static final String teavmToolingJar = "teavm-tooling-0.6.1.jar";
-	public static final String teavmToolingMaven = "org/teavm/teavm-tooling/0.6.1/teavm-tooling-0.6.1.jar";
-	public static File teavmTooling = null;
-
-	public static final String teavmPlatformJar = "teavm-platform-0.6.1.jar";
-	public static final String teavmPlatformMaven = "org/teavm/teavm-platform/0.6.1/teavm-platform-0.6.1.jar";
-	public static File teavmPlatform = null;
-
-	public static final String teavmClasslibJar = "teavm-classlib-0.6.1.jar";
-	public static final String teavmClasslibMaven = "org/teavm/teavm-classlib/0.6.1/teavm-classlib-0.6.1.jar";
-	public static File teavmClasslib = null;
-
-	public static final String teavmInteropJar = "teavm-interop-0.6.1.jar";
-	public static final String teavmInteropMaven = "org/teavm/teavm-interop/0.6.1/teavm-interop-0.6.1.jar";
-	public static File teavmInterop = null;
-
-	public static final String teavmJSOJar = "teavm-jso-0.6.1.jar";
-	public static final String teavmJSOMaven = "org/teavm/teavm-jso/0.6.1/teavm-jso-0.6.1.jar";
-	public static File teavmJSO = null;
-
-	public static final String teavmJSOApisJar = "teavm-jso-apis-0.6.1.jar";
-	public static final String teavmJSOApisMaven = "org/teavm/teavm-jso-apis/0.6.1/teavm-jso-apis-0.6.1.jar";
-	public static File teavmJSOApis = null;
-
-	public static final String teavmJSOImplJar = "teavm-jso-impl-0.6.1.jar";
-	public static final String teavmJSOImplMaven = "org/teavm/teavm-jso-impl/0.6.1/teavm-jso-impl-0.6.1.jar";
-	public static File teavmJSOImpl = null;
-
-	public static final String teavmMetaprogrammingAPIJar = "teavm-metaprogramming-api-0.6.1.jar";
-	public static final String teavmMetaprogrammingAPIMaven = "org/teavm/teavm-metaprogramming-api/0.6.1/teavm-metaprogramming-api-0.6.1.jar";
-	public static File teavmMetaprogrammingAPI = null;
-
-	public static final String teavmMetaprogrammingImplJar = "teavm-metaprogramming-impl-0.6.1.jar";
-	public static final String teavmMetaprogrammingImplMaven = "org/teavm/teavm-metaprogramming-impl/0.6.1/teavm-metaprogramming-impl-0.6.1.jar";
-	public static File teavmMetaprogrammingImpl = null;
-
-	public static final String teavmJodaTimeJar = "joda-time-2.7.jar";
-	public static final String teavmJodaTimeMaven = "joda-time/joda-time/2.7/joda-time-2.7.jar";
-	public static File teavmJodaTime = null;
-
-	public static final String teavmJZLIBJar = "jzlib-1.1.3.jar";
-	public static final String teavmJZLIBMaven = "com/jcraft/jzlib/1.1.3/jzlib-1.1.3.jar";
-	public static File teavmJZLIB = null;
+	private static final MavenJAREntry[] jarsList = new MavenJAREntry[] { teavmCore, teavmCli, teavmTooling,
+			teavmPlatform, teavmClasslib, teavmInterop, teavmJSO, teavmJSOApis, teavmJSOImpl, teavmRelocatedLibsASM,
+			teavmRelocatedLibsASMAnalysis, teavmRelocatedLibsASMCommons, teavmRelocatedLibsASMTree,
+			teavmRelocatedLibsASMUtil, teavmRelocatedLibsHPPC, teavmRelocatedLibsRhino, asm, asmAnalysis, asmCommons,
+			asmTree, asmUtil, hppc, rhino, teavmMetaprogrammingAPI, teavmMetaprogrammingImpl, teavmJodaTime,
+			teavmJZLIB
+	};
 
 	public static File teavmBridge = null;
 
@@ -100,203 +96,40 @@ public class TeaVMBinaries {
 	}
 
 	public static void downloadFromMaven(String url, File outputDir) throws MissingJARsException {
-		teavmCore = teavmPlatform = teavmClasslib = teavmInterop = teavmJSO = 
-		teavmJSOApis = teavmJSOImpl = teavmMetaprogrammingAPI = teavmMetaprogrammingImpl =
-		teavmJodaTime = teavmJZLIB = teavmTooling = teavmCli = null;
+		for(int i = 0; i < jarsList.length; ++i) {
+			jarsList[i].file = null;
+		}
 		
 		if(url.lastIndexOf('/') != url.length() - 1) {
 			url += "/";
 		}
 		
-		String urlConc = url + teavmCoreMaven;
-		try {
-			File f = new File(outputDir, teavmCoreJar);
-			copyURLToFileCheck404(urlConc, f);
-			teavmCore = f;
-		}catch(IOException ex) {
-			System.err.println("Could not download JAR: " + urlConc);
-			ex.printStackTrace();
-			throw new MissingJARsException("The following JAR file could not be downloaded: " + urlConc, Arrays.asList(urlConc));
+		for(int i = 0; i < jarsList.length; ++i) {
+			MavenJAREntry jar = jarsList[i];
+			String urlConc = url + jar.maven;
+			try {
+				File f = new File(outputDir, jar.jar);
+				copyURLToFileCheck404(urlConc, f);
+				jar.file = f;
+			}catch(IOException ex) {
+				System.err.println("Could not download JAR: " + urlConc);
+				ex.printStackTrace();
+				throw new MissingJARsException("The following JAR file could not be downloaded: " + urlConc, Arrays.asList(urlConc));
+			}
 		}
-		
-		urlConc = url + teavmCliMaven;
-		try {
-			File f = new File(outputDir, teavmCliJar);
-			copyURLToFileCheck404(urlConc, f);
-			teavmCli = f;
-		}catch(IOException ex) {
-			System.err.println("Could not download JAR: " + urlConc);
-			ex.printStackTrace();
-			throw new MissingJARsException("The following JAR file could not be downloaded: " + urlConc, Arrays.asList(urlConc));
-		}
-		
-		urlConc = url + teavmToolingMaven;
-		try {
-			File f = new File(outputDir, teavmToolingJar);
-			copyURLToFileCheck404(urlConc, f);
-			teavmTooling = f;
-		}catch(IOException ex) {
-			System.err.println("Could not download JAR: " + urlConc);
-			ex.printStackTrace();
-			throw new MissingJARsException("The following JAR file could not be downloaded: " + urlConc, Arrays.asList(urlConc));
-		}
-		
-		urlConc = url + teavmPlatformMaven;
-		try {
-			File f = new File(outputDir, teavmPlatformJar);
-			copyURLToFileCheck404(urlConc, f);
-			teavmPlatform = f;
-		}catch(IOException ex) {
-			System.err.println("Could not download JAR: " + urlConc);
-			ex.printStackTrace();
-			throw new MissingJARsException("The following JAR file could not be downloaded: " + urlConc, Arrays.asList(urlConc));
-		}
-		
-		urlConc = url + teavmClasslibMaven;
-		try {
-			File f = new File(outputDir, teavmClasslibJar);
-			copyURLToFileCheck404(urlConc, f);
-			teavmClasslib = f;
-		}catch(IOException ex) {
-			System.err.println("Could not download JAR: " + urlConc);
-			ex.printStackTrace();
-			throw new MissingJARsException("The following JAR file could not be downloaded: " + urlConc, Arrays.asList(urlConc));
-		}
-		
-		urlConc = url + teavmInteropMaven;
-		try {
-			File f = new File(outputDir, teavmInteropJar);
-			copyURLToFileCheck404(urlConc, f);
-			teavmInterop = f;
-		}catch(IOException ex) {
-			System.err.println("Could not download JAR: " + urlConc);
-			ex.printStackTrace();
-			throw new MissingJARsException("The following JAR file could not be downloaded: " + urlConc, Arrays.asList(urlConc));
-		}
-		
-		urlConc = url + teavmJSOMaven;
-		try {
-			File f = new File(outputDir, teavmJSOJar);
-			copyURLToFileCheck404(urlConc, f);
-			teavmJSO = f;
-		}catch(IOException ex) {
-			System.err.println("Could not download JAR: " + urlConc);
-			ex.printStackTrace();
-			throw new MissingJARsException("The following JAR file could not be downloaded: " + urlConc, Arrays.asList(urlConc));
-		}
-		
-		urlConc = url + teavmJSOApisMaven;
-		try {
-			File f = new File(outputDir, teavmJSOApisJar);
-			copyURLToFileCheck404(urlConc, f);
-			teavmJSOApis = f;
-		}catch(IOException ex) {
-			System.err.println("Could not download JAR: " + urlConc);
-			ex.printStackTrace();
-			throw new MissingJARsException("The following JAR file could not be downloaded: " + urlConc, Arrays.asList(urlConc));
-		}
-		
-		urlConc = url + teavmJSOImplMaven;
-		try {
-			File f = new File(outputDir, teavmJSOImplJar);
-			copyURLToFileCheck404(urlConc, f);
-			teavmJSOImpl = f;
-		}catch(IOException ex) {
-			System.err.println("Could not download JAR: " + urlConc);
-			ex.printStackTrace();
-			throw new MissingJARsException("The following JAR file could not be downloaded: " + urlConc, Arrays.asList(urlConc));
-		}
-		
-		urlConc = url + teavmMetaprogrammingAPIMaven;
-		try {
-			File f = new File(outputDir, teavmMetaprogrammingAPIJar);
-			copyURLToFileCheck404(urlConc, f);
-			teavmMetaprogrammingAPI = f;
-		}catch(IOException ex) {
-			System.err.println("Could not download JAR: " + urlConc);
-			ex.printStackTrace();
-			throw new MissingJARsException("The following JAR file could not be downloaded: " + urlConc, Arrays.asList(urlConc));
-		}
-		
-		urlConc = url + teavmMetaprogrammingImplMaven;
-		try {
-			File f = new File(outputDir, teavmMetaprogrammingImplJar);
-			copyURLToFileCheck404(urlConc, f);
-			teavmMetaprogrammingImpl = f;
-		}catch(IOException ex) {
-			System.err.println("Could not download JAR: " + urlConc);
-			ex.printStackTrace();
-			throw new MissingJARsException("The following JAR file could not be downloaded: " + urlConc, Arrays.asList(urlConc));
-		}
-		
-		urlConc = url + teavmJodaTimeMaven;
-		try {
-			File f = new File(outputDir, teavmJodaTimeJar);
-			copyURLToFileCheck404(urlConc, f);
-			teavmJodaTime = f;
-		}catch(IOException ex) {
-			System.err.println("Could not download JAR: " + urlConc);
-			ex.printStackTrace();
-			throw new MissingJARsException("The following JAR file could not be downloaded: " + urlConc, Arrays.asList(urlConc));
-		}
-		
-		urlConc = url + teavmJZLIBMaven;
-		try {
-			File f = new File(outputDir, teavmJZLIBJar);
-			copyURLToFileCheck404(urlConc, f);
-			teavmJZLIB = f;
-		}catch(IOException ex) {
-			System.err.println("Could not download JAR: " + urlConc);
-			ex.printStackTrace();
-			throw new MissingJARsException("The following JAR file could not be downloaded: " + urlConc, Arrays.asList(urlConc));
-		}
-		
 	}
 
 	public static void loadFromDirectory(File directory) throws MissingJARsException {
-		teavmCore = teavmPlatform = teavmClasslib = teavmInterop = teavmJSO = 
-		teavmJSOApis = teavmJSOImpl = teavmMetaprogrammingAPI = teavmMetaprogrammingImpl =
-		teavmJodaTime = teavmJZLIB = teavmTooling = teavmCli = null;
+		for(int i = 0; i < jarsList.length; ++i) {
+			jarsList[i].file = null;
+		}
 		discoverJars(directory);
 		List<String> missingJars = new ArrayList();
-		if(teavmCore == null) {
-			missingJars.add(teavmCoreJar);
-		}
-		if(teavmCli == null) {
-			missingJars.add(teavmCliJar);
-		}
-		if(teavmTooling == null) {
-			missingJars.add(teavmToolingJar);
-		}
-		if(teavmPlatform == null) {
-			missingJars.add(teavmPlatformJar);
-		}
-		if(teavmClasslib == null) {
-			missingJars.add(teavmClasslibJar);
-		}
-		if(teavmInterop == null) {
-			missingJars.add(teavmInteropJar);
-		}
-		if(teavmJSO == null) {
-			missingJars.add(teavmJSOJar);
-		}
-		if(teavmJSOApis == null) {
-			missingJars.add(teavmJSOApisJar);
-		}
-		if(teavmJSOImpl == null) {
-			missingJars.add(teavmJSOImplJar);
-		}
-		if(teavmMetaprogrammingAPI == null) {
-			missingJars.add(teavmMetaprogrammingAPIJar);
-		}
-		if(teavmMetaprogrammingImpl == null) {
-			missingJars.add(teavmMetaprogrammingImplJar);
-		}
-		if(teavmJodaTime == null) {
-			missingJars.add(teavmJodaTimeJar);
-		}
-		if(teavmJZLIB == null) {
-			missingJars.add(teavmJZLIBJar);
+		for(int i = 0; i < jarsList.length; ++i) {
+			MavenJAREntry jar = jarsList[i];
+			if(jar.file == null) {
+				missingJars.add(jar.jar);
+			}
 		}
 		if(missingJars.size() > 0) {
 			throw new MissingJARsException(missingJars);
@@ -311,48 +144,10 @@ public class TeaVMBinaries {
 				discoverJars(f);
 			}else {
 				String n = f.getName();
-				switch(n) {
-				case teavmCoreJar:
-					teavmCore = f;
-					break;
-				case teavmCliJar:
-					teavmCli = f;
-					break;
-				case teavmToolingJar:
-					teavmTooling = f;
-					break;
-				case teavmPlatformJar:
-					teavmPlatform = f;
-					break;
-				case teavmClasslibJar:
-					teavmClasslib = f;
-					break;
-				case teavmInteropJar:
-					teavmInterop = f;
-					break;
-				case teavmJSOJar:
-					teavmJSO = f;
-					break;
-				case teavmJSOApisJar:
-					teavmJSOApis = f;
-					break;
-				case teavmJSOImplJar:
-					teavmJSOImpl = f;
-					break;
-				case teavmMetaprogrammingAPIJar:
-					teavmMetaprogrammingAPI = f;
-					break;
-				case teavmMetaprogrammingImplJar:
-					teavmMetaprogrammingImpl = f;
-					break;
-				case teavmJodaTimeJar:
-					teavmJodaTime = f;
-					break;
-				case teavmJZLIBJar:
-					teavmJZLIB = f;
-					break;
-				default:
-					break;
+				for(int j = 0; j < jarsList.length; ++j) {
+					if(n.equals(jarsList[j].jar)) {
+						jarsList[j].file = f;
+					}
 				}
 			}
 		}
@@ -407,16 +202,19 @@ public class TeaVMBinaries {
 	}
 
 	public static File[] getTeaVMCompilerClasspath() {
-		return new File[] { teavmCore, teavmCli, teavmTooling, teavmInterop, teavmMetaprogrammingAPI, teavmBridge };
+		return new File[] { teavmCore.file, teavmCli.file, teavmTooling.file, teavmInterop.file,
+				teavmRelocatedLibsASM.file, teavmRelocatedLibsASMAnalysis.file, teavmRelocatedLibsASMCommons.file,
+				teavmRelocatedLibsASMTree.file, teavmRelocatedLibsASMUtil.file, teavmRelocatedLibsHPPC.file,
+				teavmRelocatedLibsRhino.file, asm.file, asmAnalysis.file, asmCommons.file, asmTree.file, asmUtil.file,
+				hppc.file, rhino.file, teavmMetaprogrammingAPI.file, teavmBridge };
 	}
 
 	public static String[] getTeaVMRuntimeClasspath() {
-		return new String[] {
-				teavmJodaTime.getAbsolutePath(), teavmJZLIB.getAbsolutePath(), teavmClasslib.getAbsolutePath(),
-				teavmInterop.getAbsolutePath(), teavmJSO.getAbsolutePath(), teavmJSOApis.getAbsolutePath(),
-				teavmJSOImpl.getAbsolutePath(), teavmMetaprogrammingAPI.getAbsolutePath(),
-				teavmMetaprogrammingImpl.getAbsolutePath(), teavmPlatform.getAbsolutePath()
-		};
+		return new String[] { teavmJodaTime.file.getAbsolutePath(), teavmJZLIB.file.getAbsolutePath(),
+				teavmClasslib.file.getAbsolutePath(), teavmInterop.file.getAbsolutePath(), teavmJSO.file.getAbsolutePath(),
+				teavmJSOApis.file.getAbsolutePath(), teavmJSOImpl.file.getAbsolutePath(),
+				teavmMetaprogrammingAPI.file.getAbsolutePath(), teavmMetaprogrammingImpl.file.getAbsolutePath(),
+				teavmPlatform.file.getAbsolutePath() };
 	}
 
 }

@@ -13,7 +13,6 @@
 		<meta property="og:image" content="favicon.png" />
 		<link type="image/png" rel="shortcut icon" href="favicon.png" />
 		<script type="text/javascript" src="classes.js"></script>
-		<script type="text/javascript" src="fix-webm-duration.js"></script>
 		<script type="text/javascript">
 			"use strict";
 			window.addEventListener("load", () => {
@@ -28,6 +27,7 @@
 					if(!opts.container) opts.container = "game_frame";
 					if(!opts.assetsURI) opts.assetsURI = "assets.epk";
 					if(!opts.localesURI) opts.localesURI = "lang/";
+					if(!opts.worldsDB) opts.worldsDB = "worlds";
 					
 					if(!opts.joinServer)  {
 						var q = window.location.search;

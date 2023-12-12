@@ -1,26 +1,28 @@
 
 # Eagler Context Redacted Diff
-# Copyright (c) 2023 lax1dude. All rights reserved.
+# Copyright (c) 2024 lax1dude. All rights reserved.
 
 # Version: 1.0
 # Author: lax1dude
 
 > DELETE  2  @  2 : 3
 
-> CHANGE  1 : 3  @  1 : 8
+> CHANGE  1 : 4  @  1 : 8
 
 ~ 
+~ import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 ~ import net.lax1dude.eaglercraft.v1_8.netty.ByteBuf;
 
 > DELETE  2  @  2 : 3
 
 > DELETE  2  @  2 : 3
 
-> CHANGE  2 : 3  @  2 : 3
+> CHANGE  2 : 4  @  2 : 4
 
 ~ public abstract class CommandBlockLogic {
+~ 	private static final SimpleDateFormat timestampFormat = EagRuntime.fixDateFormat(new SimpleDateFormat("HH:mm:ss"));
 
-> DELETE  6  @  6 : 7
+> DELETE  5  @  5 : 6
 
 > DELETE  17  @  17 : 19
 

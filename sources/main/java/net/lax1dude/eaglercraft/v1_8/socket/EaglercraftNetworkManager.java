@@ -1,6 +1,7 @@
 package net.lax1dude.eaglercraft.v1_8.socket;
 
 import java.io.IOException;
+import java.util.List;
 
 import net.lax1dude.eaglercraft.v1_8.internal.EnumEaglerConnectionState;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformNetworking;
@@ -17,31 +18,49 @@ import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IChatComponent;
 
 /**
- * Copyright (c) 2022-2023 LAX1DUDE. All Rights Reserved.
+ * Copyright (c) 2022-2024 lax1dude, ayunami2000. All Rights Reserved.
  * 
- * WITH THE EXCEPTION OF PATCH FILES, MINIFIED JAVASCRIPT, AND ALL FILES
- * NORMALLY FOUND IN AN UNMODIFIED MINECRAFT RESOURCE PACK, YOU ARE NOT ALLOWED
- * TO SHARE, DISTRIBUTE, OR REPURPOSE ANY FILE USED BY OR PRODUCED BY THE
- * SOFTWARE IN THIS REPOSITORY WITHOUT PRIOR PERMISSION FROM THE PROJECT AUTHOR.
- * 
- * NOT FOR COMMERCIAL OR MALICIOUS USE
- * 
- * (please read the 'LICENSE' file this repo's root directory for more info)
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ * IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
 public class EaglercraftNetworkManager {
 	
-	private final String address;
-	private INetHandler nethandler = null;
-	private EnumConnectionState packetState = EnumConnectionState.HANDSHAKING;
-	private final PacketBuffer temporaryBuffer;
-	private int debugPacketCounter = 0;
+	protected final String address;
+	protected INetHandler nethandler = null;
+	protected EnumConnectionState packetState = EnumConnectionState.HANDSHAKING;
+	protected final PacketBuffer temporaryBuffer;
+	protected int debugPacketCounter = 0;
+	
+	protected String pluginBrand = null;
+	protected String pluginVersion = null;
 	
 	public static final Logger logger = LogManager.getLogger("NetworkManager");
 
 	public EaglercraftNetworkManager(String address) {
 		this.address = address;
 		this.temporaryBuffer = new PacketBuffer(Unpooled.buffer(0x1FFFF));
+	}
+	
+	public void setPluginInfo(String pluginBrand, String pluginVersion) {
+		this.pluginBrand = pluginBrand;
+		this.pluginVersion = pluginVersion;
+	}
+	
+	public String getPluginBrand() {
+		return pluginBrand;
+	}
+	
+	public String getPluginVersion() {
+		return pluginVersion;
 	}
 	
 	public void connect() {
@@ -66,9 +85,13 @@ public class EaglercraftNetworkManager {
 	
 	public void processReceivedPackets() throws IOException {
 		if(nethandler == null) return;
-		byte[] next;
+		List<byte[]> pkts = PlatformNetworking.readAllPacket();
 
-		while((next = PlatformNetworking.readPlayPacket()) != null) {
+		if(pkts == null) {
+			return;
+		}
+
+		for(byte[] next : pkts) {
 			++debugPacketCounter;
 			try {
 				ByteBuf nettyBuffer = Unpooled.buffer(next, next.length);
@@ -81,6 +104,10 @@ public class EaglercraftNetworkManager {
 					pkt = packetState.getPacket(EnumPacketDirection.CLIENTBOUND, pktId);
 				}catch(IllegalAccessException | InstantiationException ex) {
 					throw new IOException("Recieved a packet with type " + pktId + " which is invalid!");
+				}
+				
+				if(pkt == null) {
+					throw new IOException("Recieved packet type " + pktId + " which is undefined in state " + packetState);
 				}
 				
 				try {
@@ -166,9 +193,9 @@ public class EaglercraftNetworkManager {
 		}
 	}
 	
-	private boolean clientDisconnected = false;
+	protected boolean clientDisconnected = false;
 	
-	private void doClientDisconnect(IChatComponent msg) {
+	protected void doClientDisconnect(IChatComponent msg) {
 		if(!clientDisconnected) {
 			clientDisconnected = true;
 			if(nethandler != null) {

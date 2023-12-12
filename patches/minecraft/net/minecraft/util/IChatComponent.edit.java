@@ -1,6 +1,6 @@
 
 # Eagler Context Redacted Diff
-# Copyright (c) 2023 lax1dude. All rights reserved.
+# Copyright (c) 2024 lax1dude. All rights reserved.
 
 # Version: 1.0
 # Author: lax1dude
@@ -181,17 +181,21 @@
 + 		 * So sorry for this implementation
 + 		 */
 
-> CHANGE  1 : 7  @  1 : 2
+> CHANGE  1 : 8  @  1 : 2
 
-~ 			if (component instanceof ChatComponentText) {
+~ 			if ((component instanceof ChatComponentText) && component.getChatStyle().isEmpty()
+~ 					&& component.getSiblings().isEmpty()) {
 ~ 				String escaped = new JSONObject().put("E", component.getUnformattedTextForChat()).toString();
 ~ 				return escaped.substring(5, escaped.length() - 1);
 ~ 			} else {
 ~ 				return JSONTypeProvider.serialize(component).toString();
 ~ 			}
 
-> CHANGE  3 : 4  @  3 : 4
+> CHANGE  3 : 7  @  3 : 4
 
+~ 			if (json.equals("null")) {
+~ 				return new ChatComponentText("");
+~ 			}
 ~ 			return (IChatComponent) JSONTypeProvider.deserialize(json, IChatComponent.class);
 
 > INSERT  1 : 2  @  1

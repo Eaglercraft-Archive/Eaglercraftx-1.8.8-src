@@ -1,6 +1,6 @@
 
 # Eagler Context Redacted Diff
-# Copyright (c) 2023 lax1dude. All rights reserved.
+# Copyright (c) 2024 lax1dude. All rights reserved.
 
 # Version: 1.0
 # Author: lax1dude
@@ -15,9 +15,12 @@
 
 > DELETE  1  @  1 : 3
 
-> INSERT  3 : 22  @  3
+> INSERT  3 : 25  @  3
 
 + 
++ import net.lax1dude.eaglercraft.v1_8.sp.relay.RelayManager;
++ import net.minecraft.nbt.CompressedStreamTools;
++ import net.minecraft.nbt.NBTTagCompound;
 + import org.json.JSONArray;
 + 
 + import com.google.common.collect.ImmutableSet;
@@ -73,11 +76,17 @@
 
 > DELETE  12  @  12 : 13
 
-> CHANGE  12 : 13  @  12 : 13
+> INSERT  1 : 4  @  1
+
++ 	public boolean hasCreatedDemoWorld;
++ 	public int relayTimeout;
++ 	public boolean hideJoinCode;
+
+> CHANGE  11 : 12  @  11 : 12
 
 ~ 	public int guiScale = 3;
 
-> INSERT  3 : 15  @  3
+> INSERT  3 : 16  @  3
 
 + 	public boolean hudFps = true;
 + 	public boolean hudCoords = true;
@@ -91,6 +100,7 @@
 + 	public boolean shaders = false;
 + 	public boolean shadersAODisable = false;
 + 	public EaglerDeferredConfig deferredShaderConf = new EaglerDeferredConfig();
++ 	public boolean enableUpdateSvc = true;
 
 > CHANGE  1 : 2  @  1 : 2
 
@@ -101,7 +111,12 @@
 ~ 				this.keyBindTogglePerspective, this.keyBindSmoothCamera, this.keyBindZoomCamera, this.keyBindFunction,
 ~ 				this.keyBindClose }, this.keyBindsHotbar);
 
-> CHANGE  3 : 5  @  3 : 4
+> INSERT  1 : 3  @  1
+
++ 		this.relayTimeout = 4;
++ 		this.hideJoinCode = false;
+
+> CHANGE  2 : 4  @  2 : 3
 
 ~ 		this.gammaSetting = 1.0F;
 ~ 		this.language = EagRuntime.getConfiguration().getDefaultLocale();
@@ -262,7 +277,22 @@
 ~ 			BufferedReader bufferedreader = new BufferedReader(
 ~ 					new InputStreamReader(EaglerZLIB.newGZIPInputStream(new EaglerInputStream(options))));
 
-> CHANGE  83 : 89  @  83 : 84
+> INSERT  58 : 70  @  58
+
++ 					if (astring[0].equals("hasCreatedDemoWorld")) {
++ 						this.hasCreatedDemoWorld = astring[1].equals("true");
++ 					}
++ 
++ 					if (astring[0].equals("relayTimeout")) {
++ 						this.relayTimeout = Integer.parseInt(astring[1]);
++ 					}
++ 
++ 					if (astring[0].equals("hideJoinCode")) {
++ 						this.hideJoinCode = astring[1].equals("true");
++ 					}
++ 
+
+> CHANGE  25 : 31  @  25 : 26
 
 ~ 						this.resourcePacks.clear();
 ~ 						for (Object o : (new JSONArray(s.substring(s.indexOf(58) + 1))).toList()) {
@@ -357,10 +387,14 @@
 
 > DELETE  2  @  2 : 10
 
-> INSERT  6 : 12  @  6
+> INSERT  6 : 16  @  6
 
 + 					if (astring[0].equals("shaders")) {
 + 						this.shaders = astring[1].equals("true");
++ 					}
++ 
++ 					if (astring[0].equals("enableUpdateSvc")) {
++ 						this.enableUpdateSvc = astring[1].equals("true");
 + 					}
 + 
 + 					Keyboard.setFunctionKeyModifier(keyBindFunction.getKeyCode());
@@ -378,7 +412,13 @@
 ~ 			ByteArrayOutputStream bao = new ByteArrayOutputStream();
 ~ 			PrintWriter printwriter = new PrintWriter(new OutputStreamWriter(EaglerZLIB.newGZIPOutputStream(bao)));
 
-> CHANGE  26 : 28  @  26 : 28
+> INSERT  13 : 16  @  13
+
++ 			printwriter.println("hasCreatedDemoWorld:" + this.hasCreatedDemoWorld);
++ 			printwriter.println("relayTimeout:" + this.relayTimeout);
++ 			printwriter.println("hideJoinCode:" + this.hideJoinCode);
+
+> CHANGE  13 : 15  @  13 : 15
 
 ~ 			printwriter.println("resourcePacks:" + toJSONArray(this.resourcePacks));
 ~ 			printwriter.println("incompatibleResourcePacks:" + toJSONArray(this.field_183018_l));
@@ -389,7 +429,7 @@
 
 > DELETE  13  @  13 : 24
 
-> INSERT  5 : 15  @  5
+> INSERT  5 : 16  @  5
 
 + 			printwriter.println("hudFps:" + this.hudFps);
 + 			printwriter.println("hudWorld:" + this.hudWorld);
@@ -401,6 +441,7 @@
 + 			printwriter.println("fog:" + this.fog);
 + 			printwriter.println("fxaa:" + this.fxaa);
 + 			printwriter.println("shaders:" + this.shaders);
++ 			printwriter.println("enableUpdateSvc:" + this.enableUpdateSvc);
 
 > INSERT  5 : 7  @  5
 
@@ -412,16 +453,22 @@
 + 			deferredShaderConf.writeOptions(printwriter);
 + 
 
-> INSERT  1 : 3  @  1
+> INSERT  1 : 5  @  1
 
 + 
 + 			EagRuntime.setStorage("g", bao.toByteArray());
++ 
++ 			RelayManager.relayManager.save();
 
 > CHANGE  10 : 11  @  10 : 11
 
 ~ 				: (parSoundCategory == SoundCategory.VOICE ? 0.0F : 1.0F);
 
-> INSERT  53 : 61  @  53
+> CHANGE  16 : 17  @  16 : 17
+
+~ 					Math.max(this.renderDistanceChunks, 2), this.chatVisibility, this.chatColours, i));
+
+> INSERT  36 : 44  @  36
 
 + 	private String toJSONArray(List<String> e) {
 + 		JSONArray arr = new JSONArray();

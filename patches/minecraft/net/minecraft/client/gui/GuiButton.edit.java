@@ -1,12 +1,14 @@
 
 # Eagler Context Redacted Diff
-# Copyright (c) 2023 lax1dude. All rights reserved.
+# Copyright (c) 2024 lax1dude. All rights reserved.
 
 # Version: 1.0
 # Author: lax1dude
 
-> INSERT  2 : 3  @  2
+> INSERT  2 : 5  @  2
 
++ import net.lax1dude.eaglercraft.v1_8.Mouse;
++ import net.lax1dude.eaglercraft.v1_8.internal.EnumCursorType;
 + import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 
 > DELETE  3  @  3 : 6
@@ -15,7 +17,13 @@
 
 + 	public float fontScale = 1.0f;
 
-> CHANGE  51 : 66  @  51 : 53
+> INSERT  36 : 39  @  36
+
++ 			if (this.enabled && this.hovered) {
++ 				Mouse.showCursor(EnumCursorType.HAND);
++ 			}
+
+> CHANGE  15 : 30  @  15 : 17
 
 ~ 			if (fontScale == 1.0f) {
 ~ 				this.drawCenteredString(fontrenderer, this.displayString, this.xPosition + this.width / 2,

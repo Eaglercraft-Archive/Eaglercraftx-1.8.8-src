@@ -7,7 +7,9 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -49,7 +51,9 @@ import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.config.EaglerAuth
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.config.EaglerBungeeConfig;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.config.EaglerListenerConfig;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.config.EaglerRateLimiter;
+import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.config.EaglerUpdateConfig;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.config.RateLimitStatus;
+import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.server.EaglerInitialHandler.ClientCertificateHolder;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.server.bungeeprotocol.EaglerBungeeProtocol;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.server.query.MOTDQueryHandler;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.server.query.QueryManager;
@@ -75,16 +79,18 @@ import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.event.ServerConnectEvent;
 
 /**
- * Copyright (c) 2022-2023 LAX1DUDE. All Rights Reserved.
+ * Copyright (c) 2022-2024 lax1dude. All Rights Reserved.
  * 
- * WITH THE EXCEPTION OF PATCH FILES, MINIFIED JAVASCRIPT, AND ALL FILES
- * NORMALLY FOUND IN AN UNMODIFIED MINECRAFT RESOURCE PACK, YOU ARE NOT ALLOWED
- * TO SHARE, DISTRIBUTE, OR REPURPOSE ANY FILE USED BY OR PRODUCED BY THE
- * SOFTWARE IN THIS REPOSITORY WITHOUT PRIOR PERMISSION FROM THE PROJECT AUTHOR.
- * 
- * NOT FOR COMMERCIAL OR MALICIOUS USE
- * 
- * (please read the 'LICENSE' file this repo's root directory for more info)
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ * IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
 public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
@@ -758,9 +764,32 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 			baseAddress = new InetSocketAddress(addr, baseAddress.getPort());
 			ch.setRemoteAddress(baseAddress);
 		}
+		EaglerUpdateConfig updateconf = EaglerXBungee.getEagler().getConfig().getUpdateConfig();
+		boolean blockUpdate = updateconf.isBlockAllClientUpdates();
+		ClientCertificateHolder cert = null;
+		if(!blockUpdate && !updateconf.isDiscardLoginPacketCerts()) {
+			byte[] b = profileData.get("update_cert_v1");
+			if(b != null && b.length < 32759) {
+				EaglerUpdateSvc.sendCertificateToPlayers(EaglerUpdateSvc.tryMakeHolder(b));
+			}
+		}
 		final EaglerInitialHandler initialHandler = new EaglerInitialHandler(bungee, conf, ch, gameProtocolVersion,
 				usernameStr, clientUUID, baseAddress, ctx.channel().attr(EaglerPipeline.HOST).get(),
-				ctx.channel().attr(EaglerPipeline.ORIGIN).get());
+				ctx.channel().attr(EaglerPipeline.ORIGIN).get(), cert);
+		if(!blockUpdate) {
+			List<ClientCertificateHolder> set = EaglerUpdateSvc.getCertList();
+			synchronized(set) {
+				initialHandler.certificatesToSend.addAll(set);
+			}
+			for(ProxiedPlayer p : bungee.getPlayers()) {
+				if(p.getPendingConnection() instanceof EaglerInitialHandler) {
+					EaglerInitialHandler pp = (EaglerInitialHandler)p.getPendingConnection();
+					if(pp.clientCertificate != null && pp.clientCertificate != cert) {
+						initialHandler.certificatesToSend.add(pp.clientCertificate);
+					}
+				}
+			}
+		}
 		final Callback<LoginEvent> complete = (Callback<LoginEvent>) new Callback<LoginEvent>() {
 			public void done(final LoginEvent result, final Throwable error) {
 				if (result.isCancelled()) {

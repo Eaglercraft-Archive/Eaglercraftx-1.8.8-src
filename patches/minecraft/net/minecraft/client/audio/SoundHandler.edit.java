@@ -1,17 +1,15 @@
 
 # Eagler Context Redacted Diff
-# Copyright (c) 2023 lax1dude. All rights reserved.
+# Copyright (c) 2024 lax1dude. All rights reserved.
 
 # Version: 1.0
 # Author: lax1dude
 
 > DELETE  2  @  2 : 5
 
-> DELETE  3  @  3 : 4
+> CHANGE  3 : 4  @  3 : 6
 
-> INSERT  2 : 3  @  2
-
-+ import java.nio.charset.StandardCharsets;
+~ import java.nio.charset.StandardCharsets;
 
 > DELETE  2  @  2 : 3
 
@@ -33,11 +31,9 @@
 
 > DELETE  7  @  7 : 11
 
-> CHANGE  3 : 4  @  3 : 5
+> DELETE  3  @  3 : 18
 
-~ 
-
-> CHANGE  16 : 17  @  16 : 17
+> CHANGE  3 : 4  @  3 : 4
 
 ~ 	private final EaglercraftSoundManager sndManager;
 

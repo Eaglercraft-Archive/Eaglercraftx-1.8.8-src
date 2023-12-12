@@ -16,26 +16,27 @@ import org.teavm.jso.dom.html.HTMLCanvasElement;
 import org.teavm.jso.dom.html.HTMLImageElement;
 import org.teavm.jso.dom.xml.Document;
 import org.teavm.jso.typedarrays.ArrayBuffer;
-import org.teavm.jso.typedarrays.DataView;
-import org.teavm.jso.typedarrays.Uint8Array;
+import org.teavm.jso.typedarrays.Int32Array;
 import org.teavm.jso.typedarrays.Uint8ClampedArray;
 
 import net.lax1dude.eaglercraft.v1_8.EaglerInputStream;
-import net.lax1dude.eaglercraft.v1_8.internal.teavm.MainClass;
+import net.lax1dude.eaglercraft.v1_8.internal.teavm.ClientMain;
 import net.lax1dude.eaglercraft.v1_8.internal.teavm.TeaVMUtils;
 import net.lax1dude.eaglercraft.v1_8.opengl.ImageData;
 
 /**
- * Copyright (c) 2022-2023 LAX1DUDE. All Rights Reserved.
+ * Copyright (c) 2022-2023 lax1dude. All Rights Reserved.
  * 
- * WITH THE EXCEPTION OF PATCH FILES, MINIFIED JAVASCRIPT, AND ALL FILES
- * NORMALLY FOUND IN AN UNMODIFIED MINECRAFT RESOURCE PACK, YOU ARE NOT ALLOWED
- * TO SHARE, DISTRIBUTE, OR REPURPOSE ANY FILE USED BY OR PRODUCED BY THE
- * SOFTWARE IN THIS REPOSITORY WITHOUT PRIOR PERMISSION FROM THE PROJECT AUTHOR.
- * 
- * NOT FOR COMMERCIAL OR MALICIOUS USE
- * 
- * (please read the 'LICENSE' file this repo's root directory for more info)
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ * IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
 public class PlatformAssets {
@@ -51,7 +52,7 @@ public class PlatformAssets {
 		byte[] data = assets.get(path);
 		if(data == null && path.startsWith("assets/minecraft/lang/") && !path.endsWith(".mcmeta")) {
 			ArrayBuffer file = PlatformRuntime.downloadRemoteURI(
-					MainClass.configLocalesFolder + "/" + path.substring(22));
+					ClientMain.configLocalesFolder + "/" + path.substring(22));
 			if(file != null && file.getByteLength() > 0) {
 				data = TeaVMUtils.arrayBufferToBytes(file);
 				assets.put(path, data);
@@ -78,9 +79,7 @@ public class PlatformAssets {
 	private static CanvasRenderingContext2D imageLoadContext = null;
 	
 	public static ImageData loadImageFile(byte[] data) {
-		Uint8Array buf = Uint8Array.create(data.length);
-		buf.set(data);
-		return loadImageFile(buf.getBuffer());
+		return loadImageFile(TeaVMUtils.unwrapUnsignedByteArray(data).getBuffer());
 	}
 	
 	@JSBody(params = { }, script = "return { willReadFrequently: true };")
@@ -117,12 +116,7 @@ public class PlatformAssets {
 					ret.complete(null);
 					return;
 				}
-				DataView view = DataView.create(pxls.getBuffer());
-				int[] pixels = new int[totalPixels];
-				for(int i = 0; i < pixels.length; ++i) {
-					pixels[i] = view.getUint32(i << 2, true);
-				}
-				ret.complete(new ImageData(pxlsDat.getWidth(), pxlsDat.getHeight(), pixels, true));
+				ret.complete(new ImageData(pxlsDat.getWidth(), pxlsDat.getHeight(), TeaVMUtils.wrapIntArray(Int32Array.create(pxls.getBuffer())), true));
 			}
 		});
 		toLoad.addEventListener("error", new EventListener<Event>() {

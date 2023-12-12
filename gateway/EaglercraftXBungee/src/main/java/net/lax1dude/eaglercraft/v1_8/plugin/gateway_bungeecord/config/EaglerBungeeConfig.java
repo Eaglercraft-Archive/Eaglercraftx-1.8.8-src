@@ -31,16 +31,18 @@ import net.md_5.bungee.config.YamlConfiguration;
 import net.md_5.bungee.protocol.Property;
 
 /**
- * Copyright (c) 2022-2023 LAX1DUDE. All Rights Reserved.
+ * Copyright (c) 2022-2023 lax1dude. All Rights Reserved.
  * 
- * WITH THE EXCEPTION OF PATCH FILES, MINIFIED JAVASCRIPT, AND ALL FILES
- * NORMALLY FOUND IN AN UNMODIFIED MINECRAFT RESOURCE PACK, YOU ARE NOT ALLOWED
- * TO SHARE, DISTRIBUTE, OR REPURPOSE ANY FILE USED BY OR PRODUCED BY THE
- * SOFTWARE IN THIS REPOSITORY WITHOUT PRIOR PERMISSION FROM THE PROJECT AUTHOR.
- * 
- * NOT FOR COMMERCIAL OR MALICIOUS USE
- * 
- * (please read the 'LICENSE' file this repo's root directory for more info)
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ * IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
 public class EaglerBungeeConfig {
@@ -100,6 +102,9 @@ public class EaglerBungeeConfig {
 		Configuration authserivceYml = prov.load(getConfigFile(directory, "authservice.yml"));
 		EaglerAuthConfig authConfig = EaglerAuthConfig.loadConfig(authserivceYml);
 		
+		Configuration updatesYml = prov.load(getConfigFile(directory, "updates.yml"));
+		EaglerUpdateConfig updatesConfig = EaglerUpdateConfig.loadConfig(updatesYml);
+		
 		if(authConfig.isEnableAuthentication()) {
 			for(EaglerListenerConfig lst : serverListeners.values()) {
 				if(lst.getRatelimitLogin() != null) lst.getRatelimitLogin().setDivisor(2);
@@ -135,7 +140,7 @@ public class EaglerBungeeConfig {
 				websocketHandshakeTimeout, websocketCompressionLevel, serverListeners, contentTypes,
 				downloadVanillaSkins, validSkinUrls, uuidRateLimitPlayer, uuidRateLimitGlobal, skinRateLimitPlayer,
 				skinRateLimitGlobal, skinCacheURI, keepObjectsDays, keepProfilesDays, maxObjects, maxProfiles,
-				antagonistsRateLimit, sqliteDriverClass, sqliteDriverPath, eaglerPlayersVanillaSkin, authConfig);
+				antagonistsRateLimit, sqliteDriverClass, sqliteDriverPath, eaglerPlayersVanillaSkin, authConfig, updatesConfig);
 		
 		if(eaglerPlayersVanillaSkin != null) {
 			VanillaDefaultSkinProfileLoader.lookupVanillaSkinUser(ret);
@@ -239,6 +244,7 @@ public class EaglerBungeeConfig {
 	private final String sqliteDriverPath;
 	private final String eaglerPlayersVanillaSkin;
 	private final EaglerAuthConfig authConfig;
+	private final EaglerUpdateConfig updateConfig;
 	Property[] eaglerPlayersVanillaSkinCached = new Property[] { isEaglerProperty };
 
 	public String getServerName() {
@@ -368,6 +374,10 @@ public class EaglerBungeeConfig {
 		return authConfig;
 	}
 
+	public EaglerUpdateConfig getUpdateConfig() {
+		return updateConfig;
+	}
+
 	private EaglerBungeeConfig(String serverName, UUID serverUUID, long websocketKeepAliveTimeout,
 			long websocketHandshakeTimeout, int httpWebsocketCompressionLevel,
 			Map<String, EaglerListenerConfig> serverListeners, Map<String, HttpContentType> contentTypes,
@@ -375,7 +385,7 @@ public class EaglerBungeeConfig {
 			int uuidRateLimitGlobal, int skinRateLimitPlayer, int skinRateLimitGlobal, String skinCacheURI,
 			int keepObjectsDays, int keepProfilesDays, int maxObjects, int maxProfiles, int antagonistsRateLimit,
 			String sqliteDriverClass, String sqliteDriverPath, String eaglerPlayersVanillaSkin,
-			EaglerAuthConfig authConfig) {
+			EaglerAuthConfig authConfig, EaglerUpdateConfig updateConfig) {
 		this.serverName = serverName;
 		this.serverUUID = serverUUID;
 		this.serverListeners = serverListeners;
@@ -399,6 +409,7 @@ public class EaglerBungeeConfig {
 		this.sqliteDriverPath = sqliteDriverPath;
 		this.eaglerPlayersVanillaSkin = eaglerPlayersVanillaSkin;
 		this.authConfig = authConfig;
+		this.updateConfig = updateConfig;
 	}
 
 }

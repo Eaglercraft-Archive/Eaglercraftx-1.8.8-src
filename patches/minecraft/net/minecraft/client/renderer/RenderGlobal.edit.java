@@ -1,6 +1,6 @@
 
 # Eagler Context Redacted Diff
-# Copyright (c) 2023 lax1dude. All rights reserved.
+# Copyright (c) 2024 lax1dude. All rights reserved.
 
 # Version: 1.0
 # Author: lax1dude
@@ -47,9 +47,10 @@
 
 > DELETE  2  @  2 : 5
 
-> INSERT  15 : 16  @  15
+> INSERT  15 : 17  @  15
 
 + import net.minecraft.util.ChatComponentText;
++ import net.minecraft.util.ChatComponentTranslation;
 
 > INSERT  1 : 2  @  1
 
@@ -140,7 +141,7 @@
 + 			this.renderDistanceChunks = this.mc.gameSettings.renderDistanceChunks;
 + 
 
-> INSERT  19 : 76  @  19
+> INSERT  19 : 75  @  19
 
 + 
 + 			if (mc.gameSettings.shaders) {
@@ -173,11 +174,10 @@
 + 					EaglerDeferredPipeline.isSuspended = true;
 + 				}
 + 				if (flag && !EaglerDeferredPipeline.isSuspended) {
-+ 					ChatComponentText shaderF4Msg = new ChatComponentText("[EaglercraftX]");
++ 					ChatComponentText shaderF4Msg = new ChatComponentText("[EaglercraftX] ");
 + 					shaderF4Msg.getChatStyle().setColor(EnumChatFormatting.GOLD);
-+ 					ChatComponentText shaderF4Msg2 = new ChatComponentText(
-+ 							" Press " + Keyboard.getKeyName(mc.gameSettings.keyBindFunction.getKeyCode())
-+ 									+ "+4 to access the shader debug menu");
++ 					ChatComponentTranslation shaderF4Msg2 = new ChatComponentTranslation("shaders.debugMenuTip",
++ 							Keyboard.getKeyName(mc.gameSettings.keyBindFunction.getKeyCode()));
 + 					shaderF4Msg2.getChatStyle().setColor(EnumChatFormatting.AQUA);
 + 					shaderF4Msg.appendSibling(shaderF4Msg2);
 + 					mc.ingameGUI.getChatGUI().printChatMessage(shaderF4Msg);

@@ -1,6 +1,6 @@
 
 # Eagler Context Redacted Diff
-# Copyright (c) 2023 lax1dude. All rights reserved.
+# Copyright (c) 2024 lax1dude. All rights reserved.
 
 # Version: 1.0
 # Author: lax1dude
@@ -11,5 +11,9 @@
 
 + import com.google.common.collect.Maps;
 + 
+
+> CHANGE  53 : 54  @  53 : 54
+
+~ 		CHANGE_PAGE("change_page", true), EAGLER_PLUGIN_DOWNLOAD("eagler_plugin_download", true);
 
 > EOF

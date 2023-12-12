@@ -1,7 +1,7 @@
 {
 	"rules": [
 		{
-			"minecraft/sounds/music/menu/menu2.ogg": {
+			"EXAMPLE: minecraft/sounds/music/menu/menu2.ogg": {
 				"action": "encode",
 				"ffmpeg": {
 					"samples": 16000,

@@ -1,6 +1,6 @@
 
 # Eagler Context Redacted Diff
-# Copyright (c) 2023 lax1dude. All rights reserved.
+# Copyright (c) 2024 lax1dude. All rights reserved.
 
 # Version: 1.0
 # Author: lax1dude
@@ -197,7 +197,7 @@
 
 > DELETE  39  @  39 : 52
 
-> CHANGE  4 : 44  @  4 : 5
+> CHANGE  4 : 45  @  4 : 5
 
 ~ 					long framebufferAge = this.overlayFramebuffer.getAge();
 ~ 					if (framebufferAge == -1l || framebufferAge > (Minecraft.getDebugFPS() < 25 ? 125l : 75l)) {
@@ -214,7 +214,7 @@
 ~ 					GlStateManager.disableLighting();
 ~ 					GlStateManager.enableBlend();
 ~ 					if (Minecraft.isFancyGraphicsEnabled()) {
-~ 						this.mc.ingameGUI.renderVignette(parFloat1, l, i1);
+~ 						this.mc.ingameGUI.renderVignette(this.mc.thePlayer.getBrightness(parFloat1), l, i1);
 ~ 					}
 ~ 					this.mc.ingameGUI.renderGameOverlayCrosshairs(l, i1);
 ~ 					GlStateManager.bindTexture(this.overlayFramebuffer.getTexture());
@@ -237,7 +237,8 @@
 ~ 					GlStateManager.enableAlpha();
 ~ 					GlStateManager.disableBlend();
 ~ 					if (this.mc.gameSettings.hudPlayer) { // give the player model HUD good fps
-~ 						this.mc.ingameGUI.drawEaglerPlayerOverlay(l - 3, 3, parFloat1);
+~ 						this.mc.ingameGUI.drawEaglerPlayerOverlay(l - 3,
+~ 								3 + this.mc.ingameGUI.overlayDebug.playerOffset, parFloat1);
 ~ 					}
 
 > CHANGE  23 : 24  @  23 : 24
@@ -341,7 +342,7 @@
 
 + 			boolean df = DeferredStateManager.isInDeferredPass();
 
-> CHANGE  9 : 24  @  9 : 13
+> CHANGE  9 : 25  @  9 : 13
 
 ~ 			if (!df) {
 ~ 				GlStateManager.enableBlend();
@@ -353,6 +354,7 @@
 ~ 				DeferredStateManager.reportForwardRenderObjectPosition2(0.0f, 0.0f, 0.0f);
 ~ 				GlStateManager.alphaFunc(516, 0.01F);
 ~ 				GlStateManager.depthMask(false);
+~ 				GlStateManager.enableDepth();
 ~ 				EaglerDeferredPipeline.instance.setForwardRenderLightFactors(0.65f,
 ~ 						4.75f - MathHelper.clamp_float(DeferredStateManager.getSunHeight() * 8.0f - 3.0f, 0.0f, 4.0f),
 ~ 						1.0f, 0.03f);
@@ -390,7 +392,7 @@
 + 										GlStateManager.color(1.3F, 1.3F, 1.3F, 0.5F);
 + 									}
 
-> CHANGE  41 : 50  @  41 : 42
+> CHANGE  41 : 51  @  41 : 42
 
 ~ 			if (!df) {
 ~ 				GlStateManager.disableBlend();
@@ -399,6 +401,7 @@
 ~ 				GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 ~ 				DeferredStateManager.setDefaultMaterialConstants();
 ~ 				GlStateManager.depthMask(true);
+~ 				GlStateManager.disableDepth();
 ~ 				EaglerDeferredPipeline.instance.setForwardRenderLightFactors(1.0f, 1.0f, 1.0f, 1.0f);
 ~ 			}
 
@@ -502,10 +505,7 @@
 + 
 + 		DeferredStateManager.setWavingBlockOffset(blockWaveDistX, blockWaveDistY, blockWaveDistZ);
 + 		if (wavingBlocks) {
-+ 			DeferredStateManager.setWavingBlockParams(1.0f * waveTimer,
-+ 					200.0f * waveTimer
-+ 							+ MathHelper.sin(waveTimer * 0.125f + MathHelper.sin(waveTimer * 1.5f) * 0.2f) * 125.0f,
-+ 					0.0f, 0.0f);
++ 			DeferredStateManager.setWavingBlockParams(1.0f * waveTimer, 200.0f * waveTimer, 0.0f, 0.0f);
 + 		}
 + 
 + 		// if (mc.gameSettings.renderDistanceChunks >= 4) vanilla shows sky not fog
@@ -1133,7 +1133,10 @@
 + 			}
 + 			ds *= 1.5f + mc.theWorld.getRainStrength(partialTicks) * 10.0f
 + 					+ mc.theWorld.getThunderStrength(partialTicks) * 5.0f;
-+ 			ds *= MathHelper.clamp_float(6.0f - DeferredStateManager.getSunHeight() * 17.0f, 1.0f, 2.0f);
++ 			ds *= MathHelper.clamp_float(6.0f - DeferredStateManager.getSunHeight() * 17.0f, 1.0f, 3.0f);
++ 			if (conf.is_rendering_lightShafts) {
++ 				ds *= Math.max(2.0f - Math.abs(DeferredStateManager.getSunHeight()) * 5.0f, 1.0f);
++ 			}
 + 			DeferredStateManager.enableFogExp(ds, true, 1.0f, 1.0f, 1.0f, 1.0f, ff, ff, ff, 1.0f);
 + 		}
 + 

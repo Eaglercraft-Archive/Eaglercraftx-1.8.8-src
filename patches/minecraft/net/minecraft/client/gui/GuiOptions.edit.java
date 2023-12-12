@@ -1,16 +1,18 @@
 
 # Eagler Context Redacted Diff
-# Copyright (c) 2023 lax1dude. All rights reserved.
+# Copyright (c) 2024 lax1dude. All rights reserved.
 
 # Version: 1.0
 # Author: lax1dude
 
-> CHANGE  2 : 7  @  2 : 24
+> CHANGE  2 : 9  @  2 : 24
 
 ~ import net.lax1dude.eaglercraft.v1_8.EagRuntime;
+~ import net.lax1dude.eaglercraft.v1_8.internal.EnumPlatformType;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.EaglerDeferredPipeline;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.gui.GuiShaderConfig;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.gui.GuiShadersNotSupported;
+~ import net.lax1dude.eaglercraft.v1_8.sp.SingleplayerServerController;
 ~ import net.lax1dude.eaglercraft.v1_8.vfs.SYS;
 
 > DELETE  2  @  2 : 3
@@ -34,14 +36,12 @@
 ~ 		GuiButton rp;
 ~ 		this.buttonList.add(rp = new GuiButton(105, this.width / 2 - 155, this.height / 6 + 144 - 6, 150, 20,
 
-> CHANGE  1 : 3  @  1 : 2
+> CHANGE  1 : 5  @  1 : 3
 
-~ 		GuiButton b;
-~ 		this.buttonList.add(b = new GuiButton(104, this.width / 2 + 5, this.height / 6 + 144 - 6, 150, 20,
-
-> INSERT  1 : 2  @  1
-
-+ 		b.enabled = false;
+~ 		GuiButton dbg;
+~ 		this.buttonList.add(dbg = new GuiButton(104, this.width / 2 + 5, this.height / 6 + 144 - 6, 150, 20,
+~ 				I18n.format("options.debugConsoleButton", new Object[0])));
+~ 		dbg.enabled = EagRuntime.getPlatformType() != EnumPlatformType.DESKTOP;
 
 > INSERT  2 : 4  @  2
 
@@ -52,7 +52,12 @@
 
 ~ 	protected void actionPerformed(GuiButton parGuiButton) {
 
-> CHANGE  32 : 38  @  32 : 33
+> INSERT  11 : 13  @  11
+
++ 				SingleplayerServerController
++ 						.setDifficulty(this.mc.theWorld.getWorldInfo().getDifficulty().getDifficultyId());
+
+> CHANGE  21 : 27  @  21 : 22
 
 ~ 				if (EaglerDeferredPipeline.isSupported()) {
 ~ 					this.mc.displayGuiScreen(new GuiShaderConfig(this));
@@ -68,6 +73,10 @@
 ~ 				EagRuntime.toggleRec();
 ~ 				broadcastSettings.displayString = I18n.format(EagRuntime.getRecText(), new Object[0]);
 
-> DELETE  1  @  1 : 2
+> INSERT  2 : 5  @  2
+
++ 			if (parGuiButton.id == 104) {
++ 				EagRuntime.showDebugConsole();
++ 			}
 
 > EOF

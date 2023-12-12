@@ -1,6 +1,6 @@
 
 # Eagler Context Redacted Diff
-# Copyright (c) 2023 lax1dude. All rights reserved.
+# Copyright (c) 2024 lax1dude. All rights reserved.
 
 # Version: 1.0
 # Author: lax1dude
@@ -131,7 +131,7 @@
 
 > CHANGE  3 : 4  @  3 : 4
 
-~ 					jsonobject.put("color", (String) JSONTypeProvider.serialize(chatstyle.color));
+~ 					jsonobject.put("color", chatstyle.color.getFriendlyName());
 
 > CHANGE  3 : 4  @  3 : 4
 
@@ -144,12 +144,18 @@
 ~ 					jsonobject1.put("value", chatstyle.chatClickEvent.getValue());
 ~ 					jsonobject.put("clickEvent", jsonobject1);
 
-> CHANGE  3 : 8  @  3 : 7
+> CHANGE  3 : 14  @  3 : 7
 
 ~ 					JSONObject jsonobject2 = new JSONObject();
 ~ 					jsonobject2.put("action", chatstyle.chatHoverEvent.getAction().getCanonicalName());
-~ 					jsonobject2.put("value",
-~ 							(JSONObject) JSONTypeProvider.serialize(chatstyle.chatHoverEvent.getValue()));
+~ 					Object obj = JSONTypeProvider.serialize(chatstyle.chatHoverEvent.getValue());
+~ 					if (obj instanceof String) {
+~ 						jsonobject2.put("value", (String) obj);
+~ 					} else if (obj instanceof JSONObject) {
+~ 						jsonobject2.put("value", (JSONObject) obj);
+~ 					} else {
+~ 						throw new ClassCastException();
+~ 					}
 ~ 					jsonobject.put("hoverEvent", jsonobject2);
 
 > EOF

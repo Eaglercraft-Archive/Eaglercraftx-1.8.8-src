@@ -1,6 +1,5 @@
 package net.lax1dude.eaglercraft.v1_8.log4j;
 
-import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -8,16 +7,18 @@ import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformRuntime;
 
 /**
- * Copyright (c) 2022-2023 LAX1DUDE. All Rights Reserved.
+ * Copyright (c) 2022-2024 lax1dude. All Rights Reserved.
  * 
- * WITH THE EXCEPTION OF PATCH FILES, MINIFIED JAVASCRIPT, AND ALL FILES
- * NORMALLY FOUND IN AN UNMODIFIED MINECRAFT RESOURCE PACK, YOU ARE NOT ALLOWED
- * TO SHARE, DISTRIBUTE, OR REPURPOSE ANY FILE USED BY OR PRODUCED BY THE
- * SOFTWARE IN THIS REPOSITORY WITHOUT PRIOR PERMISSION FROM THE PROJECT AUTHOR.
- * 
- * NOT FOR COMMERCIAL OR MALICIOUS USE
- * 
- * (please read the 'LICENSE' file this repo's root directory for more info) 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ * IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
 public class Logger {
@@ -100,17 +101,20 @@ public class Logger {
 		log(Level.FATAL, msg);
 	}
 	
-	private static final SimpleDateFormat fmt = new SimpleDateFormat("hh:mm:ss+SSS");
+	private static final SimpleDateFormat fmt = EagRuntime.fixDateFormat(new SimpleDateFormat("hh:mm:ss+SSS"));
 	private static final Date dateInstance = new Date();
 	
 	public void log(Level level, String msg) {
 		if(level.levelInt >= LogManager.logLevel.levelInt) {
 			synchronized(LogManager.logLock) {
-				PrintStream ps = level.getPrintStream();
 				dateInstance.setTime(System.currentTimeMillis());
-				ps.println("[" + fmt.format(dateInstance) + "]" +
-						"[" + Thread.currentThread().getName() + "/" + level.levelName + "]" +
-						"[" + loggerName + "]: " + msg);
+				String line = "[" + fmt.format(dateInstance) + "]" +
+						"[" + EagRuntime.currentThreadName() + "/" + level.levelName + "]" +
+						"[" + loggerName + "]: " + msg;
+				level.getPrintStream().println(line);
+				if(LogManager.logRedirector != null) {
+					LogManager.logRedirector.log(line, level.isErr);
+				}
 			}
 		}
 	}
@@ -118,11 +122,14 @@ public class Logger {
 	public void log(Level level, String msg, Object... args) {
 		if(level.levelInt >= LogManager.logLevel.levelInt) {
 			synchronized(LogManager.logLock) {
-				PrintStream ps = level.getPrintStream();
 				dateInstance.setTime(System.currentTimeMillis());
-				ps.println("[" + fmt.format(dateInstance) + "]" +
-						"[" + Thread.currentThread().getName() + "/" + level.levelName + "]" +
-						"[" + loggerName + "]: " + formatParams(msg, args));
+				String line = "[" + fmt.format(dateInstance) + "]" +
+						"[" + EagRuntime.currentThreadName() + "/" + level.levelName + "]" +
+						"[" + loggerName + "]: " + formatParams(msg, args);
+				level.getPrintStream().println(line);
+				if(LogManager.logRedirector != null) {
+					LogManager.logRedirector.log(line, level.isErr);
+				}
 			}
 		}
 	}

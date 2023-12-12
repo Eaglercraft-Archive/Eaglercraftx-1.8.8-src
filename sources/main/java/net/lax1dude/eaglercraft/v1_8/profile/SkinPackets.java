@@ -9,16 +9,18 @@ import net.lax1dude.eaglercraft.v1_8.netty.Unpooled;
 import net.minecraft.network.PacketBuffer;
 
 /**
- * Copyright (c) 2022-2023 LAX1DUDE. All Rights Reserved.
+ * Copyright (c) 2022-2023 lax1dude, ayunami2000. All Rights Reserved.
  * 
- * WITH THE EXCEPTION OF PATCH FILES, MINIFIED JAVASCRIPT, AND ALL FILES
- * NORMALLY FOUND IN AN UNMODIFIED MINECRAFT RESOURCE PACK, YOU ARE NOT ALLOWED
- * TO SHARE, DISTRIBUTE, OR REPURPOSE ANY FILE USED BY OR PRODUCED BY THE
- * SOFTWARE IN THIS REPOSITORY WITHOUT PRIOR PERMISSION FROM THE PROJECT AUTHOR.
- * 
- * NOT FOR COMMERCIAL OR MALICIOUS USE
- * 
- * (please read the 'LICENSE' file this repo's root directory for more info) 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ * IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
 public class SkinPackets {
@@ -29,6 +31,7 @@ public class SkinPackets {
 	public static final int PACKET_OTHER_SKIN_PRESET = 0x04;
 	public static final int PACKET_OTHER_SKIN_CUSTOM = 0x05;
 	public static final int PACKET_GET_SKIN_BY_URL = 0x06;
+	public static final int PACKET_INSTALL_NEW_SKIN = 0x07;
 
 	public static void readPluginMessage(PacketBuffer buffer, ServerSkinCache skinCache) throws IOException {
 		try {
@@ -74,17 +77,26 @@ public class SkinPackets {
 		}
 	}
 
-	public static byte[] writeMySkinPreset(int skinId) throws IOException {
+	public static byte[] writeMySkinPreset(int skinId) {
 		return new byte[] { (byte) PACKET_MY_SKIN_PRESET, (byte) (skinId >> 24), (byte) (skinId >> 16),
 				(byte) (skinId >> 8), (byte) (skinId & 0xFF) };
 	}
 
-	public static byte[] writeMySkinCustom(CustomSkin customSkin) throws IOException {
+	public static byte[] writeMySkinCustom(CustomSkin customSkin) {
 		byte[] packet = new byte[2 + customSkin.texture.length];
 		packet[0] = (byte) PACKET_MY_SKIN_CUSTOM;
 		packet[1] = (byte) customSkin.model.id;
 		System.arraycopy(customSkin.texture, 0, packet, 2, customSkin.texture.length);
 		return packet;
+	}
+
+	public static PacketBuffer writeCreateCustomSkull(byte[] customSkin) {
+		int len = 3 + customSkin.length;
+		PacketBuffer ret = new PacketBuffer(Unpooled.buffer(len, len));
+		ret.writeByte(PACKET_INSTALL_NEW_SKIN);
+		ret.writeShort(customSkin.length);
+		ret.writeBytes(customSkin);
+		return ret;
 	}
 
 	public static PacketBuffer writeGetOtherSkin(EaglercraftUUID skinId) throws IOException {

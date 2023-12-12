@@ -16,29 +16,37 @@ import org.teavm.jso.canvas.CanvasRenderingContext2D;
 import org.teavm.jso.dom.events.Event;
 import org.teavm.jso.dom.events.EventListener;
 import org.teavm.jso.dom.html.HTMLCanvasElement;
+import org.teavm.jso.dom.html.HTMLDocument;
 import org.teavm.jso.dom.html.HTMLInputElement;
-import org.teavm.jso.dom.xml.Document;
 import org.teavm.jso.typedarrays.ArrayBuffer;
-import org.teavm.jso.typedarrays.Int8Array;
+import org.teavm.jso.typedarrays.Uint8Array;
 
 import net.lax1dude.eaglercraft.v1_8.Base64;
+import net.lax1dude.eaglercraft.v1_8.EagRuntime;
+import net.lax1dude.eaglercraft.v1_8.internal.teavm.DebugConsoleWindow;
+import net.lax1dude.eaglercraft.v1_8.internal.teavm.TeaVMUtils;
 
 /**
- * Copyright (c) 2022-2023 LAX1DUDE. All Rights Reserved.
+ * Copyright (c) 2022-2023 lax1dude. All Rights Reserved.
  * 
- * WITH THE EXCEPTION OF PATCH FILES, MINIFIED JAVASCRIPT, AND ALL FILES
- * NORMALLY FOUND IN AN UNMODIFIED MINECRAFT RESOURCE PACK, YOU ARE NOT ALLOWED
- * TO SHARE, DISTRIBUTE, OR REPURPOSE ANY FILE USED BY OR PRODUCED BY THE
- * SOFTWARE IN THIS REPOSITORY WITHOUT PRIOR PERMISSION FROM THE PROJECT AUTHOR.
- * 
- * NOT FOR COMMERCIAL OR MALICIOUS USE
- * 
- * (please read the 'LICENSE' file this repo's root directory for more info)
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ * IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
 public class PlatformApplication {
 
 	public static void openLink(String url) {
+		if(url.indexOf(':') == -1) {
+			url = "http://" + url;
+		}
 		Window.current().open(url, "_blank", "noopener,noreferrer");
 	}
 
@@ -90,7 +98,11 @@ public class PlatformApplication {
 		try {
 			Storage s = Window.current().getLocalStorage();
 			if(s != null) {
-				s.setItem("_eaglercraftX." + name, Base64.encodeBase64String(data));
+				if(data != null) {
+					s.setItem("_eaglercraftX." + name, Base64.encodeBase64String(data));
+				}else {
+					s.removeItem("_eaglercraftX." + name);
+				}
 			}
 		}catch(Throwable t) {
 		}
@@ -114,7 +126,7 @@ public class PlatformApplication {
 		}
 	}
 	
-	private static final DateFormat dateFormatSS = new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss");
+	private static final DateFormat dateFormatSS = EagRuntime.fixDateFormat(new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss"));
 	
 	public static String saveScreenshot() {
 		String name = "screenshot_" + dateFormatSS.format(new Date()).toString() + ".png";
@@ -156,12 +168,7 @@ public class PlatformApplication {
 			if(name == null) {
 				fileChooserResultObject = null;
 			}else {
-				Int8Array typedArray = Int8Array.create(buffer);
-				byte[] bytes = new byte[typedArray.getByteLength()];
-				for(int i = 0; i < bytes.length; ++i) {
-					bytes[i] = typedArray.get(i);
-				}
-				fileChooserResultObject = new FileChooserResult(name, bytes);
+				fileChooserResultObject = new FileChooserResult(name, TeaVMUtils.wrapUnsignedByteArray(Uint8Array.create(buffer)));
 			}
 		}
 
@@ -213,8 +220,14 @@ public class PlatformApplication {
 		return res;
 	}
 
-	@JSBody(params = { "doc", "str" }, script = "doc.write(str);")
-	private static native void documentWrite(Document doc, String str);
+	private static final String faviconURLString = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAIAAAD8GO2jAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAFiUAABYlAUlSJPAAAAR/SURBVEhLtZXZK3ZRFMYPcqXc+gv413DHxVuGIpIhkciQWaRccCNjSCkligwXSOZ5nmfv9zvn2e8+58V753sudmuvvdZ61l5r7XOc8H+GS/D19aUNkPz5+aktQH5/f//4+LBKZKuRkpUtQjCUYG5gD2T38vLy/PwsDfL9/f3Dw8PT05M0b29vnKLhCKCBT4L4gvBLBIei4//4+Hh1dUVEQutUuLu7E83FxQUGnKLBWKfQaA3S+AREVxaEOD8/Pzk50XpzcyMDcH19zdZG3N3d3dzc3Nvb01aX5pQUpQGGQJxcQpfNysoKhUIdHR1o1tbWbInYAgxIPDMzMy8vLzc3FxqOdMoRqwJK8G8ALUYIhHMiSEhIwI6CyIb0qQzC4eGhsXCc1tZWnZIEKzdQJQSXgKxfX18RCM3Z5eWlcfVAxKOjo+Pj49PTU88lTOk2NjbMsePc3t6SAfcgFdszOyMuAdeBg0CQi2lhYUHOeOLDCisN8FzcPFZXV3t7ezHY3t5GQ+6it+2xMASsKhEEWKsmRLRBBUpPvpJ/TpFKFBwKYAiITmicsbYhdHfJAltqhUCVsCQhwslmeXmZxiBQT9c0Ar9E2O3v72sYSE0N1yQArkKy0kBMXLqlZqIZHR3t6empqqqSDcBdhXEJSJ/bUc3q6uq+vj629GB9fR1WsLW1NTs7u7S0RN2locMjIyOEm5ubQ7+4uJienk4/+vv77Y1hwhLBEKhwWHitdVFfX9/Y2Gg2HuLi4owUAysrK8yCG97rh0+ApP5Q2ZycHFlPTExUVFRIBvn5+WhKSkp2dnaMKhptbW2426GgQ/rwuAQCZ1hwFayLiork9hMFBQV1dXVmE0BLS4vqw3QFB8kn4IAxoGPkYpxi4FeDmpqas7Mz4pClAgqGwD48rjY2NmacYqC0tJQ1KSlJWyE5OZkpUKkBAxZVIntAoZh04+Q48fHxPNGBgYHExMT29naj9cBodnZ2mo3jlJWVMeW2OGQck4B1amqqoaGhqamJjx2lGxwcpL0mUgR8fJhsWqJtSkoKU2SbHHUDpkhPBujd8xuQG6PJRM/Pz09PT7O1NNnZ2Tw3fgZkXVhYKCUlUhBATP+hCVyKZGky17RV0g04laayslJ6hlVeFHB4eFhKaogGd0LxtmTgE+hbhKDnPjMzgw8E3qGL2tpaBWpubjYqj2BoaEj6rq4uNATRZ0ZwCbiL6gXEzINk5vCBQJ9rMD4+rkA8QNK036uDg4Py8vLu7m680KjIBNR3zBDoWQM1g98snyB+VSoRW8C/UwR81/SvhgNj9JOTkwwVERUdRBEI0BAdLRVERkhLS8vIyEDQlrsTPTU1lVFhKxARvZgUlFLbegCf4BvIsbi4mIg4E5EogIHhiKCMtU0WUFiVy06j5fAJIDdSBDQw+PegDfBRcbOPwH4F9LuFWIIQdQNKwWqzIE0aoFUaBsw+SQuFw0uNtC9A+F4i3QNrbg3IDn+SAsHh+wYiEpeyBEMLv/cAO6KzAijxxB+Y4wisBhssJUhjEbPJf4Nw+B+JXqLW3bw+wQAAAABJRU5ErkJggg==";
+
+	public static String faviconURLTeaVM() {
+		return faviconURLString.substring(0);
+	}
+
+	@JSBody(params = { "doc", "str" }, script = "doc.write(str);doc.close();")
+	private static native void documentWrite(HTMLDocument doc, String str);
 
 	public static void openCreditsPopup(String text) {
 		Window currentWin = Window.current();
@@ -226,9 +239,43 @@ public class PlatformApplication {
 		int y = (currentWin.getScreen().getHeight() - h) / 2;
 		
 		Window newWin = Window.current().open("", "_blank", "top=" + y + ",left=" + x + ",width=" + w + ",height=" + h + ",menubar=0,status=0,titlebar=0,toolbar=0");
-		
+		if(newWin == null) {
+			Window.alert("ERROR: Popup blocked!\n\nPlease make sure you have popups enabled for this site!");
+			return;
+		}
+
 		newWin.focus();
-		documentWrite(newWin.getDocument(), "<html><head><title>EaglercraftX 1.8 Credits</title></head><body><pre>" + text + "</pre></body></html>");
+		documentWrite(newWin.getDocument(), "<!DOCTYPE html><html><head><meta charset=\"UTF-8\" />"
+				+ "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" /><title>EaglercraftX 1.8 Credits</title>"
+				+ "<link type=\"image/png\" rel=\"shortcut icon\" href=\"" + PlatformApplication.faviconURLTeaVM() + "\" />"
+						+ "</head><body><pre>" + text + "</pre></body></html>");
 	}
 
+	public static void clearFileChooserResult() {
+		fileChooserHasResult = false;
+		fileChooserResultObject = null;
+	}
+
+	@JSBody(params = { "name", "buf" }, script =
+			"var hr = window.URL.createObjectURL(new Blob([buf], {type: \"octet/stream\"}));" +
+			"var a = document.createElement(\"a\");" +
+			"a.href = hr; a.download = name; a.click();" +
+			"window.URL.revokeObjectURL(hr);")
+	private static final native void downloadBytesImpl(String str, ArrayBuffer buf);
+
+	public static final void downloadFileWithName(String str, byte[] dat) {
+		downloadBytesImpl(str, TeaVMUtils.unwrapUnsignedByteArray(dat).getBuffer());
+	}
+
+	public static void showDebugConsole() {
+		DebugConsoleWindow.showDebugConsole();
+	}
+
+	public static void addLogMessage(String text, boolean err) {
+		DebugConsoleWindow.addLogMessage(text, err);
+	}
+
+	public static boolean isShowingDebugConsole() {
+		return DebugConsoleWindow.isShowingDebugConsole();
+	}
 }

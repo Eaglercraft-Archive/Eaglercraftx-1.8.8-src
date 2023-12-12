@@ -1,16 +1,18 @@
 #line 2
 
 /*
- * Copyright (c) 2023 LAX1DUDE. All Rights Reserved.
+ * Copyright (c) 2023 lax1dude. All Rights Reserved.
  * 
- * WITH THE EXCEPTION OF PATCH FILES, MINIFIED JAVASCRIPT, AND ALL FILES
- * NORMALLY FOUND IN AN UNMODIFIED MINECRAFT RESOURCE PACK, YOU ARE NOT ALLOWED
- * TO SHARE, DISTRIBUTE, OR REPURPOSE ANY FILE USED BY OR PRODUCED BY THE
- * SOFTWARE IN THIS REPOSITORY WITHOUT PRIOR PERMISSION FROM THE PROJECT AUTHOR.
- * 
- * NOT FOR COMMERCIAL OR MALICIOUS USE
- * 
- * (please read the 'LICENSE' file this repo's root directory for more info) 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ * IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
 
@@ -80,7 +82,7 @@ float shadow(in vec3 coords) {
 #define STEP2DST(stepNum) (stepNum * stepNum * 0.06 + stepNum * 0.05)
 
 void main() {
-	output1f = 1.0;
+	output1f = 0.0;
 	float depth = textureLod(u_gbufferDepthTexture, v_position2f, 0.0).r;
 	if(depth < 0.00001) {
 		return;
@@ -104,55 +106,55 @@ void main() {
 	if(cloudSample > viewDist) return;
 	cloudSample = shadow(u_eyePosition3f + fragPos4f.xyz * cloudSample);
 	if(cloudSample < 0.0) return;
-	output1f -= SAMPLES_PER_STEP_1 - cloudSample * SAMPLES_PER_STEP_1;
+	output1f += cloudSample * SAMPLES_PER_STEP_1;
 
 	sampleNum += 1.0;
 	cloudSample = STEP2DST(sampleNum);
 	if(cloudSample > viewDist) return;
 	cloudSample = shadow(u_eyePosition3f + fragPos4f.xyz * cloudSample);
 	if(cloudSample < 0.0) return;
-	output1f -= SAMPLES_PER_STEP_1 - cloudSample * SAMPLES_PER_STEP_1;
+	output1f += cloudSample * SAMPLES_PER_STEP_1;
 
 	sampleNum += 1.0;
 	cloudSample = STEP2DST(sampleNum);
 	if(cloudSample > viewDist) return;
 	cloudSample = shadow(u_eyePosition3f + fragPos4f.xyz * cloudSample);
 	if(cloudSample < 0.0) return;
-	output1f -= SAMPLES_PER_STEP_1 - cloudSample * SAMPLES_PER_STEP_1;
+	output1f += cloudSample * SAMPLES_PER_STEP_1;
 
 	sampleNum += 1.0;
 	cloudSample = STEP2DST(sampleNum);
 	if(cloudSample > viewDist) return;
 	cloudSample = shadow(u_eyePosition3f + fragPos4f.xyz * cloudSample);
 	if(cloudSample < 0.0) return;
-	output1f -= SAMPLES_PER_STEP_1 - cloudSample * SAMPLES_PER_STEP_1;
+	output1f += cloudSample * SAMPLES_PER_STEP_1;
 
 	sampleNum += 1.0;
 	cloudSample = STEP2DST(sampleNum);
 	if(cloudSample > viewDist) return;
 	cloudSample = shadow(u_eyePosition3f + fragPos4f.xyz * cloudSample);
 	if(cloudSample < 0.0) return;
-	output1f -= SAMPLES_PER_STEP_1 - cloudSample * SAMPLES_PER_STEP_1;
+	output1f += cloudSample * SAMPLES_PER_STEP_1;
 
 	sampleNum += 1.0;
 	cloudSample = STEP2DST(sampleNum);
 	if(cloudSample > viewDist) return;
 	cloudSample = shadow(u_eyePosition3f + fragPos4f.xyz * cloudSample);
 	if(cloudSample < 0.0) return;
-	output1f -= SAMPLES_PER_STEP_1 - cloudSample * SAMPLES_PER_STEP_1;
+	output1f += cloudSample * SAMPLES_PER_STEP_1;
 
 	sampleNum += 1.0;
 	cloudSample = STEP2DST(sampleNum);
 	if(cloudSample > viewDist) return;
 	cloudSample = shadow(u_eyePosition3f + fragPos4f.xyz * cloudSample);
 	if(cloudSample < 0.0) return;
-	output1f -= SAMPLES_PER_STEP_1 - cloudSample * SAMPLES_PER_STEP_1;
+	output1f += cloudSample * SAMPLES_PER_STEP_1;
 
 	sampleNum += 1.0;
 	cloudSample = STEP2DST(sampleNum);
 	if(cloudSample > viewDist) return;
 	cloudSample = shadow(u_eyePosition3f + fragPos4f.xyz * cloudSample);
 	if(cloudSample < 0.0) return;
-	output1f -= SAMPLES_PER_STEP_1 - cloudSample * SAMPLES_PER_STEP_1;
+	output1f += cloudSample * SAMPLES_PER_STEP_1;
 
 }

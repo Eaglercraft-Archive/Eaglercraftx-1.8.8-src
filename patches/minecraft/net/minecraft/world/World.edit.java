@@ -1,14 +1,16 @@
 
 # Eagler Context Redacted Diff
-# Copyright (c) 2023 lax1dude. All rights reserved.
+# Copyright (c) 2024 lax1dude. All rights reserved.
 
 # Version: 1.0
 # Author: lax1dude
 
 > DELETE  2  @  2 : 5
 
-> CHANGE  5 : 6  @  5 : 6
+> CHANGE  5 : 8  @  5 : 6
 
+~ 
+~ import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 
 > CHANGE  1 : 2  @  1 : 2
@@ -41,7 +43,11 @@
 
 > DELETE  7  @  7 : 8
 
-> DELETE  3  @  3 : 4
+> CHANGE  1 : 2  @  1 : 2
+
+~ 	private final Calendar theCalendar = EagRuntime.getLocaleCalendar();
+
+> DELETE  1  @  1 : 2
 
 > INSERT  10 : 13  @  10
 

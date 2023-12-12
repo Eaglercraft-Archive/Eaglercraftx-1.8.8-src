@@ -13,7 +13,6 @@ import org.teavm.tooling.TeaVMTargetType;
 import org.teavm.tooling.builder.BuildException;
 import org.teavm.tooling.builder.BuildResult;
 import org.teavm.tooling.builder.BuildStrategy;
-import org.teavm.tooling.builder.ClassLoaderFactory;
 import org.teavm.tooling.builder.InProcessBuildStrategy;
 import org.teavm.vm.TeaVMOptimizationLevel;
 import org.teavm.vm.TeaVMPhase;
@@ -64,70 +63,48 @@ public class TeaVMBridgeImpl {
 		
 		System.out.println();
 		
-		final List<URLClassLoader> openedClassLoaders = new ArrayList();
-		
-		BuildStrategy buildStrategy = new InProcessBuildStrategy(new ClassLoaderFactory() {
-			@Override
-			public ClassLoader create(URL[] var1, ClassLoader var2) {
-				URLClassLoader classLoader = new URLClassLoader(var1, var2);
-				synchronized(openedClassLoaders) {
-					openedClassLoaders.add(classLoader);
-				}
-				return classLoader;
-			}
-		});
+		BuildStrategy buildStrategy = new InProcessBuildStrategy();
 		
 		long start = System.currentTimeMillis();
 		BuildResult result = null;
 		
+		buildStrategy.setClassPathEntries((List<String>)options.get("classPathEntries"));
+		buildStrategy.setDebugInformationGenerated(false);
+		buildStrategy.setEntryPointName((String)options.get("entryPointName"));
+		buildStrategy.setMainClass((String)options.get("mainClass"));
+		buildStrategy.setMaxTopLevelNames(16000); // TODO: what does this do? sounds important
+		buildStrategy.setObfuscated(((Boolean)options.get("minifying")).booleanValue());
+		buildStrategy.setOptimizationLevel(TeaVMOptimizationLevel.valueOf((String)options.get("optimizationLevel")));
+		buildStrategy.setSourceFilesCopied(false);
+		buildStrategy.setSourceMapsFileGenerated(((Boolean)options.get("generateSourceMaps")).booleanValue());
+		buildStrategy.setTargetDirectory((String)options.get("targetDirectory"));
+		buildStrategy.setTargetFileName((String)options.get("targetFileName"));
+		buildStrategy.setTargetType(TeaVMTargetType.JAVASCRIPT);
+		
+		buildStrategy.setProgressListener(new TeaVMProgressListener() {
+			
+			@Override
+			public TeaVMProgressFeedback progressReached(int var1) {
+				return TeaVMProgressFeedback.CONTINUE;
+			}
+			
+			@Override
+			public TeaVMProgressFeedback phaseStarted(TeaVMPhase var1, int var2) {
+				if(var1 == TeaVMPhase.DEPENDENCY_ANALYSIS) {
+					System.out.println("[TeaVMBridge] Analyzing dependencies...");
+				}else if(var1 == TeaVMPhase.COMPILING) {
+					System.out.println("[TeaVMBridge] Running compiler...");
+				}
+				return TeaVMProgressFeedback.CONTINUE;
+			}
+		});
+		
 		try {
-			buildStrategy.setClassPathEntries((List<String>)options.get("classPathEntries"));
-			buildStrategy.setDebugInformationGenerated(false);
-			buildStrategy.setEntryPointName((String)options.get("entryPointName"));
-			buildStrategy.setMainClass((String)options.get("mainClass"));
-			buildStrategy.setMaxTopLevelNames(10000); // TODO: what does this do? sounds important
-			buildStrategy.setMinifying(((Boolean)options.get("minifying")).booleanValue());
-			buildStrategy.setOptimizationLevel(TeaVMOptimizationLevel.valueOf((String)options.get("optimizationLevel")));
-			buildStrategy.setSourceFilesCopied(false);
-			buildStrategy.setSourceMapsFileGenerated(((Boolean)options.get("generateSourceMaps")).booleanValue());
-			buildStrategy.setTargetDirectory((String)options.get("targetDirectory"));
-			buildStrategy.setTargetFileName((String)options.get("targetFileName"));
-			buildStrategy.setTargetType(TeaVMTargetType.JAVASCRIPT);
-			
-			buildStrategy.setProgressListener(new TeaVMProgressListener() {
-				
-				@Override
-				public TeaVMProgressFeedback progressReached(int var1) {
-					return TeaVMProgressFeedback.CONTINUE;
-				}
-				
-				@Override
-				public TeaVMProgressFeedback phaseStarted(TeaVMPhase var1, int var2) {
-					if(var1 == TeaVMPhase.DEPENDENCY_ANALYSIS) {
-						System.out.println("[TeaVMBridge] Analyzing dependencies...");
-					}else if(var1 == TeaVMPhase.COMPILING) {
-						System.out.println("[TeaVMBridge] Running compiler...");
-					}
-					return TeaVMProgressFeedback.CONTINUE;
-				}
-			});
-			
-			try {
-				result = buildStrategy.build();
-			}catch(BuildException ex) {
-				throw new RuntimeException("[TeaVMBridge] BuildException thrown while building!", ex.getCause());
-			}catch(Throwable t) {
-				throw new RuntimeException("[TeaVMBridge] Unhandled exception thrown while building!", t);
-			}
-		}finally {
-			for(int i = 0, l = openedClassLoaders.size(); i < l; ++i) {
-				URLClassLoader cl = openedClassLoaders.get(i);
-				try {
-					cl.close();
-				}catch(Throwable t) {
-					System.out.println("[TeaVMBridge] ERROR: could not free classloader " + cl + ": " + t.toString());
-				}
-			}
+			result = buildStrategy.build();
+		}catch(BuildException ex) {
+			throw new RuntimeException("[TeaVMBridge] BuildException thrown while building!", ex.getCause());
+		}catch(Throwable t) {
+			throw new RuntimeException("[TeaVMBridge] Unhandled exception thrown while building!", t);
 		}
 
 		System.out.println();

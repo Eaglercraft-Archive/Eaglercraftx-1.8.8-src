@@ -16,6 +16,7 @@ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 import net.lax1dude.eaglercraft.v1_8.profile.EaglerProfile;
 import net.lax1dude.eaglercraft.v1_8.profile.GuiAuthenticationScreen;
+import net.lax1dude.eaglercraft.v1_8.update.UpdateService;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiDisconnected;
 import net.minecraft.client.gui.GuiScreen;
@@ -25,16 +26,18 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 
 /**
- * Copyright (c) 2022-2023 LAX1DUDE. All Rights Reserved.
+ * Copyright (c) 2022-2023 lax1dude, ayunami2000. All Rights Reserved.
  * 
- * WITH THE EXCEPTION OF PATCH FILES, MINIFIED JAVASCRIPT, AND ALL FILES
- * NORMALLY FOUND IN AN UNMODIFIED MINECRAFT RESOURCE PACK, YOU ARE NOT ALLOWED
- * TO SHARE, DISTRIBUTE, OR REPURPOSE ANY FILE USED BY OR PRODUCED BY THE
- * SOFTWARE IN THIS REPOSITORY WITHOUT PRIOR PERMISSION FROM THE PROJECT AUTHOR.
- * 
- * NOT FOR COMMERCIAL OR MALICIOUS USE
- * 
- * (please read the 'LICENSE' file this repo's root directory for more info)
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ * IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
 public class ConnectionHandshake {
@@ -45,9 +48,14 @@ public class ConnectionHandshake {
 	private static final int protocolV3 = 3;
 	
 	private static final Logger logger = LogManager.getLogger();
+
+	public static String pluginVersion = null;
+	public static String pluginBrand = null;
 	
 	public static boolean attemptHandshake(Minecraft mc, GuiConnecting connecting, GuiScreen ret, String password, boolean allowPlaintext) {
 		try {
+			pluginVersion = null;
+			pluginBrand = null;
 			ByteArrayOutputStream bao = new ByteArrayOutputStream();
 			DataOutputStream d = new DataOutputStream(bao);
 			
@@ -140,23 +148,15 @@ public class ConnectionHandshake {
 				int msgLen = di.read();
 				byte[] dat = new byte[msgLen];
 				di.read(dat);
-				String brandStr = ArrayUtils.asciiString(dat);
+				pluginBrand = ArrayUtils.asciiString(dat);
 				
 				msgLen = di.read();
 				dat = new byte[msgLen];
 				di.read(dat);
-				String versionStr = ArrayUtils.asciiString(dat);
+				pluginVersion = ArrayUtils.asciiString(dat);
 				
-				logger.info("Server version: {}", versionStr);
-				logger.info("Server brand: {}", brandStr);
-				
-				if(versionStr.equals("1.0.0") || versionStr.equals("1.0.1") || versionStr.equals("1.0.2")
-						|| versionStr.equals("1.0.3") || versionStr.equals("1.0.4") || versionStr.equals("1.0.5")) {
-					mc.bungeeOutdatedMsgTimer = 80;
-					mc.bungeeOutdatedMsgVer = versionStr;
-				}else {
-					mc.bungeeOutdatedMsgTimer = 0;
-				}
+				logger.info("Server version: {}", pluginVersion);
+				logger.info("Server brand: {}", pluginBrand);
 				
 				int authType = di.read();
 				int saltLength = (int)di.readShort() & 0xFFFF;
@@ -292,6 +292,21 @@ public class ConnectionHandshake {
 					d.writeShort(packetSkin.length);
 					d.write(packetSkin);
 					PlatformNetworking.writePlayPacket(bao.toByteArray());
+					
+					byte[] packetSignatureData = UpdateService.getClientSignatureData();
+					if(packetSignatureData != null) {
+						bao.reset();
+						d.writeByte(HandshakePacketTypes.PROTOCOL_CLIENT_PROFILE_DATA);
+						profileDataType = "update_cert_v1";
+						d.writeByte(profileDataType.length());
+						d.writeBytes(profileDataType);
+						if(packetSignatureData.length > 0xFFFF) {
+							throw new IOException("Update certificate login packet is too long: " + packetSignatureData.length);
+						}
+						d.writeShort(packetSignatureData.length);
+						d.write(packetSignatureData);
+						PlatformNetworking.writePlayPacket(bao.toByteArray());
+					}
 					
 					bao.reset();
 					d.writeByte(HandshakePacketTypes.PROTOCOL_CLIENT_FINISH_LOGIN);

@@ -5,14 +5,16 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.WeakHashMap;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.io.FileUtils;
@@ -22,16 +24,18 @@ import com.github.difflib.patch.Patch;
 import com.github.difflib.patch.PatchFailedException;
 
 /**
- * Copyright (c) 2022-2023 LAX1DUDE. All Rights Reserved.
+ * Copyright (c) 2022-2023 lax1dude. All Rights Reserved.
  * 
- * WITH THE EXCEPTION OF PATCH FILES, MINIFIED JAVASCRIPT, AND ALL FILES
- * NORMALLY FOUND IN AN UNMODIFIED MINECRAFT RESOURCE PACK, YOU ARE NOT ALLOWED
- * TO SHARE, DISTRIBUTE, OR REPURPOSE ANY FILE USED BY OR PRODUCED BY THE
- * SOFTWARE IN THIS REPOSITORY WITHOUT PRIOR PERMISSION FROM THE PROJECT AUTHOR.
- * 
- * NOT FOR COMMERCIAL OR MALICIOUS USE
- * 
- * (please read the 'LICENSE' file this repo's root directory for more info)
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ * IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
 public class ApplyPatchesToZip {
@@ -148,6 +152,33 @@ public class ApplyPatchesToZip {
 		System.out.println("Replaced " + repCnt + " files");
 		System.out.println("Deleted " + delCnt + " files");
 		System.out.println();
+	}
+
+	public static void writeIntegratedServerClass(String fileId, String fileIn, OutputStream os) throws IOException {
+		List<String> lines = new ArrayList(Lines.linesList(fileIn));
+		String str;
+		for(int i = 0; i < lines.size(); ++i) {
+			String lineIn = lines.get(i);
+			if(lineIn.startsWith("import net.minecraft.")) {
+				lines.set(i, "import net.lax1dude.eaglercraft.v1_8.sp.server.classes." + lineIn.substring(7));
+			}else if(lineIn.contains(" class ") || lineIn.startsWith("class ")) {
+				lines.addAll(i + 1, Arrays.asList(new String[] {
+						"",
+						"	static {",
+						"		__checkIntegratedContextValid(\"" + fileId + "\");",
+						"	}",
+						""
+				}));
+				lines.addAll(i, Arrays.asList(new String[] {
+						"import static net.lax1dude.eaglercraft.v1_8.sp.server.classes.ContextUtil.__checkIntegratedContextValid;",
+						""
+				}));
+				break;
+			}else if(lineIn.startsWith("package ")) {
+				lines.set(i, "package net.lax1dude.eaglercraft.v1_8.sp.server.classes." + lineIn.substring(8));
+			}
+		}
+		IOUtils.writeLines(lines, null, os, "UTF-8");
 	}
 
 }

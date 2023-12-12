@@ -1,11 +1,18 @@
 
 # Eagler Context Redacted Diff
-# Copyright (c) 2023 lax1dude. All rights reserved.
+# Copyright (c) 2024 lax1dude. All rights reserved.
 
 # Version: 1.0
 # Author: lax1dude
 
-> DELETE  5  @  5 : 6
+> INSERT  2 : 6  @  2
+
++ import net.lax1dude.eaglercraft.v1_8.sp.SingleplayerServerController;
++ import net.lax1dude.eaglercraft.v1_8.sp.lan.LANClientNetworkManager;
++ import net.lax1dude.eaglercraft.v1_8.sp.lan.LANServerController;
++ import net.lax1dude.eaglercraft.v1_8.sp.socket.ClientIntegratedServerNetworkManager;
+
+> DELETE  3  @  3 : 4
 
 > DELETE  51  @  51 : 52
 
@@ -22,5 +29,15 @@
 > INSERT  2 : 3  @  2
 
 + 		this.statWriter = statWriter;
+
+> CHANGE  116 : 123  @  116 : 117
+
+~ 		if (((sendQueue.getNetworkManager() instanceof ClientIntegratedServerNetworkManager)
+~ 				|| (sendQueue.getNetworkManager() instanceof LANClientNetworkManager))
+~ 				&& message.startsWith("/eagskull")) {
+~ 			this.mc.eagskullCommand.openFileChooser();
+~ 		} else {
+~ 			this.sendQueue.addToSendQueue(new C01PacketChatMessage(message));
+~ 		}
 
 > EOF

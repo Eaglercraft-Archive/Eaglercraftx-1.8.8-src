@@ -1,6 +1,6 @@
 
 # Eagler Context Redacted Diff
-# Copyright (c) 2023 lax1dude. All rights reserved.
+# Copyright (c) 2024 lax1dude. All rights reserved.
 
 # Version: 1.0
 # Author: lax1dude
@@ -20,16 +20,18 @@
 
 > DELETE  1  @  1 : 4
 
-> CHANGE  1 : 41  @  1 : 4
+> CHANGE  1 : 51  @  1 : 4
 
 ~ 
 ~ import net.lax1dude.eaglercraft.v1_8.internal.PlatformInput;
+~ 
 ~ import org.apache.commons.lang3.Validate;
 ~ 
 ~ import com.google.common.collect.Lists;
 ~ 
 ~ import net.lax1dude.eaglercraft.v1_8.Display;
 ~ import net.lax1dude.eaglercraft.v1_8.EagRuntime;
+~ import net.lax1dude.eaglercraft.v1_8.EaglerXBungeeVersion;
 ~ import net.lax1dude.eaglercraft.v1_8.HString;
 ~ import net.lax1dude.eaglercraft.v1_8.IOUtils;
 ~ import net.lax1dude.eaglercraft.v1_8.Keyboard;
@@ -62,6 +64,14 @@
 ~ import net.lax1dude.eaglercraft.v1_8.socket.AddressResolver;
 ~ import net.lax1dude.eaglercraft.v1_8.socket.EaglercraftNetworkManager;
 ~ import net.lax1dude.eaglercraft.v1_8.socket.RateLimitTracker;
+~ import net.lax1dude.eaglercraft.v1_8.sp.IntegratedServerState;
+~ import net.lax1dude.eaglercraft.v1_8.sp.SingleplayerServerController;
+~ import net.lax1dude.eaglercraft.v1_8.sp.SkullCommand;
+~ import net.lax1dude.eaglercraft.v1_8.sp.gui.GuiScreenDemoIntegratedServerStartup;
+~ import net.lax1dude.eaglercraft.v1_8.sp.gui.GuiScreenIntegratedServerBusy;
+~ import net.lax1dude.eaglercraft.v1_8.sp.gui.GuiScreenSingleplayerConnecting;
+~ import net.lax1dude.eaglercraft.v1_8.sp.lan.LANServerController;
+~ import net.lax1dude.eaglercraft.v1_8.update.RelayUpdateChecker;
 
 > DELETE  2  @  2 : 4
 
@@ -91,21 +101,29 @@
 
 > DELETE  14  @  14 : 18
 
-> DELETE  21  @  21 : 25
+> INSERT  13 : 14  @  13
+
++ import net.minecraft.event.ClickEvent;
+
+> DELETE  8  @  8 : 12
 
 > DELETE  1  @  1 : 3
 
 > DELETE  1  @  1 : 3
 
-> INSERT  6 : 7  @  6
+> INSERT  6 : 9  @  6
 
++ import net.minecraft.util.ChatComponentTranslation;
++ import net.minecraft.util.ChatStyle;
 + import net.minecraft.util.EnumChatFormatting;
 
 > INSERT  11 : 12  @  11
 
 + import net.minecraft.util.StringTranslate;
 
-> DELETE  6  @  6 : 26
+> DELETE  6  @  6 : 7
+
+> DELETE  1  @  1 : 19
 
 > CHANGE  1 : 2  @  1 : 2
 
@@ -117,13 +135,17 @@
 
 > DELETE  12  @  12 : 14
 
-> DELETE  19  @  19 : 20
+> INSERT  11 : 12  @  11
+
++ 	private boolean wasPaused;
+
+> DELETE  8  @  8 : 9
 
 > DELETE  6  @  6 : 8
 
 > DELETE  1  @  1 : 3
 
-> CHANGE  11 : 12  @  11 : 12
+> CHANGE  10 : 11  @  10 : 12
 
 ~ 	private EaglercraftNetworkManager myNetworkManager;
 
@@ -138,9 +160,14 @@
 + 	public int joinWorldTickCounter = 0;
 + 	private int dontPauseTimer = 0;
 + 	public int bungeeOutdatedMsgTimer = 0;
-+ 	public String bungeeOutdatedMsgVer = null;
++ 	private boolean isLANOpen = false;
 
-> CHANGE  3 : 4  @  3 : 6
+> INSERT  1 : 3  @  1
+
++ 	public SkullCommand eagskullCommand;
++ 
+
+> CHANGE  2 : 3  @  2 : 5
 
 ~ 		StringTranslate.doCLINIT();
 
@@ -148,11 +175,11 @@
 
 ~ 		this.mcDefaultResourcePack = new DefaultResourcePack();
 
-> CHANGE  1 : 2  @  1 : 3
+> CHANGE  1 : 2  @  1 : 4
 
 ~ 		logger.info("Setting user: " + this.session.getProfile().getName());
 
-> CHANGE  7 : 12  @  7 : 11
+> CHANGE  6 : 11  @  6 : 10
 
 ~ 		String serverToJoin = EagRuntime.getConfiguration().getServerToJoin();
 ~ 		if (serverToJoin != null) {
@@ -167,21 +194,23 @@
 ~ 		try {
 ~ 			while (true) {
 
-> DELETE  16  @  16 : 33
+> CHANGE  5 : 6  @  5 : 12
 
-> CHANGE  1 : 16  @  1 : 3
+~ 					this.runGameLoop();
+
+> DELETE  4  @  4 : 21
+
+> CHANGE  1 : 14  @  1 : 3
 
 ~ 		} catch (MinecraftError var12) {
 ~ 			// ??
 ~ 		} catch (ReportedException reportedexception) {
 ~ 			this.addGraphicsAndWorldToCrashReport(reportedexception.getCrashReport());
-~ 			this.freeMemory();
 ~ 			logger.fatal("Reported exception thrown!", reportedexception);
 ~ 			this.displayCrashReport(reportedexception.getCrashReport());
 ~ 		} catch (Throwable throwable1) {
 ~ 			CrashReport crashreport1 = this
 ~ 					.addGraphicsAndWorldToCrashReport(new CrashReport("Unexpected error", throwable1));
-~ 			this.freeMemory();
 ~ 			logger.fatal("Unreported exception thrown!", throwable1);
 ~ 			this.displayCrashReport(crashreport1);
 ~ 		} finally {
@@ -240,23 +269,28 @@
 
 + 		SkinPreviewRenderer.initialize();
 
-> INSERT  2 : 6  @  2
+> INSERT  2 : 11  @  2
 
++ 		this.eagskullCommand = new SkullCommand(this);
 + 
 + 		ServerList.initServerList(this);
 + 		EaglerProfile.read();
 + 
++ 		GuiScreen mainMenu = new GuiMainMenu();
++ 		if (isDemo()) {
++ 			mainMenu = new GuiScreenDemoIntegratedServerStartup(mainMenu);
++ 		}
 
-> CHANGE  1 : 3  @  1 : 2
+> CHANGE  1 : 2  @  1 : 4
 
-~ 			this.displayGuiScreen(new GuiScreenEditProfile(
-~ 					new GuiConnecting(new GuiMainMenu(), this, this.serverName, this.serverPort)));
+~ 			mainMenu = new GuiConnecting(mainMenu, this, this.serverName, this.serverPort);
 
-> CHANGE  1 : 2  @  1 : 2
+> INSERT  2 : 4  @  2
 
-~ 			this.displayGuiScreen(new GuiScreenEditProfile(new GuiMainMenu()));
++ 		this.displayGuiScreen(new GuiScreenEditProfile(mainMenu));
++ 
 
-> DELETE  5  @  5 : 17
+> DELETE  3  @  3 : 15
 
 > CHANGE  16 : 17  @  16 : 24
 
@@ -333,8 +367,18 @@
 
 > DELETE  26  @  26 : 30
 
-> CHANGE  31 : 32  @  31 : 32
+> CHANGE  31 : 42  @  31 : 32
 
+~ 	public void shutdownIntegratedServer(GuiScreen cont) {
+~ 		if (SingleplayerServerController.shutdownEaglercraftServer()
+~ 				|| SingleplayerServerController.getStatusState() == IntegratedServerState.WORLD_UNLOADING) {
+~ 			displayGuiScreen(new GuiScreenIntegratedServerBusy(cont, "singleplayer.busy.stoppingIntegratedServer",
+~ 					"singleplayer.failed.stoppingIntegratedServer", () -> SingleplayerServerController.isReady()));
+~ 		} else {
+~ 			displayGuiScreen(cont);
+~ 		}
+~ 	}
+~ 
 ~ 	public void checkGLError(String message) {
 
 > CHANGE  1 : 2  @  1 : 2
@@ -347,7 +391,11 @@
 
 > DELETE  10  @  10 : 11
 
-> CHANGE  10 : 11  @  10 : 11
+> INSERT  9 : 10  @  9
+
++ 			SingleplayerServerController.shutdownEaglercraftServer();
+
+> CHANGE  1 : 2  @  1 : 2
 
 ~ 			EagRuntime.destroy();
 
@@ -421,9 +469,7 @@
 
 + 
 
-> CHANGE  1 : 2  @  1 : 3
-
-~ 		this.isGamePaused = false;
+> DELETE  1  @  1 : 3
 
 > CHANGE  6 : 7  @  6 : 7
 
@@ -436,9 +482,13 @@
 
 > DELETE  3  @  3 : 7
 
-> DELETE  49  @  49 : 56
+> INSERT  8 : 9  @  8
 
-> CHANGE  48 : 49  @  48 : 49
++ 		Mouse.tickCursorShape();
+
+> DELETE  39  @  39 : 57
+
+> CHANGE  39 : 40  @  39 : 40
 
 ~ 			EaglercraftGPU.glLineWidth(1.0F);
 
@@ -468,9 +518,26 @@
 
 > DELETE  2  @  2 : 10
 
-> INSERT  9 : 11  @  9
+> INSERT  9 : 28  @  9
 
 + 		RateLimitTracker.tick();
++ 
++ 		boolean isHostingLAN = LANServerController.isHostingLAN();
++ 		this.isGamePaused = !isHostingLAN && this.isSingleplayer() && this.theWorld != null && this.thePlayer != null
++ 				&& this.currentScreen != null && this.currentScreen.doesGuiPauseGame();
++ 
++ 		if (isLANOpen && !isHostingLAN) {
++ 			ingameGUI.getChatGUI().printChatMessage(new ChatComponentTranslation("lanServer.relayDisconnected"));
++ 		}
++ 		isLANOpen = isHostingLAN;
++ 
++ 		if (wasPaused != isGamePaused) {
++ 			SingleplayerServerController.setPaused(this.isGamePaused);
++ 			wasPaused = isGamePaused;
++ 		}
++ 
++ 		SingleplayerServerController.runTick();
++ 		RelayUpdateChecker.runTick();
 + 
 
 > INSERT  15 : 16  @  15
@@ -542,43 +609,70 @@
 
 + 							GlStateManager.recompileShaders();
 
-> INSERT  206 : 237  @  206
+> INSERT  163 : 164  @  163
+
++ 			this.eagskullCommand.tick();
+
+> INSERT  43 : 88  @  43
 
 + 		if (this.theWorld != null) {
 + 			++joinWorldTickCounter;
 + 			if (bungeeOutdatedMsgTimer > 0) {
-+ 				if (--bungeeOutdatedMsgTimer == 0) {
-+ 					String pfx = EnumChatFormatting.GOLD + "[EagX]" + EnumChatFormatting.AQUA;
-+ 					ingameGUI.getChatGUI()
-+ 							.printChatMessage(new ChatComponentText(pfx + " ---------------------------------------"));
-+ 					ingameGUI.getChatGUI().printChatMessage(new ChatComponentText(
-+ 							pfx + EnumChatFormatting.GREEN + EnumChatFormatting.BOLD + " MESSAGE FROM LAX:"));
-+ 					ingameGUI.getChatGUI().printChatMessage(new ChatComponentText(pfx));
-+ 					ingameGUI.getChatGUI()
-+ 							.printChatMessage(new ChatComponentText(
-+ 									pfx + " This server appears to be using version " + EnumChatFormatting.YELLOW
-+ 											+ bungeeOutdatedMsgVer + EnumChatFormatting.AQUA + " of"));
-+ 					ingameGUI.getChatGUI().printChatMessage(
-+ 							new ChatComponentText(pfx + " the EaglerXBungee plugin which has memory leaks"));
-+ 					ingameGUI.getChatGUI().printChatMessage(new ChatComponentText(pfx));
-+ 					ingameGUI.getChatGUI()
-+ 							.printChatMessage(new ChatComponentText(pfx + " If you are the admin update to "
-+ 									+ EnumChatFormatting.YELLOW + "1.0.6" + EnumChatFormatting.AQUA + " or newer"));
-+ 					ingameGUI.getChatGUI().printChatMessage(new ChatComponentText(pfx));
-+ 					ingameGUI.getChatGUI().printChatMessage(new ChatComponentText(pfx + EnumChatFormatting.GREEN
-+ 							+ " https://ftp.deev.is/EaglerXBungee-1.0.6-MemleakFix.jar"));
-+ 					ingameGUI.getChatGUI()
-+ 							.printChatMessage(new ChatComponentText(pfx + " ---------------------------------------"));
++ 				if (--bungeeOutdatedMsgTimer == 0 && this.thePlayer.sendQueue != null) {
++ 					String pluginBrand = this.thePlayer.sendQueue.getNetworkManager().getPluginBrand();
++ 					String pluginVersion = this.thePlayer.sendQueue.getNetworkManager().getPluginVersion();
++ 					if (pluginBrand != null && pluginVersion != null
++ 							&& EaglerXBungeeVersion.isUpdateToPluginAvailable(pluginBrand, pluginVersion)) {
++ 						String pfx = EnumChatFormatting.GOLD + "[EagX]" + EnumChatFormatting.AQUA;
++ 						ingameGUI.getChatGUI().printChatMessage(
++ 								new ChatComponentText(pfx + " ---------------------------------------"));
++ 						ingameGUI.getChatGUI().printChatMessage(
++ 								new ChatComponentText(pfx + " This server appears to be using version "
++ 										+ EnumChatFormatting.YELLOW + pluginVersion));
++ 						ingameGUI.getChatGUI().printChatMessage(
++ 								new ChatComponentText(pfx + " of the EaglerXBungee plugin which is outdated"));
++ 						ingameGUI.getChatGUI().printChatMessage(new ChatComponentText(pfx));
++ 						ingameGUI.getChatGUI()
++ 								.printChatMessage(new ChatComponentText(pfx + " If you are the admin update to "
++ 										+ EnumChatFormatting.YELLOW + EaglerXBungeeVersion.getPluginVersion()
++ 										+ EnumChatFormatting.AQUA + " or newer"));
++ 						ingameGUI.getChatGUI().printChatMessage(new ChatComponentText(pfx));
++ 						ingameGUI.getChatGUI().printChatMessage((new ChatComponentText(pfx + " Click: "))
++ 								.appendSibling((new ChatComponentText("" + EnumChatFormatting.GREEN
++ 										+ EnumChatFormatting.UNDERLINE + EaglerXBungeeVersion.getPluginButton()))
++ 												.setChatStyle((new ChatStyle()).setChatClickEvent(
++ 														new ClickEvent(ClickEvent.Action.EAGLER_PLUGIN_DOWNLOAD,
++ 																"plugin_download.zip")))));
++ 						ingameGUI.getChatGUI().printChatMessage(
++ 								new ChatComponentText(pfx + " ---------------------------------------"));
++ 					}
 + 				}
 + 			}
 + 		} else {
 + 			joinWorldTickCounter = 0;
++ 			if (currentScreen != null && currentScreen.shouldHangupIntegratedServer()) {
++ 				if (SingleplayerServerController.hangupEaglercraftServer()) {
++ 					this.displayGuiScreen(new GuiScreenIntegratedServerBusy(currentScreen,
++ 							"singleplayer.busy.stoppingIntegratedServer",
++ 							"singleplayer.failed.stoppingIntegratedServer",
++ 							() -> SingleplayerServerController.isReady()));
++ 				}
++ 			}
 + 		}
 + 
 
-> CHANGE  5 : 6  @  5 : 54
+> CHANGE  6 : 16  @  6 : 54
 
-~ 		throw new UnsupportedOperationException("singleplayer has been removed");
+~ 		session.reset();
+~ 		SingleplayerServerController.launchEaglercraftServer(folderName, gameSettings.difficulty.getDifficultyId(),
+~ 				Math.max(gameSettings.renderDistanceChunks, 2), worldSettingsIn);
+~ 		this.displayGuiScreen(new GuiScreenIntegratedServerBusy(
+~ 				new GuiScreenSingleplayerConnecting(new GuiMainMenu(), "Connecting to " + folderName),
+~ 				"singleplayer.busy.startingIntegratedServer", "singleplayer.failed.startingIntegratedServer",
+~ 				() -> SingleplayerServerController.isWorldReady(), (t, u) -> {
+~ 					Minecraft.this.displayGuiScreen(GuiScreenIntegratedServerBusy.createException(new GuiMainMenu(),
+~ 							((GuiScreenIntegratedServerBusy) t).failMessage, u));
+~ 				}));
 
 > INSERT  12 : 13  @  12
 
@@ -592,7 +686,11 @@
 
 ~ 		this.thePlayer = this.playerController.func_178892_a(this.theWorld, new StatFileWriter());
 
-> CHANGE  34 : 38  @  34 : 35
+> CHANGE  18 : 19  @  18 : 19
+
+~ 		return EagRuntime.getConfiguration().isDemo();
+
+> CHANGE  15 : 19  @  15 : 16
 
 ~ 		if (theMinecraft == null)
 ~ 			return false;
@@ -629,9 +727,13 @@
 
 > DELETE  2  @  2 : 219
 
-> CHANGE  17 : 18  @  17 : 18
+> CHANGE  13 : 14  @  13 : 14
 
-~ 		return false;
+~ 		return SingleplayerServerController.isWorldRunning();
+
+> CHANGE  3 : 4  @  3 : 4
+
+~ 		return SingleplayerServerController.isWorldRunning();
 
 > DELETE  2  @  2 : 6
 
@@ -675,7 +777,7 @@
 
 > DELETE  24  @  24 : 32
 
-> INSERT  7 : 19  @  7
+> INSERT  7 : 27  @  7
 
 + 
 + 	public static int getGLMaximumTextureSize() {
@@ -688,6 +790,14 @@
 + 
 + 	public ModelManager getModelManager() {
 + 		return modelManager;
++ 	}
++ 
++ 	public ISaveFormat getSaveLoader() {
++ 		return SingleplayerServerController.instance;
++ 	}
++ 
++ 	public void clearTitles() {
++ 		ingameGUI.displayTitle(null, null, -1, -1, -1);
 + 	}
 
 > EOF

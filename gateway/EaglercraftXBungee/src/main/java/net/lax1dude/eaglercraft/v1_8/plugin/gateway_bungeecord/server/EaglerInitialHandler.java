@@ -4,8 +4,12 @@ import java.lang.reflect.Field;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.nio.charset.StandardCharsets;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
+import gnu.trove.set.TIntSet;
+import gnu.trove.set.hash.TIntHashSet;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.config.EaglerBungeeConfig;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.skins.SimpleRateLimiter;
 import net.md_5.bungee.BungeeCord;
@@ -28,19 +32,30 @@ import net.md_5.bungee.protocol.packet.PluginMessage;
 import net.md_5.bungee.protocol.packet.StatusRequest;
 
 /**
- * Copyright (c) 2022-2023 LAX1DUDE. All Rights Reserved.
+ * Copyright (c) 2022-2023 lax1dude. All Rights Reserved.
  * 
- * WITH THE EXCEPTION OF PATCH FILES, MINIFIED JAVASCRIPT, AND ALL FILES
- * NORMALLY FOUND IN AN UNMODIFIED MINECRAFT RESOURCE PACK, YOU ARE NOT ALLOWED
- * TO SHARE, DISTRIBUTE, OR REPURPOSE ANY FILE USED BY OR PRODUCED BY THE
- * SOFTWARE IN THIS REPOSITORY WITHOUT PRIOR PERMISSION FROM THE PROJECT AUTHOR.
- * 
- * NOT FOR COMMERCIAL OR MALICIOUS USE
- * 
- * (please read the 'LICENSE' file this repo's root directory for more info)
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ * IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
 public class EaglerInitialHandler extends InitialHandler {
+
+	public static class ClientCertificateHolder {
+		public final byte[] data;
+		public final int hash;
+		public ClientCertificateHolder(byte[] data, int hash) {
+			this.data = data;
+			this.hash = hash;
+		}
+	}
 
 	private final int gameProtocolVersion;
 	private final String username;
@@ -53,10 +68,13 @@ public class EaglerInitialHandler extends InitialHandler {
 	public final SimpleRateLimiter skinUUIDLookupRateLimiter;
 	public final SimpleRateLimiter skinTextureDownloadRateLimiter;
 	public final String origin;
+	public final ClientCertificateHolder clientCertificate;
+	public final Set<ClientCertificateHolder> certificatesToSend;
+	public final TIntSet certificatesSent;
 
 	public EaglerInitialHandler(BungeeCord bungee, ListenerInfo listener, final ChannelWrapper ch,
 			int gameProtocolVersion, String username, UUID playerUUID, InetSocketAddress address, String host,
-			String origin) {
+			String origin, ClientCertificateHolder clientCertificate) {
 		super(bungee, listener);
 		this.gameProtocolVersion = gameProtocolVersion;
 		this.username = username;
@@ -66,6 +84,12 @@ public class EaglerInitialHandler extends InitialHandler {
 		this.skinLookupRateLimiter = new SimpleRateLimiter();
 		this.skinUUIDLookupRateLimiter = new SimpleRateLimiter();
 		this.skinTextureDownloadRateLimiter = new SimpleRateLimiter();
+		this.clientCertificate = clientCertificate;
+		this.certificatesToSend = new HashSet();
+		this.certificatesSent = new TIntHashSet();
+		if(clientCertificate != null) {
+			this.certificatesSent.add(clientCertificate.hashCode());
+		}
 		if(host == null) host = "";
 		int port = 25565;
 		if(host.contains(":")) {

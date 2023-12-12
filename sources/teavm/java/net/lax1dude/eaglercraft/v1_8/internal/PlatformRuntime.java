@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.function.Consumer;
 
+import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.EaglercraftVersion;
 import net.lax1dude.eaglercraft.v1_8.profile.EaglerProfile;
 import org.teavm.interop.Async;
@@ -41,8 +42,10 @@ import net.lax1dude.eaglercraft.v1_8.internal.buffer.FloatBuffer;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.IntBuffer;
 import net.lax1dude.eaglercraft.v1_8.internal.teavm.EPKLoader;
 import net.lax1dude.eaglercraft.v1_8.internal.teavm.EarlyLoadScreen;
-import net.lax1dude.eaglercraft.v1_8.internal.teavm.MainClass;
-import net.lax1dude.eaglercraft.v1_8.internal.teavm.MainClass.EPKFileEntry;
+import net.lax1dude.eaglercraft.v1_8.internal.teavm.FixWebMDurationJS;
+import net.lax1dude.eaglercraft.v1_8.internal.teavm.ClientMain;
+import net.lax1dude.eaglercraft.v1_8.internal.teavm.ClientMain.EPKFileEntry;
+import net.lax1dude.eaglercraft.v1_8.internal.teavm.DebugConsoleWindow;
 import net.lax1dude.eaglercraft.v1_8.internal.teavm.TeaVMClientConfigAdapter;
 import net.lax1dude.eaglercraft.v1_8.internal.teavm.TeaVMUtils;
 import net.lax1dude.eaglercraft.v1_8.internal.teavm.WebGL2RenderingContext;
@@ -51,16 +54,18 @@ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 import net.lax1dude.eaglercraft.v1_8.opengl.RealOpenGLEnums;
 
 /**
- * Copyright (c) 2022-2023 LAX1DUDE. All Rights Reserved.
+ * Copyright (c) 2022-2024 lax1dude, ayunami2000. All Rights Reserved.
  * 
- * WITH THE EXCEPTION OF PATCH FILES, MINIFIED JAVASCRIPT, AND ALL FILES
- * NORMALLY FOUND IN AN UNMODIFIED MINECRAFT RESOURCE PACK, YOU ARE NOT ALLOWED
- * TO SHARE, DISTRIBUTE, OR REPURPOSE ANY FILE USED BY OR PRODUCED BY THE
- * SOFTWARE IN THIS REPOSITORY WITHOUT PRIOR PERMISSION FROM THE PROJECT AUTHOR.
- * 
- * NOT FOR COMMERCIAL OR MALICIOUS USE
- * 
- * (please read the 'LICENSE' file this repo's root directory for more info)
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ * IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
 public class PlatformRuntime {
@@ -78,12 +83,13 @@ public class PlatformRuntime {
 	public static void create() {
 		win = Window.current();
 		doc = win.getDocument();
+		DebugConsoleWindow.initialize(win);
 		
 		logger.info("Creating main game canvas");
 		
-		parent = doc.getElementById(MainClass.configRootElement);
+		parent = doc.getElementById(ClientMain.configRootElementId);
 		if(parent == null) {
-			throw new RuntimeInitializationFailureException("Root element \"" + MainClass.configRootElement + "\" was not found in this document!");
+			throw new RuntimeInitializationFailureException("Root element \"" + ClientMain.configRootElementId + "\" was not found in this document!");
 		}
 
 		CSSStyleDeclaration style = parent.getStyle();
@@ -135,7 +141,7 @@ public class PlatformRuntime {
 		
 		EarlyLoadScreen.paintScreen();
 		
-		EPKFileEntry[] epkFiles = MainClass.configEPKFiles;
+		EPKFileEntry[] epkFiles = ClientMain.configEPKFiles;
 		
 		for(int i = 0; i < epkFiles.length; ++i) {
 			String url = epkFiles[i].url;
@@ -173,6 +179,8 @@ public class PlatformRuntime {
 		}
 
 		logger.info("Platform initialization complete");
+
+		FixWebMDurationJS.checkOldScriptStillLoaded();
 	}
 	
 	@JSBody(params = { }, script = "return {antialias: false, depth: false, powerPreference: \"high-performance\", desynchronized: true, preserveDrawingBuffer: false, premultipliedAlpha: false, alpha: false};")
@@ -257,7 +265,11 @@ public class PlatformRuntime {
 	}
 
 	public static void downloadRemoteURI(String assetPackageURI, final Consumer<ArrayBuffer> cb) {
-		downloadRemoteURI(assetPackageURI, new AsyncCallback<ArrayBuffer>() {
+		downloadRemoteURI(assetPackageURI, false, cb);
+	}
+
+	public static void downloadRemoteURI(String assetPackageURI, boolean useCache, final Consumer<ArrayBuffer> cb) {
+		downloadRemoteURI(assetPackageURI, useCache, new AsyncCallback<ArrayBuffer>() {
 			@Override
 			public void complete(ArrayBuffer result) {
 				cb.accept(result);
@@ -265,16 +277,16 @@ public class PlatformRuntime {
 
 			@Override
 			public void error(Throwable e) {
-				e.printStackTrace();
+				EagRuntime.debugPrintStackTrace(e);
 				cb.accept(null);
 			}
 		});
 	}
 	
 	@Async
-	public static native ArrayBuffer downloadRemoteURI(String assetPackageURI);
+	public static native ArrayBuffer downloadRemoteURIOld(String assetPackageURI);
 
-	private static void downloadRemoteURI(String assetPackageURI, final AsyncCallback<ArrayBuffer> cb) {
+	private static void downloadRemoteURIOld(String assetPackageURI, final AsyncCallback<ArrayBuffer> cb) {
 		final XMLHttpRequest request = XMLHttpRequest.create();
 		request.setResponseType("arraybuffer");
 		request.open("GET", assetPackageURI, true);
@@ -301,12 +313,33 @@ public class PlatformRuntime {
 		request.send();
 	}
 	
+	@JSFunctor
+	private static interface FetchHandler extends JSObject {
+		void onFetch(ArrayBuffer data);
+	}
+	
+	@JSBody(params = { "uri", "forceCache", "callback" }, script = "fetch(uri, { cache: forceCache, mode: \"cors\" })"
+			+ ".then(function(res) { return res.arrayBuffer(); }).then(function(arr) { callback(arr); })"
+			+ ".catch(function(err) { console.error(err); callback(null); });")
+	private static native void doFetchDownload(String uri, String forceCache, FetchHandler callback);
+
+	public static ArrayBuffer downloadRemoteURI(String assetPackageURI) {
+		return downloadRemoteURI(assetPackageURI, true);
+	}
+
+	@Async
+	public static native ArrayBuffer downloadRemoteURI(String assetPackageURI, boolean forceCache);
+
+	private static void downloadRemoteURI(String assetPackageURI, boolean useCache, final AsyncCallback<ArrayBuffer> cb) {
+		doFetchDownload(assetPackageURI, useCache ? "force-cache" : "no-store", (bb) -> cb.complete(bb));
+	}
+	
 	public static boolean isDebugRuntime() {
 		return false;
 	}
 	
 	public static void writeCrashReport(String crashDump) {
-		MainClass.showCrashScreen(crashDump);
+		ClientMain.showCrashScreen(crashDump);
 	}
 
 	public static void removeEventHandlers() {
@@ -354,13 +387,13 @@ public class PlatformRuntime {
 	}
 	
 	@JSBody(params = { "o" }, script = "console.error(o);")
-	private static native void printNativeExceptionToConsole(JSObject o);
+	public static native void printNativeExceptionToConsoleTeaVM(JSObject o);
 	
 	public static boolean printJSExceptionIfBrowser(Throwable t) {
 		if(t != null) {
 			JSObject o = JSExceptions.getJSException(t);
 			if(o != null) {
-				printNativeExceptionToConsole(o);
+				printNativeExceptionToConsoleTeaVM(o);
 				return true;
 			}
 		}
@@ -372,7 +405,7 @@ public class PlatformRuntime {
 	}
 
 	public static void setThreadName(String string) {
-		// no teavm support
+		currentThreadName = string;
 	}
 
 	public static long maxMemory() {
@@ -410,6 +443,9 @@ public class PlatformRuntime {
 	@JSBody(params = { }, script = "return window.location.protocol && window.location.protocol.toLowerCase().startsWith(\"https\");")
 	public static native boolean requireSSL();
 	
+	@JSBody(params = { }, script = "return window.location.protocol && window.location.protocol.toLowerCase().startsWith(\"file\");")
+	public static native boolean isOfflineDownloadURL();
+	
 	public static IClientConfigAdapter getClientConfigAdapter() {
 		return TeaVMClientConfigAdapter.instance;
 	}
@@ -436,14 +472,6 @@ public class PlatformRuntime {
 
 	@JSBody(params = { }, script = "return \"MediaRecorder\" in window;")
 	private static native boolean canRec();
-
-	@JSFunctor
-	private static interface RecUrlHandler extends JSObject {
-		void onUrl(String url);
-	}
-
-	@JSBody(params = { "e", "duration", "cb" }, script = "if (\"ysFixWebmDuration\" in window) { ysFixWebmDuration(e.data, duration, function(b) { cb(URL.createObjectURL(b)); }); } else { cb(URL.createObjectURL(e.data)); }")
-	private static native void getRecUrl(Event e, int duration, RecUrlHandler cb);
 
 	public static boolean recSupported() {
 		return true;
@@ -516,7 +544,7 @@ public class PlatformRuntime {
 		return null;
 	}
 
-	private static final SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd hh-mm-ss");
+	private static final SimpleDateFormat fmt = EagRuntime.fixDateFormat(new SimpleDateFormat("yyyy-MM-dd hh-mm-ss"));
 	private static final Date dateInstance = new Date();
 
 	public static void toggleRec() {
@@ -542,12 +570,15 @@ public class PlatformRuntime {
 			TeaVMUtils.addEventListener(mediaRec, "dataavailable", new EventListener<Event>() {
 				@Override
 				public void handleEvent(Event evt) {
-					getRecUrl(evt, (int) (System.currentTimeMillis() - startTime), url -> {
+					FixWebMDurationJS.getRecUrl(evt, (int) (System.currentTimeMillis() - startTime), url -> {
 						HTMLAnchorElement a = (HTMLAnchorElement) doc.createElement("a");
 						dateInstance.setTime(startTime);
 						a.setDownload(EaglercraftVersion.mainMenuStringB + " - " + EaglerProfile.getName() + " - " + fmt.format(dateInstance) + ".webm");
 						a.setHref(url);
 						a.click();
+						TeaVMUtils.freeDataURL(url);
+					}, (msg) -> {
+						logger.info(msg);
 					});
 				}
 			});
@@ -556,5 +587,15 @@ public class PlatformRuntime {
 			stopRec(mediaRec);
 			mediaRec = null;
 		}
+	}
+
+	public static long randomSeed() {
+		return (long)(Math.random() * 9007199254740991.0);
+	}
+
+	private static String currentThreadName = "main";
+
+	public static String currentThreadName() {
+		return currentThreadName;
 	}
 }

@@ -10,7 +10,7 @@ import org.teavm.jso.dom.events.Event;
 import org.teavm.jso.dom.events.EventListener;
 import org.teavm.jso.dom.events.MessageEvent;
 import org.teavm.jso.typedarrays.ArrayBuffer;
-import org.teavm.jso.typedarrays.Int8Array;
+import org.teavm.jso.typedarrays.Uint8Array;
 import org.teavm.jso.websocket.WebSocket;
 
 import net.lax1dude.eaglercraft.v1_8.internal.EnumServerRateLimit;
@@ -20,16 +20,18 @@ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 
 /**
- * Copyright (c) 2022-2023 LAX1DUDE. All Rights Reserved.
+ * Copyright (c) 2022 lax1dude. All Rights Reserved.
  * 
- * WITH THE EXCEPTION OF PATCH FILES, MINIFIED JAVASCRIPT, AND ALL FILES
- * NORMALLY FOUND IN AN UNMODIFIED MINECRAFT RESOURCE PACK, YOU ARE NOT ALLOWED
- * TO SHARE, DISTRIBUTE, OR REPURPOSE ANY FILE USED BY OR PRODUCED BY THE
- * SOFTWARE IN THIS REPOSITORY WITHOUT PRIOR PERMISSION FROM THE PROJECT AUTHOR.
- * 
- * NOT FOR COMMERCIAL OR MALICIOUS USE
- * 
- * (please read the 'LICENSE' file this repo's root directory for more info)
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ * IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
 public class TeaVMServerQuery implements IServerQuery {
@@ -114,12 +116,7 @@ public class TeaVMServerQuery implements IServerQuery {
 					}
 				}else {
 					synchronized(queryResponsesBytes) {
-						Int8Array packetBytes = Int8Array.create(evt.getDataAsArray());
-						byte[] data = new byte[packetBytes.getLength()];
-						for(int i = 0; i < data.length; ++i) {
-							data[i] = packetBytes.get(i);
-						}
-						queryResponsesBytes.add(data);
+						queryResponsesBytes.add(TeaVMUtils.wrapUnsignedByteArray(Uint8Array.create(evt.getDataAsArray())));
 					}
 				}
 			}
@@ -146,9 +143,7 @@ public class TeaVMServerQuery implements IServerQuery {
 	@Override
 	public void send(byte[] bytes) {
 		if(open) {
-			Int8Array arr = Int8Array.create(bytes.length);
-			arr.set(bytes, 0);
-			nativeBinarySend(sock, arr.getBuffer());
+			nativeBinarySend(sock, TeaVMUtils.unwrapByteArray(bytes).getBuffer());
 		}
 	}
 

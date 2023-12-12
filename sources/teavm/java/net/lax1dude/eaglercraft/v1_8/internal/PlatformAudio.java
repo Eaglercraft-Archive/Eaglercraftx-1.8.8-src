@@ -24,6 +24,7 @@ import org.teavm.jso.webaudio.MediaStream;
 import org.teavm.jso.webaudio.MediaStreamAudioDestinationNode;
 import org.teavm.jso.webaudio.PannerNode;
 
+import net.lax1dude.eaglercraft.v1_8.internal.teavm.TeaVMUtils;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 import net.minecraft.util.MathHelper;
@@ -211,9 +212,7 @@ public class PlatformAudio {
 		if(buffer == null) {
 			byte[] file = PlatformAssets.getResourceBytes(filename);
 			if(file == null) return null;
-			Uint8Array buf = Uint8Array.create(file.length);
-			buf.set(file);
-			buffer = new BrowserAudioResource(decodeAudioAsync(buf.getBuffer(), filename));
+			buffer = new BrowserAudioResource(decodeAudioAsync(TeaVMUtils.unwrapUnsignedByteArray(file).getBuffer(), filename));
 			if(holdInCache) {
 				synchronized(soundCache) {
 					soundCache.put(filename, buffer);

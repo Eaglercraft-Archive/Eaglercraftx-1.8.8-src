@@ -1,19 +1,28 @@
 
 # Eagler Context Redacted Diff
-# Copyright (c) 2023 lax1dude. All rights reserved.
+# Copyright (c) 2024 lax1dude. All rights reserved.
 
 # Version: 1.0
 # Author: lax1dude
 
 > DELETE  2  @  2 : 6
 
-> INSERT  3 : 4  @  3
+> INSERT  1 : 2  @  1
 
++ import java.util.ArrayList;
+
+> INSERT  1 : 2  @  1
+
++ import java.util.List;
+
+> INSERT  1 : 3  @  1
+
++ import java.util.Map.Entry;
 + import java.util.regex.Matcher;
 
 > DELETE  1  @  1 : 3
 
-> INSERT  1 : 10  @  1
+> INSERT  1 : 11  @  1
 
 + import com.google.common.base.Charsets;
 + import com.google.common.base.Splitter;
@@ -23,6 +32,7 @@
 + import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 + import net.lax1dude.eaglercraft.v1_8.HString;
 + import net.lax1dude.eaglercraft.v1_8.IOUtils;
++ import net.lax1dude.eaglercraft.v1_8.sp.SingleplayerServerController;
 + 
 
 > CHANGE  8 : 10  @  8 : 10
@@ -51,8 +61,39 @@
 
 + 		instance.lastUpdateTimeInMilliseconds = System.currentTimeMillis();
 
-> CHANGE  20 : 21  @  20 : 21
+> CHANGE  6 : 7  @  6 : 7
+
+~ 	public static void replaceWith(Map<String, String> parMap) {
+
+> INSERT  3 : 4  @  3
+
++ 		SingleplayerServerController.updateLocale(dump());
+
+> CHANGE  2 : 3  @  2 : 3
+
+~ 	public String translateKey(String key) {
+
+> CHANGE  3 : 4  @  3 : 4
+
+~ 	public String translateKeyFormat(String key, Object... format) {
+
+> CHANGE  3 : 4  @  3 : 4
 
 ~ 			return HString.format(s, format);
+
+> CHANGE  10 : 11  @  10 : 11
+
+~ 	public boolean isKeyTranslated(String key) {
+
+> INSERT  6 : 14  @  6
+
++ 
++ 	public static List<String> dump() {
++ 		List<String> ret = new ArrayList(instance.languageList.size());
++ 		for (Entry<String, String> etr : instance.languageList.entrySet()) {
++ 			ret.add(etr.getKey() + "=" + etr.getValue());
++ 		}
++ 		return ret;
++ 	}
 
 > EOF

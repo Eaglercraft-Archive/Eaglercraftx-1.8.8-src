@@ -1,6 +1,6 @@
 
 # Eagler Context Redacted Diff
-# Copyright (c) 2023 lax1dude. All rights reserved.
+# Copyright (c) 2024 lax1dude. All rights reserved.
 
 # Version: 1.0
 # Author: lax1dude
@@ -13,8 +13,25 @@
 ~ 
 ~ import net.lax1dude.eaglercraft.v1_8.mojang.authlib.GameProfile;
 
-> CHANGE  15 : 16  @  15 : 16
+> INSERT  6 : 7  @  6
+
++ 	private byte[] skin;
+
+> CHANGE  4 : 5  @  4 : 5
+
+~ 	public C00PacketLoginStart(GameProfile profileIn, byte[] skin) {
+
+> INSERT  1 : 2  @  1
+
++ 		this.skin = skin;
+
+> CHANGE  3 : 5  @  3 : 4
 
 ~ 		this.profile = new GameProfile((EaglercraftUUID) null, parPacketBuffer.readStringFromBuffer(16));
+~ 		this.skin = parPacketBuffer.readByteArray();
+
+> INSERT  4 : 5  @  4
+
++ 		parPacketBuffer.writeByteArray(this.skin);
 
 > EOF

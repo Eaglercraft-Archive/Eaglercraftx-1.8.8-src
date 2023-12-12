@@ -1,6 +1,6 @@
 
 # Eagler Context Redacted Diff
-# Copyright (c) 2023 lax1dude. All rights reserved.
+# Copyright (c) 2024 lax1dude. All rights reserved.
 
 # Version: 1.0
 # Author: lax1dude
@@ -113,7 +113,7 @@
 ~ 		this.allowPlaintext = allowPlaintext;
 ~ 	}
 
-> CHANGE  1 : 37  @  1 : 8
+> CHANGE  1 : 41  @  1 : 8
 
 ~ 	public void updateScreen() {
 ~ 		++timer;
@@ -132,6 +132,10 @@
 ~ 						if (ConnectionHandshake.attemptHandshake(this.mc, this, previousGuiScreen, currentPassword,
 ~ 								allowPlaintext)) {
 ~ 							logger.info("Handshake Success");
+~ 							this.networkManager.setPluginInfo(ConnectionHandshake.pluginBrand,
+~ 									ConnectionHandshake.pluginVersion);
+~ 							mc.bungeeOutdatedMsgTimer = 80;
+~ 							mc.clearTitles();
 ~ 							this.networkManager.setConnectionState(EnumConnectionState.PLAY);
 ~ 							this.networkManager.setNetHandler(new NetHandlerPlayClient(this.mc, previousGuiScreen,
 ~ 									this.networkManager, this.mc.getSession().getProfile()));

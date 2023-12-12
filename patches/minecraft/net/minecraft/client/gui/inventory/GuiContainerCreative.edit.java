@@ -1,19 +1,20 @@
 
 # Eagler Context Redacted Diff
-# Copyright (c) 2023 lax1dude. All rights reserved.
+# Copyright (c) 2024 lax1dude. All rights reserved.
 
 # Version: 1.0
 # Author: lax1dude
 
 > DELETE  2  @  2 : 3
 
-> INSERT  4 : 10  @  4
+> INSERT  4 : 11  @  4
 
 + 
 + import com.google.common.collect.Lists;
 + 
 + import net.lax1dude.eaglercraft.v1_8.Keyboard;
 + import net.lax1dude.eaglercraft.v1_8.Mouse;
++ import net.lax1dude.eaglercraft.v1_8.internal.EnumCursorType;
 + import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 
 > DELETE  4  @  4 : 7
@@ -42,7 +43,11 @@
 
 ~ 	protected void mouseClicked(int parInt1, int parInt2, int parInt3) {
 
-> CHANGE  322 : 323  @  322 : 323
+> INSERT  149 : 150  @  149
+
++ 				Mouse.showCursor(EnumCursorType.HAND);
+
+> CHANGE  173 : 174  @  173 : 174
 
 ~ 	protected void actionPerformed(GuiButton parGuiButton) {
 

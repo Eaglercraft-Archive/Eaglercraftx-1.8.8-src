@@ -1,6 +1,6 @@
 
 # Eagler Context Redacted Diff
-# Copyright (c) 2023 lax1dude. All rights reserved.
+# Copyright (c) 2024 lax1dude. All rights reserved.
 
 # Version: 1.0
 # Author: lax1dude
@@ -18,7 +18,7 @@
 
 + import java.util.Locale;
 
-> INSERT  1 : 13  @  1
+> INSERT  1 : 14  @  1
 
 + import java.util.TimeZone;
 + 
@@ -32,6 +32,7 @@
 + import net.lax1dude.eaglercraft.v1_8.opengl.EaglercraftGPU;
 + import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 + import net.lax1dude.eaglercraft.v1_8.opengl.OpenGlHelper;
++ import net.lax1dude.eaglercraft.v1_8.sp.SingleplayerServerController;
 
 > CHANGE  5 : 8  @  5 : 10
 
@@ -50,12 +51,17 @@
 
 > DELETE  1  @  1 : 3
 
-> INSERT  11 : 13  @  11
+> INSERT  4 : 5  @  4
 
++ 	public int playerOffset = 0;
+
+> INSERT  7 : 10  @  7
+
++ 		playerOffset = 0;
 + 		int ww = scaledResolutionIn.getScaledWidth();
 + 		int hh = scaledResolutionIn.getScaledHeight();
 
-> CHANGE  1 : 20  @  1 : 7
+> CHANGE  1 : 22  @  1 : 7
 
 ~ 		if (this.mc.gameSettings.showDebugInfo) {
 ~ 			GlStateManager.pushMatrix();
@@ -70,12 +76,14 @@
 ~ 
 ~ 			if (this.mc.gameSettings.hudFps) {
 ~ 				drawFPS(2, i);
+~ 				playerOffset = drawSingleplayerStats(scaledResolutionIn);
 ~ 				i += 9;
 ~ 			}
 ~ 
 ~ 			if (this.mc.gameSettings.hudCoords) {
 ~ 				drawXYZ(2, i);
 ~ 			}
+~ 
 
 > INSERT  2 : 26  @  2
 
@@ -246,7 +254,42 @@
 + 	}
 + 
 
-> INSERT  39 : 46  @  39
+> INSERT  4 : 36  @  4
+
++ 	private int drawSingleplayerStats(ScaledResolution parScaledResolution) {
++ 		if (mc.isDemo()) {
++ 			return 13;
++ 		}
++ 		int i = 0;
++ 		if (SingleplayerServerController.isWorldRunning()) {
++ 			long tpsAge = SingleplayerServerController.getTPSAge();
++ 			if (tpsAge < 20000l) {
++ 				int color = tpsAge > 2000l ? 0x777777 : 0xFFFFFF;
++ 				List<String> strs = SingleplayerServerController.getTPS();
++ 				int l;
++ 				boolean first = true;
++ 				for (String str : strs) {
++ 					l = (int) (this.fontRenderer.getStringWidth(str) * (!first ? 0.5f : 1.0f));
++ 					GlStateManager.pushMatrix();
++ 					GlStateManager.translate(parScaledResolution.getScaledWidth() - 2 - l, i + 2, 0.0f);
++ 					if (!first) {
++ 						GlStateManager.scale(0.5f, 0.5f, 0.5f);
++ 					}
++ 					this.fontRenderer.drawStringWithShadow(str, 0, 0, color);
++ 					GlStateManager.popMatrix();
++ 					i += (int) (this.fontRenderer.FONT_HEIGHT * (!first ? 0.5f : 1.0f));
++ 					first = false;
++ 					if (color == 0xFFFFFF) {
++ 						color = 14737632;
++ 					}
++ 				}
++ 			}
++ 		}
++ 		return i > 0 ? i + 2 : i;
++ 	}
++ 
+
+> INSERT  35 : 42  @  35
 
 + 		if (!this.mc.gameSettings.showDebugInfo) {
 + 			BlockPos blockpos = new BlockPos(this.mc.getRenderViewEntity().posX,

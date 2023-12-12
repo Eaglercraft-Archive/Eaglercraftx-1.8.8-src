@@ -3,16 +3,18 @@ package net.lax1dude.eaglercraft.v1_8;
 import net.lax1dude.eaglercraft.v1_8.crypto.MD5Digest;
 
 /**
- * Copyright (c) 2022-2023 LAX1DUDE. All Rights Reserved.
+ * Copyright (c) 2022 lax1dude. All Rights Reserved.
  * 
- * WITH THE EXCEPTION OF PATCH FILES, MINIFIED JAVASCRIPT, AND ALL FILES
- * NORMALLY FOUND IN AN UNMODIFIED MINECRAFT RESOURCE PACK, YOU ARE NOT ALLOWED
- * TO SHARE, DISTRIBUTE, OR REPURPOSE ANY FILE USED BY OR PRODUCED BY THE
- * SOFTWARE IN THIS REPOSITORY WITHOUT PRIOR PERMISSION FROM THE PROJECT AUTHOR.
- * 
- * NOT FOR COMMERCIAL OR MALICIOUS USE
- * 
- * (please read the 'LICENSE' file this repo's root directory for more info)
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ * IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
 public class EaglercraftUUID implements Comparable<EaglercraftUUID> {
@@ -221,6 +223,16 @@ public class EaglercraftUUID implements Comparable<EaglercraftUUID> {
 		md5Bytes[8] &= 0x3f;
 		md5Bytes[8] |= 0x80;
 		return new EaglercraftUUID(md5Bytes);
+	}
+
+	public static EaglercraftUUID randomUUID() {
+		byte[] randomBytes = new byte[16];
+		(new EaglercraftRandom()).nextBytes(randomBytes);
+		randomBytes[6] &= 0x0f; /* clear version */
+		randomBytes[6] |= 0x40; /* set to version 4 */
+		randomBytes[8] &= 0x3f; /* clear variant */
+		randomBytes[8] |= 0x80; /* set to IETF variant */
+		return new EaglercraftUUID(randomBytes);
 	}
 
 	@Override

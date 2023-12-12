@@ -8,7 +8,9 @@ import net.lax1dude.eaglercraft.v1_8.internal.buffer.ByteBuffer;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.FloatBuffer;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.IntBuffer;
 import java.nio.charset.StandardCharsets;
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -23,18 +25,21 @@ import net.lax1dude.eaglercraft.v1_8.internal.PlatformRuntime;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 import net.lax1dude.eaglercraft.v1_8.opengl.EaglercraftGPU;
+import net.lax1dude.eaglercraft.v1_8.update.UpdateService;
 
 /**
- * Copyright (c) 2022-2023 LAX1DUDE. All Rights Reserved.
+ * Copyright (c) 2022-2023 lax1dude, ayunami2000. All Rights Reserved.
  * 
- * WITH THE EXCEPTION OF PATCH FILES, MINIFIED JAVASCRIPT, AND ALL FILES
- * NORMALLY FOUND IN AN UNMODIFIED MINECRAFT RESOURCE PACK, YOU ARE NOT ALLOWED
- * TO SHARE, DISTRIBUTE, OR REPURPOSE ANY FILE USED BY OR PRODUCED BY THE
- * SOFTWARE IN THIS REPOSITORY WITHOUT PRIOR PERMISSION FROM THE PROJECT AUTHOR.
- * 
- * NOT FOR COMMERCIAL OR MALICIOUS USE
- * 
- * (please read the 'LICENSE' file this repo's root directory for more info) 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ * IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
 public class EagRuntime {
@@ -42,6 +47,7 @@ public class EagRuntime {
 	private static final Logger logger = LogManager.getLogger("EagRuntime");
 	private static final Logger exceptionLogger = LogManager.getLogger("Exception");
 	private static boolean ssl = false;
+	private static boolean offlineDownloadURL = false;
 	
 	public static String getVersion() {
 		return "EagRuntimeX 1.0";
@@ -51,6 +57,9 @@ public class EagRuntime {
 		logger.info("Version: {}", getVersion());
 		PlatformRuntime.create();
 		ssl = PlatformRuntime.requireSSL();
+		offlineDownloadURL = PlatformRuntime.isOfflineDownloadURL();
+		UpdateService.initialize();
+		EaglerXBungeeVersion.initialize();
 		EaglercraftGPU.warmUpCache();
 	}
 
@@ -211,9 +220,13 @@ public class EagRuntime {
 	public static long freeMemory() {
 		return PlatformRuntime.freeMemory();
 	}
-	
+
 	public static boolean requireSSL() {
 		return ssl;
+	}
+
+	public static boolean isOfflineDownloadURL() {
+		return offlineDownloadURL;
 	}
 
 	public static void showPopup(String msg) {
@@ -244,6 +257,10 @@ public class EagRuntime {
 		return PlatformApplication.getFileChooserResult();
 	}
 
+	public static void clearFileChooserResult() {
+		PlatformApplication.clearFileChooserResult();
+	}
+
 	public static void setStorage(String name, byte[] data) {
 		PlatformApplication.setLocalStorage(name, data);
 	}
@@ -270,5 +287,26 @@ public class EagRuntime {
 
 	public static void openCreditsPopup(String text) {
 		PlatformApplication.openCreditsPopup(text);
+	}
+
+	public static void downloadFileWithName(String fileName, byte[] fileContents) {
+		PlatformApplication.downloadFileWithName(fileName, fileContents);
+	}
+
+	public static String currentThreadName() {
+		return PlatformRuntime.currentThreadName();
+	}
+
+	public static void showDebugConsole() {
+		PlatformApplication.showDebugConsole();
+	}
+
+	public static Calendar getLocaleCalendar() {
+		return Calendar.getInstance(); //TODO: fix teavm calendar's time zone offset
+	}
+
+	public static <T extends DateFormat> T fixDateFormat(T input) {
+		input.setCalendar(getLocaleCalendar());
+		return input;
 	}
 }

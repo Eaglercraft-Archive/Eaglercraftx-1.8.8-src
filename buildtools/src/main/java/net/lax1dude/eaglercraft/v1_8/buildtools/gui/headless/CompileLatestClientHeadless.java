@@ -40,16 +40,18 @@ import net.lax1dude.eaglercraft.v1_8.buildtools.util.FileReaderUTF;
 import net.lax1dude.eaglercraft.v1_8.buildtools.util.FileWriterUTF;
 
 /**
- * Copyright (c) 2022-2023 LAX1DUDE. All Rights Reserved.
+ * Copyright (c) 2022-2023 lax1dude. All Rights Reserved.
  * 
- * WITH THE EXCEPTION OF PATCH FILES, MINIFIED JAVASCRIPT, AND ALL FILES
- * NORMALLY FOUND IN AN UNMODIFIED MINECRAFT RESOURCE PACK, YOU ARE NOT ALLOWED
- * TO SHARE, DISTRIBUTE, OR REPURPOSE ANY FILE USED BY OR PRODUCED BY THE
- * SOFTWARE IN THIS REPOSITORY WITHOUT PRIOR PERMISSION FROM THE PROJECT AUTHOR.
- * 
- * NOT FOR COMMERCIAL OR MALICIOUS USE
- * 
- * (please read the 'LICENSE' file this repo's root directory for more info)
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ * IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
 public class CompileLatestClientHeadless {
@@ -484,8 +486,6 @@ public class CompileLatestClientHeadless {
 				FileUtils.copyFile(productionFavicon, new File(outputDirectory, "favicon." + faviconExt));
 			}
 			
-			FileUtils.copyFile(new File(repositoryFolder, "sources/setup/workspace_template/javascript/fix-webm-duration.js"), new File(outputDirectory, "fix-webm-duration.js"));
-			
 			System.out.println();
 			System.out.println("Running EPKCompiler on assets...");
 			
@@ -569,8 +569,7 @@ public class CompileLatestClientHeadless {
 				File offlineDownloadGenerator = new File(repositoryFolder, "sources/setup/workspace_template/desktopRuntime/MakeOfflineDownload.jar");
 				MakeOfflineDownload.compilerMain(offlineDownloadGenerator, new String[] {
 						offlineTemplateArg.getAbsolutePath(),
-						(new File(outputDirectory, "classes.js")).getAbsolutePath() + System.getProperty("path.separator")
-							+ (new File(outputDirectory, "fix-webm-duration.js")).getAbsolutePath(),
+						(new File(outputDirectory, "classes.js")).getAbsolutePath(),
 						(new File(outputDirectory, "assets.epk")).getAbsolutePath(),
 						(new File(outputDirectory, "EaglercraftX_1.8_Offline_en_US.html")).getAbsolutePath(),
 						(new File(outputDirectory, "EaglercraftX_1.8_Offline_International.html")).getAbsolutePath(), 

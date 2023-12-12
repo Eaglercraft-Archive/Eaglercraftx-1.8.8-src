@@ -1,6 +1,6 @@
 
 # Eagler Context Redacted Diff
-# Copyright (c) 2023 lax1dude. All rights reserved.
+# Copyright (c) 2024 lax1dude. All rights reserved.
 
 # Version: 1.0
 # Author: lax1dude
@@ -35,7 +35,11 @@
 
 > DELETE  3  @  3 : 4
 
-> DELETE  27  @  27 : 28
+> CHANGE  7 : 8  @  7 : 8
+
+~ 	public final GuiOverlayDebug overlayDebug;
+
+> DELETE  19  @  19 : 20
 
 > CHANGE  16 : 19  @  16 : 21
 

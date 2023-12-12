@@ -1,6 +1,6 @@
 
 # Eagler Context Redacted Diff
-# Copyright (c) 2023 lax1dude. All rights reserved.
+# Copyright (c) 2024 lax1dude. All rights reserved.
 
 # Version: 1.0
 # Author: lax1dude
@@ -9,8 +9,10 @@
 
 > DELETE  4  @  4 : 6
 
-> INSERT  1 : 13  @  1
+> INSERT  1 : 16  @  1
 
++ 
++ import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 + import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 + import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
 + 
@@ -20,6 +22,7 @@
 + import net.lax1dude.eaglercraft.v1_8.profile.ServerSkinCache;
 + import net.lax1dude.eaglercraft.v1_8.profile.SkinPackets;
 + import net.lax1dude.eaglercraft.v1_8.socket.EaglercraftNetworkManager;
++ import net.lax1dude.eaglercraft.v1_8.update.UpdateService;
 + import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 + import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 + import net.lax1dude.eaglercraft.v1_8.mojang.authlib.GameProfile;
@@ -112,10 +115,14 @@
 
 > CHANGE  1 : 3  @  1 : 9
 
-~ 			this.gameController
-~ 					.displayGuiScreen(new GuiDisconnected(this.guiScreenServer, "disconnect.lost", ichatcomponent));
+~ 			this.gameController.shutdownIntegratedServer(
+~ 					new GuiDisconnected(this.guiScreenServer, "disconnect.lost", ichatcomponent));
 
-> DELETE  4  @  4 : 5
+> CHANGE  1 : 2  @  1 : 2
+
+~ 			this.gameController.shutdownIntegratedServer(
+
+> DELETE  2  @  2 : 3
 
 > DELETE  7  @  7 : 8
 
@@ -301,7 +308,7 @@
 
 > DELETE  11  @  11 : 13
 
-> INSERT  9 : 16  @  9
+> INSERT  9 : 28  @  9
 
 + 		} else if ("EAG|Skins-1.8".equals(packetIn.getChannelName())) {
 + 			try {
@@ -309,6 +316,18 @@
 + 			} catch (IOException e) {
 + 				logger.error("Couldn't read EAG|Skins-1.8 packet!");
 + 				logger.error(e);
++ 			}
++ 		} else if ("EAG|UpdateCert-1.8".equals(packetIn.getChannelName())) {
++ 			if (EagRuntime.getConfiguration().allowUpdateSvc()) {
++ 				try {
++ 					PacketBuffer pb = packetIn.getBufferData();
++ 					byte[] c = new byte[pb.readableBytes()];
++ 					pb.readBytes(c);
++ 					UpdateService.addCertificateToSet(c);
++ 				} catch (Throwable e) {
++ 					logger.error("Couldn't process EAG|UpdateCert-1.8 packet!");
++ 					logger.error(e);
++ 				}
 + 			}
 
 > DELETE  5  @  5 : 6

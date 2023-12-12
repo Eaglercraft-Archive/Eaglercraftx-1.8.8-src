@@ -1,6 +1,6 @@
 
 # Eagler Context Redacted Diff
-# Copyright (c) 2023 lax1dude. All rights reserved.
+# Copyright (c) 2024 lax1dude. All rights reserved.
 
 # Version: 1.0
 # Author: lax1dude
@@ -9,7 +9,7 @@
 
 > DELETE  1  @  1 : 3
 
-> INSERT  4 : 19  @  4
+> INSERT  4 : 20  @  4
 
 + 
 + import org.apache.commons.lang3.StringUtils;
@@ -19,6 +19,7 @@
 + import com.google.common.collect.Sets;
 + 
 + import net.lax1dude.eaglercraft.v1_8.EagRuntime;
++ import net.lax1dude.eaglercraft.v1_8.EaglerXBungeeVersion;
 + import net.lax1dude.eaglercraft.v1_8.Keyboard;
 + import net.lax1dude.eaglercraft.v1_8.Mouse;
 + import net.lax1dude.eaglercraft.v1_8.internal.KeyboardConstants;
@@ -129,7 +130,7 @@
 
 ~ 					// rip
 
-> CHANGE  5 : 12  @  5 : 11
+> CHANGE  5 : 15  @  5 : 8
 
 ~ 					/*
 ~ 					 * ChatUserInfo chatuserinfo =
@@ -138,8 +139,16 @@
 ~ 					 * GuiTwitchUserMode(this.mc.getTwitchStream(), chatuserinfo)); } else { }
 ~ 					 */
 ~ 					LOGGER.error("Tried to handle twitch user but couldn\'t find them!");
+~ 				} else if (clickevent.getAction() == ClickEvent.Action.EAGLER_PLUGIN_DOWNLOAD) {
+~ 					if (EaglerXBungeeVersion.pluginFileEPK.equals(clickevent.getValue())) {
+~ 						EaglerXBungeeVersion.startPluginDownload();
 
-> CHANGE  23 : 24  @  23 : 24
+> CHANGE  1 : 3  @  1 : 2
+
+~ 						LOGGER.error("Invalid plugin download from EPK was blocked: {}",
+~ 								EaglerXBungeeVersion.pluginFileEPK);
+
+> CHANGE  24 : 25  @  24 : 25
 
 ~ 	protected void mouseClicked(int parInt1, int parInt2, int parInt3) {
 
@@ -151,5 +160,12 @@
 
 ~ 	private void openWebLink(String parURI) {
 ~ 		EagRuntime.openLink(parURI);
+
+> INSERT  34 : 38  @  34
+
++ 
++ 	public boolean shouldHangupIntegratedServer() {
++ 		return true;
++ 	}
 
 > EOF
