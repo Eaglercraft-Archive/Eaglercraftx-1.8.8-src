@@ -33,7 +33,6 @@ import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.skins.BinaryHttpC
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.skins.ISkinService;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.skins.SkinService;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.skins.SkinServiceOffline;
-import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.api.plugin.PluginManager;
 import net.md_5.bungee.netty.PipelineUtils;
@@ -54,8 +53,8 @@ import net.md_5.bungee.BungeeCord;
  */
 public class EaglerXBungee extends Plugin {
 
-	public static final String NATIVE_BUNGEECORD_BUILD = "1.20-R0.2-SNAPSHOT:231024b:1777";
-	public static final String NATIVE_WATERFALL_BUILD = "1.20-R0.2-SNAPSHOT:d85fe36:556";
+	public static final String NATIVE_BUNGEECORD_BUILD = "1.20-R0.3-SNAPSHOT:eda268b:1797";
+	public static final String NATIVE_WATERFALL_BUILD = "1.20-R0.2-SNAPSHOT:92b5149:562";
 	public static final String NATIVE_FLAMECORD_BUILD = "1.1.1";
 	
 	static {
