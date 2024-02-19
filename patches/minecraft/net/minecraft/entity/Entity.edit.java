@@ -17,51 +17,25 @@
 
 + 
 
-> CHANGE  7 : 8  @  7 : 10
+> INSERT  8 : 9  @  8
 
-~ import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
++ import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 
-> DELETE  4  @  4 : 7
+> DELETE  6  @  6 : 9
 
-> DELETE  3  @  3 : 4
-
-> DELETE  8  @  8 : 9
-
-> DELETE  14  @  14 : 15
-
-> CHANGE  1 : 2  @  1 : 2
-
-~ public abstract class Entity {
-
-> CHANGE  44 : 45  @  44 : 45
+> CHANGE  74 : 75  @  74 : 75
 
 ~ 	protected EaglercraftRandom rand;
 
-> CHANGE  27 : 28  @  27 : 29
+> CHANGE  27 : 28  @  27 : 28
 
 ~ 	protected EaglercraftUUID entityUniqueID;
 
-> CHANGE  20 : 21  @  20 : 21
+> CHANGE  21 : 22  @  21 : 22
 
 ~ 		this.rand = new EaglercraftRandom();
 
-> DELETE  3  @  3 : 4
-
-> DELETE  59  @  59 : 62
-
-> DELETE  45  @  45 : 60
-
-> DELETE  1  @  1 : 23
-
-> CHANGE  2 : 3  @  2 : 14
-
-~ 		this.fire = 0;
-
-> DELETE  1  @  1 : 5
-
-> DELETE  9  @  9 : 13
-
-> CHANGE  116 : 117  @  116 : 117
+> CHANGE  297 : 298  @  297 : 298
 
 ~ 			for (AxisAlignedBB axisalignedbb1 : (List<AxisAlignedBB>) list1) {
 
@@ -101,9 +75,7 @@
 
 ~ 				for (AxisAlignedBB axisalignedbb12 : (List<AxisAlignedBB>) list) {
 
-> DELETE  595  @  595 : 596
-
-> CHANGE  55 : 57  @  55 : 56
+> CHANGE  651 : 653  @  651 : 652
 
 ~ 				this.entityUniqueID = new EaglercraftUUID(tagCompund.getLong("UUIDMost"),
 ~ 						tagCompund.getLong("UUIDLeast"));
@@ -112,45 +84,19 @@
 
 ~ 				this.entityUniqueID = EaglercraftUUID.fromString(tagCompund.getString("UUID"));
 
-> DELETE  9  @  9 : 10
-
-> CHANGE  216 : 217  @  216 : 217
+> CHANGE  226 : 227  @  226 : 227
 
 ~ 			for (AxisAlignedBB axisalignedbb : (List<AxisAlignedBB>) list) {
 
-> DELETE  23  @  23 : 44
-
-> CHANGE  28 : 29  @  28 : 29
-
-~ 		boolean flag = this.worldObj != null;
-
-> CHANGE  183 : 184  @  183 : 184
+> CHANGE  256 : 257  @  256 : 257
 
 ~ 		return HString.format("%s[\'%s\'/%d, l=\'%s\', x=%.2f, y=%.2f, z=%.2f]",
 
-> DELETE  25  @  25 : 59
-
-> CHANGE  30 : 31  @  30 : 31
-
-~ 				return EntityList.getEntityString(Entity.this) + " (" + Entity.this.getClass().getName() + ")";
-
-> CHANGE  8 : 9  @  8 : 9
-
-~ 		category.addCrashSection("Entity\'s Exact location", HString.format("%.2f, %.2f, %.2f",
-
-> CHANGE  4 : 5  @  4 : 5
-
-~ 		category.addCrashSection("Entity\'s Momentum", HString.format("%.2f, %.2f, %.2f", new Object[] {
-
-> CHANGE  17 : 18  @  17 : 18
+> CHANGE  121 : 122  @  121 : 122
 
 ~ 	public EaglercraftUUID getUniqueID() {
 
-> DELETE  62  @  62 : 66
-
-> DELETE  51  @  51 : 63
-
-> INSERT  22 : 48  @  22
+> INSERT  151 : 177  @  151
 
 + 
 + 	public void renderDynamicLightsEagler(float partialTicks, boolean isInFrustum) {

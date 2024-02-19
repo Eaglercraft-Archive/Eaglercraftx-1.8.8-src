@@ -5,7 +5,9 @@
 # Version: 1.0
 # Author: lax1dude
 
-> DELETE  2  @  2 : 5
+> INSERT  5 : 6  @  5
+
++ 
 
 > CHANGE  5 : 8  @  5 : 6
 
@@ -13,27 +15,19 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 
-> CHANGE  1 : 2  @  1 : 2
+> CHANGE  1 : 4  @  1 : 2
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
+~ import net.lax1dude.eaglercraft.v1_8.HString;
+~ 
 
-> INSERT  1 : 6  @  1
+> INSERT  1 : 2  @  1
 
 + 
-+ import com.google.common.base.Predicate;
-+ import com.google.common.collect.Lists;
-+ import com.google.common.collect.Sets;
-+ 
 
-> DELETE  18  @  18 : 19
+> DELETE  32  @  32 : 46
 
-> DELETE  12  @  12 : 27
-
-> DELETE  1  @  1 : 2
-
-> DELETE  3  @  3 : 4
-
-> CHANGE  18 : 19  @  18 : 19
+> CHANGE  24 : 25  @  24 : 25
 
 ~ 	protected int updateLCG = (new EaglercraftRandom()).nextInt();
 
@@ -41,71 +35,61 @@
 
 ~ 	public final EaglercraftRandom rand = new EaglercraftRandom();
 
-> DELETE  7  @  7 : 8
-
-> CHANGE  1 : 2  @  1 : 2
+> CHANGE  9 : 10  @  9 : 10
 
 ~ 	private final Calendar theCalendar = EagRuntime.getLocaleCalendar();
 
 > DELETE  1  @  1 : 2
 
-> INSERT  10 : 13  @  10
+> INSERT  7 : 8  @  7
 
-+ 		if (!client) {
-+ 			throw new IllegalStateException("Singleplayer is unavailable because all of it's code was deleted");
-+ 		}
++ 	public final boolean isRemote;
 
-> DELETE  8  @  8 : 9
+> DELETE  11  @  11 : 12
 
-> CHANGE  12 : 13  @  12 : 13
+> INSERT  1 : 2  @  1
 
-~ 				return chunk.getBiome(pos);
++ 		this.isRemote = client;
 
-> CHANGE  11 : 12  @  11 : 12
+> CHANGE  17 : 19  @  17 : 18
 
-~ 			return BiomeGenBase.plains;
+~ 						return CrashReportCategory
+~ 								.getCoordinateInfo(new net.minecraft.util.BlockPos(pos.getX(), pos.getY(), pos.getZ()));
 
-> DELETE  3  @  3 : 7
+> CHANGE  257 : 258  @  257 : 258
 
-> DELETE  54  @  54 : 62
+~ 							return HString.format("ID #%d (%s // %s)",
 
-> DELETE  36  @  36 : 38
-
-> CHANGE  15 : 16  @  15 : 16
-
-~ 				if ((flags & 2) != 0 && ((flags & 4) == 0) && chunk.isPopulated()) {
-
-> DELETE  3  @  3 : 10
-
-> CHANGE  36 : 37  @  36 : 40
-
-~ 		this.notifyNeighborsOfStateChange(pos, blockType);
-
-> DELETE  67  @  67 : 69
-
-> DELETE  1  @  1 : 21
-
-> CHANGE  117 : 118  @  117 : 118
+> CHANGE  128 : 129  @  128 : 129
 
 ~ 			return Chunk.getNoSkyLightValue();
 
-> DELETE  1286  @  1286 : 1344
+> CHANGE  1299 : 1300  @  1299 : 1300
 
-> DELETE  40  @  40 : 64
+~ 						this.worldInfo.setThunderTime((this.rand.nextInt(12000) / 2) + 3600);
 
-> CHANGE  8 : 9  @  8 : 9
+> CHANGE  1 : 2  @  1 : 2
+
+~ 						this.worldInfo.setThunderTime((this.rand.nextInt(168000) + 12000) * 2);
+
+> CHANGE  20 : 21  @  20 : 21
+
+~ 						this.worldInfo.setRainTime((this.rand.nextInt(12000) + 12000) / 2);
+
+> CHANGE  1 : 2  @  1 : 2
+
+~ 						this.worldInfo.setRainTime((this.rand.nextInt(168000) + 12000) * 2);
+
+> CHANGE  91 : 92  @  91 : 92
 
 ~ 	public void forceBlockUpdateTick(Block blockType, BlockPos pos, EaglercraftRandom random) {
 
-> DELETE  231  @  231 : 235
-
-> CHANGE  28 : 29  @  28 : 29
+> CHANGE  263 : 264  @  263 : 264
 
 ~ 			if (entityType.isAssignableFrom(entity.getClass()) && filter.apply((T) entity)) {
 
-> CHANGE  10 : 12  @  10 : 12
+> CHANGE  11 : 12  @  11 : 12
 
-~ 		for (EntityPlayer entity : this.playerEntities) {
 ~ 			if (playerType.isAssignableFrom(entity.getClass()) && filter.apply((T) entity)) {
 
 > CHANGE  232 : 233  @  232 : 233
@@ -116,10 +100,10 @@
 
 ~ 	public EaglercraftRandom setRandomSeed(int parInt1, int parInt2, int parInt3) {
 
-> CHANGE  52 : 53  @  52 : 53
+> INSERT  129 : 132  @  129
 
-~ 			this.theCalendar.setTimeInMillis(System.currentTimeMillis());
-
-> DELETE  67  @  67 : 71
++ 		if (!MinecraftServer.getServer().worldServers[0].getWorldInfo().getGameRulesInstance()
++ 				.getBoolean("loadSpawnChunks"))
++ 			return false;
 
 > EOF

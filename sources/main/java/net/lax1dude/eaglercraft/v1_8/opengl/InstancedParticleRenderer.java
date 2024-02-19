@@ -17,7 +17,7 @@ import net.lax1dude.eaglercraft.v1_8.opengl.FixedFunctionShader.FixedFunctionCon
 import net.lax1dude.eaglercraft.v1_8.vector.Matrix4f;
 
 /**
- * Copyright (c) 2023 lax1dude. All Rights Reserved.
+ * Copyright (c) 2022 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED

@@ -5,14 +5,14 @@
 # Version: 1.0
 # Author: lax1dude
 
-> DELETE  2  @  2 : 3
+> DELETE  4  @  4 : 5
 
-> DELETE  1  @  1 : 2
+> CHANGE  70 : 71  @  70 : 71
 
-> DELETE  3  @  3 : 7
+~ 					for (EntityLivingBase entitylivingbase : (List<EntityLivingBase>) list1) {
 
-> DELETE  57  @  57 : 70
+> CHANGE  7 : 8  @  7 : 8
 
-> DELETE  1  @  1 : 23
+~ 							for (PotionEffect potioneffect : (List<PotionEffect>) list) {
 
 > EOF

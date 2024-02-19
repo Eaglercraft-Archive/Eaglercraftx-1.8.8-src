@@ -5,13 +5,13 @@
 # Version: 1.0
 # Author: lax1dude
 
-> DELETE  2  @  2 : 3
+> CHANGE  2 : 3  @  2 : 3
 
-> DELETE  4  @  4 : 5
+~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 
-> DELETE  4  @  4 : 15
+> DELETE  11  @  11 : 12
 
-> CHANGE  3 : 6  @  3 : 11
+> CHANGE  11 : 14  @  11 : 19
 
 ~ 	private final IBlockState field_181620_aE;
 ~ 	private final IBlockState field_181621_aF;
@@ -26,8 +26,16 @@
 + 		field_181622_aG = Blocks.leaves.getDefaultState().withProperty(BlockOldLeaf.VARIANT, BlockPlanks.EnumType.OAK)
 + 				.withProperty(BlockLeaves.CHECK_DECAY, Boolean.valueOf(false));
 
-> DELETE  1  @  1 : 9
+> CHANGE  16 : 17  @  16 : 17
 
-> DELETE  7  @  7 : 37
+~ 	public WorldGenAbstractTree genBigTreeChance(EaglercraftRandom random) {
+
+> CHANGE  8 : 9  @  8 : 9
+
+~ 	public WorldGenerator getRandomWorldGenForGrass(EaglercraftRandom random) {
+
+> CHANGE  4 : 5  @  4 : 5
+
+~ 	public void decorate(World world, EaglercraftRandom random, BlockPos blockpos) {
 
 > EOF

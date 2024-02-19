@@ -5,6 +5,11 @@
 # Version: 1.0
 # Author: lax1dude
 
-> DELETE  2  @  2 : 4
+> DELETE  6  @  6 : 7
+
+> CHANGE  10 : 12  @  10 : 11
+
+~ 		return StringTranslate.fallbackInstance != null ? StringTranslate.fallbackInstance.translateKey(key)
+~ 				: localizedName.translateKey(key);
 
 > EOF

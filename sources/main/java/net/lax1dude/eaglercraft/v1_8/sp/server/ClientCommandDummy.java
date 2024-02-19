@@ -1,9 +1,9 @@
 package net.lax1dude.eaglercraft.v1_8.sp.server;
 
-import net.lax1dude.eaglercraft.v1_8.sp.server.classes.net.minecraft.command.CommandBase;
-import net.lax1dude.eaglercraft.v1_8.sp.server.classes.net.minecraft.command.CommandException;
-import net.lax1dude.eaglercraft.v1_8.sp.server.classes.net.minecraft.command.ICommandSender;
-import net.lax1dude.eaglercraft.v1_8.sp.server.classes.net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.command.CommandBase;
+import net.minecraft.command.CommandException;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.util.ChatComponentTranslation;
 
 /**
  * Copyright (c) 2024 lax1dude. All Rights Reserved.

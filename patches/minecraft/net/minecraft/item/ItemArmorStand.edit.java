@@ -7,16 +7,12 @@
 
 > CHANGE  3 : 4  @  3 : 4
 
-~ 
+~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 
-> DELETE  2  @  2 : 3
+> DELETE  4  @  4 : 6
 
-> DELETE  1  @  1 : 4
+> CHANGE  68 : 69  @  68 : 69
 
-> DELETE  3  @  3 : 5
-
-> DELETE  33  @  33 : 54
-
-> DELETE  7  @  7 : 19
+~ 	private void applyRandomRotations(EntityArmorStand armorStand, EaglercraftRandom rand) {
 
 > EOF

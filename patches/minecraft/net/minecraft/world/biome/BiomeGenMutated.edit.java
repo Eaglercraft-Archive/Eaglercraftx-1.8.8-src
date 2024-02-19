@@ -16,13 +16,17 @@
 
 > DELETE  2  @  2 : 3
 
-> DELETE  1  @  1 : 2
+> CHANGE  31 : 32  @  31 : 32
 
-> CHANGE  29 : 31  @  29 : 34
+~ 	public void decorate(World world, EaglercraftRandom random, BlockPos blockpos) {
+
+> CHANGE  3 : 5  @  3 : 4
 
 ~ 	public void genTerrainBlocks(World world, EaglercraftRandom random, ChunkPrimer chunkprimer, int i, int j,
 ~ 			double d0) {
 
-> DELETE  7  @  7 : 11
+> CHANGE  7 : 8  @  7 : 8
+
+~ 	public WorldGenAbstractTree genBigTreeChance(EaglercraftRandom random) {
 
 > EOF

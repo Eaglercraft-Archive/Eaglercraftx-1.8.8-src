@@ -7,6 +7,4 @@
 
 > DELETE  3  @  3 : 4
 
-> DELETE  19  @  19 : 23
-
 > EOF

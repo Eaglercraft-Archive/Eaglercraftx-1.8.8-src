@@ -5,22 +5,14 @@
 # Version: 1.0
 # Author: lax1dude
 
-> DELETE  2  @  2 : 3
+> CHANGE  2 : 3  @  2 : 3
 
-> DELETE  1  @  1 : 2
+~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 
-> DELETE  1  @  1 : 5
+> DELETE  6  @  6 : 7
 
-> DELETE  1  @  1 : 2
+> CHANGE  247 : 248  @  247 : 248
 
-> DELETE  4  @  4 : 6
-
-> DELETE  1  @  1 : 3
-
-> DELETE  11  @  11 : 16
-
-> DELETE  14  @  14 : 22
-
-> DELETE  85  @  85 : 252
+~ 			EaglercraftRandom random = this.parentEntity.getRNG();
 
 > EOF

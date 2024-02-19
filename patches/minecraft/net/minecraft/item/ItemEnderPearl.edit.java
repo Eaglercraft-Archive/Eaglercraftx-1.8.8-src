@@ -5,10 +5,21 @@
 # Version: 1.0
 # Author: lax1dude
 
-> DELETE  3  @  3 : 4
+> INSERT  2 : 3  @  2
 
-> DELETE  1  @  1 : 3
++ import net.lax1dude.eaglercraft.v1_8.sp.SingleplayerServerController;
 
-> DELETE  15  @  15 : 18
+> DELETE  3  @  3 : 5
+
+> CHANGE  10 : 12  @  10 : 11
+
+~ 		if (entityplayer.capabilities.isCreativeMode && world.isRemote
+~ 				&& !SingleplayerServerController.isClientInEaglerSingleplayerOrLAN()) {
+
+> CHANGE  2 : 5  @  2 : 3
+
+~ 			if (!entityplayer.capabilities.isCreativeMode) {
+~ 				--itemstack.stackSize;
+~ 			}
 
 > EOF

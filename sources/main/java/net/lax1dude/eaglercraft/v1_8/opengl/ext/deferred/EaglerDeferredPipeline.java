@@ -1620,6 +1620,24 @@ public class EaglerDeferredPipeline {
 
 				DeferredStateManager.checkGLError("combineGBuffersAndIlluminate(): NETHER SKY IRRADIANCE MAP");
 
+			}else if(dim == 1) {
+
+				// =============== END SKY REFLECTION MAP ================ //
+
+				_wglBindFramebuffer(_GL_FRAMEBUFFER, envMapSkyFramebuffer);
+				GlStateManager.clearColor(0.1f, 0.06f, 0.19f, 1.0f);
+				GlStateManager.clear(GL_COLOR_BUFFER_BIT);
+
+				DeferredStateManager.checkGLError("combineGBuffersAndIlluminate(): END SKY REFLECTION MAP");
+
+				// =============== END SKY IRRADIANCE MAP ================ //
+
+				_wglBindFramebuffer(_GL_FRAMEBUFFER, skyIrradianceFramebuffer);
+				GlStateManager.clearColor(0.05f, 0.03f, 0.09f, 1.0f);
+				GlStateManager.clear(GL_COLOR_BUFFER_BIT);
+
+				DeferredStateManager.checkGLError("combineGBuffersAndIlluminate(): END SKY IRRADIANCE MAP");
+
 			}
 
 		}

@@ -5,29 +5,8 @@
 # Version: 1.0
 # Author: lax1dude
 
-> DELETE  2  @  2 : 6
+> INSERT  5 : 11  @  5
 
-> INSERT  1 : 2  @  1
-
-+ import java.util.ArrayList;
-
-> INSERT  1 : 2  @  1
-
-+ import java.util.List;
-
-> INSERT  1 : 3  @  1
-
-+ import java.util.Map.Entry;
-+ import java.util.regex.Matcher;
-
-> DELETE  1  @  1 : 3
-
-> INSERT  1 : 11  @  1
-
-+ import com.google.common.base.Charsets;
-+ import com.google.common.base.Splitter;
-+ import com.google.common.collect.Iterables;
-+ import com.google.common.collect.Maps;
 + 
 + import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 + import net.lax1dude.eaglercraft.v1_8.HString;
@@ -35,16 +14,46 @@
 + import net.lax1dude.eaglercraft.v1_8.sp.SingleplayerServerController;
 + 
 
-> CHANGE  8 : 10  @  8 : 10
+> INSERT  2 : 4  @  2
 
-~ 		this.lastUpdateTimeInMilliseconds = System.currentTimeMillis();
++ import java.nio.charset.StandardCharsets;
++ import java.util.ArrayList;
+
+> INSERT  1 : 2  @  1
+
++ import java.util.List;
+
+> INSERT  1 : 2  @  1
+
++ import java.util.Map.Entry;
+
+> DELETE  1  @  1 : 3
+
+> INSERT  5 : 6  @  5
+
++ 	static StringTranslate fallbackInstance = null;
+
+> CHANGE  3 : 5  @  3 : 6
+
+~ 	private StringTranslate() {
 ~ 	}
 
-> CHANGE  1 : 13  @  1 : 9
+> CHANGE  1 : 24  @  1 : 9
 
-~ 	public static void doCLINIT() {
-~ 		InputStream inputstream = EagRuntime.getResourceStream("/assets/minecraft/lang/en_US.lang");
-~ 		for (String s : IOUtils.readLines(inputstream, Charsets.UTF_8)) {
+~ 	public static void initClient() {
+~ 		try (InputStream inputstream = EagRuntime.getResourceStream("/assets/minecraft/lang/en_US.lang")) {
+~ 			initServer(IOUtils.readLines(inputstream, StandardCharsets.UTF_8));
+~ 			fallbackInstance = new StringTranslate();
+~ 			fallbackInstance.replaceWith(instance.languageList);
+~ 			SingleplayerServerController.updateLocale(dump());
+~ 		} catch (IOException e) {
+~ 			EagRuntime.debugPrintStackTrace(e);
+~ 		}
+~ 	}
+~ 
+~ 	public static void initServer(List<String> strs) {
+~ 		instance.languageList.clear();
+~ 		for (String s : strs) {
 ~ 			if (!s.isEmpty() && s.charAt(0) != 35) {
 ~ 				String[] astring = (String[]) Iterables.toArray(equalSignSplitter.split(s), String.class);
 ~ 				if (astring != null && astring.length == 2) {
@@ -65,11 +74,7 @@
 
 ~ 	public static void replaceWith(Map<String, String> parMap) {
 
-> INSERT  3 : 4  @  3
-
-+ 		SingleplayerServerController.updateLocale(dump());
-
-> CHANGE  2 : 3  @  2 : 3
+> CHANGE  5 : 6  @  5 : 6
 
 ~ 	public String translateKey(String key) {
 

@@ -13,10 +13,6 @@
 + import com.google.common.collect.Maps;
 + 
 
-> DELETE  5  @  5 : 9
-
-> CHANGE  21 : 22  @  21 : 30
-
-~ 			return true;
+> DELETE  5  @  5 : 8
 
 > EOF

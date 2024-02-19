@@ -5,52 +5,34 @@
 # Version: 1.0
 # Author: lax1dude
 
-> INSERT  3 : 4  @  3
+> INSERT  3 : 5  @  3
 
 + 
++ import net.lax1dude.eaglercraft.v1_8.sp.SingleplayerServerController;
 
-> DELETE  7  @  7 : 15
+> DELETE  18  @  18 : 19
 
-> DELETE  3  @  3 : 4
+> DELETE  12  @  12 : 13
 
-> DELETE  10  @  10 : 11
+> CHANGE  1015 : 1020  @  1015 : 1016
 
-> DELETE  1  @  1 : 2
+~ 		if (worldObj.isRemote && !SingleplayerServerController.isClientInEaglerSingleplayerOrLAN()) {
+~ 			nbttagcompound.setString("OwnerUUID", this.getOwnerId());
+~ 		} else {
+~ 			nbttagcompound.setString("Owner", this.getOwnerId());
+~ 		}
 
-> DELETE  59  @  59 : 68
+> CHANGE  37 : 41  @  37 : 39
 
-> CHANGE  212 : 213  @  212 : 216
+~ 		if (worldObj.isRemote && !SingleplayerServerController.isClientInEaglerSingleplayerOrLAN()) {
+~ 			if (nbttagcompound.hasKey("OwnerUUID", 8)) {
+~ 				s = nbttagcompound.getString("OwnerUUID");
+~ 			}
 
-~ 
+> CHANGE  1 : 4  @  1 : 3
 
-> DELETE  61  @  61 : 67
-
-> DELETE  215  @  215 : 220
-
-> DELETE  146  @  146 : 149
-
-> DELETE  34  @  34 : 42
-
-> DELETE  6  @  6 : 32
-
-> CHANGE  4 : 5  @  4 : 5
-
-~ 		if (this.dataWatcher.hasObjectChanged()) {
-
-> DELETE  9  @  9 : 14
-
-> DELETE  56  @  56 : 60
-
-> DELETE  25  @  25 : 29
-
-> DELETE  18  @  18 : 25
-
-> DELETE  1  @  1 : 2
-
-> DELETE  48  @  48 : 53
-
-> CHANGE  70 : 71  @  70 : 78
-
-~ 		String s = nbttagcompound.getString("OwnerUUID");
+~ 			if (nbttagcompound.hasKey("Owner", 8)) {
+~ 				s = nbttagcompound.getString("Owner");
+~ 			}
 
 > EOF

@@ -14,8 +14,8 @@
 
 ~ 	public int quantityDropped(EaglercraftRandom var1) {
 
-> DELETE  16  @  16 : 19
+> DELETE  19  @  19 : 20
 
-> DELETE  4  @  4 : 7
+> DELETE  6  @  6 : 7
 
 > EOF

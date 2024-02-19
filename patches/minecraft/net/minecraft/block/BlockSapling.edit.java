@@ -10,11 +10,7 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
 
-> DELETE  6  @  6 : 7
-
-> DELETE  5  @  5 : 14
-
-> CHANGE  2 : 3  @  2 : 4
+> CHANGE  23 : 24  @  23 : 25
 
 ~ 	public static PropertyEnum<BlockPlanks.EnumType> TYPE;
 
@@ -25,16 +21,26 @@
 + 	}
 + 
 
-> CHANGE  5 : 6  @  5 : 13
+> CHANGE  5 : 6  @  5 : 6
 
 ~ 	public void updateTick(World world, BlockPos blockpos, IBlockState iblockstate, EaglercraftRandom random) {
 
-> DELETE  2  @  2 : 103
+> DELETE  5  @  5 : 6
 
-> CHANGE  28 : 29  @  28 : 29
+> CHANGE  3 : 4  @  3 : 4
+
+~ 	public void grow(World worldIn, BlockPos pos, IBlockState state, EaglercraftRandom rand) {
+
+> CHANGE  8 : 9  @  8 : 9
+
+~ 	public void generateTree(World worldIn, BlockPos pos, IBlockState state, EaglercraftRandom rand) {
+
+> CHANGE  119 : 120  @  119 : 120
 
 ~ 	public boolean canUseBonemeal(World world, EaglercraftRandom var2, BlockPos var3, IBlockState var4) {
 
-> DELETE  3  @  3 : 7
+> CHANGE  3 : 4  @  3 : 4
+
+~ 	public void grow(World world, EaglercraftRandom random, BlockPos blockpos, IBlockState iblockstate) {
 
 > EOF

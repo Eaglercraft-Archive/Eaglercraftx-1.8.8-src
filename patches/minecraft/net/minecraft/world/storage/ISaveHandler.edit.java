@@ -7,10 +7,16 @@
 
 > DELETE  2  @  2 : 3
 
-> DELETE  2  @  2 : 6
+> INSERT  1 : 2  @  1
 
-> DELETE  6  @  6 : 8
++ import net.lax1dude.eaglercraft.v1_8.internal.vfs2.VFile2;
 
-> DELETE  8  @  8 : 12
+> CHANGE  21 : 22  @  21 : 22
+
+~ 	VFile2 getWorldDirectory();
+
+> CHANGE  1 : 2  @  1 : 2
+
+~ 	VFile2 getMapFileFromName(String var1);
 
 > EOF

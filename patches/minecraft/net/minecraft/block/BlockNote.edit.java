@@ -13,12 +13,6 @@
 ~ import com.google.common.collect.Lists;
 ~ 
 
-> DELETE  4  @  4 : 5
-
-> CHANGE  34 : 35  @  34 : 47
-
-~ 		return true;
-
-> DELETE  2  @  2 : 13
+> DELETE  61  @  61 : 62
 
 > EOF

@@ -10,20 +10,24 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
 
-> DELETE  18  @  18 : 19
-
-> DELETE  2  @  2 : 3
-
-> CHANGE  10 : 11  @  10 : 11
+> CHANGE  32 : 33  @  32 : 33
 
 ~ 	protected EaglercraftRandom rand = new EaglercraftRandom();
 
-> DELETE  12  @  12 : 41
+> CHANGE  43 : 44  @  43 : 46
 
-> CHANGE  2 : 3  @  2 : 17
+~ 		if (!world.isRemote) {
 
-~ 		return true;
+> DELETE  9  @  9 : 11
 
-> DELETE  37  @  37 : 44
+> INSERT  1 : 2  @  1
+
++ 		return true;
+
+> CHANGE  37 : 38  @  37 : 38
+
+~ 	public void updateTick(World world, BlockPos blockpos, IBlockState var3, EaglercraftRandom var4) {
+
+> DELETE  3  @  3 : 4
 
 > EOF

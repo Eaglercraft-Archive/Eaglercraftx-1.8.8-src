@@ -5,8 +5,11 @@
 # Version: 1.0
 # Author: lax1dude
 
-> INSERT  3 : 4  @  3
+> INSERT  62 : 66  @  62
 
 + 
++ 	public int getViewDistance() {
++ 		return this.view;
++ 	}
 
 > EOF

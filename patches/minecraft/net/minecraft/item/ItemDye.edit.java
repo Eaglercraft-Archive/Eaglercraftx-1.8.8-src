@@ -11,10 +11,4 @@
 
 > DELETE  10  @  10 : 13
 
-> DELETE  28  @  28 : 32
-
-> CHANGE  36 : 37  @  36 : 45
-
-~ 			if (igrowable.canGrow(worldIn, target, iblockstate, true)) {
-
 > EOF

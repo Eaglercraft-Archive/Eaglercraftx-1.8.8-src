@@ -5,7 +5,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.lax1dude.eaglercraft.v1_8.sp.server.classes.EaglerServerBootstrap;
 import org.teavm.jso.JSBody;
 import org.teavm.jso.JSFunctor;
 import org.teavm.jso.JSObject;
@@ -75,7 +74,6 @@ public class ServerPlatformSingleplayer {
 
 	public static void initializeContext() {
 		PlatformFilesystem.initialize();
-		EaglerServerBootstrap.staticInit();
 	}
 
 	@JSBody(params = { "ch", "dat" }, script = "postMessage({ ch: ch, dat : dat });")

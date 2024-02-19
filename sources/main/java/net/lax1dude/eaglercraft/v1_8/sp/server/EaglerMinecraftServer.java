@@ -8,14 +8,14 @@ import java.util.List;
 
 import net.lax1dude.eaglercraft.v1_8.internal.vfs2.VFile2;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
-import net.lax1dude.eaglercraft.v1_8.sp.server.classes.net.minecraft.entity.player.EntityPlayer;
-import net.lax1dude.eaglercraft.v1_8.sp.server.classes.net.minecraft.entity.player.EntityPlayerMP;
-import net.lax1dude.eaglercraft.v1_8.sp.server.classes.net.minecraft.init.Bootstrap;
-import net.lax1dude.eaglercraft.v1_8.sp.server.classes.net.minecraft.server.MinecraftServer;
-import net.lax1dude.eaglercraft.v1_8.sp.server.classes.net.minecraft.world.EnumDifficulty;
-import net.lax1dude.eaglercraft.v1_8.sp.server.classes.net.minecraft.world.WorldServer;
-import net.lax1dude.eaglercraft.v1_8.sp.server.classes.net.minecraft.world.WorldSettings;
-import net.lax1dude.eaglercraft.v1_8.sp.server.classes.net.minecraft.world.WorldSettings.GameType;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Bootstrap;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.EnumDifficulty;
+import net.minecraft.world.WorldServer;
+import net.minecraft.world.WorldSettings;
+import net.minecraft.world.WorldSettings.GameType;
 import net.lax1dude.eaglercraft.v1_8.sp.server.skins.IntegratedSkinService;
 
 /**

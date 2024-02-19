@@ -19,7 +19,7 @@ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 import net.lax1dude.eaglercraft.v1_8.sp.server.EaglerChunkLoader;
 import net.lax1dude.eaglercraft.v1_8.sp.server.EaglerIntegratedServerWorker;
 import net.lax1dude.eaglercraft.v1_8.sp.server.EaglerSaveFormat;
-import net.lax1dude.eaglercraft.v1_8.sp.server.classes.net.minecraft.world.chunk.storage.RegionFile;
+import net.minecraft.world.chunk.storage.RegionFile;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 

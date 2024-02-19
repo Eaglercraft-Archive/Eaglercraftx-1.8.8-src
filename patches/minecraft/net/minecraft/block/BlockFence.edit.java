@@ -9,10 +9,4 @@
 
 ~ 
 
-> DELETE  10  @  10 : 11
-
-> CHANGE  130 : 131  @  130 : 131
-
-~ 		return true;
-
 > EOF

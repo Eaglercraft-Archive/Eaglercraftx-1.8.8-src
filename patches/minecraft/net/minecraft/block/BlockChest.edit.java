@@ -7,14 +7,18 @@
 
 > DELETE  2  @  2 : 4
 
-> DELETE  15  @  15 : 16
+> CHANGE  130 : 131  @  130 : 133
 
-> CHANGE  114 : 115  @  114 : 186
+~ 		if (!worldIn.isRemote) {
 
-~ 		return state;
+> DELETE  67  @  67 : 68
 
-> CHANGE  117 : 118  @  117 : 132
+> INSERT  1 : 2  @  1
 
-~ 		return true;
++ 		return state;
+
+> CHANGE  117 : 118  @  117 : 120
+
+~ 		{
 
 > EOF

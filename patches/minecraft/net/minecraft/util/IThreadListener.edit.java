@@ -5,10 +5,10 @@
 # Version: 1.0
 # Author: lax1dude
 
-> CHANGE  2 : 3  @  2 : 3
+> DELETE  2  @  2 : 4
 
-~ import net.lax1dude.eaglercraft.v1_8.futures.ListenableFuture;
+> CHANGE  1 : 2  @  1 : 4
 
-> DELETE  3  @  3 : 5
+~ 	void addScheduledTask(Runnable var1);
 
 > EOF

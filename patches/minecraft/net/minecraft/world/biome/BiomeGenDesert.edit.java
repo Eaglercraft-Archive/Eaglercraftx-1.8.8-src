@@ -5,12 +5,14 @@
 # Version: 1.0
 # Author: lax1dude
 
-> DELETE  2  @  2 : 3
+> CHANGE  2 : 3  @  2 : 3
 
-> DELETE  1  @  1 : 5
+~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 
-> DELETE  7  @  7 : 11
+> DELETE  3  @  3 : 4
 
-> DELETE  2  @  2 : 13
+> CHANGE  15 : 16  @  15 : 16
+
+~ 	public void decorate(World world, EaglercraftRandom random, BlockPos blockpos) {
 
 > EOF

@@ -182,9 +182,6 @@ public class DecompileMinecraft {
 					ZipEntry z2 = new ZipEntry(nm);
 					jarOut.putNextEntry(z2);
 					IOUtils.write(txt, jarOut, "UTF-8");
-					z2 = new ZipEntry("net/lax1dude/eaglercraft/v1_8/sp/server/classes/" + nm);
-					jarOut.putNextEntry(z2);
-					ApplyPatchesToZip.writeIntegratedServerClass(nm.substring(0, nm.length() - 5), txt, jarOut);
 					++xt;
 					if(xt % 75 == 74) {
 						System.out.print(".");

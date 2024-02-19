@@ -5,31 +5,8 @@
 # Version: 1.0
 # Author: lax1dude
 
-> DELETE  2  @  2 : 3
+> CHANGE  143 : 144  @  143 : 144
 
-> INSERT  1 : 5  @  1
-
-+ import java.util.List;
-+ 
-+ import com.google.common.collect.Lists;
-+ 
-
-> DELETE  2  @  2 : 4
-
-> DELETE  5  @  5 : 7
-
-> DELETE  1  @  1 : 2
-
-> DELETE  2  @  2 : 3
-
-> DELETE  55  @  55 : 58
-
-> DELETE  8  @  8 : 23
-
-> DELETE  1  @  1 : 34
-
-> CHANGE  13 : 14  @  13 : 14
-
-~ 				for (Entity entity : (List<Entity>) arraylist) {
+~ 				ArrayList<Entity> arraylist = Lists.newArrayList(
 
 > EOF

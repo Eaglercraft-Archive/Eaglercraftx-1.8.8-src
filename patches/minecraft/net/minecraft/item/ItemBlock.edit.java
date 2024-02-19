@@ -5,14 +5,6 @@
 # Version: 1.0
 # Author: lax1dude
 
-> INSERT  3 : 4  @  3
-
-+ 
-
-> DELETE  6  @  6 : 11
-
-> CHANGE  53 : 54  @  53 : 84
-
-~ 		return false;
+> DELETE  9  @  9 : 11
 
 > EOF

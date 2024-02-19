@@ -5,25 +5,22 @@
 # Version: 1.0
 # Author: lax1dude
 
-> DELETE  2  @  2 : 3
+> CHANGE  2 : 3  @  2 : 3
 
-> CHANGE  1 : 4  @  1 : 2
-
-~ import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
-~ 
 ~ import net.lax1dude.eaglercraft.v1_8.mojang.authlib.GameProfile;
 
-> DELETE  1  @  1 : 2
+> CHANGE  1 : 2  @  1 : 2
 
-> DELETE  4  @  4 : 6
+~ import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
 
-> DELETE  2  @  2 : 3
+> DELETE  6  @  6 : 8
 
-> DELETE  3  @  3 : 4
+> CHANGE  60 : 62  @  60 : 61
 
-> DELETE  33  @  33 : 69
+~ 									gameprofile = new GameProfile((EaglercraftUUID) null,
+~ 											nbttagcompound.getString("SkullOwner"));
 
-> CHANGE  47 : 48  @  47 : 48
+> CHANGE  62 : 63  @  62 : 63
 
 ~ 			GameProfile gameprofile = new GameProfile((EaglercraftUUID) null, nbt.getString("SkullOwner"));
 

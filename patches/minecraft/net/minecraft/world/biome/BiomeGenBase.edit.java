@@ -5,29 +5,22 @@
 # Version: 1.0
 # Author: lax1dude
 
-> DELETE  2  @  2 : 5
+> INSERT  5 : 6  @  5
+
++ 
 
 > CHANGE  3 : 4  @  3 : 4
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 
-> INSERT  1 : 8  @  1
+> DELETE  29  @  29 : 48
 
-+ 
-+ import com.google.common.collect.Lists;
-+ import com.google.common.collect.Maps;
-+ import com.google.common.collect.Sets;
-+ 
-+ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
-+ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
+> CHANGE  9 : 11  @  9 : 11
 
-> DELETE  2  @  2 : 3
+~ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
+~ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 
-> DELETE  25  @  25 : 44
-
-> DELETE  2  @  2 : 11
-
-> CHANGE  19 : 64  @  19 : 110
+> CHANGE  19 : 63  @  19 : 110
 
 ~ 	public static BiomeGenBase ocean;
 ~ 	public static BiomeGenBase plains;
@@ -70,28 +63,27 @@
 ~ 	public static BiomeGenBase mesaPlateau_F;
 ~ 	public static BiomeGenBase mesaPlateau;
 ~ 	public static BiomeGenBase field_180279_ad;
-~ 	protected static final NoiseGeneratorPerlin temperatureNoise = new NoiseGeneratorPerlin(
-~ 			new EaglercraftRandom(1234L), 1);
-~ 	protected static final NoiseGeneratorPerlin GRASS_COLOR_NOISE = new NoiseGeneratorPerlin(
-~ 			new EaglercraftRandom(2345L), 1);
+~ 	protected static NoiseGeneratorPerlin temperatureNoise;
+~ 	protected static NoiseGeneratorPerlin GRASS_COLOR_NOISE;
+~ 	protected static WorldGenDoublePlant DOUBLE_PLANT_GENERATOR;
 
-> DELETE  11  @  11 : 12
+> CHANGE  81 : 82  @  81 : 82
 
-> DELETE  7  @  7 : 10
+~ 	public WorldGenAbstractTree genBigTreeChance(EaglercraftRandom rand) {
 
-> DELETE  12  @  12 : 15
+> CHANGE  3 : 4  @  3 : 4
 
-> DELETE  2  @  2 : 3
+~ 	public WorldGenerator getRandomWorldGenForGrass(EaglercraftRandom rand) {
 
-> DELETE  16  @  16 : 20
-
-> CHANGE  21 : 22  @  21 : 30
+> CHANGE  3 : 4  @  3 : 4
 
 ~ 	public BlockFlower.EnumFlowerType pickRandomFlower(EaglercraftRandom rand, BlockPos pos) {
 
-> DELETE  94  @  94 : 98
+> CHANGE  94 : 95  @  94 : 95
 
-> CHANGE  16 : 18  @  16 : 18
+~ 	public void decorate(World worldIn, EaglercraftRandom rand, BlockPos pos) {
+
+> CHANGE  19 : 21  @  19 : 21
 
 ~ 	public void genTerrainBlocks(World worldIn, EaglercraftRandom rand, ChunkPrimer chunkPrimerIn, int parInt1,
 ~ 			int parInt2, double parDouble1) {
@@ -101,46 +93,9 @@
 ~ 	public final void generateBiomeTerrain(World worldIn, EaglercraftRandom rand, ChunkPrimer chunkPrimerIn,
 ~ 			int parInt1, int parInt2, double parDouble1) {
 
-> CHANGE  101 : 214  @  101 : 102
+> CHANGE  101 : 177  @  101 : 102
 
-~ 	public static class Height {
-~ 		public float rootHeight;
-~ 		public float variation;
-~ 
-~ 		public Height(float rootHeightIn, float variationIn) {
-~ 			this.rootHeight = rootHeightIn;
-~ 			this.variation = variationIn;
-~ 		}
-~ 
-~ 		public BiomeGenBase.Height attenuate() {
-~ 			return new BiomeGenBase.Height(this.rootHeight * 0.8F, this.variation * 0.6F);
-~ 		}
-~ 	}
-~ 
-~ 	public static class SpawnListEntry extends WeightedRandom.Item {
-~ 		public Class<? extends EntityLiving> entityClass;
-~ 		public int minGroupCount;
-~ 		public int maxGroupCount;
-~ 
-~ 		public SpawnListEntry(Class<? extends EntityLiving> entityclassIn, int weight, int groupCountMin,
-~ 				int groupCountMax) {
-~ 			super(weight);
-~ 			this.entityClass = entityclassIn;
-~ 			this.minGroupCount = groupCountMin;
-~ 			this.maxGroupCount = groupCountMax;
-~ 		}
-~ 
-~ 		public String toString() {
-~ 			return this.entityClass.getSimpleName() + "*(" + this.minGroupCount + "-" + this.maxGroupCount + "):"
-~ 					+ this.itemWeight;
-~ 		}
-~ 	}
-~ 
-~ 	public static enum TempCategory {
-~ 		OCEAN, COLD, MEDIUM, WARM;
-~ 	}
-~ 
-~ 	public static void bootstrap() {
+~ 	public static void doBootstrap() {
 ~ 		ocean = (new BiomeGenOcean(0)).setColor(112).setBiomeName("Ocean").setHeight(height_Oceans);
 ~ 		plains = (new BiomeGenPlains(1)).setColor(9286496).setBiomeName("Plains");
 ~ 		desert = (new BiomeGenDesert(2)).setColor(16421912).setBiomeName("Desert").setDisableRain()
@@ -217,8 +172,14 @@
 ~ 		field_180279_ad = ocean;
 ~ 
 
-> DELETE  41  @  41 : 44
+> INSERT  22 : 24  @  22
 
-> DELETE  2  @  2 : 38
++ 		explorationBiomesList.clear();
++ 
+
+> CHANGE  19 : 21  @  19 : 21
+
+~ 		temperatureNoise = new NoiseGeneratorPerlin(new EaglercraftRandom(1234L), 1);
+~ 		GRASS_COLOR_NOISE = new NoiseGeneratorPerlin(new EaglercraftRandom(2345L), 1);
 
 > EOF

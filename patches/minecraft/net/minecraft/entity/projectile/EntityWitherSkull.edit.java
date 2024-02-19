@@ -5,12 +5,6 @@
 # Version: 1.0
 # Author: lax1dude
 
-> DELETE  6  @  6 : 9
-
-> DELETE  3  @  3 : 4
-
-> DELETE  38  @  38 : 52
-
-> DELETE  1  @  1 : 21
+> DELETE  6  @  6 : 7
 
 > EOF

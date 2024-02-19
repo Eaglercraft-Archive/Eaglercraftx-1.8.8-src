@@ -9,11 +9,7 @@
 
 + import net.minecraft.client.Minecraft;
 
-> DELETE  39  @  39 : 44
-
-> DELETE  126  @  126 : 139
-
-> INSERT  6 : 15  @  6
+> INSERT  189 : 198  @  189
 
 + 
 + 	public boolean eaglerEmissiveFlag = false;

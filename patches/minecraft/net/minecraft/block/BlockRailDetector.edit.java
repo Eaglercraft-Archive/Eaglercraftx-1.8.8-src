@@ -7,14 +7,16 @@
 
 > DELETE  2  @  2 : 3
 
-> CHANGE  1 : 4  @  1 : 3
+> CHANGE  1 : 5  @  1 : 3
 
 ~ 
 ~ import com.google.common.base.Predicate;
 ~ 
+~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 
-> CHANGE  18 : 19  @  18 : 27
+> CHANGE  18 : 20  @  18 : 27
 
+~ 
 ~ 	public static PropertyEnum<BlockRailBase.EnumRailDirection> SHAPE;
 
 > INSERT  9 : 21  @  9
@@ -32,6 +34,12 @@
 + 	}
 + 
 
-> DELETE  8  @  8 : 25
+> CHANGE  16 : 17  @  16 : 17
+
+~ 	public void randomTick(World var1, BlockPos var2, IBlockState var3, EaglercraftRandom var4) {
+
+> CHANGE  2 : 3  @  2 : 3
+
+~ 	public void updateTick(World world, BlockPos blockpos, IBlockState iblockstate, EaglercraftRandom var4) {
 
 > EOF

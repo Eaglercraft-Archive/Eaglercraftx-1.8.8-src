@@ -9,10 +9,4 @@
 
 ~ 
 
-> DELETE  44  @  44 : 48
-
-> DELETE  2  @  2 : 16
-
-> DELETE  45  @  45 : 57
-
 > EOF

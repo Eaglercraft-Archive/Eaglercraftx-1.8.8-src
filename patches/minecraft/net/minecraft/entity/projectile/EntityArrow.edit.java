@@ -5,18 +5,19 @@
 # Version: 1.0
 # Author: lax1dude
 
-> INSERT  3 : 4  @  3
+> INSERT  156 : 158  @  156
 
++ 	public boolean isChair = false;
 + 
 
-> DELETE  9  @  9 : 12
+> INSERT  2 : 9  @  2
 
-> DELETE  1  @  1 : 2
-
-> DELETE  250  @  250 : 254
-
-> DELETE  17  @  17 : 24
-
-> DELETE  141  @  141 : 160
++ 		if (isChair) {
++ 			if (!(riddenByEntity instanceof EntityPlayer)) {
++ 				isChair = false;
++ 				setDead();
++ 			}
++ 			return;
++ 		}
 
 > EOF

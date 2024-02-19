@@ -14,15 +14,11 @@
 
 ~ 
 
-> DELETE  10  @  10 : 11
-
-> CHANGE  42 : 43  @  42 : 43
+> CHANGE  53 : 54  @  53 : 54
 
 ~ 	public void updateTick(World world, BlockPos blockpos, IBlockState iblockstate, EaglercraftRandom random) {
 
-> DELETE  60  @  60 : 77
-
-> CHANGE  5 : 6  @  5 : 6
+> CHANGE  82 : 83  @  82 : 83
 
 ~ 	public Item getItemDropped(IBlockState var1, EaglercraftRandom var2, int var3) {
 

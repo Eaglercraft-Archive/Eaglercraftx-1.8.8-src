@@ -5,22 +5,19 @@
 # Version: 1.0
 # Author: lax1dude
 
-> CHANGE  3 : 5  @  3 : 4
+> CHANGE  3 : 4  @  3 : 4
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
-~ 
 
-> DELETE  9  @  9 : 10
+> CHANGE  44 : 45  @  44 : 45
 
-> DELETE  2  @  2 : 3
+~ 	public WorldGenAbstractTree genBigTreeChance(EaglercraftRandom var1) {
 
-> DELETE  19  @  19 : 24
+> CHANGE  11 : 12  @  11 : 12
 
-> DELETE  1  @  1 : 5
+~ 	public void decorate(World world, EaglercraftRandom random, BlockPos blockpos) {
 
-> DELETE  2  @  2 : 6
-
-> CHANGE  8 : 10  @  8 : 13
+> CHANGE  3 : 5  @  3 : 4
 
 ~ 	public void genTerrainBlocks(World world, EaglercraftRandom random, ChunkPrimer chunkprimer, int i, int j,
 ~ 			double d0) {

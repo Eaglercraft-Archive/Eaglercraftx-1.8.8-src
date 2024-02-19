@@ -1,10 +1,10 @@
 package net.lax1dude.eaglercraft.v1_8.sp.server.socket;
 
 import net.lax1dude.eaglercraft.v1_8.sp.server.EaglerMinecraftServer;
-import net.lax1dude.eaglercraft.v1_8.sp.server.classes.net.minecraft.network.handshake.INetHandlerHandshakeServer;
-import net.lax1dude.eaglercraft.v1_8.sp.server.classes.net.minecraft.network.handshake.client.C00Handshake;
-import net.lax1dude.eaglercraft.v1_8.sp.server.classes.net.minecraft.server.network.NetHandlerLoginServer;
-import net.lax1dude.eaglercraft.v1_8.sp.server.classes.net.minecraft.util.IChatComponent;
+import net.minecraft.network.handshake.INetHandlerHandshakeServer;
+import net.minecraft.network.handshake.client.C00Handshake;
+import net.minecraft.server.network.NetHandlerLoginServer;
+import net.minecraft.util.IChatComponent;
 
 /**
  * Copyright (c) 2023-2024 lax1dude. All Rights Reserved.

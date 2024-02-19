@@ -5,29 +5,31 @@
 # Version: 1.0
 # Author: lax1dude
 
-> CHANGE  2 : 3  @  2 : 5
+> DELETE  4  @  4 : 5
 
-~ import java.util.ArrayList;
+> INSERT  1 : 2  @  1
 
-> CHANGE  3 : 4  @  3 : 4
++ import java.util.LinkedList;
+
+> CHANGE  2 : 4  @  2 : 3
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
+~ 
 
-> CHANGE  1 : 8  @  1 : 2
+> CHANGE  1 : 3  @  1 : 2
 
 ~ 
-~ import com.google.common.base.Predicate;
-~ import com.google.common.collect.Maps;
-~ 
-~ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
-~ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
-~ import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.DeferredStateManager;
+~ import net.lax1dude.eaglercraft.v1_8.sp.server.EaglerMinecraftServer;
 
 > DELETE  18  @  18 : 19
 
-> DELETE  1  @  1 : 5
+> DELETE  2  @  2 : 5
 
-> DELETE  1  @  1 : 4
+> CHANGE  1 : 4  @  1 : 4
+
+~ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
+~ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
+~ import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.DeferredStateManager;
 
 > CHANGE  24 : 25  @  24 : 25
 
@@ -35,9 +37,21 @@
 
 > CHANGE  8 : 9  @  8 : 9
 
-~ 		this.tileEntityPosQueue = new ArrayList();
+~ 		this.tileEntityPosQueue = new LinkedList();
 
-> CHANGE  342 : 351  @  342 : 346
+> INSERT  135 : 138  @  135
+
++ 		if (!this.worldObj.isRemote) {
++ 			++EaglerMinecraftServer.counterLightUpdate;
++ 		}
+
+> INSERT  146 : 149  @  146
+
++ 			if (!this.worldObj.isRemote) {
++ 				++EaglerMinecraftServer.counterLightUpdate;
++ 			}
+
+> CHANGE  61 : 70  @  61 : 65
 
 ~ 		try {
 ~ 			if (pos.getY() >= 0 && pos.getY() >> 4 < this.storageArrays.length) {
@@ -96,13 +110,7 @@
 + 			});
 + 			throw new ReportedException(crashreport);
 
-> CHANGE  46 : 47  @  46 : 49
-
-~ 				if (block1 instanceof ITileEntityProvider) {
-
-> DELETE  33  @  33 : 37
-
-> CHANGE  24 : 26  @  24 : 25
+> CHANGE  110 : 112  @  110 : 111
 
 ~ 		return extendedblockstorage == null
 ~ 				? (this.canSeeSky(blockpos) ? enumskyblock.defaultLightValue : getNoSkyLightValue())
@@ -137,18 +145,12 @@
 ~ 	public EaglercraftRandom getRandomWithSeed(long i) {
 ~ 		return new EaglercraftRandom(this.worldObj.getSeed() + (long) (this.xPosition * this.xPosition * 4987142)
 
-> CHANGE  83 : 84  @  83 : 84
-
-~ 			this.recheckGaps(true);
-
-> CHANGE  8 : 9  @  8 : 9
+> CHANGE  92 : 93  @  92 : 93
 
 ~ 			BlockPos blockpos = (BlockPos) this.tileEntityPosQueue.remove(0);
 
-> CHANGE  109 : 110  @  109 : 110
+> CHANGE  113 : 114  @  113 : 114
 
-~ 	public BiomeGenBase getBiome(BlockPos pos) {
-
-> DELETE  3  @  3 : 9
+~ 		if (chunkManager != null && k == 255) {
 
 > EOF

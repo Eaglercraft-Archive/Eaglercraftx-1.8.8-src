@@ -10,18 +10,20 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
 
-> DELETE  4  @  4 : 5
-
-> CHANGE  8 : 9  @  8 : 9
+> CHANGE  13 : 14  @  13 : 14
 
 ~ 	public void updateTick(World world, BlockPos blockpos, IBlockState var3, EaglercraftRandom random) {
 
-> DELETE  52  @  52 : 69
+> CHANGE  52 : 53  @  52 : 53
 
-> CHANGE  4 : 5  @  4 : 5
+~ 	public boolean generateBigMushroom(World worldIn, BlockPos pos, IBlockState state, EaglercraftRandom rand) {
+
+> CHANGE  20 : 21  @  20 : 21
 
 ~ 	public boolean canUseBonemeal(World var1, EaglercraftRandom random, BlockPos var3, IBlockState var4) {
 
-> DELETE  2  @  2 : 6
+> CHANGE  3 : 4  @  3 : 4
+
+~ 	public void grow(World world, EaglercraftRandom random, BlockPos blockpos, IBlockState iblockstate) {
 
 > EOF

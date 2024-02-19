@@ -12,16 +12,20 @@ import net.lax1dude.eaglercraft.v1_8.internal.PlatformWebRTC;
 import org.apache.commons.lang3.StringUtils;
 
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
+import net.lax1dude.eaglercraft.v1_8.EaglercraftSoundManager;
 import net.lax1dude.eaglercraft.v1_8.internal.EnumEaglerConnectionState;
 import net.lax1dude.eaglercraft.v1_8.internal.IPCPacketData;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformApplication;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 import net.lax1dude.eaglercraft.v1_8.profile.EaglerProfile;
+import net.lax1dude.eaglercraft.v1_8.socket.EaglercraftNetworkManager;
 import net.lax1dude.eaglercraft.v1_8.sp.internal.ClientPlatformSingleplayer;
 import net.lax1dude.eaglercraft.v1_8.sp.ipc.*;
+import net.lax1dude.eaglercraft.v1_8.sp.lan.LANClientNetworkManager;
 import net.lax1dude.eaglercraft.v1_8.sp.lan.LANServerController;
 import net.lax1dude.eaglercraft.v1_8.sp.socket.ClientIntegratedServerNetworkManager;
+import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IProgressUpdate;
 import net.minecraft.util.StringTranslate;
@@ -528,9 +532,10 @@ public class SingleplayerServerController implements ISaveFormat {
 	}
 
 	@Override
-	public void renameWorld(String var1, String var2) {
+	public boolean renameWorld(String var1, String var2) {
 		sendIPCPacket(new IPCPacket06RenameWorldNBT(var1, var2, false));
 		statusState = IntegratedServerState.WORLD_RENAMING;
+		return true;
 	}
 
 	public static void duplicateWorld(String var1, String var2) {
@@ -582,5 +587,10 @@ public class SingleplayerServerController implements ISaveFormat {
 
 	public static void configureLAN(net.minecraft.world.WorldSettings.GameType enumGameType, boolean allowCommands) {
 		sendIPCPacket(new IPCPacket17ConfigureLAN(enumGameType.getID(), allowCommands, LANServerController.currentICEServers));
+	}
+
+	public static boolean isClientInEaglerSingleplayerOrLAN() {
+		Minecraft mc = Minecraft.getMinecraft();
+		return mc != null && mc.thePlayer != null && mc.thePlayer.sendQueue.isClientInEaglerSingleplayerOrLAN();
 	}
 }

@@ -17,14 +17,14 @@ import net.lax1dude.eaglercraft.v1_8.netty.Unpooled;
 import net.lax1dude.eaglercraft.v1_8.socket.CompressionNotSupportedException;
 import net.lax1dude.eaglercraft.v1_8.sp.SingleplayerServerController;
 import net.lax1dude.eaglercraft.v1_8.sp.server.EaglerIntegratedServerWorker;
-import net.lax1dude.eaglercraft.v1_8.sp.server.classes.net.minecraft.network.EnumConnectionState;
-import net.lax1dude.eaglercraft.v1_8.sp.server.classes.net.minecraft.network.EnumPacketDirection;
-import net.lax1dude.eaglercraft.v1_8.sp.server.classes.net.minecraft.network.INetHandler;
-import net.lax1dude.eaglercraft.v1_8.sp.server.classes.net.minecraft.network.Packet;
-import net.lax1dude.eaglercraft.v1_8.sp.server.classes.net.minecraft.network.PacketBuffer;
-import net.lax1dude.eaglercraft.v1_8.sp.server.classes.net.minecraft.util.ChatComponentText;
-import net.lax1dude.eaglercraft.v1_8.sp.server.classes.net.minecraft.util.IChatComponent;
-import net.lax1dude.eaglercraft.v1_8.sp.server.classes.net.minecraft.util.ITickable;
+import net.minecraft.network.EnumConnectionState;
+import net.minecraft.network.EnumPacketDirection;
+import net.minecraft.network.INetHandler;
+import net.minecraft.network.Packet;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.IChatComponent;
+import net.minecraft.util.ITickable;
 import net.lax1dude.eaglercraft.v1_8.sp.server.internal.ServerPlatformSingleplayer;
 
 /**

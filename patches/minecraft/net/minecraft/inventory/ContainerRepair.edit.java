@@ -5,20 +5,11 @@
 # Version: 1.0
 # Author: lax1dude
 
-> CHANGE  4 : 9  @  4 : 6
+> DELETE  12  @  12 : 18
 
-~ 
-~ import org.apache.commons.lang3.StringUtils;
-~ 
+> CHANGE  4 : 6  @  4 : 6
+
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
-
-> DELETE  6  @  6 : 12
-
-> DELETE  3  @  3 : 6
-
-> DELETE  60  @  60 : 76
-
-> DELETE  219  @  219 : 232
 
 > EOF

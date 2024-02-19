@@ -12,7 +12,7 @@ import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.EaglercraftVersion;
 import net.lax1dude.eaglercraft.v1_8.opengl.EaglercraftGPU;
 import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
-import net.lax1dude.eaglercraft.v1_8.sp.server.classes.net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.client.gui.GuiSlot;
 import net.minecraft.util.ResourceLocation;
 

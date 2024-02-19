@@ -169,7 +169,7 @@
 
 > CHANGE  2 : 3  @  2 : 5
 
-~ 		StringTranslate.doCLINIT();
+~ 		StringTranslate.initClient();
 
 > CHANGE  1 : 2  @  1 : 9
 
@@ -714,7 +714,11 @@
 
 > DELETE  36  @  36 : 41
 
-> INSERT  14 : 16  @  14
+> CHANGE  12 : 13  @  12 : 13
+
+~ 		return this.addScheduledTaskFuture(new Runnable() {
+
+> INSERT  1 : 3  @  1
 
 + 				Minecraft.this.loadingScreen.eaglerShow(I18n.format("resourcePack.load.refreshing"),
 + 						I18n.format("resourcePack.load.pleaseWait"));
@@ -766,16 +770,31 @@
 
 > DELETE  4  @  4 : 12
 
-> CHANGE  11 : 15  @  11 : 23
+> CHANGE  9 : 10  @  9 : 10
+
+~ 	public <V> ListenableFuture<V> addScheduledTaskFuture(Callable<V> callableToSchedule) {
+
+> CHANGE  1 : 5  @  1 : 13
 
 ~ 		ListenableFutureTask listenablefuturetask = ListenableFutureTask.create(callableToSchedule);
 ~ 		synchronized (this.scheduledTasks) {
 ~ 			this.scheduledTasks.add(listenablefuturetask);
 ~ 			return listenablefuturetask;
 
-> DELETE  8  @  8 : 12
+> CHANGE  3 : 4  @  3 : 4
 
-> DELETE  24  @  24 : 32
+~ 	public ListenableFuture<Object> addScheduledTaskFuture(Runnable runnableToSchedule) {
+
+> CHANGE  1 : 2  @  1 : 2
+
+~ 		return this.addScheduledTaskFuture(Executors.callable(runnableToSchedule));
+
+> CHANGE  2 : 4  @  2 : 4
+
+~ 	public void addScheduledTask(Runnable runnableToSchedule) {
+~ 		this.addScheduledTaskFuture(Executors.callable(runnableToSchedule));
+
+> DELETE  26  @  26 : 34
 
 > INSERT  7 : 27  @  7
 

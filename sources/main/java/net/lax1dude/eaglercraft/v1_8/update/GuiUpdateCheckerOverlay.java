@@ -1,9 +1,10 @@
 package net.lax1dude.eaglercraft.v1_8.update;
 
+import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.opengl.EaglercraftGPU;
 import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 import net.lax1dude.eaglercraft.v1_8.sp.lan.LANServerController;
-import net.lax1dude.eaglercraft.v1_8.sp.server.classes.net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
@@ -55,6 +56,9 @@ public class GuiUpdateCheckerOverlay extends Gui {
 	}
 
 	public void setResolution(Minecraft mc, int w, int h) {
+		if(!UpdateService.supported()) {
+			return;
+		}
 		this.mc = mc;
 		this.width = w;
 		this.height = h;
@@ -65,6 +69,9 @@ public class GuiUpdateCheckerOverlay extends Gui {
 	}
 
 	public void drawScreen(int mx, int my, float partialTicks) {
+		if(!UpdateService.supported()) {
+			return;
+		}
 		UpdateProgressStruct progressState = UpdateService.getUpdatingStatus();
 		if(progressState.isBusy) {
 			drawScreenBusy(mx, my, partialTicks, progressState);
@@ -159,6 +166,9 @@ public class GuiUpdateCheckerOverlay extends Gui {
 	}
 
 	public void drawScreenBusy(int mx, int my, float partialTicks, UpdateProgressStruct progressState) {
+		if(!UpdateService.supported()) {
+			return;
+		}
 		checkForUpdatesButton.visible = false;
 		startDownloadButton.visible = false;
 		viewAllUpdatesButton.visible = false;
@@ -207,6 +217,9 @@ public class GuiUpdateCheckerOverlay extends Gui {
 	}
 
 	public void mouseClicked(int mx, int my, int btn) {
+		if(!UpdateService.supported()) {
+			return;
+		}
 		if (btn == 0) {
 			if(checkForUpdatesButton.mousePressed(mc, mx, my)) {
 				mc.gameSettings.enableUpdateSvc = !mc.gameSettings.enableUpdateSvc;

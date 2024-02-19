@@ -16,8 +16,4 @@
 
 > DELETE  9  @  9 : 11
 
-> DELETE  26  @  26 : 38
-
-> DELETE  137  @  137 : 152
-
 > EOF

@@ -19,11 +19,7 @@
 
 > DELETE  8  @  8 : 13
 
-> CHANGE  123 : 124  @  123 : 126
-
-~ 			// multiplayer only
-
-> CHANGE  101 : 103  @  101 : 103
+> CHANGE  227 : 229  @  227 : 229
 
 ~ 		AttributeModifier attributemodifier = new AttributeModifier(EaglercraftUUID.fromString(parString1),
 ~ 				this.getName(), parDouble1, parInt1);

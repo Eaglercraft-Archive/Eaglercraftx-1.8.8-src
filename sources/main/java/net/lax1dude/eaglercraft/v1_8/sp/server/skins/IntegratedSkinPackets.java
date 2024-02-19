@@ -3,7 +3,7 @@ package net.lax1dude.eaglercraft.v1_8.sp.server.skins;
 import java.io.IOException;
 
 import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
-import net.lax1dude.eaglercraft.v1_8.sp.server.classes.net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.EntityPlayerMP;
 
 /**
  * Copyright (c) 2022-2024 lax1dude. All Rights Reserved.

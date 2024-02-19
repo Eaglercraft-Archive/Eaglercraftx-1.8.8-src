@@ -8,10 +8,10 @@ import org.apache.commons.lang3.StringUtils;
 import com.google.common.collect.Lists;
 
 import net.lax1dude.eaglercraft.v1_8.internal.vfs2.VFile2;
-import net.lax1dude.eaglercraft.v1_8.sp.server.classes.net.minecraft.world.storage.ISaveHandler;
-import net.lax1dude.eaglercraft.v1_8.sp.server.classes.net.minecraft.world.storage.SaveFormatComparator;
-import net.lax1dude.eaglercraft.v1_8.sp.server.classes.net.minecraft.world.storage.SaveFormatOld;
-import net.lax1dude.eaglercraft.v1_8.sp.server.classes.net.minecraft.world.storage.WorldInfo;
+import net.minecraft.world.storage.ISaveHandler;
+import net.minecraft.world.storage.SaveFormatComparator;
+import net.minecraft.world.storage.SaveFormatOld;
+import net.minecraft.world.storage.WorldInfo;
 
 /**
  * Copyright (c) 2023-2024 lax1dude. All Rights Reserved.
@@ -62,7 +62,7 @@ public class EaglerSaveFormat extends SaveFormatOld {
 
 					arraylist.add(new SaveFormatComparator(s, s1, worldinfo.getLastTimePlayed(), 0l,
 							worldinfo.getGameType(), flag, worldinfo.isHardcoreModeEnabled(),
-							worldinfo.areCommandsAllowed()));
+							worldinfo.areCommandsAllowed(), null));
 				}
 			}
 		}

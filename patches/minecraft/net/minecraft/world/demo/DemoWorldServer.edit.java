@@ -5,17 +5,14 @@
 # Version: 1.0
 # Author: lax1dude
 
-> CHANGE  2 : 3  @  2 : 5
+> INSERT  10 : 12  @  10
 
-~ import net.lax1dude.eaglercraft.v1_8.EaglercraftVersion;
++ import net.lax1dude.eaglercraft.v1_8.EaglercraftVersion;
++ 
 
-> DELETE  2  @  2 : 4
+> CHANGE  1 : 3  @  1 : 2
 
-> CHANGE  1 : 3  @  1 : 3
-
-~ public class DemoWorldServer {
+~ 
 ~ 	private static final long demoWorldSeed = EaglercraftVersion.demoWorldSeed;
-
-> DELETE  2  @  2 : 8
 
 > EOF

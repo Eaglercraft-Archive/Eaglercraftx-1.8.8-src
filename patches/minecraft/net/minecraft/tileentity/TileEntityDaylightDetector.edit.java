@@ -5,8 +5,6 @@
 # Version: 1.0
 # Author: lax1dude
 
-> DELETE  2  @  2 : 4
-
-> DELETE  4  @  4 : 11
+> DELETE  3  @  3 : 4
 
 > EOF

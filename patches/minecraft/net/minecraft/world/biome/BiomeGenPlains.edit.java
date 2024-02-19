@@ -5,19 +5,18 @@
 # Version: 1.0
 # Author: lax1dude
 
-> CHANGE  2 : 4  @  2 : 4
+> CHANGE  2 : 3  @  2 : 3
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
-~ 
 
-> DELETE  3  @  3 : 5
+> DELETE  5  @  5 : 6
 
-> DELETE  9  @  9 : 12
-
-> CHANGE  2 : 3  @  2 : 3
+> CHANGE  14 : 15  @  14 : 15
 
 ~ 	public BlockFlower.EnumFlowerType pickRandomFlower(EaglercraftRandom random, BlockPos blockpos) {
 
-> DELETE  24  @  24 : 57
+> CHANGE  24 : 25  @  24 : 25
+
+~ 	public void decorate(World world, EaglercraftRandom random, BlockPos blockpos) {
 
 > EOF

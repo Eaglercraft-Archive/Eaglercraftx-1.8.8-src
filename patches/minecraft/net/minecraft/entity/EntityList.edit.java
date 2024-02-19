@@ -27,7 +27,12 @@
 
 + 	private static final Map<Integer, EntityConstructor<? extends Entity>> idToConstructorMapping = Maps.newHashMap();
 
-> CHANGE  4 : 6  @  4 : 5
+> INSERT  1 : 3  @  1
+
++ 	private static final Map<Class<? extends Entity>, EntityConstructor<? extends Entity>> classToConstructorMapping = Maps
++ 			.newHashMap();
+
+> CHANGE  3 : 5  @  3 : 4
 
 ~ 	private static void addMapping(Class<? extends Entity> entityClass,
 ~ 			EntityConstructor<? extends Entity> entityConstructor, String entityName, int id) {
@@ -40,7 +45,11 @@
 
 + 			idToConstructorMapping.put(Integer.valueOf(id), entityConstructor);
 
-> CHANGE  5 : 7  @  5 : 6
+> INSERT  1 : 2  @  1
+
++ 			classToConstructorMapping.put(entityClass, entityConstructor);
+
+> CHANGE  4 : 6  @  4 : 5
 
 ~ 	private static void addMapping(Class<? extends Entity> entityClass,
 ~ 			EntityConstructor<? extends Entity> entityConstructor, String entityName, int entityID, int baseColor,
@@ -59,7 +68,33 @@
 
 ~ 			logger.error("Could not create entity", exception);
 
-> CHANGE  13 : 16  @  13 : 17
+> INSERT  5 : 28  @  5
+
++ 	public static Entity createEntityByClass(Class<? extends Entity> entityClass, World worldIn) {
++ 		Entity entity = null;
++ 
++ 		try {
++ 			EntityConstructor<? extends Entity> constructor = classToConstructorMapping.get(entityClass);
++ 			if (constructor != null) {
++ 				entity = constructor.createEntity(worldIn);
++ 			}
++ 		} catch (Exception exception) {
++ 			logger.error("Could not create entity", exception);
++ 		}
++ 
++ 		return entity;
++ 	}
++ 
++ 	public static Entity createEntityByClassUnsafe(Class<? extends Entity> entityClass, World worldIn) {
++ 		EntityConstructor<? extends Entity> constructor = classToConstructorMapping.get(entityClass);
++ 		if (constructor != null) {
++ 			return constructor.createEntity(worldIn);
++ 		}
++ 		return null;
++ 	}
++ 
+
+> CHANGE  8 : 11  @  8 : 12
 
 ~ 			EntityConstructor<? extends Entity> constructor = stringToConstructorMapping.get(nbt.getString("id"));
 ~ 			if (constructor != null) {
@@ -105,7 +140,7 @@
 ~ 		addMapping(EntityEnderEye.class, (w) -> new EntityEnderEye(w), "EyeOfEnderSignal", 15);
 ~ 		addMapping(EntityPotion.class, (w) -> new EntityPotion(w), "ThrownPotion", 16);
 ~ 		addMapping(EntityExpBottle.class, (w) -> new EntityExpBottle(w), "ThrownExpBottle", 17);
-~ 		addMapping(EntityItemFrame.class, (w) -> new EntityItem(w), "ItemFrame", 18);
+~ 		addMapping(EntityItemFrame.class, (w) -> new EntityItemFrame(w), "ItemFrame", 18);
 ~ 		addMapping(EntityWitherSkull.class, (w) -> new EntityWitherSkull(w), "WitherSkull", 19);
 ~ 		addMapping(EntityTNTPrimed.class, (w) -> new EntityTNTPrimed(w), "PrimedTnt", 20);
 ~ 		addMapping(EntityFallingBlock.class, (w) -> new EntityFallingBlock(w), "FallingSand", 21);

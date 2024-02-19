@@ -24,7 +24,7 @@ in vec3 v_position3f;
 
 layout(location = 0) out vec4 output4f;
 
-#define SKY_BRIGHTNESS 0.015
+#define SKY_BRIGHTNESS 0.05
 
 uniform sampler2D u_skyTexture;
 

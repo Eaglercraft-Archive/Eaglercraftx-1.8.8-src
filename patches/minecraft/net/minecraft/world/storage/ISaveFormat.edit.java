@@ -11,4 +11,8 @@
 
 ~ 	List<SaveFormatComparator> getSaveList();
 
+> CHANGE  9 : 10  @  9 : 10
+
+~ 	boolean renameWorld(String var1, String var2);
+
 > EOF

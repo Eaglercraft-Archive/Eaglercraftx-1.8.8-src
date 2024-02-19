@@ -5,20 +5,18 @@
 # Version: 1.0
 # Author: lax1dude
 
-> DELETE  2  @  2 : 3
+> CHANGE  2 : 3  @  2 : 3
 
-> DELETE  1  @  1 : 3
+~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 
-> DELETE  2  @  2 : 9
+> DELETE  11  @  11 : 12
 
-> DELETE  4  @  4 : 7
+> CHANGE  118 : 119  @  118 : 119
 
-> DELETE  3  @  3 : 4
+~ 				EaglercraftRandom random = this.field_179485_a.getRNG();
 
-> DELETE  4  @  4 : 10
+> CHANGE  62 : 63  @  62 : 63
 
-> DELETE  33  @  33 : 45
-
-> DELETE  35  @  35 : 144
+~ 				EaglercraftRandom random = this.silverfish.getRNG();
 
 > EOF

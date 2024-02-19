@@ -5,63 +5,31 @@
 # Version: 1.0
 # Author: lax1dude
 
-> DELETE  2  @  2 : 7
+> CHANGE  6 : 7  @  6 : 7
 
-> CHANGE  1 : 6  @  1 : 2
+~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
+
+> CHANGE  1 : 2  @  1 : 2
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
-~ import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.DynamicLightManager;
-~ 
-~ import com.google.common.collect.Sets;
-~ 
 
-> DELETE  1  @  1 : 2
+> DELETE  16  @  16 : 18
 
-> INSERT  1 : 2  @  1
-
-+ import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-
-> DELETE  3  @  3 : 11
-
-> DELETE  1  @  1 : 4
-
-> DELETE  1  @  1 : 2
-
-> DELETE  3  @  3 : 4
-
-> DELETE  6  @  6 : 7
-
-> CHANGE  4 : 6  @  4 : 5
+> CHANGE  17 : 19  @  17 : 18
 
 ~ 	private static final EaglercraftUUID attackingSpeedBoostModifierUUID = EaglercraftUUID
 ~ 			.fromString("020E0DFB-87AE-4653-9556-831010E291A0");
 
-> DELETE  9  @  9 : 24
-
-> DELETE  38  @  38 : 54
-
-> CHANGE  5 : 12  @  5 : 14
-
-~ 		for (int i = 0; i < 2; ++i) {
-~ 			this.worldObj.spawnParticle(EnumParticleTypes.PORTAL,
-~ 					this.posX + (this.rand.nextDouble() - 0.5D) * (double) this.width,
-~ 					this.posY + this.rand.nextDouble() * (double) this.height - 0.25D,
-~ 					this.posZ + (this.rand.nextDouble() - 0.5D) * (double) this.width,
-~ 					(this.rand.nextDouble() - 0.5D) * 2.0D, -this.rand.nextDouble(),
-~ 					(this.rand.nextDouble() - 0.5D) * 2.0D, new int[0]);
-
-> DELETE  1  @  1 : 2
-
-> DELETE  143  @  143 : 146
-
-> CHANGE  2 : 3  @  2 : 8
-
-~ 					this.isAggressive = true;
-
-> CHANGE  32 : 33  @  32 : 33
+> CHANGE  280 : 281  @  280 : 281
 
 ~ 	public static void bootstrap() {
 
-> DELETE  16  @  16 : 167
+> CHANGE  115 : 116  @  115 : 116
+
+~ 			EaglercraftRandom random = this.enderman.getRNG();
+
+> CHANGE  36 : 37  @  36 : 37
+
+~ 			EaglercraftRandom random = this.enderman.getRNG();
 
 > EOF

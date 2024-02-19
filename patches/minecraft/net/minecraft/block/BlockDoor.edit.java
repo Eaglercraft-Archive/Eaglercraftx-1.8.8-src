@@ -26,11 +26,7 @@
 + 	}
 + 
 
-> CHANGE  135 : 136  @  135 : 140
-
-~ 			if (!flag1) {
-
-> CHANGE  15 : 16  @  15 : 16
+> CHANGE  155 : 156  @  155 : 156
 
 ~ 	public Item getItemDropped(IBlockState iblockstate, EaglercraftRandom var2, int var3) {
 

@@ -14,23 +14,9 @@
 
 + import net.minecraft.client.Minecraft;
 
-> DELETE  4  @  4 : 5
+> DELETE  13  @  13 : 15
 
-> DELETE  2  @  2 : 3
-
-> DELETE  5  @  5 : 7
-
-> DELETE  68  @  68 : 72
-
-> DELETE  21  @  21 : 24
-
-> DELETE  136  @  136 : 145
-
-> DELETE  1  @  1 : 36
-
-> DELETE  11  @  11 : 19
-
-> INSERT  66 : 75  @  66
+> INSERT  362 : 371  @  362
 
 + 
 + 	public boolean eaglerEmissiveFlag = false;

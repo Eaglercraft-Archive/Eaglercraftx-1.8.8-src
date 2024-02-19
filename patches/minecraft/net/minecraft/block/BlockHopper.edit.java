@@ -13,10 +13,4 @@
 ~ import com.google.common.base.Predicate;
 ~ 
 
-> DELETE  14  @  14 : 15
-
-> CHANGE  77 : 78  @  77 : 88
-
-~ 		return true;
-
 > EOF

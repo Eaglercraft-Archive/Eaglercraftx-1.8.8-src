@@ -5,16 +5,11 @@
 # Version: 1.0
 # Author: lax1dude
 
-> CHANGE  2 : 4  @  2 : 3
+> CHANGE  2 : 3  @  2 : 3
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
-~ 
 
-> DELETE  1  @  1 : 2
-
-> DELETE  3  @  3 : 5
-
-> DELETE  2  @  2 : 3
+> DELETE  9  @  9 : 10
 
 > CHANGE  10 : 11  @  10 : 11
 
@@ -24,12 +19,8 @@
 
 ~ 	private EaglercraftUUID angerTargetUUID;
 
-> DELETE  14  @  14 : 19
-
-> CHANGE  64 : 65  @  64 : 65
+> CHANGE  83 : 84  @  83 : 84
 
 ~ 			this.angerTargetUUID = EaglercraftUUID.fromString(s);
-
-> DELETE  82  @  82 : 105
 
 > EOF

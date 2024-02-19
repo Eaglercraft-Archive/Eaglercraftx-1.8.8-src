@@ -10,9 +10,7 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
 
-> DELETE  6  @  6 : 7
-
-> CHANGE  8 : 9  @  8 : 10
+> CHANGE  15 : 16  @  15 : 17
 
 ~ 	public static PropertyEnum<BlockSilverfish.EnumType> VARIANT;
 
@@ -23,7 +21,5 @@
 ~ 	}
 ~ 
 ~ 	public int quantityDropped(EaglercraftRandom var1) {
-
-> DELETE  26  @  26 : 37
 
 > EOF

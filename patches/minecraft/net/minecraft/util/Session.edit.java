@@ -11,7 +11,7 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
 ~ import net.lax1dude.eaglercraft.v1_8.mojang.authlib.GameProfile;
 ~ import net.lax1dude.eaglercraft.v1_8.profile.EaglerProfile;
-~ import net.lax1dude.eaglercraft.v1_8.sp.server.classes.net.minecraft.entity.player.EntityPlayer;
+~ import net.minecraft.entity.player.EntityPlayer;
 
 > CHANGE  2 : 3  @  2 : 6
 

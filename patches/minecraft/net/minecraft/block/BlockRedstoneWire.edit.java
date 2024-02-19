@@ -43,9 +43,13 @@
 
 ~ 		ArrayList<BlockPos> arraylist = Lists.newArrayList(this.blocksNeedingUpdate);
 
-> DELETE  80  @  80 : 129
+> DELETE  100  @  100 : 101
 
-> CHANGE  9 : 10  @  9 : 22
+> DELETE  24  @  24 : 25
+
+> DELETE  20  @  20 : 21
+
+> CHANGE  3 : 4  @  3 : 4
 
 ~ 	public Item getItemDropped(IBlockState var1, EaglercraftRandom var2, int var3) {
 

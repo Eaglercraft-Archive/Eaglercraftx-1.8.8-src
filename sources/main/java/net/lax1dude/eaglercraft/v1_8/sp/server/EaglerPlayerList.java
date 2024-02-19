@@ -1,8 +1,8 @@
 package net.lax1dude.eaglercraft.v1_8.sp.server;
 
-import net.lax1dude.eaglercraft.v1_8.sp.server.classes.net.minecraft.entity.player.EntityPlayerMP;
-import net.lax1dude.eaglercraft.v1_8.sp.server.classes.net.minecraft.server.MinecraftServer;
-import net.lax1dude.eaglercraft.v1_8.sp.server.classes.net.minecraft.server.management.ServerConfigurationManager;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.management.ServerConfigurationManager;
 import net.minecraft.nbt.NBTTagCompound;
 
 /**

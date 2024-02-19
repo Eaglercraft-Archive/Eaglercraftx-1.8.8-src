@@ -13,10 +13,8 @@
 ~ import com.google.common.collect.Lists;
 ~ 
 
-> DELETE  69  @  69 : 112
+> DELETE  76  @  76 : 77
 
-> CHANGE  5 : 6  @  5 : 8
-
-~ 		return parIBlockState;
+> DELETE  31  @  31 : 32
 
 > EOF

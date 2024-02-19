@@ -14,8 +14,14 @@
 
 ~ 	public void randomDisplayTick(World world, BlockPos blockpos, IBlockState iblockstate, EaglercraftRandom random) {
 
-> CHANGE  43 : 44  @  43 : 53
+> CHANGE  43 : 44  @  43 : 46
 
-~ 		return true;
+~ 		if (!world.isRemote) {
+
+> DELETE  4  @  4 : 6
+
+> INSERT  1 : 2  @  1
+
++ 		return true;
 
 > EOF

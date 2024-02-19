@@ -10,9 +10,15 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
 
-> CHANGE  65 : 66  @  65 : 81
+> CHANGE  65 : 66  @  65 : 68
 
-~ 			return true;
+~ 			if (!world.isRemote) {
+
+> DELETE  10  @  10 : 12
+
+> INSERT  1 : 2  @  1
+
++ 			return true;
 
 > CHANGE  5 : 6  @  5 : 6
 

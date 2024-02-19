@@ -321,7 +321,7 @@
 
 > CHANGE  5 : 6  @  5 : 6
 
-~ 				arraylist.add("Biome: " + chunk.getBiome(blockpos).biomeName);
+~ 				arraylist.add("Biome: " + chunk.getBiome(blockpos, null).biomeName);
 
 > CHANGE  4 : 5  @  4 : 14
 

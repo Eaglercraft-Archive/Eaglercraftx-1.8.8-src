@@ -5,13 +5,13 @@
 # Version: 1.0
 # Author: lax1dude
 
-> DELETE  2  @  2 : 3
+> CHANGE  2 : 3  @  2 : 3
 
-> CHANGE  1 : 4  @  1 : 2
+~ import net.lax1dude.eaglercraft.v1_8.mojang.authlib.GameProfile;
+
+> CHANGE  1 : 2  @  1 : 2
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
-~ 
-~ import net.lax1dude.eaglercraft.v1_8.mojang.authlib.GameProfile;
 
 > INSERT  6 : 7  @  6
 
@@ -33,5 +33,12 @@
 > INSERT  4 : 5  @  4
 
 + 		parPacketBuffer.writeByteArray(this.skin);
+
+> INSERT  9 : 13  @  9
+
++ 
++ 	public byte[] getSkin() {
++ 		return this.skin;
++ 	}
 
 > EOF

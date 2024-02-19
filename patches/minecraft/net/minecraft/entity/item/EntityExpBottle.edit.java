@@ -7,10 +7,4 @@
 
 > DELETE  3  @  3 : 4
 
-> DELETE  1  @  1 : 2
-
-> DELETE  29  @  29 : 32
-
-> DELETE  1  @  1 : 10
-
 > EOF

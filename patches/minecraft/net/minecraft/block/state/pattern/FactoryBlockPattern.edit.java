@@ -24,10 +24,14 @@
 
 > CHANGE  12 : 13  @  12 : 13
 
-~ 		if (aisle.length > 0 && !StringUtils.isEmpty(aisle[0])) {
+~ 		if (!(aisle == null || aisle.length <= 0) && !StringUtils.isEmpty(aisle[0])) {
 
 > CHANGE  18 : 19  @  18 : 19
 
-~ 							this.symbolMap.put(Character.valueOf(c0), (Predicate<BlockWorldState>) null);
+~ 							this.symbolMap.put(Character.valueOf(c0), null);
+
+> CHANGE  27 : 28  @  27 : 29
+
+~ 		Predicate[][][] apredicate = new Predicate[this.depth.size()][this.aisleHeight][this.rowWidth];
 
 > EOF

@@ -1,10 +1,10 @@
 package net.lax1dude.eaglercraft.v1_8.sp.server;
 
 import net.lax1dude.eaglercraft.v1_8.internal.vfs2.VFile2;
-import net.lax1dude.eaglercraft.v1_8.sp.server.classes.net.minecraft.world.WorldProvider;
-import net.lax1dude.eaglercraft.v1_8.sp.server.classes.net.minecraft.world.chunk.storage.IChunkLoader;
-import net.lax1dude.eaglercraft.v1_8.sp.server.classes.net.minecraft.world.storage.SaveHandler;
-import net.lax1dude.eaglercraft.v1_8.sp.server.classes.net.minecraft.world.storage.WorldInfo;
+import net.minecraft.world.WorldProvider;
+import net.minecraft.world.chunk.storage.IChunkLoader;
+import net.minecraft.world.storage.SaveHandler;
+import net.minecraft.world.storage.WorldInfo;
 import net.minecraft.nbt.NBTTagCompound;
 
 /**

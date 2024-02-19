@@ -10,11 +10,7 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
 
-> DELETE  6  @  6 : 7
-
-> DELETE  4  @  4 : 6
-
-> CHANGE  7 : 8  @  7 : 9
+> CHANGE  20 : 21  @  20 : 22
 
 ~ 	public static PropertyEnum<BlockTallGrass.EnumType> TYPE;
 
@@ -33,9 +29,7 @@
 
 ~ 	public int quantityDroppedWithBonus(int i, EaglercraftRandom random) {
 
-> DELETE  3  @  3 : 16
-
-> CHANGE  16 : 17  @  16 : 17
+> CHANGE  32 : 33  @  32 : 33
 
 ~ 	public boolean canUseBonemeal(World var1, EaglercraftRandom var2, BlockPos var3, IBlockState var4) {
 

@@ -5,8 +5,4 @@
 # Version: 1.0
 # Author: lax1dude
 
-> DELETE  6  @  6 : 7
-
-> DELETE  55  @  55 : 72
-
 > EOF

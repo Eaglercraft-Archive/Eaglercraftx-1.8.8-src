@@ -14,28 +14,8 @@
 
 ~ 
 
-> DELETE  11  @  11 : 12
-
-> DELETE  5  @  5 : 8
-
-> DELETE  5  @  5 : 6
-
-> DELETE  1  @  1 : 2
-
-> DELETE  94  @  94 : 106
-
-> DELETE  1  @  1 : 7
-
-> CHANGE  2 : 3  @  2 : 3
+> CHANGE  143 : 144  @  143 : 144
 
 ~ 	public Item getItemDropped(IBlockState var1, EaglercraftRandom var2, int var3) {
-
-> CHANGE  4 : 5  @  4 : 6
-
-~ 		return false;
-
-> DELETE  3  @  3 : 13
-
-> DELETE  1  @  1 : 42
 
 > EOF

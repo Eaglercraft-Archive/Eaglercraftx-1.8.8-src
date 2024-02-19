@@ -8,26 +8,48 @@
 > CHANGE  2 : 4  @  2 : 3
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
-~ 
+~ import net.lax1dude.eaglercraft.v1_8.sp.SingleplayerServerController;
 
-> DELETE  2  @  2 : 5
+> DELETE  3  @  3 : 4
 
-> DELETE  2  @  2 : 4
+> DELETE  3  @  3 : 4
 
-> DELETE  4  @  4 : 5
+> INSERT  5 : 6  @  5
 
-> CHANGE  25 : 26  @  25 : 33
++ 
 
-~ 		String s = nbttagcompound.getString("OwnerUUID");
+> CHANGE  15 : 21  @  15 : 17
 
-> DELETE  4  @  4 : 6
+~ 		if (worldObj.isRemote && !SingleplayerServerController.isClientInEaglerSingleplayerOrLAN()) {
+~ 			if (this.getOwnerId() == null) {
+~ 				nbttagcompound.setString("OwnerUUID", "");
+~ 			} else {
+~ 				nbttagcompound.setString("OwnerUUID", this.getOwnerId());
+~ 			}
 
-> CHANGE  75 : 76  @  75 : 76
+> CHANGE  1 : 6  @  1 : 2
+
+~ 			if (this.getOwnerId() == null) {
+~ 				nbttagcompound.setString("Owner", "");
+~ 			} else {
+~ 				nbttagcompound.setString("Owner", this.getOwnerId());
+~ 			}
+
+> CHANGE  8 : 12  @  8 : 10
+
+~ 		if (worldObj.isRemote && !SingleplayerServerController.isClientInEaglerSingleplayerOrLAN()) {
+~ 			if (nbttagcompound.hasKey("OwnerUUID", 8)) {
+~ 				s = nbttagcompound.getString("OwnerUUID");
+~ 			}
+
+> CHANGE  1 : 4  @  1 : 3
+
+~ 			if (nbttagcompound.hasKey("Owner", 8)) {
+~ 				s = nbttagcompound.getString("Owner");
+~ 			}
+
+> CHANGE  83 : 84  @  83 : 84
 
 ~ 			EaglercraftUUID uuid = EaglercraftUUID.fromString(this.getOwnerId());
-
-> DELETE  10  @  10 : 14
-
-> DELETE  29  @  29 : 38
 
 > EOF

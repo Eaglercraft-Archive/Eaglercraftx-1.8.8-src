@@ -5,12 +5,24 @@
 # Version: 1.0
 # Author: lax1dude
 
-> DELETE  5  @  5 : 6
+> INSERT  2 : 3  @  2
 
-> DELETE  75  @  75 : 80
++ import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.DynamicLightManager;
 
-> DELETE  1  @  1 : 6
+> DELETE  3  @  3 : 4
 
-> DELETE  29  @  29 : 36
+> INSERT  159 : 170  @  159
+
++ 
++ 	protected void renderDynamicLightsEaglerAt(double entityX, double entityY, double entityZ, double renderX,
++ 			double renderY, double renderZ, float partialTicks, boolean isInFrustum) {
++ 		super.renderDynamicLightsEaglerAt(entityX, entityY, entityZ, renderX, renderY, renderZ, partialTicks,
++ 				isInFrustum);
++ 		if (minecartTNTFuse > -1 && minecartTNTFuse / 5 % 2 == 0) {
++ 			float dynamicLightMag = 10.0f;
++ 			DynamicLightManager.renderDynamicLight("entity_" + getEntityId() + "_tnt_flash", entityX, entityY + 0.5,
++ 					entityZ, dynamicLightMag, dynamicLightMag * 0.7792f, dynamicLightMag * 0.618f, false);
++ 		}
++ 	}
 
 > EOF

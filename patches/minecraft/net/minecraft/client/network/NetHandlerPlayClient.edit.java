@@ -9,7 +9,7 @@
 
 > DELETE  4  @  4 : 6
 
-> INSERT  1 : 16  @  1
+> INSERT  1 : 18  @  1
 
 + 
 + import net.lax1dude.eaglercraft.v1_8.EagRuntime;
@@ -22,6 +22,8 @@
 + import net.lax1dude.eaglercraft.v1_8.profile.ServerSkinCache;
 + import net.lax1dude.eaglercraft.v1_8.profile.SkinPackets;
 + import net.lax1dude.eaglercraft.v1_8.socket.EaglercraftNetworkManager;
++ import net.lax1dude.eaglercraft.v1_8.sp.lan.LANClientNetworkManager;
++ import net.lax1dude.eaglercraft.v1_8.sp.socket.ClientIntegratedServerNetworkManager;
 + import net.lax1dude.eaglercraft.v1_8.update.UpdateService;
 + import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 + import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
@@ -49,8 +51,9 @@
 
 ~ 	private final Map<EaglercraftUUID, NetworkPlayerInfo> playerInfoMap = Maps.newHashMap();
 
-> CHANGE  2 : 4  @  2 : 3
+> CHANGE  2 : 5  @  2 : 3
 
+~ 	private boolean isIntegratedServer = false;
 ~ 	private final EaglercraftRandom avRandomizer = new EaglercraftRandom();
 ~ 	private final ServerSkinCache skinCache;
 
@@ -58,9 +61,11 @@
 
 ~ 	public NetHandlerPlayClient(Minecraft mcIn, GuiScreen parGuiScreen, EaglercraftNetworkManager parNetworkManager,
 
-> INSERT  5 : 6  @  5
+> INSERT  5 : 8  @  5
 
 + 		this.skinCache = new ServerSkinCache(parNetworkManager, mcIn.getTextureManager());
++ 		this.isIntegratedServer = (parNetworkManager instanceof ClientIntegratedServerNetworkManager)
++ 				|| (parNetworkManager instanceof LANClientNetworkManager);
 
 > INSERT  4 : 5  @  4
 
@@ -349,5 +354,12 @@
 > CHANGE  7 : 8  @  7 : 8
 
 ~ 	public NetworkPlayerInfo getPlayerInfo(EaglercraftUUID parUUID) {
+
+> INSERT  16 : 20  @  16
+
++ 
++ 	public boolean isClientInEaglerSingleplayerOrLAN() {
++ 		return isIntegratedServer;
++ 	}
 
 > EOF

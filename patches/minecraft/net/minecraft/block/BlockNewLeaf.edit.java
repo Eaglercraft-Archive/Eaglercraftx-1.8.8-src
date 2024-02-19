@@ -13,11 +13,7 @@
 ~ import com.google.common.base.Predicate;
 ~ 
 
-> DELETE  5  @  5 : 6
-
-> DELETE  3  @  3 : 5
-
-> CHANGE  4 : 5  @  4 : 10
+> CHANGE  15 : 16  @  15 : 21
 
 ~ 	public static PropertyEnum<BlockPlanks.EnumType> VARIANT;
 
@@ -32,6 +28,6 @@
 + 	}
 + 
 
-> DELETE  54  @  54 : 65
+> DELETE  4  @  4 : 5
 
 > EOF

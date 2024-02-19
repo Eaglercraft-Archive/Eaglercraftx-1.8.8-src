@@ -9,9 +9,7 @@
 
 + import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.DynamicLightManager;
 
-> DELETE  158  @  158 : 172
-
-> INSERT  33 : 44  @  33
+> INSERT  205 : 216  @  205
 
 + 
 + 	protected void renderDynamicLightsEaglerAt(double entityX, double entityY, double entityZ, double renderX,

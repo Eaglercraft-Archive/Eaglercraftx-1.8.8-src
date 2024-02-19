@@ -5,20 +5,10 @@
 # Version: 1.0
 # Author: lax1dude
 
-> DELETE  2  @  2 : 3
+> DELETE  25  @  25 : 26
 
-> INSERT  2 : 5  @  2
+> CHANGE  43 : 44  @  43 : 44
 
-+ 
-+ import com.google.common.collect.Lists;
-+ 
-
-> DELETE  18  @  18 : 22
-
-> DELETE  29  @  29 : 35
-
-> DELETE  1  @  1 : 20
-
-> DELETE  82  @  82 : 90
+~ 			List<EntityPlayer> list = this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, axisalignedbb);
 
 > EOF

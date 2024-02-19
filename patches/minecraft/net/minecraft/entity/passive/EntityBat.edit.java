@@ -5,14 +5,6 @@
 # Version: 1.0
 # Author: lax1dude
 
-> INSERT  3 : 4  @  3
-
-+ 
-
-> DELETE  3  @  3 : 4
-
-> DELETE  3  @  3 : 4
-
-> DELETE  141  @  141 : 153
+> DELETE  6  @  6 : 7
 
 > EOF

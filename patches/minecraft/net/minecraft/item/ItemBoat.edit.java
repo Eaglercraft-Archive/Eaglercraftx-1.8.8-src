@@ -11,6 +11,4 @@
 
 > DELETE  5  @  5 : 7
 
-> DELETE  73  @  73 : 77
-
 > EOF

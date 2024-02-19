@@ -5,28 +5,30 @@
 # Version: 1.0
 # Author: lax1dude
 
-> CHANGE  2 : 4  @  2 : 4
+> CHANGE  2 : 3  @  2 : 3
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
-~ 
 
-> DELETE  4  @  4 : 11
+> DELETE  6  @  6 : 8
 
-> DELETE  3  @  3 : 6
+> CHANGE  54 : 55  @  54 : 55
 
-> DELETE  4  @  4 : 11
+~ 	public WorldGenAbstractTree genBigTreeChance(EaglercraftRandom random) {
 
-> DELETE  13  @  13 : 17
-
-> CHANGE  16 : 17  @  16 : 22
+> CHANGE  4 : 5  @  4 : 5
 
 ~ 	public BlockFlower.EnumFlowerType pickRandomFlower(EaglercraftRandom random, BlockPos blockpos) {
 
-> DELETE  14  @  14 : 64
+> CHANGE  14 : 15  @  14 : 15
 
-> CHANGE  15 : 17  @  15 : 25
+~ 	public void decorate(World world, EaglercraftRandom random, BlockPos blockpos) {
 
-~ 					&& this.biomeID != BiomeGenBase.birchForestHills.biomeID ? new BiomeGenMutated(i, this)
-~ 							: new BiomeGenMutated(i, this);
+> CHANGE  65 : 66  @  65 : 66
+
+~ 						public void decorate(World world, EaglercraftRandom random, BlockPos blockpos) {
+
+> CHANGE  3 : 4  @  3 : 4
+
+~ 						public WorldGenAbstractTree genBigTreeChance(EaglercraftRandom random) {
 
 > EOF

@@ -5,116 +5,56 @@
 # Version: 1.0
 # Author: lax1dude
 
-> DELETE  2  @  2 : 8
+> CHANGE  64 : 65  @  64 : 65
 
-> DELETE  6  @  6 : 7
+~ 			for (Entity entity : (ArrayList<Entity>) list) {
 
-> INSERT  1 : 2  @  1
+> CHANGE  20 : 21  @  20 : 21
 
-+ import java.util.Set;
+~ 				for (World world : (ArrayList<World>) list) {
 
-> CHANGE  2 : 11  @  2 : 4
+> CHANGE  49 : 50  @  49 : 50
 
-~ 
-~ import com.google.common.base.Predicate;
-~ import com.google.common.base.Predicates;
-~ import com.google.common.collect.ComparisonChain;
-~ import com.google.common.collect.Lists;
-~ import com.google.common.collect.Maps;
-~ import com.google.common.collect.Sets;
-~ 
-~ import net.minecraft.client.Minecraft;
+~ 		String s = func_179651_b(parMap, "type");
 
-> DELETE  4  @  4 : 5
+> INSERT  16 : 17  @  16
 
-> DELETE  4  @  4 : 5
++ 			final String ss = s;
 
-> DELETE  17  @  17 : 21
+> CHANGE  2 : 3  @  2 : 3
 
-> CHANGE  13 : 14  @  13 : 14
+~ 					return EntityList.isStringEntityName(entity, ss) != flag;
 
-~ 			for (Entity entity : (List<Entity>) list) {
+> CHANGE  49 : 50  @  49 : 50
 
-> CHANGE  3 : 4  @  3 : 4
+~ 		String s = func_179651_b(parMap, "team");
 
-~ 			return IChatComponent.join(arraylist);
+> INSERT  6 : 7  @  6
+
++ 			final String ss = s;
+
+> CHANGE  8 : 9  @  8 : 9
+
+~ 						return s1.equals(ss) != flag;
 
 > CHANGE  16 : 17  @  16 : 17
 
-~ 				for (World world : (List<World>) list) {
+~ 					for (Entry entry : (Set<Entry>) map.entrySet()) {
 
-> CHANGE  26 : 30  @  26 : 27
+> CHANGE  39 : 40  @  39 : 40
 
-~ 			Minecraft mc = Minecraft.getMinecraft();
-~ 			if (mc.theWorld != null) {
-~ 				arraylist.add(mc.thePlayer);
-~ 			}
+~ 		String s = func_179651_b(parMap, "name");
 
-> CHANGE  22 : 24  @  22 : 24
+> INSERT  6 : 7  @  6
 
-~ 		String ss = func_179651_b(parMap, "type");
-~ 		final boolean flag = ss != null && ss.startsWith("!");
++ 			final String ss = s;
 
-> CHANGE  1 : 2  @  1 : 2
+> CHANGE  2 : 3  @  2 : 3
 
-~ 			ss = ss.substring(1);
+~ 					return entity.getName().equals(ss) != flag;
 
-> INSERT  1 : 2  @  1
+> CHANGE  135 : 136  @  135 : 136
 
-+ 		final String s = ss;
-
-> CHANGE  29 : 30  @  29 : 36
-
-~ 					return false;
-
-> CHANGE  13 : 14  @  13 : 19
-
-~ 					return false;
-
-> CHANGE  9 : 11  @  9 : 11
-
-~ 		String ss = func_179651_b(parMap, "team");
-~ 		final boolean flag = ss != null && ss.startsWith("!");
-
-> CHANGE  1 : 2  @  1 : 2
-
-~ 			ss = ss.substring(1);
-
-> INSERT  1 : 2  @  1
-
-+ 		final String s = ss;
-
-> CHANGE  21 : 22  @  21 : 22
-
-~ 		final Map<String, Integer> map = func_96560_a(parMap);
-
-> CHANGE  3 : 4  @  3 : 4
-
-~ 					Scoreboard scoreboard = Minecraft.getMinecraft().theWorld.getScoreboard();
-
-> CHANGE  14 : 15  @  14 : 16
-
-~ 						String s1 = entity instanceof EntityPlayer ? entity.getName() : entity.getUniqueID().toString();
-
-> CHANGE  25 : 27  @  25 : 27
-
-~ 		String ss = func_179651_b(parMap, "name");
-~ 		final boolean flag = ss != null && ss.startsWith("!");
-
-> CHANGE  1 : 2  @  1 : 2
-
-~ 			ss = ss.substring(1);
-
-> INSERT  1 : 2  @  1
-
-+ 		final String s = ss;
-
-> CHANGE  140 : 141  @  140 : 141
-
-~ 			parList = (List<T>) Lists.newArrayList(new Entity[] { entity });
-
-> INSERT  133 : 134  @  133
-
-+ 
+~ 			parList = (List<T>) Lists.newArrayList(entity);
 
 > EOF

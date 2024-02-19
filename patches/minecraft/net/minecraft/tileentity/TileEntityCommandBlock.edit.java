@@ -5,12 +5,10 @@
 # Version: 1.0
 # Author: lax1dude
 
-> CHANGE  2 : 3  @  2 : 4
+> CHANGE  2 : 3  @  2 : 3
 
 ~ import net.lax1dude.eaglercraft.v1_8.netty.ByteBuf;
 
-> DELETE  5  @  5 : 6
-
-> DELETE  68  @  68 : 71
+> DELETE  6  @  6 : 7
 
 > EOF

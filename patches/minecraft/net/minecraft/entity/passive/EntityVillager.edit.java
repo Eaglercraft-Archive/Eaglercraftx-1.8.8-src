@@ -5,28 +5,11 @@
 # Version: 1.0
 # Author: lax1dude
 
-> CHANGE  2 : 4  @  2 : 3
+> CHANGE  2 : 3  @  2 : 3
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
-~ 
 
-> DELETE  3  @  3 : 4
-
-> DELETE  1  @  1 : 3
-
-> DELETE  4  @  4 : 20
-
-> DELETE  3  @  3 : 6
-
-> DELETE  9  @  9 : 12
-
-> DELETE  4  @  4 : 5
-
-> DELETE  6  @  6 : 7
-
-> DELETE  7  @  7 : 8
-
-> CHANGE  12 : 13  @  12 : 164
+> CHANGE  77 : 78  @  77 : 229
 
 ~ 	private static EntityVillager.ITradeList[][][][] DEFAULT_TRADE_LIST_MAP = null;
 
@@ -198,27 +181,15 @@
 + 	}
 + 
 
-> DELETE  9  @  9 : 25
+> CHANGE  125 : 130  @  125 : 126
 
-> DELETE  3  @  3 : 23
+~ 			try {
+~ 				nbttagcompound.setTag("Offers", this.buyingList.getRecipiesAsTags());
+~ 			} catch (Throwable t) {
+~ 				this.buyingList = null; // workaround
+~ 			}
 
-> DELETE  5  @  5 : 48
-
-> DELETE  4  @  4 : 9
-
-> DELETE  57  @  57 : 58
-
-> DELETE  42  @  42 : 81
-
-> DELETE  73  @  73 : 81
-
-> DELETE  140  @  140 : 141
-
-> DELETE  19  @  19 : 29
-
-> DELETE  1  @  1 : 4
-
-> CHANGE  94 : 95  @  94 : 95
+> CHANGE  467 : 468  @  467 : 468
 
 ~ 		public void modifyMerchantRecipeList(MerchantRecipeList recipeList, EaglercraftRandom random) {
 

@@ -5,12 +5,4 @@
 # Version: 1.0
 # Author: lax1dude
 
-> DELETE  2  @  2 : 3
-
-> DELETE  1  @  1 : 2
-
-> DELETE  1  @  1 : 2
-
-> DELETE  38  @  38 : 67
-
 > EOF

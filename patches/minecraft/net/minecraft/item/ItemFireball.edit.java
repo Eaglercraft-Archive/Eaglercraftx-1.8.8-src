@@ -5,12 +5,6 @@
 # Version: 1.0
 # Author: lax1dude
 
-> DELETE  2  @  2 : 3
-
-> DELETE  2  @  2 : 5
-
-> CHANGE  11 : 12  @  11 : 32
-
-~ 		return true;
+> DELETE  6  @  6 : 8
 
 > EOF

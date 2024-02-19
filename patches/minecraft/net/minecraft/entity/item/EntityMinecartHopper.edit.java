@@ -11,8 +11,4 @@
 
 > DELETE  1  @  1 : 4
 
-> DELETE  44  @  44 : 48
-
-> DELETE  35  @  35 : 56
-
 > EOF

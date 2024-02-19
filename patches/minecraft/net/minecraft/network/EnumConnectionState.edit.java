@@ -5,20 +5,18 @@
 # Version: 1.0
 # Author: lax1dude
 
-> INSERT  2 : 5  @  2
+> INSERT  5 : 7  @  5
 
-+ import java.util.Collection;
-+ import java.util.Map;
 + 
++ import java.util.Collection;
 
-> CHANGE  3 : 5  @  3 : 6
+> CHANGE  104 : 105  @  104 : 109
 
-~ 
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 
-> DELETE  105  @  105 : 106
+> DELETE  111  @  111 : 119
 
-> CHANGE  147 : 148  @  147 : 148
+> CHANGE  28 : 29  @  28 : 29
 
 ~ 			this.directionMaps.put(direction, (BiMap<Integer, Class<? extends Packet>>) object);
 

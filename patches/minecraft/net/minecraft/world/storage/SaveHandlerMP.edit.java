@@ -5,14 +5,36 @@
 # Version: 1.0
 # Author: lax1dude
 
-> DELETE  2  @  2 : 3
+> CHANGE  2 : 3  @  2 : 3
 
-> DELETE  2  @  2 : 7
+~ import net.lax1dude.eaglercraft.v1_8.internal.vfs2.VFile2;
+
+> DELETE  4  @  4 : 7
 
 > DELETE  9  @  9 : 13
 
-> DELETE  13  @  13 : 17
+> CHANGE  13 : 19  @  13 : 14
 
-> DELETE  4  @  4 : 7
+~ 	public String getWorldDirectoryName() {
+~ 		return "none";
+~ 	}
+~ 
+~ 	@Override
+~ 	public IChunkLoader getChunkLoader(WorldProvider var1) {
+
+> CHANGE  3 : 6  @  3 : 5
+
+~ 	@Override
+~ 	public VFile2 getWorldDirectory() {
+~ 		return null;
+
+> CHANGE  2 : 4  @  2 : 3
+
+~ 	@Override
+~ 	public VFile2 getMapFileFromName(String var1) {
+
+> INSERT  2 : 3  @  2
+
++ 
 
 > EOF

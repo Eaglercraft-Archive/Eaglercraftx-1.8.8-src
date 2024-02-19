@@ -7,8 +7,4 @@
 
 > DELETE  8  @  8 : 10
 
-> CHANGE  14 : 15  @  14 : 20
-
-~ 			return true;
-
 > EOF

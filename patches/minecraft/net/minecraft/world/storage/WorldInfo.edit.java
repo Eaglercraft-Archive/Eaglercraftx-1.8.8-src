@@ -5,22 +5,12 @@
 # Version: 1.0
 # Author: lax1dude
 
-> INSERT  3 : 4  @  3
-
-+ 
-
-> DELETE  2  @  2 : 3
-
-> INSERT  6 : 8  @  6
+> INSERT  12 : 14  @  12
 
 + import net.lax1dude.eaglercraft.v1_8.HString;
 + 
 
-> CHANGE  237 : 238  @  237 : 238
-
-~ 		// nbt.setLong("LastPlayed", MinecraftServer.getCurrentTimeMillis());
-
-> CHANGE  301 : 302  @  301 : 302
+> CHANGE  539 : 540  @  539 : 540
 
 ~ 				return HString.format("ID %02d - %s, ver %d. Features enabled: %b",
 

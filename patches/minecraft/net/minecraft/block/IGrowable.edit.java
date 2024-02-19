@@ -10,8 +10,12 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
 
-> CHANGE  7 : 8  @  7 : 10
+> CHANGE  7 : 8  @  7 : 8
 
 ~ 	boolean canUseBonemeal(World var1, EaglercraftRandom var2, BlockPos var3, IBlockState var4);
+
+> CHANGE  1 : 2  @  1 : 2
+
+~ 	void grow(World var1, EaglercraftRandom var2, BlockPos var3, IBlockState var4);
 
 > EOF

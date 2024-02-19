@@ -5,14 +5,13 @@
 # Version: 1.0
 # Author: lax1dude
 
-> DELETE  2  @  2 : 4
+> CHANGE  3 : 4  @  3 : 4
 
-> DELETE  7  @  7 : 8
+~ import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
 
-> DELETE  7  @  7 : 8
+> CHANGE  290 : 292  @  290 : 291
 
-> DELETE  142  @  142 : 171
-
-> DELETE  101  @  101 : 111
+~ 					Entity entity = ((WorldServer) this.worldObj)
+~ 							.getEntityFromUuid(EaglercraftUUID.fromString(this.throwerName));
 
 > EOF

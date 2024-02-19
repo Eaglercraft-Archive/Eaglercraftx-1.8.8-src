@@ -10,19 +10,16 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
 
-> DELETE  7  @  7 : 8
+> CHANGE  71 : 72  @  71 : 74
 
-> DELETE  1  @  1 : 2
+~ 		if (!world.isRemote) {
 
-> DELETE  2  @  2 : 7
+> INSERT  84 : 86  @  84
 
-> DELETE  42  @  42 : 52
++ 		} else {
++ 			return true;
 
-> CHANGE  2 : 3  @  2 : 90
-
-~ 		return true;
-
-> CHANGE  17 : 18  @  17 : 18
+> CHANGE  18 : 19  @  18 : 19
 
 ~ 	public Item getItemDropped(IBlockState var1, EaglercraftRandom var2, int var3) {
 

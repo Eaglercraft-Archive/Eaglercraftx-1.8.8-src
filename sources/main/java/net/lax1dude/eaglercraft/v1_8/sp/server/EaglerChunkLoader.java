@@ -7,11 +7,11 @@ import java.io.OutputStream;
 import net.lax1dude.eaglercraft.v1_8.internal.vfs2.VFile2;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
-import net.lax1dude.eaglercraft.v1_8.sp.server.classes.net.minecraft.world.ChunkCoordIntPair;
-import net.lax1dude.eaglercraft.v1_8.sp.server.classes.net.minecraft.world.MinecraftException;
-import net.lax1dude.eaglercraft.v1_8.sp.server.classes.net.minecraft.world.World;
-import net.lax1dude.eaglercraft.v1_8.sp.server.classes.net.minecraft.world.chunk.Chunk;
-import net.lax1dude.eaglercraft.v1_8.sp.server.classes.net.minecraft.world.chunk.storage.AnvilChunkLoader;
+import net.minecraft.world.ChunkCoordIntPair;
+import net.minecraft.world.MinecraftException;
+import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.chunk.storage.AnvilChunkLoader;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 

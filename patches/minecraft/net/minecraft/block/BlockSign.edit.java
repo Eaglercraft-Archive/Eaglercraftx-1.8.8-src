@@ -14,8 +14,4 @@
 
 ~ 	public Item getItemDropped(IBlockState var1, EaglercraftRandom var2, int var3) {
 
-> CHANGE  9 : 10  @  9 : 16
-
-~ 		return true;
-
 > EOF

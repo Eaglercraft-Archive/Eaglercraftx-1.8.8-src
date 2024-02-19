@@ -14,7 +14,7 @@
 
 ~ 	public int quantityDropped(EaglercraftRandom var1) {
 
-> CHANGE  3 : 4  @  3 : 11
+> CHANGE  10 : 11  @  10 : 11
 
 ~ 	public void randomDisplayTick(World world, BlockPos blockpos, IBlockState var3, EaglercraftRandom random) {
 

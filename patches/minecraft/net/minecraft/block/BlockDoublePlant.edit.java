@@ -10,9 +10,7 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
 
-> DELETE  12  @  12 : 14
-
-> CHANGE  8 : 10  @  8 : 12
+> CHANGE  22 : 24  @  22 : 26
 
 ~ 	public static PropertyEnum<BlockDoublePlant.EnumPlantType> VARIANT;
 ~ 	public static PropertyEnum<BlockDoublePlant.EnumBlockHalf> HALF;
@@ -29,13 +27,7 @@
 
 ~ 	public Item getItemDropped(IBlockState iblockstate, EaglercraftRandom random, int var3) {
 
-> DELETE  39  @  39 : 49
-
-> DELETE  10  @  10 : 18
-
-> DELETE  14  @  14 : 30
-
-> CHANGE  17 : 18  @  17 : 18
+> CHANGE  114 : 115  @  114 : 115
 
 ~ 	public boolean canUseBonemeal(World var1, EaglercraftRandom var2, BlockPos var3, IBlockState var4) {
 

@@ -10,11 +10,13 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
 
-> CHANGE  28 : 29  @  28 : 43
+> DELETE  39  @  39 : 40
+
+> CHANGE  2 : 3  @  2 : 3
 
 ~ 	public void updateTick(World world, BlockPos blockpos, IBlockState var3, EaglercraftRandom var4) {
 
-> DELETE  40  @  40 : 44
+> DELETE  43  @  43 : 44
 
 > CHANGE  3 : 4  @  3 : 4
 

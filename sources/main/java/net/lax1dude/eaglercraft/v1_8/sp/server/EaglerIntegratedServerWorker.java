@@ -18,15 +18,15 @@ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 import net.lax1dude.eaglercraft.v1_8.sp.SingleplayerServerController;
 import net.lax1dude.eaglercraft.v1_8.sp.ipc.*;
-import net.lax1dude.eaglercraft.v1_8.sp.server.classes.net.minecraft.network.EnumConnectionState;
-import net.lax1dude.eaglercraft.v1_8.sp.server.classes.net.minecraft.server.network.NetHandlerLoginServer;
-import net.lax1dude.eaglercraft.v1_8.sp.server.classes.net.minecraft.util.ChatComponentText;
-import net.lax1dude.eaglercraft.v1_8.sp.server.classes.net.minecraft.util.ReportedException;
-import net.lax1dude.eaglercraft.v1_8.sp.server.classes.net.minecraft.util.StringTranslate;
-import net.lax1dude.eaglercraft.v1_8.sp.server.classes.net.minecraft.world.EnumDifficulty;
-import net.lax1dude.eaglercraft.v1_8.sp.server.classes.net.minecraft.world.WorldSettings;
-import net.lax1dude.eaglercraft.v1_8.sp.server.classes.net.minecraft.world.WorldSettings.GameType;
-import net.lax1dude.eaglercraft.v1_8.sp.server.classes.net.minecraft.world.WorldType;
+import net.minecraft.network.EnumConnectionState;
+import net.minecraft.server.network.NetHandlerLoginServer;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ReportedException;
+import net.minecraft.util.StringTranslate;
+import net.minecraft.world.EnumDifficulty;
+import net.minecraft.world.WorldSettings;
+import net.minecraft.world.WorldSettings.GameType;
+import net.minecraft.world.WorldType;
 import net.lax1dude.eaglercraft.v1_8.sp.server.export.WorldConverterEPK;
 import net.lax1dude.eaglercraft.v1_8.sp.server.export.WorldConverterMCA;
 import net.lax1dude.eaglercraft.v1_8.sp.server.internal.ServerPlatformSingleplayer;
@@ -341,7 +341,7 @@ public class EaglerIntegratedServerWorker {
 				IPCPacket14StringList pkt = (IPCPacket14StringList)ipc;
 				switch(pkt.opCode) {
 				case IPCPacket14StringList.LOCALE:
-					StringTranslate.init(pkt.stringList);
+					StringTranslate.initServer(pkt.stringList);
 					break;
 				//case IPCPacket14StringList.STAT_GUID:
 				//	AchievementMap.init(pkt.stringList);

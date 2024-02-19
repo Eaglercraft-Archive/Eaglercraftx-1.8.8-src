@@ -7,7 +7,6 @@ import net.lax1dude.eaglercraft.v1_8.internal.IClientConfigAdapter;
 import net.lax1dude.eaglercraft.v1_8.internal.IPCPacketData;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformFilesystem;
 import net.lax1dude.eaglercraft.v1_8.internal.lwjgl.DesktopClientConfigAdapter;
-import net.lax1dude.eaglercraft.v1_8.sp.server.classes.EaglerServerBootstrap;
 import net.lax1dude.eaglercraft.v1_8.sp.server.internal.lwjgl.MemoryConnection;
 
 /**
@@ -29,7 +28,6 @@ public class ServerPlatformSingleplayer {
 
 	public static void initializeContext() {
 		PlatformFilesystem.initialize();
-		EaglerServerBootstrap.staticInit();
 	}
 
 	public static void sendPacket(IPCPacketData packet) {

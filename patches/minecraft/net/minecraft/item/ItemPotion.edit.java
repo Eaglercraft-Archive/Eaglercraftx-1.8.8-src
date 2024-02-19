@@ -16,15 +16,13 @@
 + import com.google.common.collect.Maps;
 + 
 
-> DELETE  4  @  4 : 5
+> DELETE  6  @  6 : 9
 
-> DELETE  1  @  1 : 4
+> CHANGE  64 : 65  @  64 : 65
 
-> DELETE  61  @  61 : 70
+~ 				for (PotionEffect potioneffect : (List<PotionEffect>) list) {
 
-> DELETE  27  @  27 : 30
-
-> CHANGE  24 : 25  @  24 : 25
+> CHANGE  59 : 60  @  59 : 60
 
 ~ 			for (PotionEffect potioneffect : (List<PotionEffect>) list) {
 
@@ -34,10 +32,10 @@
 
 > CHANGE  4 : 5  @  4 : 5
 
-~ 						for (Entry entry : (Set<Entry>) map.entrySet()) {
+~ 						for (Entry entry : (Set<Entry<Object, Object>>) map.entrySet()) {
 
 > CHANGE  33 : 34  @  33 : 34
 
-~ 				for (Entry entry1 : (Set<Entry>) hashmultimap.entries()) {
+~ 				for (Entry entry1 : (Set<Entry<Object, Object>>) hashmultimap.entries()) {
 
 > EOF
