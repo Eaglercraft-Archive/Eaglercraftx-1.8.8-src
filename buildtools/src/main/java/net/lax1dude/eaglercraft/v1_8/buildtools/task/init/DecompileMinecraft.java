@@ -123,10 +123,6 @@ public class DecompileMinecraft {
 		System.out.println("This will take a while, go get a drink or something lol.");
 		System.out.println();
 		
-		System.out.println("Staying hydrated is important when u work on a fucked up project that");
-		System.out.println("will make you angry enough put your fists through your bedroom wall");
-		System.out.println();
-		
 		ex = JARSubprocess.runJava(mcpDataTMP, new String[] {
 				"-jar", "fernflower.jar", "-din=1", "-rbr=1", "-dgs=1", "-asc=1", "-rsy=1", "-iec=1",
 				"-ren=0", "-jvn=1", "-udv=1", "-ump=1", "-log=WARN", deobfOut2.getAbsolutePath(),

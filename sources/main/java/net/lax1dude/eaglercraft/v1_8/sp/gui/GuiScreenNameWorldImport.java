@@ -1,7 +1,5 @@
 package net.lax1dude.eaglercraft.v1_8.sp.gui;
 
-import org.apache.commons.lang3.StringUtils;
-
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.Keyboard;
 import net.lax1dude.eaglercraft.v1_8.internal.FileChooserResult;
@@ -61,7 +59,7 @@ public class GuiScreenNameWorldImport extends GuiScreen {
 		if(definetlyTimeToImport && !isImporting) {
 			isImporting = true;
 			SingleplayerServerController.importWorld(GuiCreateWorld.func_146317_a(mc.getSaveLoader(), this.theGuiTextField.getText().trim()), world.fileData, importFormat, (byte) ((loadSpawnChunks ? 2 : 0) | (enhancedGameRules ? 1 : 0)));
-			mc.displayGuiScreen(new GuiScreenIntegratedServerBusy(parentGuiScreen, "singleplayer.busy.importing." + (importFormat + 1), "singleplayer.failed.importing." + (importFormat + 1), () -> SingleplayerServerController.isReady()));
+			mc.displayGuiScreen(new GuiScreenIntegratedServerBusy(parentGuiScreen, "singleplayer.busy.importing." + (importFormat + 1), "singleplayer.failed.importing." + (importFormat + 1), SingleplayerServerController::isReady));
 		}
 	}
 

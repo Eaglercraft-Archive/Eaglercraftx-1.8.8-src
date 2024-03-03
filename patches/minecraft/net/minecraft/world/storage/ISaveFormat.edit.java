@@ -7,7 +7,9 @@
 
 > DELETE  3  @  3 : 4
 
-> CHANGE  10 : 11  @  10 : 11
+> DELETE  1  @  1 : 4
+
+> CHANGE  6 : 7  @  6 : 7
 
 ~ 	List<SaveFormatComparator> getSaveList();
 

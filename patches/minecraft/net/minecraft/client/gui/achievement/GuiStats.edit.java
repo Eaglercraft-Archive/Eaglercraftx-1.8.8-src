@@ -26,4 +26,14 @@
 
 ~ 	protected void actionPerformed(GuiButton parGuiButton) {
 
+> CHANGE  270 : 272  @  270 : 271
+
+~ 			for (int m = 0, l = StatList.objectMineStats.size(); m < l; ++m) {
+~ 				StatCrafting statcrafting = StatList.objectMineStats.get(m);
+
+> CHANGE  133 : 135  @  133 : 134
+
+~ 			for (int m = 0, l = StatList.itemStats.size(); m < l; ++m) {
+~ 				StatCrafting statcrafting = StatList.itemStats.get(m);
+
 > EOF

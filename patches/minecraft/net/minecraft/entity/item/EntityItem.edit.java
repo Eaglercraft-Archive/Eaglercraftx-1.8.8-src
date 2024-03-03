@@ -5,8 +5,10 @@
 # Version: 1.0
 # Author: lax1dude
 
-> INSERT  2 : 4  @  2
+> INSERT  2 : 6  @  2
 
++ import java.util.List;
++ 
 + import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 + import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 
@@ -16,7 +18,14 @@
 
 > DELETE  13  @  13 : 15
 
-> INSERT  362 : 371  @  362
+> CHANGE  101 : 105  @  101 : 104
+
+~ 		List<EntityItem> lst = this.worldObj.getEntitiesWithinAABB(EntityItem.class,
+~ 				this.getEntityBoundingBox().expand(0.5D, 0.0D, 0.5D));
+~ 		for (int i = 0, l = lst.size(); i < l; ++i) {
+~ 			this.combineItems(lst.get(i));
+
+> INSERT  258 : 267  @  258
 
 + 
 + 	public boolean eaglerEmissiveFlag = false;

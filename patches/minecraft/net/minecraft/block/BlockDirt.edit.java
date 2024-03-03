@@ -20,4 +20,14 @@
 + 	}
 + 
 
+> CHANGE  50 : 51  @  50 : 51
+
+~ 		private static final BlockDirt.DirtType[] METADATA_LOOKUP = new BlockDirt.DirtType[3];
+
+> CHANGE  45 : 48  @  45 : 47
+
+~ 			BlockDirt.DirtType[] types = values();
+~ 			for (int i = 0; i < types.length; ++i) {
+~ 				METADATA_LOOKUP[types[i].getMetadata()] = types[i];
+
 > EOF

@@ -12,7 +12,6 @@ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 import net.lax1dude.eaglercraft.v1_8.opengl.EaglercraftGPU;
 import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.program.PipelineShaderAccelParticleForward;
-import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.program.PipelineShaderAccelParticleGBuffer;
 import net.lax1dude.eaglercraft.v1_8.vector.Matrix4f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -92,7 +91,7 @@ public class ForwardAcceleratedEffectRenderer extends AbstractAcceleratedEffectR
 		_wglVertexAttribDivisor(0, 0);
 
 		EaglercraftGPU.bindGLArrayBuffer(instancesBuffer);
-		_wglBufferData(GL_ARRAY_BUFFER, particleBuffer.remaining(), GL_STATIC_DRAW);
+		_wglBufferData(GL_ARRAY_BUFFER, particleBuffer.remaining(), GL_STREAM_DRAW);
 
 		_wglEnableVertexAttribArray(1);
 		_wglVertexAttribPointer(1, 3, GL_FLOAT, false, 24, 0);

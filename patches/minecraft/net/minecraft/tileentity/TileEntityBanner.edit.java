@@ -28,7 +28,12 @@
 ~ 				() -> new ItemStack(Blocks.red_flower, 1, BlockFlower.EnumFlowerType.OXEYE_DAISY.getMeta())),
 ~ 		MOJANG("mojang", "moj", () -> new ItemStack(Items.golden_apple, 1, 1));
 
-> INSERT  4 : 5  @  4
+> INSERT  1 : 3  @  1
+
++ 		public static final EnumBannerPattern[] _VALUES = values();
++ 
+
+> INSERT  3 : 4  @  3
 
 + 		private Supplier<ItemStack> patternCraftingStackSupplier;
 
@@ -53,5 +58,11 @@
 + 			if (patternCraftingStack == null) {
 + 				patternCraftingStack = patternCraftingStackSupplier.get();
 + 			}
+
+> CHANGE  4 : 7  @  4 : 5
+
+~ 			TileEntityBanner.EnumBannerPattern[] arr = _VALUES;
+~ 			for (int i = 0; i < arr.length; ++i) {
+~ 				TileEntityBanner.EnumBannerPattern tileentitybanner$enumbannerpattern = arr[i];
 
 > EOF

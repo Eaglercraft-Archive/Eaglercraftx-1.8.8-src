@@ -2,7 +2,6 @@ package net.lax1dude.eaglercraft.v1_8.sp.gui;
 
 import net.lax1dude.eaglercraft.v1_8.sp.lan.LANServerController;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiCreateWorld;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.world.demo.DemoWorldServer;

@@ -88,7 +88,7 @@ public class PlatformApplication {
 		});
 	}
 	
-	@JSBody(params = { "cb" }, script = "if(!window.navigator.clipboard) cb(\"\"); else window.navigator.clipboard.readText().then(function(s) { cb(s); }, function(s) { cb(\"\"); });")
+	@JSBody(params = { "cb" }, script = "if(!window.navigator.clipboard || !window.navigator.clipboard.readText) cb(\"\"); else window.navigator.clipboard.readText().then(function(s) { cb(s); }, function(s) { cb(\"\"); });")
 	private static native void getClipboard1(StupidFunctionResolveString cb);
 	
 	@JSBody(params = { "str" }, script = "if(window.navigator.clipboard) window.navigator.clipboard.writeText(str);")
@@ -248,7 +248,7 @@ public class PlatformApplication {
 		documentWrite(newWin.getDocument(), "<!DOCTYPE html><html><head><meta charset=\"UTF-8\" />"
 				+ "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" /><title>EaglercraftX 1.8 Credits</title>"
 				+ "<link type=\"image/png\" rel=\"shortcut icon\" href=\"" + PlatformApplication.faviconURLTeaVM() + "\" />"
-						+ "</head><body><pre>" + text + "</pre></body></html>");
+						+ "</head><body><pre style=\"font:15px Consolas,monospace;\">" + text + "</pre></body></html>");
 	}
 
 	public static void clearFileChooserResult() {

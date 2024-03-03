@@ -7,19 +7,24 @@
 
 > DELETE  2  @  2 : 3
 
-> CHANGE  1 : 6  @  1 : 2
+> CHANGE  1 : 4  @  1 : 2
 
-~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
-~ 
 ~ import com.google.common.collect.Lists;
 ~ 
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 
-> DELETE  8  @  8 : 9
+> DELETE  1  @  1 : 2
+
+> DELETE  6  @  6 : 7
 
 > DELETE  1  @  1 : 2
 
-> INSERT  66 : 70  @  66
+> CHANGE  41 : 43  @  41 : 43
+
+~ 		for (int i = 0, l = this.field_178672_a.size(); i < l; ++i) {
+~ 			if (this.field_178672_a.get(i).func_178662_A_()) {
+
+> INSERT  23 : 27  @  23
 
 + 			this.field_178677_c = DefaultPlayerSkin.getDefaultSkinLegacy();
 + 

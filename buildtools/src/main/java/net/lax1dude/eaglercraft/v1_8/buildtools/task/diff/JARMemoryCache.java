@@ -2,7 +2,6 @@ package net.lax1dude.eaglercraft.v1_8.buildtools.task.diff;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.ZipEntry;

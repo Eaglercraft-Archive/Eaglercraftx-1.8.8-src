@@ -153,7 +153,7 @@ public class TeaVMUpdateThread implements Runnable {
 					return;
 				}
 				updateProg.statusString2 = "Signature Invalid!";
-				logger.error("File signature is invalid: {}");
+				logger.error("File signature is invalid: {}", url);
 				EagUtils.sleep(1000l);
 			}
 			
@@ -222,11 +222,11 @@ public class TeaVMUpdateThread implements Runnable {
 						if(data.getByteLength() == updateCert.bundleDataLength) {
 							cb.complete(TeaVMUtils.wrapUnsignedByteArray(Uint8Array.create(data)));
 						}else {
-							logger.error("Unexpected response length {} (expect: {}) from URL: {}", xhr.getStatus(), xhr.getStatusText());
+							logger.error("Unexpected response length {} (expect: {}) from URL: {}", xhr.getStatus(), xhr.getStatusText(), url);
 							cb.complete(null);
 						}
 					}else {
-						logger.error("Got response code {} \"{}\" for url: {}", xhr.getStatus(), xhr.getStatusText());
+						logger.error("Got response code {} \"{}\" for url: {}", xhr.getStatus(), xhr.getStatusText(), url);
 						cb.complete(null);
 					}
 				}
@@ -251,7 +251,7 @@ public class TeaVMUpdateThread implements Runnable {
 	}
 
 	public static void downloadSignedOffline(UpdateCertificate cert, byte[] data) {
-		PlatformApplication.downloadFileWithName(cert.bundleDisplayName.replaceAll("[^a-zA-Z0-9\\-_]", "_") + "_" + cert.bundleDisplayVersion.replaceAll("[^a-zA-Z0-9\\-_]", "_") + "_Offline_Signed.html", generateSignedOffline(cert, data));
+		PlatformApplication.downloadFileWithName(cert.bundleDisplayName.replaceAll("[^a-zA-Z0-9\\-_\\.]", "_") + "_" + cert.bundleDisplayVersion.replaceAll("[^a-zA-Z0-9\\-_]", "_") + "_Offline_Signed.html", generateSignedOffline(cert, data));
 	}
 
 	public static byte[] generateSignedOffline(UpdateCertificate cert, byte[] data) {

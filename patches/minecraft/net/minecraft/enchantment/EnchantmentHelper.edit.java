@@ -19,26 +19,54 @@
 
 ~ 	private static final EaglercraftRandom enchantmentRand = new EaglercraftRandom();
 
-> CHANGE  211 : 213  @  211 : 212
+> CHANGE  76 : 78  @  76 : 78
+
+~ 			for (int k = 0; k < stacks.length; ++k) {
+~ 				int j = getEnchantmentLevel(enchID, stacks[k]);
+
+> CHANGE  26 : 28  @  26 : 28
+
+~ 		for (int k = 0; k < stacks.length; ++k) {
+~ 			applyEnchantmentModifier(modifier, stacks[k]);
+
+> CHANGE  96 : 99  @  96 : 97
+
+~ 		ItemStack[] stacks = parEntityLivingBase.getInventory();
+~ 		for (int k = 0; k < stacks.length; ++k) {
+~ 			ItemStack itemstack = stacks[k];
+
+> CHANGE  8 : 10  @  8 : 9
 
 ~ 	public static int calcItemStackEnchantability(EaglercraftRandom parRandom, int parInt1, int parInt2,
 ~ 			ItemStack parItemStack) {
 
-> CHANGE  14 : 15  @  14 : 15
+> CHANGE  14 : 16  @  14 : 16
 
 ~ 	public static ItemStack addRandomEnchantment(EaglercraftRandom parRandom, ItemStack parItemStack, int parInt1) {
+~ 		List<EnchantmentData> list = buildEnchantmentList(parRandom, parItemStack, parInt1);
 
-> CHANGE  7 : 8  @  7 : 8
+> CHANGE  6 : 8  @  6 : 7
 
-~ 			for (EnchantmentData enchantmentdata : (List<EnchantmentData>) list) {
+~ 			for (int i = 0, l = list.size(); i < l; ++i) {
+~ 				EnchantmentData enchantmentdata = list.get(i);
 
 > CHANGE  11 : 13  @  11 : 12
 
 ~ 	public static List<EnchantmentData> buildEnchantmentList(EaglercraftRandom randomIn, ItemStack itemStackIn,
 ~ 			int parInt1) {
 
-> CHANGE  30 : 31  @  30 : 31
+> CHANGE  14 : 15  @  14 : 15
 
-~ 							for (EnchantmentData enchantmentdata1 : (List<EnchantmentData>) arraylist) {
+~ 			ArrayList<EnchantmentData> arraylist = null;
+
+> CHANGE  15 : 17  @  15 : 16
+
+~ 							for (int m = 0, n = arraylist.size(); m < n; ++m) {
+~ 								EnchantmentData enchantmentdata1 = arraylist.get(m);
+
+> CHANGE  30 : 32  @  30 : 31
+
+~ 		for (int j = 0; j < Enchantment.enchantmentsBookList.length; ++j) {
+~ 			Enchantment enchantment = Enchantment.enchantmentsBookList[j];
 
 > EOF

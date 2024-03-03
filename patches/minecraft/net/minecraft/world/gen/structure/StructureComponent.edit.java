@@ -9,11 +9,9 @@
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 
-> INSERT  19 : 20  @  19
+> DELETE  15  @  15 : 17
 
-+ 
-
-> CHANGE  36 : 37  @  36 : 37
+> CHANGE  38 : 39  @  38 : 39
 
 ~ 	public void buildComponent(StructureComponent var1, List<StructureComponent> var2, EaglercraftRandom var3) {
 

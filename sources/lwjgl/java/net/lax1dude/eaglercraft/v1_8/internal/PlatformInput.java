@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.lwjgl.PointerBuffer;
+import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.system.MemoryStack;
 
 /**
@@ -129,6 +130,9 @@ public class PlatformInput {
 		});
 		
 		glfwSetKeyCallback(glfwWindow, (window, key, scancode, action, mods) -> {
+			if (key == GLFW_KEY_F11 && action == GLFW_PRESS) {
+				toggleFullscreen();
+			}
 			if(glfwGetKey(glfwWindow, functionKeyModifier) == GLFW_PRESS) {
 				if(key >= GLFW_KEY_1 && key <= GLFW_KEY_9) {
 					key = key - GLFW_KEY_1 + GLFW_KEY_F1;
@@ -381,12 +385,64 @@ public class PlatformInput {
 		functionKeyModifier = KeyboardConstants.getGLFWKeyFromEagler(key);
 	}
 
+	private static boolean fullscreen = false;
+	private static int[] lastPos = new int[4];
+
 	public static void toggleFullscreen() {
-		//
+		long win = PlatformRuntime.getWindowHandle();
+		long mon = getCurrentMonitor(win);
+		GLFWVidMode mode = glfwGetVideoMode(mon);
+		if (fullscreen) {
+			glfwSetWindowMonitor(win, 0, lastPos[0], lastPos[1], lastPos[2], lastPos[3], mode.refreshRate());
+		} else {
+			int[] x = new int[1], y = new int[1];
+			glfwGetWindowPos(win, x, y);
+			lastPos[0] = x[0];
+			lastPos[1] = y[0];
+			glfwGetWindowSize(win, x, y);
+			lastPos[2] = x[0];
+			lastPos[3] = y[0];
+			glfwSetWindowMonitor(win, mon, 0, 0, mode.width(), mode.height(), mode.refreshRate());
+		}
+		fullscreen = !fullscreen;
+	}
+
+	// https://stackoverflow.com/a/31526753
+	private static long getCurrentMonitor(long window) {
+		int nmonitors, i;
+		int[] wx = new int[1], wy = new int[1], ww = new int[1], wh = new int[1];
+		int[] mx = new int[1], my = new int[1], mw = new int[1], mh = new int[1];
+		int overlap, bestoverlap = 0;
+		long bestmonitor = 0;
+		PointerBuffer monitors;
+		GLFWVidMode mode;
+
+		glfwGetWindowPos(window, wx, wy);
+		glfwGetWindowSize(window, ww, wh);
+		monitors = glfwGetMonitors();
+		nmonitors = monitors.remaining();
+
+		for (i = 0; i < nmonitors; ++i) {
+			mode = glfwGetVideoMode(monitors.get(i));
+			glfwGetMonitorPos(monitors.get(i), mx, my);
+			mw[0] = mode.width();
+			mh[0] = mode.height();
+
+			overlap =
+					Math.max(0, Math.min(wx[0] + ww[0], mx[0] + mw[0]) - Math.max(wx[0], mx[0])) *
+							Math.max(0, Math.min(wy[0] + wh[0], my[0] + mh[0]) - Math.max(wy[0], my[0]));
+
+			if (bestoverlap < overlap) {
+				bestoverlap = overlap;
+				bestmonitor = monitors.get(i);
+			}
+		}
+
+		return bestmonitor;
 	}
 
 	public static boolean isFullscreen() {
-		return false;
+		return fullscreen;
 	}
 
 	public static void showCursor(EnumCursorType cursor) {

@@ -12,7 +12,7 @@
 + import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 + import net.lax1dude.eaglercraft.v1_8.opengl.WorldRenderer;
 
-> DELETE  7  @  7 : 8
+> DELETE  1  @  1 : 8
 
 > DELETE  2  @  2 : 3
 
@@ -29,5 +29,10 @@
 > CHANGE  6 : 7  @  6 : 7
 
 ~ 	protected void actionPerformed(GuiButton parGuiButton) {
+
+> CHANGE  55 : 57  @  55 : 57
+
+~ 			for (int i = 0, l = parList.size(); i < l; ++i) {
+~ 				flatgeneratorinfo.getWorldFeatures().put(parList.get(i), Maps.newHashMap());
 
 > EOF

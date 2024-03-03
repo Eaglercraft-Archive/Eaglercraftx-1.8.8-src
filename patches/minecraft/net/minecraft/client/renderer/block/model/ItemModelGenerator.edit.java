@@ -33,8 +33,19 @@
 ~ 	private List<BlockPart> func_178397_a(EaglerTextureAtlasSprite parTextureAtlasSprite, String parString1,
 ~ 			int parInt1) {
 
-> CHANGE  102 : 103  @  102 : 103
+> CHANGE  4 : 7  @  4 : 5
+
+~ 		List<ItemModelGenerator.Span> lst = this.func_178393_a(parTextureAtlasSprite);
+~ 		for (int i = 0, l = lst.size(); i < l; ++i) {
+~ 			ItemModelGenerator.Span itemmodelgenerator$span = lst.get(i);
+
+> CHANGE  97 : 98  @  97 : 98
 
 ~ 	private List<ItemModelGenerator.Span> func_178393_a(EaglerTextureAtlasSprite parTextureAtlasSprite) {
+
+> CHANGE  35 : 37  @  35 : 36
+
+~ 		for (int j = 0, l = parList.size(); j < l; ++j) {
+~ 			ItemModelGenerator.Span itemmodelgenerator$span1 = parList.get(j);
 
 > EOF

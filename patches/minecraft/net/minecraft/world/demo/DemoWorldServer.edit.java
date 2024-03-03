@@ -10,9 +10,8 @@
 + import net.lax1dude.eaglercraft.v1_8.EaglercraftVersion;
 + 
 
-> CHANGE  1 : 3  @  1 : 2
+> CHANGE  1 : 2  @  1 : 2
 
-~ 
 ~ 	private static final long demoWorldSeed = EaglercraftVersion.demoWorldSeed;
 
 > EOF

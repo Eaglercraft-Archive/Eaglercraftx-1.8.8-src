@@ -5,14 +5,12 @@
 # Version: 1.0
 # Author: lax1dude
 
-> INSERT  6 : 10  @  6
+> CHANGE  6 : 10  @  6 : 16
 
-+ 
-+ import net.lax1dude.eaglercraft.v1_8.HString;
-+ import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
-+ import net.lax1dude.eaglercraft.v1_8.opengl.WorldRenderer;
-
-> DELETE  9  @  9 : 10
+~ 
+~ import net.lax1dude.eaglercraft.v1_8.HString;
+~ import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
+~ import net.lax1dude.eaglercraft.v1_8.opengl.WorldRenderer;
 
 > DELETE  1  @  1 : 2
 

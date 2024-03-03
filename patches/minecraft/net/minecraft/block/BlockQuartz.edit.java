@@ -20,4 +20,14 @@
 + 	}
 + 
 
+> CHANGE  59 : 60  @  59 : 60
+
+~ 		private static final BlockQuartz.EnumType[] META_LOOKUP = new BlockQuartz.EnumType[5];
+
+> CHANGE  31 : 34  @  31 : 33
+
+~ 			BlockQuartz.EnumType[] types = values();
+~ 			for (int i = 0; i < types.length; ++i) {
+~ 				META_LOOKUP[types[i].getMetadata()] = types[i];
+
 > EOF

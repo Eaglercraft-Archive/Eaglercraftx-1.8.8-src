@@ -23,7 +23,15 @@
 
 ~ 		EaglerLoadingCache loadingcache = func_181627_a(worldIn, false);
 
-> CHANGE  19 : 21  @  19 : 21
+> CHANGE  3 : 8  @  3 : 5
+
+~ 			EnumFacing[] facings = EnumFacing._VALUES;
+~ 			for (int j = 0; j < facings.length; ++j) {
+~ 				EnumFacing enumfacing = facings[j];
+~ 				for (int k = 0; k < facings.length; ++k) {
+~ 					EnumFacing enumfacing1 = facings[k];
+
+> CHANGE  14 : 16  @  14 : 16
 
 ~ 	public static EaglerLoadingCache<BlockPos, BlockWorldState> func_181627_a(World parWorld, boolean parFlag) {
 ~ 		return new EaglerLoadingCache<BlockPos, BlockWorldState>(new BlockPattern.CacheLoader(parWorld, parFlag));

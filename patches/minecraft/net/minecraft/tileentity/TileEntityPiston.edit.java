@@ -15,4 +15,9 @@
 
 > DELETE  5  @  5 : 6
 
+> CHANGE  81 : 83  @  81 : 82
+
+~ 				for (int i = 0, l = this.field_174933_k.size(); i < l; ++i) {
+~ 					Entity entity = this.field_174933_k.get(i);
+
 > EOF

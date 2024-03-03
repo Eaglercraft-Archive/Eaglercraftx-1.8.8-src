@@ -8,8 +8,8 @@
 <title>EaglercraftX 1.8</title>
 <meta property="og:locale" content="en-US" />
 <meta property="og:type" content="website" />
-<meta property="og:title" content="EaglercraftX 1.8 Offline" />
-<meta property="og:description" content="this file is not a website, whoever uploaded it to this URL is a dumbass" />
+<meta property="og:title" content="EaglercraftX 1.8" />
+<meta property="og:description" content="Play minecraft 1.8 in your browser" />
 <script type="text/javascript">
 "use strict";
 const relayId = Math.floor(Math.random() * 3);
@@ -31,10 +31,15 @@ window.eaglercraftXOptsHints = {
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 </script>
+<style type="eaglercraft" id="eaglercraftXClientSignature">data:application/octet-stream;base64,${client_signature}</style>
+<style type="eaglercraft" id="eaglercraftXClientBundle">data:application/octet-stream;base64,${client_bundle}</style>
 <script type="text/javascript">
 "use strict";
-window.eaglercraftXClientSignature = "data:application/octet-stream;base64,${client_signature}";
-window.eaglercraftXClientBundle = "data:application/octet-stream;base64,${client_bundle}";
+(function(){
+	function eaglerBundleUnwrap(tagIn) { const e = document.getElementById(tagIn); const ret = e.innerText; e.remove(); return ret;  }
+	window.eaglercraftXClientSignature = eaglerBundleUnwrap("eaglercraftXClientSignature");
+	window.eaglercraftXClientBundle = eaglerBundleUnwrap("eaglercraftXClientBundle");
+})();
 </script>
 <script type="text/javascript">
 "use strict";

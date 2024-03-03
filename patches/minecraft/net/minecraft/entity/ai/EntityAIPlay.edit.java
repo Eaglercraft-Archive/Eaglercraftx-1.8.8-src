@@ -5,12 +5,15 @@
 # Version: 1.0
 # Author: lax1dude
 
-> INSERT  10 : 11  @  10
-
-+ 
+> DELETE  4  @  4 : 6
 
 > CHANGE  21 : 22  @  21 : 22
 
-~ 			for (EntityVillager entityvillager : (List<EntityVillager>) list) {
+~ 			List<EntityVillager> list = this.villagerObj.worldObj.getEntitiesWithinAABB(EntityVillager.class,
+
+> CHANGE  3 : 5  @  3 : 4
+
+~ 			for (int i = 0, l = list.size(); i < l; ++i) {
+~ 				EntityVillager entityvillager = list.get(i);
 
 > EOF

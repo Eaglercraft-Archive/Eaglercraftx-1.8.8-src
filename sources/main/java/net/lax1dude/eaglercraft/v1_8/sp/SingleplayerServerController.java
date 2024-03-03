@@ -12,17 +12,14 @@ import net.lax1dude.eaglercraft.v1_8.internal.PlatformWebRTC;
 import org.apache.commons.lang3.StringUtils;
 
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
-import net.lax1dude.eaglercraft.v1_8.EaglercraftSoundManager;
 import net.lax1dude.eaglercraft.v1_8.internal.EnumEaglerConnectionState;
 import net.lax1dude.eaglercraft.v1_8.internal.IPCPacketData;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformApplication;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 import net.lax1dude.eaglercraft.v1_8.profile.EaglerProfile;
-import net.lax1dude.eaglercraft.v1_8.socket.EaglercraftNetworkManager;
 import net.lax1dude.eaglercraft.v1_8.sp.internal.ClientPlatformSingleplayer;
 import net.lax1dude.eaglercraft.v1_8.sp.ipc.*;
-import net.lax1dude.eaglercraft.v1_8.sp.lan.LANClientNetworkManager;
 import net.lax1dude.eaglercraft.v1_8.sp.lan.LANServerController;
 import net.lax1dude.eaglercraft.v1_8.sp.socket.ClientIntegratedServerNetworkManager;
 import net.minecraft.client.Minecraft;
@@ -475,7 +472,8 @@ public class SingleplayerServerController implements ISaveFormat {
 	private static void loadSaveComparators() {
 		saveListMap.clear();
 		saveListCache.clear();
-		for(NBTTagCompound nbt : saveListNBT) {
+		for(int j = 0, l = saveListNBT.size(); j < l; ++j) {
+			NBTTagCompound nbt = saveListNBT.get(j);
 			String folderName = nbt.getString("folderNameEagler");
 			if(!StringUtils.isEmpty(folderName)) {
 				WorldInfo worldinfo = new WorldInfo(nbt.getCompoundTag("Data"));

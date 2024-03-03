@@ -5,7 +5,9 @@
 # Version: 1.0
 # Author: lax1dude
 
-> INSERT  11 : 12  @  11
+> DELETE  3  @  3 : 8
+
+> INSERT  3 : 4  @  3
 
 + import net.minecraft.util.StringUtils;
 

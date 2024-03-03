@@ -90,7 +90,9 @@ public class EaglerSaveFormat extends SaveFormatOld {
 		int totalSize = 0;
 		int lastUpdate = 0;
 		final VFile2 finalNewFolder = newFolder;
-		for(VFile2 vf : oldFolder.listFiles(true)) {
+		List<VFile2> vfl = oldFolder.listFiles(true);
+		for(int i = 0, l = vfl.size(); i < l; ++i) {
+			VFile2 vf = vfl.get(i);
 			String fileNameRelative = vf.getPath().substring(oldPath.length() + 1);
 			totalSize += VFile2.copyFile(vf, new VFile2(finalNewFolder, fileNameRelative));
 			if (totalSize - lastUpdate > 10000) {

@@ -9,9 +9,10 @@
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 
-> CHANGE  7 : 9  @  7 : 8
+> DELETE  4  @  4 : 5
 
-~ 
+> CHANGE  2 : 3  @  2 : 3
+
 ~ 	public boolean generate(World world, EaglercraftRandom random, BlockPos blockpos) {
 
 > EOF

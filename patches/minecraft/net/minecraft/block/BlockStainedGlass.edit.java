@@ -10,7 +10,13 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
 
-> CHANGE  43 : 44  @  43 : 44
+> CHANGE  29 : 32  @  29 : 31
+
+~ 		EnumDyeColor[] colors = EnumDyeColor.META_LOOKUP;
+~ 		for (int i = 0; i < colors.length; ++i) {
+~ 			list.add(new ItemStack(item, 1, colors[i].getMetadata()));
+
+> CHANGE  12 : 13  @  12 : 13
 
 ~ 	public int quantityDropped(EaglercraftRandom var1) {
 

@@ -1,6 +1,5 @@
 package net.lax1dude.eaglercraft.v1_8.update;
 
-import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,8 +10,10 @@ import java.util.Objects;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.MultimapBuilder.ListMultimapBuilder;
 
+import net.lax1dude.eaglercraft.v1_8.EaglerInputStream;
 import net.lax1dude.eaglercraft.v1_8.EaglerZLIB;
 import net.lax1dude.eaglercraft.v1_8.EaglercraftVersion;
+import net.lax1dude.eaglercraft.v1_8.IOUtils;
 import net.lax1dude.eaglercraft.v1_8.crypto.SHA256Digest;
 
 /**
@@ -78,7 +79,7 @@ public class UpdateCertificate {
 	public final DLSource[] bundleDataSources;
 
 	public static UpdateCertificate parseAndVerifyCertificate(byte[] certData) throws IOException, CertificateInvalidException {
-		InputStream is = new ByteArrayInputStream(certData);
+		InputStream is = new EaglerInputStream(certData);
 		if(is.read() != 'E' || is.read() != 'A' || is.read() != 'G' || is.read() != 'S' || is.read() != 'I' || is.read() != 'G') {
 			throw new IOException("Data is not a certificate!");
 		}
@@ -90,7 +91,7 @@ public class UpdateCertificate {
 		}
 		
 		byte[] rsa2048sum = new byte[256];
-		is.read(rsa2048sum);
+		IOUtils.readFully(is, rsa2048sum);
 		
 		byte[] rsa2048sumDec = (new BigInteger(rsa2048sum)).modPow(new BigInteger("65537"), EaglercraftVersion.updateSignatureModulus).toByteArray();
 		
@@ -108,7 +109,7 @@ public class UpdateCertificate {
 		payloadLen |= is.read();
 		
 		byte[] signaturePayload = new byte[payloadLen];
-		is.read(signaturePayload);
+		IOUtils.readFully(is, signaturePayload);
 		
 		SHA256Digest sha256 = new SHA256Digest();
 		sha256.update(new byte[] { (byte) 170, (byte) 191, (byte) 203, (byte) 188, (byte) 47, (byte) 37, (byte) 17,
@@ -147,7 +148,7 @@ public class UpdateCertificate {
 			throw new CertificateInvalidException("SHA256 checksum of signature payload is invalid!");
 		}
 		
-		return new UpdateCertificate(certData, EaglerZLIB.newGZIPInputStream(new ByteArrayInputStream(signaturePayload)), vers);
+		return new UpdateCertificate(certData, EaglerZLIB.newGZIPInputStream(new EaglerInputStream(signaturePayload)), vers);
 	}
 
 	private UpdateCertificate(byte[] certData, InputStream is, int sigVers) throws IOException {
@@ -157,18 +158,18 @@ public class UpdateCertificate {
 		this.sigTimestamp = dis.readLong();
 		this.bundleDataLength = dis.readInt();
 		this.bundleDataHash = new byte[32];
-		dis.read(bundleDataHash);
+		IOUtils.readFully(dis, bundleDataHash);
 		this.bundlePackageName = dis.readUTF();
 		this.bundleDisplayName = dis.readUTF();
 		this.bundleAuthorName = dis.readUTF();
 		this.bundleVersionInteger = dis.readInt();
 		this.bundleDisplayVersion = dis.readUTF();
 		this.bundleVersionComment = dis.readUTF();
-		dis.skip(dis.read());
+		IOUtils.skipFully(dis, dis.read());
 		int sourceCount = dis.readInt();
 		this.bundleDataSources = new DLSource[sourceCount];
 		for(int i = 0; i < sourceCount; ++i) {
-			dis.skip(4);
+			IOUtils.skipFully(dis, 4);
 			bundleDataSources[i] = new DLSource(dis.readUTF(), dis.readUTF());
 		}
 	}

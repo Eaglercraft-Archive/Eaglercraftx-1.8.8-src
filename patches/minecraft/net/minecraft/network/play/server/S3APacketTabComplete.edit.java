@@ -9,4 +9,9 @@
 
 + 
 
+> CHANGE  26 : 28  @  26 : 28
+
+~ 		for (int i = 0; i < this.matches.length; ++i) {
+~ 			parPacketBuffer.writeString(this.matches[i]);
+
 > EOF

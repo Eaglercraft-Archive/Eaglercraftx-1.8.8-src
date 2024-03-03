@@ -11,7 +11,11 @@
 
 > DELETE  14  @  14 : 15
 
-> CHANGE  193 : 194  @  193 : 194
+> CHANGE  68 : 69  @  68 : 69
+
+~ 		this.dataWatcher.addObject(16, Byte.valueOf((byte) 0));
+
+> CHANGE  124 : 125  @  124 : 125
 
 ~ 	public static EnumDyeColor getRandomSheepColor(EaglercraftRandom random) {
 

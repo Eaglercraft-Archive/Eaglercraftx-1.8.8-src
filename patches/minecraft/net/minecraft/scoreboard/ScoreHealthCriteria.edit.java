@@ -11,4 +11,9 @@
 
 > DELETE  1  @  1 : 3
 
+> CHANGE  10 : 12  @  10 : 11
+
+~ 		for (int i = 0, l = list.size(); i < l; ++i) {
+~ 			EntityPlayer entityplayer = list.get(i);
+
 > EOF

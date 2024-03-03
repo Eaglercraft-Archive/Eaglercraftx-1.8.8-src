@@ -16,4 +16,10 @@
 
 ~ 		CHANGE_PAGE("change_page", true), EAGLER_PLUGIN_DOWNLOAD("eagler_plugin_download", true);
 
+> CHANGE  23 : 26  @  23 : 25
+
+~ 			ClickEvent.Action[] types = values();
+~ 			for (int i = 0; i < types.length; ++i) {
+~ 				nameMapping.put(types[i].getCanonicalName(), types[i]);
+
 > EOF

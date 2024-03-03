@@ -26,7 +26,13 @@
 
 ~ 	protected void actionPerformed(GuiButton parGuiButton) {
 
-> INSERT  20 : 32  @  20
+> CHANGE  12 : 15  @  12 : 14
+
+~ 			for (int l = 0, m = this.multilineMessage.size(); l < m; ++l) {
+~ 				this.drawCenteredString(this.fontRendererObj, this.multilineMessage.get(l), this.width / 2, k,
+~ 						16777215);
+
+> INSERT  6 : 18  @  6
 
 + 
 + 	public void updateScreen() {

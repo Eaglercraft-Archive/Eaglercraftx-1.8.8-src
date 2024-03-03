@@ -84,15 +84,42 @@
 
 ~ 	public void forceBlockUpdateTick(Block blockType, BlockPos pos, EaglercraftRandom random) {
 
-> CHANGE  263 : 264  @  263 : 264
+> CHANGE  93 : 96  @  93 : 94
 
+~ 				EnumFacing[] facings = EnumFacing._VALUES;
+~ 				for (int m = 0; m < facings.length; ++m) {
+~ 					EnumFacing enumfacing = facings[m];
+
+> CHANGE  50 : 53  @  50 : 51
+
+~ 								EnumFacing[] facings = EnumFacing._VALUES;
+~ 								for (int m = 0; m < facings.length; ++m) {
+~ 									EnumFacing enumfacing = facings[m];
+
+> CHANGE  117 : 120  @  117 : 119
+
+~ 		for (int i = 0, l = this.loadedEntityList.size(); i < l; ++i) {
+~ 			Entity entity = this.loadedEntityList.get(i);
 ~ 			if (entityType.isAssignableFrom(entity.getClass()) && filter.apply((T) entity)) {
 
-> CHANGE  11 : 12  @  11 : 12
+> CHANGE  10 : 13  @  10 : 12
 
+~ 		for (int i = 0, l = this.playerEntities.size(); i < l; ++i) {
+~ 			Entity entity = this.playerEntities.get(i);
 ~ 			if (playerType.isAssignableFrom(entity.getClass()) && filter.apply((T) entity)) {
 
-> CHANGE  232 : 233  @  232 : 233
+> CHANGE  68 : 70  @  68 : 69
+
+~ 		for (int j = 0, l = this.loadedEntityList.size(); j < l; ++j) {
+~ 			Entity entity = this.loadedEntityList.get(j);
+
+> CHANGE  102 : 105  @  102 : 103
+
+~ 		EnumFacing[] facings = EnumFacing._VALUES;
+~ 		for (int k = 0; k < facings.length; ++k) {
+~ 			EnumFacing enumfacing = facings[k];
+
+> CHANGE  60 : 61  @  60 : 61
 
 ~ 	public EntityPlayer getPlayerEntityByUUID(EaglercraftUUID uuid) {
 
@@ -100,7 +127,13 @@
 
 ~ 	public EaglercraftRandom setRandomSeed(int parInt1, int parInt2, int parInt3) {
 
-> INSERT  129 : 132  @  129
+> CHANGE  67 : 70  @  67 : 68
+
+~ 		EnumFacing[] facings = EnumFacing.Plane.HORIZONTAL.facingsArray;
+~ 		for (int i = 0; i < facings.length; ++i) {
+~ 			EnumFacing enumfacing = facings[i];
+
+> INSERT  61 : 64  @  61
 
 + 		if (!MinecraftServer.getServer().worldServers[0].getWorldInfo().getGameRulesInstance()
 + 				.getBoolean("loadSpawnChunks"))

@@ -62,7 +62,12 @@
 ~ 						+ I18n.format(this.serverData.hideAddress ? "gui.yes" : "gui.no", new Object[0]);
 ~ 			} else if (parGuiButton.id == 2) {
 
-> CHANGE  8 : 10  @  8 : 10
+> CHANGE  1 : 3  @  1 : 3
+
+~ 						ServerData.ServerResourceMode._VALUES[(this.serverData.getResourceMode().ordinal() + 1)
+~ 								% ServerData.ServerResourceMode._VALUES.length]);
+
+> CHANGE  5 : 7  @  5 : 7
 
 ~ 				this.serverData.serverName = this.serverNameField.getText().trim();
 ~ 				this.serverData.serverIP = this.serverIPField.getText().trim();

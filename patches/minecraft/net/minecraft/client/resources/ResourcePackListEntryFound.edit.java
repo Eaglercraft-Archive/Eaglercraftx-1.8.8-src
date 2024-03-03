@@ -7,4 +7,8 @@
 
 > DELETE  3  @  3 : 5
 
+> CHANGE  23 : 24  @  23 : 24
+
+~ 		return this.field_148319_c.getResourcePackEaglerDisplayName();
+
 > EOF

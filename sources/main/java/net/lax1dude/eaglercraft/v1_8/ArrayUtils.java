@@ -55,6 +55,17 @@ public class ArrayUtils {
 		}
 		return str;
 	}
+	
+	private static final String hex = "0123456789abcdef";
+	
+	public static String hexString(byte[] bytesIn) {
+		char[] ret = new char[bytesIn.length << 1];
+		for(int i = 0; i < bytesIn.length; ++i) {
+			ret[i << 1] = hex.charAt((bytesIn[i] >> 4) & 15);
+			ret[(i << 1) + 1] = hex.charAt(bytesIn[i] & 15);
+		}
+		return new String(ret);
+	}
 
 	public static <T> void eaglerShuffle(List<T> list, EaglercraftRandom rnd) {
 		T k;

@@ -35,7 +35,13 @@
 
 ~ 	public void generateTree(World worldIn, BlockPos pos, IBlockState state, EaglercraftRandom rand) {
 
-> CHANGE  119 : 120  @  119 : 120
+> CHANGE  109 : 112  @  109 : 111
+
+~ 		BlockPlanks.EnumType[] types = BlockPlanks.EnumType.META_LOOKUP;
+~ 		for (int i = 0; i < types.length; ++i) {
+~ 			list.add(new ItemStack(item, 1, types[i].getMetadata()));
+
+> CHANGE  8 : 9  @  8 : 9
 
 ~ 	public boolean canUseBonemeal(World world, EaglercraftRandom var2, BlockPos var3, IBlockState var4) {
 

@@ -91,7 +91,8 @@ public class EaglercraftNetworkManager {
 			return;
 		}
 
-		for(byte[] next : pkts) {
+		for(int i = 0, l = pkts.size(); i < l; ++i) {
+			byte[] next = pkts.get(i);
 			++debugPacketCounter;
 			try {
 				ByteBuf nettyBuffer = Unpooled.buffer(next, next.length);

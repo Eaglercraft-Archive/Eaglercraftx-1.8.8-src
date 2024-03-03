@@ -1,6 +1,5 @@
 package net.lax1dude.eaglercraft.v1_8.sp.server.export;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
@@ -9,6 +8,7 @@ import java.util.Date;
 import java.util.zip.CRC32;
 
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
+import net.lax1dude.eaglercraft.v1_8.EaglerOutputStream;
 
 /**
  * Copyright (c) 2022-2024 lax1dude. All Rights Reserved.
@@ -27,13 +27,13 @@ import net.lax1dude.eaglercraft.v1_8.EagRuntime;
  */
 public class EPKCompiler {
 
-	private final ByteArrayOutputStream os;
+	private final EaglerOutputStream os;
 	private final CRC32 checkSum = new CRC32();
 	private int lengthIntegerOffset = 0;
 	private int totalFileCount = 0;
 
 	public EPKCompiler(String name, String owner, String type) {
-		os = new ByteArrayOutputStream(0x200000);
+		os = new EaglerOutputStream(0x200000);
 		try {
 			
 			os.write(new byte[]{(byte)69,(byte)65,(byte)71,(byte)80,(byte)75,(byte)71,(byte)36,(byte)36}); // EAGPKG$$

@@ -5,8 +5,6 @@
 # Version: 1.0
 # Author: lax1dude
 
-> INSERT  7 : 8  @  7
-
-+ 
+> DELETE  2  @  2 : 3
 
 > EOF

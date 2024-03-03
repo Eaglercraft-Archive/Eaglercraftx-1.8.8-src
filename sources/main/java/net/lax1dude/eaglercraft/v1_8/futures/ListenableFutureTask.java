@@ -41,7 +41,8 @@ public class ListenableFutureTask<V> extends FutureTask<V> implements Listenable
 	}
 	
 	protected void done() {
-		for(Runnable r : listeners) {
+		for(int i = 0, l = listeners.size(); i < l; ++i) {
+			Runnable r = listeners.get(i);
 			try {
 				r.run();
 			}catch(Throwable t) {

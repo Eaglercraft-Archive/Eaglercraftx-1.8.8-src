@@ -29,7 +29,22 @@
 ~ 			this.drawDefaultBackground();
 ~ 		}
 
-> INSERT  29 : 34  @  29
+> CHANGE  3 : 5  @  3 : 5
+
+~ 		for (int l = 0, m = this.field_175298_s.size(); l < m; ++l) {
+~ 			this.drawCenteredString(this.fontRendererObj, this.field_175298_s.get(l), this.width / 2, k, 16777215);
+
+> CHANGE  9 : 11  @  9 : 11
+
+~ 		for (int l = 0, m = this.buttonList.size(); l < m; ++l) {
+~ 			this.buttonList.get(l).enabled = false;
+
+> CHANGE  7 : 9  @  7 : 9
+
+~ 			for (int l = 0, m = this.buttonList.size(); l < m; ++l) {
+~ 				this.buttonList.get(l).enabled = true;
+
+> INSERT  4 : 9  @  4
 
 + 
 + 	public GuiYesNo withOpaqueBackground() {

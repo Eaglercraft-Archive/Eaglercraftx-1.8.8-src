@@ -10,11 +10,15 @@
 + 
 + import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 
-> INSERT  12 : 13  @  12
+> DELETE  7  @  7 : 8
 
-+ 
+> CHANGE  86 : 89  @  86 : 87
 
-> CHANGE  125 : 126  @  125 : 126
+~ 						List<Village> lst = this.worldObj.getVillageCollection().getVillageList();
+~ 						for (int j = 0, l = lst.size(); j < l; ++j) {
+~ 							Village village = lst.get(i);
+
+> CHANGE  42 : 43  @  42 : 43
 
 ~ 				EagRuntime.debugPrintStackTrace(exception);
 

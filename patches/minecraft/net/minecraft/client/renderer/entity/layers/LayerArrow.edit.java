@@ -11,9 +11,9 @@
 ~ 
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 
-> DELETE  2  @  2 : 3
+> DELETE  2  @  2 : 4
 
-> DELETE  2  @  2 : 3
+> DELETE  1  @  1 : 2
 
 > CHANGE  17 : 19  @  17 : 19
 

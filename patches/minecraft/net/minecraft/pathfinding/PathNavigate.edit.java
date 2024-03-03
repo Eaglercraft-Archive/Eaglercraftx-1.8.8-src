@@ -5,12 +5,15 @@
 # Version: 1.0
 # Author: lax1dude
 
-> INSERT  17 : 18  @  17
+> DELETE  7  @  7 : 9
 
-+ 
+> CHANGE  134 : 135  @  134 : 135
 
-> CHANGE  131 : 132  @  131 : 132
+~ 					List<AxisAlignedBB> list = this.worldObj.getCollidingBoundingBoxes(this.theEntity,
 
-~ 					for (AxisAlignedBB axisalignedbb : (List<AxisAlignedBB>) list) {
+> CHANGE  4 : 6  @  4 : 5
+
+~ 					for (int i = 0, l = list.size(); i < l; ++i) {
+~ 						AxisAlignedBB axisalignedbb = list.get(i);
 
 > EOF

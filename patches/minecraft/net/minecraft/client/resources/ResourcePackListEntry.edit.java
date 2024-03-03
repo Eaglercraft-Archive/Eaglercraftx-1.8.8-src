@@ -9,13 +9,13 @@
 
 + 
 + import net.lax1dude.eaglercraft.v1_8.Keyboard;
-+ import net.lax1dude.eaglercraft.v1_8.vfs.SYS;
 + import net.lax1dude.eaglercraft.v1_8.internal.KeyboardConstants;
++ import net.lax1dude.eaglercraft.v1_8.minecraft.EaglerFolderResourcePack;
 + import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 
 > DELETE  6  @  6 : 8
 
-> INSERT  128 : 157  @  128
+> INSERT  128 : 158  @  128
 
 + 	private void proceedWithBs(int l, boolean deleteInstead) {
 + 		if (!deleteInstead && l != 1) {
@@ -39,7 +39,8 @@
 + 			this.resourcePacksGUI.getListContaining(this).remove(this);
 + 			if (deleteInstead) {
 + 				this.mc.loadingScreen.eaglerShow(I18n.format("resourcePack.load.deleting"), this.func_148312_b());
-+ 				SYS.deleteResourcePack(this.func_148312_b());
++ 				EaglerFolderResourcePack.deleteResourcePack(EaglerFolderResourcePack.RESOURCE_PACKS,
++ 						this.func_148312_b());
 + 			} else {
 + 				this.resourcePacksGUI.getSelectedResourcePacks().add(0, this);
 + 			}

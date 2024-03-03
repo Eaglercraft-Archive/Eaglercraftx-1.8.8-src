@@ -273,7 +273,8 @@ public class EaglerTextureAtlasSprite {
 						public String call() throws Exception {
 							StringBuilder stringbuilder = new StringBuilder();
 
-							for (int[] aint1 : aint) {
+							for (int j = 0; j < aint.length; ++j) {
+								int[] aint1 = aint[j];
 								if (stringbuilder.length() > 0) {
 									stringbuilder.append(", ");
 								}

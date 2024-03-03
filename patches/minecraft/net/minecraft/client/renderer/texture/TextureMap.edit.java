@@ -322,13 +322,14 @@
 + 		_wglBindFramebuffer(_GL_FRAMEBUFFER, null);
 + 
 
-> CHANGE  2 : 7  @  2 : 3
+> CHANGE  2 : 8  @  2 : 3
 
 ~ 		width = stitcher.getCurrentWidth();
 ~ 		height = stitcher.getCurrentHeight();
 ~ 
 ~ 		List<EaglerTextureAtlasSprite> spriteList = stitcher.getStichSlots();
-~ 		for (EaglerTextureAtlasSprite textureatlassprite2 : spriteList) {
+~ 		for (int l = 0, m = spriteList.size(); l < m; ++l) {
+~ 			EaglerTextureAtlasSprite textureatlassprite2 = spriteList.get(l);
 
 > INSERT  5 : 6  @  5
 
@@ -369,11 +370,12 @@
 
 ~ 			textureatlassprite = isEaglerPBRMode ? missingImagePBR : missingImage;
 
-> CHANGE  6 : 13  @  6 : 7
+> CHANGE  6 : 14  @  6 : 7
 
 ~ 		if (isEaglerPBRMode) {
-~ 			for (EaglerTextureAtlasSprite textureatlassprite : this.listAnimatedSprites) {
-~ 				textureatlassprite.updateAnimationPBR(copyColorFramebuffer, copyMaterialFramebuffer, height);
+~ 			for (int i = 0, l = this.listAnimatedSprites.size(); i < l; ++i) {
+~ 				this.listAnimatedSprites.get(i).updateAnimationPBR(copyColorFramebuffer, copyMaterialFramebuffer,
+~ 						height);
 ~ 			}
 ~ 			_wglBindFramebuffer(_GL_FRAMEBUFFER, null);
 ~ 			return;
@@ -381,8 +383,8 @@
 
 > CHANGE  1 : 3  @  1 : 3
 
-~ 		for (EaglerTextureAtlasSprite textureatlassprite : this.listAnimatedSprites) {
-~ 			textureatlassprite.updateAnimation(copyColorFramebuffer);
+~ 		for (int i = 0, l = this.listAnimatedSprites.size(); i < l; ++i) {
+~ 			this.listAnimatedSprites.get(i).updateAnimation(copyColorFramebuffer);
 
 > INSERT  2 : 3  @  2
 
@@ -391,8 +393,8 @@
 > CHANGE  2 : 9  @  2 : 3
 
 ~ 	private void destroyAnimationCaches() {
-~ 		for (EaglerTextureAtlasSprite textureatlassprite : this.listAnimatedSprites) {
-~ 			textureatlassprite.clearFramesTextureData();
+~ 		for (int i = 0, l = this.listAnimatedSprites.size(); i < l; ++i) {
+~ 			this.listAnimatedSprites.get(i).clearFramesTextureData();
 ~ 		}
 ~ 	}
 ~ 

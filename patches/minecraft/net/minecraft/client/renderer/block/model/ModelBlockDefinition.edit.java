@@ -7,18 +7,19 @@
 
 > DELETE  2  @  2 : 11
 
-> INSERT  7 : 17  @  7
+> DELETE  1  @  1 : 2
 
-+ 
-+ import org.json.JSONArray;
-+ import org.json.JSONException;
-+ import org.json.JSONObject;
-+ 
-+ import com.google.common.collect.Lists;
-+ import com.google.common.collect.Maps;
-+ 
-+ import net.lax1dude.eaglercraft.v1_8.json.JSONTypeDeserializer;
-+ import net.lax1dude.eaglercraft.v1_8.json.JSONTypeProvider;
+> CHANGE  4 : 13  @  4 : 5
+
+~ import org.json.JSONArray;
+~ import org.json.JSONException;
+~ import org.json.JSONObject;
+~ 
+~ import com.google.common.collect.Lists;
+~ import com.google.common.collect.Maps;
+~ 
+~ import net.lax1dude.eaglercraft.v1_8.json.JSONTypeDeserializer;
+~ import net.lax1dude.eaglercraft.v1_8.json.JSONTypeProvider;
 
 > DELETE  1  @  1 : 2
 
@@ -30,7 +31,12 @@
 
 ~ 		return (ModelBlockDefinition) JSONTypeProvider.deserialize(parReader, ModelBlockDefinition.class);
 
-> CHANGE  41 : 45  @  41 : 47
+> CHANGE  10 : 12  @  10 : 12
+
+~ 		for (int i = 0, l = parList.size(); i < l; ++i) {
+~ 			this.mapVariants.putAll(parList.get(i).mapVariants);
+
+> CHANGE  29 : 33  @  29 : 35
 
 ~ 	public static class Deserializer implements JSONTypeDeserializer<JSONObject, ModelBlockDefinition> {
 ~ 		public ModelBlockDefinition deserialize(JSONObject jsonobject) throws JSONException {

@@ -12,8 +12,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
-import java.util.logging.Logger;
-
 import org.apache.commons.codec.binary.Base64;
 
 import com.google.common.collect.Multimap;

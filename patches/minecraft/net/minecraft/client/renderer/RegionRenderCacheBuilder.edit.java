@@ -9,7 +9,11 @@
 
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.WorldRenderer;
 
-> INSERT  10 : 12  @  10
+> CHANGE  3 : 4  @  3 : 4
+
+~ 	private final WorldRenderer[] worldRenderers = new WorldRenderer[EnumWorldBlockLayer._VALUES.length];
+
+> INSERT  6 : 8  @  6
 
 + 		this.worldRenderers[EnumWorldBlockLayer.REALISTIC_WATER.ordinal()] = new WorldRenderer(262145);
 + 		this.worldRenderers[EnumWorldBlockLayer.GLASS_HIGHLIGHTS.ordinal()] = new WorldRenderer(131072);

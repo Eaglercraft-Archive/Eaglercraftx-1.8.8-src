@@ -42,11 +42,13 @@ public interface IClientConfigAdapter {
 
 	String getWorldsDB();
 
+	String getResourcePacksDB();
+
 	JSONObject dumpConfig();
 
 	List<RelayEntry> getRelays();
 
-	boolean checkShaderGLErrors();
+	boolean isCheckShaderGLErrors();
 
 	boolean isDemo();
 

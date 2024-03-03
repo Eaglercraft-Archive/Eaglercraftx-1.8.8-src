@@ -17,17 +17,13 @@
 
 + import net.lax1dude.eaglercraft.v1_8.sp.server.EaglerIntegratedServerWorker;
 
-> CHANGE  6 : 9  @  6 : 8
+> CHANGE  1 : 4  @  1 : 8
 
 ~ import net.lax1dude.eaglercraft.v1_8.internal.vfs2.VFile2;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 
-> INSERT  2 : 3  @  2
-
-+ 
-
-> CHANGE  1 : 2  @  1 : 2
+> CHANGE  3 : 4  @  3 : 4
 
 ~ 	protected final VFile2 savesDirectory;
 

@@ -20,32 +20,42 @@
 
 > DELETE  2  @  2 : 3
 
-> CHANGE  46 : 47  @  46 : 47
+> CHANGE  46 : 48  @  46 : 47
 
-~ 		for (NetworkPlayerInfo networkplayerinfo : (List<NetworkPlayerInfo>) list) {
+~ 		for (int m = 0, n = list.size(); m < n; ++m) {
+~ 			NetworkPlayerInfo networkplayerinfo = (NetworkPlayerInfo) list.get(m);
 
 > CHANGE  20 : 21  @  20 : 22
 
 ~ 		boolean flag = true;
 
-> CHANGE  20 : 21  @  20 : 21
+> CHANGE  15 : 17  @  15 : 17
 
-~ 			for (String s : (List<String>) list1) {
+~ 		List<String> list1 = null;
+~ 		List<String> list2 = null;
 
-> CHANGE  7 : 8  @  7 : 8
+> CHANGE  3 : 5  @  3 : 5
 
-~ 			for (String s2 : (List<String>) list2) {
+~ 			for (int m = 0, n = list1.size(); m < n; ++m) {
+~ 				l1 = Math.max(l1, this.mc.fontRendererObj.getStringWidth(list1.get(m)));
 
-> CHANGE  8 : 9  @  8 : 9
+> CHANGE  6 : 8  @  6 : 8
 
-~ 			for (String s3 : (List<String>) list1) {
+~ 			for (int m = 0, n = list2.size(); m < n; ++m) {
+~ 				l1 = Math.max(l1, this.mc.fontRendererObj.getStringWidth(list2.get(m)));
+
+> CHANGE  7 : 9  @  7 : 8
+
+~ 			for (int m = 0, n = list1.size(); m < n; ++m) {
+~ 				String s3 = list1.get(m);
 
 > CHANGE  32 : 33  @  32 : 33
 
 ~ 					if (entityplayer == null || entityplayer.isWearing(EnumPlayerModelParts.HAT)) {
 
-> CHANGE  33 : 34  @  33 : 34
+> CHANGE  33 : 35  @  33 : 34
 
-~ 			for (String s4 : (List<String>) list2) {
+~ 			for (int m = 0, n = list2.size(); m < n; ++m) {
+~ 				String s4 = list2.get(m);
 
 > EOF

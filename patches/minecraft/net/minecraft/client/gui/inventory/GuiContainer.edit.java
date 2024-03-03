@@ -5,15 +5,16 @@
 # Version: 1.0
 # Author: lax1dude
 
-> DELETE  2  @  2 : 4
+> CHANGE  2 : 3  @  2 : 4
 
-> INSERT  1 : 9  @  1
+~ import java.util.List;
+
+> INSERT  1 : 8  @  1
 
 + 
 + import com.google.common.collect.Sets;
 + 
 + import net.lax1dude.eaglercraft.v1_8.Keyboard;
-+ import net.lax1dude.eaglercraft.v1_8.internal.KeyboardConstants;
 + import net.lax1dude.eaglercraft.v1_8.minecraft.EaglerTextureAtlasSprite;
 + import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 + import net.lax1dude.eaglercraft.v1_8.opengl.OpenGlHelper;
@@ -36,7 +37,13 @@
 
 ~ 	protected void mouseClicked(int parInt1, int parInt2, int parInt3) {
 
-> CHANGE  235 : 239  @  235 : 237
+> CHANGE  126 : 129  @  126 : 127
+
+~ 					List<Slot> lst = this.inventorySlots.inventorySlots;
+~ 					for (int n = 0, m = lst.size(); n < m; ++n) {
+~ 						Slot slot2 = lst.get(n);
+
+> CHANGE  108 : 112  @  108 : 110
 
 ~ 	protected void keyTyped(char parChar1, int parInt1) {
 ~ 		if (parInt1 == this.mc.gameSettings.keyBindClose.getKeyCode()

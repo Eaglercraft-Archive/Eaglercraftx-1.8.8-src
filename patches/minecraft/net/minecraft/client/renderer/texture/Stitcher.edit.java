@@ -23,17 +23,33 @@
 
 ~ 	public void addSprite(EaglerTextureAtlasSprite parTextureAtlasSprite) {
 
-> CHANGE  15 : 16  @  15 : 16
+> CHANGE  13 : 15  @  13 : 14
+
+~ 		for (int i = 0; i < astitcher$holder.length; ++i) {
+~ 			Stitcher.Holder stitcher$holder = astitcher$holder[i];
+
+> CHANGE  1 : 2  @  1 : 2
 
 ~ 				String s = HString.format("Unable to fit: %s - size: %dx%d - Maybe try a lowerresolution resourcepack?",
 
-> CHANGE  14 : 15  @  14 : 15
+> CHANGE  14 : 16  @  14 : 16
 
 ~ 	public List<EaglerTextureAtlasSprite> getStichSlots() {
+~ 		ArrayList<Slot> arraylist = Lists.newArrayList();
 
-> CHANGE  8 : 9  @  8 : 9
+> CHANGE  1 : 3  @  1 : 3
 
-~ 		for (Stitcher.Slot stitcher$slot1 : (List<Stitcher.Slot>) arraylist) {
+~ 		for (int i = 0, l = this.stitchSlots.size(); i < l; ++i) {
+~ 			this.stitchSlots.get(i).getAllStitchSlots(arraylist);
+
+> CHANGE  2 : 3  @  2 : 3
+
+~ 		ArrayList<EaglerTextureAtlasSprite> arraylist1 = Lists.newArrayList();
+
+> CHANGE  1 : 3  @  1 : 2
+
+~ 		for (int i = 0, l = arraylist.size(); i < l; ++i) {
+~ 			Stitcher.Slot stitcher$slot1 = arraylist.get(i);
 
 > CHANGE  1 : 2  @  1 : 2
 
@@ -50,5 +66,15 @@
 > CHANGE  8 : 9  @  8 : 9
 
 ~ 		public EaglerTextureAtlasSprite getAtlasSprite() {
+
+> CHANGE  117 : 119  @  117 : 119
+
+~ 						for (int m = 0, n = this.subSlots.size(); m < n; ++m) {
+~ 							if (this.subSlots.get(m).addSlot(holderIn)) {
+
+> CHANGE  16 : 18  @  16 : 18
+
+~ 				for (int i = 0, l = this.subSlots.size(); i < l; ++i) {
+~ 					this.subSlots.get(i).getAllStitchSlots(parList);
 
 > EOF

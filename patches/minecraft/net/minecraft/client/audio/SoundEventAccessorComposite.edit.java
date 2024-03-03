@@ -18,4 +18,14 @@
 
 ~ 	private final EaglercraftRandom rnd = new EaglercraftRandom();
 
+> CHANGE  16 : 18  @  16 : 18
+
+~ 		for (int j = 0, l = this.soundPool.size(); j < l; ++j) {
+~ 			i += this.soundPool.get(j).getWeight();
+
+> CHANGE  10 : 12  @  10 : 11
+
+~ 			for (int k = 0, l = this.soundPool.size(); k < l; ++k) {
+~ 				ISoundEventAccessor isoundeventaccessor = this.soundPool.get(k);
+
 > EOF

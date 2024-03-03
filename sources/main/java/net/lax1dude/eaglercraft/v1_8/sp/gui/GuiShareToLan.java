@@ -150,7 +150,7 @@ public class GuiShareToLan extends GuiScreen {
 			}
 			this.mc.displayGuiScreen(null);
 			LoadingScreenRenderer ls = mc.loadingScreen;
-			String code = LANServerController.shareToLAN((str) -> ls.resetProgressAndMessage(str), worldName, hiddenToggle);
+			String code = LANServerController.shareToLAN(ls::resetProgressAndMessage, worldName, hiddenToggle);
 			if (code != null) {
 				SingleplayerServerController.configureLAN(WorldSettings.GameType.getByName(this.gameMode), this.allowCommands);
 				this.mc.ingameGUI.getChatGUI().printChatMessage(new ChatComponentText(I18n.format("lanServer.opened")

@@ -61,7 +61,11 @@
 
 ~ 					parFlag2, calcNormal);
 
-> CHANGE  40 : 42  @  40 : 42
+> CHANGE  29 : 30  @  29 : 30
+
+~ 		float[] afloat = new float[EnumFacing._VALUES.length];
+
+> CHANGE  10 : 12  @  10 : 12
 
 ~ 			float[] sprite, EaglerTextureAtlasSprite modelRotationIn, ModelRotation partRotation,
 ~ 			BlockPartRotation uvLocked, boolean shade, boolean parFlag2, Vector3f calcNormal) {
@@ -117,7 +121,13 @@
 + 
 + 	public static EnumFacing getFacingFromVertexData(Vector3f normal) {
 
-> CHANGE  6 : 7  @  6 : 7
+> CHANGE  3 : 6  @  3 : 4
+
+~ 		EnumFacing[] facings = EnumFacing._VALUES;
+~ 		for (int i = 0; i < facings.length; ++i) {
+~ 			EnumFacing enumfacing1 = facings[i];
+
+> CHANGE  2 : 3  @  2 : 3
 
 ~ 			float f2 = Vector3f.dot(normal, vector3f6);
 
@@ -125,7 +135,11 @@
 
 ~ 			EaglerTextureAtlasSprite parTextureAtlasSprite) {
 
-> CHANGE  18 : 19  @  18 : 19
+> CHANGE  9 : 10  @  9 : 10
+
+~ 		float[] afloat = new float[EnumFacing._VALUES.length];
+
+> CHANGE  8 : 9  @  8 : 9
 
 ~ 			int j = stride * i;
 

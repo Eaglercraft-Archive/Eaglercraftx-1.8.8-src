@@ -5,11 +5,9 @@
 # Version: 1.0
 # Author: lax1dude
 
-> INSERT  2 : 6  @  2
+> INSERT  2 : 4  @  2
 
-+ import net.lax1dude.eaglercraft.v1_8.sp.SingleplayerServerController;
 + import net.lax1dude.eaglercraft.v1_8.sp.lan.LANClientNetworkManager;
-+ import net.lax1dude.eaglercraft.v1_8.sp.lan.LANServerController;
 + import net.lax1dude.eaglercraft.v1_8.sp.socket.ClientIntegratedServerNetworkManager;
 
 > DELETE  3  @  3 : 4

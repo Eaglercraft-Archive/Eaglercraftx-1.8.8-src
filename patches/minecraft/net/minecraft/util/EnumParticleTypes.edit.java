@@ -13,4 +13,15 @@
 + import com.google.common.collect.Maps;
 + 
 
+> INSERT  17 : 19  @  17
+
++ 	public static final EnumParticleTypes[] _VALUES = values();
++ 
+
+> CHANGE  49 : 52  @  49 : 50
+
+~ 		EnumParticleTypes[] types = values();
+~ 		for (int i = 0; i < types.length; ++i) {
+~ 			EnumParticleTypes enumparticletypes = types[i];
+
 > EOF

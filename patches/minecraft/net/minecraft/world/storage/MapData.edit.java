@@ -14,4 +14,9 @@
 + import com.google.common.collect.Maps;
 + 
 
+> CHANGE  179 : 181  @  179 : 181
+
+~ 		for (int i = 0, l = this.playersArrayList.size(); i < l; ++i) {
+~ 			this.playersArrayList.get(i).update(x, y);
+
 > EOF

@@ -34,7 +34,12 @@
 
 > DELETE  9  @  9 : 11
 
-> DELETE  41  @  41 : 43
+> CHANGE  30 : 32  @  30 : 32
+
+~ 			for (int i = 0, l = objectsList.size(); i < l; ++i) {
+~ 				writeWatchableObjectToPacketBuffer(buffer, objectsList.get(i));
+
+> DELETE  9  @  9 : 11
 
 > DELETE  10  @  10 : 12
 
@@ -48,6 +53,11 @@
 
 > DELETE  93  @  93 : 94
 
-> DELETE  10  @  10 : 11
+> CHANGE  1 : 3  @  1 : 2
+
+~ 		for (int i = 0, l = parList.size(); i < l; ++i) {
+~ 			DataWatcher.WatchableObject datawatcher$watchableobject = parList.get(i);
+
+> DELETE  8  @  8 : 9
 
 > EOF

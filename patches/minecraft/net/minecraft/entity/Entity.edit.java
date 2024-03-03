@@ -35,47 +35,66 @@
 
 ~ 		this.rand = new EaglercraftRandom();
 
-> CHANGE  297 : 298  @  297 : 298
+> CHANGE  294 : 296  @  294 : 295
 
-~ 			for (AxisAlignedBB axisalignedbb1 : (List<AxisAlignedBB>) list1) {
+~ 			List<AxisAlignedBB> list1 = this.worldObj.getCollidingBoundingBoxes(this,
+~ 					this.getEntityBoundingBox().addCoord(x, y, z));
 
-> CHANGE  6 : 7  @  6 : 7
+> CHANGE  2 : 4  @  2 : 4
 
-~ 			for (AxisAlignedBB axisalignedbb2 : (List<AxisAlignedBB>) list1) {
+~ 			for (int i = 0, l = list1.size(); i < l; ++i) {
+~ 				y = list1.get(i).calculateYOffset(this.getEntityBoundingBox(), y);
 
-> CHANGE  5 : 6  @  5 : 6
+> CHANGE  5 : 7  @  5 : 7
 
-~ 			for (AxisAlignedBB axisalignedbb13 : (List<AxisAlignedBB>) list1) {
+~ 			for (int i = 0, l = list1.size(); i < l; ++i) {
+~ 				x = list1.get(i).calculateXOffset(this.getEntityBoundingBox(), x);
 
-> CHANGE  17 : 18  @  17 : 18
+> CHANGE  4 : 6  @  4 : 6
 
-~ 				for (AxisAlignedBB axisalignedbb6 : (List<AxisAlignedBB>) list) {
+~ 			for (int i = 0, l = list1.size(); i < l; ++i) {
+~ 				z = list1.get(i).calculateZOffset(this.getEntityBoundingBox(), z);
 
-> CHANGE  6 : 7  @  6 : 7
+> CHANGE  10 : 11  @  10 : 11
 
-~ 				for (AxisAlignedBB axisalignedbb7 : (List<AxisAlignedBB>) list) {
+~ 				List<AxisAlignedBB> list = this.worldObj.getCollidingBoundingBoxes(this,
 
-> CHANGE  6 : 7  @  6 : 7
+> CHANGE  5 : 7  @  5 : 7
 
-~ 				for (AxisAlignedBB axisalignedbb8 : (List<AxisAlignedBB>) list) {
+~ 				for (int i = 0, l = list.size(); i < l; ++i) {
+~ 					d9 = list.get(i).calculateYOffset(axisalignedbb5, d9);
 
-> CHANGE  7 : 8  @  7 : 8
+> CHANGE  5 : 7  @  5 : 7
 
-~ 				for (AxisAlignedBB axisalignedbb9 : (List<AxisAlignedBB>) list) {
+~ 				for (int i = 0, l = list.size(); i < l; ++i) {
+~ 					d15 = list.get(i).calculateXOffset(axisalignedbb4, d15);
 
-> CHANGE  6 : 7  @  6 : 7
+> CHANGE  5 : 7  @  5 : 7
 
-~ 				for (AxisAlignedBB axisalignedbb10 : (List<AxisAlignedBB>) list) {
+~ 				for (int i = 0, l = list.size(); i < l; ++i) {
+~ 					d16 = list.get(i).calculateZOffset(axisalignedbb4, d16);
 
-> CHANGE  6 : 7  @  6 : 7
+> CHANGE  6 : 8  @  6 : 8
 
-~ 				for (AxisAlignedBB axisalignedbb11 : (List<AxisAlignedBB>) list) {
+~ 				for (int i = 0, l = list.size(); i < l; ++i) {
+~ 					d17 = list.get(i).calculateYOffset(axisalignedbb14, d17);
 
-> CHANGE  18 : 19  @  18 : 19
+> CHANGE  5 : 7  @  5 : 7
 
-~ 				for (AxisAlignedBB axisalignedbb12 : (List<AxisAlignedBB>) list) {
+~ 				for (int i = 0, l = list.size(); i < l; ++i) {
+~ 					d18 = list.get(i).calculateXOffset(axisalignedbb14, d18);
 
-> CHANGE  651 : 653  @  651 : 652
+> CHANGE  5 : 7  @  5 : 7
+
+~ 				for (int i = 0, l = list.size(); i < l; ++i) {
+~ 					d19 = list.get(i).calculateZOffset(axisalignedbb14, d19);
+
+> CHANGE  17 : 19  @  17 : 19
+
+~ 				for (int i = 0, l = list.size(); i < l; ++i) {
+~ 					y = list.get(i).calculateYOffset(this.getEntityBoundingBox(), y);
+
+> CHANGE  650 : 652  @  650 : 651
 
 ~ 				this.entityUniqueID = new EaglercraftUUID(tagCompund.getLong("UUIDMost"),
 ~ 						tagCompund.getLong("UUIDLeast"));
@@ -84,7 +103,17 @@
 
 ~ 				this.entityUniqueID = EaglercraftUUID.fromString(tagCompund.getString("UUID"));
 
-> CHANGE  226 : 227  @  226 : 227
+> CHANGE  42 : 44  @  42 : 44
+
+~ 		for (int i = 0; i < numbers.length; ++i) {
+~ 			nbttaglist.appendTag(new NBTTagDouble(numbers[i]));
+
+> CHANGE  8 : 10  @  8 : 10
+
+~ 		for (int i = 0; i < numbers.length; ++i) {
+~ 			nbttaglist.appendTag(new NBTTagFloat(numbers[i]));
+
+> CHANGE  172 : 173  @  172 : 173
 
 ~ 			for (AxisAlignedBB axisalignedbb : (List<AxisAlignedBB>) list) {
 

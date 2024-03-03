@@ -9,11 +9,9 @@
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 
-> INSERT  9 : 10  @  9
+> DELETE  6  @  6 : 7
 
-+ 
-
-> CHANGE  5 : 6  @  5 : 6
+> CHANGE  7 : 8  @  7 : 8
 
 ~ 		EaglercraftRandom random = new EaglercraftRandom(parLong1);
 

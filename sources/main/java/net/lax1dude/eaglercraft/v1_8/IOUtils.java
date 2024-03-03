@@ -71,4 +71,19 @@ public class IOUtils {
 		}
 	}
 
+	public static int readFully(InputStream is, byte[] out) throws IOException {
+		int i = 0, j;
+		while(i < out.length && (j = is.read(out, i, out.length - i)) != -1) {
+			i += j;
+		}
+		return i;
+	}
+
+	public static long skipFully(InputStream is, long skip) throws IOException {
+		long i = 0, j;
+		while(i < skip && (j = is.skip(skip - i)) != 0) {
+			i += j;
+		}
+		return i;
+	}
 }

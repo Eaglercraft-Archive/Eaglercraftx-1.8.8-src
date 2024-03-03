@@ -9,16 +9,29 @@
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 
-> INSERT  24 : 25  @  24
+> DELETE  11  @  11 : 14
 
-+ 
-
-> CHANGE  1 : 2  @  1 : 2
+> CHANGE  11 : 12  @  11 : 12
 
 ~ 	private EaglercraftRandom random;
 
 > CHANGE  10 : 11  @  10 : 11
 
 ~ 		this.random = new EaglercraftRandom(seed);
+
+> CHANGE  110 : 112  @  110 : 111
+
+~ 		for (int m = 0, n = this.structureGenerators.size(); m < n; ++m) {
+~ 			MapGenStructure mapgenstructure = this.structureGenerators.get(m);
+
+> CHANGE  63 : 65  @  63 : 64
+
+~ 			for (int m = 0, n = this.structureGenerators.size(); m < n; ++m) {
+~ 				MapGenStructure mapgenstructure = this.structureGenerators.get(m);
+
+> CHANGE  14 : 16  @  14 : 16
+
+~ 		for (int m = 0, n = this.structureGenerators.size(); m < n; ++m) {
+~ 			this.structureGenerators.get(m).generate(this, this.worldObj, i, j, (ChunkPrimer) null);
 
 > EOF

@@ -20,4 +20,9 @@
 
 ~ 						List<PotionEffect> list = Items.potionitem.getEffects(itemstack);
 
+> CHANGE  1 : 3  @  1 : 3
+
+~ 							for (int i = 0, l = list.size(); i < l; ++i) {
+~ 								this.addPotionEffect(new PotionEffect(list.get(i)));
+
 > EOF

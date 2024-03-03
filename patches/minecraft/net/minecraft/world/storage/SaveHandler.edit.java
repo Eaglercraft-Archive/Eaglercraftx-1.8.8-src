@@ -5,27 +5,20 @@
 # Version: 1.0
 # Author: lax1dude
 
-> DELETE  4  @  4 : 7
+> CHANGE  2 : 6  @  2 : 8
 
-> INSERT  1 : 5  @  1
+~ import java.io.InputStream;
+~ import java.io.OutputStream;
+~ import java.util.List;
+~ 
 
-+ import java.io.InputStream;
-+ import java.io.OutputStream;
-+ import java.util.List;
-+ 
+> CHANGE  7 : 10  @  7 : 12
 
-> CHANGE  10 : 14  @  10 : 12
-
-~ import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 ~ import net.lax1dude.eaglercraft.v1_8.internal.vfs2.VFile2;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 
-> INSERT  2 : 3  @  2
-
-+ 
-
-> CHANGE  1 : 4  @  1 : 4
+> CHANGE  3 : 6  @  3 : 6
 
 ~ 	private final VFile2 worldDirectory;
 ~ 	private final VFile2 playersDirectory;

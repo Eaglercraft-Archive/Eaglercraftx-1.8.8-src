@@ -5,8 +5,4 @@
 # Version: 1.0
 # Author: lax1dude
 
-> INSERT  18 : 19  @  18
-
-+ 
-
 > EOF

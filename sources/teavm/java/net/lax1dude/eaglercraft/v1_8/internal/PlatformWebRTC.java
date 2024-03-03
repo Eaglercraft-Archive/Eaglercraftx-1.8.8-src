@@ -1,6 +1,7 @@
 package net.lax1dude.eaglercraft.v1_8.internal;
 
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
+import net.lax1dude.eaglercraft.v1_8.EaglerInputStream;
 import net.lax1dude.eaglercraft.v1_8.internal.teavm.TeaVMUtils;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
@@ -29,7 +30,6 @@ import org.teavm.jso.websocket.WebSocket;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.ListMultimap;
 
-import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.*;
@@ -619,7 +619,7 @@ public class PlatformWebRTC {
 					}else {
 						if(open) {
 							try {
-								IPacket pkt = IPacket.readPacket(new DataInputStream(new ByteArrayInputStream(arr)));
+								IPacket pkt = IPacket.readPacket(new DataInputStream(new EaglerInputStream(arr)));
 								if(pkt instanceof IPacket69Pong) {
 									IPacket69Pong ipkt = (IPacket69Pong)pkt;
 									versError = VersionMismatch.COMPATIBLE;
@@ -875,7 +875,7 @@ public class PlatformWebRTC {
 					}else {
 						if(open) {
 							try {
-								IPacket pkt = IPacket.readPacket(new DataInputStream(new ByteArrayInputStream(arr)));
+								IPacket pkt = IPacket.readPacket(new DataInputStream(new EaglerInputStream(arr)));
 								if(pkt instanceof IPacket07LocalWorlds) {
 									worlds = ((IPacket07LocalWorlds)pkt).worldsList;
 									sock.close();
@@ -1065,7 +1065,7 @@ public class PlatformWebRTC {
 				if(evt.getData() != null && !isString(evt.getData())) {
 					hasRecievedAnyData = true;
 					try {
-						IPacket pkt = IPacket.readPacket(new DataInputStream(new ByteArrayInputStream(TeaVMUtils.wrapUnsignedByteArray(Uint8Array.create(evt.getDataAsArray())))));
+						IPacket pkt = IPacket.readPacket(new DataInputStream(new EaglerInputStream(TeaVMUtils.wrapUnsignedByteArray(Uint8Array.create(evt.getDataAsArray())))));
 						if(pkt instanceof IPacket70SpecialUpdate) {
 							IPacket70SpecialUpdate ipkt = (IPacket70SpecialUpdate)pkt;
 							if(ipkt.operation == IPacket70SpecialUpdate.OPERATION_UPDATE_CERTIFICATE) {

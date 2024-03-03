@@ -6,12 +6,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.ByteBuffer;
-import net.lax1dude.eaglercraft.v1_8.internal.lwjgl.LWJGLEntryPoint;
 import net.lax1dude.eaglercraft.v1_8.internal.vfs2.EaglerFileSystemException;
 import net.lax1dude.eaglercraft.v1_8.internal.vfs2.VFSIterator2.BreakLoop;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
-import net.lax1dude.eaglercraft.v1_8.sp.server.internal.lwjgl.DesktopIntegratedServer;
 
 /**
  * Copyright (c) 2022-2024 lax1dude. All Rights Reserved.
@@ -35,20 +33,12 @@ public class PlatformFilesystem {
 	public static final File filesystemRoot = (new File("filesystem/sp")).getAbsoluteFile();
 
 	public static void initialize() {
-		assertThread();
 		if(!filesystemRoot.isDirectory() && !filesystemRoot.mkdirs()) {
 			throw new EaglerFileSystemException("Could not create directory for virtual filesystem: " + filesystemRoot.getAbsolutePath());
 		}
 	}
 
-	private static void assertThread() {
-		if(Thread.currentThread() != DesktopIntegratedServer.serverThread) {
-			throw new UnsupportedOperationException("[DEBUG CHECK] VFS2 is currently only initialized for server contexts!");
-		}
-	}
-
 	public static boolean eaglerDelete(String pathName) {
-		assertThread();
 		File f = getJREFile(pathName);
 		if(!f.exists()) {
 			logger.warn("Tried to delete file that doesn't exist: \"{}\"", pathName);
@@ -62,7 +52,6 @@ public class PlatformFilesystem {
 	}
 
 	public static ByteBuffer eaglerRead(String pathName) {
-		assertThread();
 		File f = getJREFile(pathName);
 		if(f.isFile()) {
 			long fileSize = f.length();
@@ -96,7 +85,6 @@ public class PlatformFilesystem {
 	}
 
 	public static void eaglerWrite(String pathName, ByteBuffer data) {
-		assertThread();
 		File f = getJREFile(pathName);
 		File p = f.getParentFile();
 		if(!p.isDirectory()) {
@@ -105,7 +93,7 @@ public class PlatformFilesystem {
 			}
 		}
 		try(FileOutputStream fos = new FileOutputStream(f)) {
-			byte[] copyBuffer = new byte[4096];
+			byte[] copyBuffer = new byte[Math.min(4096, data.remaining())];
 			int i;
 			while((i = data.remaining()) > 0) {
 				if(i > copyBuffer.length) {
@@ -120,12 +108,10 @@ public class PlatformFilesystem {
 	}
 
 	public static boolean eaglerExists(String pathName) {
-		assertThread();
 		return getJREFile(pathName).isFile();
 	}
 
 	public static boolean eaglerMove(String pathNameOld, String pathNameNew) {
-		assertThread();
 		File f1 = getJREFile(pathNameOld);
 		File f2 = getJREFile(pathNameNew);
 		if(f2.exists()) {
@@ -142,7 +128,6 @@ public class PlatformFilesystem {
 	}
 
 	public static int eaglerCopy(String pathNameOld, String pathNameNew) {
-		assertThread();
 		File f1 = getJREFile(pathNameOld);
 		File f2 = getJREFile(pathNameNew);
 		if(!f1.isFile()) {
@@ -174,7 +159,6 @@ public class PlatformFilesystem {
 	}
 
 	public static int eaglerSize(String pathName) {
-		assertThread();
 		File f = getJREFile(pathName);
 		if(f.isFile()) {
 			long fileSize = f.length();
@@ -186,7 +170,6 @@ public class PlatformFilesystem {
 	}
 
 	public static void eaglerIterate(String pathName, VFSFilenameIterator itr, boolean recursive) {
-		assertThread();
 		try {
 			iterateFile(pathName, getJREFile(pathName), itr, recursive);
 		}catch(BreakLoop ex) {

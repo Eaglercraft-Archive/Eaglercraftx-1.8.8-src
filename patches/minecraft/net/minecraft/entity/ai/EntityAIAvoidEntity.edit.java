@@ -5,11 +5,9 @@
 # Version: 1.0
 # Author: lax1dude
 
-> INSERT  15 : 16  @  15
+> DELETE  7  @  7 : 9
 
-+ 
-
-> CHANGE  42 : 43  @  42 : 43
+> CHANGE  48 : 49  @  48 : 49
 
 ~ 			this.closestLivingEntity = (T) list.get(0);
 

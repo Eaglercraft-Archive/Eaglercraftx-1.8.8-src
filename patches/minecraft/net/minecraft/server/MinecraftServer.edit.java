@@ -12,11 +12,11 @@
 ~ import net.lax1dude.eaglercraft.v1_8.mojang.authlib.GameProfile;
 ~ 
 
-> DELETE  1  @  1 : 3
+> DELETE  1  @  1 : 4
 
-> INSERT  5 : 6  @  5
+> CHANGE  1 : 2  @  1 : 4
 
-+ import java.util.LinkedList;
+~ import java.util.LinkedList;
 
 > DELETE  2  @  2 : 4
 
@@ -28,25 +28,28 @@
 ~ import net.lax1dude.eaglercraft.v1_8.futures.FutureTask;
 ~ import net.lax1dude.eaglercraft.v1_8.sp.server.EaglerIntegratedServerWorker;
 
-> DELETE  9  @  9 : 11
+> DELETE  8  @  8 : 11
 
 > DELETE  1  @  1 : 3
 
 > DELETE  1  @  1 : 2
 
-> CHANGE  19 : 20  @  19 : 20
+> DELETE  7  @  7 : 8
+
+> CHANGE  10 : 11  @  10 : 12
 
 ~ import net.minecraft.world.chunk.Chunk;
 
-> CHANGE  5 : 7  @  5 : 7
+> DELETE  1  @  1 : 2
+
+> CHANGE  2 : 4  @  2 : 5
 
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 
-> CHANGE  1 : 3  @  1 : 2
+> CHANGE  1 : 2  @  1 : 2
 
 ~ public abstract class MinecraftServer implements Runnable, ICommandSender, IThreadListener {
-~ 
 
 > DELETE  1  @  1 : 2
 
@@ -158,7 +161,12 @@
 
 ~ 	public void saveAllWorlds(boolean dontLog) {
 
-> DELETE  22  @  22 : 25
+> CHANGE  1 : 3  @  1 : 2
+
+~ 			for (int i = 0; i < this.worldServers.length; ++i) {
+~ 				WorldServer worldserver = this.worldServers[i];
+
+> DELETE  20  @  20 : 23
 
 > CHANGE  16 : 22  @  16 : 21
 
@@ -213,11 +221,22 @@
 
 ~ 		return "eagler";
 
-> CHANGE  30 : 31  @  30 : 31
+> CHANGE  28 : 29  @  28 : 29
 
-~ 				for (String s2 : (List<String>) list) {
+~ 			List<String> list = this.commandManager.getTabCompletionOptions(sender, input, pos);
 
-> DELETE  27  @  27 : 31
+> CHANGE  1 : 3  @  1 : 2
+
+~ 				for (int i = 0, l = list.size(); i < l; ++i) {
+~ 					String s2 = list.get(i);
+
+> CHANGE  12 : 15  @  12 : 14
+
+~ 			String[] unames = this.serverConfigManager.getAllUsernames();
+~ 			for (int i = 0; i < unames.length; ++i) {
+~ 				String s1 = unames[i];
+
+> DELETE  13  @  13 : 17
 
 > DELETE  16  @  16 : 20
 
@@ -241,11 +260,13 @@
 
 > DELETE  20  @  20 : 36
 
-> CHANGE  4 : 5  @  4 : 5
+> CHANGE  4 : 7  @  4 : 6
 
 ~ 	public Entity getEntityFromUuid(EaglercraftUUID uuid) {
+~ 		for (int i = 0; i < this.worldServers.length; ++i) {
+~ 			WorldServer worldserver = this.worldServers[i];
 
-> CHANGE  23 : 25  @  23 : 38
+> CHANGE  22 : 24  @  22 : 37
 
 ~ 	public boolean isCallingFromMinecraftThread() {
 ~ 		return true;

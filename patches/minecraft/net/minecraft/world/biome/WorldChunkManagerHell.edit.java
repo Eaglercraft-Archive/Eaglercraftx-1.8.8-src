@@ -9,11 +9,9 @@
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 
-> INSERT  5 : 6  @  5
+> DELETE  1  @  1 : 3
 
-+ 
-
-> CHANGE  43 : 44  @  43 : 44
+> CHANGE  45 : 46  @  45 : 46
 
 ~ 	public BlockPos findBiomePosition(int i, int j, int k, List<BiomeGenBase> list, EaglercraftRandom random) {
 

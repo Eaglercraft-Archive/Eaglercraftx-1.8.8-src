@@ -26,7 +26,19 @@
 
 ~ 	private void catchOnFire(World worldIn, BlockPos pos, int chance, EaglercraftRandom random, int age) {
 
-> CHANGE  77 : 78  @  77 : 78
+> CHANGE  23 : 26  @  23 : 24
+
+~ 		EnumFacing[] facings = EnumFacing._VALUES;
+~ 		for (int i = 0; i < facings.length; ++i) {
+~ 			EnumFacing enumfacing = facings[i];
+
+> CHANGE  14 : 17  @  14 : 16
+
+~ 			EnumFacing[] facings = EnumFacing._VALUES;
+~ 			for (int j = 0; j < facings.length; ++j) {
+~ 				i = Math.max(this.getEncouragement(worldIn.getBlockState(pos.offset(facings[j])).getBlock()), i);
+
+> CHANGE  37 : 38  @  37 : 38
 
 ~ 	public void randomDisplayTick(World world, BlockPos blockpos, IBlockState var3, EaglercraftRandom random) {
 

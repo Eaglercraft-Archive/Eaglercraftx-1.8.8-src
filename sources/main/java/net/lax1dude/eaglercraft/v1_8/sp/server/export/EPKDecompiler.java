@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.zip.CRC32;
 
 import net.lax1dude.eaglercraft.v1_8.EaglerZLIB;
+import net.lax1dude.eaglercraft.v1_8.IOUtils;
 
 /**
  * Copyright (c) 2022-2024 lax1dude. All Rights Reserved.
@@ -46,7 +47,7 @@ public class EPKDecompiler {
 		in2 = new ByteArrayInputStream(data);
 		
 		byte[] header = new byte[8];
-		in2.read(header);
+		IOUtils.readFully(in2, header);
 		
 		if(Arrays.equals(header, new byte[]{(byte)69,(byte)65,(byte)71,(byte)80,(byte)75,(byte)71,(byte)36,(byte)36})) {
 			byte[] endCode = new byte[] { (byte)':', (byte)':', (byte)':', (byte)'Y',
@@ -63,10 +64,10 @@ public class EPKDecompiler {
 			if(!vers.startsWith("ver2.")) {
 				throw new IOException("Unknown or invalid EPK version: " + vers);
 			}
-			
-			is.skip(is.read()); // skip filename
-			is.skip(loadShort(is)); // skip comment
-			is.skip(8); // skip millis date
+
+			IOUtils.skipFully(is, is.read()); // skip filename
+			IOUtils.skipFully(is, loadShort(is)); // skip comment
+			IOUtils.skipFully(is, 8); // skip millis date
 			
 			numFiles = loadInt(is);
 			
@@ -101,7 +102,7 @@ public class EPKDecompiler {
 		}
 		
 		byte[] typeBytes = new byte[4];
-		zis.read(typeBytes);
+		IOUtils.readFully(zis, typeBytes);
 		String type = readASCII(typeBytes);
 		
 		if(numFiles == 0) {
@@ -126,7 +127,7 @@ public class EPKDecompiler {
 					int loadedCrc = loadInt(zis);
 					
 					data = new byte[len - 5];
-					zis.read(data);
+					IOUtils.readFully(zis, data);
 					
 					crc32.reset();
 					crc32.update(data, 0, data.length);
@@ -139,7 +140,7 @@ public class EPKDecompiler {
 					}
 				}else {
 					data = new byte[len];
-					zis.read(data);
+					IOUtils.readFully(zis, data);
 				}
 				
 				if(zis.read() != '>') {
@@ -152,11 +153,11 @@ public class EPKDecompiler {
 		}
 	}
 	
-	private static final int loadShort(InputStream is) throws IOException {
+	public static final int loadShort(InputStream is) throws IOException {
 		return (is.read() << 8) | is.read();
 	}
 	
-	private static final int loadInt(InputStream is) throws IOException {
+	public static final int loadInt(InputStream is) throws IOException {
 		return (is.read() << 24) | (is.read() << 16) | (is.read() << 8) | is.read();
 	}
 	
@@ -168,7 +169,7 @@ public class EPKDecompiler {
 		return new String(charIn);
 	}
 	
-	private static final String readASCII(InputStream bytesIn) throws IOException {
+	public static final String readASCII(InputStream bytesIn) throws IOException {
 		int len = bytesIn.read();
 		char[] charIn = new char[len];
 		for(int i = 0; i < len; ++i) {

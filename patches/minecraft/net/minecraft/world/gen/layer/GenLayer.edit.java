@@ -5,11 +5,9 @@
 # Version: 1.0
 # Author: lax1dude
 
-> INSERT  30 : 31  @  30
+> DELETE  9  @  9 : 28
 
-+ 
-
-> CHANGE  44 : 45  @  44 : 45
+> CHANGE  46 : 47  @  46 : 47
 
 ~ 		GenLayer genlayerhills = new GenLayerHills(1000L, genlayerbiomeedge, genlayer1);
 

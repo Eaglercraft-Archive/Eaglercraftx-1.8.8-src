@@ -7,10 +7,9 @@
 
 > DELETE  3  @  3 : 6
 
-> INSERT  1 : 4  @  1
+> INSERT  1 : 3  @  1
 
 + import net.lax1dude.eaglercraft.v1_8.minecraft.EaglerTextureAtlasSprite;
-+ import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.DeferredStateManager;
 + 
 
 > CHANGE  1 : 2  @  1 : 2

@@ -20,7 +20,13 @@
 ~ 	private static final EaglercraftUUID attackingSpeedBoostModifierUUID = EaglercraftUUID
 ~ 			.fromString("020E0DFB-87AE-4653-9556-831010E291A0");
 
-> CHANGE  280 : 281  @  280 : 281
+> CHANGE  36 : 39  @  36 : 39
+
+~ 		this.dataWatcher.addObject(16, Short.valueOf((short) 0));
+~ 		this.dataWatcher.addObject(17, Byte.valueOf((byte) 0));
+~ 		this.dataWatcher.addObject(18, Byte.valueOf((byte) 0));
+
+> CHANGE  241 : 242  @  241 : 242
 
 ~ 	public static void bootstrap() {
 

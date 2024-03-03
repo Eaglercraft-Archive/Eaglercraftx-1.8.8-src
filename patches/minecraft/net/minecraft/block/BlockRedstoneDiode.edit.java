@@ -18,4 +18,18 @@
 
 ~ 	public void updateTick(World world, BlockPos blockpos, IBlockState iblockstate, EaglercraftRandom var4) {
 
+> CHANGE  43 : 47  @  43 : 45
+
+~ 			EnumFacing[] facings = EnumFacing._VALUES;
+~ 			BlockPos tmp = new BlockPos(0, 0, 0);
+~ 			for (int i = 0; i < facings.length; ++i) {
+~ 				world.notifyNeighborsOfStateChange(blockpos.offsetEvenFaster(facings[i], tmp), this);
+
+> CHANGE  93 : 97  @  93 : 95
+
+~ 			EnumFacing[] facings = EnumFacing._VALUES;
+~ 			BlockPos tmp = new BlockPos(0, 0, 0);
+~ 			for (int i = 0; i < facings.length; ++i) {
+~ 				world.notifyNeighborsOfStateChange(blockpos.offsetEvenFaster(facings[i], tmp), this);
+
 > EOF

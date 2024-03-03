@@ -11,7 +11,7 @@
 + import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 + import net.lax1dude.eaglercraft.v1_8.opengl.WorldRenderer;
 
-> DELETE  8  @  8 : 9
+> DELETE  2  @  2 : 9
 
 > DELETE  2  @  2 : 3
 

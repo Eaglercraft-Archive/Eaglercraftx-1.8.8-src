@@ -9,11 +9,9 @@
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 
-> INSERT  8 : 9  @  8
+> DELETE  5  @  5 : 6
 
-+ 
-
-> CHANGE  11 : 12  @  11 : 12
+> CHANGE  13 : 14  @  13 : 14
 
 ~ 	public void func_180711_a(World worldIn, EaglercraftRandom parRandom, BlockPos parBlockPos) {
 

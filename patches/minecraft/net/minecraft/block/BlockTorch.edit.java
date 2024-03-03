@@ -14,7 +14,13 @@
 
 ~ 
 
-> CHANGE  149 : 150  @  149 : 150
+> CHANGE  75 : 78  @  75 : 76
+
+~ 			EnumFacing[] facings = EnumFacing.Plane.HORIZONTAL.facingsArray;
+~ 			for (int i = 0; i < facings.length; ++i) {
+~ 				EnumFacing enumfacing1 = facings[i];
+
+> CHANGE  73 : 74  @  73 : 74
 
 ~ 	public void randomDisplayTick(World world, BlockPos blockpos, IBlockState iblockstate, EaglercraftRandom var4) {
 

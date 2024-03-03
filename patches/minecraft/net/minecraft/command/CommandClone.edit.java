@@ -5,7 +5,9 @@
 # Version: 1.0
 # Author: lax1dude
 
-> INSERT  23 : 24  @  23
+> DELETE  8  @  8 : 13
+
+> INSERT  10 : 11  @  10
 
 + 
 
@@ -17,24 +19,33 @@
 
 ~ 								for (BlockPos blockpos7 : (LinkedList<BlockPos>) linkedlist) {
 
-> CHANGE  10 : 11  @  10 : 11
+> CHANGE  10 : 13  @  10 : 11
 
-~ 							for (CommandClone.StaticCloneData commandclone$staticclonedata : (List<CommandClone.StaticCloneData>) list) {
+~ 							for (int k = 0, l = list.size(); k < l; ++k) {
+~ 								CommandClone.StaticCloneData commandclone$staticclonedata = (CommandClone.StaticCloneData) list
+~ 										.get(k);
 
-> CHANGE  12 : 13  @  12 : 13
+> CHANGE  12 : 15  @  12 : 13
 
-~ 							for (CommandClone.StaticCloneData commandclone$staticclonedata1 : (ArrayList<CommandClone.StaticCloneData>) arraylist3) {
+~ 							for (int k = 0, l = arraylist3.size(); k < l; ++k) {
+~ 								CommandClone.StaticCloneData commandclone$staticclonedata1 = (CommandClone.StaticCloneData) arraylist3
+~ 										.get(k);
 
-> CHANGE  6 : 7  @  6 : 7
+> CHANGE  6 : 9  @  6 : 7
 
-~ 							for (CommandClone.StaticCloneData commandclone$staticclonedata2 : (ArrayList<CommandClone.StaticCloneData>) arraylist1) {
+~ 							for (int k = 0, l = arraylist1.size(); k < l; ++k) {
+~ 								CommandClone.StaticCloneData commandclone$staticclonedata2 = (CommandClone.StaticCloneData) arraylist1
+~ 										.get(k);
 
-> CHANGE  17 : 18  @  17 : 18
+> CHANGE  17 : 20  @  17 : 18
 
-~ 							for (CommandClone.StaticCloneData commandclone$staticclonedata3 : (List<CommandClone.StaticCloneData>) list) {
+~ 							for (int k = 0, l = list.size(); k < l; ++k) {
+~ 								CommandClone.StaticCloneData commandclone$staticclonedata3 = (CommandClone.StaticCloneData) list
+~ 										.get(k);
 
-> CHANGE  6 : 7  @  6 : 7
+> CHANGE  6 : 8  @  6 : 7
 
-~ 								for (NextTickListEntry nextticklistentry : (List<NextTickListEntry>) list1) {
+~ 								for (int k = 0, l = list1.size(); k < l; ++k) {
+~ 									NextTickListEntry nextticklistentry = (NextTickListEntry) list1.get(k);
 
 > EOF

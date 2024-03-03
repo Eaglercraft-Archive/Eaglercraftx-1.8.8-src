@@ -19,7 +19,12 @@
 
 ~ 	public BlockFlower.EnumFlowerType pickRandomFlower(EaglercraftRandom random, BlockPos blockpos) {
 
-> CHANGE  14 : 15  @  14 : 15
+> CHANGE  4 : 6  @  4 : 6
+
+~ 			BlockFlower.EnumFlowerType blockflower$enumflowertype = BlockFlower.EnumFlowerType._VALUES[(int) (d0
+~ 					* (double) BlockFlower.EnumFlowerType._VALUES.length)];
+
+> CHANGE  8 : 9  @  8 : 9
 
 ~ 	public void decorate(World world, EaglercraftRandom random, BlockPos blockpos) {
 

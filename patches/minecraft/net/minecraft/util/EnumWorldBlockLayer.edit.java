@@ -10,4 +10,9 @@
 ~ 	SOLID("Solid"), CUTOUT_MIPPED("Mipped Cutout"), CUTOUT("Cutout"), TRANSLUCENT("Translucent"),
 ~ 	REALISTIC_WATER("EaglerShaderWater"), GLASS_HIGHLIGHTS("EaglerShaderGlassHighlights");
 
+> INSERT  1 : 3  @  1
+
++ 	public static final EnumWorldBlockLayer[] _VALUES = values();
++ 
+
 > EOF

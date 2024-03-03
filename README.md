@@ -125,6 +125,7 @@ The default eaglercraftXOpts values is this:
 - `assetsURI:` the URL of the assets.epk file **(required)**
 - `localesURI:` the URL where extra .lang files can be found
 - `worldsDB:` the name of the IndexedDB database to store worlds in
+- `resourcePacksDB:` the name of the IndexedDB database to store resource packs in
 - `demoMode:` whether to launch the game in java edition demo mode
 - `servers:` a list of default servers to display on the Multiplayer screen
 - `relays:` the default list of shared world relays to use for invites

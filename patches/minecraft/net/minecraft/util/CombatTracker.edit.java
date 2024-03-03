@@ -15,4 +15,9 @@
 
 > DELETE  6  @  6 : 11
 
+> CHANGE  108 : 110  @  108 : 109
+
+~ 		for (int i = 0, l = this.combatEntries.size(); i < l; ++i) {
+~ 			CombatEntry combatentry = this.combatEntries.get(i);
+
 > EOF

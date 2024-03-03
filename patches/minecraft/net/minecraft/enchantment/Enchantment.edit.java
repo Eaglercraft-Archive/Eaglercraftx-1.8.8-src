@@ -14,4 +14,9 @@
 ~ import com.google.common.collect.Maps;
 ~ 
 
+> CHANGE  137 : 139  @  137 : 138
+
+~ 		for (int i = 0; i < enchantmentsList.length; ++i) {
+~ 			Enchantment enchantment = enchantmentsList[i];
+
 > EOF

@@ -321,8 +321,9 @@ public class ClientMain {
 		}else {
 			System.err.println();
 			System.err.println("An additional crash report was supressed:");
-			for(String l : t.split("[\\r\\n]+")) {
-				System.err.println("  " + l);
+			String[] s = t.split("[\\r\\n]+");
+			for(int i = 0; i < s.length; ++i) {
+				System.err.println("  " + s[i]);
 			}
 		}
 	}

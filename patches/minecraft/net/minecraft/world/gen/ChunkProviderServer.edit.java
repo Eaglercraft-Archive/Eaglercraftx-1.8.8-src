@@ -15,11 +15,11 @@
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 
-> INSERT  2 : 3  @  2
+> CHANGE  9 : 10  @  9 : 10
 
-+ 
+~ 	private List<Chunk> loadedChunks = Lists.newLinkedList();
 
-> INSERT  56 : 57  @  56
+> INSERT  48 : 49  @  48
 
 + 						++EaglerMinecraftServer.counterChunkGenerate;
 
@@ -35,5 +35,9 @@
 > INSERT  54 : 55  @  54
 
 + 				++EaglerMinecraftServer.counterChunkWrite;
+
+> CHANGE  36 : 37  @  36 : 37
+
+~ 		for (int j = 0, l = arraylist.size(); j < l; ++j) {
 
 > EOF

@@ -10,11 +10,18 @@
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.EaglercraftGPU;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 
-> DELETE  3  @  3 : 4
+> DELETE  1  @  1 : 2
 
-> CHANGE  7 : 9  @  7 : 9
+> DELETE  1  @  1 : 2
 
-~ 				this.preRenderChunk(renderchunk, enumworldblocklayer);
+> CHANGE  4 : 6  @  4 : 6
+
+~ 			for (int i = 0, l = this.renderChunks.size(); i < l; ++i) {
+~ 				ListedRenderChunk listedrenderchunk = (ListedRenderChunk) this.renderChunks.get(i);
+
+> CHANGE  1 : 3  @  1 : 3
+
+~ 				this.preRenderChunk(listedrenderchunk, enumworldblocklayer);
 ~ 				EaglercraftGPU.glCallList(
 
 > EOF

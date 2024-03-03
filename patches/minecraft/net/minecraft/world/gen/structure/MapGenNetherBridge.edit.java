@@ -9,11 +9,9 @@
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 
-> INSERT  12 : 13  @  12
+> DELETE  6  @  6 : 10
 
-+ 
-
-> CHANGE  34 : 35  @  34 : 35
+> CHANGE  36 : 37  @  36 : 37
 
 ~ 		public Start(World worldIn, EaglercraftRandom parRandom, int parInt1, int parInt2) {
 

@@ -7,4 +7,10 @@
 
 > DELETE  8  @  8 : 12
 
+> CHANGE  92 : 95  @  92 : 93
+
+~ 		EnumDyeColor[] colors = EnumDyeColor.META_LOOKUP;
+~ 		for (int i = 0; i < colors.length; ++i) {
+~ 			EnumDyeColor enumdyecolor = colors[i];
+
 > EOF

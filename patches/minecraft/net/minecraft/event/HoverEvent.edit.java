@@ -13,4 +13,10 @@
 + import com.google.common.collect.Maps;
 + 
 
+> CHANGE  78 : 81  @  78 : 80
+
+~ 			HoverEvent.Action[] types = values();
+~ 			for (int i = 0; i < types.length; ++i) {
+~ 				nameMapping.put(types[i].getCanonicalName(), types[i]);
+
 > EOF

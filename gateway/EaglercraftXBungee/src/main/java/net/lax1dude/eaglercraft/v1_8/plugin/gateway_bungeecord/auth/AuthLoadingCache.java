@@ -2,11 +2,8 @@ package net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.auth;
 
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.function.Consumer;
 
 /**
  * Copyright (c) 2022-2023 lax1dude. All Rights Reserved.

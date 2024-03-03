@@ -13,7 +13,7 @@
 
 > DELETE  7  @  7 : 8
 
-> INSERT  1 : 17  @  1
+> INSERT  1 : 16  @  1
 
 + import java.util.Set;
 + 
@@ -28,7 +28,6 @@
 + import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 + import net.lax1dude.eaglercraft.v1_8.minecraft.EaglerTextureAtlasSprite;
 + import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.BlockVertexIDs;
-+ import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.DeferredStateManager;
 + import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.VertexMarkerState;
 + import net.minecraft.client.Minecraft;
 

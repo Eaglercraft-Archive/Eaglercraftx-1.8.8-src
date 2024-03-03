@@ -11,7 +11,11 @@
 
 > DELETE  14  @  14 : 17
 
-> CHANGE  180 : 181  @  180 : 181
+> CHANGE  38 : 39  @  38 : 39
+
+~ 		this.dataWatcher.addObject(16, Byte.valueOf((byte) 0));
+
+> CHANGE  141 : 142  @  141 : 142
 
 ~ 		public void func_111104_a(EaglercraftRandom rand) {
 

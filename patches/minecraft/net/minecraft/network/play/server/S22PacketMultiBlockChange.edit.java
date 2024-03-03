@@ -9,4 +9,9 @@
 
 + 
 
+> CHANGE  42 : 44  @  42 : 43
+
+~ 		for (int i = 0; i < this.changedBlocks.length; ++i) {
+~ 			S22PacketMultiBlockChange.BlockUpdateData s22packetmultiblockchange$blockupdatedata = this.changedBlocks[i];
+
 > EOF

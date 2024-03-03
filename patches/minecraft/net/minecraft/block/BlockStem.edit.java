@@ -14,11 +14,25 @@
 
 ~ 
 
-> CHANGE  53 : 54  @  53 : 54
+> CHANGE  39 : 44  @  39 : 41
+
+~ 		BlockPos tmp = new BlockPos(0, 0, 0);
+~ 		EnumFacing[] facings = EnumFacing.Plane.HORIZONTAL.facingsArray;
+~ 		for (int i = 0; i < facings.length; ++i) {
+~ 			EnumFacing enumfacing = facings[i];
+~ 			if (iblockaccess.getBlockState(blockpos.offsetEvenFaster(enumfacing, tmp)).getBlock() == this.crop) {
+
+> CHANGE  12 : 13  @  12 : 13
 
 ~ 	public void updateTick(World world, BlockPos blockpos, IBlockState iblockstate, EaglercraftRandom random) {
 
-> CHANGE  82 : 83  @  82 : 83
+> CHANGE  9 : 12  @  9 : 11
+
+~ 					EnumFacing[] facings = EnumFacing.Plane.HORIZONTAL.facingsArray;
+~ 					for (int j = 0; j < facings.length; ++j) {
+~ 						if (world.getBlockState(blockpos.offset(facings[j])).getBlock() == this.crop) {
+
+> CHANGE  71 : 72  @  71 : 72
 
 ~ 	public Item getItemDropped(IBlockState var1, EaglercraftRandom var2, int var3) {
 

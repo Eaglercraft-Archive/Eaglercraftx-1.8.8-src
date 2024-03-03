@@ -9,15 +9,29 @@
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 
-> INSERT  12 : 13  @  12
+> DELETE  6  @  6 : 10
 
-+ 
+> CHANGE  14 : 17  @  14 : 15
 
-> CHANGE  44 : 45  @  44 : 45
+~ 		BiomeGenBase[] biomes = BiomeGenBase.getBiomeGenArray();
+~ 		for (int i = 0; i < biomes.length; ++i) {
+~ 			BiomeGenBase biomegenbase = biomes[i];
+
+> CHANGE  31 : 32  @  31 : 32
 
 ~ 			EaglercraftRandom random = new EaglercraftRandom();
 
-> CHANGE  64 : 65  @  64 : 65
+> CHANGE  26 : 28  @  26 : 27
+
+~ 		for (int l = 0; l < this.structureCoords.length; ++l) {
+~ 			ChunkCoordIntPair chunkcoordintpair = this.structureCoords[l];
+
+> CHANGE  11 : 13  @  11 : 12
+
+~ 		for (int l = 0; l < this.structureCoords.length; ++l) {
+~ 			ChunkCoordIntPair chunkcoordintpair = this.structureCoords[l];
+
+> CHANGE  25 : 26  @  25 : 26
 
 ~ 		public Start(World worldIn, EaglercraftRandom parRandom, int parInt1, int parInt2) {
 

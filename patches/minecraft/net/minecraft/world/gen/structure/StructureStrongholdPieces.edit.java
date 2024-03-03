@@ -9,11 +9,9 @@
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 
-> INSERT  18 : 19  @  18
+> DELETE  13  @  13 : 16
 
-+ 
-
-> CHANGE  69 : 70  @  69 : 70
+> CHANGE  71 : 72  @  71 : 72
 
 ~ 			EaglercraftRandom parRandom, int parInt1, int parInt2, int parInt3, EnumFacing parEnumFacing, int parInt4) {
 

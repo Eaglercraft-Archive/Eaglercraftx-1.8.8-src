@@ -32,32 +32,32 @@ public class IPCPacketManager {
 	public static final DataOutputStream IPC_DATA_OUTPUT_STREAM = new DataOutputStream(IPC_OUTPUT_STREAM);
 	
 	static {
-		mappings.put(IPCPacket00StartServer.ID, () -> new IPCPacket00StartServer());
-		mappings.put(IPCPacket01StopServer.ID, () -> new IPCPacket01StopServer());
-		mappings.put(IPCPacket02InitWorld.ID, () -> new IPCPacket02InitWorld());
-		mappings.put(IPCPacket03DeleteWorld.ID, () -> new IPCPacket03DeleteWorld());
-		mappings.put(IPCPacket05RequestData.ID, () -> new IPCPacket05RequestData());
-		mappings.put(IPCPacket06RenameWorldNBT.ID, () -> new IPCPacket06RenameWorldNBT());
-		mappings.put(IPCPacket07ImportWorld.ID, () -> new IPCPacket07ImportWorld());
-		mappings.put(IPCPacket09RequestResponse.ID, () -> new IPCPacket09RequestResponse());
-		mappings.put(IPCPacket0ASetWorldDifficulty.ID, () -> new IPCPacket0ASetWorldDifficulty());
-		mappings.put(IPCPacket0BPause.ID, () -> new IPCPacket0BPause());
-		mappings.put(IPCPacket0CPlayerChannel.ID, () -> new IPCPacket0CPlayerChannel());
-		mappings.put(IPCPacket0DProgressUpdate.ID, () -> new IPCPacket0DProgressUpdate());
-		mappings.put(IPCPacket0EListWorlds.ID, () -> new IPCPacket0EListWorlds());
-		mappings.put(IPCPacket0FListFiles.ID, () -> new IPCPacket0FListFiles());
-		mappings.put(IPCPacket10FileRead.ID, () -> new IPCPacket10FileRead());
-		mappings.put(IPCPacket12FileWrite.ID, () -> new IPCPacket12FileWrite());
-		mappings.put(IPCPacket13FileCopyMove.ID, () -> new IPCPacket13FileCopyMove());
-		mappings.put(IPCPacket14StringList.ID, () -> new IPCPacket14StringList());
-		mappings.put(IPCPacket15Crashed.ID, () -> new IPCPacket15Crashed());
-		mappings.put(IPCPacket16NBTList.ID, () -> new IPCPacket16NBTList());
-		mappings.put(IPCPacket17ConfigureLAN.ID, () -> new IPCPacket17ConfigureLAN());
-		mappings.put(IPCPacket18ClearPlayers.ID, () -> new IPCPacket18ClearPlayers());
-		mappings.put(IPCPacket19Autosave.ID, () -> new IPCPacket19Autosave());
-		mappings.put(IPCPacket20LoggerMessage.ID, () -> new IPCPacket20LoggerMessage());
-		mappings.put(IPCPacket21EnableLogging.ID, () -> new IPCPacket21EnableLogging());
-		mappings.put(IPCPacketFFProcessKeepAlive.ID, () -> new IPCPacketFFProcessKeepAlive());
+		mappings.put(IPCPacket00StartServer.ID, IPCPacket00StartServer::new);
+		mappings.put(IPCPacket01StopServer.ID, IPCPacket01StopServer::new);
+		mappings.put(IPCPacket02InitWorld.ID, IPCPacket02InitWorld::new);
+		mappings.put(IPCPacket03DeleteWorld.ID, IPCPacket03DeleteWorld::new);
+		mappings.put(IPCPacket05RequestData.ID, IPCPacket05RequestData::new);
+		mappings.put(IPCPacket06RenameWorldNBT.ID, IPCPacket06RenameWorldNBT::new);
+		mappings.put(IPCPacket07ImportWorld.ID, IPCPacket07ImportWorld::new);
+		mappings.put(IPCPacket09RequestResponse.ID, IPCPacket09RequestResponse::new);
+		mappings.put(IPCPacket0ASetWorldDifficulty.ID, IPCPacket0ASetWorldDifficulty::new);
+		mappings.put(IPCPacket0BPause.ID, IPCPacket0BPause::new);
+		mappings.put(IPCPacket0CPlayerChannel.ID, IPCPacket0CPlayerChannel::new);
+		mappings.put(IPCPacket0DProgressUpdate.ID, IPCPacket0DProgressUpdate::new);
+		mappings.put(IPCPacket0EListWorlds.ID, IPCPacket0EListWorlds::new);
+		mappings.put(IPCPacket0FListFiles.ID, IPCPacket0FListFiles::new);
+		mappings.put(IPCPacket10FileRead.ID, IPCPacket10FileRead::new);
+		mappings.put(IPCPacket12FileWrite.ID, IPCPacket12FileWrite::new);
+		mappings.put(IPCPacket13FileCopyMove.ID, IPCPacket13FileCopyMove::new);
+		mappings.put(IPCPacket14StringList.ID, IPCPacket14StringList::new);
+		mappings.put(IPCPacket15Crashed.ID, IPCPacket15Crashed::new);
+		mappings.put(IPCPacket16NBTList.ID, IPCPacket16NBTList::new);
+		mappings.put(IPCPacket17ConfigureLAN.ID, IPCPacket17ConfigureLAN::new);
+		mappings.put(IPCPacket18ClearPlayers.ID, IPCPacket18ClearPlayers::new);
+		mappings.put(IPCPacket19Autosave.ID, IPCPacket19Autosave::new);
+		mappings.put(IPCPacket20LoggerMessage.ID, IPCPacket20LoggerMessage::new);
+		mappings.put(IPCPacket21EnableLogging.ID, IPCPacket21EnableLogging::new);
+		mappings.put(IPCPacketFFProcessKeepAlive.ID, IPCPacketFFProcessKeepAlive::new);
 	}
 	
 	public static byte[] IPCSerialize(IPCPacketBase pkt) throws IOException {

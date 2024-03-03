@@ -17,4 +17,10 @@
 
 > DELETE  2  @  2 : 4
 
+> CHANGE  75 : 78  @  75 : 77
+
+~ 		ModelRotation[] lst = values();
+~ 		for (int i = 0; i < lst.length; ++i) {
+~ 			mapRotations.put(Integer.valueOf(lst[i].combinedXY), lst[i]);
+
 > EOF

@@ -19,8 +19,10 @@
 
 > DELETE  1  @  1 : 2
 
-> CHANGE  95 : 96  @  95 : 96
+> CHANGE  95 : 98  @  95 : 98
 
-~ 				for (TileEntityBanner.EnumBannerPattern tileentitybanner$enumbannerpattern : (List<TileEntityBanner.EnumBannerPattern>) list1) {
+~ 				for (int i = 0, l = list1.size(); i < l; ++i) {
+~ 					arraylist.add("textures/entity/banner/"
+~ 							+ ((TileEntityBanner.EnumBannerPattern) list1.get(i)).getPatternName() + ".png");
 
 > EOF

@@ -17,15 +17,9 @@
 ~ import net.minecraft.client.renderer.EntityRenderer;
 ~ import net.minecraft.client.renderer.entity.RenderManager;
 
-> CHANGE  1 : 2  @  1 : 2
+> DELETE  1  @  1 : 2
 
-~ import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-
-> INSERT  1 : 2  @  1
-
-+ import net.minecraft.util.MathHelper;
-
-> INSERT  11 : 44  @  11
+> INSERT  12 : 45  @  12
 
 + 		if (DeferredStateManager.isInDeferredPass()) {
 + 			if (DeferredStateManager.forwardCallbackHandler != null) {

@@ -21,6 +21,7 @@ import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
+import net.lax1dude.eaglercraft.v1_8.internal.lwjgl.MainMenuCreditsDialog;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 
@@ -204,8 +205,15 @@ public class PlatformApplication {
 		fileChooserResultObject = null;
 	}
 
+	private static MainMenuCreditsDialog creditsDialog = null;
+
 	public static void openCreditsPopup(String text) {
-		
+		if(creditsDialog == null) {
+			creditsDialog = new MainMenuCreditsDialog();
+		}
+		creditsDialog.setCreditsText(text);
+		creditsDialog.setLocationRelativeTo(null);
+		creditsDialog.setVisible(true);
 	}
 
 	private static final File downloadsDirectory = new File("downloads");
@@ -239,6 +247,11 @@ public class PlatformApplication {
 		}
 
 		downloadsLogger.info("Saved {} byte file to: {}", fileContents.length, f.getAbsolutePath());
+
+		try {
+			Desktop.getDesktop().open(downloadsDirectory);
+		}catch(Throwable t) {
+		}
 	}
 
 	public static void addLogMessage(String logMessage, boolean isError) {

@@ -91,7 +91,7 @@ public class GBufferAcceleratedEffectRenderer extends AbstractAcceleratedEffectR
 		_wglVertexAttribDivisor(0, 0);
 
 		EaglercraftGPU.bindGLArrayBuffer(instancesBuffer);
-		_wglBufferData(GL_ARRAY_BUFFER, particleBuffer.remaining(), GL_STATIC_DRAW);
+		_wglBufferData(GL_ARRAY_BUFFER, particleBuffer.remaining(), GL_STREAM_DRAW);
 
 		_wglEnableVertexAttribArray(1);
 		_wglVertexAttribPointer(1, 3, GL_FLOAT, false, 24, 0);

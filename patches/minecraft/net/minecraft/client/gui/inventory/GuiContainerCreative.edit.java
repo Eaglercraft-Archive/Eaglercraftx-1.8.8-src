@@ -39,15 +39,48 @@
 + 	}
 + 
 
-> CHANGE  49 : 50  @  49 : 50
+> CHANGE  10 : 12  @  10 : 11
+
+~ 		for (int i = 0; i < Enchantment.enchantmentsBookList.length; ++i) {
+~ 			Enchantment enchantment = Enchantment.enchantmentsBookList[i];
+
+> CHANGE  12 : 15  @  12 : 14
+
+~ 			List<String> lst = itemstack.getTooltip(this.mc.thePlayer, this.mc.gameSettings.advancedItemTooltips);
+~ 			for (int i = 0, l = lst.size(); i < l; ++i) {
+~ 				if (EnumChatFormatting.getTextWithoutFormattingCodes(lst.get(i)).toLowerCase().contains(s1)) {
+
+> CHANGE  24 : 25  @  24 : 25
 
 ~ 	protected void mouseClicked(int parInt1, int parInt2, int parInt3) {
 
-> INSERT  149 : 150  @  149
+> CHANGE  4 : 6  @  4 : 6
 
-+ 				Mouse.showCursor(EnumCursorType.HAND);
+~ 			for (int k = 0; k < CreativeTabs.creativeTabArray.length; ++k) {
+~ 				if (this.func_147049_a(CreativeTabs.creativeTabArray[k], i, j)) {
 
-> CHANGE  173 : 174  @  173 : 174
+> CHANGE  13 : 15  @  13 : 14
+
+~ 			for (int m = 0; m < CreativeTabs.creativeTabArray.length; ++m) {
+~ 				CreativeTabs creativetabs = CreativeTabs.creativeTabArray[m];
+
+> CHANGE  127 : 130  @  127 : 129
+
+~ 		for (int m = 0; m < CreativeTabs.creativeTabArray.length; ++m) {
+~ 			if (this.renderCreativeInventoryHoveringText(CreativeTabs.creativeTabArray[m], i, j)) {
+~ 				Mouse.showCursor(EnumCursorType.HAND);
+
+> CHANGE  24 : 26  @  24 : 25
+
+~ 					for (int m = 0; m < CreativeTabs.creativeTabArray.length; ++m) {
+~ 						CreativeTabs creativetabs1 = CreativeTabs.creativeTabArray[m];
+
+> CHANGE  33 : 35  @  33 : 34
+
+~ 		for (int m = 0; m < CreativeTabs.creativeTabArray.length; ++m) {
+~ 			CreativeTabs creativetabs1 = CreativeTabs.creativeTabArray[m];
+
+> CHANGE  114 : 115  @  114 : 115
 
 ~ 	protected void actionPerformed(GuiButton parGuiButton) {
 

@@ -27,12 +27,28 @@
 
 ~ 	public Item getItemDropped(IBlockState iblockstate, EaglercraftRandom random, int var3) {
 
-> CHANGE  114 : 115  @  114 : 115
+> CHANGE  98 : 101  @  98 : 100
+
+~ 		BlockDoublePlant.EnumPlantType[] types = BlockDoublePlant.EnumPlantType.META_LOOKUP;
+~ 		for (int i = 0; i < types.length; ++i) {
+~ 			list.add(new ItemStack(item, 1, types[i].getMeta()));
+
+> CHANGE  14 : 15  @  14 : 15
 
 ~ 	public boolean canUseBonemeal(World var1, EaglercraftRandom var2, BlockPos var3, IBlockState var4) {
 
 > CHANGE  3 : 4  @  3 : 4
 
 ~ 	public void grow(World world, EaglercraftRandom var2, BlockPos blockpos, IBlockState var4) {
+
+> CHANGE  50 : 51  @  50 : 51
+
+~ 		private static final BlockDoublePlant.EnumPlantType[] META_LOOKUP = new BlockDoublePlant.EnumPlantType[6];
+
+> CHANGE  39 : 42  @  39 : 41
+
+~ 			BlockDoublePlant.EnumPlantType[] types = BlockDoublePlant.EnumPlantType.values();
+~ 			for (int i = 0; i < types.length; ++i) {
+~ 				META_LOOKUP[types[i].getMeta()] = types[i];
 
 > EOF

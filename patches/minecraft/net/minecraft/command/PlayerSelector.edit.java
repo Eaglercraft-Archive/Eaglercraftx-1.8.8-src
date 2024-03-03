@@ -5,13 +5,25 @@
 # Version: 1.0
 # Author: lax1dude
 
-> CHANGE  64 : 65  @  64 : 65
+> DELETE  18  @  18 : 20
 
-~ 			for (Entity entity : (ArrayList<Entity>) list) {
+> CHANGE  38 : 39  @  38 : 39
 
-> CHANGE  20 : 21  @  20 : 21
+~ 		List<Entity> list = matchEntities(sender, token, Entity.class);
 
-~ 				for (World world : (ArrayList<World>) list) {
+> CHANGE  5 : 7  @  5 : 7
+
+~ 			for (int i = 0, l = list.size(); i < l; ++i) {
+~ 				arraylist.add(list.get(i).getDisplayName());
+
+> CHANGE  16 : 17  @  16 : 17
+
+~ 				List<World> list = getWorlds(sender, map);
+
+> CHANGE  2 : 4  @  2 : 3
+
+~ 				for (int i = 0, l = list.size(); i < l; ++i) {
+~ 					World world = list.get(i);
 
 > CHANGE  49 : 50  @  49 : 50
 

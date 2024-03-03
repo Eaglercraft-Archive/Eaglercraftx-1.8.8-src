@@ -43,8 +43,8 @@
 
 > CHANGE  1 : 3  @  1 : 9
 
-~ 		for (Runnable runnable : this.listFinishRunnables) {
-~ 			runnable.run();
+~ 		for (int i = 0, l = this.listFinishRunnables.size(); i < l; ++i) {
+~ 			this.listFinishRunnables.get(i).run();
 
 > DELETE  1  @  1 : 2
 

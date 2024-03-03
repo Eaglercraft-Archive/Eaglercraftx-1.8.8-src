@@ -1,7 +1,5 @@
 package net.lax1dude.eaglercraft.v1_8.sp.server.export;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,6 +11,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+import net.lax1dude.eaglercraft.v1_8.EaglerInputStream;
+import net.lax1dude.eaglercraft.v1_8.EaglerOutputStream;
 import net.lax1dude.eaglercraft.v1_8.internal.vfs2.VFile2;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
@@ -50,7 +50,7 @@ public class WorldConverterMCA {
 			folderName += "_";
 			worldDir = EaglerIntegratedServerWorker.saveFormat.getSaveLoader(folderName, false).getWorldDirectory();
 		}
-		ZipInputStream zis = new ZipInputStream(new ByteArrayInputStream(archiveContents));
+		ZipInputStream zis = new ZipInputStream(new EaglerInputStream(archiveContents));
 		ZipEntry folderNameFile = null;
 		List<char[]> fileNames = new ArrayList<>();
 		while((folderNameFile = zis.getNextEntry()) != null) {
@@ -63,7 +63,7 @@ public class WorldConverterMCA {
 		final int[] i = new int[] { 0 };
 		while(fileNames.get(0).length > i[0] && fileNames.stream().allMatch(w -> w[i[0]] == fileNames.get(0)[i[0]])) i[0]++;
 		int folderPrefixOffset = i[0];
-		zis = new ZipInputStream(new ByteArrayInputStream(archiveContents));
+		zis = new ZipInputStream(new EaglerInputStream(archiveContents));
 		ZipEntry f = null;
 		int lastProgUpdate = 0;
 		int prog = 0;
@@ -73,7 +73,7 @@ public class WorldConverterMCA {
 			if (f.isDirectory()) continue;
 			String lowerName = f.getName().toLowerCase();
 			if (!(lowerName.endsWith(".dat") || lowerName.endsWith(".dat_old") || lowerName.endsWith(".mca") || lowerName.endsWith(".mcr") || lowerName.endsWith(".bmp"))) continue;
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			EaglerOutputStream baos = new EaglerOutputStream();
 			int len;
 			while ((len = zis.read(bb)) != -1) {
 				baos.write(bb, 0, len);
@@ -82,7 +82,7 @@ public class WorldConverterMCA {
 			byte[] b = baos.toByteArray();
 			String fileName = f.getName().substring(folderPrefixOffset);
 			if (fileName.equals("level.dat") || fileName.equals("level.dat_old")) {
-				NBTTagCompound worldDatNBT = CompressedStreamTools.readCompressed(new ByteArrayInputStream(b));
+				NBTTagCompound worldDatNBT = CompressedStreamTools.readCompressed(new EaglerInputStream(b));
 
 				NBTTagCompound gameRulesNBT = worldDatNBT.getCompoundTag("Data").getCompoundTag("GameRules");
 				gameRulesNBT.setString("loadSpawnChunks", (gameRules & 2) != 0 ? "true" : "false");
@@ -96,7 +96,7 @@ public class WorldConverterMCA {
 
 				worldDatNBT.getCompoundTag("Data").setString("LevelName", newName);
 				worldDatNBT.getCompoundTag("Data").setLong("LastPlayed", System.currentTimeMillis());
-				ByteArrayOutputStream bo = new ByteArrayOutputStream();
+				EaglerOutputStream bo = new EaglerOutputStream();
 				CompressedStreamTools.writeCompressed(worldDatNBT, bo);
 				b = bo.toByteArray();
 				VFile2 ff = new VFile2(worldDir, fileName);
@@ -129,7 +129,7 @@ public class WorldConverterMCA {
 								logger.error("{}: Chunk already exists: {}", fileName, chunkOut.getPath());
 								continue;
 							}
-							ByteArrayOutputStream bao = new ByteArrayOutputStream();
+							EaglerOutputStream bao = new EaglerOutputStream();
 							CompressedStreamTools.writeCompressed(chunkNBT, bao);
 							b = bao.toByteArray();
 							chunkOut.setAllBytes(b);
@@ -171,7 +171,7 @@ public class WorldConverterMCA {
 	}
 
 	public static byte[] exportWorld(String folderName) throws IOException {
-		ByteArrayOutputStream bao = new ByteArrayOutputStream();
+		EaglerOutputStream bao = new EaglerOutputStream();
 		ZipOutputStream zos = new ZipOutputStream(bao);
 		zos.setComment("contains backup of world '" + folderName + "'");
 		VFile2 worldFolder = EaglerIntegratedServerWorker.saveFormat.getSaveLoader(folderName, false).getWorldDirectory();
@@ -209,12 +209,13 @@ public class WorldConverterMCA {
 			String regionFolder = folderName + dstFolderNames[i];
 			logger.info("Converting chunks in \"{}\" as MCA to \"{}\"...", vf.getPath(), regionFolder);
 			Map<String,RegionFile> regionFiles = new HashMap();
-			for(VFile2 chunkFile : fileList) {
+			for(int k = 0, l = fileList.size(); k < l; ++k) {
+				VFile2 chunkFile = fileList.get(k);
 				NBTTagCompound chunkNBT;
 				NBTTagCompound chunkLevel;
 				try {
 					b = chunkFile.getAllBytes();
-					chunkNBT = CompressedStreamTools.readCompressed(new ByteArrayInputStream(b));
+					chunkNBT = CompressedStreamTools.readCompressed(new EaglerInputStream(b));
 					if(!chunkNBT.hasKey("Level", 10)) {
 						throw new IOException("Chunk is missing level data!");
 					}
@@ -258,7 +259,8 @@ public class WorldConverterMCA {
 		}
 		logger.info("Copying extra world data...");
 		fileList = (new VFile2(worldFolder, "data")).listFiles(false);
-		for(VFile2 dataFile : fileList) {
+		for(int k = 0, l = fileList.size(); k < l; ++k) {
+			VFile2 dataFile = fileList.get(k);
 			zos.putNextEntry(new ZipEntry(folderName + "/data/" + dataFile.getName()));
 			b = dataFile.getAllBytes();
 			zos.write(b);
@@ -269,7 +271,8 @@ public class WorldConverterMCA {
 			}
 		}
 		fileList = (new VFile2(worldFolder, "players")).listFiles(false);
-		for(VFile2 dataFile : fileList) {
+		for(int k = 0, l = fileList.size(); k < l; ++k) {
+			VFile2 dataFile = fileList.get(k);
 			zos.putNextEntry(new ZipEntry(folderName + "/players/" + dataFile.getName()));
 			b = dataFile.getAllBytes();
 			zos.write(b);
@@ -280,7 +283,8 @@ public class WorldConverterMCA {
 			}
 		}
 		fileList = (new VFile2(worldFolder, "eagler/skulls")).listFiles(false);
-		for(VFile2 dataFile : fileList) {
+		for(int k = 0, l = fileList.size(); k < l; ++k) {
+			VFile2 dataFile = fileList.get(k);
 			zos.putNextEntry(new ZipEntry(folderName + "/eagler/skulls/" + dataFile.getName()));
 			b = dataFile.getAllBytes();
 			zos.write(b);

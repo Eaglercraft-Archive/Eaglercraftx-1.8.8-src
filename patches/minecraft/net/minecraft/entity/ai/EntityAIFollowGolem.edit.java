@@ -5,12 +5,15 @@
 # Version: 1.0
 # Author: lax1dude
 
-> INSERT  8 : 9  @  8
+> DELETE  3  @  3 : 4
 
-+ 
+> CHANGE  20 : 21  @  20 : 21
 
-> CHANGE  21 : 22  @  21 : 22
+~ 			List<EntityIronGolem> list = this.theVillager.worldObj.getEntitiesWithinAABB(EntityIronGolem.class,
 
-~ 				for (EntityIronGolem entityirongolem : (List<EntityIronGolem>) list) {
+> CHANGE  4 : 6  @  4 : 5
+
+~ 				for (int i = 0, l = list.size(); i < l; ++i) {
+~ 					EntityIronGolem entityirongolem = list.get(i);
 
 > EOF

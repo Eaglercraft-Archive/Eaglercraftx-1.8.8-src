@@ -5,9 +5,8 @@
 # Version: 1.0
 # Author: lax1dude
 
-> CHANGE  2 : 5  @  2 : 3
+> CHANGE  2 : 4  @  2 : 3
 
-~ import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 ~ import net.lax1dude.eaglercraft.v1_8.netty.ByteBuf;
 ~ 
 

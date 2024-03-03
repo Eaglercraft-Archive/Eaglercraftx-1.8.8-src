@@ -13,4 +13,11 @@
 + import com.google.common.collect.Lists;
 + 
 
+> CHANGE  258 : 262  @  258 : 261
+
+~ 				int l = this.minecartToSpawn.size();
+~ 				if (l > 0) {
+~ 					for (int i = 0; i < l; ++i) {
+~ 						nbttaglist.appendTag(this.minecartToSpawn.get(i).toNBT());
+
 > EOF

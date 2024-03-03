@@ -28,7 +28,13 @@
 
 ~ 		Collection<ScoreObjective> collection = this.getWorldScoreboard()
 
-> INSERT  348 : 359  @  348
+> CHANGE  271 : 274  @  271 : 273
+
+~ 		ItemStack[] stack = this.inventory.armorInventory;
+~ 		for (int j = 0; j < stack.length; ++j) {
+~ 			if (stack[j] != null) {
+
+> INSERT  75 : 86  @  75
 
 + 				} else if (!this.worldObj.isRemote && MinecraftServer.getServer().worldServers[0].getWorldInfo()
 + 						.getGameRulesInstance().getBoolean("clickToRide") && itemstack == null
@@ -51,5 +57,15 @@
 
 ~ 	public static EaglercraftUUID getOfflineUUID(String username) {
 ~ 		return EaglercraftUUID.nameUUIDFromBytes(("OfflinePlayer:" + username).getBytes(Charsets.UTF_8));
+
+> CHANGE  66 : 67  @  66 : 67
+
+~ 		private static final EntityPlayer.EnumChatVisibility[] ID_LOOKUP = new EntityPlayer.EnumChatVisibility[3];
+
+> CHANGE  21 : 24  @  21 : 23
+
+~ 			EntityPlayer.EnumChatVisibility[] lst = values();
+~ 			for (int i = 0; i < lst.length; ++i) {
+~ 				ID_LOOKUP[lst[i].chatVisibility] = lst[i];
 
 > EOF

@@ -2,7 +2,6 @@ package net.lax1dude.eaglercraft.v1_8.internal;
 
 import java.net.URL;
 
-import net.lax1dude.eaglercraft.v1_8.internal.PlatformAudio.IAudioCacheLoader;
 import net.lax1dude.eaglercraft.v1_8.internal.paulscode.lwjgl3.LibraryLWJGLOpenAL;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;

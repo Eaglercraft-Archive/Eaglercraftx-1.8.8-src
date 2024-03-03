@@ -5,6 +5,21 @@
 # Version: 1.0
 # Author: lax1dude
 
-> DELETE  15  @  15 : 16
+> INSERT  2 : 4  @  2
+
++ import java.util.List;
++ 
+
+> DELETE  13  @  13 : 14
+
+> CHANGE  317 : 318  @  317 : 318
+
+~ 				List<EntityPlayerMP> lst = this.worldObj.getPlayers(EntityPlayerMP.class,
+
+> CHANGE  5 : 8  @  5 : 6
+
+~ 						});
+~ 				for (int i = 0, l = lst.size(); i < l; ++i) {
+~ 					EntityPlayerMP entityplayermp = lst.get(i);
 
 > EOF

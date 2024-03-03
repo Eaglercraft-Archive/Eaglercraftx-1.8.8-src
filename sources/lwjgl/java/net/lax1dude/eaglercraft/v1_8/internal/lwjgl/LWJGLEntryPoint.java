@@ -8,6 +8,7 @@ import net.lax1dude.eaglercraft.v1_8.EagUtils;
 import net.lax1dude.eaglercraft.v1_8.internal.EnumPlatformANGLE;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformRuntime;
 import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.program.ShaderSource;
+import net.lax1dude.eaglercraft.v1_8.sp.relay.RelayManager;
 import net.minecraft.client.main.Main;
 
 /**
@@ -55,6 +56,13 @@ public class LWJGLEntryPoint {
 			if(args[i].equalsIgnoreCase("highp")) {
 				ShaderSource.setHighP(true);
 			}
+		}
+		
+		RelayManager.relayManager.load(EagRuntime.getStorage("r"));
+
+		if (RelayManager.relayManager.count() <= 0) {
+			RelayManager.relayManager.loadDefaults();
+			RelayManager.relayManager.save();
 		}
 		
 		EagRuntime.create();

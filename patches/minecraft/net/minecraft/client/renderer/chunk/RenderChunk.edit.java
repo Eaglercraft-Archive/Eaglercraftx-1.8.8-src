@@ -5,9 +5,7 @@
 # Version: 1.0
 # Author: lax1dude
 
-> CHANGE  2 : 3  @  2 : 5
-
-~ import net.lax1dude.eaglercraft.v1_8.internal.buffer.FloatBuffer;
+> DELETE  2  @  2 : 5
 
 > CHANGE  3 : 11  @  3 : 4
 
@@ -52,7 +50,13 @@
 
 > DELETE  11  @  11 : 15
 
-> INSERT  24 : 33  @  24
+> CHANGE  5 : 8  @  5 : 7
+
+~ 		EnumFacing[] facings = EnumFacing._VALUES;
+~ 		for (int i = 0; i < facings.length; ++i) {
+~ 			this.field_181702_p.put(facings[i], pos.offset(facings[i], 16));
+
+> INSERT  17 : 26  @  17
 
 + 		if (DeferredStateManager.isRenderingRealisticWater() && compiledchunk.getStateRealisticWater() != null
 + 				&& !compiledchunk.isLayerEmpty(EnumWorldBlockLayer.REALISTIC_WATER)) {
@@ -77,7 +81,11 @@
 + 		generator.setCompiledChunk(compiledchunk);
 + 
 
-> CHANGE  7 : 9  @  7 : 9
+> CHANGE  4 : 5  @  4 : 5
+
+~ 			boolean[] aboolean = new boolean[EnumWorldBlockLayer._VALUES.length];
+
+> CHANGE  2 : 4  @  2 : 4
 
 ~ 			for (BlockPos blockpos$mutableblockpos : BlockPos.getAllInBox(blockpos, blockpos1)) {
 ~ 				IBlockState iblockstate = regionrendercache.getBlockStateFaster(blockpos$mutableblockpos);
@@ -102,7 +110,13 @@
 + 								blockpos$mutableblockpos, regionrendercache, worldrenderer);
 + 					}
 
-> DELETE  17  @  17 : 18
+> CHANGE  3 : 6  @  3 : 4
+
+~ 			EnumWorldBlockLayer[] layers = EnumWorldBlockLayer._VALUES;
+~ 			for (int i = 0; i < layers.length; ++i) {
+~ 				EnumWorldBlockLayer enumworldblocklayer = layers[i];
+
+> DELETE  13  @  13 : 14
 
 > CHANGE  1 : 8  @  1 : 12
 

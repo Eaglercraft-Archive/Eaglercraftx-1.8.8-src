@@ -53,8 +53,8 @@ public final class ObjectUtil {
 			throw new NullPointerException(text);
 		}
 
-		for (T element : varargs) {
-			if (element == null) {
+		for (int i = 0; i < varargs.length; ++i) {
+			if (varargs[i] == null) {
 				throw new NullPointerException(text);
 			}
 		}

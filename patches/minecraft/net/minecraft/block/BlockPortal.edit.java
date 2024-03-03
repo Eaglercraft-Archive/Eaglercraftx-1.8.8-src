@@ -27,4 +27,19 @@
 
 ~ 		EaglerLoadingCache loadingcache = BlockPattern.func_181627_a(parWorld, true);
 
+> CHANGE  8 : 10  @  8 : 9
+
+~ 			EnumFacing.AxisDirection[] axis = EnumFacing.AxisDirection._VALUES;
+~ 			int[] aint = new int[axis.length];
+
+> CHANGE  3 : 5  @  3 : 4
+
+~ 			for (int k = 0; k < axis.length; ++k) {
+~ 				EnumFacing.AxisDirection enumfacing$axisdirection = axis[k];
+
+> CHANGE  20 : 22  @  20 : 21
+
+~ 			for (int k = 0; k < axis.length; ++k) {
+~ 				EnumFacing.AxisDirection enumfacing$axisdirection2 = axis[k];
+
 > EOF

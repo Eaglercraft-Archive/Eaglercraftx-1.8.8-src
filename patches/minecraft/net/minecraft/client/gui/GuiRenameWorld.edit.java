@@ -5,14 +5,13 @@
 # Version: 1.0
 # Author: lax1dude
 
-> INSERT  3 : 7  @  3
+> CHANGE  2 : 5  @  2 : 6
 
-+ 
-+ import net.lax1dude.eaglercraft.v1_8.Keyboard;
-+ import net.lax1dude.eaglercraft.v1_8.sp.SingleplayerServerController;
-+ import net.lax1dude.eaglercraft.v1_8.sp.gui.GuiScreenIntegratedServerBusy;
+~ import net.lax1dude.eaglercraft.v1_8.Keyboard;
+~ import net.lax1dude.eaglercraft.v1_8.sp.SingleplayerServerController;
+~ import net.lax1dude.eaglercraft.v1_8.sp.gui.GuiScreenIntegratedServerBusy;
 
-> DELETE  6  @  6 : 7
+> DELETE  3  @  3 : 4
 
 > INSERT  5 : 6  @  5
 
@@ -51,13 +50,13 @@
 ~ 					SingleplayerServerController.duplicateWorld(this.saveName, this.field_146583_f.getText().trim());
 ~ 					this.mc.displayGuiScreen(
 ~ 							new GuiScreenIntegratedServerBusy(this.parentScreen, "singleplayer.busy.duplicating",
-~ 									"singleplayer.failed.duplicating", () -> SingleplayerServerController.isReady()));
+~ 									"singleplayer.failed.duplicating", SingleplayerServerController::isReady));
 ~ 				} else {
 ~ 					ISaveFormat isaveformat = this.mc.getSaveLoader();
 ~ 					isaveformat.renameWorld(this.saveName, this.field_146583_f.getText().trim());
 ~ 					this.mc.displayGuiScreen(
 ~ 							new GuiScreenIntegratedServerBusy(this.parentScreen, "singleplayer.busy.renaming",
-~ 									"singleplayer.failed.renaming", () -> SingleplayerServerController.isReady()));
+~ 									"singleplayer.failed.renaming", SingleplayerServerController::isReady));
 ~ 				}
 
 > DELETE  1  @  1 : 2

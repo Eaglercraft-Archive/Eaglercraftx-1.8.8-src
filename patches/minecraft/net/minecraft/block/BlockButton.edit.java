@@ -9,7 +9,13 @@
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 
-> CHANGE  164 : 165  @  164 : 165
+> CHANGE  52 : 55  @  52 : 53
+
+~ 		EnumFacing[] facings = EnumFacing._VALUES;
+~ 		for (int i = 0; i < facings.length; ++i) {
+~ 			EnumFacing enumfacing = facings[i];
+
+> CHANGE  111 : 112  @  111 : 112
 
 ~ 	public void randomTick(World var1, BlockPos var2, IBlockState var3, EaglercraftRandom var4) {
 

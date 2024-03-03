@@ -9,19 +9,37 @@
 
 + 
 
-> CHANGE  189 : 190  @  189 : 190
+> CHANGE  189 : 191  @  189 : 190
 
-~ 			for (String s1 : (ArrayList<String>) arraylist1) {
+~ 			for (int j = 0, l = arraylist1.size(); j < l; ++j) {
+~ 				String s1 = (String) arraylist1.get(j);
 
 > CHANGE  234 : 235  @  234 : 235
 
 ~ 			for (ScorePlayerTeam scoreplayerteam1 : (Collection<ScorePlayerTeam>) collection1) {
 
-> CHANGE  115 : 116  @  115 : 116
+> CHANGE  25 : 28  @  25 : 26
 
-~ 				for (String s : (ArrayList<String>) arraylist) {
+~ 					List<Entity> lst = func_175763_c(parICommandSender, s1);
+~ 					for (int i = 0, l = lst.size(); i < l; ++i) {
+~ 						Entity entity = lst.get(i);
 
-> CHANGE  28 : 29  @  28 : 29
+> CHANGE  47 : 50  @  47 : 48
+
+~ 					List<Entity> lst = func_175763_c(parICommandSender, s);
+~ 					for (int i = 0, l = lst.size(); i < l; ++i) {
+~ 						Entity entity = lst.get(i);
+
+> CHANGE  35 : 36  @  35 : 36
+
+~ 			ArrayList<String> arraylist = Lists.newArrayList(scoreplayerteam.getMembershipCollection());
+
+> CHANGE  5 : 7  @  5 : 7
+
+~ 				for (int i = 0, l = arraylist.size(); i < l; ++i) {
+~ 					scoreboard.removePlayerFromTeam(arraylist.get(i), scoreplayerteam);
+
+> CHANGE  27 : 28  @  27 : 28
 
 ~ 			for (ScoreObjective scoreobjective : (Collection<ScoreObjective>) collection) {
 

@@ -15,4 +15,10 @@
 
 > DELETE  1  @  1 : 4
 
+> CHANGE  71 : 74  @  71 : 74
+
+~ 			IScoreObjectiveCriteria.EnumRenderType[] types = values();
+~ 			for (int i = 0; i < types.length; ++i) {
+~ 				field_178801_c.put(types[i].func_178796_a(), types[i]);
+
 > EOF

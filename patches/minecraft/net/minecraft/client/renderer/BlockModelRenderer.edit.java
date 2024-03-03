@@ -15,19 +15,32 @@
 
 > DELETE  3  @  3 : 7
 
-> INSERT  72 : 73  @  72
+> CHANGE  44 : 45  @  44 : 45
+
+~ 		float[] afloat = new float[EnumFacing._VALUES.length * 2];
+
+> CHANGE  3 : 6  @  3 : 4
+
+~ 		EnumFacing[] facings = EnumFacing._VALUES;
+~ 		for (int i = 0; i < facings.length; ++i) {
+~ 			EnumFacing enumfacing = facings[i];
+
+> INSERT  23 : 24  @  23
 
 + 		boolean isDeferred = DeferredStateManager.isDeferredRenderer();
 
 > INSERT  1 : 2  @  1
 
-+ 		float[] afloat = isDeferred ? new float[EnumFacing.values().length * 2] : null;
++ 		float[] afloat = isDeferred ? new float[EnumFacing._VALUES.length * 2] : null;
 
-> INSERT  2 : 3  @  2
+> CHANGE  2 : 6  @  2 : 3
 
-+ 		BlockPos.MutableBlockPos pointer = new BlockPos.MutableBlockPos();
+~ 		BlockPos.MutableBlockPos pointer = new BlockPos.MutableBlockPos();
+~ 		EnumFacing[] facings = EnumFacing._VALUES;
+~ 		for (int m = 0; m < facings.length; ++m) {
+~ 			EnumFacing enumfacing = facings[m];
 
-> CHANGE  3 : 4  @  3 : 4
+> CHANGE  2 : 3  @  2 : 3
 
 ~ 				BlockPos blockpos = blockPosIn.offsetEvenFaster(enumfacing, pointer);
 
@@ -47,8 +60,10 @@
 
 ~ 			if (!isDeferred && block$enumoffsettype == Block.EnumOffsetType.XYZ) {
 
-> CHANGE  5 : 7  @  5 : 6
+> CHANGE  4 : 8  @  4 : 6
 
+~ 		for (int i = 0, l = listQuadsIn.size(); i < l; ++i) {
+~ 			BakedQuad bakedquad = listQuadsIn.get(i);
 ~ 			int[] vertData = isDeferred ? bakedquad.getVertexDataWithNormals() : bakedquad.getVertexData();
 ~ 			this.fillQuadBounds(blockIn, vertData, bakedquad.getFace(), quadBounds, boundsFlags, isDeferred ? 8 : 7);
 
@@ -67,7 +82,16 @@
 ~ 			float f7 = Float.intBitsToFloat(vertexData[j + 1]);
 ~ 			float f8 = Float.intBitsToFloat(vertexData[j + 2]);
 
-> INSERT  53 : 60  @  53
+> CHANGE  15 : 21  @  15 : 21
+
+~ 			quadBounds[EnumFacing.WEST.getIndex() + EnumFacing._VALUES.length] = 1.0F - f;
+~ 			quadBounds[EnumFacing.EAST.getIndex() + EnumFacing._VALUES.length] = 1.0F - f3;
+~ 			quadBounds[EnumFacing.DOWN.getIndex() + EnumFacing._VALUES.length] = 1.0F - f1;
+~ 			quadBounds[EnumFacing.UP.getIndex() + EnumFacing._VALUES.length] = 1.0F - f4;
+~ 			quadBounds[EnumFacing.NORTH.getIndex() + EnumFacing._VALUES.length] = 1.0F - f2;
+~ 			quadBounds[EnumFacing.SOUTH.getIndex() + EnumFacing._VALUES.length] = 1.0F - f5;
+
+> INSERT  32 : 39  @  32
 
 + 	private final BlockPos blockpos0 = new BlockPos(0, 0, 0);
 + 	private final BlockPos blockpos1 = new BlockPos(0, 0, 0);
@@ -86,13 +110,15 @@
 
 ~ 			if (!isDeferred && block$enumoffsettype == Block.EnumOffsetType.XYZ) {
 
-> INSERT  5 : 10  @  5
+> CHANGE  4 : 11  @  4 : 5
 
-+ 			EnumFacing facingIn = bakedquad.getFace();
-+ 			int[] vertData = isDeferred ? bakedquad.getVertexDataWithNormals() : bakedquad.getVertexData();
-+ 			blockPosIn.offsetEvenFaster(facingIn, blockpos0);
-+ 			this.fillQuadBounds(blockIn, vertData, facingIn, quadBounds, boundsFlags, isDeferred ? 8 : 7);
-+ 			boolean boundsFlags0 = boundsFlags.get(0);
+~ 		for (int m = 0, n = listQuadsIn.size(); m < n; ++m) {
+~ 			BakedQuad bakedquad = listQuadsIn.get(m);
+~ 			EnumFacing facingIn = bakedquad.getFace();
+~ 			int[] vertData = isDeferred ? bakedquad.getVertexDataWithNormals() : bakedquad.getVertexData();
+~ 			blockPosIn.offsetEvenFaster(facingIn, blockpos0);
+~ 			this.fillQuadBounds(blockIn, vertData, facingIn, quadBounds, boundsFlags, isDeferred ? 8 : 7);
+~ 			boolean boundsFlags0 = boundsFlags.get(0);
 
 > CHANGE  1 : 2  @  1 : 5
 
@@ -217,7 +243,18 @@
 + 	}
 + 
 
-> CHANGE  45 : 47  @  45 : 46
+> CHANGE  2 : 5  @  2 : 3
+
+~ 		EnumFacing[] facings = EnumFacing._VALUES;
+~ 		for (int i = 0; i < facings.length; ++i) {
+~ 			EnumFacing enumfacing = facings[i];
+
+> CHANGE  32 : 34  @  32 : 33
+
+~ 		for (int i = 0, l = parList.size(); i < l; ++i) {
+~ 			BakedQuad bakedquad = parList.get(i);
+
+> CHANGE  9 : 11  @  9 : 10
 
 ~ 			worldrenderer.putNormal((float) vec3i.getX(), (float) vec3i.getY(), (float) vec3i.getZ(),
 ~ 					VertexMarkerState.markId);
@@ -342,5 +379,9 @@
 ~ 		int j = (int) ((float) (parInt1 & 255) * parFloat1 + (float) (parInt2 & 255) * parFloat2
 ~ 				+ (float) (parInt3 & 255) * parFloat3 + (float) (parInt4 & 255) * parFloat4) & 255;
 ~ 		return i << 16 | j;
+
+> CHANGE  140 : 141  @  140 : 141
+
+~ 			this.field_178229_m = parEnumFacing.getIndex() + (parFlag ? EnumFacing._VALUES.length : 0);
 
 > EOF

@@ -7,4 +7,9 @@
 
 > DELETE  2  @  2 : 3
 
+> CHANGE  41 : 43  @  41 : 43
+
+~ 		for (int i = 0; i < this.renderChunks.length; ++i) {
+~ 			renderChunks[i].deleteGlResources();
+
 > EOF

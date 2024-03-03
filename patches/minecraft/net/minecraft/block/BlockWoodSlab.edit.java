@@ -25,4 +25,10 @@
 
 ~ 	public Item getItemDropped(IBlockState var1, EaglercraftRandom var2, int var3) {
 
+> CHANGE  21 : 24  @  21 : 23
+
+~ 			BlockPlanks.EnumType[] types = BlockPlanks.EnumType.META_LOOKUP;
+~ 			for (int i = 0; i < types.length; ++i) {
+~ 				list.add(new ItemStack(item, 1, types[i].getMetadata()));
+
 > EOF

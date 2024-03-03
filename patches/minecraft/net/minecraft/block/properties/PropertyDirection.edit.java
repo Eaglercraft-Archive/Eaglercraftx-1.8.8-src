@@ -14,4 +14,8 @@
 
 ~ 
 
+> CHANGE  12 : 13  @  12 : 13
+
+~ 		return create(name, Collections2.filter(Lists.newArrayList(EnumFacing._VALUES), filter));
+
 > EOF

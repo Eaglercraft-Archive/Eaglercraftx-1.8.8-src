@@ -5,7 +5,9 @@
 # Version: 1.0
 # Author: lax1dude
 
-> INSERT  26 : 27  @  26
+> DELETE  6  @  6 : 12
+
+> INSERT  14 : 15  @  14
 
 + 
 

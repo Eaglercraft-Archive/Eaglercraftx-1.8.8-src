@@ -7,4 +7,9 @@
 
 > DELETE  6  @  6 : 8
 
+> CHANGE  39 : 41  @  39 : 41
+
+~ 		for (int i = 0; i < this.intArray.length; ++i) {
+~ 			s = s + this.intArray[i] + ",";
+
 > EOF

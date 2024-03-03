@@ -7,16 +7,20 @@
 
 > DELETE  2  @  2 : 3
 
-> DELETE  5  @  5 : 6
+> DELETE  1  @  1 : 3
+
+> DELETE  2  @  2 : 3
 
 > DELETE  1  @  1 : 2
 
 > DELETE  1  @  1 : 5
 
-> INSERT  1 : 6  @  1
+> INSERT  1 : 8  @  1
 
 + import com.google.common.collect.Lists;
 + 
++ import net.lax1dude.eaglercraft.v1_8.EaglerInputStream;
++ import net.lax1dude.eaglercraft.v1_8.EaglerOutputStream;
 + import net.lax1dude.eaglercraft.v1_8.EaglerZLIB;
 + import net.lax1dude.eaglercraft.v1_8.sp.server.export.RandomAccessMemoryFile;
 + 
@@ -60,11 +64,11 @@
 > CHANGE  10 : 12  @  10 : 12
 
 ~ 								return new DataInputStream(new BufferedInputStream(
-~ 										EaglerZLIB.newGZIPInputStream(new ByteArrayInputStream(abyte1))));
+~ 										EaglerZLIB.newGZIPInputStream(new EaglerInputStream(abyte1))));
 
 > CHANGE  4 : 5  @  4 : 5
 
-~ 										EaglerZLIB.newInflaterInputStream(new ByteArrayInputStream(abyte))));
+~ 										EaglerZLIB.newInflaterInputStream(new EaglerInputStream(abyte))));
 
 > CHANGE  12 : 13  @  12 : 13
 
@@ -102,5 +106,9 @@
 
 ~ 	public RandomAccessMemoryFile getFile() {
 ~ 		return dataFile;
+
+> CHANGE  2 : 3  @  2 : 3
+
+~ 	class ChunkBuffer extends EaglerOutputStream {
 
 > EOF

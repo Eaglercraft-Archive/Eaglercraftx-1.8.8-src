@@ -19,4 +19,14 @@
 + import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 + 
 
+> CHANGE  282 : 284  @  282 : 283
+
+~ 			for (int i = 0, l = this.field_150491_b.size(); i < l; ++i) {
+~ 				JsonToNBT.Any jsontonbt$any = this.field_150491_b.get(i);
+
+> CHANGE  17 : 19  @  17 : 19
+
+~ 			for (int i = 0, l = this.field_150492_b.size(); i < l; ++i) {
+~ 				nbttaglist.appendTag(this.field_150492_b.get(i).parse());
+
 > EOF

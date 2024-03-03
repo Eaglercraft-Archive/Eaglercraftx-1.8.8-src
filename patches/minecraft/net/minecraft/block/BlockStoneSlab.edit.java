@@ -22,4 +22,20 @@
 ~ 
 ~ 	public Item getItemDropped(IBlockState var1, EaglercraftRandom var2, int var3) {
 
+> CHANGE  21 : 24  @  21 : 22
+
+~ 			BlockStoneSlab.EnumType[] types = BlockStoneSlab.EnumType.META_LOOKUP;
+~ 			for (int i = 0; i < types.length; ++i) {
+~ 				BlockStoneSlab.EnumType blockstoneslab$enumtype = types[i];
+
+> CHANGE  55 : 56  @  55 : 56
+
+~ 		public static final BlockStoneSlab.EnumType[] META_LOOKUP = new BlockStoneSlab.EnumType[8];
+
+> CHANGE  45 : 48  @  45 : 47
+
+~ 			BlockStoneSlab.EnumType[] types = values();
+~ 			for (int i = 0; i < types.length; ++i) {
+~ 				META_LOOKUP[types[i].getMetadata()] = types[i];
+
 > EOF

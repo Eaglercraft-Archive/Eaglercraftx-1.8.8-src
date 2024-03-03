@@ -9,4 +9,19 @@
 
 + 
 
+> CHANGE  166 : 168  @  166 : 168
+
+~ 			for (int i = 0; i < this.enchantmentTypes.length; ++i) {
+~ 				if (this.enchantmentTypes[i] == enchantmentType) {
+
+> CHANGE  22 : 24  @  22 : 23
+
+~ 		for (int i = 0; i < Enchantment.enchantmentsBookList.length; ++i) {
+~ 			Enchantment enchantment = Enchantment.enchantmentsBookList[i];
+
+> CHANGE  3 : 5  @  3 : 5
+
+~ 				for (int j = 0; j < enchantmentType.length && !flag; ++j) {
+~ 					if (enchantment.type == enchantmentType[j]) {
+
 > EOF

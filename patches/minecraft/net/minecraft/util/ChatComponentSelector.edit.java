@@ -5,6 +5,14 @@
 # Version: 1.0
 # Author: lax1dude
 
-> DELETE  2  @  2 : 5
+> CHANGE  2 : 3  @  2 : 4
+
+~ import java.util.List;
+
+> CHANGE  20 : 23  @  20 : 22
+
+~ 		List<IChatComponent> lst = this.getSiblings();
+~ 		for (int i = 0, l = lst.size(); i < l; ++i) {
+~ 			chatcomponentselector.appendSibling(lst.get(i).createCopy());
 
 > EOF

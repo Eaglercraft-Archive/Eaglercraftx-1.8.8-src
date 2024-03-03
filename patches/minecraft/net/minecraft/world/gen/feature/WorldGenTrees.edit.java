@@ -9,12 +9,16 @@
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 
-> INSERT  17 : 18  @  17
+> DELETE  14  @  14 : 15
 
-+ 
-
-> CHANGE  23 : 24  @  23 : 24
+> CHANGE  25 : 26  @  25 : 26
 
 ~ 	public boolean generate(World world, EaglercraftRandom random, BlockPos blockpos) {
+
+> CHANGE  126 : 129  @  126 : 127
+
+~ 								EnumFacing[] facings = EnumFacing.Plane.HORIZONTAL.facingsArray;
+~ 								for (int m = 0; m < facings.length; ++m) {
+~ 									EnumFacing enumfacing = facings[m];
 
 > EOF

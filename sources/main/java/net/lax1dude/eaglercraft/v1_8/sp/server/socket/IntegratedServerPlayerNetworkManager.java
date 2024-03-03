@@ -1,12 +1,12 @@
 package net.lax1dude.eaglercraft.v1_8.sp.server.socket;
 
-import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.lax1dude.eaglercraft.v1_8.EaglerOutputStream;
 import net.lax1dude.eaglercraft.v1_8.EaglerZLIB;
 import net.lax1dude.eaglercraft.v1_8.internal.EnumEaglerConnectionState;
 import net.lax1dude.eaglercraft.v1_8.internal.IPCPacketData;
@@ -48,7 +48,7 @@ public class IntegratedServerPlayerNetworkManager {
 	public final String playerChannel;
 	private EnumConnectionState packetState = EnumConnectionState.HANDSHAKING;
 	private static PacketBuffer temporaryBuffer;
-	private static ByteArrayOutputStream temporaryOutputStream;
+	private static EaglerOutputStream temporaryOutputStream;
 	private int debugPacketCounter = 0;
 	private byte[][] recievedPacketBuffer = new byte[16384][];
 	private int recievedPacketBufferCounter = 0;
@@ -71,7 +71,7 @@ public class IntegratedServerPlayerNetworkManager {
 		this.enableSendCompression = !SingleplayerServerController.PLAYER_CHANNEL.equals(playerChannel);
 		if(this.enableSendCompression) {
 			if(temporaryOutputStream == null) {
-				temporaryOutputStream = new ByteArrayOutputStream(16386);
+				temporaryOutputStream = new EaglerOutputStream(16386);
 			}
 		}
 	}
@@ -115,7 +115,7 @@ public class IntegratedServerPlayerNetworkManager {
 			if(enableSendCompression) {
 				if(firstPacket) {
 					if(data.length > 2 && data[0] == (byte)0x02 && data[1] == (byte)0x3D) {
-						ByteArrayOutputStream kickPacketBAO = new ByteArrayOutputStream();
+						EaglerOutputStream kickPacketBAO = new EaglerOutputStream();
 						try {
 							DataOutputStream kickDAO = new DataOutputStream(kickPacketBAO);
 							kickDAO.write(0);

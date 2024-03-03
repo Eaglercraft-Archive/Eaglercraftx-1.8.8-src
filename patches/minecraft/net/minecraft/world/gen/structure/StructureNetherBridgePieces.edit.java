@@ -9,11 +9,9 @@
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 
-> INSERT  15 : 16  @  15
+> DELETE  10  @  10 : 13
 
-+ 
-
-> CHANGE  35 : 37  @  35 : 37
+> CHANGE  37 : 39  @  37 : 39
 
 ~ 			StructureNetherBridgePieces.PieceWeight parPieceWeight, List<StructureComponent> parList,
 ~ 			EaglercraftRandom parRandom, int parInt1, int parInt2, int parInt3, EnumFacing parEnumFacing, int parInt4) {

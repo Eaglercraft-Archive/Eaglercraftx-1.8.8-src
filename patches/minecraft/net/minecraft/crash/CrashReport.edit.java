@@ -5,18 +5,15 @@
 # Version: 1.0
 # Author: lax1dude
 
-> DELETE  2  @  2 : 5
+> DELETE  2  @  2 : 9
 
-> DELETE  2  @  2 : 4
-
-> CHANGE  4 : 13  @  4 : 5
+> CHANGE  4 : 12  @  4 : 5
 
 ~ 
 ~ import com.google.common.collect.Lists;
 ~ 
 ~ import net.lax1dude.eaglercraft.v1_8.ArrayUtils;
 ~ import net.lax1dude.eaglercraft.v1_8.EagRuntime;
-~ import net.lax1dude.eaglercraft.v1_8.IOUtils;
 ~ import net.lax1dude.eaglercraft.v1_8.internal.EnumPlatformType;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
@@ -56,11 +53,17 @@
 
 ~ 			this.stacktrace = (String[]) ArrayUtils
 
-> CHANGE  7 : 8  @  7 : 8
+> CHANGE  7 : 9  @  7 : 9
 
-~ 			for (String stacktraceelement : this.stacktrace) {
+~ 			for (int i = 0; i < this.stacktrace.length; ++i) {
+~ 				builder.append("\t").append("at ").append(this.stacktrace[i].toString());
 
-> CHANGE  16 : 17  @  16 : 27
+> CHANGE  6 : 8  @  6 : 8
+
+~ 		for (int i = 0, l = this.crashReportSections.size(); i < l; ++i) {
+~ 			this.crashReportSections.get(i).appendToStringBuilder(builder);
+
+> CHANGE  7 : 8  @  7 : 18
 
 ~ 		StringBuilder stackTrace = new StringBuilder();
 

@@ -24,8 +24,13 @@
 
 ~ 	public void updateTick(World world, BlockPos blockpos, IBlockState var3, EaglercraftRandom var4) {
 
-> CHANGE  16 : 17  @  16 : 17
+> CHANGE  11 : 12  @  11 : 12
 
-~ 			for (Entity entity : (List<Entity>) list) {
+~ 		List<Entity> list = worldIn.getEntitiesWithinAABBExcludingEntity((Entity) null,
+
+> CHANGE  4 : 6  @  4 : 6
+
+~ 			for (int i = 0, l = list.size(); i < l; ++i) {
+~ 				if (!list.get(i).doesEntityNotTriggerPressurePlate()) {
 
 > EOF

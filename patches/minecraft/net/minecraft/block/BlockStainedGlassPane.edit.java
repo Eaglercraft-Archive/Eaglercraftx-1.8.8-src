@@ -9,7 +9,11 @@
 
 ~ 
 
-> DELETE  61  @  61 : 62
+> CHANGE  31 : 32  @  31 : 32
+
+~ 		for (int i = 0; i < EnumDyeColor.META_LOOKUP.length; ++i) {
+
+> DELETE  29  @  29 : 30
 
 > DELETE  6  @  6 : 7
 

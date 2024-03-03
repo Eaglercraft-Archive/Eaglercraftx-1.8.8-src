@@ -23,4 +23,10 @@
 + 			smeltingBase = new FurnaceRecipes();
 + 		}
 
+> CHANGE  27 : 30  @  27 : 28
+
+~ 		ItemFishFood.FishType[] types = ItemFishFood.FishType.values();
+~ 		for (int i = 0; i < types.length; ++i) {
+~ 			ItemFishFood.FishType itemfishfood$fishtype = types[i];
+
 > EOF

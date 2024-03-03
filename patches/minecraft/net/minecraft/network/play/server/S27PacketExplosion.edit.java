@@ -13,4 +13,9 @@
 + import com.google.common.collect.Lists;
 + 
 
+> CHANGE  67 : 69  @  67 : 68
+
+~ 		for (int m = 0, n = this.affectedBlockPositions.size(); m < n; ++m) {
+~ 			BlockPos blockpos = this.affectedBlockPositions.get(m);
+
 > EOF

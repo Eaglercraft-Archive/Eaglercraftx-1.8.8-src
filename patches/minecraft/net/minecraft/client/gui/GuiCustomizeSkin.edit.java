@@ -7,7 +7,13 @@
 
 > DELETE  2  @  2 : 5
 
-> CHANGE  30 : 31  @  30 : 31
+> CHANGE  15 : 18  @  15 : 16
+
+~ 		EnumPlayerModelParts[] parts = EnumPlayerModelParts._VALUES;
+~ 		for (int k = 0; k < parts.length; ++k) {
+~ 			EnumPlayerModelParts enumplayermodelparts = parts[k];
+
+> CHANGE  14 : 15  @  14 : 15
 
 ~ 	protected void actionPerformed(GuiButton parGuiButton) {
 

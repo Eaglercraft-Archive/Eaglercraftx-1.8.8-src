@@ -380,7 +380,7 @@ public class EaglerDeferredPipeline {
 
 	public void rebuild(EaglerDeferredConfig config) {
 		destroy();
-		DeferredStateManager.doCheckErrors = EagRuntime.getConfiguration().checkShaderGLErrors();
+		DeferredStateManager.doCheckErrors = EagRuntime.getConfiguration().isCheckShaderGLErrors();
 		DeferredStateManager.checkGLError("Pre: rebuild pipeline");
 		this.config = config;
 		this.currentWidth = -1;
@@ -3302,7 +3302,7 @@ public class EaglerDeferredPipeline {
 			GlStateManager.bindTexture(bloomVBlurTexture);
 			GlStateManager.enableBlend();
 			GlStateManager.tryBlendFuncSeparate(GL_CONSTANT_ALPHA, GL_ONE, GL_ZERO, GL_ONE);
-			GlStateManager.setBlendConstants(0.0f, 0.0f, 0.0f, 0.25f);
+			GlStateManager.setBlendConstants(0.0f, 0.0f, 0.0f, 0.15f);
 			TextureCopyUtil.blitTexture();
 			GlStateManager.disableBlend();
 

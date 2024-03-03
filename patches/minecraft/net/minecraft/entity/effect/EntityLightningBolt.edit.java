@@ -5,4 +5,6 @@
 # Version: 1.0
 # Author: lax1dude
 
+> DELETE  5  @  5 : 6
+
 > EOF

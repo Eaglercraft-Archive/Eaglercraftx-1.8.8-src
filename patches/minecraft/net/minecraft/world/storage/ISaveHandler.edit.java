@@ -11,7 +11,9 @@
 
 + import net.lax1dude.eaglercraft.v1_8.internal.vfs2.VFile2;
 
-> CHANGE  21 : 22  @  21 : 22
+> DELETE  3  @  3 : 5
+
+> CHANGE  16 : 17  @  16 : 17
 
 ~ 	VFile2 getWorldDirectory();
 

@@ -15,11 +15,7 @@
 
 > DELETE  4  @  4 : 6
 
-> INSERT  1 : 2  @  1
-
-+ import net.minecraft.init.Blocks;
-
-> CHANGE  6 : 8  @  6 : 8
+> CHANGE  7 : 9  @  7 : 9
 
 ~ 	private EaglerTextureAtlasSprite[] atlasSpritesLava = new EaglerTextureAtlasSprite[2];
 ~ 	private EaglerTextureAtlasSprite[] atlasSpritesWater = new EaglerTextureAtlasSprite[2];

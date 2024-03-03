@@ -15,4 +15,9 @@
 
 ~ 		EaglercraftRandom random = new EaglercraftRandom(1660L);
 
+> CHANGE  27 : 29  @  27 : 29
+
+~ 		for (int i = 0; i < this.tentacles.length; ++i) {
+~ 			this.tentacles[i].render(f5);
+
 > EOF

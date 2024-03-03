@@ -15,12 +15,24 @@
 
 ~ 	protected void actionPerformed(GuiButton parGuiButton) {
 
-> CHANGE  16 : 17  @  16 : 17
+> CHANGE  3 : 6  @  3 : 5
+
+~ 			KeyBinding[] arr = this.mc.gameSettings.keyBindings;
+~ 			for (int i = 0; i < arr.length; ++i) {
+~ 				arr[i].setKeyCode(arr[i].getKeyCodeDefault());
+
+> CHANGE  11 : 12  @  11 : 12
 
 ~ 	protected void mouseClicked(int parInt1, int parInt2, int parInt3) {
 
 > CHANGE  17 : 18  @  17 : 18
 
 ~ 	protected void keyTyped(char parChar1, int parInt1) {
+
+> CHANGE  24 : 27  @  24 : 26
+
+~ 		KeyBinding[] arr = this.options.keyBindings;
+~ 		for (int k = 0; k < arr.length; ++k) {
+~ 			if (arr[k].getKeyCode() != arr[k].getKeyCodeDefault()) {
 
 > EOF

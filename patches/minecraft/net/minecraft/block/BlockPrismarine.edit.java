@@ -20,4 +20,14 @@
 + 	}
 + 
 
+> CHANGE  35 : 36  @  35 : 36
+
+~ 		private static final BlockPrismarine.EnumType[] META_LOOKUP = new BlockPrismarine.EnumType[3];
+
+> CHANGE  35 : 38  @  35 : 37
+
+~ 			BlockPrismarine.EnumType[] types = values();
+~ 			for (int i = 0; i < types.length; ++i) {
+~ 				META_LOOKUP[types[i].getMetadata()] = types[i];
+
 > EOF

@@ -5,7 +5,9 @@
 # Version: 1.0
 # Author: lax1dude
 
-> CHANGE  22 : 24  @  22 : 24
+> DELETE  10  @  10 : 18
+
+> CHANGE  4 : 6  @  4 : 6
 
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
@@ -14,8 +16,9 @@
 
 + 
 
-> CHANGE  27 : 28  @  27 : 28
+> CHANGE  27 : 29  @  27 : 29
 
-~ 				for (Entity entity : (List<Entity>) list) {
+~ 				for (int k = 0, l = list.size(); k < l; ++k) {
+~ 					astring[i] = ((Entity) list.get(k)).getUniqueID().toString();
 
 > EOF

@@ -22,6 +22,10 @@
 
 > CHANGE  108 : 109  @  108 : 109
 
-~ 		for (IChatComponent ichatcomponent : (List<IChatComponent>) list) {
+~ 		for (int j = 0, l = list.size(); j < l; ++j) {
+
+> CHANGE  5 : 6  @  5 : 6
+
+~ 			this.field_146253_i.add(0, new ChatLine(parInt2, (IChatComponent) list.get(j), parInt1));
 
 > EOF

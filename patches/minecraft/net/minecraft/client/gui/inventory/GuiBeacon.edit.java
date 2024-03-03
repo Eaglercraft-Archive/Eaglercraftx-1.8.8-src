@@ -22,7 +22,12 @@
 
 ~ 	protected void actionPerformed(GuiButton parGuiButton) {
 
-> INSERT  116 : 118  @  116
+> CHANGE  37 : 39  @  37 : 38
+
+~ 		for (int k = 0, l = this.buttonList.size(); k < l; ++k) {
+~ 			GuiButton guibutton = this.buttonList.get(k);
+
+> INSERT  78 : 80  @  78
 
 + 			if (this.enabled)
 + 				Mouse.showCursor(EnumCursorType.HAND);

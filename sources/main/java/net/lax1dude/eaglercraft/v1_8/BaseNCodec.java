@@ -390,7 +390,8 @@ public abstract class BaseNCodec {
 		if (arrayOctet == null) {
 			return false;
 		}
-		for (final byte element : arrayOctet) {
+		for (int i = 0; i < arrayOctet.length; ++i) {
+			byte element = arrayOctet[i];
 			if (pad == element || isInAlphabet(element)) {
 				return true;
 			}
@@ -624,7 +625,8 @@ public abstract class BaseNCodec {
 	 *         the byte array is empty; {@code false}, otherwise
 	 */
 	public boolean isInAlphabet(final byte[] arrayOctet, final boolean allowWSPad) {
-		for (final byte octet : arrayOctet) {
+		for (int i = 0; i < arrayOctet.length; ++i) {
+			byte octet = arrayOctet[i];
 			if (!isInAlphabet(octet) && (!allowWSPad || (octet != pad) && !isWhiteSpace(octet))) {
 				return false;
 			}

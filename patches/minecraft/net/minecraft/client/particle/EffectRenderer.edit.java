@@ -46,7 +46,12 @@
 + 	public IAcceleratedParticleEngine acceleratedParticleRenderer = vanillaAcceleratedParticleRenderer;
 + 
 
-> CHANGE  157 : 167  @  157 : 158
+> CHANGE  104 : 106  @  104 : 105
+
+~ 		for (int i = 0, l = this.particleEmitters.size(); i < l; ++i) {
+~ 			EntityParticleEmitter entityparticleemitter = this.particleEmitters.get(i);
+
+> CHANGE  52 : 62  @  52 : 53
 
 ~ 	public boolean hasParticlesInAlphaLayer() {
 ~ 		for (int i = 0; i < 3; ++i) {

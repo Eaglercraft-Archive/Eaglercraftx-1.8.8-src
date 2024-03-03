@@ -1,17 +1,16 @@
 package net.lax1dude.eaglercraft.v1_8.profile;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.EaglerInputStream;
+import net.lax1dude.eaglercraft.v1_8.EaglerOutputStream;
 import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompressedStreamTools;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ResourceLocation;
@@ -148,8 +147,10 @@ public class EaglerProfile {
 	}
 
 	public static void read() {
-		byte[] profileStorage = EagRuntime.getStorage("p");
+		read(EagRuntime.getStorage("p"));
+	}
 
+	public static void read(byte[] profileStorage) {
 		if (profileStorage == null) {
 			return;
 		}
@@ -207,7 +208,7 @@ public class EaglerProfile {
 
 	}
 
-	public static void write() {
+	public static byte[] write() {
 		NBTTagCompound profile = new NBTTagCompound();
 		profile.setInteger("presetSkin", presetSkinId);
 		profile.setInteger("customSkin", customSkinId);
@@ -222,13 +223,20 @@ public class EaglerProfile {
 			skinsList.appendTag(skin);
 		}
 		profile.setTag("skins", skinsList);
-		ByteArrayOutputStream bao = new ByteArrayOutputStream();
+		EaglerOutputStream bao = new EaglerOutputStream();
 		try {
 			CompressedStreamTools.writeCompressed(profile, bao);
 		} catch (IOException e) {
-			return;
+			return null;
 		}
-		EagRuntime.setStorage("p", bao.toByteArray());
+		return bao.toByteArray();
+	}
+
+	public static void save() {
+		byte[] b = write();
+		if(b != null) {
+			EagRuntime.setStorage("p", b);
+		}
 	}
 
 	static {

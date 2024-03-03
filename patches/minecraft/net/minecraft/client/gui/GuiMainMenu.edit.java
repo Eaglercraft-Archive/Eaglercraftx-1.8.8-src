@@ -51,7 +51,9 @@
 
 > DELETE  3  @  3 : 5
 
-> DELETE  4  @  4 : 11
+> DELETE  2  @  2 : 3
+
+> DELETE  1  @  1 : 8
 
 > DELETE  2  @  2 : 3
 
@@ -247,7 +249,7 @@
 
 ~ 			isaveformat.deleteWorldDirectory("Demo World");
 ~ 			this.mc.displayGuiScreen(new GuiScreenIntegratedServerBusy(this, "singleplayer.busy.deleting",
-~ 					"singleplayer.failed.deleting", () -> SingleplayerServerController.isReady()));
+~ 					"singleplayer.failed.deleting", SingleplayerServerController::isReady));
 ~ 		} else {
 
 > DELETE  1  @  1 : 14

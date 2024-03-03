@@ -88,7 +88,20 @@
 + 	}
 + 
 
-> INSERT  85 : 86  @  85
+> CHANGE  32 : 34  @  32 : 33
+
+~ 		int l = this.foundPlayerNames.size();
+~ 		if (l > 1) {
+
+> CHANGE  2 : 3  @  2 : 3
+
+~ 			for (int i = 0; i < l; ++i) {
+
+> CHANGE  4 : 5  @  4 : 5
+
+~ 				stringbuilder.append(this.foundPlayerNames.get(i));
+
+> INSERT  44 : 45  @  44
 
 + 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 
@@ -98,5 +111,10 @@
 + 			exitButton.yPosition = 3 + mc.guiAchievement.getHeight();
 + 		}
 + 
+
+> CHANGE  8 : 10  @  8 : 9
+
+~ 			for (int i = 0; i < parArrayOfString.length; ++i) {
+~ 				String s = parArrayOfString[i];
 
 > EOF

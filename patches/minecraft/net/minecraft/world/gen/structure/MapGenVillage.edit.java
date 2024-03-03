@@ -9,11 +9,9 @@
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 
-> INSERT  11 : 12  @  11
+> DELETE  5  @  5 : 9
 
-+ 
-
-> CHANGE  42 : 43  @  42 : 43
+> CHANGE  44 : 45  @  44 : 45
 
 ~ 		EaglercraftRandom random = this.worldObj.setRandomSeed(i1, j1, 10387312);
 

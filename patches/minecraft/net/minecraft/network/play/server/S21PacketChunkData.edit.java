@@ -13,16 +13,29 @@
 + import com.google.common.collect.Lists;
 + 
 
-> CHANGE  74 : 75  @  74 : 75
+> CHANGE  59 : 60  @  59 : 60
 
-~ 		for (ExtendedBlockStorage extendedblockstorage1 : (ArrayList<ExtendedBlockStorage>) arraylist) {
+~ 		ArrayList<ExtendedBlockStorage> arraylist = Lists.newArrayList();
 
-> CHANGE  8 : 9  @  8 : 9
+> INSERT  13 : 16  @  13
 
-~ 		for (ExtendedBlockStorage extendedblockstorage2 : (ArrayList<ExtendedBlockStorage>) arraylist) {
++ 		int l = arraylist.size();
++ 		for (int k = 0; k < l; ++k) {
++ 			char[] achar = arraylist.get(k).getData();
 
-> CHANGE  5 : 6  @  5 : 6
+> CHANGE  1 : 3  @  1 : 5
 
-~ 			for (ExtendedBlockStorage extendedblockstorage3 : (ArrayList<ExtendedBlockStorage>) arraylist) {
+~ 			for (int m = 0; m < achar.length; ++m) {
+~ 				char c0 = achar[m];
+
+> CHANGE  5 : 7  @  5 : 8
+
+~ 		for (int k = 0; k < l; ++k) {
+~ 			j = func_179757_a(arraylist.get(k).getBlocklightArray().getData(), s21packetchunkdata$extracted.data, j);
+
+> CHANGE  3 : 5  @  3 : 6
+
+~ 			for (int k = 0; k < l; ++k) {
+~ 				j = func_179757_a(arraylist.get(k).getSkylightArray().getData(), s21packetchunkdata$extracted.data, j);
 
 > EOF

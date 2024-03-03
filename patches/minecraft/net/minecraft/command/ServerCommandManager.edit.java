@@ -17,12 +17,14 @@
 
 > DELETE  3  @  3 : 4
 
-> DELETE  4  @  4 : 5
+> CHANGE  4 : 5  @  4 : 7
 
-> DELETE  1  @  1 : 2
+~ import net.minecraft.entity.player.EntityPlayerMP;
 
-> INSERT  4 : 6  @  4
+> INSERT  4 : 8  @  4
 
++ import java.util.List;
++ 
 + import net.lax1dude.eaglercraft.v1_8.sp.server.ClientCommandDummy;
 + 
 
@@ -39,7 +41,13 @@
 ~ 		this.registerCommand(new CommandSetPlayerTimeout());
 ~ 		this.registerCommand(new ClientCommandDummy("eagskull", 2, "command.skull.usage"));
 
-> CHANGE  20 : 21  @  20 : 26
+> CHANGE  16 : 19  @  16 : 17
+
+~ 			List<EntityPlayerMP> players = minecraftserver.getConfigurationManager().func_181057_v();
+~ 			for (int i = 0, l = players.size(); i < l; ++i) {
+~ 				EntityPlayerMP entityplayer = players.get(i);
+
+> CHANGE  3 : 4  @  3 : 9
 
 ~ 					entityplayer.addChatMessage(chatcomponenttranslation);
 

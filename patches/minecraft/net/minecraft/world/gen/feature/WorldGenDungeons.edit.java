@@ -9,20 +9,22 @@
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 
-> CHANGE  11 : 13  @  11 : 13
+> CHANGE  10 : 12  @  10 : 13
 
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 
-> INSERT  2 : 3  @  2
-
-+ 
-
-> CHANGE  19 : 20  @  19 : 20
+> CHANGE  21 : 22  @  21 : 22
 
 ~ 	public boolean generate(World world, EaglercraftRandom random, BlockPos blockpos) {
 
-> CHANGE  103 : 104  @  103 : 104
+> CHANGE  66 : 69  @  66 : 68
+
+~ 						EnumFacing[] facings = EnumFacing.Plane.HORIZONTAL.facingsArray;
+~ 						for (int m = 0; m < facings.length; ++m) {
+~ 							if (world.getBlockState(blockpos3.offset(facings[m])).getBlock().getMaterial().isSolid()) {
+
+> CHANGE  35 : 36  @  35 : 36
 
 ~ 	private String pickMobSpawner(EaglercraftRandom parRandom) {
 

@@ -145,7 +145,14 @@
 ~ 				this.refreshServerList();
 ~ 			}
 
-> DELETE  1  @  1 : 2
+> INSERT  1 : 2  @  1
+
++ 	}
+
+> INSERT  1 : 3  @  1
+
++ 	public void cancelDirectConnect() {
++ 		this.directConnect = false;
 
 > CHANGE  2 : 3  @  2 : 3
 
@@ -159,10 +166,13 @@
 
 > DELETE  2  @  2 : 11
 
-> INSERT  25 : 28  @  25
+> INSERT  22 : 24  @  22
 
 + 		relaysButton.drawScreen(i, j);
 + 		drawPluginDownloadLink(i, j);
+
+> INSERT  3 : 4  @  3
+
 + 	}
 
 > INSERT  1 : 17  @  1

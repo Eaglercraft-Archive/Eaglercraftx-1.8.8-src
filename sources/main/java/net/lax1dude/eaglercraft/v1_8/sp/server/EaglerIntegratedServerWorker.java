@@ -88,8 +88,8 @@ public class EaglerIntegratedServerWorker {
 
 	public static void tick() {
 		List<IntegratedServerPlayerNetworkManager> ocs = new ArrayList<>(openChannels.values());
-		for(IntegratedServerPlayerNetworkManager i : ocs) {
-			i.tick();
+		for(int i = 0, l = ocs.size(); i < l; ++i) {
+			ocs.get(i).tick();
 		}
 	}
 
@@ -147,8 +147,8 @@ public class EaglerIntegratedServerWorker {
 					EaglerSaveFormat.worldsList.setAllChars(pkt.worldName);
 				}else {
 					boolean found = false;
-					for(String s : worlds) {
-						if(s.equals(pkt.worldName)) {
+					for(int i = 0; i < worlds.length; ++i) {
+						if(worlds[i].equals(pkt.worldName)) {
 							found = true;
 							break;
 						}
@@ -196,7 +196,8 @@ public class EaglerIntegratedServerWorker {
 				String[] worldsTxt = EaglerSaveFormat.worldsList.getAllLines();
 				if(worldsTxt != null) {
 					List<String> newWorlds = new ArrayList();
-					for(String str : worldsTxt) {
+					for(int i = 0; i < worldsTxt.length; ++i) {
+						String str = worldsTxt[i];
 						if(!str.equalsIgnoreCase(pkt.worldName)) {
 							newWorlds.add(str);
 						}

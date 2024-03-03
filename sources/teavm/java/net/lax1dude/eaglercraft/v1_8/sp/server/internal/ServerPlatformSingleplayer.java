@@ -1,7 +1,6 @@
 package net.lax1dude.eaglercraft.v1_8.sp.server.internal;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -73,7 +72,7 @@ public class ServerPlatformSingleplayer {
 	}
 
 	public static void initializeContext() {
-		PlatformFilesystem.initialize();
+		PlatformFilesystem.initialize(getClientConfigAdapter().getWorldsDB());
 	}
 
 	@JSBody(params = { "ch", "dat" }, script = "postMessage({ ch: ch, dat : dat });")

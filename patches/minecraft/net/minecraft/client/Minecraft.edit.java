@@ -20,7 +20,7 @@
 
 > DELETE  1  @  1 : 4
 
-> CHANGE  1 : 51  @  1 : 4
+> CHANGE  1 : 52  @  1 : 4
 
 ~ 
 ~ import net.lax1dude.eaglercraft.v1_8.internal.PlatformInput;
@@ -44,6 +44,7 @@
 ~ import net.lax1dude.eaglercraft.v1_8.internal.PlatformRuntime;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
+~ import net.lax1dude.eaglercraft.v1_8.minecraft.EaglerFolderResourcePack;
 ~ import net.lax1dude.eaglercraft.v1_8.minecraft.EaglerFontRenderer;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.EaglercraftGPU;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
@@ -75,7 +76,9 @@
 
 > DELETE  2  @  2 : 4
 
-> DELETE  13  @  13 : 15
+> DELETE  10  @  10 : 11
+
+> DELETE  2  @  2 : 4
 
 > DELETE  3  @  3 : 4
 
@@ -229,8 +232,9 @@
 
 > DELETE  1  @  1 : 4
 
-> CHANGE  1 : 2  @  1 : 3
+> CHANGE  1 : 3  @  1 : 3
 
+~ 		EaglerFolderResourcePack.deleteOldResourcePacks(EaglerFolderResourcePack.SERVER_RESOURCE_PACKS, 604800000L);
 ~ 		this.mcResourcePackRepository = new ResourcePackRepository(this.mcDefaultResourcePack, this.metadataSerializer_,
 
 > DELETE  8  @  8 : 11
@@ -373,7 +377,7 @@
 ~ 		if (SingleplayerServerController.shutdownEaglercraftServer()
 ~ 				|| SingleplayerServerController.getStatusState() == IntegratedServerState.WORLD_UNLOADING) {
 ~ 			displayGuiScreen(new GuiScreenIntegratedServerBusy(cont, "singleplayer.busy.stoppingIntegratedServer",
-~ 					"singleplayer.failed.stoppingIntegratedServer", () -> SingleplayerServerController.isReady()));
+~ 					"singleplayer.failed.stoppingIntegratedServer", SingleplayerServerController::isReady));
 ~ 		} else {
 ~ 			displayGuiScreen(cont);
 ~ 		}
@@ -613,7 +617,7 @@
 
 + 			this.eagskullCommand.tick();
 
-> INSERT  43 : 88  @  43
+> INSERT  43 : 87  @  43
 
 + 		if (this.theWorld != null) {
 + 			++joinWorldTickCounter;
@@ -654,8 +658,7 @@
 + 				if (SingleplayerServerController.hangupEaglercraftServer()) {
 + 					this.displayGuiScreen(new GuiScreenIntegratedServerBusy(currentScreen,
 + 							"singleplayer.busy.stoppingIntegratedServer",
-+ 							"singleplayer.failed.stoppingIntegratedServer",
-+ 							() -> SingleplayerServerController.isReady()));
++ 							"singleplayer.failed.stoppingIntegratedServer", SingleplayerServerController::isReady));
 + 				}
 + 			}
 + 		}

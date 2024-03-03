@@ -10,9 +10,13 @@
 ~ import net.lax1dude.eaglercraft.v1_8.mojang.authlib.GameProfile;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 
-> DELETE  3  @  3 : 6
+> DELETE  1  @  1 : 2
 
-> DELETE  7  @  7 : 8
+> DELETE  1  @  1 : 4
+
+> DELETE  3  @  3 : 4
+
+> DELETE  3  @  3 : 4
 
 > DELETE  3  @  3 : 5
 

@@ -16,9 +16,7 @@
 
 ~ import net.minecraft.client.renderer.EntityRenderer;
 
-> CHANGE  1 : 2  @  1 : 2
-
-~ import net.minecraft.client.renderer.entity.RendererLivingEntity;
+> DELETE  1  @  1 : 2
 
 > INSERT  16 : 67  @  16
 

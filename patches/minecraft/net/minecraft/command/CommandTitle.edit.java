@@ -7,13 +7,13 @@
 
 > DELETE  2  @  2 : 3
 
-> INSERT  1 : 4  @  1
+> CHANGE  1 : 4  @  1 : 6
 
-+ 
-+ import org.json.JSONException;
-+ 
+~ 
+~ import org.json.JSONException;
+~ 
 
-> CHANGE  11 : 14  @  11 : 14
+> CHANGE  6 : 9  @  6 : 9
 
 ~ import net.lax1dude.eaglercraft.v1_8.ExceptionUtils;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;

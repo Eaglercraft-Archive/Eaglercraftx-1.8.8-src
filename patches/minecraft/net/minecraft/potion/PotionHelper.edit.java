@@ -14,4 +14,9 @@
 ~ import com.google.common.collect.Maps;
 ~ 
 
+> CHANGE  270 : 272  @  270 : 271
+
+~ 		for (int k = 0; k < Potion.potionTypes.length; ++k) {
+~ 			Potion potion = Potion.potionTypes[k];
+
 > EOF

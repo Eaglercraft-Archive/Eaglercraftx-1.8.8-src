@@ -39,8 +39,8 @@ public class IPCPacket14StringList implements IPCPacketBase {
 	
 	public IPCPacket14StringList(int opcode, String[] list) {
 		stringList = new ArrayList();
-		for(String s : list) {
-			s = s.trim();
+		for(int i = 0; i < list.length; ++i) {
+			String s = list[i].trim();
 			if(s.length() > 0) {
 				stringList.add(s);
 			}
@@ -50,8 +50,8 @@ public class IPCPacket14StringList implements IPCPacketBase {
 	
 	public IPCPacket14StringList(int opcode, List<String> list) {
 		stringList = new ArrayList();
-		for(String s : list) {
-			s = s.trim();
+		for(int i = 0, l = list.size(); i < l; ++i) {
+			String s = list.get(i).trim();
 			if(s.length() > 0) {
 				stringList.add(s);
 			}
@@ -72,9 +72,10 @@ public class IPCPacket14StringList implements IPCPacketBase {
 	@Override
 	public void serialize(DataOutput bin) throws IOException {
 		bin.writeByte(opCode);
-		bin.writeInt(stringList.size());
-		for(String str : stringList) {
-			bin.writeUTF(str);
+		int l = stringList.size();
+		bin.writeInt(l);
+		for(int i = 0; i < l; ++i) {
+			bin.writeUTF(stringList.get(i));
 		}
 	}
 
@@ -86,8 +87,8 @@ public class IPCPacket14StringList implements IPCPacketBase {
 	@Override
 	public int size() {
 		int len = 5;
-		for(String str : stringList) {
-			len += IPCPacketBase.strLen(str);
+		for(int i = 0, l = stringList.size(); i < l; ++i) {
+			len += IPCPacketBase.strLen(stringList.get(i));
 		}
 		return len;
 	}

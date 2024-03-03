@@ -23,6 +23,11 @@
 
 ~ 		return resourcePack.getInputStream(location);
 
-> DELETE  27  @  27 : 58
+> CHANGE  6 : 8  @  6 : 7
+
+~ 		for (int i = 0, l = this.resourcePacks.size(); i < l; ++i) {
+~ 			IResourcePack iresourcepack = this.resourcePacks.get(i);
+
+> DELETE  20  @  20 : 51
 
 > EOF

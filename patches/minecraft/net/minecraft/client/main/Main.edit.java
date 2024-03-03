@@ -11,13 +11,10 @@
 
 > DELETE  1  @  1 : 2
 
-> CHANGE  3 : 4  @  3 : 4
+> CHANGE  3 : 5  @  3 : 100
 
 ~ 	public static void appMain(String[] astring) {
-
-> DELETE  1  @  1 : 45
-
-> DELETE  1  @  1 : 51
+~ 		System.setProperty("java.net.preferIPv6Addresses", "true");
 
 > CHANGE  1 : 5  @  1 : 12
 

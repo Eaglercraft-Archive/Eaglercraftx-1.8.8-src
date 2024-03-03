@@ -31,10 +31,10 @@
 + 	public static final Map<Class<? extends WorldSavedData>, MapStorageProvider> storageProviders = new HashMap();
 + 
 + 	static {
-+ 		storageProviders.put(MapData.class, (s) -> new MapData(s));
-+ 		storageProviders.put(MapGenStructureData.class, (s) -> new MapGenStructureData(s));
-+ 		storageProviders.put(ScoreboardSaveData.class, (s) -> new ScoreboardSaveData(s));
-+ 		storageProviders.put(VillageCollection.class, (s) -> new VillageCollection(s));
++ 		storageProviders.put(MapData.class, MapData::new);
++ 		storageProviders.put(MapGenStructureData.class, MapGenStructureData::new);
++ 		storageProviders.put(ScoreboardSaveData.class, ScoreboardSaveData::new);
++ 		storageProviders.put(VillageCollection.class, VillageCollection::new);
 + 	}
 + 
 

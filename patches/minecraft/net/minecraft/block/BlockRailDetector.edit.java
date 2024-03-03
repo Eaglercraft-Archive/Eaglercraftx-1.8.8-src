@@ -14,9 +14,8 @@
 ~ 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 
-> CHANGE  18 : 20  @  18 : 27
+> CHANGE  18 : 19  @  18 : 27
 
-~ 
 ~ 	public static PropertyEnum<BlockRailBase.EnumRailDirection> SHAPE;
 
 > INSERT  9 : 21  @  9

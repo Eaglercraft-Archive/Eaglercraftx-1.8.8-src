@@ -28,6 +28,8 @@ import org.teavm.jso.dom.html.HTMLCanvasElement;
 import org.teavm.jso.dom.html.HTMLDocument;
 import org.teavm.jso.dom.html.HTMLElement;
 import org.teavm.jso.typedarrays.ArrayBuffer;
+import org.teavm.jso.typedarrays.DataView;
+import org.teavm.jso.typedarrays.Uint8Array;
 import org.teavm.jso.webaudio.MediaStream;
 import org.teavm.jso.webgl.WebGLFramebuffer;
 
@@ -36,6 +38,7 @@ import com.jcraft.jzlib.GZIPInputStream;
 import com.jcraft.jzlib.GZIPOutputStream;
 import com.jcraft.jzlib.InflaterInputStream;
 
+import net.lax1dude.eaglercraft.v1_8.internal.PlatformFilesystem.FilesystemDatabaseLockedException;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.ByteBuffer;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.EaglerArrayBufferAllocator;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.FloatBuffer;
@@ -51,6 +54,7 @@ import net.lax1dude.eaglercraft.v1_8.internal.teavm.TeaVMUtils;
 import net.lax1dude.eaglercraft.v1_8.internal.teavm.WebGL2RenderingContext;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
+import net.lax1dude.eaglercraft.v1_8.minecraft.EaglerFolderResourcePack;
 import net.lax1dude.eaglercraft.v1_8.opengl.RealOpenGLEnums;
 
 /**
@@ -168,6 +172,22 @@ public class PlatformRuntime {
 
 		byte[] finalLoadScreen = PlatformAssets.getResourceBytes("/assets/eagler/eagtek.png");
 
+		logger.info("Initializing filesystem...");
+
+		try {
+			PlatformFilesystem.initialize(getClientConfigAdapter().getResourcePacksDB());
+			EaglerFolderResourcePack.setSupported(true);
+		}catch(FilesystemDatabaseLockedException t) {
+			logger.error("Could not initialize filesystem, database is locked!");
+		}catch(Throwable t) {
+			logger.error("Could not initialize filesystem, encountered an exception!");
+			logger.error(t);
+		}
+
+		if(!EaglerFolderResourcePack.isSupported()) {
+			logger.error("Resource packs will be disabled for this session");
+		}
+
 		logger.info("Initializing sound engine...");
 
 		PlatformInput.pressAnyKeyScreen();
@@ -177,6 +197,8 @@ public class PlatformRuntime {
 		if(finalLoadScreen != null) {
 			EarlyLoadScreen.paintFinal(finalLoadScreen);
 		}
+
+		EarlyLoadScreen.destroy();
 
 		logger.info("Platform initialization complete");
 
@@ -251,7 +273,31 @@ public class PlatformRuntime {
 	public static FloatBuffer allocateFloatBuffer(int length) {
 		return EaglerArrayBufferAllocator.allocateFloatBuffer(length);
 	}
-	
+
+	public static ByteBuffer castPrimitiveByteArray(byte[] array) {
+		return EaglerArrayBufferAllocator.wrapByteBufferTeaVM(DataView.create(TeaVMUtils.unwrapArrayBuffer(array)));
+	}
+
+	public static IntBuffer castPrimitiveIntArray(int[] array) {
+		return EaglerArrayBufferAllocator.wrapIntBufferTeaVM(DataView.create(TeaVMUtils.unwrapArrayBuffer(array)));
+	}
+
+	public static FloatBuffer castPrimitiveFloatArray(float[] array) {
+		return EaglerArrayBufferAllocator.wrapFloatBufferTeaVM(DataView.create(TeaVMUtils.unwrapArrayBuffer(array)));
+	}
+
+	public static byte[] castNativeByteBuffer(ByteBuffer buffer) {
+		return TeaVMUtils.wrapUnsignedByteArray(EaglerArrayBufferAllocator.getDataViewStupid(buffer));
+	}
+
+	public static int[] castNativeIntBuffer(IntBuffer buffer) {
+		return TeaVMUtils.wrapIntArray(EaglerArrayBufferAllocator.getDataViewStupid32(buffer));
+	}
+
+	public static float[] castNativeFloatBuffer(FloatBuffer buffer) {
+		return TeaVMUtils.wrapFloatArray(EaglerArrayBufferAllocator.getFloatArrayStupid(buffer));
+	}
+
 	public static void freeByteBuffer(ByteBuffer byteBuffer) {
 		
 	}
@@ -262,6 +308,10 @@ public class PlatformRuntime {
 	
 	public static void freeFloatBuffer(FloatBuffer floatBuffer) {
 		
+	}
+
+	public static void downloadRemoteURIByteArray(String assetPackageURI, final Consumer<byte[]> cb) {
+		downloadRemoteURI(assetPackageURI, arr -> cb.accept(TeaVMUtils.wrapUnsignedByteArray(Uint8Array.create(arr))));
 	}
 
 	public static void downloadRemoteURI(String assetPackageURI, final Consumer<ArrayBuffer> cb) {
@@ -331,7 +381,7 @@ public class PlatformRuntime {
 	public static native ArrayBuffer downloadRemoteURI(String assetPackageURI, boolean forceCache);
 
 	private static void downloadRemoteURI(String assetPackageURI, boolean useCache, final AsyncCallback<ArrayBuffer> cb) {
-		doFetchDownload(assetPackageURI, useCache ? "force-cache" : "no-store", (bb) -> cb.complete(bb));
+		doFetchDownload(assetPackageURI, useCache ? "force-cache" : "no-store", cb::complete);
 	}
 	
 	public static boolean isDebugRuntime() {
@@ -577,9 +627,7 @@ public class PlatformRuntime {
 						a.setHref(url);
 						a.click();
 						TeaVMUtils.freeDataURL(url);
-					}, (msg) -> {
-						logger.info(msg);
-					});
+					}, logger::info);
 				}
 			});
 			onRecFrame();

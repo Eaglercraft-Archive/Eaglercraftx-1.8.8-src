@@ -5,8 +5,10 @@
 # Version: 1.0
 # Author: lax1dude
 
-> CHANGE  2 : 4  @  2 : 5
+> CHANGE  2 : 6  @  2 : 5
 
+~ import java.util.List;
+~ 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
 
@@ -96,7 +98,13 @@
 + 					(double) blockpos.getZ() + 0.5D, 5.0F, true, true);
 + 			return true;
 
-> CHANGE  40 : 41  @  40 : 41
+> CHANGE  4 : 7  @  4 : 5
+
+~ 		List<EntityPlayer> playerEntities = worldIn.playerEntities;
+~ 		for (int i = 0, l = playerEntities.size(); i < l; ++i) {
+~ 			EntityPlayer entityplayer = playerEntities.get(i);
+
+> CHANGE  35 : 36  @  35 : 36
 
 ~ 	public Item getItemDropped(IBlockState iblockstate, EaglercraftRandom var2, int var3) {
 

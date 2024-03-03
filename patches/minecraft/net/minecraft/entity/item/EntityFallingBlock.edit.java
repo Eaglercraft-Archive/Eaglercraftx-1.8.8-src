@@ -9,4 +9,9 @@
 
 ~ 				ArrayList<Entity> arraylist = Lists.newArrayList(
 
+> CHANGE  4 : 6  @  4 : 6
+
+~ 				for (int j = 0, l = arraylist.size(); j < l; ++j) {
+~ 					arraylist.get(j).attackEntityFrom(damagesource, (float) Math
+
 > EOF

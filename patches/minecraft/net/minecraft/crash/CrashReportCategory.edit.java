@@ -59,13 +59,18 @@
 
 ~ 		String[] astacktraceelement = new String[this.stackTrace.length - amount];
 
-> CHANGE  18 : 19  @  18 : 19
+> CHANGE  8 : 10  @  8 : 9
 
-~ 			for (String stacktraceelement : this.stackTrace) {
+~ 		for (int i = 0, l = this.children.size(); i < l; ++i) {
+~ 			CrashReportCategory.Entry crashreportcategory$entry = this.children.get(i);
+
+> CHANGE  9 : 10  @  9 : 10
+
+~ 			for (int i = 0; i < this.stackTrace.length; ++i) {
 
 > CHANGE  1 : 2  @  1 : 2
 
-~ 				builder.append(stacktraceelement);
+~ 				builder.append(this.stackTrace[i]);
 
 > CHANGE  5 : 6  @  5 : 6
 

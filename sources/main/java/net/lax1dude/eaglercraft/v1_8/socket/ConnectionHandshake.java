@@ -1,6 +1,5 @@
 package net.lax1dude.eaglercraft.v1_8.socket;
 
-import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -8,6 +7,7 @@ import java.nio.charset.StandardCharsets;
 
 import net.lax1dude.eaglercraft.v1_8.ArrayUtils;
 import net.lax1dude.eaglercraft.v1_8.EaglerInputStream;
+import net.lax1dude.eaglercraft.v1_8.EaglerOutputStream;
 import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
 import net.lax1dude.eaglercraft.v1_8.EaglercraftVersion;
 import net.lax1dude.eaglercraft.v1_8.crypto.SHA256Digest;
@@ -56,7 +56,7 @@ public class ConnectionHandshake {
 		try {
 			pluginVersion = null;
 			pluginBrand = null;
-			ByteArrayOutputStream bao = new ByteArrayOutputStream();
+			EaglerOutputStream bao = new EaglerOutputStream();
 			DataOutputStream d = new DataOutputStream(bao);
 			
 			d.writeByte(HandshakePacketTypes.PROTOCOL_CLIENT_VERSION);

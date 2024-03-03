@@ -15,4 +15,16 @@
 
 > DELETE  2  @  2 : 5
 
+> CHANGE  43 : 46  @  43 : 44
+
+~ 		ItemFishFood.FishType[] types = ItemFishFood.FishType.values();
+~ 		for (int i = 0; i < types.length; ++i) {
+~ 			ItemFishFood.FishType itemfishfood$fishtype = types[i];
+
+> CHANGE  86 : 89  @  86 : 88
+
+~ 			ItemFishFood.FishType[] types = values();
+~ 			for (int i = 0; i < types.length; ++i) {
+~ 				META_LOOKUP.put(Integer.valueOf(types[i].getMetadata()), types[i]);
+
 > EOF

@@ -45,7 +45,15 @@
 ~ 	private String clickedLinkURI;
 ~ 	protected long showingCloseKey = 0;
 
-> INSERT  10 : 40  @  10
+> CHANGE  2 : 3  @  2 : 3
+
+~ 		for (int k = 0, l = this.buttonList.size(); k < l; ++k) {
+
+> CHANGE  3 : 4  @  3 : 4
+
+~ 		for (int l = 0, m = this.labelList.size(); l < m; ++l) {
+
+> INSERT  3 : 33  @  3
 
 + 		long millis = System.currentTimeMillis();
 + 		long closeKeyTimeout = millis - showingCloseKey;
@@ -108,7 +116,16 @@
 
 ~ 			EagRuntime.setClipboard(copyText);
 
-> CHANGE  68 : 71  @  68 : 69
+> CHANGE  6 : 7  @  6 : 7
+
+~ 		for (int k = 0, l = list.size(); k < l; ++k) {
+
+> CHANGE  22 : 24  @  22 : 24
+
+~ 			for (int m = 0, n = list.size(); m < n; ++m) {
+~ 				int l = this.fontRendererObj.getStringWidth(list.get(m));
+
+> CHANGE  37 : 40  @  37 : 38
 
 ~ 				if (s1.length() > 0) {
 ~ 					this.fontRendererObj.drawStringWithShadow(s1, (float) j2, (float) k2, -1);

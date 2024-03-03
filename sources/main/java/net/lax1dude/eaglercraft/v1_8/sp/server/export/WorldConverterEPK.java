@@ -1,9 +1,10 @@
 package net.lax1dude.eaglercraft.v1_8.sp.server.export;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.List;
 
+import net.lax1dude.eaglercraft.v1_8.EaglerInputStream;
+import net.lax1dude.eaglercraft.v1_8.EaglerOutputStream;
 import net.lax1dude.eaglercraft.v1_8.internal.vfs2.VFile2;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
@@ -62,10 +63,10 @@ public class WorldConverterEPK {
 			}
 			if(f.type.equals("FILE")) {
 				if(f.name.equals("level.dat") || f.name.equals("level.dat_old")) {
-					NBTTagCompound worldDatNBT = CompressedStreamTools.readCompressed(new ByteArrayInputStream(b));
+					NBTTagCompound worldDatNBT = CompressedStreamTools.readCompressed(new EaglerInputStream(b));
 					worldDatNBT.getCompoundTag("Data").setString("LevelName", newName);
 					worldDatNBT.getCompoundTag("Data").setLong("LastPlayed", System.currentTimeMillis());
-					ByteArrayOutputStream tmp = new ByteArrayOutputStream();
+					EaglerOutputStream tmp = new EaglerOutputStream();
 					CompressedStreamTools.writeCompressed(worldDatNBT, tmp);
 					b = tmp.toByteArray();
 				}
@@ -109,7 +110,9 @@ public class WorldConverterEPK {
 		final int[] lastUpdate = new int[1];
 		EPKCompiler c = new EPKCompiler(realWorldName, worldOwner, "epk/world188");
 		String pfx = worldDir.getPath();
-		for(VFile2 vf : worldDir.listFiles(true)) {
+		List<VFile2> filesList = worldDir.listFiles(true);
+		for(int i = 0, l = filesList.size(); i < l; ++i) {
+			VFile2 vf = filesList.get(i);
 			++filesWritten[0];
 			byte[] b = vf.getAllBytes();
 			c.append(vf.getPath().substring(pfx.length() + 1), b);

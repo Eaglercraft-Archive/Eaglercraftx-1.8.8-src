@@ -9,4 +9,9 @@
 
 + 
 
+> CHANGE  64 : 66  @  64 : 65
+
+~ 		for (int i = 0; i < this.mapVisiblePlayersVec4b.length; ++i) {
+~ 			Vec4b vec4b = this.mapVisiblePlayersVec4b[i];
+
 > EOF

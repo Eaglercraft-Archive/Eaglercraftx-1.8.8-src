@@ -5,7 +5,9 @@
 # Version: 1.0
 # Author: lax1dude
 
-> INSERT  13 : 14  @  13
+> DELETE  2  @  2 : 6
+
+> INSERT  7 : 8  @  7
 
 + 
 

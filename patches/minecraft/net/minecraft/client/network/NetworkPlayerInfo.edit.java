@@ -5,13 +5,11 @@
 # Version: 1.0
 # Author: lax1dude
 
-> CHANGE  3 : 6  @  3 : 6
+> CHANGE  2 : 3  @  2 : 6
 
-~ 
 ~ import net.lax1dude.eaglercraft.v1_8.mojang.authlib.GameProfile;
-~ import net.lax1dude.eaglercraft.v1_8.profile.EaglerProfile;
 
-> DELETE  2  @  2 : 3
+> DELETE  1  @  1 : 3
 
 > DELETE  10  @  10 : 13
 

@@ -26,4 +26,19 @@
 + 			instance = new CraftingManager();
 + 		}
 
+> CHANGE  382 : 384  @  382 : 383
+
+~ 		for (int i = 0; i < recipeComponents.length; ++i) {
+~ 			Object object = recipeComponents[i];
+
+> CHANGE  22 : 24  @  22 : 23
+
+~ 		for (int i = 0, l = this.recipes.size(); i < l; ++i) {
+~ 			IRecipe irecipe = this.recipes.get(i);
+
+> CHANGE  9 : 11  @  9 : 10
+
+~ 		for (int i = 0, l = this.recipes.size(); i < l; ++i) {
+~ 			IRecipe irecipe = this.recipes.get(i);
+
 > EOF

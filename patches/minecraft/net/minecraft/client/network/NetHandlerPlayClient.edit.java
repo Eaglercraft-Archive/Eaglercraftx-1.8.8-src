@@ -9,7 +9,7 @@
 
 > DELETE  4  @  4 : 6
 
-> INSERT  1 : 18  @  1
+> INSERT  1 : 19  @  1
 
 + 
 + import net.lax1dude.eaglercraft.v1_8.EagRuntime;
@@ -27,6 +27,7 @@
 + import net.lax1dude.eaglercraft.v1_8.update.UpdateService;
 + import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 + import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
++ import net.lax1dude.eaglercraft.v1_8.minecraft.EaglerFolderResourcePack;
 + import net.lax1dude.eaglercraft.v1_8.mojang.authlib.GameProfile;
 
 > DELETE  14  @  14 : 16
@@ -39,7 +40,19 @@
 
 > DELETE  2  @  2 : 3
 
-> DELETE  78  @  78 : 79
+> INSERT  36 : 37  @  36
+
++ import net.minecraft.network.play.server.S20PacketEntityProperties.Snapshot;
+
+> INSERT  2 : 3  @  2
+
++ import net.minecraft.network.play.server.S22PacketMultiBlockChange.BlockUpdateData;
+
+> INSERT  22 : 23  @  22
+
++ import net.minecraft.network.play.server.S38PacketPlayerListItem.AddPlayerData;
+
+> DELETE  18  @  18 : 19
 
 > DELETE  32  @  32 : 34
 
@@ -106,9 +119,13 @@
 
 > DELETE  7  @  7 : 8
 
-> DELETE  47  @  47 : 49
+> CHANGE  47 : 50  @  47 : 51
 
-> DELETE  9  @  9 : 10
+~ 		BlockUpdateData[] dat = packetIn.getChangedBlocks();
+~ 		for (int i = 0; i < dat.length; ++i) {
+~ 			BlockUpdateData s22packetmultiblockchange$blockupdatedata = dat[i];
+
+> DELETE  7  @  7 : 8
 
 > DELETE  22  @  22 : 23
 
@@ -218,9 +235,13 @@
 
 > DELETE  36  @  36 : 37
 
-> DELETE  8  @  8 : 10
+> CHANGE  8 : 11  @  8 : 11
 
-> CHANGE  2 : 5  @  2 : 3
+~ 		List<AddPlayerData> lst = packetIn.func_179767_a();
+~ 		for (int i = 0, l = lst.size(); i < l; ++i) {
+~ 			S38PacketPlayerListItem.AddPlayerData s38packetplayerlistitem$addplayerdata = lst.get(i);
+
+> CHANGE  1 : 4  @  1 : 2
 
 ~ 				EaglercraftUUID uuid = s38packetplayerlistitem$addplayerdata.getProfile().getId();
 ~ 				this.playerInfoMap.remove(uuid);
@@ -232,8 +253,9 @@
 
 > DELETE  9  @  9 : 10
 
-> CHANGE  8 : 30  @  8 : 31
+> CHANGE  7 : 30  @  7 : 31
 
+~ 		if (!EaglerFolderResourcePack.isSupported() || s.startsWith("level://")) {
 ~ 			this.netManager
 ~ 					.sendPacket(new C19PacketResourcePackStatus(s1, C19PacketResourcePackStatus.Action.DECLINED));
 ~ 			return;
@@ -347,7 +369,13 @@
 
 > DELETE  35  @  35 : 36
 
-> CHANGE  29 : 30  @  29 : 30
+> CHANGE  8 : 11  @  8 : 9
+
+~ 				List<Snapshot> lst = packetIn.func_149441_d();
+~ 				for (int i = 0, l = lst.size(); i < l; ++i) {
+~ 					S20PacketEntityProperties.Snapshot s20packetentityproperties$snapshot = lst.get(i);
+
+> CHANGE  20 : 21  @  20 : 21
 
 ~ 	public EaglercraftNetworkManager getNetworkManager() {
 

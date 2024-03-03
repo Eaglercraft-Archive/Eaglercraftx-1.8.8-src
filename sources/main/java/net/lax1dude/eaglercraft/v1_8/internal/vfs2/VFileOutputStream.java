@@ -1,8 +1,8 @@
 package net.lax1dude.eaglercraft.v1_8.internal.vfs2;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
+import net.lax1dude.eaglercraft.v1_8.EaglerOutputStream;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformFilesystem;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformRuntime;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.ByteBuffer;
@@ -22,7 +22,7 @@ import net.lax1dude.eaglercraft.v1_8.internal.buffer.ByteBuffer;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-class VFileOutputStream extends ByteArrayOutputStream {
+class VFileOutputStream extends EaglerOutputStream {
 
 	private final VFile2 vfsFile;
 	private boolean closed = false;

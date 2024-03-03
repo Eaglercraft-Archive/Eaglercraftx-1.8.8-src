@@ -5,12 +5,12 @@
 # Version: 1.0
 # Author: lax1dude
 
-> INSERT  3 : 5  @  3
+> CHANGE  3 : 5  @  3 : 8
 
-+ 
-+ import net.lax1dude.eaglercraft.v1_8.HString;
+~ 
+~ import net.lax1dude.eaglercraft.v1_8.HString;
 
-> INSERT  12 : 13  @  12
+> INSERT  7 : 8  @  7
 
 + 
 

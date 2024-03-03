@@ -5,12 +5,15 @@
 # Version: 1.0
 # Author: lax1dude
 
-> INSERT  7 : 8  @  7
+> DELETE  3  @  3 : 4
 
-+ 
+> CHANGE  17 : 18  @  17 : 18
 
-> CHANGE  19 : 20  @  19 : 20
+~ 			List<EntityAnimal> list = this.childAnimal.worldObj.getEntitiesWithinAABB(this.childAnimal.getClass(),
 
-~ 			for (EntityAnimal entityanimal1 : (List<EntityAnimal>) list) {
+> CHANGE  4 : 6  @  4 : 5
+
+~ 			for (int i = 0, l = list.size(); i < l; ++i) {
+~ 				EntityAnimal entityanimal1 = list.get(i);
 
 > EOF

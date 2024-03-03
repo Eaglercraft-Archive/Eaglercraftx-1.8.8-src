@@ -3,7 +3,6 @@ package net.lax1dude.eaglercraft.v1_8.sp.internal;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.lax1dude.eaglercraft.v1_8.internal.IClientConfigAdapter;
 import net.lax1dude.eaglercraft.v1_8.internal.IPCPacketData;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformRuntime;
 import net.lax1dude.eaglercraft.v1_8.sp.server.internal.lwjgl.CrashScreenPopup;

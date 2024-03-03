@@ -15,15 +15,9 @@
 ~ import net.lax1dude.eaglercraft.v1_8.HString;
 ~ 
 
-> INSERT  5 : 6  @  5
+> DELETE  11  @  11 : 16
 
-+ import net.minecraft.util.AxisAlignedBB;
-
-> INSERT  13 : 14  @  13
-
-+ 
-
-> CHANGE  28 : 29  @  28 : 29
+> CHANGE  30 : 31  @  30 : 31
 
 ~ 						HString.format("%d,%d", new Object[] { Integer.valueOf(i), Integer.valueOf(j) }));
 
@@ -31,8 +25,13 @@
 
 ~ 	public boolean generateStructure(World worldIn, EaglercraftRandom randomIn, ChunkCoordIntPair chunkCoord) {
 
-> CHANGE  90 : 91  @  90 : 91
+> CHANGE  86 : 87  @  86 : 87
 
-~ 				for (BlockPos blockpos3 : (List<BlockPos>) list) {
+~ 			List<BlockPos> list = this.getCoordList();
+
+> CHANGE  3 : 5  @  3 : 4
+
+~ 				for (int m = 0, n = list.size(); m < n; ++m) {
+~ 					BlockPos blockpos3 = list.get(m);
 
 > EOF

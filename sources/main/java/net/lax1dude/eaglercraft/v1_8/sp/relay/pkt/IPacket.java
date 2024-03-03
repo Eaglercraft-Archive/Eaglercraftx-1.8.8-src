@@ -1,6 +1,5 @@
 package net.lax1dude.eaglercraft.v1_8.sp.relay.pkt;
 
-import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -9,6 +8,7 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.lax1dude.eaglercraft.v1_8.EaglerOutputStream;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 
@@ -73,8 +73,8 @@ public class IPacket {
 		Integer i = definedPacketIds.get(packet.getClass());
 		if(i != null) {
 			int len = packet.packetLength();
-			ByteArrayOutputStream bao = len == -1 ? new ByteArrayOutputStream() :
-				new ByteArrayOutputStream(len + 1);
+			EaglerOutputStream bao = len == -1 ? new EaglerOutputStream() :
+				new EaglerOutputStream(len + 1);
 			bao.write(i);
 			packet.write(new DataOutputStream(bao));
 			byte[] ret = bao.toByteArray();

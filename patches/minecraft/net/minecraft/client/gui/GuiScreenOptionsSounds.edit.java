@@ -11,7 +11,13 @@
 
 > DELETE  4  @  4 : 7
 
-> CHANGE  37 : 38  @  37 : 38
+> CHANGE  24 : 27  @  24 : 25
+
+~ 		SoundCategory[] cats = SoundCategory._VALUES;
+~ 		for (int j = 0; j < cats.length; ++j) {
+~ 			SoundCategory soundcategory = cats[j];
+
+> CHANGE  12 : 13  @  12 : 13
 
 ~ 	protected void actionPerformed(GuiButton parGuiButton) {
 

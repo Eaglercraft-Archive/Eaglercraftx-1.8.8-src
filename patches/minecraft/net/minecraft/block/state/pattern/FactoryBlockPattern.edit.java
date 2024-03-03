@@ -5,28 +5,38 @@
 # Version: 1.0
 # Author: lax1dude
 
-> DELETE  2  @  2 : 7
+> INSERT  2 : 9  @  2
 
-> CHANGE  5 : 6  @  5 : 8
++ import java.util.ArrayList;
++ import java.util.List;
++ import java.util.Map;
++ import java.util.Map.Entry;
++ 
++ import org.apache.commons.lang3.StringUtils;
++ 
+
+> CHANGE  5 : 6  @  5 : 10
 
 ~ 
 
-> INSERT  2 : 10  @  2
+> DELETE  1  @  1 : 4
 
-+ import com.google.common.base.Joiner;
-+ import com.google.common.base.Predicate;
-+ import com.google.common.base.Predicates;
-+ import com.google.common.collect.Lists;
-+ import com.google.common.collect.Maps;
-+ 
-+ import net.minecraft.block.state.BlockWorldState;
-+ 
-
-> CHANGE  12 : 13  @  12 : 13
+> CHANGE  13 : 14  @  13 : 14
 
 ~ 		if (!(aisle == null || aisle.length <= 0) && !StringUtils.isEmpty(aisle[0])) {
 
-> CHANGE  18 : 19  @  18 : 19
+> CHANGE  9 : 11  @  9 : 10
+
+~ 				for (int i = 0; i < aisle.length; ++i) {
+~ 					String s = aisle[i];
+
+> CHANGE  6 : 9  @  6 : 7
+
+~ 					char[] achar = s.toCharArray();
+~ 					for (int j = 0; j < achar.length; ++j) {
+~ 						char c0 = achar[j];
+
+> CHANGE  1 : 2  @  1 : 2
 
 ~ 							this.symbolMap.put(Character.valueOf(c0), null);
 

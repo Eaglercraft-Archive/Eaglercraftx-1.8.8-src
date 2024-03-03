@@ -5,7 +5,7 @@
 # Version: 1.0
 # Author: lax1dude
 
-> INSERT  4 : 12  @  4
+> INSERT  4 : 11  @  4
 
 + 
 + import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
@@ -13,7 +13,6 @@
 + import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.DeferredStateManager;
 + import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.EaglerDeferredPipeline;
 + import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.ShadersRenderPassFuture;
-+ import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.ShadersRenderPassFuture.PassType;
 + import net.lax1dude.eaglercraft.v1_8.vector.Matrix4f;
 
 > DELETE  21  @  21 : 22
@@ -28,7 +27,13 @@
 
 + import net.minecraft.util.EnumWorldBlockLayer;
 
-> INSERT  63 : 67  @  63
+> CHANGE  55 : 58  @  55 : 56
+
+~ 		EnumFacing[] facings = EnumFacing._VALUES;
+~ 		for (int i = 0; i < facings.length; ++i) {
+~ 			EnumFacing enumfacing = facings[i];
+
+> INSERT  7 : 11  @  7
 
 + 	public static float renderPosX = 0.0f;
 + 	public static float renderPosY = 0.0f;

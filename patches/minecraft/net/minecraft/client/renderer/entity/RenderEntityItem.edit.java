@@ -5,13 +5,12 @@
 # Version: 1.0
 # Author: lax1dude
 
-> CHANGE  2 : 7  @  2 : 4
+> CHANGE  2 : 6  @  2 : 4
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.DeferredStateManager;
-~ import net.minecraft.client.Minecraft;
 
 > DELETE  1  @  1 : 4
 

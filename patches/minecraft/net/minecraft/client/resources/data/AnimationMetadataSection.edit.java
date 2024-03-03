@@ -14,4 +14,9 @@
 + import com.google.common.collect.Sets;
 + 
 
+> CHANGE  56 : 58  @  56 : 58
+
+~ 		for (int i = 0, l = this.animationFrames.size(); i < l; ++i) {
+~ 			hashset.add(Integer.valueOf(this.animationFrames.get(i).getFrameIndex()));
+
 > EOF

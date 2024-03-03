@@ -14,7 +14,6 @@ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 import net.lax1dude.eaglercraft.v1_8.minecraft.EaglerTextureAtlasSprite;
 import net.lax1dude.eaglercraft.v1_8.minecraft.TextureAnimationCache;
-import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 import net.lax1dude.eaglercraft.v1_8.opengl.ImageData;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.resources.data.AnimationFrame;
@@ -187,11 +186,12 @@ public class EaglerTextureAtlasSpritePBR extends EaglerTextureAtlasSprite {
 							public String call() throws Exception {
 								StringBuilder stringbuilder = new StringBuilder();
 	
-								for (int[] aint1 : aint) {
+								for (int k = 0; k < aint.length; ++k) {
 									if (stringbuilder.length() > 0) {
 										stringbuilder.append(", ");
 									}
 	
+									int[] aint1 = aint[k];
 									stringbuilder.append(aint1 == null ? "null" : Integer.valueOf(aint1.length));
 								}
 	

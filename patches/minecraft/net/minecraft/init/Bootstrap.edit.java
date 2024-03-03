@@ -19,7 +19,9 @@
 + import net.minecraft.entity.monster.EntityEnderman;
 + import net.minecraft.entity.passive.EntityVillager;
 
-> INSERT  9 : 10  @  9
+> DELETE  5  @  5 : 7
+
+> INSERT  2 : 3  @  2
 
 + import net.minecraft.item.ItemAxe;
 

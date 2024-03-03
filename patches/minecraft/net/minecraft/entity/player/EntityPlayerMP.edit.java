@@ -10,7 +10,9 @@
 ~ import net.lax1dude.eaglercraft.v1_8.mojang.authlib.GameProfile;
 ~ import net.lax1dude.eaglercraft.v1_8.netty.Unpooled;
 
-> DELETE  69  @  69 : 70
+> DELETE  17  @  17 : 18
+
+> DELETE  51  @  51 : 52
 
 > CHANGE  22 : 24  @  22 : 24
 
@@ -29,15 +31,17 @@
 
 ~ 		if (!this.openContainer.canInteractWith(this)) {
 
-> CHANGE  51 : 52  @  51 : 52
+> CHANGE  51 : 53  @  51 : 53
 
-~ 				for (TileEntity tileentity : (ArrayList<TileEntity>) arraylist1) {
+~ 				for (int i = 0, l = arraylist1.size(); i < l; ++i) {
+~ 					this.sendTileEntityUpdate((TileEntity) arraylist1.get(i));
 
-> CHANGE  3 : 4  @  3 : 4
+> CHANGE  2 : 4  @  2 : 4
 
-~ 				for (Chunk chunk1 : (ArrayList<Chunk>) arraylist) {
+~ 				for (int i = 0, l = arraylist.size(); i < l; ++i) {
+~ 					this.getServerForPlayer().getEntityTracker().func_85172_a(this, (Chunk) arraylist.get(i));
 
-> CHANGE  582 : 583  @  582 : 583
+> CHANGE  581 : 582  @  581 : 582
 
 ~ 		if ("seed".equals(s)) {
 

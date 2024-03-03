@@ -9,9 +9,10 @@
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 
-> CHANGE  16 : 18  @  16 : 17
+> DELETE  13  @  13 : 14
 
-~ 
+> CHANGE  2 : 3  @  2 : 3
+
 ~ 	private EaglercraftRandom endRNG;
 
 > CHANGE  16 : 17  @  16 : 17

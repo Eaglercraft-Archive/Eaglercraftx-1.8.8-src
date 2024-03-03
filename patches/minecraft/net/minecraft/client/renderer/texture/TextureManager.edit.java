@@ -82,7 +82,12 @@
 
 ~ 				HString.format("dynamic/%s_%d", new Object[] { name, integer }));
 
-> CHANGE  12 : 13  @  12 : 13
+> CHANGE  5 : 7  @  5 : 7
+
+~ 		for (int i = 0, l = this.listTickables.size(); i < l; ++i) {
+~ 			this.listTickables.get(i).tick();
+
+> CHANGE  5 : 6  @  5 : 6
 
 ~ 		ITextureObject itextureobject = this.mapTextureObjects.remove(textureLocation);
 

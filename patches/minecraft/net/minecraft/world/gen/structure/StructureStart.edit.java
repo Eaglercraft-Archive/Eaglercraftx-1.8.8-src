@@ -9,11 +9,9 @@
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 
-> INSERT  9 : 10  @  9
+> DELETE  4  @  4 : 7
 
-+ 
-
-> CHANGE  21 : 22  @  21 : 22
+> CHANGE  23 : 24  @  23 : 24
 
 ~ 	public void generateStructure(World world, EaglercraftRandom random, StructureBoundingBox structureboundingbox) {
 

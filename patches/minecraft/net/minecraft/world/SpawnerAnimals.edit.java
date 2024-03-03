@@ -19,17 +19,27 @@
 
 + import net.minecraft.entity.EntityList;
 
-> INSERT  16 : 17  @  16
+> DELETE  9  @  9 : 12
 
-+ 
+> CHANGE  15 : 18  @  15 : 16
 
-> CHANGE  21 : 24  @  21 : 22
+~ 			List<EntityPlayer> lst = spawnHostileMobs.playerEntities;
+~ 			for (int m = 0, n = lst.size(); m < n; ++m) {
+~ 				EntityPlayer entityplayer = lst.get(m);
+
+> CHANGE  9 : 12  @  9 : 10
 
 ~ 							if (!this.eligibleChunksForSpawning.contains(chunkcoordintpair)
 ~ 									&& spawnHostileMobs.theChunkProviderServer.chunkExists(chunkcoordintpair.chunkXPos,
 ~ 											chunkcoordintpair.chunkZPos)) {
 
-> CHANGE  65 : 67  @  65 : 68
+> CHANGE  13 : 16  @  13 : 14
+
+~ 			EnumCreatureType[] types = EnumCreatureType._VALUES;
+~ 			for (int m = 0; m < types.length; ++m) {
+~ 				EnumCreatureType enumcreaturetype = types[m];
+
+> CHANGE  51 : 53  @  51 : 54
 
 ~ 													entityliving = (EntityLiving) EntityList.createEntityByClassUnsafe(
 ~ 															biomegenbase$spawnlistentry.entityClass, spawnHostileMobs);

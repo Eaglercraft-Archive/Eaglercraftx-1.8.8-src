@@ -13,4 +13,10 @@
 + import com.google.common.collect.Lists;
 + 
 
+> CHANGE  152 : 155  @  152 : 153
+
+~ 		EnumFacing[] facings = EnumFacing._VALUES;
+~ 		for (int i = 0; i < facings.length; ++i) {
+~ 			EnumFacing enumfacing = facings[i];
+
 > EOF

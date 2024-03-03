@@ -5,9 +5,11 @@
 # Version: 1.0
 # Author: lax1dude
 
-> DELETE  4  @  4 : 9
+> DELETE  4  @  4 : 10
 
-> CHANGE  19 : 21  @  19 : 22
+> DELETE  10  @  10 : 15
+
+> CHANGE  3 : 5  @  3 : 6
 
 ~ import org.json.JSONException;
 ~ import org.json.JSONObject;
@@ -19,11 +21,7 @@
 + import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 + 
 
-> INSERT  1 : 2  @  1
-
-+ 
-
-> CHANGE  2 : 3  @  2 : 3
+> CHANGE  3 : 4  @  3 : 4
 
 ~ 	private final VFile2 statsFile;
 
@@ -93,5 +91,10 @@
 > CHANGE  1 : 2  @  1 : 2
 
 ~ 				jsonobject.put(((StatBase) entry.getKey()).statId,
+
+> CHANGE  31 : 33  @  31 : 32
+
+~ 		for (int i = 0, l = AchievementList.achievementList.size(); i < l; ++i) {
+~ 			Achievement achievement = AchievementList.achievementList.get(i);
 
 > EOF

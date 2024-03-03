@@ -5,17 +5,17 @@
 # Version: 1.0
 # Author: lax1dude
 
-> CHANGE  7 : 10  @  7 : 8
+> DELETE  4  @  4 : 5
+
+> CHANGE  2 : 5  @  2 : 3
 
 ~ 
 ~ import net.lax1dude.eaglercraft.v1_8.ArrayUtils;
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 
-> INSERT  15 : 16  @  15
+> DELETE  10  @  10 : 13
 
-+ 
-
-> CHANGE  19 : 20  @  19 : 20
+> CHANGE  21 : 22  @  21 : 22
 
 ~ 				EaglercraftRandom parRandom) {
 
@@ -85,7 +85,11 @@
 
 ~ 		private List<StructureOceanMonumentPieces.RoomDefinition> func_175836_a(EaglercraftRandom parRandom) {
 
-> CHANGE  99 : 100  @  99 : 100
+> CHANGE  36 : 37  @  36 : 37
+
+~ 							for (EnumFacing enumfacing : EnumFacing._VALUES) {
+
+> CHANGE  62 : 63  @  62 : 63
 
 ~ 			ArrayUtils.eaglerShuffle(arraylist, parRandom);
 

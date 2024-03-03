@@ -9,16 +9,36 @@
 
 + 
 
-> CHANGE  60 : 61  @  60 : 61
+> CHANGE  29 : 31  @  29 : 31
 
-~ 								for (Achievement achievement1 : (List<Achievement>) Lists.reverse(arraylist)) {
+~ 							for (int i = 0, l = AchievementList.achievementList.size(); i < l; ++i) {
+~ 								entityplayermp.triggerAchievement(AchievementList.achievementList.get(i));
 
-> CHANGE  17 : 18  @  17 : 18
+> CHANGE  5 : 8  @  5 : 7
 
-~ 								for (Achievement achievement2 : (ArrayList<Achievement>) arraylist1) {
+~ 							List<Achievement> ach = Lists.reverse(AchievementList.achievementList);
+~ 							for (int i = 0, l = ach.size(); i < l; ++i) {
+~ 								entityplayermp.func_175145_a(ach.get(i));
 
-> CHANGE  16 : 17  @  16 : 17
+> CHANGE  22 : 25  @  22 : 24
 
-~ 								for (Achievement achievement6 : (ArrayList<Achievement>) arraylist2) {
+~ 								List<Achievement> ach = Lists.reverse(AchievementList.achievementList);
+~ 								for (int i = 0, l = ach.size(); i < l; ++i) {
+~ 									entityplayermp.triggerAchievement(ach.get(i));
+
+> CHANGE  16 : 18  @  16 : 17
+
+~ 								for (int i = 0, l = arraylist1.size(); i < l; ++i) {
+~ 									Achievement achievement2 = (Achievement) arraylist1.get(i);
+
+> CHANGE  16 : 18  @  16 : 18
+
+~ 								for (int i = 0, l = arraylist2.size(); i < l; ++i) {
+~ 									entityplayermp.func_175145_a((Achievement) arraylist2.get(i));
+
+> CHANGE  30 : 32  @  30 : 32
+
+~ 			for (int i = 0, l = StatList.allStats.size(); i < l; ++i) {
+~ 				arraylist.add(StatList.allStats.get(i).statId);
 
 > EOF

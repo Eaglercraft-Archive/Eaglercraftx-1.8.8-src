@@ -14,4 +14,11 @@
 + import com.google.common.collect.Lists;
 + 
 
+> CHANGE  91 : 95  @  91 : 94
+
+~ 				SoundList.SoundEntry.Type[] types = values();
+~ 				for (int i = 0; i < types.length; ++i) {
+~ 					if (types[i].field_148583_c.equals(parString1)) {
+~ 						return types[i];
+
 > EOF

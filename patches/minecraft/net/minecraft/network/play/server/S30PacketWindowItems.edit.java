@@ -9,4 +9,9 @@
 
 + 
 
+> CHANGE  38 : 40  @  38 : 40
+
+~ 		for (int i = 0; i < this.itemStacks.length; ++i) {
+~ 			parPacketBuffer.writeItemStackToBuffer(this.itemStacks[i]);
+
 > EOF

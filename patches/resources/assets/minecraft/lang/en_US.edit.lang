@@ -12,7 +12,7 @@
 ~ eaglercraft.recording.start=Record Screen...
 ~ eaglercraft.soundCategory.voice=Voice
 
-> INSERT  1 : 195  @  1
+> INSERT  1 : 230  @  1
 
 + eaglercraft.resourcePack.prompt.title=What do you want to do with '%s'?
 + eaglercraft.resourcePack.prompt.text=Tip: Hold Shift to skip this screen when selecting a resource pack!
@@ -37,6 +37,41 @@
 + eaglercraft.editProfile.playerSkin=Player Skin
 + eaglercraft.editProfile.addSkin=Add Skin
 + eaglercraft.editProfile.clearSkin=Clear List
++ 
++ eaglercraft.editProfile.importExport=Import/Export
++ 
++ eaglercraft.settingsBackup.importExport.title=What do you wanna do?
++ eaglercraft.settingsBackup.importExport.import=Import Profile and Settings...
++ eaglercraft.settingsBackup.importExport.export=Export Profile and Settings...
++ 
++ eaglercraft.settingsBackup.import.title=Import Profile and Settings
++ eaglercraft.settingsBackup.import.option.profile=Import Profile:
++ eaglercraft.settingsBackup.import.option.settings=Import Settings:
++ eaglercraft.settingsBackup.import.option.servers=Import Servers:
++ eaglercraft.settingsBackup.import.option.resourcePacks=Resource Packs:
++ eaglercraft.settingsBackup.import.option.import=Import
++ 
++ eaglercraft.settingsBackup.export.title=Export Profile and Settings
++ eaglercraft.settingsBackup.export.option.profile=Export Profile:
++ eaglercraft.settingsBackup.export.option.settings=Export Settings:
++ eaglercraft.settingsBackup.export.option.servers=Export Servers:
++ eaglercraft.settingsBackup.export.option.resourcePacks=Resource Packs:
++ eaglercraft.settingsBackup.export.option.export=Export
++ 
++ eaglercraft.settingsBackup.exporting.1=Exporting Profile...
++ eaglercraft.settingsBackup.exporting.2=Please Wait.
++ 
++ eaglercraft.settingsBackup.exporting.failed.1=Export Failed!
++ eaglercraft.settingsBackup.exporting.failed.2=Could not compile EPK
++ 
++ eaglercraft.settingsBackup.importing.1=Importing Profile...
++ eaglercraft.settingsBackup.importing.2=Please Wait.
++ 
++ eaglercraft.settingsBackup.importing.failed.1=Import Failed!
++ eaglercraft.settingsBackup.importing.failed.2=Could not load EPK
++ 
++ eaglercraft.resourcePack.importFailed.1=Import Failed!
++ eaglercraft.resourcePack.importFailed.2=Could not import ZIP file
 + 
 + eaglercraft.singleplayer.integratedStartup=Starting integrated server
 + 

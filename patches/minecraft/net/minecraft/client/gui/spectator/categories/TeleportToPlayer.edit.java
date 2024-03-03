@@ -15,4 +15,10 @@
 + import com.google.common.collect.Ordering;
 + 
 
+> CHANGE  29 : 32  @  29 : 30
+
+~ 		List<NetworkPlayerInfo> lst = field_178674_a.sortedCopy(parCollection);
+~ 		for (int i = 0, l = lst.size(); i < l; ++i) {
+~ 			NetworkPlayerInfo networkplayerinfo = lst.get(i);
+
 > EOF

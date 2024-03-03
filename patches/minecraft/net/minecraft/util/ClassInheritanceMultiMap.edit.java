@@ -15,11 +15,12 @@
 + import com.google.common.collect.Sets;
 + 
 
-> CHANGE  23 : 24  @  23 : 24
+> CHANGE  21 : 23  @  21 : 22
 
-~ 				this.func_181743_a((T) object, clazz);
+~ 		for (int i = 0, l = this.field_181745_e.size(); i < l; ++i) {
+~ 			T object = this.field_181745_e.get(i);
 
-> CHANGE  31 : 32  @  31 : 32
+> CHANGE  33 : 34  @  33 : 34
 
 ~ 			this.map.put(parClass1, (List<T>) Lists.newArrayList(new Object[] { parObject }));
 

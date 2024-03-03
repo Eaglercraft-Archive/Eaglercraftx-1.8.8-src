@@ -11,7 +11,11 @@
 
 > DELETE  9  @  9 : 10
 
-> INSERT  222 : 229  @  222
+> CHANGE  36 : 37  @  36 : 37
+
+~ 		this.dataWatcher.addObject(16, Byte.valueOf((byte) 0));
+
+> INSERT  185 : 192  @  185
 
 + 
 + 	protected void renderDynamicLightsEaglerAt(double entityX, double entityY, double entityZ, double renderX,

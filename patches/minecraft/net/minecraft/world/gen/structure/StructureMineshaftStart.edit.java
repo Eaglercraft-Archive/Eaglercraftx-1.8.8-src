@@ -9,11 +9,9 @@
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 
-> INSERT  5 : 6  @  5
+> DELETE  1  @  1 : 3
 
-+ 
-
-> CHANGE  3 : 4  @  3 : 4
+> CHANGE  5 : 6  @  5 : 6
 
 ~ 	public StructureMineshaftStart(World worldIn, EaglercraftRandom rand, int chunkX, int chunkZ) {
 

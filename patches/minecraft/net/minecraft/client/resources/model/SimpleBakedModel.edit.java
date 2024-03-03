@@ -36,16 +36,35 @@
 
 ~ 		public Builder(IBakedModel parIBakedModel, EaglerTextureAtlasSprite parTextureAtlasSprite) {
 
-> CHANGE  11 : 12  @  11 : 12
+> CHANGE  4 : 7  @  4 : 6
+
+~ 			EnumFacing[] facings = EnumFacing._VALUES;
+~ 			for (int i = 0; i < facings.length; ++i) {
+~ 				this.addFaceBreakingFours(parIBakedModel, parTextureAtlasSprite, facings[i]);
+
+> CHANGE  5 : 6  @  5 : 6
 
 ~ 		private void addFaceBreakingFours(IBakedModel parIBakedModel, EaglerTextureAtlasSprite parTextureAtlasSprite,
 
-> CHANGE  7 : 9  @  7 : 8
+> CHANGE  1 : 4  @  1 : 3
+
+~ 			List<BakedQuad> quads = parIBakedModel.getFaceQuads(parEnumFacing);
+~ 			for (int i = 0, l = quads.size(); i < l; ++i) {
+~ 				this.addFaceQuad(parEnumFacing, new BreakingFour(quads.get(i), parTextureAtlasSprite));
+
+> CHANGE  4 : 9  @  4 : 7
 
 ~ 		private void addGeneralBreakingFours(IBakedModel parIBakedModel,
 ~ 				EaglerTextureAtlasSprite parTextureAtlasSprite) {
+~ 			List<BakedQuad> quads = parIBakedModel.getGeneralQuads();
+~ 			for (int i = 0, l = quads.size(); i < l; ++i) {
+~ 				this.addGeneralQuad(new BreakingFour(quads.get(i), parTextureAtlasSprite));
 
-> CHANGE  29 : 30  @  29 : 30
+> CHANGE  8 : 9  @  8 : 9
+
+~ 			for (int i = 0, l = EnumFacing._VALUES.length; i < l; ++i) {
+
+> CHANGE  18 : 19  @  18 : 19
 
 ~ 		public SimpleBakedModel.Builder setTexture(EaglerTextureAtlasSprite parTextureAtlasSprite) {
 

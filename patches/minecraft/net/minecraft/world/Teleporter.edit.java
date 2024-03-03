@@ -9,11 +9,9 @@
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 
-> INSERT  13 : 14  @  13
+> DELETE  9  @  9 : 11
 
-+ 
-
-> CHANGE  1 : 2  @  1 : 2
+> CHANGE  3 : 4  @  3 : 4
 
 ~ 	private final EaglercraftRandom random;
 

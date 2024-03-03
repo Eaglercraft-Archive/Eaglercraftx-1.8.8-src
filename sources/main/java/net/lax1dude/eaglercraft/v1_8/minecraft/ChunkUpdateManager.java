@@ -73,7 +73,9 @@ public class ChunkUpdateManager {
 
 		final CompiledChunk compiledchunk = generator.getCompiledChunk();
 		if (chunkcompiletaskgenerator$type == ChunkCompileTaskGenerator.Type.REBUILD_CHUNK) {
-			for (EnumWorldBlockLayer enumworldblocklayer : EnumWorldBlockLayer.values()) {
+			EnumWorldBlockLayer[] en = EnumWorldBlockLayer._VALUES;
+			for (int i = 0; i < en.length; ++i) {
+				EnumWorldBlockLayer enumworldblocklayer = en[i];
 				if (!compiledchunk.isLayerEmpty(enumworldblocklayer)) {
 					this.uploadChunk(enumworldblocklayer,
 							generator.getRegionRenderCacheBuilder().getWorldRendererByLayer(enumworldblocklayer),

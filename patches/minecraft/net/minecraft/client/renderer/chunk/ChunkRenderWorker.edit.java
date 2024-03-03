@@ -69,8 +69,11 @@
 
 > DELETE  1  @  1 : 2
 
-> CHANGE  2 : 4  @  2 : 4
+> CHANGE  1 : 6  @  1 : 4
 
+~ 				EnumWorldBlockLayer[] layers = EnumWorldBlockLayer._VALUES;
+~ 				for (int i = 0; i < layers.length; ++i) {
+~ 					EnumWorldBlockLayer enumworldblocklayer = layers[i];
 ~ 					if (!compiledchunk.isLayerEmpty(enumworldblocklayer)) {
 ~ 						this.chunkRenderDispatcher.uploadChunk(enumworldblocklayer,
 

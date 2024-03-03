@@ -5,10 +5,7 @@
 # Version: 1.0
 # Author: lax1dude
 
-> CHANGE  2 : 4  @  2 : 4
-
-~ import java.io.ByteArrayOutputStream;
-~ import java.util.Iterator;
+> DELETE  2  @  2 : 4
 
 > INSERT  1 : 15  @  1
 
@@ -17,6 +14,7 @@
 + 
 + import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 + import net.lax1dude.eaglercraft.v1_8.EaglerInputStream;
++ import net.lax1dude.eaglercraft.v1_8.EaglerOutputStream;
 + import net.lax1dude.eaglercraft.v1_8.internal.EnumServerRateLimit;
 + import net.lax1dude.eaglercraft.v1_8.internal.IClientConfigAdapter.DefaultServer;
 + import net.lax1dude.eaglercraft.v1_8.internal.QueryResponse;
@@ -25,7 +23,6 @@
 + import net.lax1dude.eaglercraft.v1_8.socket.AddressResolver;
 + import net.lax1dude.eaglercraft.v1_8.socket.RateLimitTracker;
 + import net.lax1dude.eaglercraft.v1_8.socket.ServerQueryDispatch;
-+ import net.lax1dude.eaglercraft.v1_8.sp.relay.RelayManager;
 
 > CHANGE  1 : 2  @  1 : 2
 
@@ -56,7 +53,14 @@
 + 	}
 + 
 
-> CHANGE  2 : 9  @  2 : 6
+> INSERT  1 : 5  @  1
+
++ 		loadServerList(EagRuntime.getStorage("s"));
++ 	}
++ 
++ 	public void loadServerList(byte[] localStorage) {
+
+> CHANGE  1 : 8  @  1 : 5
 
 ~ 			freeServerIcons();
 ~ 
@@ -66,11 +70,7 @@
 ~ 				dat.isDefault = true;
 ~ 				this.allServers.add(dat);
 
-> CHANGE  2 : 3  @  2 : 3
-
-~ 			byte[] localStorage = EagRuntime.getStorage("s");
-
-> CHANGE  1 : 14  @  1 : 3
+> CHANGE  2 : 8  @  2 : 3
 
 ~ 			if (localStorage != null) {
 ~ 				NBTTagCompound nbttagcompound = CompressedStreamTools
@@ -78,7 +78,9 @@
 ~ 				if (nbttagcompound == null) {
 ~ 					return;
 ~ 				}
-~ 
+
+> CHANGE  1 : 7  @  1 : 3
+
 ~ 				NBTTagList nbttaglist = nbttagcompound.getTagList("servers", 10);
 ~ 
 ~ 				for (int i = 0; i < nbttaglist.tagCount(); ++i) {
@@ -95,8 +97,20 @@
 + 		} finally {
 + 			refreshServerPing();
 
-> CHANGE  9 : 12  @  9 : 10
+> INSERT  5 : 12  @  5
 
++ 		byte[] data = writeServerList();
++ 		if (data != null) {
++ 			EagRuntime.setStorage("s", data);
++ 		}
++ 	}
++ 
++ 	public byte[] writeServerList() {
+
+> CHANGE  3 : 8  @  3 : 5
+
+~ 			for (int i = 0, l = this.servers.size(); i < l; ++i) {
+~ 				ServerData serverdata = this.servers.get(i);
 ~ 				if (!serverdata.isDefault) {
 ~ 					nbttaglist.appendTag(serverdata.getNBTCompound());
 ~ 				}
@@ -104,12 +118,16 @@
 > CHANGE  4 : 9  @  4 : 5
 
 ~ 
-~ 			ByteArrayOutputStream bao = new ByteArrayOutputStream();
+~ 			EaglerOutputStream bao = new EaglerOutputStream();
 ~ 			CompressedStreamTools.writeCompressed(nbttagcompound, bao);
-~ 			EagRuntime.setStorage("s", bao.toByteArray());
+~ 			return bao.toByteArray();
 ~ 
 
-> CHANGE  11 : 16  @  11 : 12
+> INSERT  2 : 3  @  2
+
++ 			return null;
+
+> CHANGE  9 : 14  @  9 : 10
 
 ~ 		ServerData data = this.servers.remove(parInt1);
 ~ 		if (data != null && data.iconTextureObject != null) {
@@ -134,7 +152,8 @@
 + 	public void refreshServerPing() {
 + 		this.servers.clear();
 + 		this.servers.addAll(this.allServers);
-+ 		for (ServerData dat : servers) {
++ 		for (int i = 0, l = this.servers.size(); i < l; ++i) {
++ 			ServerData dat = this.servers.get(i);
 + 			if (dat.currentQuery != null) {
 + 				if (dat.currentQuery.isOpen()) {
 + 					dat.currentQuery.close();
@@ -148,9 +167,8 @@
 + 
 + 	public void updateServerPing() {
 + 		int total = 0;
-+ 		Iterator<ServerData> itr = servers.iterator();
-+ 		while (itr.hasNext()) {
-+ 			ServerData dat = itr.next();
++ 		for (int i = 0, l = this.servers.size(); i < l; ++i) {
++ 			ServerData dat = this.servers.get(i);
 + 			if (dat.pingSentTime <= 0l) {
 + 				dat.pingSentTime = System.currentTimeMillis();
 + 				if (RateLimitTracker.isLockedOut(dat.serverIP)) {

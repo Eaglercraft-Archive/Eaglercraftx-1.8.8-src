@@ -9,11 +9,9 @@
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 
-> INSERT  7 : 8  @  7
+> DELETE  1  @  1 : 2
 
-+ 
-
-> CHANGE  44 : 45  @  44 : 45
+> CHANGE  49 : 50  @  49 : 50
 
 ~ 		EaglercraftRandom random = this.theCreature.getRNG();
 

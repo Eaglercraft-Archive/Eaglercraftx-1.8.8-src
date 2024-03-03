@@ -5,30 +5,38 @@
 # Version: 1.0
 # Author: lax1dude
 
-> DELETE  5  @  5 : 6
+> DELETE  2  @  2 : 8
 
-> CHANGE  23 : 25  @  23 : 28
+> DELETE  1  @  1 : 4
+
+> DELETE  3  @  3 : 4
+
+> DELETE  5  @  5 : 7
+
+> CHANGE  4 : 6  @  4 : 11
 
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 
-> CHANGE  1 : 2  @  1 : 7
+> CHANGE  1 : 3  @  1 : 7
 
 ~ public abstract class AnvilChunkLoader implements IChunkLoader {
-
-> CHANGE  1 : 2  @  1 : 4
-
 ~ 	private static final Logger logger = LogManager.getLogger("AnvilChunkLoader");
 
-> DELETE  1  @  1 : 17
+> DELETE  1  @  1 : 21
 
 > CHANGE  24 : 25  @  24 : 109
 
 ~ 	protected void writeChunkToNBT(Chunk chunkIn, World worldIn, NBTTagCompound parNBTTagCompound) {
 
-> CHANGE  85 : 86  @  85 : 86
+> CHANGE  80 : 81  @  80 : 81
 
-~ 			for (NextTickListEntry nextticklistentry : (List<NextTickListEntry>) list) {
+~ 		List<NextTickListEntry> list = worldIn.getPendingBlockUpdates(chunkIn, false);
+
+> CHANGE  4 : 6  @  4 : 5
+
+~ 			for (int k = 0, l = list.size(); k < l; ++k) {
+~ 				NextTickListEntry nextticklistentry = list.get(k);
 
 > CHANGE  17 : 18  @  17 : 18
 

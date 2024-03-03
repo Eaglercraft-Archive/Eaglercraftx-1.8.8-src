@@ -9,11 +9,7 @@
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 
-> INSERT  6 : 7  @  6
-
-+ 
-
-> CHANGE  18 : 19  @  18 : 19
+> CHANGE  24 : 25  @  24 : 25
 
 ~ 		EaglercraftRandom random = entitycreatureIn.getRNG();
 

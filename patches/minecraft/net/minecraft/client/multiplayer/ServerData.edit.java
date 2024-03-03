@@ -79,7 +79,12 @@
 
 ~ 		this.hideAddress = serverDataIn.hideAddress;
 
-> INSERT  16 : 82  @  16
+> INSERT  6 : 8  @  6
+
++ 		public static final ServerResourceMode[] _VALUES = values();
++ 
+
+> INSERT  10 : 76  @  10
 
 + 
 + 	public void setMOTDFromQuery(QueryResponse pkt) {

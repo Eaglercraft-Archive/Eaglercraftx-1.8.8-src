@@ -9,11 +9,9 @@
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 
-> INSERT  23 : 24  @  23
+> DELETE  18  @  18 : 21
 
-+ 
-
-> CHANGE  23 : 24  @  23 : 24
+> CHANGE  25 : 26  @  25 : 26
 
 ~ 		public DesertPyramid(EaglercraftRandom parRandom, int parInt1, int parInt2) {
 
@@ -22,7 +20,13 @@
 ~ 		public boolean addComponentParts(World world, EaglercraftRandom random,
 ~ 				StructureBoundingBox structureboundingbox) {
 
-> CHANGE  377 : 378  @  377 : 378
+> CHANGE  352 : 355  @  352 : 353
+
+~ 			EnumFacing[] facings = EnumFacing.Plane.HORIZONTAL.facingsArray;
+~ 			for (int m = 0; m < facings.length; ++m) {
+~ 				EnumFacing enumfacing = facings[m];
+
+> CHANGE  24 : 25  @  24 : 25
 
 ~ 		protected Feature(EaglercraftRandom parRandom, int parInt1, int parInt2, int parInt3, int parInt4, int parInt5,
 

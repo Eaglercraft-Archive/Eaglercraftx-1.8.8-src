@@ -1,7 +1,9 @@
 package net.lax1dude.eaglercraft.v1_8.sp.lan;
 
 import net.lax1dude.eaglercraft.v1_8.EagUtils;
+import net.lax1dude.eaglercraft.v1_8.EaglerInputStream;
 import net.lax1dude.eaglercraft.v1_8.EaglerZLIB;
+import net.lax1dude.eaglercraft.v1_8.IOUtils;
 import net.lax1dude.eaglercraft.v1_8.internal.EnumEaglerConnectionState;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformWebRTC;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
@@ -17,7 +19,6 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IChatComponent;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -299,7 +300,8 @@ public class LANClientNetworkManager extends EaglercraftNetworkManager {
 			if(packets == null) {
 				return;
 			}
-			for(byte[] data : packets) {
+			for(int k = 0, l = packets.size(); k < l; ++k) {
+				byte[] data = packets.get(k);
 				byte[] fullData;
 				boolean compressed = false;
 
@@ -336,11 +338,14 @@ public class LANClientNetworkManager extends EaglercraftNetworkManager {
 					if(fullData.length < 4) {
 						throw new IOException("Recieved invalid " + fullData.length + " byte compressed packet");
 					}
-					ByteArrayInputStream bi = new ByteArrayInputStream(fullData);
+					EaglerInputStream bi = new EaglerInputStream(fullData);
 					int i = (bi.read() << 24) | (bi.read() << 16) | (bi.read() << 8) | bi.read();
 					InputStream inflaterInputStream = EaglerZLIB.newInflaterInputStream(bi);
 					fullData = new byte[i];
-					inflaterInputStream.read(fullData);
+					int r = IOUtils.readFully(inflaterInputStream, fullData);
+					if (i != r) {
+						logger.warn("Decompressed packet expected size {} differs from actual size {}!", i, r);
+					}
 				}
 
 				if(firstPacket) {

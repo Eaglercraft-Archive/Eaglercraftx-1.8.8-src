@@ -7,12 +7,14 @@
 
 > DELETE  4  @  4 : 5
 
-> CHANGE  70 : 71  @  70 : 71
+> CHANGE  70 : 72  @  70 : 71
 
-~ 					for (EntityLivingBase entitylivingbase : (List<EntityLivingBase>) list1) {
+~ 					for (int k = 0, l = list1.size(); k < l; ++k) {
+~ 						EntityLivingBase entitylivingbase = (EntityLivingBase) list1.get(k);
 
-> CHANGE  7 : 8  @  7 : 8
+> CHANGE  7 : 9  @  7 : 8
 
-~ 							for (PotionEffect potioneffect : (List<PotionEffect>) list) {
+~ 							for (int m = 0, n = list.size(); m < n; ++m) {
+~ 								PotionEffect potioneffect = (PotionEffect) list.get(m);
 
 > EOF

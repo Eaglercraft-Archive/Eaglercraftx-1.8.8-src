@@ -9,14 +9,16 @@
 
 ~ import net.lax1dude.eaglercraft.v1_8.netty.Unpooled;
 
-> INSERT  6 : 8  @  6
+> CHANGE  3 : 4  @  3 : 4
+
+~ import java.util.List;
+
+> INSERT  2 : 4  @  2
 
 + 
 + import net.lax1dude.eaglercraft.v1_8.sp.server.EaglerMinecraftServer;
 
-> DELETE  25  @  25 : 26
-
-> DELETE  2  @  2 : 3
+> DELETE  25  @  25 : 29
 
 > INSERT  33 : 34  @  33
 
@@ -70,7 +72,13 @@
 
 > DELETE  64  @  64 : 65
 
-> CHANGE  51 : 65  @  51 : 63
+> CHANGE  3 : 6  @  3 : 4
+
+~ 			WorldServer[] srv = this.serverController.worldServers;
+~ 			for (int i = 0; i < srv.length; ++i) {
+~ 				WorldServer worldserver = srv[i];
+
+> CHANGE  47 : 61  @  47 : 59
 
 ~ 		if (!hasDisconnected) {
 ~ 			hasDisconnected = true;
@@ -133,9 +141,19 @@
 
 > DELETE  21  @  21 : 22
 
-> DELETE  5  @  5 : 6
+> CHANGE  5 : 10  @  5 : 11
 
-> DELETE  12  @  12 : 13
+~ 		List<String> lst = this.serverController.getTabCompletions(this.playerEntity, c14packettabcomplete.getMessage(),
+~ 				c14packettabcomplete.getTargetBlock());
+~ 		String[] fuckOff = new String[lst.size()];
+~ 		for (int i = 0; i < fuckOff.length; ++i) {
+~ 			fuckOff[i] = lst.get(i);
+
+> CHANGE  2 : 3  @  2 : 4
+
+~ 		this.playerEntity.playerNetServerHandler.sendPacket(new S3APacketTabComplete(fuckOff));
+
+> DELETE  3  @  3 : 4
 
 > DELETE  4  @  4 : 5
 
@@ -168,7 +186,7 @@
 + 						s = net.minecraft.util.StringUtils.translateControlCodesAlternate(s);
 + 					}
 
-> INSERT  5 : 22  @  5
+> INSERT  5 : 24  @  5
 
 + 		} else if ("EAG|Skins-1.8".equals(c17packetcustompayload.getChannelName())) {
 + 			byte[] r = new byte[c17packetcustompayload.getBufferData().readableBytes()];
@@ -180,7 +198,9 @@
 + 				byte[] cert = new byte[pb.readableBytes()];
 + 				pb.readBytes(cert);
 + 				playerEntity.updateCertificate = cert;
-+ 				for (EntityPlayerMP player : playerEntity.mcServer.getConfigurationManager().func_181057_v()) {
++ 				List<EntityPlayerMP> lst = playerEntity.mcServer.getConfigurationManager().func_181057_v();
++ 				for (int i = 0, l = lst.size(); i < l; ++i) {
++ 					EntityPlayerMP player = lst.get(i);
 + 					if (player != playerEntity) {
 + 						player.playerNetServerHandler.sendPacket(new S3FPacketCustomPayload("EAG|UpdateCert-1.8",
 + 								new PacketBuffer(Unpooled.buffer(cert, cert.length).writerIndex(cert.length))));

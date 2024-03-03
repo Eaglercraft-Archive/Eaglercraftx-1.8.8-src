@@ -7,4 +7,8 @@
 
 > DELETE  4  @  4 : 5
 
+> CHANGE  31 : 32  @  31 : 32
+
+~ 		this.dataWatcher.addObject(16, Byte.valueOf((byte) 0));
+
 > EOF

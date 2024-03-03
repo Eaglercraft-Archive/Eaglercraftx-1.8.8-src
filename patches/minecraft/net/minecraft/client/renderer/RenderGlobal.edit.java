@@ -222,17 +222,31 @@
 
 > DELETE  2  @  2 : 16
 
-> INSERT  24 : 27  @  24
+> CHANGE  4 : 7  @  4 : 5
+
+~ 			label738: for (int ii = 0, ll = this.renderInfos.size(); ii < ll; ++ii) {
+~ 				RenderGlobal.ContainerLocalRenderInformation renderglobal$containerlocalrenderinformation = this.renderInfos
+~ 						.get(ii);
+
+> INSERT  19 : 22  @  19
 
 + 							if (light) {
 + 								entity2.renderDynamicLightsEagler(partialTicks, flag2);
 + 							}
 
-> CHANGE  31 : 32  @  31 : 32
+> CHANGE  27 : 30  @  27 : 28
 
-~ 					for (TileEntity tileentity2 : (List<TileEntity>) list1) {
+~ 			for (int ii = 0, ll = this.renderInfos.size(); ii < ll; ++ii) {
+~ 				RenderGlobal.ContainerLocalRenderInformation renderglobal$containerlocalrenderinformation1 = this.renderInfos
+~ 						.get(ii);
 
-> INSERT  41 : 200  @  41
+> CHANGE  3 : 6  @  3 : 5
+
+~ 					for (int m = 0, n = list1.size(); m < n; ++m) {
+~ 						TileEntityRendererDispatcher.instance.renderTileEntity((TileEntity) list1.get(m), partialTicks,
+~ 								-1);
+
+> INSERT  40 : 199  @  40
 
 + 	public static interface EntityChunkCullAdapter {
 + 		boolean shouldCull(RenderChunk renderChunk);
@@ -394,19 +408,35 @@
 + 	}
 + 
 
-> CHANGE  11 : 12  @  11 : 12
+> CHANGE  4 : 7  @  4 : 5
+
+~ 		for (int ii = 0, ll = this.renderInfos.size(); ii < ll; ++ii) {
+~ 			RenderGlobal.ContainerLocalRenderInformation renderglobal$containerlocalrenderinformation = this.renderInfos
+~ 					.get(ii);
+
+> CHANGE  6 : 7  @  6 : 7
 
 ~ 		return HString.format("C: %d/%d %sD: %d, %s",
 
-> DELETE  115  @  115 : 116
+> CHANGE  115 : 118  @  115 : 117
 
-> CHANGE  2 : 3  @  2 : 3
+~ 				EnumFacing[] facings = EnumFacing._VALUES;
+~ 				for (int i = 0; i < facings.length; ++i) {
+~ 					EnumFacing enumfacing1 = facings[i];
+
+> CHANGE  1 : 2  @  1 : 2
 
 ~ 					if ((!flag1 || !renderglobal$containerlocalrenderinformation1.setFacing // TODO:
 
 > DELETE  22  @  22 : 23
 
-> CHANGE  7 : 9  @  7 : 8
+> CHANGE  3 : 6  @  3 : 4
+
+~ 		for (int ii = 0, ll = this.renderInfos.size(); ii < ll; ++ii) {
+~ 			RenderGlobal.ContainerLocalRenderInformation renderglobal$containerlocalrenderinformation2 = this.renderInfos
+~ 					.get(ii);
+
+> CHANGE  3 : 5  @  3 : 4
 
 ~ 				if (this.mc.gameSettings.chunkFix ? this.isPositionInRenderChunkHack(blockpos1, renderchunk4)
 ~ 						: this.isPositionInRenderChunk(blockpos, renderchunk4)) {
@@ -428,7 +458,13 @@
 
 + 		((ClippingHelperImpl) this.debugFixedClippingHelper).destroy();
 
-> INSERT  92 : 129  @  92
+> CHANGE  58 : 61  @  58 : 59
+
+~ 				for (int ii = 0, ll = this.renderInfos.size(); ii < ll; ++ii) {
+~ 					RenderGlobal.ContainerLocalRenderInformation renderglobal$containerlocalrenderinformation = this.renderInfos
+~ 							.get(ii);
+
+> INSERT  33 : 70  @  33
 
 + 	public static interface ChunkCullAdapter {
 + 		boolean shouldCull(RenderChunk chunk);
@@ -576,7 +612,7 @@
 
 ~ 		EaglercraftRandom random = this.theWorld.rand;
 
-> INSERT  229 : 246  @  229
+> INSERT  229 : 248  @  229
 
 + 
 + 	public String getDebugInfoShort() {
@@ -584,7 +620,9 @@
 + 		int j = 0;
 + 		int k = 0;
 + 
-+ 		for (RenderGlobal.ContainerLocalRenderInformation renderglobal$containerlocalrenderinformation : this.renderInfos) {
++ 		for (int ii = 0, ll = this.renderInfos.size(); ii < ll; ++ii) {
++ 			RenderGlobal.ContainerLocalRenderInformation renderglobal$containerlocalrenderinformation = this.renderInfos
++ 					.get(ii);
 + 			CompiledChunk compiledchunk = renderglobal$containerlocalrenderinformation.renderChunk.compiledChunk;
 + 			if (compiledchunk != CompiledChunk.DUMMY && !compiledchunk.isEmpty()) {
 + 				++j;

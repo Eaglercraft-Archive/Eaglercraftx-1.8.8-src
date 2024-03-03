@@ -118,7 +118,7 @@ public class GuiScreenBackupWorldSelection extends GuiScreen {
 	public void confirmClicked(boolean par1, int par2) {
 		if(par1) {
 			SingleplayerServerController.clearPlayerData(worldName);
-			this.mc.displayGuiScreen(new GuiScreenIntegratedServerBusy(this, "singleplayer.busy.clearplayers", "singleplayer.failed.clearplayers", () -> SingleplayerServerController.isReady()));
+			this.mc.displayGuiScreen(new GuiScreenIntegratedServerBusy(this, "singleplayer.busy.clearplayers", "singleplayer.failed.clearplayers", SingleplayerServerController::isReady));
 		}else {
 			mc.displayGuiScreen(this);
 		}

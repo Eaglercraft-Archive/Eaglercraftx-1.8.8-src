@@ -9,7 +9,9 @@
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 
-> CHANGE  44 : 45  @  44 : 45
+> DELETE  9  @  9 : 10
+
+> CHANGE  34 : 35  @  34 : 35
 
 ~ 	public WorldGenAbstractTree genBigTreeChance(EaglercraftRandom var1) {
 

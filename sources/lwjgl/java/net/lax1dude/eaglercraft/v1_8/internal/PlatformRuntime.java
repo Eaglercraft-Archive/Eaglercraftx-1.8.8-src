@@ -10,6 +10,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -36,12 +37,14 @@ import org.lwjgl.system.MemoryUtil;
 import org.lwjgl.system.jemalloc.JEmalloc;
 
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.EaglerLWJGLAllocator;
+import net.lax1dude.eaglercraft.v1_8.EaglerOutputStream;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.ByteBuffer;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.FloatBuffer;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.IntBuffer;
 import net.lax1dude.eaglercraft.v1_8.internal.lwjgl.DesktopClientConfigAdapter;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
+import net.lax1dude.eaglercraft.v1_8.minecraft.EaglerFolderResourcePack;
 
 /**
  * Copyright (c) 2022-2023 lax1dude, ayunami2000. All Rights Reserved.
@@ -71,6 +74,8 @@ public class PlatformRuntime {
 
 	public static void create() {
 		logger.info("Starting Desktop Runtime...");
+		PlatformFilesystem.initialize();
+		EaglerFolderResourcePack.setSupported(true);
 		
 		if(requestedANGLEPlatform != EnumPlatformANGLE.DEFAULT) {
 			logger.info("Setting ANGLE Platform: {}", requestedANGLEPlatform.name);
@@ -295,7 +300,31 @@ public class PlatformRuntime {
 	public static FloatBuffer allocateFloatBuffer(int length) {
 		return EaglerLWJGLAllocator.allocFloatBuffer(length);
 	}
-	
+
+	public static ByteBuffer castPrimitiveByteArray(byte[] array) {
+		return null;
+	}
+
+	public static IntBuffer castPrimitiveIntArray(int[] array) {
+		return null;
+	}
+
+	public static FloatBuffer castPrimitiveFloatArray(float[] array) {
+		return null;
+	}
+
+	public static byte[] castNativeByteBuffer(ByteBuffer buffer) {
+		return null;
+	}
+
+	public static int[] castNativeIntBuffer(IntBuffer buffer) {
+		return null;
+	}
+
+	public static float[] castNativeFloatBuffer(FloatBuffer buffer) {
+		return null;
+	}
+
 	public static void freeByteBuffer(ByteBuffer byteBuffer) {
 		EaglerLWJGLAllocator.freeByteBuffer(byteBuffer);
 	}
@@ -429,6 +458,22 @@ public class PlatformRuntime {
 		return new GZIPInputStream(is);
 	}
 	
+	public static void downloadRemoteURIByteArray(String assetPackageURI, final Consumer<byte[]> cb) {
+		logger.info("Downloading: {}");
+		try(InputStream is = (new URL(assetPackageURI)).openStream()) {
+			EaglerOutputStream bao = new EaglerOutputStream();
+			byte[] copyBuffer = new byte[16384];
+			int i;
+			while((i = is.read(copyBuffer, 0, copyBuffer.length)) != -1) {
+				bao.write(copyBuffer, 0, i);
+			}
+			cb.accept(bao.toByteArray());
+		}catch(IOException ex) {
+			logger.error("Failed to download file!");
+			logger.error(ex);
+		}
+	}
+	
 	public static boolean requireSSL() {
 		return false;
 	}
@@ -467,5 +512,9 @@ public class PlatformRuntime {
 
 	public static String currentThreadName() {
 		return Thread.currentThread().getName();
+	}
+
+	public static long getWindowHandle() {
+		return windowHandle;
 	}
 }

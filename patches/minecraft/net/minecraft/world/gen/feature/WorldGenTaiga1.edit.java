@@ -9,11 +9,9 @@
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 
-> INSERT  13 : 14  @  13
+> DELETE  10  @  10 : 11
 
-+ 
-
-> CHANGE  10 : 11  @  10 : 11
+> CHANGE  12 : 13  @  12 : 13
 
 ~ 	public boolean generate(World world, EaglercraftRandom random, BlockPos blockpos) {
 

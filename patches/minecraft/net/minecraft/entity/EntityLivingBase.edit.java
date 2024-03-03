@@ -29,7 +29,18 @@
 
 ~ 	public EaglercraftRandom getRNG() {
 
-> INSERT  1309 : 1320  @  1309
+> CHANGE  46 : 49  @  46 : 47
+
+~ 		ItemStack[] inv = this.getInventory();
+~ 		for (int i = 0; i < inv.length; ++i) {
+~ 			ItemStack itemstack = inv[i];
+
+> CHANGE  7 : 9  @  7 : 8
+
+~ 		for (int i = 0; i < inv.length; ++i) {
+~ 			ItemStack itemstack1 = inv[i];
+
+> INSERT  1254 : 1265  @  1254
 
 + 
 + 	protected void renderDynamicLightsEaglerAt(double entityX, double entityY, double entityZ, double renderX,

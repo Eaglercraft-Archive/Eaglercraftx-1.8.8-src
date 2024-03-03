@@ -9,11 +9,9 @@
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 
-> INSERT  26 : 27  @  26
+> DELETE  20  @  20 : 24
 
-+ 
-
-> CHANGE  16 : 18  @  16 : 18
+> CHANGE  18 : 20  @  18 : 20
 
 ~ 	public static List<StructureVillagePieces.PieceWeight> getStructureVillageWeightedPieceList(
 ~ 			EaglercraftRandom random, int parInt1) {

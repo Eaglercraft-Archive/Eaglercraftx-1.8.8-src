@@ -13,4 +13,9 @@
 
 ~ 		List<Entity> list;
 
+> CHANGE  12 : 14  @  12 : 13
+
+~ 			for (int i = 0, l = list.size(); i < l; ++i) {
+~ 				Entity entity = list.get(i);
+
 > EOF

@@ -9,11 +9,9 @@
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 
-> INSERT  20 : 21  @  20
+> DELETE  15  @  15 : 18
 
-+ 
-
-> CHANGE  22 : 24  @  22 : 24
+> CHANGE  24 : 26  @  24 : 26
 
 ~ 	private static StructureComponent func_175892_a(List<StructureComponent> listIn, EaglercraftRandom rand, int x,
 ~ 			int y, int z, EnumFacing facing, int type) {

@@ -10,8 +10,10 @@
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 
-> INSERT  2 : 3  @  2
+> CHANGE  206 : 209  @  206 : 207
 
-+ 
+~ 			List<EntityPlayerMP> playerz = Lists.newArrayList(this.players);
+~ 			for (int m = 0, n = playerz.size(); m < n; ++m) {
+~ 				EntityPlayerMP entityplayermp = playerz.get(m);
 
 > EOF

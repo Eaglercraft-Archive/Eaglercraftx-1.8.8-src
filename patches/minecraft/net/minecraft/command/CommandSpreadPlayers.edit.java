@@ -10,7 +10,9 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ import net.lax1dude.eaglercraft.v1_8.HString;
 
-> INSERT  20 : 21  @  20
+> DELETE  1  @  1 : 9
+
+> INSERT  11 : 12  @  11
 
 + 
 
@@ -22,11 +24,22 @@
 
 ~ 					new Object[] { HString.format("%.2f", new Object[] { Double.valueOf(d4) }), Integer.valueOf(i) }));
 
-> CHANGE  19 : 20  @  19 : 20
+> CHANGE  7 : 9  @  7 : 8
+
+~ 		for (int i = 0, l = parList.size(); i < l; ++i) {
+~ 			Entity entity = parList.get(i);
+
+> CHANGE  11 : 12  @  11 : 12
 
 ~ 			EaglercraftRandom parRandom, double parDouble2, double parDouble3, double parDouble4, double parDouble5,
 
-> CHANGE  64 : 65  @  64 : 65
+> CHANGE  50 : 53  @  50 : 54
+
+~ 				for (int k = 0; k < parArrayOfPosition.length; ++k) {
+~ 					if (!parArrayOfPosition[k].func_111098_b(parWorld)) {
+~ 						parArrayOfPosition[k].func_111097_a(parRandom, parDouble2, parDouble3, parDouble4, parDouble5);
+
+> CHANGE  10 : 11  @  10 : 11
 
 ~ 							HString.format("%.2f", new Object[] { Double.valueOf(d0) }) });
 

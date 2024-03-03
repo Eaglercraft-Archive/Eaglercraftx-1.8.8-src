@@ -5,9 +5,18 @@
 # Version: 1.0
 # Author: lax1dude
 
-> DELETE  2  @  2 : 4
+> CHANGE  2 : 4  @  2 : 4
 
-> CHANGE  130 : 131  @  130 : 133
+~ import java.util.List;
+~ 
+
+> CHANGE  68 : 71  @  68 : 69
+
+~ 		EnumFacing[] facings = EnumFacing.Plane.HORIZONTAL.facings();
+~ 		for (int i = 0; i < facings.length; ++i) {
+~ 			EnumFacing enumfacing = facings[i];
+
+> CHANGE  61 : 62  @  61 : 64
 
 ~ 		if (!worldIn.isRemote) {
 
@@ -17,8 +26,36 @@
 
 + 		return state;
 
-> CHANGE  117 : 118  @  117 : 120
+> CHANGE  5 : 8  @  5 : 6
+
+~ 		EnumFacing[] facings = EnumFacing.Plane.HORIZONTAL.facingsArray;
+~ 		for (int i = 0; i < facings.length; ++i) {
+~ 			EnumFacing enumfacing1 = facings[i];
+
+> CHANGE  80 : 83  @  80 : 81
+
+~ 			EnumFacing[] facings = EnumFacing.Plane.HORIZONTAL.facingsArray;
+~ 			for (int i = 0; i < facings.length; ++i) {
+~ 				EnumFacing enumfacing = facings[i];
+
+> CHANGE  30 : 31  @  30 : 33
 
 ~ 		{
+
+> CHANGE  23 : 26  @  23 : 24
+
+~ 				EnumFacing[] facings = EnumFacing.Plane.HORIZONTAL.facingsArray;
+~ 				for (int i = 0; i < facings.length; ++i) {
+~ 					EnumFacing enumfacing = facings[i];
+
+> CHANGE  61 : 62  @  61 : 62
+
+~ 		List<Entity> entityList = worldIn.getEntitiesWithinAABB(EntityOcelot.class,
+
+> CHANGE  1 : 4  @  1 : 2
+
+~ 						(double) (pos.getX() + 1), (double) (pos.getY() + 2), (double) (pos.getZ() + 1)));
+~ 		for (int i = 0, l = entityList.size(); i < l; ++i) {
+~ 			Entity entity = entityList.get(i);
 
 > EOF

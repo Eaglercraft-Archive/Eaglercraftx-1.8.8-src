@@ -1,16 +1,13 @@
 package net.lax1dude.eaglercraft.v1_8.internal.teavm;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
-import net.lax1dude.eaglercraft.v1_8.EaglerInputStream;
 import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 import net.lax1dude.eaglercraft.v1_8.EaglercraftVersion;
+import net.lax1dude.eaglercraft.v1_8.ThreadLocalRandom;
 import net.lax1dude.eaglercraft.v1_8.sp.relay.RelayManager;
-import net.minecraft.nbt.CompressedStreamTools;
-import net.minecraft.nbt.NBTTagCompound;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -41,8 +38,9 @@ public class TeaVMClientConfigAdapter implements IClientConfigAdapter {
 	private List<RelayEntry> relays = new ArrayList();
 	private String serverToJoin = null;   
 	private String worldsDB = "worlds";
+	private String resourcePacksDB = "resourcePacks";
 	private JSONObject originalEaglercraftOpts;
-	private boolean isCheckShaderGLErrors = false;
+	private boolean checkShaderGLErrors = false;
 	private boolean demoMode = EaglercraftVersion.forceDemoMode;
 	private boolean isAllowUpdateSvc = EaglercraftVersion.enableUpdateService;
 	private boolean isAllowUpdateDL = EaglercraftVersion.enableUpdateService;
@@ -52,14 +50,14 @@ public class TeaVMClientConfigAdapter implements IClientConfigAdapter {
 	private boolean logInvalidCerts = false;
 	private boolean checkRelaysForUpdates = false;
 	private boolean enableSignatureBadge = false;
-	private static final EaglercraftRandom random = new EaglercraftRandom();
 
 	public void loadJSON(JSONObject eaglercraftOpts) {
 		originalEaglercraftOpts = eaglercraftOpts;
 		defaultLocale = eaglercraftOpts.optString("lang", "en_US");
 		serverToJoin = eaglercraftOpts.optString("joinServer", null);
 		worldsDB = eaglercraftOpts.optString("worldsDB", "worlds");
-		isCheckShaderGLErrors = eaglercraftOpts.optBoolean("checkShaderGLErrors", false);
+		resourcePacksDB = eaglercraftOpts.optString("resourcePacksDB", "resourcePacks");
+		checkShaderGLErrors = eaglercraftOpts.optBoolean("checkShaderGLErrors", false);
 		if(EaglercraftVersion.forceDemoMode) {
 			eaglercraftOpts.put("demoMode", true);
 		}
@@ -88,7 +86,7 @@ public class TeaVMClientConfigAdapter implements IClientConfigAdapter {
 			boolean gotAPrimary = false;
 			for (int i = 0, l = relaysArray.length(); i < l; ++i) {
 				JSONObject relay = relaysArray.getJSONObject(i);
-				boolean p = relay.getBoolean("primary");
+				boolean p = relay.optBoolean("primary");
 				if(p) {
 					if(gotAPrimary) {
 						p = false;
@@ -100,42 +98,28 @@ public class TeaVMClientConfigAdapter implements IClientConfigAdapter {
 			}
 		}
 
+		boolean officialUpdates = !demoMode && EaglercraftVersion.updateBundlePackageName.equals("net.lax1dude.eaglercraft.v1_8.client");
 		if (relays.size() <= 0) {
-			int choice = random.nextInt(3);
+			int choice = ThreadLocalRandom.current().nextInt(3);
 			relays.add(new RelayEntry("wss://relay.deev.is/", "lax1dude relay #1", choice == 0));
 			relays.add(new RelayEntry("wss://relay.lax1dude.net/", "lax1dude relay #2", choice == 1));
 			relays.add(new RelayEntry("wss://relay.shhnowisnottheti.me/", "ayunami relay #1", choice == 2));
-			checkRelaysForUpdates = !demoMode && eaglercraftOpts.optBoolean("checkRelaysForUpdates", true);
+			checkRelaysForUpdates = !demoMode && eaglercraftOpts.optBoolean("checkRelaysForUpdates", officialUpdates);
 		}else {
-			boolean isOfficial = true;
-			for(int i = 0, l = relays.size(); i < l; ++i) {
-				String addr = relays.get(i).address;
-				if(!addr.contains("deev.is") && !addr.contains("lax1dude.net") && !addr.contains("shhnowisnottheti.me")) {
-					isOfficial = false;
-					break;
+			if(officialUpdates) {
+				for(int i = 0, l = relays.size(); i < l; ++i) {
+					String addr = relays.get(i).address;
+					if(!addr.contains("deev.is") && !addr.contains("lax1dude.net") && !addr.contains("shhnowisnottheti.me")) {
+						officialUpdates = false;
+						break;
+					}
 				}
 			}
-			checkRelaysForUpdates = !demoMode && eaglercraftOpts.optBoolean("checkRelaysForUpdates", isOfficial);
+			checkRelaysForUpdates = !demoMode && eaglercraftOpts.optBoolean("checkRelaysForUpdates", officialUpdates);
 		}
 		
-		try {
-			byte[] localStorage = EagRuntime.getStorage("r");
-
-			if (localStorage != null) {
-				NBTTagCompound nbttagcompound = CompressedStreamTools
-						.readCompressed(new EaglerInputStream(localStorage));
-				if (nbttagcompound == null) {
-					RelayManager.relayManager.load(null);
-				} else {
-					RelayManager.relayManager.load(nbttagcompound.getTagList("relays", 10));
-				}
-			} else {
-				RelayManager.relayManager.load(null);
-			}
-		} catch (IOException e) {
-			EagRuntime.debugPrintStackTrace(e);
-		}
-
+		RelayManager.relayManager.load(EagRuntime.getStorage("r"));
+		
 		if (RelayManager.relayManager.count() <= 0) {
 			RelayManager.relayManager.loadDefaults();
 			RelayManager.relayManager.save();
@@ -163,6 +147,11 @@ public class TeaVMClientConfigAdapter implements IClientConfigAdapter {
 	}
 
 	@Override
+	public String getResourcePacksDB() {
+		return resourcePacksDB;
+	}
+
+	@Override
 	public JSONObject dumpConfig() {
 		return originalEaglercraftOpts;
 	}
@@ -173,8 +162,8 @@ public class TeaVMClientConfigAdapter implements IClientConfigAdapter {
 	}
 
 	@Override
-	public boolean checkShaderGLErrors() {
-		return isCheckShaderGLErrors;
+	public boolean isCheckShaderGLErrors() {
+		return checkShaderGLErrors;
 	}
 
 	@Override

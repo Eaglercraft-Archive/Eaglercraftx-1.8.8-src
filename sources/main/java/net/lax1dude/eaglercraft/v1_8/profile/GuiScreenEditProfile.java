@@ -3,13 +3,16 @@ package net.lax1dude.eaglercraft.v1_8.profile;
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.Keyboard;
 import net.lax1dude.eaglercraft.v1_8.Mouse;
+import net.lax1dude.eaglercraft.v1_8.internal.EnumCursorType;
 import net.lax1dude.eaglercraft.v1_8.internal.FileChooserResult;
 import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 import net.lax1dude.eaglercraft.v1_8.opengl.ImageData;
+import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
 
 import static net.lax1dude.eaglercraft.v1_8.opengl.RealOpenGLEnums.*;
@@ -160,6 +163,23 @@ public class GuiScreenEditProfile extends GuiScreen {
 			int scrollerSize = skinHeight * slotsVisible / dropDownOptions.length;
 			int scrollerPos = skinHeight * scrollPos / dropDownOptions.length;
 			drawRect(skinX + skinWidth - 4, skinY + scrollerPos + 1, skinX + skinWidth - 1, skinY + scrollerPos + scrollerSize, 0xff888888);
+		}
+
+		if(!EagRuntime.getConfiguration().isDemo()) {
+			GlStateManager.pushMatrix();
+			GlStateManager.scale(0.75f, 0.75f, 0.75f);
+			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
+			String text = I18n.format("editProfile.importExport");
+			
+			int w = mc.fontRendererObj.getStringWidth(text);
+			boolean hover = mx > 1 && my > 1 && mx < (w * 3 / 4) + 7 && my < 12;
+			if(hover) {
+				Mouse.showCursor(EnumCursorType.HAND);
+			}
+	
+			drawString(mc.fontRendererObj, EnumChatFormatting.UNDERLINE + text, 5, 5, hover ? 0xFFEEEE22 : 0xFFCCCCCC);
+			
+			GlStateManager.popMatrix();
 		}
 
 		int xx = width / 2 - 80;
@@ -370,6 +390,15 @@ public class GuiScreenEditProfile extends GuiScreen {
 		super.mouseClicked(mx, my, button);
 		usernameField.mouseClicked(mx, my, button);
 		if (button == 0) {
+			if(!EagRuntime.getConfiguration().isDemo()) {
+				int w = mc.fontRendererObj.getStringWidth(I18n.format("editProfile.importExport"));
+				if(mx > 1 && my > 1 && mx < (w * 3 / 4) + 7 && my < 12) {
+					mc.displayGuiScreen(new GuiScreenImportExportProfile(this));
+					mc.getSoundHandler().playSound(PositionedSoundRecord.create(new ResourceLocation("gui.button.press"), 1.0F));
+					return;
+				}
+			}
+			
 			if(newSkinWaitSteveOrAlex) {
 				int skinX = width / 2 - 90;
 				int skinY = height / 4;
@@ -459,7 +488,7 @@ public class GuiScreenEditProfile extends GuiScreen {
 			name = name.substring(0, 16);
 		}
 		EaglerProfile.setName(name);
-		EaglerProfile.write();
+		EaglerProfile.save();
 	}
 
 }

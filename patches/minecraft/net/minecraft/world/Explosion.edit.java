@@ -16,7 +16,11 @@
 ~ import com.google.common.collect.Sets;
 ~ 
 
-> DELETE  15  @  15 : 16
+> INSERT  12 : 13  @  12
+
++ import net.minecraft.util.EnumFacing;
+
+> DELETE  3  @  3 : 4
 
 > CHANGE  4 : 5  @  4 : 5
 
@@ -25,5 +29,18 @@
 > CHANGE  22 : 23  @  22 : 23
 
 ~ 		this.explosionRNG = new EaglercraftRandom();
+
+> CHANGE  112 : 114  @  112 : 113
+
+~ 			for (int i = 0, l = this.affectedBlockPositions.size(); i < l; ++i) {
+~ 				BlockPos blockpos = this.affectedBlockPositions.get(i);
+
+> CHANGE  36 : 41  @  36 : 39
+
+~ 			BlockPos tmp = new BlockPos(0, 0, 0);
+~ 			for (int i = 0, l = this.affectedBlockPositions.size(); i < l; ++i) {
+~ 				BlockPos blockpos1 = this.affectedBlockPositions.get(i);
+~ 				if (this.worldObj.getBlockState(blockpos1).getBlock().getMaterial() == Material.air && this.worldObj
+~ 						.getBlockState(blockpos1.offsetEvenFaster(EnumFacing.DOWN, tmp)).getBlock().isFullBlock()
 
 > EOF

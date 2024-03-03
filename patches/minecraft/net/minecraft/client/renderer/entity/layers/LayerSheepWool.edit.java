@@ -13,4 +13,8 @@
 
 > DELETE  1  @  1 : 2
 
+> CHANGE  20 : 21  @  20 : 21
+
+~ 				int j = EnumDyeColor.META_LOOKUP.length;
+
 > EOF

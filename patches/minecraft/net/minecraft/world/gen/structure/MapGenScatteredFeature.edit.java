@@ -9,15 +9,18 @@
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 
-> INSERT  12 : 13  @  12
+> DELETE  6  @  6 : 10
 
-+ 
-
-> CHANGE  43 : 44  @  43 : 44
+> CHANGE  45 : 46  @  45 : 46
 
 ~ 		EaglercraftRandom random = this.worldObj.setRandomSeed(i1, j1, 14357617);
 
-> CHANGE  44 : 45  @  44 : 45
+> CHANGE  11 : 13  @  11 : 13
+
+~ 			for (int m = 0, n = biomelist.size(); m < n; ++m) {
+~ 				if (biomegenbase == biomelist.get(m)) {
+
+> CHANGE  31 : 32  @  31 : 32
 
 ~ 		public Start(World worldIn, EaglercraftRandom parRandom, int parInt1, int parInt2) {
 

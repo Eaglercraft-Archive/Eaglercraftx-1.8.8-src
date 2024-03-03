@@ -5,12 +5,8 @@
 # Version: 1.0
 # Author: lax1dude
 
-> CHANGE  2 : 8  @  2 : 4
+> CHANGE  2 : 4  @  2 : 4
 
-~ import net.lax1dude.eaglercraft.v1_8.EagRuntime;
-~ import net.lax1dude.eaglercraft.v1_8.internal.buffer.FloatBuffer;
-~ import net.lax1dude.eaglercraft.v1_8.internal.buffer.IntBuffer;
-~ 
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.EaglercraftGPU;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 

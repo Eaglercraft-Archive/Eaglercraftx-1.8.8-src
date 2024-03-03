@@ -1,6 +1,6 @@
 package net.lax1dude.eaglercraft.v1_8.sp.relay;
 
-import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -9,6 +9,9 @@ import java.util.function.Consumer;
 
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.EagUtils;
+import net.lax1dude.eaglercraft.v1_8.EaglerInputStream;
+import net.lax1dude.eaglercraft.v1_8.EaglerOutputStream;
+import net.lax1dude.eaglercraft.v1_8.ThreadLocalRandom;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 import net.lax1dude.eaglercraft.v1_8.sp.relay.pkt.IPacket;
@@ -42,8 +45,46 @@ public class RelayManager {
 	
 	private final List<RelayServer> relays = new ArrayList();
 	private long lastPingThrough = 0l;
-	
-	public void load(NBTTagList relayConfig) {
+
+	public void load(byte[] relayConfig) {
+		NBTTagCompound relays = null;
+		if(relayConfig != null) {
+			try {
+				relays = CompressedStreamTools.readCompressed(new EaglerInputStream(relayConfig));
+			} catch (IOException ex) {
+			}
+		}
+		if(relays != null && relays.hasKey("relays", 9)) {
+			load(relays.getTagList("relays", 10));
+			if(!relays.getBoolean("f")) {
+				fixBullshit();
+			}
+		}else {
+			sort(); // loads defaults
+			save();
+		}
+	}
+
+	// versions pre-u24 always have "relay.deev.is" as primary due to a glitch
+	// this function is intended to randomize the list if that is detected
+	private void fixBullshit() {
+		if(!relays.isEmpty()) {
+			for(int i = 0, l = relays.size(); i < l; ++i) {
+				RelayServer rs = relays.get(i);
+				if(rs.address.equalsIgnoreCase("wss://relay.deev.is/") && !rs.isPrimary()) {
+					return;
+				}
+			}
+			for(int i = 0, l = relays.size(); i < l; ++i) {
+				relays.get(i).setPrimary(false);
+			}
+			relays.get(ThreadLocalRandom.current().nextInt(relays.size())).setPrimary(true);
+			sort();
+			save();
+		}
+	}
+
+	private void load(NBTTagList relayConfig) {
 		relays.clear();
 		if(relayConfig != null && relayConfig.tagCount() > 0) {
 			boolean gotAPrimary = false;
@@ -64,6 +105,16 @@ public class RelayManager {
 	}
 	
 	public void save() {
+		if(relays.isEmpty()) {
+			return;
+		}
+		byte[] data = write();
+		if(data != null) {
+			EagRuntime.setStorage("r", data);
+		}
+	}
+	
+	public byte[] write() {
 		try {
 			NBTTagList lst = new NBTTagList();
 			for(int i = 0, l = relays.size(); i < l; ++i) {
@@ -77,17 +128,25 @@ public class RelayManager {
 
 			NBTTagCompound nbttagcompound = new NBTTagCompound();
 			nbttagcompound.setTag("relays", lst);
+			nbttagcompound.setBoolean("f", true);
 
-			ByteArrayOutputStream bao = new ByteArrayOutputStream();
+			EaglerOutputStream bao = new EaglerOutputStream();
 			CompressedStreamTools.writeCompressed(nbttagcompound, bao);
-			EagRuntime.setStorage("r", bao.toByteArray());
+			return bao.toByteArray();
 		} catch (Exception exception) {
 			logger.error("Couldn\'t save relay list!");
 			logger.error(exception);
+			return null;
 		}
 	}
 	
 	private void sort() {
+		if(relays.isEmpty()) {
+			List<RelayEntry> defaultRelays = EagRuntime.getConfiguration().getRelays();
+			for(int i = 0, l = defaultRelays.size(); i < l; ++i) {
+				relays.add(new RelayServer(defaultRelays.get(i)));
+			}
+		}
 		if(relays.isEmpty()) {
 			return;
 		}
@@ -315,16 +374,17 @@ public class RelayManager {
 	}
 	
 	public void loadDefaults() {
-		int setPrimary = relays.size();
-		eee: for(RelayEntry etr : EagRuntime.getConfiguration().getRelays()) {
-			for(RelayServer exEtr : relays) {
-				if(exEtr.address.equalsIgnoreCase(etr.address)) {
+		List<RelayEntry> defaultRelays = EagRuntime.getConfiguration().getRelays();
+		eee: for(int i = 0, l = defaultRelays.size(); i < l; ++i) {
+			RelayEntry etr = defaultRelays.get(i);
+			for(int j = 0, l2 = relays.size(); j < l2; ++j) {
+				if(relays.get(j).address.equalsIgnoreCase(etr.address)) {
 					continue eee;
 				}
 			}
 			relays.add(new RelayServer(etr));
 		}
-		setPrimary(setPrimary);
+		sort();
 	}
 	
 	public String makeNewRelayName() {

@@ -4,12 +4,11 @@ import static net.lax1dude.eaglercraft.v1_8.internal.PlatformOpenGL.*;
 import static net.lax1dude.eaglercraft.v1_8.opengl.RealOpenGLEnums.*;
 import static net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.ExtGLEnums.*;
 
-import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
-import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
+import net.lax1dude.eaglercraft.v1_8.EaglerInputStream;
 import net.lax1dude.eaglercraft.v1_8.internal.IBufferArrayGL;
 import net.lax1dude.eaglercraft.v1_8.internal.IBufferGL;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.ByteBuffer;
@@ -162,7 +161,7 @@ public class LensFlareMeshRenderer {
 		if(flareTex == null) {
 			throw new RuntimeException("Could not locate: " + streaksTextureLocation);
 		}
-		try(DataInputStream dis = new DataInputStream(new ByteArrayInputStream(flareTex))) {
+		try(DataInputStream dis = new DataInputStream(new EaglerInputStream(flareTex))) {
 			loadFlareTexture(copyBuffer, dis);
 		}catch(IOException ex) {
 			EagRuntime.freeByteBuffer(copyBuffer);
@@ -175,7 +174,7 @@ public class LensFlareMeshRenderer {
 		if(flareTex == null) {
 			throw new RuntimeException("Could not locate: " + ghostsTextureLocation);
 		}
-		try(DataInputStream dis = new DataInputStream(new ByteArrayInputStream(flareTex))) {
+		try(DataInputStream dis = new DataInputStream(new EaglerInputStream(flareTex))) {
 			loadFlareTexture(copyBuffer, dis);
 		}catch(IOException ex) {
 			EagRuntime.freeByteBuffer(copyBuffer);

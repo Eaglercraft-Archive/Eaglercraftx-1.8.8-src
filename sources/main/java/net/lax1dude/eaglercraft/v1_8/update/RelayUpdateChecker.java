@@ -1,7 +1,5 @@
 package net.lax1dude.eaglercraft.v1_8.update;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -9,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
+import net.lax1dude.eaglercraft.v1_8.EaglerInputStream;
+import net.lax1dude.eaglercraft.v1_8.EaglerOutputStream;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformApplication;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformWebRTC;
 import net.lax1dude.eaglercraft.v1_8.sp.relay.RelayManager;
@@ -67,7 +67,7 @@ public class RelayUpdateChecker {
 			byte[] b = PlatformApplication.getLocalStorage("lastRelayUpdate");
 			if(b != null) {
 				try {
-					lastUpdateCheck = (new DataInputStream(new ByteArrayInputStream(b))).readLong();
+					lastUpdateCheck = (new DataInputStream(new EaglerInputStream(b))).readLong();
 				} catch (IOException e) {
 				}
 			}
@@ -77,7 +77,7 @@ public class RelayUpdateChecker {
 		if((mc.theWorld == null || mc.isSingleplayer()) && millis - lastUpdateCheck > updateCheckRate) {
 			lastUpdateCheck = millis;
 			try {
-				ByteArrayOutputStream bao = new ByteArrayOutputStream(8);
+				EaglerOutputStream bao = new EaglerOutputStream(8);
 				(new DataOutputStream(bao)).writeLong(lastUpdateCheck);
 				PlatformApplication.setLocalStorage("lastRelayUpdate", bao.toByteArray());
 			} catch (IOException e) {

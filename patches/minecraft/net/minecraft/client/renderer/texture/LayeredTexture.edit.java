@@ -22,7 +22,12 @@
 
 ~ 		ImageData bufferedimage = null;
 
-> CHANGE  5 : 6  @  5 : 6
+> CHANGE  2 : 4  @  2 : 3
+
+~ 			for (int i = 0, l = this.layeredTextureNames.size(); i < l; ++i) {
+~ 				String s = this.layeredTextureNames.get(i);
+
+> CHANGE  2 : 3  @  2 : 3
 
 ~ 					ImageData bufferedimage1 = TextureUtil.readBufferedImage(inputstream);
 

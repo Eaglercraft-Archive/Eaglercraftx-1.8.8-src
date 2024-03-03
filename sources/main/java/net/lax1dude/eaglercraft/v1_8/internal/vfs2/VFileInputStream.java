@@ -54,7 +54,7 @@ class VFileInputStream extends InputStream {
 		if(len > 0) {
 			fileBuffer.get(b, off, len);
 		}
-		return len;
+		return len <= 0 ? -1 : len;
 	}
 
 	@Override

@@ -7,20 +7,17 @@
 
 > DELETE  2  @  2 : 7
 
-> CHANGE  1 : 4  @  1 : 4
+> CHANGE  1 : 3  @  1 : 4
 
-~ import java.io.ByteArrayOutputStream;
 ~ import java.io.InputStreamReader;
 ~ import java.io.OutputStreamWriter;
 
 > DELETE  1  @  1 : 3
 
-> INSERT  3 : 25  @  3
+> INSERT  3 : 24  @  3
 
 + 
 + import net.lax1dude.eaglercraft.v1_8.sp.relay.RelayManager;
-+ import net.minecraft.nbt.CompressedStreamTools;
-+ import net.minecraft.nbt.NBTTagCompound;
 + import org.json.JSONArray;
 + 
 + import com.google.common.collect.ImmutableSet;
@@ -31,6 +28,7 @@
 + import net.lax1dude.eaglercraft.v1_8.ArrayUtils;
 + import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 + import net.lax1dude.eaglercraft.v1_8.EaglerInputStream;
++ import net.lax1dude.eaglercraft.v1_8.EaglerOutputStream;
 + import net.lax1dude.eaglercraft.v1_8.EaglerZLIB;
 + import net.lax1dude.eaglercraft.v1_8.HString;
 + import net.lax1dude.eaglercraft.v1_8.Keyboard;
@@ -59,7 +57,11 @@
 
 > DELETE  1  @  1 : 2
 
-> DELETE  17  @  17 : 28
+> CHANGE  5 : 6  @  5 : 6
+
+~ 	private final Set<EnumPlayerModelParts> setModelParts = Sets.newHashSet(EnumPlayerModelParts._VALUES);
+
+> DELETE  11  @  11 : 22
 
 > CHANGE  8 : 9  @  8 : 9
 
@@ -267,15 +269,21 @@
 + 				return s + I18n.format("options.off");
 + 			}
 
-> CHANGE  7 : 9  @  7 : 8
+> CHANGE  6 : 12  @  6 : 10
 
-~ 			byte[] options = EagRuntime.getStorage("g");
-~ 			if (options == null) {
+~ 		byte[] options = EagRuntime.getStorage("g");
+~ 		if (options == null) {
+~ 			return;
+~ 		}
+~ 		loadOptions(options);
+~ 	}
 
-> CHANGE  3 : 5  @  3 : 4
+> CHANGE  1 : 5  @  1 : 2
 
+~ 	public void loadOptions(byte[] data) {
+~ 		try {
 ~ 			BufferedReader bufferedreader = new BufferedReader(
-~ 					new InputStreamReader(EaglerZLIB.newGZIPInputStream(new EaglerInputStream(options))));
+~ 					new InputStreamReader(EaglerZLIB.newGZIPInputStream(new EaglerInputStream(data))));
 
 > INSERT  58 : 70  @  58
 
@@ -387,29 +395,46 @@
 
 > DELETE  2  @  2 : 10
 
-> INSERT  6 : 16  @  6
+> CHANGE  6 : 17  @  6 : 7
 
-+ 					if (astring[0].equals("shaders")) {
-+ 						this.shaders = astring[1].equals("true");
-+ 					}
-+ 
-+ 					if (astring[0].equals("enableUpdateSvc")) {
-+ 						this.enableUpdateSvc = astring[1].equals("true");
-+ 					}
-+ 
-+ 					Keyboard.setFunctionKeyModifier(keyBindFunction.getKeyCode());
-+ 
+~ 					if (astring[0].equals("shaders")) {
+~ 						this.shaders = astring[1].equals("true");
+~ 					}
+~ 
+~ 					if (astring[0].equals("enableUpdateSvc")) {
+~ 						this.enableUpdateSvc = astring[1].equals("true");
+~ 					}
+~ 
+~ 					Keyboard.setFunctionKeyModifier(keyBindFunction.getKeyCode());
+~ 
+~ 					for (SoundCategory soundcategory : SoundCategory._VALUES) {
 
-> INSERT  11 : 13  @  11
+> CHANGE  5 : 6  @  5 : 6
+
+~ 					for (EnumPlayerModelParts enumplayermodelparts : EnumPlayerModelParts._VALUES) {
+
+> INSERT  4 : 6  @  4
 
 + 
 + 					deferredShaderConf.readOption(astring[0], astring[1]);
 
 > DELETE  6  @  6 : 7
 
-> CHANGE  12 : 14  @  12 : 13
+> INSERT  11 : 20  @  11
 
-~ 			ByteArrayOutputStream bao = new ByteArrayOutputStream();
++ 		byte[] data = writeOptions();
++ 		if (data != null) {
++ 			EagRuntime.setStorage("g", data);
++ 		}
++ 		RelayManager.relayManager.save();
++ 		this.sendSettingsToServer();
++ 	}
++ 
++ 	public byte[] writeOptions() {
+
+> CHANGE  1 : 3  @  1 : 2
+
+~ 			EaglerOutputStream bao = new EaglerOutputStream();
 ~ 			PrintWriter printwriter = new PrintWriter(new OutputStreamWriter(EaglerZLIB.newGZIPOutputStream(bao)));
 
 > INSERT  13 : 16  @  13
@@ -443,24 +468,32 @@
 + 			printwriter.println("shaders:" + this.shaders);
 + 			printwriter.println("enableUpdateSvc:" + this.enableUpdateSvc);
 
-> INSERT  5 : 7  @  5
+> CHANGE  5 : 8  @  5 : 6
 
-+ 			Keyboard.setFunctionKeyModifier(keyBindFunction.getKeyCode());
-+ 
+~ 			Keyboard.setFunctionKeyModifier(keyBindFunction.getKeyCode());
+~ 
+~ 			for (SoundCategory soundcategory : SoundCategory._VALUES) {
 
-> INSERT  10 : 12  @  10
+> CHANGE  4 : 5  @  4 : 5
+
+~ 			for (EnumPlayerModelParts enumplayermodelparts : EnumPlayerModelParts._VALUES) {
+
+> INSERT  4 : 6  @  4
 
 + 			deferredShaderConf.writeOptions(printwriter);
 + 
 
-> INSERT  1 : 5  @  1
+> INSERT  1 : 2  @  1
 
-+ 
-+ 			EagRuntime.setStorage("g", bao.toByteArray());
-+ 
-+ 			RelayManager.relayManager.save();
++ 			return bao.toByteArray();
 
-> CHANGE  10 : 11  @  10 : 11
+> INSERT  2 : 3  @  2
+
++ 			return null;
+
+> DELETE  2  @  2 : 3
+
+> CHANGE  5 : 6  @  5 : 6
 
 ~ 				: (parSoundCategory == SoundCategory.VOICE ? 0.0F : 1.0F);
 

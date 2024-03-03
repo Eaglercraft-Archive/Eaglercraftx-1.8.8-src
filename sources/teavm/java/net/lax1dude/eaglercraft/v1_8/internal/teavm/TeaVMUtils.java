@@ -53,6 +53,10 @@ public class TeaVMUtils {
 		return Int8Array.create(((TeaVMArrayObject)(Object)buf).getData().getBuffer());
 	}
 
+	public static ArrayBuffer unwrapArrayBuffer(byte[] buf) {
+		return ((TeaVMArrayObject)(Object)buf).getData().getBuffer();
+	}
+
 	@JSBody(params = { "buf" }, script = "return $rt_createByteArray(buf.buffer)")
 	private static native JSObject wrapByteArray0(JSObject buf);
 
@@ -72,6 +76,10 @@ public class TeaVMUtils {
 		return Int32Array.create(((TeaVMArrayObject)(Object)buf).getData().getBuffer());
 	}
 
+	public static ArrayBuffer unwrapArrayBuffer(int[] buf) {
+		return ((TeaVMArrayObject)(Object)buf).getData().getBuffer();
+	}
+
 	@JSBody(params = { "buf" }, script = "return $rt_createIntArray(buf.buffer)")
 	private static native JSObject wrapIntArray0(JSObject buf);
 
@@ -81,6 +89,10 @@ public class TeaVMUtils {
 
 	public static Float32Array unwrapFloatArray(float[] buf) {
 		return Float32Array.create(((TeaVMArrayObject)(Object)buf).getData().getBuffer());
+	}
+
+	public static ArrayBuffer unwrapArrayBuffer(float[] buf) {
+		return ((TeaVMArrayObject)(Object)buf).getData().getBuffer();
 	}
 
 	@JSBody(params = { "buf" }, script = "return $rt_createFloatArray(buf.buffer)")

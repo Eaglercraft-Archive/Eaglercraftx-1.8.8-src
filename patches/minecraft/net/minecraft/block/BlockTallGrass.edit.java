@@ -37,4 +37,14 @@
 
 ~ 	public void grow(World world, EaglercraftRandom var2, BlockPos blockpos, IBlockState iblockstate) {
 
+> CHANGE  30 : 31  @  30 : 31
+
+~ 		private static final BlockTallGrass.EnumType[] META_LOOKUP = new BlockTallGrass.EnumType[3];
+
+> CHANGE  29 : 32  @  29 : 31
+
+~ 			BlockTallGrass.EnumType[] types = values();
+~ 			for (int i = 0; i < types.length; ++i) {
+~ 				META_LOOKUP[types[i].getMeta()] = types[i];
+
 > EOF

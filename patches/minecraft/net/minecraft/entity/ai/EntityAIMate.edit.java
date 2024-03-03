@@ -9,13 +9,16 @@
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 
-> INSERT  12 : 13  @  12
+> DELETE  1  @  1 : 2
 
-+ 
+> CHANGE  54 : 55  @  54 : 55
 
-> CHANGE  49 : 50  @  49 : 50
+~ 		List<EntityAnimal> list = this.theWorld.getEntitiesWithinAABB(this.theAnimal.getClass(),
 
-~ 		for (EntityAnimal entityanimal1 : (List<EntityAnimal>) list) {
+> CHANGE  4 : 6  @  4 : 5
+
+~ 		for (int i = 0, l = list.size(); i < l; ++i) {
+~ 			EntityAnimal entityanimal1 = list.get(i);
 
 > CHANGE  32 : 33  @  32 : 33
 

@@ -5,8 +5,12 @@
 # Version: 1.0
 # Author: lax1dude
 
-> INSERT  13 : 14  @  13
+> DELETE  10  @  10 : 11
 
-+ 
+> CHANGE  25 : 28  @  25 : 26
+
+~ 		EnumFacing[] facings = EnumFacing._VALUES;
+~ 		for (int j = 0; j < facings.length; ++j) {
+~ 			EnumFacing enumfacing = facings[j];
 
 > EOF

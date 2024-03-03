@@ -11,4 +11,10 @@
 
 > DELETE  5  @  5 : 11
 
+> CHANGE  51 : 54  @  51 : 53
+
+~ 		List<IChatComponent> lst = component.getSiblings();
+~ 		for (int i = 0, l = lst.size(); i < l; ++i) {
+~ 			((IChatComponent) object).appendSibling(processComponent(commandSender, lst.get(i), entityIn));
+
 > EOF

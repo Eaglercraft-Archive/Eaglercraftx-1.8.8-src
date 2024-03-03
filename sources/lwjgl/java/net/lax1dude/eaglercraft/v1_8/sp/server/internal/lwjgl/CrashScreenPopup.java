@@ -9,7 +9,6 @@ import javax.swing.ScrollPaneConstants;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.Color;
-import java.awt.Window.Type;
 
 /**
  * Copyright (c) 2022-2024 lax1dude. All Rights Reserved.

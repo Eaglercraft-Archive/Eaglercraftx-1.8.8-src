@@ -5,14 +5,9 @@
 # Version: 1.0
 # Author: lax1dude
 
-> CHANGE  2 : 6  @  2 : 3
+> CHANGE  2 : 3  @  2 : 6
 
-~ import net.lax1dude.eaglercraft.v1_8.internal.buffer.FloatBuffer;
-~ 
-~ import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
-
-> DELETE  1  @  1 : 3
 
 > DELETE  4  @  4 : 7
 

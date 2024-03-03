@@ -22,7 +22,12 @@
 
 ~ 	public static double getRandomDoubleInRange(EaglercraftRandom parRandom, double parDouble1, double parDouble2) {
 
-> CHANGE  147 : 148  @  147 : 148
+> CHANGE  6 : 8  @  6 : 8
+
+~ 		for (int j = 0; j < values.length; ++j) {
+~ 			i += values[j];
+
+> CHANGE  139 : 140  @  139 : 140
 
 ~ 	public static EaglercraftUUID getRandomUuid(EaglercraftRandom rand) {
 

@@ -11,7 +11,12 @@
 
 > DELETE  1  @  1 : 2
 
-> CHANGE  33 : 34  @  33 : 34
+> CHANGE  27 : 29  @  27 : 29
+
+~ 		for (int i = 0, l = this.buttonList.size(); i < l; ++i) {
+~ 			this.buttonList.get(i).enabled = false;
+
+> CHANGE  4 : 5  @  4 : 5
 
 ~ 	protected void keyTyped(char parChar1, int parInt1) {
 
@@ -33,5 +38,10 @@
 > CHANGE  15 : 16  @  15 : 16
 
 ~ 			this.mc.shutdownIntegratedServer(new GuiMainMenu());
+
+> CHANGE  34 : 36  @  34 : 36
+
+~ 			for (int i = 0, l = this.buttonList.size(); i < l; ++i) {
+~ 				this.buttonList.get(i).enabled = true;
 
 > EOF

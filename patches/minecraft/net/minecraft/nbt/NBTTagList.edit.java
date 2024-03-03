@@ -17,4 +17,9 @@
 + import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 + 
 
+> CHANGE  159 : 161  @  159 : 161
+
+~ 		for (int i = 0, l = this.tagList.size(); i < l; ++i) {
+~ 			NBTBase nbtbase1 = this.tagList.get(i).copy();
+
 > EOF

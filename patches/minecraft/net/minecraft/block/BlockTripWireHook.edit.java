@@ -14,7 +14,14 @@
 
 ~ 
 
-> CHANGE  167 : 168  @  167 : 168
+> CHANGE  55 : 59  @  55 : 57
+
+~ 		EnumFacing[] facings = EnumFacing.Plane.HORIZONTAL.facingsArray;
+~ 		BlockPos tmp = new BlockPos(0, 0, 0);
+~ 		for (int i = 0; i < facings.length; ++i) {
+~ 			if (world.getBlockState(blockpos.offsetEvenFaster(facings[i], tmp)).getBlock().isNormalCube()) {
+
+> CHANGE  110 : 111  @  110 : 111
 
 ~ 	public void randomTick(World var1, BlockPos var2, IBlockState var3, EaglercraftRandom var4) {
 

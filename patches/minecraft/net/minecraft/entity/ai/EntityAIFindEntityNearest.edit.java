@@ -5,13 +5,11 @@
 # Version: 1.0
 # Author: lax1dude
 
-> CHANGE  14 : 16  @  14 : 16
+> DELETE  9  @  9 : 12
+
+> CHANGE  2 : 4  @  2 : 4
 
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
-
-> INSERT  2 : 3  @  2
-
-+ 
 
 > EOF

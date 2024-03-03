@@ -9,7 +9,9 @@
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 
-> INSERT  24 : 25  @  24
+> DELETE  6  @  6 : 7
+
+> INSERT  17 : 18  @  17
 
 + 
 

@@ -137,7 +137,12 @@
 
 ~ 	public void renderLivingAt(T entityLivingBaseIn, double x, double y, double z) {
 
-> INSERT  66 : 70  @  66
+> CHANGE  35 : 37  @  35 : 36
+
+~ 		for (int i = 0, l = this.layerRenderers.size(); i < l; ++i) {
+~ 			LayerRenderer layerrenderer = this.layerRenderers.get(i);
+
+> INSERT  30 : 34  @  30
 
 + 					if (DeferredStateManager.isInDeferredPass()) {
 + 						NameTagRenderer.renderNameTag(entitylivingbase, null, d0, d1, d2, -69);

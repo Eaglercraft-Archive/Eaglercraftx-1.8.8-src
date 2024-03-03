@@ -46,11 +46,13 @@ public class GuiScreenConnectOption extends GuiScreen {
 
 	protected void actionPerformed(GuiButton par1GuiButton) {
 		if(par1GuiButton.id == 0) {
+			guiScreen.cancelDirectConnect();
 			mc.displayGuiScreen(guiScreen);
 		}else if(par1GuiButton.id == 1) {
 			mc.displayGuiScreen(new GuiScreenServerList(guiScreen, guiScreen.getSelectedServer()));
 		}else if(par1GuiButton.id == 2) {
 			if(LANServerController.supported()) {
+				guiScreen.cancelDirectConnect();
 				mc.displayGuiScreen(GuiScreenLANInfo.showLANInfoScreen(new GuiScreenLANConnect(guiScreen)));
 			}else {
 				mc.displayGuiScreen(new GuiScreenLANNotSupported(this));

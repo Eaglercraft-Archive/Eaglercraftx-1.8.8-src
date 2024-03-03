@@ -3,9 +3,6 @@ package net.lax1dude.eaglercraft.v1_8.sp.ipc;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Copyright (c) 2023-2024 lax1dude. All Rights Reserved.

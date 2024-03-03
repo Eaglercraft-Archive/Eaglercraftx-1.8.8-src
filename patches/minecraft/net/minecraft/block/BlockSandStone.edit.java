@@ -20,4 +20,20 @@
 + 	}
 + 
 
+> CHANGE  5 : 8  @  5 : 7
+
+~ 		BlockSandStone.EnumType[] types = BlockSandStone.EnumType.META_LOOKUP;
+~ 		for (int i = 0; i < types.length; ++i) {
+~ 			list.add(new ItemStack(item, 1, types[i].getMetadata()));
+
+> CHANGE  24 : 25  @  24 : 25
+
+~ 		public static final BlockSandStone.EnumType[] META_LOOKUP = new BlockSandStone.EnumType[3];
+
+> CHANGE  35 : 38  @  35 : 37
+
+~ 			BlockSandStone.EnumType[] types = values();
+~ 			for (int i = 0; i < types.length; ++i) {
+~ 				META_LOOKUP[types[i].getMetadata()] = types[i];
+
 > EOF

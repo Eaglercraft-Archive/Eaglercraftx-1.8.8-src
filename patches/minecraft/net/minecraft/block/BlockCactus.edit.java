@@ -14,4 +14,10 @@
 
 ~ 	public void updateTick(World world, BlockPos blockpos, IBlockState iblockstate, EaglercraftRandom var4) {
 
+> CHANGE  56 : 59  @  56 : 57
+
+~ 		EnumFacing[] facings = EnumFacing.Plane.HORIZONTAL.facingsArray;
+~ 		for (int i = 0; i < facings.length; ++i) {
+~ 			EnumFacing enumfacing = facings[i];
+
 > EOF

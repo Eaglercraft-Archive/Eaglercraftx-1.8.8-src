@@ -5,14 +5,26 @@
 # Version: 1.0
 # Author: lax1dude
 
-> INSERT  4 : 6  @  4
+> DELETE  2  @  2 : 3
 
-+ 
-+ import net.lax1dude.eaglercraft.v1_8.Keyboard;
+> CHANGE  1 : 3  @  1 : 6
 
-> DELETE  12  @  12 : 13
+~ 
+~ import net.lax1dude.eaglercraft.v1_8.Keyboard;
 
-> CHANGE  149 : 150  @  149 : 150
+> DELETE  7  @  7 : 8
+
+> CHANGE  82 : 84  @  82 : 84
+
+~ 		for (int i = 0; i < ChatAllowedCharacters.allowedCharactersArray.length; ++i) {
+~ 			this.field_146336_i = this.field_146336_i.replace(ChatAllowedCharacters.allowedCharactersArray[i], '_');
+
+> CHANGE  48 : 50  @  48 : 50
+
+~ 		for (int i = 0; i < disallowedFilenames.length; ++i) {
+~ 			if (parString1.equalsIgnoreCase(disallowedFilenames[i])) {
+
+> CHANGE  15 : 16  @  15 : 16
 
 ~ 	protected void actionPerformed(GuiButton parGuiButton) {
 

@@ -245,8 +245,10 @@ public class EarlyLoadScreen {
 		_wglBindTexture(GL_TEXTURE_2D, null);
 		_wglDeleteTextures(tex);
 		_wglDeleteVertexArrays(vao);
+	}
+	
+	public static void destroy() {
 		_wglDeleteBuffers(vbo);
 		_wglDeleteProgram(program);
 	}
-	
 }

@@ -17,22 +17,10 @@
 ~ 			GameSettings.Options.HUD_PLAYER, GameSettings.Options.HUD_STATS, GameSettings.Options.HUD_WORLD,
 ~ 			GameSettings.Options.HUD_24H, GameSettings.Options.CHUNK_FIX };
 
-> CHANGE  11 : 13  @  11 : 14
+> CHANGE  11 : 13  @  11 : 31
 
-~ 		GameSettings.Options[] agamesettings$options = new GameSettings.Options[videoOptions.length];
-~ 		int i = 0;
-
-> CHANGE  1 : 4  @  1 : 15
-
-~ 		for (GameSettings.Options gamesettings$options : videoOptions) {
-~ 			agamesettings$options[i] = gamesettings$options;
-~ 			++i;
-
-> INSERT  2 : 5  @  2
-
-+ 		this.optionsRowList = new GuiOptionsRowList(this.mc, this.width, this.height, 32, this.height - 32, 25,
-+ 				agamesettings$options);
-+ 
+~ 		this.optionsRowList = new GuiOptionsRowList(this.mc, this.width, this.height, 32, this.height - 32, 25,
+~ 				videoOptions);
 
 > CHANGE  7 : 8  @  7 : 8
 

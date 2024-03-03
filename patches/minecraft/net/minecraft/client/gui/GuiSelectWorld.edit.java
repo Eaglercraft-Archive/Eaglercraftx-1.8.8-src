@@ -17,11 +17,11 @@
 ~ import net.lax1dude.eaglercraft.v1_8.sp.gui.GuiScreenLANNotSupported;
 ~ import net.lax1dude.eaglercraft.v1_8.sp.lan.LANServerController;
 
-> INSERT  1 : 2  @  1
+> CHANGE  1 : 2  @  1 : 9
 
-+ import net.minecraft.client.audio.PositionedSoundRecord;
+~ import net.minecraft.client.audio.PositionedSoundRecord;
 
-> INSERT  10 : 11  @  10
+> INSERT  2 : 3  @  2
 
 + import net.minecraft.util.ResourceLocation;
 
@@ -63,7 +63,7 @@
 + 			waitingForWorlds = true;
 + 			this.mc.getSaveLoader().flushCache();
 + 			this.mc.displayGuiScreen(new GuiScreenIntegratedServerBusy(this, "singleplayer.busy.listingworlds",
-+ 					"singleplayer.failed.listingworlds", () -> SingleplayerServerController.isReady(), (t, u) -> {
++ 					"singleplayer.failed.listingworlds", SingleplayerServerController::isReady, (t, u) -> {
 + 						GuiScreenIntegratedServerBusy tt = (GuiScreenIntegratedServerBusy) t;
 + 						Minecraft.getMinecraft().displayGuiScreen(
 + 								GuiScreenIntegratedServerBusy.createException(parentScreen, tt.failMessage, u));
@@ -112,7 +112,7 @@
 > CHANGE  1 : 5  @  1 : 7
 
 ~ 				this.mc.displayGuiScreen(new GuiScreenIntegratedServerBusy(this, "singleplayer.busy.deleting",
-~ 						"singleplayer.failed.deleting", () -> SingleplayerServerController.isReady()));
+~ 						"singleplayer.failed.deleting", SingleplayerServerController::isReady));
 ~ 			} else {
 ~ 				this.mc.displayGuiScreen(this);
 

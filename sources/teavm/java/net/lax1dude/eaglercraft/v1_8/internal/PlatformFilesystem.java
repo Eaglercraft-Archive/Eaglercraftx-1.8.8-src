@@ -22,9 +22,8 @@ import org.teavm.jso.typedarrays.DataView;
 
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.ByteBuffer;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.EaglerArrayBufferAllocator;
-import net.lax1dude.eaglercraft.v1_8.internal.vfs.BooleanResult;
+import net.lax1dude.eaglercraft.v1_8.internal.teavm.BooleanResult;
 import net.lax1dude.eaglercraft.v1_8.internal.vfs2.VFSIterator2;
-import net.lax1dude.eaglercraft.v1_8.sp.server.internal.ServerPlatformSingleplayer;
 
 /**
  * Copyright (c) 2022-2024 lax1dude, ayunami2000. All Rights Reserved.
@@ -46,17 +45,16 @@ public class PlatformFilesystem {
 	private static String filesystemDB = null;
 	private static IDBDatabase database = null;
 
-	public static void initialize() {
-		filesystemDB = "_net_lax1dude_eaglercraft_v1_8_internal_PlatformFilesystem_1_8_8_"
-				+ ServerPlatformSingleplayer.getClientConfigAdapter().getWorldsDB();
+	public static void initialize(String dbName) {
+		filesystemDB = "_net_lax1dude_eaglercraft_v1_8_internal_PlatformFilesystem_1_8_8_" + dbName;
 		DatabaseOpen dbOpen = AsyncHandlers.openDB(filesystemDB);
 		
 		if(dbOpen.failedLocked) {
-			throw new WorldsDatabaseLockedException(dbOpen.failedError);
+			throw new FilesystemDatabaseLockedException(dbOpen.failedError);
 		}
 		
 		if(dbOpen.failedInit) {
-			throw new WorldsDatabaseInitializationException(dbOpen.failedError);
+			throw new FilesystemDatabaseInitializationException(dbOpen.failedError);
 		}
 		
 		if(dbOpen.database == null) {
@@ -66,14 +64,14 @@ public class PlatformFilesystem {
 		database = dbOpen.database;
 	}
 
-	public static class WorldsDatabaseLockedException extends RuntimeException {
-		public WorldsDatabaseLockedException(String message) {
+	public static class FilesystemDatabaseLockedException extends RuntimeException {
+		public FilesystemDatabaseLockedException(String message) {
 			super(message);
 		}
 	}
 
-	public static class WorldsDatabaseInitializationException extends RuntimeException {
-		public WorldsDatabaseInitializationException(String message) {
+	public static class FilesystemDatabaseInitializationException extends RuntimeException {
+		public FilesystemDatabaseInitializationException(String message) {
 			super(message);
 		}
 	}

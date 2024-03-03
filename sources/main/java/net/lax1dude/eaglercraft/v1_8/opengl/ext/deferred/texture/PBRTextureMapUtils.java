@@ -46,7 +46,8 @@ public class PBRTextureMapUtils {
 		}
 		try {
 			List<IResource> ress = resMgr.getAllResources(new ResourceLocation(domain, fname));
-			for(IResource res : ress) {
+			for(int k = 0, l = ress.size(); k < l; ++k) {
+				IResource res = ress.get(k);
 				if(res.getResourcePackName().equals(resourcePack)) {
 					ImageData toRet = TextureUtil.readBufferedImage(res.getInputStream());
 					if(ext.equals("_s")) {

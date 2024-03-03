@@ -17,7 +17,7 @@
 
 > INSERT  3 : 7  @  3
 
-+ 		this.baseDisplayList = new int[EnumWorldBlockLayer.values().length];
++ 		this.baseDisplayList = new int[EnumWorldBlockLayer._VALUES.length];
 + 		for (int i = 0; i < this.baseDisplayList.length; ++i) {
 + 			this.baseDisplayList[i] = GLAllocation.generateDisplayLists();
 + 		}
@@ -37,7 +37,7 @@
 + 
 + 	public void rebuildChunk(float x, float y, float z, ChunkCompileTaskGenerator generator) {
 + 		super.rebuildChunk(x, y, z, generator);
-+ 		EnumWorldBlockLayer[] layers = EnumWorldBlockLayer.values();
++ 		EnumWorldBlockLayer[] layers = EnumWorldBlockLayer._VALUES;
 + 		for (int i = 0; i < layers.length; ++i) {
 + 			if (generator.getCompiledChunk().isLayerEmpty(layers[i])) {
 + 				EaglercraftGPU.flushDisplayList(this.baseDisplayList[i]);

@@ -34,8 +34,8 @@
 
 > CHANGE  2 : 4  @  2 : 5
 
-~ 					for (Object jsonelement : jsonarray1) {
-~ 						IChatComponent ichatcomponent1 = this.deserialize(jsonelement);
+~ 					for (int i = 0, l = jsonarray1.length(); i < l; ++i) {
+~ 						IChatComponent ichatcomponent1 = this.deserialize(jsonarray1.get(i));
 
 > CHANGE  9 : 11  @  9 : 11
 
@@ -131,9 +131,11 @@
 
 ~ 					JSONArray jsonarray = new JSONArray();
 
-> CHANGE  2 : 3  @  2 : 4
+> CHANGE  1 : 4  @  1 : 4
 
-~ 						jsonarray.put(this.serialize(ichatcomponent1));
+~ 					List<IChatComponent> lst = ichatcomponent.getSiblings();
+~ 					for (int i = 0, l = lst.size(); i < l; ++i) {
+~ 						jsonarray.put(this.serialize(lst.get(i)));
 
 > CHANGE  2 : 3  @  2 : 3
 
@@ -151,7 +153,13 @@
 
 ~ 						JSONArray jsonarray1 = new JSONArray();
 
-> CHANGE  3 : 4  @  3 : 5
+> CHANGE  1 : 4  @  1 : 2
+
+~ 						Object[] arr = chatcomponenttranslation.getFormatArgs();
+~ 						for (int i = 0; i < arr.length; ++i) {
+~ 							Object object = arr[i];
+
+> CHANGE  1 : 2  @  1 : 3
 
 ~ 								jsonarray1.put(this.serialize((IChatComponent) object));
 

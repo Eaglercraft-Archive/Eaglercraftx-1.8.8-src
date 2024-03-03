@@ -15,8 +15,13 @@
 
 > DELETE  2  @  2 : 3
 
-> CHANGE  37 : 38  @  37 : 38
+> CHANGE  29 : 30  @  29 : 30
 
-~ 					for (ItemStack itemstack1 : (List<ItemStack>) arraylist) {
+~ 		ArrayList<ItemStack> arraylist = Lists.newArrayList(this.recipeItems);
+
+> CHANGE  7 : 9  @  7 : 8
+
+~ 					for (int m = 0, l = arraylist.size(); m < l; ++m) {
+~ 						ItemStack itemstack1 = arraylist.get(m);
 
 > EOF

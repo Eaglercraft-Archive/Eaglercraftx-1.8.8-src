@@ -5,7 +5,9 @@
 # Version: 1.0
 # Author: lax1dude
 
-> INSERT  19 : 20  @  19
+> DELETE  5  @  5 : 9
+
+> INSERT  10 : 11  @  10
 
 + 
 

@@ -12,11 +12,8 @@ import java.sql.Statement;
 import java.util.Properties;
 import java.util.UUID;
 import java.util.logging.Level;
-import java.util.zip.DeflaterOutputStream;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
-import java.util.zip.InflaterInputStream;
-
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.EaglerXBungee;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.sqlite.EaglerDrivers;
 

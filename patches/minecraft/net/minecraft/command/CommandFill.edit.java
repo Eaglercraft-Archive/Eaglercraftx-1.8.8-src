@@ -5,12 +5,15 @@
 # Version: 1.0
 # Author: lax1dude
 
-> INSERT  22 : 23  @  22
+> DELETE  7  @  7 : 12
+
+> INSERT  10 : 11  @  10
 
 + 
 
-> CHANGE  129 : 130  @  129 : 130
+> CHANGE  129 : 131  @  129 : 130
 
-~ 				for (BlockPos blockpos5 : (ArrayList<BlockPos>) arraylist) {
+~ 				for (int m = 0, n = arraylist.size(); m < n; ++m) {
+~ 					BlockPos blockpos5 = (BlockPos) arraylist.get(m);
 
 > EOF

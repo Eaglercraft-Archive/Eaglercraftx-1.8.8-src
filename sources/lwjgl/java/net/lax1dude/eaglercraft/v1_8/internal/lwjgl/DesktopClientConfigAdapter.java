@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.json.JSONObject;
 
+import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 import net.lax1dude.eaglercraft.v1_8.EaglercraftVersion;
 import net.lax1dude.eaglercraft.v1_8.internal.IClientConfigAdapter;
 import net.lax1dude.eaglercraft.v1_8.sp.relay.RelayEntry;
@@ -51,17 +52,30 @@ public class DesktopClientConfigAdapter implements IClientConfigAdapter {
 	}
 
 	@Override
+	public String getResourcePacksDB() {
+		return "desktop";
+	}
+
+	@Override
 	public JSONObject dumpConfig() {
 		return new JSONObject("{\"container\":null,\"worldsDB\":\"desktop\"}");
 	}
 
+	private final List<RelayEntry> relays = new ArrayList<>();
+
 	@Override
 	public List<RelayEntry> getRelays() {
-		throw new UnsupportedOperationException("TODO");
+		if (relays.isEmpty()) {
+			int relayId = (new EaglercraftRandom()).nextInt(3);
+			relays.add(new RelayEntry("wss://relay.deev.is/", "lax1dude relay #1", relayId == 0));
+			relays.add(new RelayEntry("wss://relay.lax1dude.net/", "lax1dude relay #2", relayId == 1));
+			relays.add(new RelayEntry("wss://relay.shhnowisnottheti.me/", "ayunami relay #1", relayId == 2));
+		}
+		return relays;
 	}
 
 	@Override
-	public boolean checkShaderGLErrors() {
+	public boolean isCheckShaderGLErrors() {
 		return true;
 	}
 

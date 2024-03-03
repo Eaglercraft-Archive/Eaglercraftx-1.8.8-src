@@ -20,9 +20,7 @@
 
 > DELETE  6  @  6 : 7
 
-> DELETE  23  @  23 : 25
-
-> DELETE  2  @  2 : 9
+> DELETE  23  @  23 : 34
 
 > INSERT  3 : 4  @  3
 
@@ -34,9 +32,7 @@
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 
-> CHANGE  2 : 3  @  2 : 6
-
-~ 
+> DELETE  2  @  2 : 6
 
 > CHANGE  4 : 6  @  4 : 10
 
@@ -90,10 +86,11 @@
 + 			playerIn.addChatMessage(shaderF4Msg);
 + 		}
 
-> INSERT  23 : 34  @  23
+> INSERT  23 : 35  @  23
 
 + 		if (EagRuntime.getConfiguration().allowUpdateSvc()) {
-+ 			for (EntityPlayerMP playerItr : playerEntityList) {
++ 			for (int i = 0, l = playerEntityList.size(); i < l; ++i) {
++ 				EntityPlayerMP playerItr = playerEntityList.get(i);
 + 				if (playerItr != playerIn && playerItr.updateCertificate != null) {
 + 					nethandlerplayserver
 + 							.sendPacket(new S3FPacketCustomPayload("EAG|UpdateCert-1.8",
@@ -104,7 +101,13 @@
 + 			}
 + 		}
 
-> CHANGE  88 : 89  @  88 : 89
+> CHANGE  12 : 15  @  12 : 14
+
+~ 				List<Packet> lst = scoreboardIn.func_96550_d(scoreobjective);
+~ 				for (int j = 0, l = lst.size(); j < l; ++j) {
+~ 					playerIn.playerNetServerHandler.sendPacket(lst.get(j));
+
+> CHANGE  74 : 75  @  74 : 75
 
 ~ 		StatisticsFile statisticsfile = (StatisticsFile) this.playerStatFiles.get(entityplayermp.getName());
 
@@ -126,10 +129,11 @@
 ~ 						: null);
 ~ 	}
 
-> CHANGE  1 : 6  @  1 : 9
+> CHANGE  1 : 7  @  1 : 9
 
 ~ 	private boolean doesPlayerAlreadyExist(GameProfile gameprofile) {
-~ 		for (EntityPlayerMP player : this.playerEntityList) {
+~ 		for (int i = 0, l = playerEntityList.size(); i < l; ++i) {
+~ 			EntityPlayerMP player = playerEntityList.get(i);
 ~ 			if (player.getName().equalsIgnoreCase(gameprofile.getName())
 ~ 					|| player.getUniqueID().equals(gameprofile.getId())) {
 ~ 				return true;
@@ -140,20 +144,38 @@
 
 + 		return false;
 
-> CHANGE  3 : 4  @  3 : 4
+> CHANGE  3 : 5  @  3 : 5
 
 ~ 		EaglercraftUUID uuid = EntityPlayer.getUUID(profile);
+~ 		ArrayList<EntityPlayerMP> arraylist = Lists.newArrayList();
 
-> CHANGE  4 : 6  @  4 : 5
+> CHANGE  1 : 2  @  1 : 2
+
+~ 		for (int i = 0, l = this.playerEntityList.size(); i < l; ++i) {
+
+> CHANGE  1 : 3  @  1 : 2
 
 ~ 			if (entityplayermp.getUniqueID().equals(uuid)
 ~ 					|| entityplayermp.getName().equalsIgnoreCase(profile.getName())) {
 
+> CHANGE  9 : 11  @  9 : 11
+
+~ 		for (int i = 0, l = arraylist.size(); i < l; ++i) {
+~ 			arraylist.get(i).playerNetServerHandler.kickPlayerFromServer("You logged in from another location");
+
+> CHANGE  205 : 206  @  205 : 206
+
+~ 			for (int i = 0, l = this.playerEntityList.size(); i < l; ++i) {
+
+> CHANGE  30 : 31  @  30 : 31
+
+~ 		for (int i = 0; i < astring.length; ++i) {
+
 > CHANGE  9 : 10  @  9 : 10
 
-~ 		for (EntityPlayerMP entityplayermp1 : (ArrayList<EntityPlayerMP>) arraylist) {
+~ 		for (int i = 0; i < agameprofile.length; ++i) {
 
-> DELETE  254  @  254 : 271
+> DELETE  6  @  6 : 23
 
 > CHANGE  1 : 2  @  1 : 3
 
@@ -163,9 +185,22 @@
 
 ~ 		return lanCheats
 
-> DELETE  42  @  42 : 69
+> CHANGE  21 : 22  @  21 : 22
 
-> CHANGE  67 : 73  @  67 : 72
+~ 		for (int i = 0, l = this.playerEntityList.size(); i < l; ++i) {
+
+> CHANGE  14 : 15  @  14 : 15
+
+~ 		for (int i = 0, l = this.playerEntityList.size(); i < l; ++i) {
+
+> DELETE  5  @  5 : 32
+
+> CHANGE  40 : 42  @  40 : 41
+
+~ 		for (int i = 0, l = playerEntityList.size(); i < l; ++i) {
+~ 			EntityPlayerMP entityplayermp = playerEntityList.get(i);
+
+> CHANGE  26 : 32  @  26 : 31
 
 ~ 		if (parEntityPlayerMP2 == null || parEntityPlayerMP2.getName().equals(mcServer.getServerOwner())) {
 ~ 			if (parEntityPlayerMP2 != null) {
@@ -181,7 +216,11 @@
 ~ 			parEntityPlayerMP2.theItemInWorldManager.setGameType(lanGamemode);
 ~ 		}
 
-> CHANGE  25 : 27  @  25 : 27
+> CHANGE  7 : 8  @  7 : 8
+
+~ 		for (int i = 0, l = this.playerEntityList.size(); i < l; ++i) {
+
+> CHANGE  17 : 19  @  17 : 19
 
 ~ 		String name = playerIn.getName();
 ~ 		StatisticsFile statisticsfile = (StatisticsFile) this.playerStatFiles.get(name);
@@ -198,7 +237,13 @@
 
 ~ 			this.playerStatFiles.put(name, statisticsfile);
 
-> DELETE  13  @  13 : 14
+> CHANGE  8 : 11  @  8 : 9
+
+~ 			WorldServer[] srv = this.mcServer.worldServers;
+~ 			for (int i = 0; i < srv.length; ++i) {
+~ 				WorldServer worldserver = srv[i];
+
+> DELETE  4  @  4 : 5
 
 > CHANGE  7 : 8  @  7 : 8
 

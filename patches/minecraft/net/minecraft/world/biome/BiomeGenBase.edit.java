@@ -172,12 +172,14 @@
 ~ 		field_180279_ad = ocean;
 ~ 
 
-> INSERT  22 : 24  @  22
+> CHANGE  22 : 26  @  22 : 23
 
-+ 		explorationBiomesList.clear();
-+ 
+~ 		explorationBiomesList.clear();
+~ 
+~ 		for (int i = 0; i < biomeList.length; ++i) {
+~ 			BiomeGenBase biomegenbase = biomeList[i];
 
-> CHANGE  19 : 21  @  19 : 21
+> CHANGE  18 : 20  @  18 : 20
 
 ~ 		temperatureNoise = new NoiseGeneratorPerlin(new EaglercraftRandom(1234L), 1);
 ~ 		GRASS_COLOR_NOISE = new NoiseGeneratorPerlin(new EaglercraftRandom(2345L), 1);

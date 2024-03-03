@@ -188,8 +188,12 @@ public class VFile2 {
 			return null;
 		}
 		ByteBuffer readBuffer = PlatformFilesystem.eaglerRead(path);
+		byte[] copyBuffer = PlatformRuntime.castNativeByteBuffer(readBuffer);
+		if(copyBuffer != null) {
+			return copyBuffer;
+		}
 		try {
-			byte[] copyBuffer = new byte[readBuffer.remaining()];
+			copyBuffer = new byte[readBuffer.remaining()];
 			readBuffer.get(copyBuffer);
 			return copyBuffer;
 		}finally {
@@ -219,7 +223,12 @@ public class VFile2 {
 	
 	public void setAllBytes(byte[] bytes) {
 		assertNotRelative();
-		ByteBuffer copyBuffer = PlatformRuntime.allocateByteBuffer(bytes.length);
+		ByteBuffer copyBuffer = PlatformRuntime.castPrimitiveByteArray(bytes);
+		if(copyBuffer != null) {
+			PlatformFilesystem.eaglerWrite(path, copyBuffer);
+			return;
+		}
+		copyBuffer = PlatformRuntime.allocateByteBuffer(bytes.length);
 		try {
 			copyBuffer.put(bytes);
 			copyBuffer.flip();

@@ -7,7 +7,12 @@
 
 > DELETE  2  @  2 : 7
 
-> CHANGE  39 : 40  @  39 : 40
+> CHANGE  22 : 24  @  22 : 23
+
+~ 		for (int j = 0; j < field_146399_a.length; ++j) {
+~ 			GameSettings.Options gamesettings$options = field_146399_a[j];
+
+> CHANGE  16 : 17  @  16 : 17
 
 ~ 	protected void actionPerformed(GuiButton parGuiButton) {
 

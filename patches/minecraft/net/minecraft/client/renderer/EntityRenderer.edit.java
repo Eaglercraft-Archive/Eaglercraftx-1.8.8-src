@@ -333,12 +333,15 @@
 
 ~ 			GlStateManager.gluPerspective(this.getFOVModifier(partialTicks, true),
 
-> INSERT  8 : 10  @  8
+> CHANGE  55 : 60  @  55 : 58
 
-+ 		if (DeferredStateManager.isDeferredRenderer())
-+ 			return;
+~ 						if (!DeferredStateManager.isDeferredRenderer()) {
+~ 							this.mc.theWorld.spawnParticle(EnumParticleTypes.WATER_DROP, (double) blockpos2.getX() + d3,
+~ 									(double) ((float) blockpos2.getY() + 0.1F) + block.getBlockBoundsMaxY(),
+~ 									(double) blockpos2.getZ() + d4, 0.0D, 0.0D, 0.0D, new int[0]);
+~ 						}
 
-> INSERT  70 : 71  @  70
+> INSERT  20 : 21  @  20
 
 + 			boolean df = DeferredStateManager.isInDeferredPass();
 

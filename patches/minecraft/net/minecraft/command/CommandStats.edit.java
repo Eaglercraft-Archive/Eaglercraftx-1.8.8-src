@@ -5,7 +5,9 @@
 # Version: 1.0
 # Author: lax1dude
 
-> INSERT  21 : 22  @  21
+> DELETE  6  @  6 : 11
+
+> INSERT  10 : 11  @  10
 
 + 
 

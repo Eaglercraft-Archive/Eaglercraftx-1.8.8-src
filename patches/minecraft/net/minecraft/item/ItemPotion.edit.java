@@ -18,17 +18,32 @@
 
 > DELETE  6  @  6 : 9
 
-> CHANGE  64 : 65  @  64 : 65
+> CHANGE  62 : 63  @  62 : 63
 
-~ 				for (PotionEffect potioneffect : (List<PotionEffect>) list) {
+~ 			List<PotionEffect> list = this.getEffects(itemstack);
 
-> CHANGE  59 : 60  @  59 : 60
+> CHANGE  1 : 3  @  1 : 3
 
-~ 			for (PotionEffect potioneffect : (List<PotionEffect>) list) {
+~ 				for (int i = 0, l = list.size(); i < l; ++i) {
+~ 					entityplayer.addPotionEffect(new PotionEffect(list.get(i)));
 
-> CHANGE  37 : 38  @  37 : 38
+> CHANGE  56 : 57  @  56 : 57
 
-~ 				for (PotionEffect potioneffect : (List<PotionEffect>) list1) {
+~ 		List<PotionEffect> list = this.getEffects(meta);
+
+> CHANGE  1 : 3  @  1 : 3
+
+~ 			for (int i = 0, l = list.size(); i < l; ++i) {
+~ 				if (Potion.potionTypes[list.get(i).getPotionID()].isInstant()) {
+
+> CHANGE  33 : 34  @  33 : 34
+
+~ 			List<PotionEffect> list1 = Items.potionitem.getEffects(itemstack);
+
+> CHANGE  2 : 4  @  2 : 3
+
+~ 				for (int i = 0, l = list1.size(); i < l; ++i) {
+~ 					PotionEffect potioneffect = list1.get(i);
 
 > CHANGE  4 : 5  @  4 : 5
 

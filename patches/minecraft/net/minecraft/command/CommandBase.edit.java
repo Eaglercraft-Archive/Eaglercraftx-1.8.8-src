@@ -13,7 +13,9 @@
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
 
-> INSERT  19 : 20  @  19
+> DELETE  1  @  1 : 9
+
+> INSERT  10 : 11  @  10
 
 + 
 

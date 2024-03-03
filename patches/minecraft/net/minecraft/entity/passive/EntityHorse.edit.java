@@ -5,7 +5,12 @@
 # Version: 1.0
 # Author: lax1dude
 
-> INSERT  3 : 5  @  3
+> INSERT  2 : 4  @  2
+
++ import java.util.List;
++ 
+
+> INSERT  1 : 3  @  1
 
 + 
 + import net.lax1dude.eaglercraft.v1_8.sp.SingleplayerServerController;
@@ -14,7 +19,14 @@
 
 > DELETE  12  @  12 : 13
 
-> CHANGE  1015 : 1020  @  1015 : 1016
+> CHANGE  381 : 385  @  381 : 383
+
+~ 		List<Entity> lst = this.worldObj.getEntitiesInAABBexcluding(entityIn,
+~ 				entityIn.getEntityBoundingBox().addCoord(distance, distance, distance), horseBreedingSelector);
+~ 		for (int i = 0, l = lst.size(); i < l; ++i) {
+~ 			Entity entity1 = lst.get(i);
+
+> CHANGE  632 : 637  @  632 : 633
 
 ~ 		if (worldObj.isRemote && !SingleplayerServerController.isClientInEaglerSingleplayerOrLAN()) {
 ~ 			nbttagcompound.setString("OwnerUUID", this.getOwnerId());

@@ -9,11 +9,9 @@
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 
-> INSERT  28 : 29  @  28
+> DELETE  15  @  15 : 19
 
-+ 
-
-> CHANGE  2 : 3  @  2 : 3
+> CHANGE  11 : 12  @  11 : 12
 
 ~ 	private final EaglercraftRandom hellRNG;
 

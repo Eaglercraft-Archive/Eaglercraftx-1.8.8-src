@@ -18,7 +18,12 @@
 
 ~ 			return true;
 
-> INSERT  8 : 9  @  8
+> CHANGE  2 : 4  @  2 : 4
+
+~ 	private final boolean[] layersUsed = new boolean[EnumWorldBlockLayer._VALUES.length];
+~ 	private final boolean[] layersStarted = new boolean[EnumWorldBlockLayer._VALUES.length];
+
+> INSERT  4 : 5  @  4
 
 + 	private WorldRenderer.State stateWater;
 

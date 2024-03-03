@@ -21,4 +21,10 @@
 
 ~ 	public EaglerTextureAtlasSprite getParticleTexture() {
 
+> CHANGE  47 : 50  @  47 : 49
+
+~ 			EnumFacing[] facings = EnumFacing._VALUES;
+~ 			for (int j = 0; j < facings.length; ++j) {
+~ 				i += this.model.getFaceQuads(facings[j]).size();
+
 > EOF

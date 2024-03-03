@@ -19,4 +19,9 @@
 
 > DELETE  3  @  3 : 5
 
+> CHANGE  17 : 19  @  17 : 18
+
+~ 		for (int i = 0, l = parList.size(); i < l; ++i) {
+~ 			IResourcePack iresourcepack = parList.get(i);
+
 > EOF

@@ -45,7 +45,24 @@
 + 			++EaglerMinecraftServer.counterLightUpdate;
 + 		}
 
-> INSERT  146 : 149  @  146
+> CHANGE  20 : 23  @  20 : 21
+
+~ 						EnumFacing[] facings = EnumFacing.Plane.HORIZONTAL.facingsArray;
+~ 						for (int m = 0; m < facings.length; ++m) {
+~ 							EnumFacing enumfacing = facings[m];
+
+> CHANGE  6 : 8  @  6 : 7
+
+~ 						for (int m = 0; m < facings.length; ++m) {
+~ 							EnumFacing enumfacing1 = facings[m];
+
+> CHANGE  110 : 113  @  110 : 111
+
+~ 				EnumFacing[] facings = EnumFacing.Plane.HORIZONTAL.facingsArray;
+~ 				for (int m = 0; m < facings.length; ++m) {
+~ 					EnumFacing enumfacing = facings[m];
+
+> INSERT  7 : 10  @  7
 
 + 			if (!this.worldObj.isRemote) {
 + 				++EaglerMinecraftServer.counterLightUpdate;
@@ -152,5 +169,20 @@
 > CHANGE  113 : 114  @  113 : 114
 
 ~ 		if (chunkManager != null && k == 255) {
+
+> INSERT  42 : 43  @  42
+
++ 			EnumFacing[] facings = EnumFacing._VALUES;
+
+> CHANGE  5 : 7  @  5 : 7
+
+~ 					for (int m = 0; m < facings.length; ++m) {
+~ 						BlockPos blockpos2 = blockpos1.offset(facings[m]);
+
+> CHANGE  29 : 32  @  29 : 30
+
+~ 					EnumFacing[] facings = EnumFacing.Plane.HORIZONTAL.facingsArray;
+~ 					for (int i = 0; i < facings.length; ++i) {
+~ 						EnumFacing enumfacing = facings[i];
 
 > EOF

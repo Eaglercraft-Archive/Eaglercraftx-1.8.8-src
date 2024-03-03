@@ -34,7 +34,7 @@ void main() {
 	float lumaHDR = textureLod(u_framebufferLumaAvgInput, vec2(0.5), 0.0).r;
 	vec3 input3f = textureLod(u_lightingHDRFramebufferTexture, v_position2f, 0.0).rgb;
 
-	input3f /= (0.1 + clamp(lumaHDR * 6.0, 0.2, 4.0));
+	input3f /= (0.07 + clamp(lumaHDR * 6.0, 0.2, 4.0));
 
 	input3f *= u_exposure3f;
 

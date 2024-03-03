@@ -7,4 +7,9 @@
 
 > DELETE  2  @  2 : 4
 
+> CHANGE  28 : 30  @  28 : 30
+
+~ 		for (int i = 0; i < this.squidTentacles.length; ++i) {
+~ 			this.squidTentacles[i].rotateAngleX = f;
+
 > EOF

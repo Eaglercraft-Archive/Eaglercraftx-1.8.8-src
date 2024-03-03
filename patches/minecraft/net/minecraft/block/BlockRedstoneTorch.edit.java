@@ -15,7 +15,21 @@
 ~ import com.google.common.collect.Maps;
 ~ 
 
-> CHANGE  76 : 77  @  76 : 77
+> CHANGE  51 : 55  @  51 : 53
+
+~ 			EnumFacing[] facings = EnumFacing._VALUES;
+~ 			BlockPos tmp = new BlockPos(0, 0, 0);
+~ 			for (int i = 0; i < facings.length; ++i) {
+~ 				world.notifyNeighborsOfStateChange(blockpos.offsetEvenFaster(facings[i], tmp), this);
+
+> CHANGE  7 : 11  @  7 : 9
+
+~ 			EnumFacing[] facings = EnumFacing._VALUES;
+~ 			BlockPos tmp = new BlockPos(0, 0, 0);
+~ 			for (int i = 0; i < facings.length; ++i) {
+~ 				world.notifyNeighborsOfStateChange(blockpos.offsetEvenFaster(facings[i], tmp), this);
+
+> CHANGE  14 : 15  @  14 : 15
 
 ~ 	public void randomTick(World var1, BlockPos var2, IBlockState var3, EaglercraftRandom var4) {
 

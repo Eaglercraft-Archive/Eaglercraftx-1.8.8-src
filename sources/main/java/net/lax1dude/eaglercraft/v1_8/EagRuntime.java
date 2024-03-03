@@ -14,6 +14,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.function.Consumer;
 
+import net.lax1dude.eaglercraft.v1_8.internal.EnumPlatformANGLE;
 import net.lax1dude.eaglercraft.v1_8.internal.EnumPlatformAgent;
 import net.lax1dude.eaglercraft.v1_8.internal.EnumPlatformOS;
 import net.lax1dude.eaglercraft.v1_8.internal.EnumPlatformType;
@@ -28,7 +29,7 @@ import net.lax1dude.eaglercraft.v1_8.opengl.EaglercraftGPU;
 import net.lax1dude.eaglercraft.v1_8.update.UpdateService;
 
 /**
- * Copyright (c) 2022-2023 lax1dude, ayunami2000. All Rights Reserved.
+ * Copyright (c) 2022-2024 lax1dude, ayunami2000. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -48,6 +49,10 @@ public class EagRuntime {
 	private static final Logger exceptionLogger = LogManager.getLogger("Exception");
 	private static boolean ssl = false;
 	private static boolean offlineDownloadURL = false;
+	private static EnumPlatformAgent userAgent = null;
+	private static String userAgentString = null;
+	private static EnumPlatformOS operatingSystem = null;
+	private static EnumPlatformANGLE angleBackend = null;
 	
 	public static String getVersion() {
 		return "EagRuntimeX 1.0";
@@ -58,6 +63,10 @@ public class EagRuntime {
 		PlatformRuntime.create();
 		ssl = PlatformRuntime.requireSSL();
 		offlineDownloadURL = PlatformRuntime.isOfflineDownloadURL();
+		userAgent = PlatformRuntime.getPlatformAgent();
+		userAgentString = PlatformRuntime.getUserAgentString();
+		operatingSystem = PlatformRuntime.getPlatformOS();
+		angleBackend = PlatformRuntime.getPlatformANGLE();
 		UpdateService.initialize();
 		EaglerXBungeeVersion.initialize();
 		EaglercraftGPU.warmUpCache();
@@ -72,15 +81,19 @@ public class EagRuntime {
 	}
 
 	public static EnumPlatformAgent getPlatformAgent() {
-		return PlatformRuntime.getPlatformAgent();
+		return userAgent;
 	}
-	
+
 	public static String getUserAgentString() {
-		return PlatformRuntime.getUserAgentString();
+		return userAgentString;
 	}
 
 	public static EnumPlatformOS getPlatformOS() {
-		return PlatformRuntime.getPlatformOS();
+		return operatingSystem;
+	}
+
+	public static EnumPlatformANGLE getPlatformANGLE() {
+		return angleBackend;
 	}
 
 	public static ByteBuffer allocateByteBuffer(int length) {

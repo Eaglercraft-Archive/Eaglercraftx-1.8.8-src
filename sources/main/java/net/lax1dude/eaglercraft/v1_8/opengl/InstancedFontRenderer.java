@@ -202,7 +202,7 @@ public class InstancedFontRenderer {
 		_wglVertexAttribDivisor(0, 0);
 
 		EaglercraftGPU.bindGLArrayBuffer(instancesBuffer);
-		_wglBufferData(GL_ARRAY_BUFFER, fontDataBuffer.remaining(), GL_STATIC_DRAW);
+		_wglBufferData(GL_ARRAY_BUFFER, fontDataBuffer.remaining(), GL_STREAM_DRAW);
 
 		_wglEnableVertexAttribArray(1);
 		_wglVertexAttribPointer(1, 2, GL_SHORT, false, 10, 0);

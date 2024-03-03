@@ -50,4 +50,14 @@
 + 			return true;
 + 		}
 
+> CHANGE  37 : 39  @  37 : 39
+
+~ 		for (int l = 0; l < aint.length; ++l) {
+~ 			amovingobjectposition[aint[l]] = null;
+
+> CHANGE  5 : 7  @  5 : 6
+
+~ 		for (int l = 0; l < amovingobjectposition.length; ++l) {
+~ 			MovingObjectPosition movingobjectposition = amovingobjectposition[l];
+
 > EOF

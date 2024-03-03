@@ -14,4 +14,14 @@
 + import com.google.common.collect.Sets;
 + 
 
+> CHANGE  35 : 37  @  35 : 37
+
+~ 		for (int i = 0, l = keybindArray.size(); i < l; ++i) {
+~ 			keybindArray.get(i).unpressKey();
+
+> CHANGE  7 : 9  @  7 : 8
+
+~ 		for (int i = 0, l = keybindArray.size(); i < l; ++i) {
+~ 			KeyBinding keybinding = keybindArray.get(i);
+
 > EOF
