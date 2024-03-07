@@ -18,18 +18,13 @@
 
 ~ 		ArrayList<BlockPos> arraylist = Lists.newArrayList();
 
-> INSERT  3 : 4  @  3
-
-+ 		BlockPos tmp = new BlockPos(0, 0, 0);
-
-> CHANGE  5 : 9  @  5 : 7
+> CHANGE  8 : 11  @  8 : 9
 
 ~ 			EnumFacing[] facings = EnumFacing._VALUES;
 ~ 			for (int k = 0; k < facings.length; ++k) {
 ~ 				EnumFacing enumfacing = facings[k];
-~ 				BlockPos blockpos1 = blockpos.offsetEvenFaster(enumfacing, tmp);
 
-> CHANGE  15 : 17  @  15 : 17
+> CHANGE  16 : 18  @  16 : 18
 
 ~ 		for (int j = 0, l = arraylist.size(); j < l; ++j) {
 ~ 			worldIn.notifyNeighborsOfStateChange(arraylist.get(j), Blocks.air);
