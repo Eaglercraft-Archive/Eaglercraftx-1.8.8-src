@@ -30,7 +30,9 @@
 
 > DELETE  8  @  8 : 11
 
-> DELETE  1  @  1 : 3
+> CHANGE  1 : 2  @  1 : 3
+
+~ import net.minecraft.network.play.server.S41PacketServerDifficulty;
 
 > DELETE  1  @  1 : 2
 
@@ -118,8 +120,13 @@
 
 > DELETE  1  @  1 : 2
 
-> CHANGE  39 : 44  @  39 : 40
+> DELETE  32  @  32 : 35
 
+> CHANGE  3 : 11  @  3 : 5
+
+~ 		if (this.worldServers[0].getWorldInfo().getDifficulty() == null) {
+~ 			this.setDifficultyForAllWorlds(this.getDifficulty());
+~ 		}
 ~ 		this.isSpawnChunksLoaded = this.worldServers[0].getWorldInfo().getGameRulesInstance()
 ~ 				.getBoolean("loadSpawnChunks");
 ~ 		if (this.isSpawnChunksLoaded) {
@@ -248,7 +255,24 @@
 
 > DELETE  4  @  4 : 8
 
-> DELETE  35  @  35 : 55
+> INSERT  16 : 19  @  16
+
++ 		this.getConfigurationManager().sendPacketToAllPlayers(new S41PacketServerDifficulty(
++ 				this.worldServers[0].getDifficulty(), this.worldServers[0].getWorldInfo().isDifficultyLocked()));
++ 	}
+
+> INSERT  1 : 9  @  1
+
++ 	public void setDifficultyLockedForAllWorlds(boolean locked) {
++ 		for (int i = 0; i < this.worldServers.length; ++i) {
++ 			WorldServer worldserver = this.worldServers[i];
++ 			if (worldserver != null) {
++ 				worldserver.getWorldInfo().setDifficultyLocked(locked);
++ 			}
++ 		}
++ 
+
+> DELETE  18  @  18 : 38
 
 > DELETE  13  @  13 : 64
 

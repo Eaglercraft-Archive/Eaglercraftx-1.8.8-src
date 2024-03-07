@@ -59,7 +59,11 @@
 ~ 				I18n.format("options.debugConsoleButton", new Object[0])));
 ~ 		btn.enabled = EagRuntime.getPlatformType() != EnumPlatformType.DESKTOP;
 
-> CHANGE  24 : 25  @  24 : 25
+> INSERT  17 : 18  @  17
+
++ 			SingleplayerServerController.setDifficulty(-1);
+
+> CHANGE  7 : 8  @  7 : 8
 
 ~ 	protected void actionPerformed(GuiButton parGuiButton) {
 

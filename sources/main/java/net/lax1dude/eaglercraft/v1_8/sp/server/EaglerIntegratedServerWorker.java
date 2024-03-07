@@ -257,7 +257,11 @@ public class EaglerIntegratedServerWorker {
 			case IPCPacket0ASetWorldDifficulty.ID: {
 				IPCPacket0ASetWorldDifficulty pkt = (IPCPacket0ASetWorldDifficulty)ipc;
 				if(!isServerStopped()) {
-					currentProcess.setDifficultyForAllWorlds(EnumDifficulty.getDifficultyEnum(pkt.difficulty));
+					if(pkt.difficulty == (byte)-1) {
+						currentProcess.setDifficultyLockedForAllWorlds(true);
+					}else {
+						currentProcess.setDifficultyForAllWorlds(EnumDifficulty.getDifficultyEnum(pkt.difficulty));
+					}
 				}else {
 					logger.warn("Client tried to set difficulty while server was stopped");
 				}
