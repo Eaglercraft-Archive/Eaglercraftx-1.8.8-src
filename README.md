@@ -124,6 +124,8 @@ The default eaglercraftXOpts values is this:
 - `container:` the ID of the HTML element to create the canvas in **(required)**
 - `assetsURI:` the URL of the assets.epk file **(required)**
 - `localesURI:` the URL where extra .lang files can be found
+- `lang`: the default language to use for the game (like "en_US")
+- `joinServer`: server address to join when the game launches
 - `worldsDB:` the name of the IndexedDB database to store worlds in
 - `resourcePacksDB:` the name of the IndexedDB database to store resource packs in
 - `demoMode:` whether to launch the game in java edition demo mode

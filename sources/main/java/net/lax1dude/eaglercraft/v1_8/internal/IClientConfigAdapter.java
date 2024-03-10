@@ -44,7 +44,7 @@ public interface IClientConfigAdapter {
 
 	String getResourcePacksDB();
 
-	JSONObject dumpConfig();
+	JSONObject getIntegratedServerOpts();
 
 	List<RelayEntry> getRelays();
 

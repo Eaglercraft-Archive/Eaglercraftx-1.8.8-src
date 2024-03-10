@@ -1,8 +1,10 @@
 package net.lax1dude.eaglercraft.v1_8.update;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
@@ -36,7 +38,29 @@ public class UpdateService {
 
 	private static UpdateCertificate latestUpdateFound = null;
 	private static final Set<UpdateCertificate> availableUpdates = new HashSet();
+	private static final Set<RawKnownCertHolder> fastUpdateKnownCheckSet = new HashSet();
 	private static final Set<UpdateCertificate> dismissedUpdates = new HashSet();
+
+	private static class RawKnownCertHolder {
+
+		private final byte[] data;
+		private final int hashcode;
+		private final long age;
+
+		public RawKnownCertHolder(byte[] data) {
+			this.data = data;
+			this.hashcode = Arrays.hashCode(data);
+			this.age = System.currentTimeMillis();
+		}
+
+		public int hashCode() {
+			return hashcode;
+		}
+
+		public boolean equals(Object o) {
+			return o != null && (o == this || ((o instanceof RawKnownCertHolder) && Arrays.equals(((RawKnownCertHolder)o).data, data)));
+		}
+	}
 
 	public static boolean supported() {
 		return EaglercraftVersion.enableUpdateService && EagRuntime.getConfiguration().allowUpdateSvc() && PlatformUpdateSvc.supported();
@@ -102,6 +126,16 @@ public class UpdateService {
 		if (EagRuntime.getConfiguration().allowUpdateDL()) {
 			synchronized(availableUpdates) {
 				try {
+					if(certificateData.length > 32767) {
+						throw new CertificateInvalidException("Certificate is too large! (" + certificateData.length + " bytes)");
+					}
+					if(!fastUpdateKnownCheckSet.add(new RawKnownCertHolder(certificateData))) {
+						if (EagRuntime.getConfiguration().isLogInvalidCerts()) {
+							logger.info("Ignoring {} byte certificate that has already been processed", certificateData.length);
+						}
+						freeMemory();
+						return;
+					}
 					UpdateCertificate cert = UpdateCertificate.parseAndVerifyCertificate(certificateData);
 					if (EaglercraftVersion.updateBundlePackageName.equalsIgnoreCase(cert.bundlePackageName)) {
 						if (myUpdateCert == null || !Arrays.equals(cert.bundleDataHash, myUpdateCert.bundleDataHash)) {
@@ -136,6 +170,17 @@ public class UpdateService {
 						logger.error(t);
 					}
 				}
+			}
+		}
+	}
+
+	private static void freeMemory() {
+		if(fastUpdateKnownCheckSet.size() > 127) {
+			List<RawKnownCertHolder> lst = new ArrayList(fastUpdateKnownCheckSet);
+			fastUpdateKnownCheckSet.clear();
+			lst.sort((c1, c2) -> { return (int)(c2.age - c1.age); });
+			for(int i = 0; i < 64; ++i) {
+				fastUpdateKnownCheckSet.add(lst.get(i));
 			}
 		}
 	}

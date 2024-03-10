@@ -57,7 +57,7 @@ public class DesktopClientConfigAdapter implements IClientConfigAdapter {
 	}
 
 	@Override
-	public JSONObject dumpConfig() {
+	public JSONObject getIntegratedServerOpts() {
 		return new JSONObject("{\"container\":null,\"worldsDB\":\"desktop\"}");
 	}
 

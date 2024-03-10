@@ -1,4 +1,4 @@
-package net.minecraft.entity;
+package net.lax1dude.eaglercraft.v1_8.minecraft;
 
 import net.minecraft.world.World;
 

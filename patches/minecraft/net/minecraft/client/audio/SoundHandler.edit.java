@@ -13,7 +13,7 @@
 
 > DELETE  2  @  2 : 3
 
-> CHANGE  1 : 14  @  1 : 11
+> CHANGE  1 : 15  @  1 : 11
 
 ~ import java.util.Set;
 ~ 
@@ -25,6 +25,7 @@
 ~ import com.google.common.collect.Lists;
 ~ 
 ~ import net.lax1dude.eaglercraft.v1_8.IOUtils;
+~ import net.lax1dude.eaglercraft.v1_8.ThreadLocalRandom;
 ~ import net.lax1dude.eaglercraft.v1_8.json.JSONTypeProvider;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
@@ -87,6 +88,6 @@
 
 > CHANGE  6 : 7  @  6 : 7
 
-~ 			return (SoundEventAccessorComposite) arraylist.get((new EaglercraftRandom()).nextInt(arraylist.size()));
+~ 			return (SoundEventAccessorComposite) arraylist.get(ThreadLocalRandom.current().nextInt(arraylist.size()));
 
 > EOF

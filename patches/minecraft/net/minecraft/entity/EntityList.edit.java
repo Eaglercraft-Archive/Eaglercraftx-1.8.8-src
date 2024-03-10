@@ -7,7 +7,7 @@
 
 > DELETE  2  @  2 : 4
 
-> CHANGE  4 : 10  @  4 : 8
+> CHANGE  4 : 11  @  4 : 8
 
 ~ 
 ~ import com.google.common.collect.Lists;
@@ -15,6 +15,7 @@
 ~ 
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
+~ import net.lax1dude.eaglercraft.v1_8.minecraft.EntityConstructor;
 
 > DELETE  66  @  66 : 68
 

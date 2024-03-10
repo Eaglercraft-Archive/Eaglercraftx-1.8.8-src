@@ -191,7 +191,7 @@ public class ClientPlatformSingleplayer {
 			}
 		});
 		registerPacketHandler(workerObj, new WorkerBinaryPacketHandlerImpl());
-		sendWorkerStartPacket(workerObj, PlatformRuntime.getClientConfigAdapter().dumpConfig().toString());
+		sendWorkerStartPacket(workerObj, PlatformRuntime.getClientConfigAdapter().getIntegratedServerOpts().toString());
 		
 	}
 

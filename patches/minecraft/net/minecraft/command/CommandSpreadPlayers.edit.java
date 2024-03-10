@@ -5,10 +5,11 @@
 # Version: 1.0
 # Author: lax1dude
 
-> CHANGE  9 : 11  @  9 : 10
+> CHANGE  9 : 12  @  9 : 10
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ import net.lax1dude.eaglercraft.v1_8.HString;
+~ import net.lax1dude.eaglercraft.v1_8.ThreadLocalRandom;
 
 > DELETE  1  @  1 : 9
 
@@ -18,7 +19,7 @@
 
 > CHANGE  61 : 62  @  61 : 62
 
-~ 		EaglercraftRandom random = new EaglercraftRandom();
+~ 		EaglercraftRandom random = ThreadLocalRandom.current();
 
 > CHANGE  15 : 16  @  15 : 16
 

@@ -4,9 +4,7 @@ import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.teavm.jso.JSBody;
 import org.teavm.jso.JSFunctor;
 import org.teavm.jso.JSObject;
@@ -22,6 +20,9 @@ import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.EaglercraftVersion;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformApplication;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformRuntime;
+import net.lax1dude.eaglercraft.v1_8.internal.teavm.opts.JSEaglercraftXOptsAssetsURI;
+import net.lax1dude.eaglercraft.v1_8.internal.teavm.opts.JSEaglercraftXOptsAssetsURIsArray;
+import net.lax1dude.eaglercraft.v1_8.internal.teavm.opts.JSEaglercraftXOptsRoot;
 import net.lax1dude.eaglercraft.v1_8.log4j.ILogRedirector;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.profile.EaglerProfile;
@@ -52,8 +53,6 @@ public class ClientMain {
 		return crashImage.substring(0);
 	}
 
-	private static String crashScreenOptsDump = null;
-
 	@JSBody(params = {}, script = "if((typeof window.__isEaglerX188Running === \"string\") && window.__isEaglerX188Running === \"yes\") return true; window.__isEaglerX188Running = \"yes\"; return false;")
 	private static native boolean getRunningFlag();
 
@@ -66,7 +65,7 @@ public class ClientMain {
 		}
 		try {
 			systemOut.println("ClientMain: [INFO] eaglercraftx is starting...");
-			String opts = getEaglerXOpts();
+			JSObject opts = getEaglerXOpts();
 			
 			if(opts == null) {
 				systemErr.println("ClientMain: [ERROR] the \"window.eaglercraftXOpts\" variable is undefined");
@@ -76,38 +75,40 @@ public class ClientMain {
 			}
 			
 			try {
-				JSONObject eaglercraftOpts = new JSONObject(opts);
+				JSEaglercraftXOptsRoot eaglercraftOpts = (JSEaglercraftXOptsRoot)opts;
 				
-				configRootElementId = eaglercraftOpts.getString("container");
+				configRootElementId = eaglercraftOpts.getContainer();
+				if(configRootElementId == null) {
+					throw new JSONException("window.eaglercraftXOpts.container is undefined!");
+				}
 				configRootElement = Window.current().getDocument().getElementById(configRootElementId);
 				
-				Object epkConfig = eaglercraftOpts.get("assetsURI");
-				if(epkConfig instanceof JSONArray) {
-					JSONArray epkConfigArr = (JSONArray)epkConfig;
-					if(epkConfigArr.length() == 0) {
+				String epkSingleURL = eaglercraftOpts.getAssetsURI();
+				if(epkSingleURL != null) {
+					configEPKFiles = new EPKFileEntry[] { new EPKFileEntry(epkSingleURL, "") };
+				}else {
+					JSEaglercraftXOptsAssetsURIsArray epkURLs = eaglercraftOpts.getAssetsURIArray();
+					int len = epkURLs.getLength();
+					if(len == 0) {
 						throw new JSONException("assetsURI array cannot be empty!");
 					}
-					configEPKFiles = new EPKFileEntry[epkConfigArr.length()];
-					for(int i = 0, l = configEPKFiles.length; i < l; ++i) {
-						configEPKFiles[i] = parseEntry(epkConfigArr.getJSONObject(i));
-					}
-				}else if(epkConfig instanceof JSONObject) {
-					configEPKFiles = new EPKFileEntry[] { parseEntry((JSONObject)epkConfig) };
-				}else if(epkConfig instanceof String) {
-					String epkConfigStr = (String)epkConfig;
-					configEPKFiles = new EPKFileEntry[] { new EPKFileEntry(epkConfigStr, "") };
-					if(epkConfigStr.length() > 128) {
-						eaglercraftOpts.put("assetsURI", epkConfigStr.substring(0, 128) + " ... ");
+					configEPKFiles = new EPKFileEntry[len];
+					for(int i = 0; i < len; ++i) {
+						JSEaglercraftXOptsAssetsURI etr = epkURLs.get(i);
+						String url = etr.getURL();
+						if(url == null) {
+							throw new JSONException("assetsURI is missing a url!");
+						}
+						configEPKFiles[i] = new EPKFileEntry(url, etr.getPath(""));
 					}
 				}
 				
-				configLocalesFolder = eaglercraftOpts.optString("localesURI", "lang");
+				configLocalesFolder = eaglercraftOpts.getLocalesURI("lang");
 				if(configLocalesFolder.endsWith("/")) {
 					configLocalesFolder = configLocalesFolder.substring(0, configLocalesFolder.length() - 1);
 				}
 				
-				((TeaVMClientConfigAdapter)TeaVMClientConfigAdapter.instance).loadJSON(eaglercraftOpts);
-				crashScreenOptsDump = eaglercraftOpts.toString();
+				((TeaVMClientConfigAdapter)TeaVMClientConfigAdapter.instance).loadNative(eaglercraftOpts);
 				
 				systemOut.println("ClientMain: [INFO] configuration was successful");
 			}catch(Throwable t) {
@@ -192,9 +193,9 @@ public class ClientMain {
 	}
 	
 	@JSBody(params = {}, script = "if(typeof window.eaglercraftXOpts === \"undefined\") {return null;}"
-			+ "else if(typeof window.eaglercraftXOpts === \"string\") {return window.eaglercraftXOpts;}"
-			+ "else {return JSON.stringify(window.eaglercraftXOpts);}")
-	private static native String getEaglerXOpts();
+			+ "else if(typeof window.eaglercraftXOpts === \"string\") {return JSON.parse(window.eaglercraftXOpts);}"
+			+ "else {return window.eaglercraftXOpts;}")
+	private static native JSObject getEaglerXOpts();
 
 	public static class EPKFileEntry {
 		
@@ -205,18 +206,6 @@ public class ClientMain {
 			this.url = url;
 			this.path = path;
 		}
-	}
-
-	private static EPKFileEntry parseEntry(JSONObject obj) {
-		String url = obj.getString("url");
-		String path = obj.optString("path", "");
-		if(url.length() > 128) {
-			obj.put("url", url.substring(0, 128) + " ... ");
-		}
-		if(path == null) {
-			path = "";
-		}
-		return new EPKFileEntry(url, path);
 	}
 
 	public static String configRootElementId = null;
@@ -269,7 +258,7 @@ public class ClientMain {
 			str.append(addWebGLToCrash());
 			str.append('\n');
 			str.append("window.eaglercraftXOpts = ");
-			str.append(crashScreenOptsDump).append('\n');
+			str.append(TeaVMClientConfigAdapter.instance.toString()).append('\n');
 			str.append('\n');
 			str.append("currentTime = ");
 			str.append(EagRuntime.fixDateFormat(new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z")).format(new Date())).append('\n');
