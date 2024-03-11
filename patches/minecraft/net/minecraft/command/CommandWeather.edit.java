@@ -7,7 +7,7 @@
 
 > CHANGE  3 : 5  @  3 : 8
 
-~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
+~ 
 ~ import net.lax1dude.eaglercraft.v1_8.ThreadLocalRandom;
 
 > INSERT  6 : 7  @  6

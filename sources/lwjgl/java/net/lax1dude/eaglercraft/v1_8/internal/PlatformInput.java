@@ -192,6 +192,10 @@ public class PlatformInput {
 		cursorHand = glfwCreateStandardCursor(GLFW_HAND_CURSOR);
 		cursorText = glfwCreateStandardCursor(GLFW_IBEAM_CURSOR);
 		glfwSetCursor(glfwWindow, cursorDefault);
+
+		if(!fullscreen && startupFullscreen) {
+			toggleFullscreen();
+		}
 	}
 	
 	public static int getWindowWidth() {
@@ -386,6 +390,7 @@ public class PlatformInput {
 	}
 
 	private static boolean fullscreen = false;
+	private static boolean startupFullscreen = false;
 	private static int[] lastPos = new int[4];
 
 	public static void toggleFullscreen() {
@@ -405,6 +410,10 @@ public class PlatformInput {
 			glfwSetWindowMonitor(win, mon, 0, 0, mode.width(), mode.height(), mode.refreshRate());
 		}
 		fullscreen = !fullscreen;
+	}
+
+	public static void setStartupFullscreen(boolean bool) {
+		startupFullscreen = bool;
 	}
 
 	// https://stackoverflow.com/a/31526753

@@ -10,7 +10,6 @@ import net.lax1dude.eaglercraft.v1_8.minecraft.GuiScreenGenericErrorMessage;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.client.resources.ResourcePackRepository;
 
 /**
  * Copyright (c) 2024 lax1dude. All Rights Reserved.

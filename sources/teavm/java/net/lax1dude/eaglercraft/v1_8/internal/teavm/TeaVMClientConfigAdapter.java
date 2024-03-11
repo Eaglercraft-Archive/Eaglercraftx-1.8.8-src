@@ -4,13 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
-import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 import net.lax1dude.eaglercraft.v1_8.EaglercraftVersion;
 import net.lax1dude.eaglercraft.v1_8.ThreadLocalRandom;
 import net.lax1dude.eaglercraft.v1_8.sp.relay.RelayManager;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.teavm.jso.JSBody;
 import org.teavm.jso.JSObject;
 
 import net.lax1dude.eaglercraft.v1_8.internal.IClientConfigAdapter;

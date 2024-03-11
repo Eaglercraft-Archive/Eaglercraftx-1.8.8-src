@@ -154,8 +154,9 @@
 
 > DELETE  3  @  3 : 6
 
-> CHANGE  6 : 8  @  6 : 7
+> CHANGE  5 : 8  @  5 : 7
 
+~ 			} catch (Throwable var2) {
 ~ 				logger.error("Failed to load resource pack icon for \"{}\"!", reResourcePack.resourcePackFile);
 ~ 				logger.error(var2);
 

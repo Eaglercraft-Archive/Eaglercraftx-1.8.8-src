@@ -6,6 +6,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.EagUtils;
 import net.lax1dude.eaglercraft.v1_8.internal.EnumPlatformANGLE;
+import net.lax1dude.eaglercraft.v1_8.internal.PlatformInput;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformRuntime;
 import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.program.ShaderSource;
 import net.lax1dude.eaglercraft.v1_8.sp.relay.RelayManager;
@@ -40,23 +41,32 @@ public class LWJGLEntryPoint {
 			System.err.println("Could not set system look and feel: " + e.toString());
 		}
 		
-		LaunchRenderDocDialog lr = new LaunchRenderDocDialog();
-		lr.setLocationRelativeTo(null);
-		lr.setVisible(true);
-		
-		while(lr.isVisible()) {
-			EagUtils.sleep(100l);
-		}
-		
-		lr.dispose();
-		
-		getANGLEPlatformFromArgs(args);
-		
+		boolean hideRenderDocDialog = false;
 		for(int i = 0; i < args.length; ++i) {
 			if(args[i].equalsIgnoreCase("highp")) {
 				ShaderSource.setHighP(true);
 			}
+			if(args[i].equalsIgnoreCase("hide-renderdoc")) {
+				hideRenderDocDialog = true;
+			}
+			if(args[i].equalsIgnoreCase("fullscreen")) {
+				PlatformInput.setStartupFullscreen(true);
+			}
 		}
+		
+		if(!hideRenderDocDialog) {
+			LaunchRenderDocDialog lr = new LaunchRenderDocDialog();
+			lr.setLocationRelativeTo(null);
+			lr.setVisible(true);
+			
+			while(lr.isVisible()) {
+				EagUtils.sleep(100l);
+			}
+			
+			lr.dispose();
+		}
+		
+		getANGLEPlatformFromArgs(args);
 		
 		RelayManager.relayManager.load(EagRuntime.getStorage("r"));
 

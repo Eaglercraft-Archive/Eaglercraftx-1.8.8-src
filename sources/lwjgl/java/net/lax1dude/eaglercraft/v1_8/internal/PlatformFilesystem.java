@@ -80,7 +80,8 @@ public class PlatformFilesystem {
 				}
 			}
 		}else {
-			throw new EaglerFileSystemException("Not a file: " + f.getAbsolutePath());
+			logger.warn("Tried to read file that doesn't exist: \"{}\"", f.getAbsolutePath());
+			return null;
 		}
 	}
 

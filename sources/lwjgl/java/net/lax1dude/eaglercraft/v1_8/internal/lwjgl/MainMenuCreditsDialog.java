@@ -2,7 +2,6 @@ package net.lax1dude.eaglercraft.v1_8.internal.lwjgl;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 import java.awt.BorderLayout;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
