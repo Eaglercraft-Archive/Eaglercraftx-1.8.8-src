@@ -9,7 +9,7 @@ import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.EaglerXBungee;
 import net.md_5.bungee.UserConnection;
 
 /**
- * Copyright (c) 2022-2023 lax1dude. All Rights Reserved.
+ * Copyright (c) 2022-2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -110,13 +110,11 @@ public class SkinPackets {
 			generatedPacket = SkinPackets.makePresetResponse(clientUUID, (bs[1] << 24) | (bs[2] << 16) | (bs[3] << 8) | (bs[4] & 0xFF));
 			break;
 		case PACKET_MY_SKIN_CUSTOM:
-			byte[] pixels = new byte[16384];
-			if(bs.length != 2 + pixels.length) {
+			if(bs.length != 2 + 16384) {
 				throw new IOException("Invalid length " + bs.length + " for custom skin packet");
 			}
-			setAlphaForChest(pixels, (byte)255);
-			System.arraycopy(bs, 2, pixels, 0, pixels.length);
-			generatedPacket = SkinPackets.makeCustomResponse(clientUUID, (skinModel = (int)bs[1] & 0xFF), pixels);
+			setAlphaForChest(bs, (byte)255, 2);
+			generatedPacket = SkinPackets.makeCustomResponse(clientUUID, (skinModel = (int)bs[1] & 0xFF), bs, 2, 16384);
 			break;
 		default:
 			throw new IOException("Unknown skin packet type: " + packetType);
@@ -130,13 +128,13 @@ public class SkinPackets {
 		skinService.registerEaglercraftPlayer(clientUUID, generatedPacket, skinModel);
 	}
 	
-	public static void setAlphaForChest(byte[] skin64x64, byte alpha) {
-		if(skin64x64.length != 16384) {
+	public static void setAlphaForChest(byte[] skin64x64, byte alpha, int offset) {
+		if(skin64x64.length - offset != 16384) {
 			throw new IllegalArgumentException("Skin is not 64x64!");
 		}
 		for(int y = 20; y < 32; ++y) {
 			for(int x = 16; x < 40; ++x) {
-				skin64x64[(y << 8) | (x << 2)] = alpha;
+				skin64x64[offset + ((y << 8) | (x << 2))] = alpha;
 			}
 		}
 	}
@@ -157,11 +155,15 @@ public class SkinPackets {
 	}
 	
 	public static byte[] makeCustomResponse(UUID uuid, int model, byte[] pixels) {
-		byte[] ret = new byte[1 + 16 + 1 + pixels.length];
+		return makeCustomResponse(uuid, model, pixels, 0, pixels.length);
+	}
+	
+	public static byte[] makeCustomResponse(UUID uuid, int model, byte[] pixels, int offset, int length) {
+		byte[] ret = new byte[1 + 16 + 1 + length];
 		ret[0] = (byte)PACKET_OTHER_SKIN_CUSTOM;
 		UUIDToBytes(uuid, ret, 1);
 		ret[17] = (byte)model;
-		System.arraycopy(pixels, 0, ret, 18, pixels.length);
+		System.arraycopy(pixels, offset, ret, 18, length);
 		return ret;
 	}
 	

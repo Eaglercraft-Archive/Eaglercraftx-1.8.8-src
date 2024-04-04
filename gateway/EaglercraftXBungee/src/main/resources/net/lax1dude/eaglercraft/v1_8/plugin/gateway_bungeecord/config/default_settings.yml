@@ -19,3 +19,7 @@ skin_cache_antagonists_ratelimit: 15
 sql_driver_class: 'internal'
 sql_driver_path: 'internal'
 eagler_players_vanilla_skin: ''
+enable_is_eagler_player_property: true
+disable_voice_chat_on_servers: []
+disable_fnaw_skins_everywhere: false
+disable_fnaw_skins_on_servers: []

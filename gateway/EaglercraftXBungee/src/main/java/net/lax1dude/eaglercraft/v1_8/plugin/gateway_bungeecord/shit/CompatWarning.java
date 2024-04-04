@@ -38,7 +38,6 @@ public class CompatWarning {
 				":>  ",
 				":>  - BungeeCord: " + EaglerXBungee.NATIVE_BUNGEECORD_BUILD,
 				":>  - Waterfall: " + EaglerXBungee.NATIVE_WATERFALL_BUILD,
-				":>  - FlameCord: " + EaglerXBungee.NATIVE_FLAMECORD_BUILD,
 				":>  ",
 				":>  This is not a Bukkit/Spigot plugin!",
 				":>  ",

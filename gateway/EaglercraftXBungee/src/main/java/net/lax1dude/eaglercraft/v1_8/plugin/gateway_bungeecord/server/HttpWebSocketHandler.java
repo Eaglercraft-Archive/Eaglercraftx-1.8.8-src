@@ -56,6 +56,7 @@ import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.server.EaglerInit
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.server.bungeeprotocol.EaglerBungeeProtocol;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.server.query.MOTDQueryHandler;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.server.query.QueryManager;
+import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.skins.CapePackets;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.skins.SkinPackets;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.skins.SkinService;
 import net.md_5.bungee.BungeeCord;
@@ -949,7 +950,21 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 							}
 						}
 						
-						bungee.getPluginManager().callEvent(new PostLoginEvent(userCon));
+						if(profileData.containsKey("cape_v1")) {
+							try {
+								CapePackets.registerEaglerPlayer(clientUUID, profileData.get("cape_v1"),
+										EaglerXBungee.getEagler().getCapeService());
+							} catch (Throwable ex) {
+								CapePackets.registerEaglerPlayerFallback(clientUUID, EaglerXBungee.getEagler().getCapeService());
+								EaglerXBungee.logger().info("[" + ctx.channel().remoteAddress() + "]: Invalid cape packet: " + ex.toString());
+							}
+						}else {
+							CapePackets.registerEaglerPlayerFallback(clientUUID, EaglerXBungee.getEagler().getCapeService());
+						}
+						
+						if(conf.getEnableVoiceChat()) {
+							EaglerXBungee.getEagler().getVoiceService().handlePlayerLoggedIn(userCon);
+						}
 						
 						ServerInfo server;
 						if (bungee.getReconnectHandler() != null) {
@@ -957,13 +972,30 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 						} else {
 							server = AbstractReconnectHandler.getForcedHost(initialHandler);
 						}
-
+						
 						if (server == null) {
 							server = bungee.getServerInfo(conf.getDefaultServer());
 						}
 						
-						eaglerCon.hasBeenForwarded = true;
-						userCon.connect(server, null, true, ServerConnectEvent.Reason.JOIN_PROXY);
+						final ServerInfo server2 = server;
+						Callback<PostLoginEvent> complete = new Callback<PostLoginEvent>() {
+							@Override
+							public void done(PostLoginEvent result, Throwable error) {
+								eaglerCon.hasBeenForwarded = true;
+								if (ch.isClosed()) {
+									return;
+								}
+								userCon.connect(server2, null, true, ServerConnectEvent.Reason.JOIN_PROXY);
+							}
+						};
+						
+						try {
+							PostLoginEvent login = new PostLoginEvent(userCon);
+							bungee.getPluginManager().callEvent(login);
+							complete.done(login, null);
+						}catch(NoSuchMethodError err) {
+							bungee.getPluginManager().callEvent(PostLoginEvent.class.getDeclaredConstructor(ProxiedPlayer.class, ServerInfo.class, Callback.class).newInstance(userCon, server, complete));
+						}
 					}
 					
 				});

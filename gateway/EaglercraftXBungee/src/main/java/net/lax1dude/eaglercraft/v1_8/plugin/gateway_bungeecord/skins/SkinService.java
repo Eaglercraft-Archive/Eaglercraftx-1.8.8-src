@@ -52,12 +52,6 @@ public class SkinService implements ISkinService {
 
 	public static final int masterRateLimitPerPlayer = 250;
 
-	public static final int PACKET_MY_SKIN_PRESET = 0x01;
-	public static final int PACKET_MY_SKIN_CUSTOM = 0x02;
-	public static final int PACKET_GET_OTHER_SKIN = 0x03;
-	public static final int PACKET_OTHER_SKIN_PRESET = 0x04;
-	public static final int PACKET_OTHER_SKIN_CUSTOM = 0x05;
-
 	public static final String CHANNEL = "EAG|Skins-1.8";
 
 	private final Map<UUID, CachedPlayerSkin> onlinePlayersCache = new HashMap();

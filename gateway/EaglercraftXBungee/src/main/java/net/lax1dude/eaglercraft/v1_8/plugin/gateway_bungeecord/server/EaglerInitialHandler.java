@@ -10,11 +10,12 @@ import java.util.UUID;
 
 import gnu.trove.set.TIntSet;
 import gnu.trove.set.hash.TIntHashSet;
+import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.EaglerXBungee;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.config.EaglerBungeeConfig;
+import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.config.EaglerListenerConfig;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.skins.SimpleRateLimiter;
 import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.config.ListenerInfo;
 import net.md_5.bungee.connection.InitialHandler;
 import net.md_5.bungee.connection.LoginResult;
 import net.md_5.bungee.netty.ChannelWrapper;
@@ -67,12 +68,17 @@ public class EaglerInitialHandler extends InitialHandler {
 	public final SimpleRateLimiter skinLookupRateLimiter;
 	public final SimpleRateLimiter skinUUIDLookupRateLimiter;
 	public final SimpleRateLimiter skinTextureDownloadRateLimiter;
+	public final SimpleRateLimiter capeLookupRateLimiter;
+	public final SimpleRateLimiter voiceConnectRateLimiter;
 	public final String origin;
 	public final ClientCertificateHolder clientCertificate;
 	public final Set<ClientCertificateHolder> certificatesToSend;
 	public final TIntSet certificatesSent;
+	public boolean currentFNAWSkinEnableStatus = true;
 
-	public EaglerInitialHandler(BungeeCord bungee, ListenerInfo listener, final ChannelWrapper ch,
+	private static final Property[] NO_PROPERTIES = new Property[0];
+
+	public EaglerInitialHandler(BungeeCord bungee, EaglerListenerConfig listener, final ChannelWrapper ch,
 			int gameProtocolVersion, String username, UUID playerUUID, InetSocketAddress address, String host,
 			String origin, ClientCertificateHolder clientCertificate) {
 		super(bungee, listener);
@@ -84,6 +90,8 @@ public class EaglerInitialHandler extends InitialHandler {
 		this.skinLookupRateLimiter = new SimpleRateLimiter();
 		this.skinUUIDLookupRateLimiter = new SimpleRateLimiter();
 		this.skinTextureDownloadRateLimiter = new SimpleRateLimiter();
+		this.capeLookupRateLimiter = new SimpleRateLimiter();
+		this.voiceConnectRateLimiter = new SimpleRateLimiter();
 		this.clientCertificate = clientCertificate;
 		this.certificatesToSend = new HashSet();
 		this.certificatesSent = new TIntHashSet();
@@ -108,7 +116,11 @@ public class EaglerInitialHandler extends InitialHandler {
 				ch.getHandle().writeAndFlush(arg0);
 			}
 		};
-		setLoginProfile(new LoginResult(playerUUID.toString(), username, new Property[] { EaglerBungeeConfig.isEaglerProperty }));
+		Property[] profileProperties = NO_PROPERTIES;
+		if(EaglerXBungee.getEagler().getConfig().getEnableIsEaglerPlayerProperty()) {
+			profileProperties = new Property[] { EaglerBungeeConfig.isEaglerProperty };
+		}
+		setLoginProfile(new LoginResult(playerUUID.toString(), username, profileProperties));
 		try {
 			super.connected(ch);
 		} catch (Exception e) {
@@ -251,4 +263,7 @@ public class EaglerInitialHandler extends InitialHandler {
 		return origin;
 	}
 
+	public EaglerListenerConfig getEaglerListenerConfig() {
+		return (EaglerListenerConfig)getListener();
+	}
 }

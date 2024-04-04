@@ -9,12 +9,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.UUID;
 
 import com.google.gson.JsonArray;
@@ -31,7 +33,7 @@ import net.md_5.bungee.config.YamlConfiguration;
 import net.md_5.bungee.protocol.Property;
 
 /**
- * Copyright (c) 2022-2023 lax1dude. All Rights Reserved.
+ * Copyright (c) 2022-2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -84,12 +86,14 @@ public class EaglerBungeeConfig {
 		Configuration listenerYml = prov.load(getConfigFile(directory, "listeners.yml"));
 		Iterator<String> listeners = listenerYml.getKeys().iterator();
 		Map<String, EaglerListenerConfig> serverListeners = new HashMap();
+		boolean voiceChat = false;
 		
 		while(listeners.hasNext()) {
 			String name = listeners.next();
 			EaglerListenerConfig conf = EaglerListenerConfig.loadConfig(listenerYml.getSection(name), contentTypes);
 			if(conf != null) {
 				serverListeners.put(name, conf);
+				voiceChat |= conf.getEnableVoiceChat();
 			}else {
 				EaglerXBungee.logger().severe("Invalid listener config: " + name);
 			}
@@ -104,6 +108,9 @@ public class EaglerBungeeConfig {
 		
 		Configuration updatesYml = prov.load(getConfigFile(directory, "updates.yml"));
 		EaglerUpdateConfig updatesConfig = EaglerUpdateConfig.loadConfig(updatesYml);
+		
+		Configuration iceServersYml = prov.load(getConfigFile(directory, "ice_servers.yml"));
+		Collection<String> iceServers = loadICEServers(iceServersYml);
 		
 		if(authConfig.isEnableAuthentication()) {
 			for(EaglerListenerConfig lst : serverListeners.values()) {
@@ -135,12 +142,18 @@ public class EaglerBungeeConfig {
 		if(eaglerPlayersVanillaSkin != null && eaglerPlayersVanillaSkin.length() == 0) {
 			eaglerPlayersVanillaSkin = null;
 		}
+		boolean enableIsEaglerPlayerProperty = configYml.getBoolean("enable_is_eagler_player_property", true);
+		Set<String> disableVoiceOnServers = new HashSet((Collection<String>)configYml.getList("disable_voice_chat_on_servers"));
+		boolean disableFNAWSkinsEverywhere = configYml.getBoolean("disable_fnaw_skins_everywhere", false);
+		Set<String> disableFNAWSkinsOnServers = new HashSet((Collection<String>)configYml.getList("disable_fnaw_skins_on_servers"));
 		
 		final EaglerBungeeConfig ret = new EaglerBungeeConfig(serverName, serverUUID, websocketKeepAliveTimeout,
 				websocketHandshakeTimeout, websocketCompressionLevel, serverListeners, contentTypes,
 				downloadVanillaSkins, validSkinUrls, uuidRateLimitPlayer, uuidRateLimitGlobal, skinRateLimitPlayer,
 				skinRateLimitGlobal, skinCacheURI, keepObjectsDays, keepProfilesDays, maxObjects, maxProfiles,
-				antagonistsRateLimit, sqliteDriverClass, sqliteDriverPath, eaglerPlayersVanillaSkin, authConfig, updatesConfig);
+				antagonistsRateLimit, sqliteDriverClass, sqliteDriverPath, eaglerPlayersVanillaSkin,
+				enableIsEaglerPlayerProperty, authConfig, updatesConfig, iceServers, voiceChat,
+				disableVoiceOnServers, disableFNAWSkinsEverywhere, disableFNAWSkinsOnServers);
 		
 		if(eaglerPlayersVanillaSkin != null) {
 			VanillaDefaultSkinProfileLoader.lookupVanillaSkinUser(ret);
@@ -202,6 +215,18 @@ public class EaglerBungeeConfig {
 		}
 	}
 	
+	private static Collection<String> loadICEServers(Configuration config) {
+		Collection<String> ret = new ArrayList(config.getList("voice_stun_servers"));
+		Configuration turnServers = config.getSection("voice_turn_servers");
+		Iterator<String> turnItr = turnServers.getKeys().iterator();
+		while(turnItr.hasNext()) {
+			String name = turnItr.next();
+			Configuration turnSvr = turnServers.getSection(name);
+			ret.add(turnSvr.getString("url") + ";" + turnSvr.getString("username") + ";" + turnSvr.getString("password"));
+		}
+		return ret;
+	}
+	
 	@SuppressWarnings("deprecation")
 	private static JsonObject parseJsonObject(InputStream file) throws IOException {
 		StringBuilder str = new StringBuilder();
@@ -243,8 +268,14 @@ public class EaglerBungeeConfig {
 	private final String sqliteDriverClass;
 	private final String sqliteDriverPath;
 	private final String eaglerPlayersVanillaSkin;
+	private final boolean enableIsEaglerPlayerProperty;
 	private final EaglerAuthConfig authConfig;
 	private final EaglerUpdateConfig updateConfig;
+	private final Collection<String> iceServers;
+	private final boolean enableVoiceChat;
+	private final Set<String> disableVoiceOnServers;
+	private final boolean disableFNAWSkinsEverywhere;
+	private final Set<String> disableFNAWSkinsOnServers;
 	Property[] eaglerPlayersVanillaSkinCached = new Property[] { isEaglerProperty };
 
 	public String getServerName() {
@@ -362,6 +393,10 @@ public class EaglerBungeeConfig {
 		return eaglerPlayersVanillaSkin;
 	}
 
+	public boolean getEnableIsEaglerPlayerProperty() {
+		return enableIsEaglerPlayerProperty;
+	}
+
 	public Property[] getEaglerPlayersVanillaSkinProperties() {
 		return eaglerPlayersVanillaSkinCached;
 	}
@@ -378,6 +413,26 @@ public class EaglerBungeeConfig {
 		return updateConfig;
 	}
 
+	public Collection<String> getICEServers() {
+		return iceServers;
+	}
+
+	public boolean getEnableVoiceChat() {
+		return enableVoiceChat;
+	}
+
+	public Set<String> getDisableVoiceOnServersSet() {
+		return disableVoiceOnServers;
+	}
+
+	public boolean getDisableFNAWSkinsEverywhere() {
+		return disableFNAWSkinsEverywhere;
+	}
+
+	public Set<String> getDisableFNAWSkinsOnServersSet() {
+		return disableFNAWSkinsOnServers;
+	}
+
 	private EaglerBungeeConfig(String serverName, UUID serverUUID, long websocketKeepAliveTimeout,
 			long websocketHandshakeTimeout, int httpWebsocketCompressionLevel,
 			Map<String, EaglerListenerConfig> serverListeners, Map<String, HttpContentType> contentTypes,
@@ -385,7 +440,9 @@ public class EaglerBungeeConfig {
 			int uuidRateLimitGlobal, int skinRateLimitPlayer, int skinRateLimitGlobal, String skinCacheURI,
 			int keepObjectsDays, int keepProfilesDays, int maxObjects, int maxProfiles, int antagonistsRateLimit,
 			String sqliteDriverClass, String sqliteDriverPath, String eaglerPlayersVanillaSkin,
-			EaglerAuthConfig authConfig, EaglerUpdateConfig updateConfig) {
+			boolean enableIsEaglerPlayerProperty, EaglerAuthConfig authConfig, EaglerUpdateConfig updateConfig,
+			Collection<String> iceServers, boolean enableVoiceChat, Set<String> disableVoiceOnServers,
+			boolean disableFNAWSkinsEverywhere, Set<String> disableFNAWSkinsOnServers) {
 		this.serverName = serverName;
 		this.serverUUID = serverUUID;
 		this.serverListeners = serverListeners;
@@ -408,8 +465,14 @@ public class EaglerBungeeConfig {
 		this.sqliteDriverClass = sqliteDriverClass;
 		this.sqliteDriverPath = sqliteDriverPath;
 		this.eaglerPlayersVanillaSkin = eaglerPlayersVanillaSkin;
+		this.enableIsEaglerPlayerProperty = enableIsEaglerPlayerProperty;
 		this.authConfig = authConfig;
 		this.updateConfig = updateConfig;
+		this.iceServers = iceServers;
+		this.enableVoiceChat = enableVoiceChat;
+		this.disableVoiceOnServers = disableVoiceOnServers;
+		this.disableFNAWSkinsEverywhere = disableFNAWSkinsEverywhere;
+		this.disableFNAWSkinsOnServers = disableFNAWSkinsOnServers;
 	}
 
 }

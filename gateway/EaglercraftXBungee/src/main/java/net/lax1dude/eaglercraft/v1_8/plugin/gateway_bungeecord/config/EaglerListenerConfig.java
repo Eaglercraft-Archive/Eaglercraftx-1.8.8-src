@@ -120,6 +120,8 @@ public class EaglerListenerConfig extends ListenerInfo {
 					contentTypes, indexPage, page404);
 		}
 		
+		boolean enableVoiceChat = config.getBoolean("allow_voice", false);
+		
 		EaglerRateLimiter ratelimitIp = null;
 		EaglerRateLimiter ratelimitLogin = null;
 		EaglerRateLimiter ratelimitMOTD = null;
@@ -149,7 +151,7 @@ public class EaglerListenerConfig extends ListenerInfo {
 				cacheTrending, cachePortfolios);
 		return new EaglerListenerConfig(hostv4, hostv6, maxPlayer, tabListType, defaultServer, forceDefaultServer,
 				forwardIp, forwardIpHeader, redirectLegacyClientsTo, serverIcon, serverMOTD, allowMOTD, allowQuery,
-				cacheConfig, httpServer, ratelimitIp, ratelimitLogin, ratelimitMOTD, ratelimitQuery);
+				cacheConfig, httpServer, enableVoiceChat, ratelimitIp, ratelimitLogin, ratelimitMOTD, ratelimitQuery);
 	}
 
 	private final InetSocketAddress address;
@@ -169,6 +171,7 @@ public class EaglerListenerConfig extends ListenerInfo {
 	private final HttpWebServer webServer;
 	private boolean serverIconSet = false;
 	private int[] serverIconPixels = null;
+	private final boolean enableVoiceChat;
 	private final EaglerRateLimiter ratelimitIp;
 	private final EaglerRateLimiter ratelimitLogin;
 	private final EaglerRateLimiter ratelimitMOTD;
@@ -178,8 +181,8 @@ public class EaglerListenerConfig extends ListenerInfo {
 			String tabListType, String defaultServer, boolean forceDefaultServer, boolean forwardIp,
 			String forwardIpHeader, String redirectLegacyClientsTo, String serverIcon, List<String> serverMOTD,
 			boolean allowMOTD, boolean allowQuery, MOTDCacheConfiguration motdCacheConfig, HttpWebServer webServer,
-			EaglerRateLimiter ratelimitIp, EaglerRateLimiter ratelimitLogin, EaglerRateLimiter ratelimitMOTD,
-			EaglerRateLimiter ratelimitQuery) {
+			boolean enableVoiceChat, EaglerRateLimiter ratelimitIp, EaglerRateLimiter ratelimitLogin,
+			EaglerRateLimiter ratelimitMOTD, EaglerRateLimiter ratelimitQuery) {
 		super(address, String.join("\n", serverMOTD), maxPlayer, 60, Arrays.asList(defaultServer), forceDefaultServer,
 				Collections.emptyMap(), tabListType, false, false, 0, false, false);
 		this.address = address;
@@ -197,6 +200,7 @@ public class EaglerListenerConfig extends ListenerInfo {
 		this.allowQuery = allowQuery;
 		this.motdCacheConfig = motdCacheConfig;
 		this.webServer = webServer;
+		this.enableVoiceChat = enableVoiceChat;
 		this.ratelimitIp = ratelimitIp;
 		this.ratelimitLogin = ratelimitLogin;
 		this.ratelimitMOTD = ratelimitMOTD;
@@ -283,6 +287,10 @@ public class EaglerListenerConfig extends ListenerInfo {
 
 	public String redirectLegacyClientsTo() {
 		return redirectLegacyClientsTo;
+	}
+
+	public boolean getEnableVoiceChat() {
+		return enableVoiceChat;
 	}
 
 	public EaglerRateLimiter getRatelimitIp() {

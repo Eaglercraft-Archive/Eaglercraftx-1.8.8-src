@@ -30,9 +30,11 @@ import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.server.EaglerPipe
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.server.web.HttpWebServer;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.shit.CompatWarning;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.skins.BinaryHttpClient;
+import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.skins.CapeServiceOffline;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.skins.ISkinService;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.skins.SkinService;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.skins.SkinServiceOffline;
+import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.voice.VoiceService;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.api.plugin.PluginManager;
 import net.md_5.bungee.netty.PipelineUtils;
@@ -55,9 +57,8 @@ import net.md_5.bungee.BungeeCord;
  */
 public class EaglerXBungee extends Plugin {
 
-	public static final String NATIVE_BUNGEECORD_BUILD = "1.20-R0.3-SNAPSHOT:eda268b:1797";
-	public static final String NATIVE_WATERFALL_BUILD = "1.20-R0.2-SNAPSHOT:92b5149:562";
-	public static final String NATIVE_FLAMECORD_BUILD = "1.1.1";
+	public static final String NATIVE_BUNGEECORD_BUILD = "1.20-R0.3-SNAPSHOT:67c65e0:1828";
+	public static final String NATIVE_WATERFALL_BUILD = "1.20-R0.3-SNAPSHOT:da6aaf6:572";
 	
 	static {
 		CompatWarning.displayCompatWarning();
@@ -72,6 +73,8 @@ public class EaglerXBungee extends Plugin {
 	private Timer authServiceTasks = null;
 	private final ChannelFutureListener newChannelListener;
 	private ISkinService skinService;
+	private CapeServiceOffline capeService;
+	private VoiceService voiceService;
 	private DefaultAuthSystem defaultAuthSystem;
 	
 	public EaglerXBungee() {
@@ -128,7 +131,10 @@ public class EaglerXBungee extends Plugin {
 			}
 		}
 		getProxy().registerChannel(SkinService.CHANNEL);
+		getProxy().registerChannel(CapeServiceOffline.CHANNEL);
 		getProxy().registerChannel(EaglerPipeline.UPDATE_CERT_CHANNEL);
+		getProxy().registerChannel(VoiceService.CHANNEL);
+		getProxy().registerChannel(EaglerPacketEventListener.FNAW_SKIN_ENABLE_CHANNEL);
 		startListeners();
 		if(skinServiceTasks != null) {
 			skinServiceTasks.cancel();
@@ -165,6 +171,7 @@ public class EaglerXBungee extends Plugin {
 				}
 			}, 1000l, 1000l);
 		}
+		capeService = new CapeServiceOffline();
 		if(authConf.isEnableAuthentication() && authConf.isUseBuiltInAuthentication()) {
 			try {
 				defaultAuthSystem = DefaultAuthSystem.initializeAuthSystem(authConf);
@@ -185,6 +192,12 @@ public class EaglerXBungee extends Plugin {
 				}, 60000l, 60000l);
 			}
 		}
+		if(conf.getEnableVoiceChat()) {
+			voiceService = new VoiceService(conf);
+			logger().warning("Voice chat enabled, not recommended for public servers!");
+		}else {
+			logger().info("Voice chat disabled, add \"allow_voice: true\" to your listeners to enable");
+		}
 	}
 
 	@Override
@@ -193,13 +206,19 @@ public class EaglerXBungee extends Plugin {
 		mgr.unregisterListeners(this);
 		mgr.unregisterCommands(this);
 		getProxy().unregisterChannel(SkinService.CHANNEL);
+		getProxy().unregisterChannel(CapeServiceOffline.CHANNEL);
 		getProxy().unregisterChannel(EaglerPipeline.UPDATE_CERT_CHANNEL);
+		getProxy().unregisterChannel(VoiceService.CHANNEL);
+		getProxy().unregisterChannel(EaglerPacketEventListener.FNAW_SKIN_ENABLE_CHANNEL);
 		stopListeners();
 		if(skinServiceTasks != null) {
 			skinServiceTasks.cancel();
 			skinServiceTasks = null;
 		}
 		skinService.shutdown();
+		skinService = null;
+		capeService.shutdown();
+		capeService = null;
 		if(defaultAuthSystem != null) {
 			defaultAuthSystem.destroy();
 			defaultAuthSystem = null;
@@ -208,6 +227,7 @@ public class EaglerXBungee extends Plugin {
 				authServiceTasks = null;
 			}
 		}
+		voiceService = null;
 		BinaryHttpClient.killEventLoop();
 	}
 	
@@ -278,8 +298,16 @@ public class EaglerXBungee extends Plugin {
 		return skinService;
 	}
 	
+	public CapeServiceOffline getCapeService() {
+		return capeService;
+	}
+	
 	public DefaultAuthSystem getAuthService() {
 		return defaultAuthSystem;
+	}
+	
+	public VoiceService getVoiceService() {
+		return voiceService;
 	}
 	
 	public static EaglerXBungee getEagler() {
