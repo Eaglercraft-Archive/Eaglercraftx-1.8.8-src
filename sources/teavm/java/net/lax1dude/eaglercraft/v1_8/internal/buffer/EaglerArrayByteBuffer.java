@@ -1,8 +1,12 @@
 package net.lax1dude.eaglercraft.v1_8.internal.buffer;
 
-import org.teavm.jso.typedarrays.ArrayBuffer;
 import org.teavm.jso.typedarrays.DataView;
-import org.teavm.jso.typedarrays.Uint8Array;
+import org.teavm.jso.typedarrays.Float32Array;
+import org.teavm.jso.typedarrays.Int16Array;
+import org.teavm.jso.typedarrays.Int32Array;
+import org.teavm.jso.typedarrays.Int8Array;
+
+import net.lax1dude.eaglercraft.v1_8.internal.teavm.TeaVMUtils;
 
 /**
  * Copyright (c) 2022-2023 lax1dude. All Rights Reserved.
@@ -22,16 +26,18 @@ import org.teavm.jso.typedarrays.Uint8Array;
 public class EaglerArrayByteBuffer implements ByteBuffer {
 
 	final DataView dataView;
+	final Int8Array typedArray;
 
 	final int capacity;
 	int position;
 	int limit;
 	int mark;
 	
-	static final DataView ZERO_LENGTH_BUFFER = DataView.create(ArrayBuffer.create(0));
+	static final Int8Array ZERO_LENGTH_BUFFER = Int8Array.create(0);
 	
 	EaglerArrayByteBuffer(DataView dataView) {
 		this.dataView = dataView;
+		this.typedArray = Int8Array.create(dataView.getBuffer(), dataView.getByteOffset(), dataView.getByteLength());
 		this.capacity = dataView.getByteLength();
 		this.position = 0;
 		this.limit = this.capacity;
@@ -40,7 +46,26 @@ public class EaglerArrayByteBuffer implements ByteBuffer {
 	
 	EaglerArrayByteBuffer(DataView dataView, int position, int limit, int mark) {
 		this.dataView = dataView;
+		this.typedArray = Int8Array.create(dataView.getBuffer(), dataView.getByteOffset(), dataView.getByteLength());
 		this.capacity = dataView.getByteLength();
+		this.position = position;
+		this.limit = limit;
+		this.mark = mark;
+	}
+	
+	EaglerArrayByteBuffer(Int8Array typedArray) {
+		this.typedArray = typedArray;
+		this.dataView = DataView.create(typedArray.getBuffer(), typedArray.getByteOffset(), typedArray.getByteLength());
+		this.capacity = typedArray.getByteLength();
+		this.position = 0;
+		this.limit = this.capacity;
+		this.mark = -1;
+	}
+	
+	EaglerArrayByteBuffer(Int8Array typedArray, int position, int limit, int mark) {
+		this.typedArray = typedArray;
+		this.dataView = DataView.create(typedArray.getBuffer(), typedArray.getByteOffset(), typedArray.getByteLength());
+		this.capacity = typedArray.getByteLength();
 		this.position = position;
 		this.limit = limit;
 		this.mark = mark;
@@ -93,8 +118,12 @@ public class EaglerArrayByteBuffer implements ByteBuffer {
 
 	@Override
 	public ByteBuffer slice() {
-		int o = dataView.getByteOffset();
-		return new EaglerArrayByteBuffer(DataView.create(dataView.getBuffer(), o + position, limit - position));
+		if(position == limit) {
+			return new EaglerArrayByteBuffer(ZERO_LENGTH_BUFFER);
+		}else {
+			if(position > limit) throw new ArrayIndexOutOfBoundsException(position);
+			return new EaglerArrayByteBuffer(Int8Array.create(typedArray.getBuffer(), typedArray.getByteOffset() + position, limit - position));
+		}
 	}
 
 	@Override
@@ -110,35 +139,33 @@ public class EaglerArrayByteBuffer implements ByteBuffer {
 	@Override
 	public byte get() {
 		if(position >= limit) throw new ArrayIndexOutOfBoundsException(position);
-		return dataView.getInt8(position++);
+		return typedArray.get(position++);
 	}
 
 	@Override
 	public ByteBuffer put(byte b) {
 		if(position >= limit) throw new ArrayIndexOutOfBoundsException(position);
-		dataView.setInt8(position++, b);
+		typedArray.set(position++, b);
 		return this;
 	}
 
 	@Override
 	public byte get(int index) {
 		if(index >= limit) throw new ArrayIndexOutOfBoundsException(index);
-		return dataView.getInt8(index);
+		return typedArray.get(index);
 	}
 
 	@Override
 	public ByteBuffer put(int index, byte b) {
 		if(index >= limit) throw new ArrayIndexOutOfBoundsException(index);
-		dataView.setInt8(index, b);
+		typedArray.set(index, b);
 		return this;
 	}
 
 	@Override
 	public ByteBuffer get(byte[] dst, int offset, int length) {
 		if(position + length > limit) throw new ArrayIndexOutOfBoundsException(position + length - 1);
-		for(int i = 0; i < length; ++i) {
-			dst[offset + i] = dataView.getInt8(position + i);
-		}
+		TeaVMUtils.unwrapArrayBufferView(dst).set(Int8Array.create(typedArray.getBuffer(), typedArray.getByteOffset() + position, length), offset);
 		position += length;
 		return this;
 	}
@@ -146,9 +173,7 @@ public class EaglerArrayByteBuffer implements ByteBuffer {
 	@Override
 	public ByteBuffer get(byte[] dst) {
 		if(position + dst.length > limit) throw new ArrayIndexOutOfBoundsException(position + dst.length - 1);
-		for(int i = 0; i < dst.length; ++i) {
-			dst[position + i] = dataView.getInt8(position + i);
-		}
+		TeaVMUtils.unwrapArrayBufferView(dst).set(Int8Array.create(typedArray.getBuffer(), typedArray.getByteOffset() + position, dst.length));
 		position += dst.length;
 		return this;
 	}
@@ -159,10 +184,7 @@ public class EaglerArrayByteBuffer implements ByteBuffer {
 			EaglerArrayByteBuffer c = (EaglerArrayByteBuffer)src;
 			int l = c.limit - c.position;
 			if(position + l > limit) throw new ArrayIndexOutOfBoundsException(position + l - 1);
-			int o = c.dataView.getByteOffset();
-			Uint8Array.create(dataView.getBuffer()).set(
-					Uint8Array.create(c.dataView.getBuffer(), o + c.position, c.limit - c.position),
-					dataView.getByteOffset() + position);
+			typedArray.set(Int8Array.create(c.typedArray.getBuffer(), c.typedArray.getByteOffset() + c.position, l), position);
 			position += l;
 			c.position += l;
 		}else {
@@ -179,8 +201,10 @@ public class EaglerArrayByteBuffer implements ByteBuffer {
 	@Override
 	public ByteBuffer put(byte[] src, int offset, int length) {
 		if(position + length > limit) throw new ArrayIndexOutOfBoundsException(position + length - 1);
-		for(int i = 0; i < length; ++i) {
-			dataView.setInt8(position + i, src[offset + i]);
+		if(offset == 0 && length == src.length) {
+			typedArray.set(TeaVMUtils.unwrapArrayBufferView(src), position);
+		}else {
+			typedArray.set(Int8Array.create(TeaVMUtils.unwrapArrayBuffer(src), offset, length), position);
 		}
 		position += length;
 		return this;
@@ -189,10 +213,7 @@ public class EaglerArrayByteBuffer implements ByteBuffer {
 	@Override
 	public ByteBuffer put(byte[] src) {
 		if(position + src.length > limit) throw new ArrayIndexOutOfBoundsException(position + src.length - 1);
-		//dataView.set(src, position); // doesn't work
-		for(int i = 0; i < src.length; ++i) {
-			dataView.setInt8(position + i, src[i]);
-		}
+		typedArray.set(TeaVMUtils.unwrapArrayBufferView(src), position);
 		position += src.length;
 		return this;
 	}
@@ -211,12 +232,10 @@ public class EaglerArrayByteBuffer implements ByteBuffer {
 			return new EaglerArrayByteBuffer(ZERO_LENGTH_BUFFER);
 		}
 		
-		int o = dataView.getByteOffset();
+		Int8Array dst = Int8Array.create(limit - position);
+		dst.set(Int8Array.create(typedArray.getBuffer(), typedArray.getByteOffset() + position, limit - position));
 		
-		Uint8Array dst = Uint8Array.create(ArrayBuffer.create(limit - position));
-		dst.set(Uint8Array.create(dataView.getBuffer(), o + position, limit - position));
-		
-		return new EaglerArrayByteBuffer(DataView.create(dst.getBuffer()));
+		return new EaglerArrayByteBuffer(dst);
 	}
 
 	@Override
@@ -279,7 +298,7 @@ public class EaglerArrayByteBuffer implements ByteBuffer {
 
 	@Override
 	public ShortBuffer asShortBuffer() {
-		return new EaglerArrayShortBuffer(dataView);
+		return new EaglerArrayShortBuffer(Int16Array.create(typedArray.getBuffer(), typedArray.getByteOffset(), typedArray.getLength() >> 1));
 	}
 
 	@Override
@@ -313,7 +332,7 @@ public class EaglerArrayByteBuffer implements ByteBuffer {
 
 	@Override
 	public IntBuffer asIntBuffer() {
-		return new EaglerArrayIntBuffer(dataView);
+		return new EaglerArrayIntBuffer(Int32Array.create(typedArray.getBuffer(), typedArray.getByteOffset(), typedArray.getLength() >> 2));
 	}
 
 	@Override
@@ -388,7 +407,7 @@ public class EaglerArrayByteBuffer implements ByteBuffer {
 
 	@Override
 	public FloatBuffer asFloatBuffer() {
-		return new EaglerArrayFloatBuffer(dataView);
+		return new EaglerArrayFloatBuffer(Float32Array.create(typedArray.getBuffer(), typedArray.getByteOffset(), typedArray.getLength() >> 2));
 	}
 
 	@Override

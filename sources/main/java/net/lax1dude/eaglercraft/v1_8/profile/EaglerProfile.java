@@ -16,7 +16,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ResourceLocation;
 
 /**
- * Copyright (c) 2022-2023 lax1dude, ayunami2000. All Rights Reserved.
+ * Copyright (c) 2022-2024 lax1dude, ayunami2000. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -37,7 +37,11 @@ public class EaglerProfile {
 	public static int presetSkinId;
 	public static int customSkinId;
 	
+	public static int presetCapeId;
+	public static int customCapeId;
+
 	public static final List<CustomSkin> customSkins = new ArrayList();
+	public static final List<CustomCape> customCapes = new ArrayList();
 	
 	public static final EaglercraftRandom rand;
 	
@@ -78,6 +82,25 @@ public class EaglerProfile {
 			}
 		}
 	}
+	
+	public static ResourceLocation getActiveCapeResourceLocation() {
+		if(presetCapeId == -1) {
+			if(customCapeId >= 0 && customCapeId < customCapes.size()) {
+				return customCapes.get(customCapeId).getResource();
+			}else {
+				customCapeId = -1;
+				presetCapeId = 0;
+				return DefaultCapes.defaultCapesMap[0].location;
+			}
+		}else {
+			if(presetCapeId >= 0 && presetCapeId < DefaultCapes.defaultCapesMap.length) {
+				return DefaultCapes.defaultCapesMap[presetCapeId].location;
+			}else {
+				presetCapeId = 0;
+				return DefaultCapes.defaultCapesMap[0].location;
+			}
+		}
+	}
 
 	public static EaglercraftUUID getPlayerUUID() {
 		return Minecraft.getMinecraft().getSession().getProfile().getId();
@@ -114,9 +137,37 @@ public class EaglerProfile {
 		}
 	}
 
+	public static byte[] getCapePacket() {
+		if(presetCapeId == -1) {
+			if(customCapeId >= 0 && customCapeId < customCapes.size()) {
+				return CapePackets.writeMyCapeCustom(customCapes.get(customCapeId));
+			}else {
+				customCapeId = -1;
+				presetCapeId = 0;
+				return CapePackets.writeMyCapePreset(0);
+			}
+		}else {
+			if(presetCapeId >= 0 && presetCapeId < DefaultCapes.defaultCapesMap.length) {
+				return CapePackets.writeMyCapePreset(presetCapeId);
+			}else {
+				presetCapeId = 0;
+				return CapePackets.writeMyCapePreset(0);
+			}
+		}
+	}
+
 	private static boolean doesSkinExist(String name) {
 		for(int i = 0, l = customSkins.size(); i < l; ++i) {
 			if(customSkins.get(i).name.equalsIgnoreCase(name)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private static boolean doesCapeExist(String name) {
+		for(int i = 0, l = customCapes.size(); i < l; ++i) {
+			if(customCapes.get(i).name.equalsIgnoreCase(name)) {
 				return true;
 			}
 		}
@@ -139,11 +190,34 @@ public class EaglerProfile {
 		return r;
 	}
 
+	public static int addCustomCape(String fileName, byte[] rawCape23x17RGB) {
+		if(doesCapeExist(fileName)) {
+			String newName;
+			int i = 2;
+			while(doesCapeExist(newName = fileName + " (" + i + ")")) {
+				++i;
+			}
+			fileName = newName;
+		}
+		CustomCape newCape = new CustomCape(fileName, rawCape23x17RGB);
+		newCape.load();
+		int r = customCapes.size();
+		customCapes.add(newCape);
+		return r;
+	}
+
 	public static void clearCustomSkins() {
 		for(int i = 0, l = customSkins.size(); i < l; ++i) {
 			customSkins.get(i).delete();
 		}
 		customSkins.clear();
+	}
+
+	public static void clearCustomCapes() {
+		for(int i = 0, l = customCapes.size(); i < l; ++i) {
+			customCapes.get(i).delete();
+		}
+		customCapes.clear();
 	}
 
 	public static void read() {
@@ -169,6 +243,9 @@ public class EaglerProfile {
 		presetSkinId = profile.getInteger("presetSkin");
 		customSkinId = profile.getInteger("customSkin");
 
+		if(profile.hasKey("presetCape", 99)) presetCapeId = profile.getInteger("presetCape");
+		if(profile.hasKey("customCape", 99)) customCapeId = profile.getInteger("customCape");
+
 		String loadUsername = profile.getString("username").trim();
 
 		if(!loadUsername.isEmpty()) {
@@ -193,7 +270,21 @@ public class EaglerProfile {
 			newSkin.load();
 			customSkins.add(newSkin);
 		}
-		
+
+		if(profile.hasKey("capes", 9)) {
+			clearCustomCapes();
+			NBTTagList capesList = profile.getTagList("capes", 10);
+			for(int i = 0, l = capesList.tagCount(); i < l; ++i) {
+				NBTTagCompound cape = capesList.getCompoundTagAt(i);
+				String capeName = cape.getString("name");
+				byte[] capeData = cape.getByteArray("data");
+				if(capeData.length != 1173) continue;
+				CustomCape newCape = new CustomCape(capeName, capeData);
+				newCape.load();
+				customCapes.add(newCape);
+			}
+		}
+
 		if(presetSkinId == -1) {
 			if(customSkinId < 0 || customSkinId >= customSkins.size()) {
 				presetSkinId = 0;
@@ -206,12 +297,26 @@ public class EaglerProfile {
 			}
 		}
 
+		if(presetCapeId == -1) {
+			if(customCapeId < 0 || customCapeId >= customCapes.size()) {
+				presetCapeId = 0;
+				customCapeId = -1;
+			}
+		}else {
+			customCapeId = -1;
+			if(presetCapeId < 0 || presetCapeId >= DefaultCapes.defaultCapesMap.length) {
+				presetCapeId = 0;
+			}
+		}
+
 	}
 
 	public static byte[] write() {
 		NBTTagCompound profile = new NBTTagCompound();
 		profile.setInteger("presetSkin", presetSkinId);
 		profile.setInteger("customSkin", customSkinId);
+		profile.setInteger("presetCape", presetCapeId);
+		profile.setInteger("customCape", customCapeId);
 		profile.setString("username", username);
 		NBTTagList skinsList = new NBTTagList();
 		for(int i = 0, l = customSkins.size(); i < l; ++i) {
@@ -223,6 +328,15 @@ public class EaglerProfile {
 			skinsList.appendTag(skin);
 		}
 		profile.setTag("skins", skinsList);
+		NBTTagList capesList = new NBTTagList();
+		for(int i = 0, l = customCapes.size(); i < l; ++i) {
+			CustomCape cp = customCapes.get(i);
+			NBTTagCompound cape = new NBTTagCompound();
+			cape.setString("name", cp.name);
+			cape.setByteArray("data", cp.texture);
+			capesList.appendTag(cape);
+		}
+		profile.setTag("capes", capesList);
 		EaglerOutputStream bao = new EaglerOutputStream();
 		try {
 			CompressedStreamTools.writeCompressed(profile, bao);
@@ -253,8 +367,13 @@ public class EaglerProfile {
 		
 		setName(username);
 		
-		presetSkinId = rand.nextInt(DefaultSkins.defaultSkinsMap.length);
+		do {
+			presetSkinId = rand.nextInt(DefaultSkins.defaultSkinsMap.length);
+		}while(DefaultSkins.defaultSkinsMap[presetSkinId].model.highPoly != null);
 		customSkinId = -1;
+		
+		presetCapeId = 0;
+		customCapeId = -1;
 		
 	}
 

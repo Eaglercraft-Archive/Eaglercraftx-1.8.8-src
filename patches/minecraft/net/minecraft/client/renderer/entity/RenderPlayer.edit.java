@@ -9,8 +9,9 @@
 
 + import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 
-> INSERT  2 : 3  @  2
+> INSERT  2 : 4  @  2
 
++ import net.minecraft.client.model.ModelBase;
 + import net.minecraft.client.model.ModelBiped;
 
 > CHANGE  1 : 2  @  1 : 4
@@ -36,10 +37,17 @@
 
 > CHANGE  8 : 10  @  8 : 10
 
-~ 	public ModelBiped getMainModel() {
-~ 		return (ModelBiped) super.getMainModel();
+~ 	protected RenderPlayer(RenderManager renderManager, ModelBase modelBase, float size) {
+~ 		super(renderManager, modelBase, size);
 
-> CHANGE  16 : 17  @  16 : 17
+> INSERT  2 : 6  @  2
+
++ 	public ModelBiped getMainModel() {
++ 		return (ModelBiped) super.getMainModel();
++ 	}
++ 
+
+> CHANGE  14 : 15  @  14 : 15
 
 ~ 		ModelBiped modelplayer = this.getMainModel();
 

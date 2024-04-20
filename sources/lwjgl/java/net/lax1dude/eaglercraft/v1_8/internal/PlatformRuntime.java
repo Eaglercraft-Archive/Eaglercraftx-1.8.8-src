@@ -171,7 +171,7 @@ public class PlatformRuntime {
 		
 		EGL.createDisplayCapabilities(glfw_eglHandle, major[0], minor[0]);
 		glfwMakeContextCurrent(windowHandle);
-		GLES.createCapabilities();
+		PlatformOpenGL.setCurrentContext(GLES.createCapabilities());
 		
 		logger.info("OpenGL Version: {}", (glVersion = GLES30.glGetString(GLES30.GL_VERSION)));
 		logger.info("OpenGL Renderer: {}", (glRenderer = GLES30.glGetString(GLES30.GL_RENDERER)));
@@ -245,6 +245,7 @@ public class PlatformRuntime {
 	
 	public static void destroy() {
 		PlatformAudio.platformShutdown();
+		PlatformFilesystem.platformShutdown();
 		GLES.destroy();
 		EGL.destroy();
 		glfwDestroyWindow(windowHandle);
@@ -340,15 +341,27 @@ public class PlatformRuntime {
 	public static class NativeNIO {
 		
 		public static java.nio.ByteBuffer allocateByteBuffer(int length) {
-			return MemoryUtil.memByteBuffer(JEmalloc.nje_malloc(length), length);
+			long ret = JEmalloc.nje_malloc(length);
+			if(ret == 0l) {
+				throw new OutOfMemoryError("Native je_malloc call returned null pointer!");
+			}
+			return MemoryUtil.memByteBuffer(ret, length);
 		}
 		
 		public static java.nio.IntBuffer allocateIntBuffer(int length) {
-			return MemoryUtil.memIntBuffer(JEmalloc.nje_malloc(length << 2), length);
+			long ret = JEmalloc.nje_malloc(length << 2);
+			if(ret == 0l) {
+				throw new OutOfMemoryError("Native je_malloc call returned null pointer!");
+			}
+			return MemoryUtil.memIntBuffer(ret, length);
 		}
 		
 		public static java.nio.FloatBuffer allocateFloatBuffer(int length) {
-			return MemoryUtil.memFloatBuffer(JEmalloc.nje_malloc(length << 2), length);
+			long ret = JEmalloc.nje_malloc(length << 2);
+			if(ret == 0l) {
+				throw new OutOfMemoryError("Native je_malloc call returned null pointer!");
+			}
+			return MemoryUtil.memFloatBuffer(ret, length);
 		}
 	
 		public static java.nio.IntBuffer getIntBuffer(java.nio.ByteBuffer byteBuffer) {

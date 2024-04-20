@@ -113,13 +113,15 @@
 ~ 		for (int j = 0, l = this.loadedEntityList.size(); j < l; ++j) {
 ~ 			Entity entity = this.loadedEntityList.get(j);
 
-> CHANGE  102 : 105  @  102 : 103
+> CHANGE  102 : 107  @  102 : 104
 
 ~ 		EnumFacing[] facings = EnumFacing._VALUES;
+~ 		BlockPos tmp = new BlockPos(0, 0, 0);
 ~ 		for (int k = 0; k < facings.length; ++k) {
 ~ 			EnumFacing enumfacing = facings[k];
+~ 			int j = this.getRedstonePower(pos.offsetEvenFaster(enumfacing, tmp), enumfacing);
 
-> CHANGE  60 : 61  @  60 : 61
+> CHANGE  59 : 60  @  59 : 60
 
 ~ 	public EntityPlayer getPlayerEntityByUUID(EaglercraftUUID uuid) {
 

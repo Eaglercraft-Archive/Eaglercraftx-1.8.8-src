@@ -195,4 +195,8 @@ public class GuiShareToLan extends GuiScreen {
 		super.updateScreen();
 		this.codeTextField.updateCursorCounter();
 	}
+
+	public boolean blockPTTKey() {
+		return this.codeTextField.isFocused();
+	}
 }

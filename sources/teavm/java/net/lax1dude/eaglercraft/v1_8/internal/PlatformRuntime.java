@@ -28,7 +28,6 @@ import org.teavm.jso.dom.html.HTMLCanvasElement;
 import org.teavm.jso.dom.html.HTMLDocument;
 import org.teavm.jso.dom.html.HTMLElement;
 import org.teavm.jso.typedarrays.ArrayBuffer;
-import org.teavm.jso.typedarrays.DataView;
 import org.teavm.jso.typedarrays.Uint8Array;
 import org.teavm.jso.webaudio.MediaStream;
 import org.teavm.jso.webgl.WebGLFramebuffer;
@@ -275,27 +274,27 @@ public class PlatformRuntime {
 	}
 
 	public static ByteBuffer castPrimitiveByteArray(byte[] array) {
-		return EaglerArrayBufferAllocator.wrapByteBufferTeaVM(DataView.create(TeaVMUtils.unwrapArrayBuffer(array)));
+		return EaglerArrayBufferAllocator.wrapByteBufferTeaVM(TeaVMUtils.unwrapByteArray(array));
 	}
 
 	public static IntBuffer castPrimitiveIntArray(int[] array) {
-		return EaglerArrayBufferAllocator.wrapIntBufferTeaVM(DataView.create(TeaVMUtils.unwrapArrayBuffer(array)));
+		return EaglerArrayBufferAllocator.wrapIntBufferTeaVM(TeaVMUtils.unwrapIntArray(array));
 	}
 
 	public static FloatBuffer castPrimitiveFloatArray(float[] array) {
-		return EaglerArrayBufferAllocator.wrapFloatBufferTeaVM(DataView.create(TeaVMUtils.unwrapArrayBuffer(array)));
+		return EaglerArrayBufferAllocator.wrapFloatBufferTeaVM(TeaVMUtils.unwrapFloatArray(array));
 	}
 
 	public static byte[] castNativeByteBuffer(ByteBuffer buffer) {
-		return TeaVMUtils.wrapUnsignedByteArray(EaglerArrayBufferAllocator.getDataViewStupid(buffer));
+		return TeaVMUtils.wrapUnsignedByteArray(EaglerArrayBufferAllocator.getDataView8Unsigned(buffer));
 	}
 
 	public static int[] castNativeIntBuffer(IntBuffer buffer) {
-		return TeaVMUtils.wrapIntArray(EaglerArrayBufferAllocator.getDataViewStupid32(buffer));
+		return TeaVMUtils.wrapIntArray(EaglerArrayBufferAllocator.getDataView32(buffer));
 	}
 
 	public static float[] castNativeFloatBuffer(FloatBuffer buffer) {
-		return TeaVMUtils.wrapFloatArray(EaglerArrayBufferAllocator.getFloatArrayStupid(buffer));
+		return TeaVMUtils.wrapFloatArray(EaglerArrayBufferAllocator.getDataView32F(buffer));
 	}
 
 	public static void freeByteBuffer(ByteBuffer byteBuffer) {
@@ -500,12 +499,13 @@ public class PlatformRuntime {
 		return TeaVMClientConfigAdapter.instance;
 	}
 
-	private static boolean canRec = false;
-	private static boolean recording = false;
-	private static JSObject mediaRec = null;
-	private static HTMLCanvasElement recCanvas = null;
-	private static CanvasRenderingContext2D recCtx = null;
-	private static MediaStream recStream = null;
+	static boolean canRec = false;
+	static boolean recording = false;
+	static long lastFrame = 0l;
+	static JSObject mediaRec = null;
+	static HTMLCanvasElement recCanvas = null;
+	static CanvasRenderingContext2D recCtx = null;
+	static MediaStream recStream = null;
 
 	public static boolean isRec() {
 		return recording && canRec;
@@ -534,7 +534,7 @@ public class PlatformRuntime {
 		return recording ? "recording.stop" : "recording.start";
 	}
 
-	private static void recFrame() {
+	static void recFrame() {
 		if (mediaRec != null) {
 			int w = PlatformRuntime.canvas.getWidth();
 			int h = PlatformRuntime.canvas.getHeight();
@@ -543,21 +543,6 @@ public class PlatformRuntime {
 				recCanvas.setHeight(h);
 			}
 			recCtx.drawImage(canvas, 0, 0);
-		}
-	}
-
-	private static void onRecFrame() {
-		if (recording) {
-			recFrame();
-			long t = System.currentTimeMillis();
-			Window.requestAnimationFrame(timestamp -> {
-				long d = (1000 / 30) - (System.currentTimeMillis() - t);
-				if (d <= 0) {
-					onRecFrame();
-				} else {
-					Window.setTimeout(PlatformRuntime::onRecFrame, d);
-				}
-			});
 		}
 	}
 
@@ -630,7 +615,6 @@ public class PlatformRuntime {
 					}, logger::info);
 				}
 			});
-			onRecFrame();
 		} else {
 			stopRec(mediaRec);
 			mediaRec = null;

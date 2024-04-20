@@ -4,6 +4,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.lax1dude.eaglercraft.v1_8.internal.teavm.TeaVMUtils;
+
+import org.teavm.interop.Async;
+import org.teavm.interop.AsyncCallback;
 import org.teavm.jso.JSBody;
 import org.teavm.jso.JSObject;
 import org.teavm.jso.browser.TimerHandler;
@@ -99,6 +102,8 @@ public class PlatformInput {
 
 	public static boolean keyboardLockSupported = false;
 	public static boolean lockKeys = false;
+	
+	private static boolean vsync = true;
 	
 	@JSBody(params = { }, script = "window.onbeforeunload = () => {return false;};")
 	private static native void onBeforeCloseRegister();
@@ -291,6 +296,10 @@ public class PlatformInput {
 		return false;
 	}
 
+	public static void setVSync(boolean enable) {
+		vsync = enable;
+	}
+
 	public static void update() {
 		double r = win.getDevicePixelRatio();
 		int w = PlatformRuntime.parent.getClientWidth();
@@ -304,9 +313,41 @@ public class PlatformInput {
 			canvas.setHeight(h2);
 		}
 		flipBuffer();
-		EagUtils.sleep(1l);
+		if (PlatformRuntime.recording) {
+			long t = System.currentTimeMillis();
+			if(t - PlatformRuntime.lastFrame > (1000 / 30)) {
+				PlatformRuntime.recFrame();
+				PlatformRuntime.lastFrame = t;
+			}
+		}
+		if(vsync) {
+			asyncRequestAnimationFrame();
+		}else {
+			EagUtils.sleep(0l);
+		}
 	}
-	
+
+	@Async
+	private static native void asyncRequestAnimationFrame();
+
+	private static void asyncRequestAnimationFrame(AsyncCallback<Void> cb) {
+		final boolean[] hasCompleted = new boolean[1];
+		final int[] timeout = new int[] { -1 };
+		Window.requestAnimationFrame((d) -> {
+			if(!hasCompleted[0]) {
+				hasCompleted[0] = true;
+				Window.clearTimeout(timeout[0]);
+				cb.complete(null);
+			}
+		});
+		timeout[0] = Window.setTimeout(() -> {
+			if(!hasCompleted[0]) {
+				hasCompleted[0] = true;
+				cb.complete(null);
+			}
+		}, 50);
+	}
+
 	static void initFramebuffer(WebGL2RenderingContext ctx, WebGLFramebuffer fbo, int sw, int sh) {
 		context = ctx;
 		mainFramebuffer = fbo;
@@ -590,7 +631,7 @@ public class PlatformInput {
 	@JSBody(params = { }, script = "window.navigator.keyboard.unlock();")
 	private static native void unlockKeys();
 
-	@JSBody(params = { }, script = "return 'keyboard' in window.navigator && 'lock' in window.navigator.keyboard;")
+	@JSBody(params = { }, script = "return !!(window.navigator.keyboard && window.navigator.keyboard.lock);")
 	private static native boolean checkKeyboardLockSupported();
 
 	@JSBody(params = { }, script = "document.exitFullscreen();")

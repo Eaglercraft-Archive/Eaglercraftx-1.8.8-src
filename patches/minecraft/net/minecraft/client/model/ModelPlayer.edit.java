@@ -13,7 +13,20 @@
 
 ~ 			if (entity != null && entity.isSneaking()) {
 
-> CHANGE  31 : 32  @  31 : 32
+> INSERT  21 : 25  @  21
+
++ 		GlStateManager.matrixMode(5890);
++ 		GlStateManager.pushMatrix();
++ 		GlStateManager.scale(2.0f, 1.0f, 1.0f);
++ 		GlStateManager.matrixMode(5888);
+
+> INSERT  1 : 4  @  1
+
++ 		GlStateManager.matrixMode(5890);
++ 		GlStateManager.popMatrix();
++ 		GlStateManager.matrixMode(5888);
+
+> CHANGE  9 : 10  @  9 : 10
 
 ~ 		if (entity != null && entity.isSneaking()) {
 

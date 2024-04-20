@@ -41,7 +41,12 @@
 
 ~ 		return this.layerRenderers.add((LayerRenderer<T>) layer);
 
-> DELETE  115  @  115 : 116
+> CHANGE  104 : 106  @  104 : 105
+
+~ 			logger.error("Couldn\'t render entity");
+~ 			logger.error(exception);
+
+> DELETE  10  @  10 : 11
 
 > CHANGE  36 : 42  @  36 : 37
 

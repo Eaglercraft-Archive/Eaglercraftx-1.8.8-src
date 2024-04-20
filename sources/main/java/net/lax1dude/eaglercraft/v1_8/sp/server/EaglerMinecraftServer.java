@@ -16,7 +16,9 @@ import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.WorldSettings;
 import net.minecraft.world.WorldSettings.GameType;
+import net.lax1dude.eaglercraft.v1_8.sp.server.skins.IntegratedCapeService;
 import net.lax1dude.eaglercraft.v1_8.sp.server.skins.IntegratedSkinService;
+import net.lax1dude.eaglercraft.v1_8.sp.server.voice.IntegratedVoiceService;
 
 /**
  * Copyright (c) 2023-2024 lax1dude, ayunami2000. All Rights Reserved.
@@ -45,6 +47,8 @@ public class EaglerMinecraftServer extends MinecraftServer {
 	protected boolean paused;
 	protected EaglerSaveHandler saveHandler;
 	protected IntegratedSkinService skinService;
+	protected IntegratedCapeService capeService;
+	protected IntegratedVoiceService voiceService;
 
 	private long lastTPSUpdate = 0l;
 
@@ -62,6 +66,8 @@ public class EaglerMinecraftServer extends MinecraftServer {
 		Bootstrap.register();
 		this.saveHandler = new EaglerSaveHandler(savesDir, world);
 		this.skinService = new IntegratedSkinService(new VFile2(saveHandler.getWorldDirectory(), "eagler/skulls"));
+		this.capeService = new IntegratedCapeService();
+		this.voiceService = null;
 		this.setServerOwner(owner);
 		logger.info("server owner: " + owner);
 		this.setDemo(demo);
@@ -74,6 +80,27 @@ public class EaglerMinecraftServer extends MinecraftServer {
 
 	public IntegratedSkinService getSkinService() {
 		return skinService;
+	}
+
+	public IntegratedCapeService getCapeService() {
+		return capeService;
+	}
+
+	public IntegratedVoiceService getVoiceService() {
+		return voiceService;
+	}
+
+	public void enableVoice(String[] iceServers) {
+		if(iceServers != null) {
+			if(voiceService != null) {
+				voiceService.changeICEServers(iceServers);
+			}else {
+				voiceService = new IntegratedVoiceService(iceServers);
+				for(EntityPlayerMP player : getConfigurationManager().func_181057_v()) {
+					voiceService.handlePlayerLoggedIn(player);
+				}
+			}
+		}
 	}
 
 	public void setBaseServerProperties(EnumDifficulty difficulty, GameType gamemode) {

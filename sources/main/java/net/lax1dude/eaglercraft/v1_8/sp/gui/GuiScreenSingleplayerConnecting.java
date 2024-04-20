@@ -88,7 +88,7 @@ public class GuiScreenSingleplayerConnecting extends GuiScreen {
 						this.mc.clearTitles();
 						this.networkManager.setConnectionState(EnumConnectionState.LOGIN);
 						this.networkManager.setNetHandler(new NetHandlerSingleplayerLogin(this.networkManager, this.mc, this.menu));
-						this.networkManager.sendPacket(new C00PacketLoginStart(this.mc.getSession().getProfile(), EaglerProfile.getSkinPacket()));
+						this.networkManager.sendPacket(new C00PacketLoginStart(this.mc.getSession().getProfile(), EaglerProfile.getSkinPacket(), EaglerProfile.getCapePacket()));
 					}
 					try {
 						this.networkManager.processReceivedPackets();

@@ -58,6 +58,9 @@ public class SkinPackets {
 						modelId = SkinModel.STEVE;
 					}
 				}
+				if(modelId.highPoly != null) {
+					modelId = SkinModel.STEVE;
+				}
 				int bytesToRead = modelId.width * modelId.height * 4;
 				byte[] readSkin = new byte[bytesToRead];
 				buffer.readBytes(readSkin);

@@ -117,4 +117,11 @@
 ~ 			for (int i = 0; i < parArrayOfString.length; ++i) {
 ~ 				String s = parArrayOfString[i];
 
+> INSERT  24 : 28  @  24
+
++ 
++ 	public boolean blockPTTKey() {
++ 		return true;
++ 	}
+
 > EOF

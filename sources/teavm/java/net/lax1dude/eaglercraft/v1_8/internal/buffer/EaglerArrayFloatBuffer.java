@@ -1,8 +1,8 @@
 package net.lax1dude.eaglercraft.v1_8.internal.buffer;
 
-import org.teavm.jso.typedarrays.ArrayBuffer;
-import org.teavm.jso.typedarrays.DataView;
-import org.teavm.jso.typedarrays.Uint8Array;
+import org.teavm.jso.typedarrays.Float32Array;
+
+import net.lax1dude.eaglercraft.v1_8.internal.teavm.TeaVMUtils;
 
 /**
  * Copyright (c) 2022-2023 lax1dude. All Rights Reserved.
@@ -21,7 +21,7 @@ import org.teavm.jso.typedarrays.Uint8Array;
  */
 public class EaglerArrayFloatBuffer implements FloatBuffer {
 
-	final DataView dataView;
+	final Float32Array typedArray;
 
 	final int capacity;
 	int position;
@@ -30,17 +30,19 @@ public class EaglerArrayFloatBuffer implements FloatBuffer {
 	
 	private static final int SHIFT = 2;
 	
-	EaglerArrayFloatBuffer(DataView dataView) {
-		this.dataView = dataView;
-		this.capacity = dataView.getByteLength() >> SHIFT;
+	static final Float32Array ZERO_LENGTH_BUFFER = Float32Array.create(0);
+	
+	EaglerArrayFloatBuffer(Float32Array typedArray) {
+		this.typedArray = typedArray;
+		this.capacity = typedArray.getLength();
 		this.position = 0;
 		this.limit = this.capacity;
 		this.mark = -1;
 	}
 	
-	EaglerArrayFloatBuffer(DataView dataView, int position, int limit, int mark) {
-		this.dataView = dataView;
-		this.capacity = dataView.getByteLength() >> SHIFT;
+	EaglerArrayFloatBuffer(Float32Array typedArray, int position, int limit, int mark) {
+		this.typedArray = typedArray;
+		this.capacity = typedArray.getLength();
 		this.position = position;
 		this.limit = limit;
 		this.mark = mark;
@@ -93,64 +95,66 @@ public class EaglerArrayFloatBuffer implements FloatBuffer {
 
 	@Override
 	public FloatBuffer slice() {
-		int o = dataView.getByteOffset();
-		return new EaglerArrayFloatBuffer(DataView.create(dataView.getBuffer(), o + (position << SHIFT), (limit - position) << SHIFT));
+		if(position == limit) {
+			return new EaglerArrayFloatBuffer(ZERO_LENGTH_BUFFER);
+		}else {
+			if(position > limit) throw new ArrayIndexOutOfBoundsException(position);
+			return new EaglerArrayFloatBuffer(Float32Array.create(typedArray.getBuffer(), typedArray.getByteOffset() + (position << SHIFT), limit - position));
+		}
 	}
 
 	@Override
 	public FloatBuffer duplicate() {
-		return new EaglerArrayFloatBuffer(dataView, position, limit, mark);
+		return new EaglerArrayFloatBuffer(typedArray, position, limit, mark);
 	}
 
 	@Override
 	public FloatBuffer asReadOnlyBuffer() {
-		return new EaglerArrayFloatBuffer(dataView, position, limit, mark);
+		return new EaglerArrayFloatBuffer(typedArray, position, limit, mark);
 	}
 
 	@Override
 	public float get() {
 		if(position >= limit) throw new ArrayIndexOutOfBoundsException(position);
-		return dataView.getFloat32((position++) << SHIFT, true);
+		return typedArray.get(position++);
 	}
 
 	@Override
 	public FloatBuffer put(float b) {
 		if(position >= limit) throw new ArrayIndexOutOfBoundsException(position);
-		dataView.setFloat32((position++) << SHIFT, b, true);
+		typedArray.set(position++, b);
 		return this;
 	}
 
 	@Override
 	public float get(int index) {
 		if(index >= limit) throw new ArrayIndexOutOfBoundsException(index);
-		return dataView.getFloat32(index << SHIFT, true);
+		return typedArray.get(index);
 	}
 
 	@Override
 	public FloatBuffer put(int index, float b) {
 		if(index >= limit) throw new ArrayIndexOutOfBoundsException(index);
-		dataView.setFloat32(index << SHIFT, b, true);
+		typedArray.set(index, b);
 		return this;
 	}
 
 	@Override
 	public float getElement(int index) {
 		if(index >= limit) throw new ArrayIndexOutOfBoundsException(index);
-		return dataView.getFloat32(index << SHIFT, true);
+		return typedArray.get(index);
 	}
 
 	@Override
 	public void putElement(int index, float value) {
 		if(index >= limit) throw new ArrayIndexOutOfBoundsException(index);
-		dataView.setFloat32(index << SHIFT, value, true);
+		typedArray.set(index, value);
 	}
 
 	@Override
 	public FloatBuffer get(float[] dst, int offset, int length) {
 		if(position + length > limit) throw new ArrayIndexOutOfBoundsException(position + length - 1);
-		for(int i = 0; i < length; ++i) {
-			dst[offset + i] = dataView.getFloat32((position + i) << SHIFT, true);
-		}
+		TeaVMUtils.unwrapArrayBufferView(dst).set(Float32Array.create(typedArray.getBuffer(), typedArray.getByteOffset() + (position << SHIFT), length), offset);
 		position += length;
 		return this;
 	}
@@ -158,9 +162,7 @@ public class EaglerArrayFloatBuffer implements FloatBuffer {
 	@Override
 	public FloatBuffer get(float[] dst) {
 		if(position + dst.length > limit) throw new ArrayIndexOutOfBoundsException(position + dst.length - 1);
-		for(int i = 0; i < dst.length; ++i) {
-			dst[i] = dataView.getFloat32((position + i) << SHIFT, true);
-		}
+		TeaVMUtils.unwrapArrayBufferView(dst).set(Float32Array.create(typedArray.getBuffer(), typedArray.getByteOffset() + (position << SHIFT), dst.length));
 		position += dst.length;
 		return this;
 	}
@@ -171,17 +173,14 @@ public class EaglerArrayFloatBuffer implements FloatBuffer {
 			EaglerArrayFloatBuffer c = (EaglerArrayFloatBuffer)src;
 			int l = c.limit - c.position;
 			if(position + l > limit) throw new ArrayIndexOutOfBoundsException(position + l - 1);
-			int o = c.dataView.getByteOffset();
-			Uint8Array.create(dataView.getBuffer()).set(
-					Uint8Array.create(c.dataView.getBuffer(), o + (c.position << SHIFT), (c.limit - c.position) << SHIFT),
-					dataView.getByteOffset() + (position << SHIFT));
+			typedArray.set(Float32Array.create(c.typedArray.getBuffer(), c.typedArray.getByteOffset() + (c.position << SHIFT), l), position);
 			position += l;
 			c.position += l;
 		}else {
 			int l = src.remaining();
 			if(position + l > limit) throw new ArrayIndexOutOfBoundsException(position + l - 1);
 			for(int i = 0; i < l; ++i) {
-				dataView.setFloat32((position + l) << SHIFT, src.get(), true);
+				typedArray.set(position + l, src.get());
 			}
 			position += l;
 		}
@@ -191,8 +190,10 @@ public class EaglerArrayFloatBuffer implements FloatBuffer {
 	@Override
 	public FloatBuffer put(float[] src, int offset, int length) {
 		if(position + length > limit) throw new ArrayIndexOutOfBoundsException(position + length - 1);
-		for(int i = 0; i < length; ++i) {
-			dataView.setFloat32((position + i) << SHIFT, src[offset + i], true);
+		if(offset == 0 && length == src.length) {
+			typedArray.set(TeaVMUtils.unwrapArrayBufferView(src), position);
+		}else {
+			typedArray.set(Float32Array.create(TeaVMUtils.unwrapArrayBuffer(src), offset << SHIFT, length), position);
 		}
 		position += length;
 		return this;
@@ -201,9 +202,7 @@ public class EaglerArrayFloatBuffer implements FloatBuffer {
 	@Override
 	public FloatBuffer put(float[] src) {
 		if(position + src.length > limit) throw new ArrayIndexOutOfBoundsException(position + src.length - 1);
-		for(int i = 0; i < src.length; ++i) {
-			dataView.setFloat32((position + i) << SHIFT, src[i], true);
-		}
+		typedArray.set(TeaVMUtils.unwrapArrayBufferView(src), position);
 		position += src.length;
 		return this;
 	}
@@ -219,15 +218,13 @@ public class EaglerArrayFloatBuffer implements FloatBuffer {
 		if(position > limit) throw new ArrayIndexOutOfBoundsException(position);
 		
 		if(position == limit) {
-			return new EaglerArrayFloatBuffer(EaglerArrayByteBuffer.ZERO_LENGTH_BUFFER);
+			return new EaglerArrayFloatBuffer(ZERO_LENGTH_BUFFER);
 		}
 		
-		int o = dataView.getByteOffset();
+		Float32Array dst = Float32Array.create(limit - position);
+		dst.set(Float32Array.create(typedArray.getBuffer(), typedArray.getByteOffset() + (position << SHIFT), limit - position));
 		
-		Uint8Array dst = Uint8Array.create(ArrayBuffer.create((limit - position) << SHIFT));
-		dst.set(Uint8Array.create(dataView.getBuffer(), o + (position << SHIFT), (limit - position) << SHIFT));
-		
-		return new EaglerArrayFloatBuffer(DataView.create(dst.getBuffer()));
+		return new EaglerArrayFloatBuffer(dst);
 	}
 
 	@Override

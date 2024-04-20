@@ -20,7 +20,7 @@
 
 > DELETE  1  @  1 : 4
 
-> CHANGE  1 : 52  @  1 : 4
+> CHANGE  1 : 55  @  1 : 4
 
 ~ 
 ~ import net.lax1dude.eaglercraft.v1_8.internal.PlatformInput;
@@ -46,6 +46,7 @@
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 ~ import net.lax1dude.eaglercraft.v1_8.minecraft.EaglerFolderResourcePack;
 ~ import net.lax1dude.eaglercraft.v1_8.minecraft.EaglerFontRenderer;
+~ import net.lax1dude.eaglercraft.v1_8.opengl.EaglerMeshLoader;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.EaglercraftGPU;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.ImageData;
@@ -73,6 +74,8 @@
 ~ import net.lax1dude.eaglercraft.v1_8.sp.gui.GuiScreenSingleplayerConnecting;
 ~ import net.lax1dude.eaglercraft.v1_8.sp.lan.LANServerController;
 ~ import net.lax1dude.eaglercraft.v1_8.update.RelayUpdateChecker;
+~ import net.lax1dude.eaglercraft.v1_8.voice.GuiVoiceOverlay;
+~ import net.lax1dude.eaglercraft.v1_8.voice.VoiceClientController;
 
 > DELETE  2  @  2 : 4
 
@@ -165,9 +168,15 @@
 + 	public int bungeeOutdatedMsgTimer = 0;
 + 	private boolean isLANOpen = false;
 
-> INSERT  1 : 3  @  1
+> INSERT  1 : 9  @  1
 
 + 	public SkullCommand eagskullCommand;
++ 
++ 	public GuiVoiceOverlay voiceOverlay;
++ 
++ 	public float startZoomValue = 18.0f;
++ 	public float adjustedZoomValue = 18.0f;
++ 	public boolean isZoomKey = false;
 + 
 
 > CHANGE  2 : 3  @  2 : 5
@@ -248,7 +257,7 @@
 
 ~ 		this.standardGalacticFontRenderer = new EaglerFontRenderer(this.gameSettings,
 
-> INSERT  5 : 11  @  5
+> INSERT  5 : 12  @  5
 
 + 		this.mcResourceManager.registerReloadListener(new ShaderPackInfoReloadListener());
 + 		this.mcResourceManager.registerReloadListener(PBRTextureMapUtils.blockMaterialConstants);
@@ -256,6 +265,7 @@
 + 		this.mcResourceManager.registerReloadListener(new MetalsLUT());
 + 		this.mcResourceManager.registerReloadListener(new EmissiveItems());
 + 		this.mcResourceManager.registerReloadListener(new BlockVertexIDs());
++ 		this.mcResourceManager.registerReloadListener(new EaglerMeshLoader());
 
 > CHANGE  3 : 4  @  3 : 4
 
@@ -273,9 +283,12 @@
 
 + 		SkinPreviewRenderer.initialize();
 
-> INSERT  2 : 11  @  2
+> INSERT  2 : 14  @  2
 
 + 		this.eagskullCommand = new SkullCommand(this);
++ 		this.voiceOverlay = new GuiVoiceOverlay(this);
++ 		ScaledResolution voiceRes = new ScaledResolution(this);
++ 		this.voiceOverlay.setResolution(voiceRes.getScaledWidth(), voiceRes.getScaledHeight());
 + 
 + 		ServerList.initServerList(this);
 + 		EaglerProfile.read();
@@ -490,7 +503,11 @@
 
 + 		Mouse.tickCursorShape();
 
-> DELETE  39  @  39 : 57
+> INSERT  5 : 6  @  5
+
++ 		Display.setVSync(this.gameSettings.enableVsync);
+
+> DELETE  34  @  34 : 52
 
 > CHANGE  39 : 40  @  39 : 40
 
@@ -518,11 +535,19 @@
 
 ~ 		Display.toggleFullscreen();
 
-> DELETE  11  @  11 : 12
+> INSERT  5 : 6  @  5
 
-> DELETE  2  @  2 : 10
++ 		ScaledResolution scaledresolution = new ScaledResolution(this);
 
-> INSERT  9 : 28  @  9
+> DELETE  1  @  1 : 2
+
+> DELETE  4  @  4 : 6
+
+> CHANGE  1 : 2  @  1 : 7
+
+~ 		this.voiceOverlay.setResolution(scaledresolution.getScaledWidth(), scaledresolution.getScaledHeight());
+
+> INSERT  11 : 30  @  11
 
 + 		RateLimitTracker.tick();
 + 
@@ -544,7 +569,13 @@
 + 		RelayUpdateChecker.runTick();
 + 
 
-> INSERT  15 : 16  @  15
+> INSERT  5 : 8  @  5
+
++ 		this.mcProfiler.endStartSection("eaglerVoice");
++ 		VoiceClientController.tickVoiceClient(this);
++ 
+
+> INSERT  10 : 11  @  10
 
 + 			GlStateManager.viewport(0, 0, displayWidth, displayHeight); // to be safe
 
@@ -573,7 +604,13 @@
 
 ~ 							return Minecraft.this.currentScreen.getClass().getName();
 
-> CHANGE  40 : 42  @  40 : 41
+> CHANGE  25 : 28  @  25 : 26
+
+~ 						if (this.isZoomKey) {
+~ 							this.adjustedZoomValue = MathHelper.clamp_float(adjustedZoomValue - j * 4.0f, 5.0f, 32.0f);
+~ 						} else if (this.thePlayer.isSpectator()) {
+
+> CHANGE  14 : 16  @  14 : 15
 
 ~ 						if ((!this.inGameHasFocus || !Mouse.isActuallyGrabbed()) && Mouse.getEventButtonState()) {
 ~ 							this.inGameHasFocus = false;
@@ -613,7 +650,16 @@
 
 + 							GlStateManager.recompileShaders();
 
-> INSERT  163 : 164  @  163
+> INSERT  71 : 77  @  71
+
++ 			boolean zoomKey = this.gameSettings.keyBindZoomCamera.isKeyDown();
++ 			if (zoomKey != isZoomKey) {
++ 				adjustedZoomValue = startZoomValue;
++ 				isZoomKey = zoomKey;
++ 			}
++ 
+
+> INSERT  92 : 93  @  92
 
 + 			this.eagskullCommand.tick();
 
@@ -664,8 +710,9 @@
 + 		}
 + 
 
-> CHANGE  6 : 16  @  6 : 54
+> CHANGE  6 : 17  @  6 : 54
 
+~ 		Minecraft.getMinecraft().getRenderManager().setEnableFNAWSkins(this.gameSettings.enableFNAWSkins);
 ~ 		session.reset();
 ~ 		SingleplayerServerController.launchEaglercraftServer(folderName, gameSettings.difficulty.getDifficultyId(),
 ~ 				Math.max(gameSettings.renderDistanceChunks, 2), worldSettingsIn);
@@ -799,7 +846,7 @@
 
 > DELETE  26  @  26 : 34
 
-> INSERT  7 : 27  @  7
+> INSERT  7 : 35  @  7
 
 + 
 + 	public static int getGLMaximumTextureSize() {
@@ -820,6 +867,14 @@
 + 
 + 	public void clearTitles() {
 + 		ingameGUI.displayTitle(null, null, -1, -1, -1);
++ 	}
++ 
++ 	public boolean getEnableFNAWSkins() {
++ 		boolean ret = this.gameSettings.enableFNAWSkins;
++ 		if (this.thePlayer != null) {
++ 			ret &= this.thePlayer.sendQueue.currentFNAWSkinAllowedState;
++ 		}
++ 		return ret;
 + 	}
 
 > EOF

@@ -361,6 +361,9 @@ public class EaglerIntegratedServerWorker {
 			case IPCPacket17ConfigureLAN.ID: {
 
 				IPCPacket17ConfigureLAN pkt = (IPCPacket17ConfigureLAN)ipc;
+				if(!pkt.iceServers.isEmpty() && ServerPlatformSingleplayer.getClientConfigAdapter().isAllowVoiceClient()) {
+					currentProcess.enableVoice(pkt.iceServers.toArray(new String[pkt.iceServers.size()]));
+				}
 				currentProcess.getConfigurationManager().configureLAN(pkt.gamemode, pkt.cheats); // don't use iceServers
 
 				break;

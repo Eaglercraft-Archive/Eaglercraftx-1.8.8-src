@@ -1,13 +1,11 @@
 package net.lax1dude.eaglercraft.v1_8.internal;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
 
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.ByteBuffer;
-import net.lax1dude.eaglercraft.v1_8.internal.vfs2.EaglerFileSystemException;
-import net.lax1dude.eaglercraft.v1_8.internal.vfs2.VFSIterator2.BreakLoop;
+import net.lax1dude.eaglercraft.v1_8.internal.lwjgl.DebugFilesystem;
+import net.lax1dude.eaglercraft.v1_8.internal.lwjgl.JDBCFilesystem;
+import net.lax1dude.eaglercraft.v1_8.internal.lwjgl.JDBCFilesystemConverter;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 
@@ -30,183 +28,104 @@ public class PlatformFilesystem {
 
 	public static final Logger logger = LogManager.getLogger("PlatformFilesystem");
 
-	public static final File filesystemRoot = (new File("filesystem/sp")).getAbsoluteFile();
+	public static final File debugFilesystemRoot = (new File("filesystem/sp")).getAbsoluteFile();
+
+	private static IFilesystemProvider provider = null;
+
+	public static String jdbcUri = null;
+	public static String jdbcDriver = null;
 
 	public static void initialize() {
-		if(!filesystemRoot.isDirectory() && !filesystemRoot.mkdirs()) {
-			throw new EaglerFileSystemException("Could not create directory for virtual filesystem: " + filesystemRoot.getAbsolutePath());
+		if(provider == null) {
+			if(jdbcUri != null && jdbcDriver != null) {
+				provider = JDBCFilesystem.initialize(jdbcUri, jdbcDriver);
+				if(((JDBCFilesystem)provider).isNewFilesystem() && debugFilesystemRoot.isDirectory() && debugFilesystemRoot.list().length > 0) {
+					JDBCFilesystemConverter.convertFilesystem("Converting filesystem, please wait...", debugFilesystemRoot, provider, true);
+				}
+			}else {
+				provider = DebugFilesystem.initialize(debugFilesystemRoot);
+			}
 		}
+	}
+
+	public static void setUseJDBC(String uri) {
+		jdbcUri = uri;
+	}
+
+	public static void setJDBCDriverClass(String driver) {
+		jdbcDriver = driver;
+	}
+
+	public static interface IFilesystemProvider {
+
+		boolean eaglerDelete(String pathName);
+
+		ByteBuffer eaglerRead(String pathName);
+
+		void eaglerWrite(String pathName, ByteBuffer data);
+
+		boolean eaglerExists(String pathName);
+
+		boolean eaglerMove(String pathNameOld, String pathNameNew);
+
+		int eaglerCopy(String pathNameOld, String pathNameNew);
+
+		int eaglerSize(String pathName);
+
+		void eaglerIterate(String pathName, VFSFilenameIterator itr, boolean recursive);
+
+	}
+
+	private static void throwNotInitialized() {
+		throw new UnsupportedOperationException("Filesystem has not been initialized!");
 	}
 
 	public static boolean eaglerDelete(String pathName) {
-		File f = getJREFile(pathName);
-		if(!f.exists()) {
-			logger.warn("Tried to delete file that doesn't exist: \"{}\"", pathName);
-			return false;
-		}
-		if(f.delete()) {
-			deleteParentIfEmpty(f);
-			return true;
-		}
-		return false;
+		if(provider == null) throwNotInitialized();
+		return provider.eaglerDelete(pathName);
 	}
 
 	public static ByteBuffer eaglerRead(String pathName) {
-		File f = getJREFile(pathName);
-		if(f.isFile()) {
-			long fileSize = f.length();
-			if(fileSize > 2147483647L) throw new EaglerFileSystemException("Too large: " + fileSize + " @ " + f.getAbsolutePath());
-			ByteBuffer buf = PlatformRuntime.allocateByteBuffer((int)fileSize);
-			try(FileInputStream is = new FileInputStream(f)) {
-				byte[] copyBuffer = new byte[4096];
-				int i;
-				while((i = is.read(copyBuffer, 0, copyBuffer.length)) != -1) {
-					buf.put(copyBuffer, 0, i);
-				}
-				if(buf.remaining() > 0) {
-					throw new EaglerFileSystemException("ERROR: " + buf.remaining() + " bytes are remaining after reading: " + f.getAbsolutePath());
-				}
-				buf.flip();
-				ByteBuffer tmp = buf;
-				buf = null;
-				return tmp;
-			}catch (IOException e) {
-				throw new EaglerFileSystemException("Failed to read: " + f.getAbsolutePath(), e);
-			}catch(ArrayIndexOutOfBoundsException ex) {
-				throw new EaglerFileSystemException("ERROR: Expected " + fileSize + " bytes, buffer overflow reading: " + f.getAbsolutePath(), ex);
-			}finally {
-				if(buf != null) {
-					PlatformRuntime.freeByteBuffer(buf);
-				}
-			}
-		}else {
-			logger.warn("Tried to read file that doesn't exist: \"{}\"", f.getAbsolutePath());
-			return null;
-		}
+		if(provider == null) throwNotInitialized();
+		return provider.eaglerRead(pathName);
 	}
 
 	public static void eaglerWrite(String pathName, ByteBuffer data) {
-		File f = getJREFile(pathName);
-		File p = f.getParentFile();
-		if(!p.isDirectory()) {
-			if(!p.mkdirs()) {
-				throw new EaglerFileSystemException("Could not create parent directory: " + p.getAbsolutePath());
-			}
-		}
-		try(FileOutputStream fos = new FileOutputStream(f)) {
-			byte[] copyBuffer = new byte[Math.min(4096, data.remaining())];
-			int i;
-			while((i = data.remaining()) > 0) {
-				if(i > copyBuffer.length) {
-					i = copyBuffer.length;
-				}
-				data.get(copyBuffer, 0, i);
-				fos.write(copyBuffer, 0, i);
-			}
-		}catch (IOException e) {
-			throw new EaglerFileSystemException("Failed to write: " + f.getAbsolutePath(), e);
-		}
+		if(provider == null) throwNotInitialized();
+		provider.eaglerWrite(pathName, data);
 	}
 
 	public static boolean eaglerExists(String pathName) {
-		return getJREFile(pathName).isFile();
+		if(provider == null) throwNotInitialized();
+		return provider.eaglerExists(pathName);
 	}
 
 	public static boolean eaglerMove(String pathNameOld, String pathNameNew) {
-		File f1 = getJREFile(pathNameOld);
-		File f2 = getJREFile(pathNameNew);
-		if(f2.exists()) {
-			logger.warn("Tried to rename file \"{}\" to \"{}\" which already exists! File will be replaced");
-			if(!f2.delete()) {
-				return false;
-			}
-		}
-		if(f1.renameTo(f2)) {
-			deleteParentIfEmpty(f1);
-			return true;
-		}
-		return false;
+		if(provider == null) throwNotInitialized();
+		return provider.eaglerMove(pathNameOld, pathNameNew);
 	}
 
 	public static int eaglerCopy(String pathNameOld, String pathNameNew) {
-		File f1 = getJREFile(pathNameOld);
-		File f2 = getJREFile(pathNameNew);
-		if(!f1.isFile()) {
-			return -1;
-		}
-		if(f2.isDirectory()) {
-			throw new EaglerFileSystemException("Destination file is a directory: " + f2.getAbsolutePath());
-		}
-		File p = f2.getParentFile();
-		if(!p.isDirectory()) {
-			if(!p.mkdirs()) {
-				throw new EaglerFileSystemException("Could not create parent directory: " + p.getAbsolutePath());
-			}
-		}
-		int sz = 0;
-		try(FileInputStream is = new FileInputStream(f1)) {
-			try(FileOutputStream os = new FileOutputStream(f2)) {
-				byte[] copyBuffer = new byte[4096];
-				int i;
-				while((i = is.read(copyBuffer, 0, copyBuffer.length)) != -1) {
-					os.write(copyBuffer, 0, i);
-					sz += i;
-				}
-			}
-		}catch (IOException e) {
-			throw new EaglerFileSystemException("Failed to copy \"" + f1.getAbsolutePath() + "\" to file \"" + f2.getAbsolutePath() + "\"", e);
-		}
-		return sz;
+		if(provider == null) throwNotInitialized();
+		return provider.eaglerCopy(pathNameOld, pathNameNew);
 	}
 
 	public static int eaglerSize(String pathName) {
-		File f = getJREFile(pathName);
-		if(f.isFile()) {
-			long fileSize = f.length();
-			if(fileSize > 2147483647L) throw new EaglerFileSystemException("Too large: " + fileSize + " @ " + f.getAbsolutePath());
-			return (int)fileSize;
-		}else {
-			return -1;
-		}
+		if(provider == null) throwNotInitialized();
+		return provider.eaglerSize(pathName);
 	}
 
 	public static void eaglerIterate(String pathName, VFSFilenameIterator itr, boolean recursive) {
-		try {
-			iterateFile(pathName, getJREFile(pathName), itr, recursive);
-		}catch(BreakLoop ex) {
-		}
+		if(provider == null) throwNotInitialized();
+		provider.eaglerIterate(pathName, itr, recursive);
 	}
 
-	private static void iterateFile(String pathName, File f, VFSFilenameIterator itr, boolean recursive) {
-		if(!f.exists()) {
-			return;
-		}
-		if(!f.isDirectory()) {
-			itr.next(pathName);
-			return;
-		}
-		File[] fa = f.listFiles();
-		for(int i = 0; i < fa.length; ++i) {
-			File ff = fa[i];
-			String fn = pathName + "/" + ff.getName();
-			if(ff.isDirectory()) {
-				if(recursive) {
-					iterateFile(fn, ff, itr, true);
-				}
-			}else {
-				itr.next(fn);
+	public static void platformShutdown() {
+		if(provider != null) {
+			if(provider instanceof JDBCFilesystem) {
+				((JDBCFilesystem)provider).shutdown();
 			}
-		}
-	}
-
-	private static File getJREFile(String path) {
-		return new File(filesystemRoot, path);
-	}
-
-	private static void deleteParentIfEmpty(File f) {
-		String[] s;
-		while((f = f.getParentFile()) != null && (s = f.list()) != null && s.length == 0) {
-			f.delete();
+			provider = null;
 		}
 	}
 }

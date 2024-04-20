@@ -59,7 +59,11 @@
 ~ 				I18n.format("options.debugConsoleButton", new Object[0])));
 ~ 		btn.enabled = EagRuntime.getPlatformType() != EnumPlatformType.DESKTOP;
 
-> INSERT  17 : 18  @  17
+> CHANGE  10 : 11  @  10 : 11
+
+~ 		return chatcomponenttext.getUnformattedText();
+
+> INSERT  6 : 7  @  6
 
 + 			SingleplayerServerController.setDifficulty(-1);
 

@@ -26,4 +26,11 @@
 
 ~ 	protected void mouseClicked(int parInt1, int parInt2, int parInt3) {
 
+> INSERT  46 : 50  @  46
+
++ 
++ 	public boolean blockPTTKey() {
++ 		return commandTextField.isFocused();
++ 	}
+
 > EOF

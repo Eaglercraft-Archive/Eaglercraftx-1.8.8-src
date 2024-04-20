@@ -3,7 +3,7 @@ package net.lax1dude.eaglercraft.v1_8.internal.buffer;
 import org.lwjgl.system.jemalloc.JEmalloc;
 
 /**
- * Copyright (c) 2022-2024 lax1dude, ayunami2000. All Rights Reserved.
+ * Copyright (c) 2022-2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -26,19 +26,35 @@ public class EaglerLWJGLAllocator {
 	}
 
 	public static ByteBuffer allocByteBuffer(int len) {
-		return new EaglerLWJGLByteBuffer(JEmalloc.nje_malloc(len), len, true);
+		long ret = JEmalloc.nje_malloc(len);
+		if(ret == 0l) {
+			throw new OutOfMemoryError("Native je_malloc call returned null pointer!");
+		}
+		return new EaglerLWJGLByteBuffer(ret, len, true);
 	}
 
 	public static ShortBuffer allocShortBuffer(int len) {
-		return new EaglerLWJGLShortBuffer(JEmalloc.nje_malloc(len << 1), len, true);
+		long ret = JEmalloc.nje_malloc(len << 1);
+		if(ret == 0l) {
+			throw new OutOfMemoryError("Native je_malloc call returned null pointer!");
+		}
+		return new EaglerLWJGLShortBuffer(ret, len, true);
 	}
 
 	public static IntBuffer allocIntBuffer(int len) {
-		return new EaglerLWJGLIntBuffer(JEmalloc.nje_malloc(len << 2), len, true);
+		long ret = JEmalloc.nje_malloc(len << 2);
+		if(ret == 0l) {
+			throw new OutOfMemoryError("Native je_malloc call returned null pointer!");
+		}
+		return new EaglerLWJGLIntBuffer(ret, len, true);
 	}
 
 	public static FloatBuffer allocFloatBuffer(int len) {
-		return new EaglerLWJGLFloatBuffer(JEmalloc.nje_malloc(len << 2), len, true);
+		long ret = JEmalloc.nje_malloc(len << 2);
+		if(ret == 0l) {
+			throw new OutOfMemoryError("Native je_malloc call returned null pointer!");
+		}
+		return new EaglerLWJGLFloatBuffer(ret, len, true);
 	}
 
 	public static void freeByteBuffer(ByteBuffer buffer) {

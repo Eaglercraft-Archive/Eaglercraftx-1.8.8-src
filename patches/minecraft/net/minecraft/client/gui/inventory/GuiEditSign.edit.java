@@ -22,4 +22,11 @@
 
 ~ 	protected void keyTyped(char parChar1, int parInt1) {
 
+> INSERT  68 : 72  @  68
+
++ 
++ 	public boolean blockPTTKey() {
++ 		return true;
++ 	}
+
 > EOF

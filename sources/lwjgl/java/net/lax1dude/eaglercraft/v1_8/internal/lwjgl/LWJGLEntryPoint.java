@@ -6,6 +6,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.EagUtils;
 import net.lax1dude.eaglercraft.v1_8.internal.EnumPlatformANGLE;
+import net.lax1dude.eaglercraft.v1_8.internal.PlatformFilesystem;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformInput;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformRuntime;
 import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.program.ShaderSource;
@@ -43,14 +44,8 @@ public class LWJGLEntryPoint {
 		
 		boolean hideRenderDocDialog = false;
 		for(int i = 0; i < args.length; ++i) {
-			if(args[i].equalsIgnoreCase("highp")) {
-				ShaderSource.setHighP(true);
-			}
 			if(args[i].equalsIgnoreCase("hide-renderdoc")) {
 				hideRenderDocDialog = true;
-			}
-			if(args[i].equalsIgnoreCase("fullscreen")) {
-				PlatformInput.setStartupFullscreen(true);
 			}
 		}
 		
@@ -66,7 +61,7 @@ public class LWJGLEntryPoint {
 			lr.dispose();
 		}
 		
-		getANGLEPlatformFromArgs(args);
+		getPlatformOptionsFromArgs(args);
 		
 		RelayManager.relayManager.load(EagRuntime.getStorage("r"));
 
@@ -81,12 +76,22 @@ public class LWJGLEntryPoint {
 		
 	}
 	
-	private static void getANGLEPlatformFromArgs(String[] args) {
+	private static void getPlatformOptionsFromArgs(String[] args) {
 		for(int i = 0; i < args.length; ++i) {
-			EnumPlatformANGLE angle = EnumPlatformANGLE.fromId(args[i]);
-			if(angle != EnumPlatformANGLE.DEFAULT) {
-				PlatformRuntime.requestANGLE(angle);
-				break;
+			if(args[i].equalsIgnoreCase("fullscreen")) {
+				PlatformInput.setStartupFullscreen(true);
+			}else if(args[i].equalsIgnoreCase("highp")) {
+				ShaderSource.setHighP(true);
+			}else if(args[i].startsWith("jdbc:")) {
+				if(i < args.length - 1) {
+					PlatformFilesystem.setUseJDBC(args[i]);
+					PlatformFilesystem.setJDBCDriverClass(args[++i]);
+				}
+			}else {
+				EnumPlatformANGLE angle = EnumPlatformANGLE.fromId(args[i]);
+				if(angle != EnumPlatformANGLE.DEFAULT) {
+					PlatformRuntime.requestANGLE(angle);
+				}
 			}
 		}
 	}

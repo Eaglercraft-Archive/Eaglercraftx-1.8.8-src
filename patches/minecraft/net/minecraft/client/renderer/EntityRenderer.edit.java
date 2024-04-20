@@ -16,7 +16,7 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ import net.lax1dude.eaglercraft.v1_8.HString;
 
-> INSERT  1 : 27  @  1
+> INSERT  1 : 28  @  1
 
 + 
 + import com.google.common.base.Predicate;
@@ -43,6 +43,7 @@
 + import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.gui.GuiShaderConfig;
 + import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.texture.EmissiveItems;
 + import net.lax1dude.eaglercraft.v1_8.vector.Vector4f;
++ import net.lax1dude.eaglercraft.v1_8.voice.VoiceTagRenderer;
 + import net.lax1dude.eaglercraft.v1_8.vector.Matrix4f;
 
 > CHANGE  10 : 13  @  10 : 20
@@ -84,7 +85,12 @@
 + 	private GameOverlayFramebuffer overlayFramebuffer;
 + 	private float eagPartialTicks = 0.0f;
 
-> DELETE  2  @  2 : 3
+> INSERT  1 : 3  @  1
+
++ 	public float currentProjMatrixFOV = 0.0f;
++ 
+
+> DELETE  1  @  1 : 2
 
 > CHANGE  9 : 10  @  9 : 10
 
@@ -136,12 +142,12 @@
 
 > CHANGE  6 : 7  @  6 : 7
 
-~ 				f = this.mc.gameSettings.keyBindZoomCamera.isKeyDown() ? 17.0f : this.mc.gameSettings.fovSetting;
+~ 				f = this.mc.isZoomKey ? this.mc.adjustedZoomValue : this.mc.gameSettings.fovSetting;
 
 > CHANGE  169 : 173  @  169 : 172
 
 ~ 		float farPlane = this.farPlaneDistance * 2.0f * MathHelper.SQRT_2;
-~ 		GlStateManager.gluPerspective(this.getFOVModifier(partialTicks, true),
+~ 		GlStateManager.gluPerspective(currentProjMatrixFOV = this.getFOVModifier(partialTicks, true),
 ~ 				(float) this.mc.displayWidth / (float) this.mc.displayHeight, 0.05F, farPlane);
 ~ 		DeferredStateManager.setGBufferNearFarPlanes(0.05f, farPlane);
 
@@ -253,13 +259,18 @@
 
 ~ 							return HString.format("Scaled: (%d, %d). Absolute: (%d, %d). Scale factor of %d",
 
-> DELETE  15  @  15 : 17
+> INSERT  9 : 11  @  9
+
++ 
++ 				this.mc.voiceOverlay.drawOverlay();
+
+> DELETE  6  @  6 : 8
 
 > CHANGE  32 : 33  @  32 : 33
 
 ~ 			EaglercraftGPU.glLineWidth(1.0F);
 
-> INSERT  25 : 33  @  25
+> INSERT  25 : 35  @  25
 
 + 
 + 		boolean fxaa = !this.mc.gameSettings.shaders
@@ -268,6 +279,8 @@
 + 		if (fxaa) {
 + 			EffectPipelineFXAA.begin(this.mc.displayWidth, this.mc.displayHeight);
 + 		}
++ 
++ 		VoiceTagRenderer.clearTagsDrawnSet();
 + 
 
 > CHANGE  4 : 5  @  4 : 5
@@ -302,16 +315,17 @@
 
 > DELETE  15  @  15 : 17
 
-> CHANGE  12 : 14  @  12 : 14
+> CHANGE  12 : 15  @  12 : 14
 
-~ 			GlStateManager.gluPerspective(this.getFOVModifier(partialTicks, true),
-~ 					(float) this.mc.displayWidth / (float) this.mc.displayHeight, 0.05F, this.farPlaneDistance * 4.0F);
+~ 			float vigg = this.getFOVModifier(partialTicks, true);
+~ 			GlStateManager.gluPerspective(vigg, (float) this.mc.displayWidth / (float) this.mc.displayHeight, 0.05F,
+~ 					this.farPlaneDistance * 4.0F);
 
-> CHANGE  4 : 5  @  4 : 5
+> CHANGE  4 : 5  @  4 : 6
 
-~ 			GlStateManager.gluPerspective(this.getFOVModifier(partialTicks, true),
+~ 			GlStateManager.gluPerspective(vigg, (float) this.mc.displayWidth / (float) this.mc.displayHeight, 0.05F,
 
-> INSERT  27 : 28  @  27
+> INSERT  26 : 27  @  26
 
 + 		GlStateManager.disableBlend();
 

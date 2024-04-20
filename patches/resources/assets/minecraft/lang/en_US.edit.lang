@@ -10,9 +10,9 @@
 ~ eaglercraft.recording.unsupported=Recording Unsupported!
 ~ eaglercraft.recording.stop=Stop Recording
 ~ eaglercraft.recording.start=Record Screen...
-~ eaglercraft.soundCategory.voice=Voice
+~ eaglercraft.soundCategory.voice=Recording Voice
 
-> INSERT  1 : 230  @  1
+> INSERT  1 : 238  @  1
 
 + eaglercraft.resourcePack.prompt.title=What do you want to do with '%s'?
 + eaglercraft.resourcePack.prompt.text=Tip: Hold Shift to skip this screen when selecting a resource pack!
@@ -37,6 +37,14 @@
 + eaglercraft.editProfile.playerSkin=Player Skin
 + eaglercraft.editProfile.addSkin=Add Skin
 + eaglercraft.editProfile.clearSkin=Clear List
++ eaglercraft.editProfile.capes=Capes
++ eaglercraft.editProfile.disableFNAW=(Note: go to 'Options...' > 'Skin Customization' to disable FNAW skins)
++ eaglercraft.editProfile.enableFNAW=(Note: go to 'Options...' > 'Skin Customization' to enable FNAW skins)
++ 
++ eaglercraft.editCape.title=Edit Cape
++ eaglercraft.editCape.playerCape=Player Cape
++ eaglercraft.editCape.addCape=Add Cape
++ eaglercraft.editCape.clearCape=Clear List
 + 
 + eaglercraft.editProfile.importExport=Import/Export
 + 
@@ -244,7 +252,7 @@
 + eaglercraft.command.clientStub=This command is client side!
 + 
 
-> INSERT  163 : 350  @  163
+> INSERT  163 : 404  @  163
 
 + eaglercraft.singleplayer.busy.killTask=Cancel Task
 + eaglercraft.singleplayer.busy.cancelWarning=Are you sure?
@@ -433,6 +441,60 @@
 + eaglercraft.updateList.note.0=Note: Updates are digitally signed, EaglercraftX will block any
 + eaglercraft.updateList.note.1=updates that were not created by lax1dude or ayunami2000
 + 
++ eaglercraft.voice.title=Voice Channel
++ eaglercraft.voice.titleNoVoice=Voice is disabled on this server
++ eaglercraft.voice.titleVoiceUnavailable=Voice is unavailable
++ eaglercraft.voice.titleVoiceBrowserError=(browser issue)
++ eaglercraft.voice.ptt=Press '%s' to speak
++ eaglercraft.voice.pttChangeDesc=(Press Any Key)
++ eaglercraft.voice.changeKey=Change
++ eaglercraft.voice.off=OFF
++ eaglercraft.voice.radius=NEARBY
++ eaglercraft.voice.global=GLOBAL
++ eaglercraft.voice.volumeTitle=Change Volume
++ eaglercraft.voice.volumeListen=Speakers Volume:
++ eaglercraft.voice.volumeSpeak=Microphone Volume:
++ eaglercraft.voice.radiusTitle=Change Listener Radius
++ eaglercraft.voice.radiusLabel=Players Within:
++ eaglercraft.voice.radiusChange=change
++ eaglercraft.voice.notConnected=Not Connected
++ eaglercraft.voice.connecting=Connecting...
++ eaglercraft.voice.unavailable=Could not connect!
++ eaglercraft.voice.connectedGlobal=Connected - Global
++ eaglercraft.voice.connectedRadius=Connected - $f$Within $radius$m
++ eaglercraft.voice.playersListening=Players Listening:
++ eaglercraft.voice.muted=Players Muted:
++ eaglercraft.voice.unmute=unmute
++ eaglercraft.voice.mute=mute
++ eaglercraft.voice.apply=Apply
++ eaglercraft.voice.volumeSpeakerLabel=Speakers:
++ eaglercraft.voice.volumeMicrophoneLabel=Microphone:
++ 
++ eaglercraft.voice.unsupportedWarning1=Voice Warning
++ eaglercraft.voice.unsupportedWarning2=Your network's firewall may not support
++ eaglercraft.voice.unsupportedWarning3=eaglercraft's voice chat.
++ eaglercraft.voice.unsupportedWarning4=If your game doesn't work it's your issue
++ eaglercraft.voice.unsupportedWarning5=to solve, not ayunami2000's or lax1dude's.
++ eaglercraft.voice.unsupportedWarning6=Don't ask them to 'fix' it for you because
++ eaglercraft.voice.unsupportedWarning7=they won't help you fix a problem that only
++ eaglercraft.voice.unsupportedWarning8=you or your network's administrator has the
++ eaglercraft.voice.unsupportedWarning9=ability to correctly resolve.
++ eaglercraft.voice.unsupportedWarning10=Continue
++ eaglercraft.voice.unsupportedWarning11=Cancel
++ 
++ eaglercraft.voice.ipGrabWarning1=IP Logger Warning
++ eaglercraft.voice.ipGrabWarning2=Using Eaglercraft voice chat may allow your
++ eaglercraft.voice.ipGrabWarning3=IP address to be logged by other players
++ eaglercraft.voice.ipGrabWarning4=also using voice on the server.
++ eaglercraft.voice.ipGrabWarning5=This issue will not be fixed, it is an
++ eaglercraft.voice.ipGrabWarning6=internal browser issue, not a mistake in the
++ eaglercraft.voice.ipGrabWarning7=game. Fortunately, this can only be done if
++ eaglercraft.voice.ipGrabWarning8=the other player uses a hacked web browser
++ eaglercraft.voice.ipGrabWarning9=or has Wireshark to capture the voice
++ eaglercraft.voice.ipGrabWarning10=packets, as there exists no real javascript
++ eaglercraft.voice.ipGrabWarning11=method to log IPs using a normal skidded
++ eaglercraft.voice.ipGrabWarning12=eaglercraft hacked client.
++ 
 
 > CHANGE  22 : 23  @  22 : 23
 
@@ -442,7 +504,11 @@
 
 ~ lanServer.start=Start Shared World
 
-> CHANGE  280 : 281  @  280 : 281
+> INSERT  175 : 176  @  175
+
++ options.skinCustomisation.enableFNAWSkins=Show FNAW Skins
+
+> CHANGE  105 : 106  @  105 : 106
 
 ~ resourcePack.openFolder=Open resource pack
 

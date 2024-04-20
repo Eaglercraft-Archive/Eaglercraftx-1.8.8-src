@@ -19,15 +19,19 @@ import java.util.Map;
  * 
  */
 public enum SkinModel {
-	STEVE(0, 64, 64, "default", false), ALEX(1, 64, 64, "slim", false), ZOMBIE(2, 64, 64, "zombie", true);
+	STEVE(0, 64, 64, "default", false), ALEX(1, 64, 64, "slim", false), ZOMBIE(2, 64, 64, "zombie", true),
+	LONG_ARMS(3, HighPolySkin.LONG_ARMS), WEIRD_CLIMBER_DUDE(4, HighPolySkin.WEIRD_CLIMBER_DUDE),
+	LAXATIVE_DUDE(5, HighPolySkin.LAXATIVE_DUDE), BABY_CHARLES(6, HighPolySkin.BABY_CHARLES),
+	BABY_WINSTON(7, HighPolySkin.BABY_WINSTON);
 	
 	public final int id;	
 	public final int width;
 	public final int height;
 	public final String profileSkinType;
 	public final boolean sanitize;
+	public final HighPolySkin highPoly;
 	
-	public static final SkinModel[] skinModels = new SkinModel[3];
+	public static final SkinModel[] skinModels = new SkinModel[8];
 	private static final Map<String, SkinModel> skinModelsByName = new HashMap();
 	
 	private SkinModel(int id, int w, int h, String profileSkinType, boolean sanitize) {
@@ -36,6 +40,16 @@ public enum SkinModel {
 		this.height = h;
 		this.profileSkinType = profileSkinType;
 		this.sanitize = sanitize;
+		this.highPoly = null;
+	}
+	
+	private SkinModel(int id, HighPolySkin highPoly) {
+		this.id = id;
+		this.width = 256;
+		this.height = 128;
+		this.profileSkinType = "eagler";
+		this.sanitize = true;
+		this.highPoly = highPoly;
 	}
 
 	public static SkinModel getModelFromId(String str) {

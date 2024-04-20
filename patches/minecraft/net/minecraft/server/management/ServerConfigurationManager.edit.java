@@ -26,9 +26,11 @@
 
 + import net.minecraft.util.ChatComponentText;
 
-> CHANGE  12 : 15  @  12 : 14
+> CHANGE  12 : 17  @  12 : 14
 
+~ import net.lax1dude.eaglercraft.v1_8.sp.server.EaglerMinecraftServer;
 ~ import net.lax1dude.eaglercraft.v1_8.sp.server.socket.IntegratedServerPlayerNetworkManager;
+~ import net.lax1dude.eaglercraft.v1_8.sp.server.voice.IntegratedVoiceService;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 
@@ -119,7 +121,17 @@
 
 ~ 			this.playerStatFiles.remove(entityplayermp.getName());
 
-> CHANGE  6 : 13  @  6 : 13
+> INSERT  2 : 9  @  2
+
++ 		((EaglerMinecraftServer) mcServer).getSkinService().unregisterPlayer(uuid);
++ 		((EaglerMinecraftServer) mcServer).getCapeService().unregisterPlayer(uuid);
++ 		IntegratedVoiceService vcs = ((EaglerMinecraftServer) mcServer).getVoiceService();
++ 		if (vcs != null) {
++ 			vcs.handlePlayerLoggedOut(playerIn);
++ 		}
++ 
+
+> CHANGE  4 : 11  @  4 : 11
 
 ~ 	public String allowUserToConnect(GameProfile gameprofile) {
 ~ 		return this.playerEntityList.size() >= this.maxPlayers && !this.func_183023_f(gameprofile)

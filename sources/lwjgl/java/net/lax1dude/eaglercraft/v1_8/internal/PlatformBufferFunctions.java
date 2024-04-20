@@ -21,10 +21,7 @@ import net.lax1dude.eaglercraft.v1_8.internal.buffer.IntBuffer;
 public class PlatformBufferFunctions {
 
 	public static void put(ByteBuffer newBuffer, ByteBuffer flip) {
-		int len = flip.remaining();
-		for(int i = 0; i < len; ++i) {
-			newBuffer.put(flip.get());
-		}
+		newBuffer.put(flip);
 	}
 
 	public static void put(IntBuffer intBuffer, int index, int[] data) {

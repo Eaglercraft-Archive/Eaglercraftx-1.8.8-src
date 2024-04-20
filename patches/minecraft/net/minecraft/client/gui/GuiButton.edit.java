@@ -13,7 +13,12 @@
 
 > DELETE  3  @  3 : 6
 
-> INSERT  13 : 14  @  13
+> CHANGE  4 : 6  @  4 : 6
+
+~ 	public int width;
+~ 	public int height;
+
+> INSERT  7 : 8  @  7
 
 + 	public float fontScale = 1.0f;
 

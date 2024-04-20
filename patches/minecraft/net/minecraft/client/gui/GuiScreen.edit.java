@@ -178,11 +178,15 @@
 ~ 	private void openWebLink(String parURI) {
 ~ 		EagRuntime.openLink(parURI);
 
-> INSERT  34 : 38  @  34
+> INSERT  34 : 42  @  34
 
 + 
 + 	public boolean shouldHangupIntegratedServer() {
 + 		return true;
++ 	}
++ 
++ 	public boolean blockPTTKey() {
++ 		return false;
 + 	}
 
 > EOF

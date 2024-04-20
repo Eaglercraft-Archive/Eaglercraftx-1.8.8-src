@@ -14,10 +14,12 @@
 
 > DELETE  1  @  1 : 3
 
-> INSERT  3 : 24  @  3
+> INSERT  3 : 27  @  3
 
 + 
 + import net.lax1dude.eaglercraft.v1_8.sp.relay.RelayManager;
++ import net.lax1dude.eaglercraft.v1_8.voice.VoiceClientController;
++ 
 + import org.json.JSONArray;
 + 
 + import com.google.common.collect.ImmutableSet;
@@ -33,6 +35,7 @@
 + import net.lax1dude.eaglercraft.v1_8.HString;
 + import net.lax1dude.eaglercraft.v1_8.Keyboard;
 + import net.lax1dude.eaglercraft.v1_8.Mouse;
++ import net.lax1dude.eaglercraft.v1_8.internal.EnumPlatformType;
 + import net.lax1dude.eaglercraft.v1_8.internal.KeyboardConstants;
 + import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 + import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
@@ -53,9 +56,9 @@
 ~ 	public boolean fancyGraphics = false;
 ~ 	public int ambientOcclusion = 0;
 
-> DELETE  8  @  8 : 9
+> CHANGE  8 : 9  @  8 : 11
 
-> DELETE  1  @  1 : 2
+~ 	public boolean enableVsync = EagRuntime.getPlatformType() != EnumPlatformType.DESKTOP;
 
 > CHANGE  5 : 6  @  5 : 6
 
@@ -88,7 +91,7 @@
 
 ~ 	public int guiScale = 3;
 
-> INSERT  3 : 16  @  3
+> INSERT  3 : 17  @  3
 
 + 	public boolean hudFps = true;
 + 	public boolean hudCoords = true;
@@ -103,9 +106,15 @@
 + 	public boolean shadersAODisable = false;
 + 	public EaglerDeferredConfig deferredShaderConf = new EaglerDeferredConfig();
 + 	public boolean enableUpdateSvc = true;
++ 	public boolean enableFNAWSkins = true;
 
-> CHANGE  1 : 2  @  1 : 2
+> CHANGE  1 : 7  @  1 : 2
 
+~ 	public int voiceListenRadius = 16;
+~ 	public float voiceListenVolume = 0.5f;
+~ 	public float voiceSpeakVolume = 0.5f;
+~ 	public int voicePTTKey = 47; // V
+~ 
 ~ 	public GameSettings(Minecraft mcIn) {
 
 > CHANGE  4 : 6  @  4 : 7
@@ -148,7 +157,7 @@
 
 > DELETE  20  @  20 : 37
 
-> INSERT  13 : 53  @  13
+> INSERT  13 : 62  @  13
 
 + 		if (parOptions == GameSettings.Options.HUD_FPS) {
 + 			this.hudFps = !this.hudFps;
@@ -190,6 +199,15 @@
 + 			this.mc.toggleFullscreen();
 + 		}
 + 
++ 		if (parOptions == GameSettings.Options.FNAW_SKINS) {
++ 			this.enableFNAWSkins = !this.enableFNAWSkins;
++ 			this.mc.getRenderManager().setEnableFNAWSkins(this.mc.getEnableFNAWSkins());
++ 		}
++ 
++ 		if (parOptions == GameSettings.Options.EAGLER_VSYNC) {
++ 			this.enableVsync = !this.enableVsync;
++ 		}
++ 
 
 > CHANGE  23 : 24  @  23 : 34
 
@@ -199,7 +217,7 @@
 
 > DELETE  2  @  2 : 4
 
-> INSERT  8 : 26  @  8
+> INSERT  8 : 30  @  8
 
 + 		case HUD_COORDS:
 + 			return this.hudCoords;
@@ -219,6 +237,10 @@
 + 			return this.fog;
 + 		case FULLSCREEN:
 + 			return this.mc.isFullScreen();
++ 		case FNAW_SKINS:
++ 			return this.enableFNAWSkins;
++ 		case EAGLER_VSYNC:
++ 			return this.enableVsync;
 
 > CHANGE  43 : 46  @  43 : 47
 
@@ -318,9 +340,11 @@
 ~ 							}
 ~ 						}
 
-> DELETE  38  @  38 : 42
+> CHANGE  38 : 39  @  38 : 43
 
-> DELETE  4  @  4 : 8
+~ 					if (astring[0].equals("enableVsyncEag")) {
+
+> DELETE  3  @  3 : 7
 
 > CHANGE  52 : 54  @  52 : 54
 
@@ -395,7 +419,7 @@
 
 > DELETE  2  @  2 : 10
 
-> CHANGE  6 : 17  @  6 : 7
+> CHANGE  6 : 31  @  6 : 7
 
 ~ 					if (astring[0].equals("shaders")) {
 ~ 						this.shaders = astring[1].equals("true");
@@ -405,7 +429,21 @@
 ~ 						this.enableUpdateSvc = astring[1].equals("true");
 ~ 					}
 ~ 
-~ 					Keyboard.setFunctionKeyModifier(keyBindFunction.getKeyCode());
+~ 					if (astring[0].equals("voiceListenRadius")) {
+~ 						voiceListenRadius = Integer.parseInt(astring[1]);
+~ 					}
+~ 
+~ 					if (astring[0].equals("voiceListenVolume")) {
+~ 						voiceListenVolume = this.parseFloat(astring[1]);
+~ 					}
+~ 
+~ 					if (astring[0].equals("voiceSpeakVolume")) {
+~ 						voiceSpeakVolume = this.parseFloat(astring[1]);
+~ 					}
+~ 
+~ 					if (astring[0].equals("voicePTTKey")) {
+~ 						voicePTTKey = Integer.parseInt(astring[1]);
+~ 					}
 ~ 
 ~ 					for (SoundCategory soundcategory : SoundCategory._VALUES) {
 
@@ -413,14 +451,31 @@
 
 ~ 					for (EnumPlayerModelParts enumplayermodelparts : EnumPlayerModelParts._VALUES) {
 
-> INSERT  4 : 6  @  4
+> INSERT  4 : 10  @  4
 
++ 
++ 					if (astring[0].equals("enableFNAWSkins")) {
++ 						this.enableFNAWSkins = astring[1].equals("true");
++ 					}
 + 
 + 					deferredShaderConf.readOption(astring[0], astring[1]);
 
-> DELETE  6  @  6 : 7
+> CHANGE  6 : 13  @  6 : 7
 
-> INSERT  11 : 20  @  11
+~ 
+~ 			Keyboard.setFunctionKeyModifier(keyBindFunction.getKeyCode());
+~ 			VoiceClientController.setVoiceListenVolume(voiceListenVolume);
+~ 			VoiceClientController.setVoiceSpeakVolume(voiceSpeakVolume);
+~ 			VoiceClientController.setVoiceProximity(voiceListenRadius);
+~ 			if (this.mc.getRenderManager() != null)
+~ 				this.mc.getRenderManager().setEnableFNAWSkins(this.enableFNAWSkins);
+
+> CHANGE  1 : 3  @  1 : 2
+
+~ 			logger.error("Failed to load options");
+~ 			logger.error(exception);
+
+> INSERT  9 : 18  @  9
 
 + 		byte[] data = writeOptions();
 + 		if (data != null) {
@@ -448,13 +503,13 @@
 ~ 			printwriter.println("resourcePacks:" + toJSONArray(this.resourcePacks));
 ~ 			printwriter.println("incompatibleResourcePacks:" + toJSONArray(this.field_183018_l));
 
-> DELETE  8  @  8 : 9
+> CHANGE  8 : 9  @  8 : 11
 
-> DELETE  1  @  1 : 2
+~ 			printwriter.println("enableVsyncEag:" + this.enableVsync);
 
 > DELETE  13  @  13 : 24
 
-> INSERT  5 : 16  @  5
+> INSERT  5 : 21  @  5
 
 + 			printwriter.println("hudFps:" + this.hudFps);
 + 			printwriter.println("hudWorld:" + this.hudWorld);
@@ -467,6 +522,11 @@
 + 			printwriter.println("fxaa:" + this.fxaa);
 + 			printwriter.println("shaders:" + this.shaders);
 + 			printwriter.println("enableUpdateSvc:" + this.enableUpdateSvc);
++ 			printwriter.println("voiceListenRadius:" + this.voiceListenRadius);
++ 			printwriter.println("voiceListenVolume:" + this.voiceListenVolume);
++ 			printwriter.println("voiceSpeakVolume:" + this.voiceSpeakVolume);
++ 			printwriter.println("voicePTTKey:" + this.voicePTTKey);
++ 			printwriter.println("enableFNAWSkins:" + this.enableFNAWSkins);
 
 > CHANGE  5 : 8  @  5 : 6
 
@@ -487,9 +547,11 @@
 
 + 			return bao.toByteArray();
 
-> INSERT  2 : 3  @  2
+> CHANGE  1 : 4  @  1 : 2
 
-+ 			return null;
+~ 			logger.error("Failed to save options");
+~ 			logger.error(exception);
+~ 			return null;
 
 > DELETE  2  @  2 : 3
 
@@ -521,13 +583,15 @@
 ~ 		TOUCHSCREEN("options.touchscreen", false, true), CHAT_SCALE("options.chat.scale", true, false),
 ~ 		CHAT_WIDTH("options.chat.width", true, false), CHAT_HEIGHT_FOCUSED("options.chat.height.focused", true, false),
 
-> CHANGE  14 : 20  @  14 : 15
+> CHANGE  14 : 22  @  14 : 15
 
 ~ 		ENTITY_SHADOWS("options.entityShadows", false, true), HUD_FPS("options.hud.fps", false, true),
 ~ 		HUD_COORDS("options.hud.coords", false, true), HUD_STATS("options.hud.stats", false, true),
 ~ 		HUD_WORLD("options.hud.world", false, true), HUD_PLAYER("options.hud.player", false, true),
 ~ 		HUD_24H("options.hud.24h", false, true), CHUNK_FIX("options.chunkFix", false, true),
 ~ 		FOG("options.fog", false, true), FXAA("options.fxaa", false, false),
-~ 		FULLSCREEN("options.fullscreen", false, true), FAST_MATH("options.fastMath", false, false);
+~ 		FULLSCREEN("options.fullscreen", false, true),
+~ 		FNAW_SKINS("options.skinCustomisation.enableFNAWSkins", false, true),
+~ 		EAGLER_VSYNC("options.vsync", false, true);
 
 > EOF

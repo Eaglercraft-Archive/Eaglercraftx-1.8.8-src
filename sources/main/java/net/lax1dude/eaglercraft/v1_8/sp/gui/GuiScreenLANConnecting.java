@@ -117,7 +117,7 @@ public class GuiScreenLANConnecting extends GuiScreen {
 				this.mc.clearTitles();
 				networkManager.setConnectionState(EnumConnectionState.LOGIN);
 				networkManager.setNetHandler(new NetHandlerSingleplayerLogin(networkManager, mc, parent));
-				networkManager.sendPacket(new C00PacketLoginStart(this.mc.getSession().getProfile(), EaglerProfile.getSkinPacket()));
+				networkManager.sendPacket(new C00PacketLoginStart(this.mc.getSession().getProfile(), EaglerProfile.getSkinPacket(), EaglerProfile.getCapePacket()));
 			}
 		}
 	}

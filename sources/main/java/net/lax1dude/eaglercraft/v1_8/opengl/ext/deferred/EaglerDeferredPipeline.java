@@ -3984,11 +3984,11 @@ public class EaglerDeferredPipeline {
 	}
 
 	public static final boolean isSupported() {
-		return EaglercraftGPU.checkHasHDRFramebufferSupport();
+		return EaglercraftGPU.checkHasHDRFramebufferSupportWithFilter();
 	}
 
 	public static final String getReasonUnsupported() {
-		if(!EaglercraftGPU.checkHasHDRFramebufferSupport()) {
+		if(!EaglercraftGPU.checkHasHDRFramebufferSupportWithFilter()) {
 			return I18n.format("shaders.gui.unsupported.reason.hdrFramebuffer");
 		}else {
 			return null;

@@ -64,8 +64,9 @@
 
 ~ 	private final EaglerTextureAtlasSprite[] destroyBlockIcons = new EaglerTextureAtlasSprite[10];
 
-> CHANGE  11 : 12  @  11 : 12
+> CHANGE  11 : 13  @  11 : 12
 
+~ 	private float lastViewProjMatrixFOV = Float.MIN_VALUE;
 ~ 	private final ChunkUpdateManager renderDispatcher = new ChunkUpdateManager();
 
 > CHANGE  22 : 24  @  22 : 24
@@ -418,7 +419,16 @@
 
 ~ 		return HString.format("C: %d/%d %sD: %d, %s",
 
-> CHANGE  115 : 118  @  115 : 117
+> CHANGE  53 : 55  @  53 : 54
+
+~ 				|| (double) viewEntity.rotationYaw != this.lastViewEntityYaw
+~ 				|| this.mc.entityRenderer.currentProjMatrixFOV != this.lastViewProjMatrixFOV;
+
+> INSERT  5 : 6  @  5
+
++ 		this.lastViewProjMatrixFOV = this.mc.entityRenderer.currentProjMatrixFOV;
+
+> CHANGE  56 : 59  @  56 : 58
 
 ~ 				EnumFacing[] facings = EnumFacing._VALUES;
 ~ 				for (int i = 0; i < facings.length; ++i) {

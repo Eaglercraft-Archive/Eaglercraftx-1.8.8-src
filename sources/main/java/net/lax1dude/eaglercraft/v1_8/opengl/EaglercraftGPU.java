@@ -23,7 +23,7 @@ import static net.lax1dude.eaglercraft.v1_8.opengl.RealOpenGLEnums.*;
 import static net.lax1dude.eaglercraft.v1_8.internal.PlatformOpenGL.*;
 
 /**
- * Copyright (c) 2022-2023 lax1dude, ayunami2000. All Rights Reserved.
+ * Copyright (c) 2022-2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -152,7 +152,7 @@ public class EaglercraftGPU {
 		currentList = null;
 	}
 
-	public static void glCallList(int displayList) {
+	public static final void glCallList(int displayList) {
 		DisplayList dp = mapDisplayListsGL.get(displayList);
 		if(dp == null) {
 			throw new NullPointerException("Tried to call a display list that does not exist: " + displayList);
@@ -488,18 +488,28 @@ public class EaglercraftGPU {
 		return mapTexturesGL.get(tex);
 	}
 
+	public static final void drawHighPoly(HighPolyMesh mesh) {
+		if(mesh.vertexCount == 0 || mesh.indexCount == 0 || mesh.vertexArray == null) {
+			return;
+		}
+		FixedFunctionPipeline p = FixedFunctionPipeline.setupRenderDisplayList(mesh.getAttribBits()).update();
+		EaglercraftGPU.bindGLBufferArray(mesh.vertexArray);
+		p.drawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_SHORT, 0);
+	}
+
 	static boolean hasFramebufferHDR16FSupport = false;
 	static boolean hasFramebufferHDR32FSupport = false;
+	static boolean hasLinearHDR32FSupport = false;
 
-	public static void createFramebufferHDR16FTexture(int target, int level, int w, int h, int format, boolean allow32bitFallback) {
+	public static final void createFramebufferHDR16FTexture(int target, int level, int w, int h, int format, boolean allow32bitFallback) {
 		createFramebufferHDR16FTexture(target, level, w, h, format, allow32bitFallback, null);
 	}
 
-	public static void createFramebufferHDR16FTexture(int target, int level, int w, int h, int format, ByteBuffer pixelData) {
+	public static final void createFramebufferHDR16FTexture(int target, int level, int w, int h, int format, ByteBuffer pixelData) {
 		createFramebufferHDR16FTexture(target, level, w, h, format, false, pixelData);
 	}
 
-	private static void createFramebufferHDR16FTexture(int target, int level, int w, int h, int format, boolean allow32bitFallback, ByteBuffer pixelData) {
+	private static final void createFramebufferHDR16FTexture(int target, int level, int w, int h, int format, boolean allow32bitFallback, ByteBuffer pixelData) {
 		if(hasFramebufferHDR16FSupport) {
 			int internalFormat;
 			switch(format) {
@@ -530,15 +540,15 @@ public class EaglercraftGPU {
 		}
 	}
 
-	public static void createFramebufferHDR32FTexture(int target, int level, int w, int h, int format, boolean allow16bitFallback) {
+	public static final void createFramebufferHDR32FTexture(int target, int level, int w, int h, int format, boolean allow16bitFallback) {
 		createFramebufferHDR32FTexture(target, level, w, h, format, allow16bitFallback, null);
 	}
 
-	public static void createFramebufferHDR32FTexture(int target, int level, int w, int h, int format, ByteBuffer pixelData) {
+	public static final void createFramebufferHDR32FTexture(int target, int level, int w, int h, int format, ByteBuffer pixelData) {
 		createFramebufferHDR32FTexture(target, level, w, h, format, false, pixelData);
 	}
 
-	private static void createFramebufferHDR32FTexture(int target, int level, int w, int h, int format, boolean allow16bitFallback, ByteBuffer pixelData) {
+	private static final void createFramebufferHDR32FTexture(int target, int level, int w, int h, int format, boolean allow16bitFallback, ByteBuffer pixelData) {
 		if(hasFramebufferHDR32FSupport) {
 			int internalFormat;
 			switch(format) {
@@ -555,7 +565,7 @@ public class EaglercraftGPU {
 			default:
 				throw new UnsupportedOperationException("Unknown format: " + format);
 			}
-			_wglTexImage2D(target, level, internalFormat, w, h, 0, format, GL_FLOAT, pixelData);
+			_wglTexImage2Df32(target, level, internalFormat, w, h, 0, format, GL_FLOAT, pixelData);
 		}else {
 			if(allow16bitFallback) {
 				if(hasFramebufferHDR16FSupport) {
@@ -585,7 +595,13 @@ public class EaglercraftGPU {
 		}else {
 			logger.error("32-bit HDR render target support: false");
 		}
-		if(!checkHasHDRFramebufferSupport()) {
+		hasLinearHDR32FSupport = PlatformOpenGL.checkLinearHDR32FSupport();
+		if(hasLinearHDR32FSupport) {
+			logger.info("32-bit HDR linear filter support: true");
+		}else {
+			logger.error("32-bit HDR linear filter support: false");
+		}
+		if(!checkHasHDRFramebufferSupportWithFilter()) {
 			logger.error("No HDR render target support was detected! Shaders will be disabled.");
 		}
 		DrawUtils.init();
@@ -611,5 +627,13 @@ public class EaglercraftGPU {
 
 	public static final boolean checkHasHDRFramebufferSupport() {
 		return hasFramebufferHDR16FSupport || hasFramebufferHDR32FSupport;
+	}
+
+	public static final boolean checkHasHDRFramebufferSupportWithFilter() {
+		return hasFramebufferHDR16FSupport || (hasFramebufferHDR32FSupport && hasLinearHDR32FSupport);
+	}
+
+	public static final boolean checkLinearHDR32FSupport() {
+		return hasLinearHDR32FSupport;
 	}
 }

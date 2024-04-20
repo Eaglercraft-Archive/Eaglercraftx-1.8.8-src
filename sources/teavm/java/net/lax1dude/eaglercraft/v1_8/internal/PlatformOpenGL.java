@@ -36,12 +36,14 @@ public class PlatformOpenGL {
 	static boolean hasDebugRenderInfoExt = false;
 	static boolean hasFramebufferHDR16FSupport = false;
 	static boolean hasFramebufferHDR32FSupport = false;
+	static boolean hasLinearHDR32FSupport = false;
 	
 	static void setCurrentContext(WebGL2RenderingContext context) {
 		ctx = context;
 		hasDebugRenderInfoExt = ctx.getExtension("WEBGL_debug_renderer_info") != null;
 		hasFramebufferHDR16FSupport = ctx.getExtension("EXT_color_buffer_half_float") != null;
 		hasFramebufferHDR32FSupport = ctx.getExtension("EXT_color_buffer_float") != null;
+		hasLinearHDR32FSupport = ctx.getExtension("OES_texture_float_linear") != null;
 		_wglClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	}
 
@@ -191,15 +193,15 @@ public class PlatformOpenGL {
 	}
 	
 	public static final void _wglBufferData(int target, ByteBuffer data, int usage) {
-		ctx.bufferData(target, data == null ? null : EaglerArrayBufferAllocator.getDataView(data), usage);
+		ctx.bufferData(target, data == null ? null : EaglerArrayBufferAllocator.getDataView8(data), usage);
 	}
 	
 	public static final void _wglBufferData(int target, IntBuffer data, int usage) {
-		ctx.bufferData(target, data == null ? null : EaglerArrayBufferAllocator.getDataView(data), usage);
+		ctx.bufferData(target, data == null ? null : EaglerArrayBufferAllocator.getDataView32(data), usage);
 	}
 	
 	public static final void _wglBufferData(int target, FloatBuffer data, int usage) {
-		ctx.bufferData(target, data == null ? null : EaglerArrayBufferAllocator.getDataView(data), usage);
+		ctx.bufferData(target, data == null ? null : EaglerArrayBufferAllocator.getDataView32F(data), usage);
 	}
 	
 	public static final void _wglBufferData(int target, int size, int usage) {
@@ -207,15 +209,15 @@ public class PlatformOpenGL {
 	}
 	
 	public static final void _wglBufferSubData(int target, int offset, ByteBuffer data) {
-		ctx.bufferSubData(target, offset, data == null ? null : EaglerArrayBufferAllocator.getDataView(data));
+		ctx.bufferSubData(target, offset, data == null ? null : EaglerArrayBufferAllocator.getDataView8(data));
 	}
 	
 	public static final void _wglBufferSubData(int target, int offset, IntBuffer data) {
-		ctx.bufferSubData(target, offset, data == null ? null : EaglerArrayBufferAllocator.getDataView(data));
+		ctx.bufferSubData(target, offset, data == null ? null : EaglerArrayBufferAllocator.getDataView32(data));
 	}
 	
 	public static final void _wglBufferSubData(int target, int offset, FloatBuffer data) {
-		ctx.bufferSubData(target, offset, data == null ? null : EaglerArrayBufferAllocator.getDataView(data));
+		ctx.bufferSubData(target, offset, data == null ? null : EaglerArrayBufferAllocator.getDataView32F(data));
 	}
 	
 	public static final void _wglBindVertexArray(IBufferArrayGL obj) {
@@ -258,55 +260,61 @@ public class PlatformOpenGL {
 	public static final void _wglTexImage3D(int target, int level, int internalFormat, int width, int height, int depth,
 			int border, int format, int type, ByteBuffer data) {
 		ctx.texImage3D(target, level, internalFormat, width, height, depth, border, format, type,
-				data == null ? null : EaglerArrayBufferAllocator.getDataViewStupid(data));
+				data == null ? null : EaglerArrayBufferAllocator.getDataView8Unsigned(data));
 	}
 	
 	public static final void _wglTexImage2D(int target, int level, int internalFormat, int width,
 			int height, int border, int format, int type, ByteBuffer data) {
 		ctx.texImage2D(target, level, internalFormat, width, height, border, format, type,
-				data == null ? null : EaglerArrayBufferAllocator.getDataViewStupid(data));
+				data == null ? null : EaglerArrayBufferAllocator.getDataView8Unsigned(data));
 	}
 	
 	public static final void _wglTexImage2Du16(int target, int level, int internalFormat, int width,
 			int height, int border, int format, int type, ByteBuffer data) {
 		ctx.texImage2D(target, level, internalFormat, width, height, border, format, type,
-				data == null ? null : EaglerArrayBufferAllocator.getDataViewStupid16(data));
+				data == null ? null : EaglerArrayBufferAllocator.getDataView16Unsigned(data));
+	}
+	
+	public static final void _wglTexImage2Df32(int target, int level, int internalFormat, int width,
+			int height, int border, int format, int type, ByteBuffer data) {
+		ctx.texImage2D(target, level, internalFormat, width, height, border, format, type,
+				data == null ? null : EaglerArrayBufferAllocator.getDataView32F(data));
 	}
 	
 	public static final void _wglTexImage2D(int target, int level, int internalFormat, int width,
 			int height, int border, int format, int type, IntBuffer data) {
 		ctx.texImage2D(target, level, internalFormat, width, height, border, format, type,
-				data == null ? null : EaglerArrayBufferAllocator.getDataViewStupid(data));
+				data == null ? null : EaglerArrayBufferAllocator.getDataView8Unsigned(data));
 	}
 	
 	public static final void _wglTexImage2D(int target, int level, int internalFormat, int width,
 			int height, int border, int format, int type, FloatBuffer data) {
 		ctx.texImage2D(target, level, internalFormat, width, height, border, format, type,
-				data == null ? null : EaglerArrayBufferAllocator.getDataViewStupid(data));
+				data == null ? null : EaglerArrayBufferAllocator.getDataView8Unsigned(data));
 	}
 	
 	public static final void _wglTexSubImage2D(int target, int level, int xoffset, int yoffset,
 			int width, int height, int format, int type, ByteBuffer data) {
 		ctx.texSubImage2D(target, level, xoffset, yoffset, width, height, format, type,
-				data == null ? null : EaglerArrayBufferAllocator.getDataViewStupid(data));
+				data == null ? null : EaglerArrayBufferAllocator.getDataView8Unsigned(data));
 	}
 	
 	public static final void _wglTexSubImage2Du16(int target, int level, int xoffset, int yoffset,
 			int width, int height, int format, int type, ByteBuffer data) {
 		ctx.texSubImage2D(target, level, xoffset, yoffset, width, height, format, type,
-				data == null ? null : EaglerArrayBufferAllocator.getDataViewStupid16(data));
+				data == null ? null : EaglerArrayBufferAllocator.getDataView16Unsigned(data));
 	}
 	
 	public static final void _wglTexSubImage2D(int target, int level, int xoffset, int yoffset,
 			int width, int height, int format, int type, IntBuffer data) {
 		ctx.texSubImage2D(target, level, xoffset, yoffset, width, height, format, type,
-				data == null ? null : EaglerArrayBufferAllocator.getDataViewStupid(data));
+				data == null ? null : EaglerArrayBufferAllocator.getDataView8Unsigned(data));
 	}
 	
 	public static final void _wglTexSubImage2D(int target, int level, int xoffset, int yoffset,
 			int width, int height, int format, int type, FloatBuffer data) {
 		ctx.texSubImage2D(target, level, xoffset, yoffset, width, height, format, type,
-				data == null ? null : EaglerArrayBufferAllocator.getDataViewStupid(data));
+				data == null ? null : EaglerArrayBufferAllocator.getDataView8Unsigned(data));
 	}
 	
 	public static final void _wglCopyTexSubImage2D(int target, int level, int xoffset, int yoffset,
@@ -455,32 +463,32 @@ public class PlatformOpenGL {
 	
 	public static final void _wglUniformMatrix2fv(IUniformGL obj, boolean transpose, FloatBuffer mat) {
 		if(obj != null) ctx.uniformMatrix2fv(((OpenGLObjects.UniformGL)obj).ptr, transpose,
-				mat == null ? null : EaglerArrayBufferAllocator.getFloatArrayStupid(mat));
+				mat == null ? null : EaglerArrayBufferAllocator.getDataView32F(mat));
 	}
 	
 	public static final void _wglUniformMatrix3fv(IUniformGL obj, boolean transpose, FloatBuffer mat) {
 		if(obj != null) ctx.uniformMatrix3fv(((OpenGLObjects.UniformGL)obj).ptr, transpose,
-				mat == null ? null : EaglerArrayBufferAllocator.getFloatArrayStupid(mat));
+				mat == null ? null : EaglerArrayBufferAllocator.getDataView32F(mat));
 	}
 	
 	public static final void _wglUniformMatrix3x2fv(IUniformGL obj, boolean transpose, FloatBuffer mat) {
 		if(obj != null) ctx.uniformMatrix3x2fv(((OpenGLObjects.UniformGL)obj).ptr, transpose,
-				mat == null ? null : EaglerArrayBufferAllocator.getFloatArrayStupid(mat));
+				mat == null ? null : EaglerArrayBufferAllocator.getDataView32F(mat));
 	}
 	
 	public static final void _wglUniformMatrix4fv(IUniformGL obj, boolean transpose, FloatBuffer mat) {
 		if(obj != null) ctx.uniformMatrix4fv(((OpenGLObjects.UniformGL)obj).ptr, transpose,
-				mat == null ? null : EaglerArrayBufferAllocator.getFloatArrayStupid(mat));
+				mat == null ? null : EaglerArrayBufferAllocator.getDataView32F(mat));
 	}
 	
 	public static final void _wglUniformMatrix4x2fv(IUniformGL obj, boolean transpose, FloatBuffer mat) {
 		if(obj != null) ctx.uniformMatrix4x2fv(((OpenGLObjects.UniformGL)obj).ptr, transpose,
-				mat == null ? null : EaglerArrayBufferAllocator.getFloatArrayStupid(mat));
+				mat == null ? null : EaglerArrayBufferAllocator.getDataView32F(mat));
 	}
 	
 	public static final void _wglUniformMatrix4x3fv(IUniformGL obj, boolean transpose, FloatBuffer mat) {
 		if(obj != null) ctx.uniformMatrix4x3fv(((OpenGLObjects.UniformGL)obj).ptr, transpose,
-				mat == null ? null : EaglerArrayBufferAllocator.getFloatArrayStupid(mat));
+				mat == null ? null : EaglerArrayBufferAllocator.getDataView32F(mat));
 	}
 	
 	public static final void _wglBindFramebuffer(int target, IFramebufferGL framebuffer) {
@@ -570,7 +578,11 @@ public class PlatformOpenGL {
 			return false;
 		}
 	}
-
+	
+	public static final boolean checkLinearHDR32FSupport() {
+		return hasLinearHDR32FSupport;
+	}
+	
 	private static final void checkErr(String name) {
 		int i = ctx.getError();
 		if(i != 0) {

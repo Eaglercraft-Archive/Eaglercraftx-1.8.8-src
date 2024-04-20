@@ -11,7 +11,7 @@ import static net.lax1dude.eaglercraft.v1_8.opengl.RealOpenGLEnums.*;
 import static net.lax1dude.eaglercraft.v1_8.internal.PlatformOpenGL.*;
 
 /**
- * Copyright (c) 2022-2023 lax1dude, ayunami2000. All Rights Reserved.
+ * Copyright (c) 2022-2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -981,6 +981,30 @@ public class GlStateManager {
 		paramMatrix.load(matrix);
 		
 		Matrix4f.mul(modeMatrix, paramMatrix, modeMatrix);
+	}
+
+	public static final void multMatrix(Matrix4f matrix) {
+		Matrix4f modeMatrix;
+		
+		switch(stateMatrixMode) {
+		case GL_MODELVIEW:
+		default:
+			modeMatrix = modelMatrixStack[modelMatrixStackPointer];
+			modelMatrixStackAccessSerial[modelMatrixStackPointer] = ++modelMatrixAccessSerial;
+			break;
+		case GL_PROJECTION:
+			modeMatrix = projectionMatrixStack[projectionMatrixStackPointer];
+			projectionMatrixStackAccessSerial[projectionMatrixStackPointer] = ++projectionMatrixAccessSerial;
+			break;
+		case GL_TEXTURE:
+			int ptr = textureMatrixStackPointer[activeTexture];
+			modeMatrix = textureMatrixStack[activeTexture][ptr];
+			textureMatrixStackAccessSerial[activeTexture][textureMatrixStackPointer[activeTexture]] =
+					++textureMatrixAccessSerial[activeTexture];
+			break;
+		}
+		
+		Matrix4f.mul(modeMatrix, matrix, modeMatrix);
 	}
 
 	public static final void color(float colorRed, float colorGreen, float colorBlue, float colorAlpha) {

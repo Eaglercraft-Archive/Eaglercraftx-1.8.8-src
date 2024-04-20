@@ -44,7 +44,7 @@
 ~ 		BlockPos posTmp = new BlockPos(0, 0, 0);
 ~ 		Block block = worldIn.getBlockState(blockpos).getBlock();
 ~ 		if (!canConnectTo(worldIn.getBlockState(blockpos), direction) && (block.isBlockNormalCube()
-~ 				|| !canConnectUpwardsTo(worldIn.getBlockState(blockpos.offsetEvenFaster(EnumFacing.UP, posTmp))))) {
+~ 				|| !canConnectUpwardsTo(worldIn.getBlockState(blockpos.offsetEvenFaster(EnumFacing.DOWN, posTmp))))) {
 
 > CHANGE  2 : 3  @  2 : 3
 
@@ -74,8 +74,19 @@
 ~ 			BlockPos blockpos = pos1.offsetEvenFaster(enumfacing, tmp);
 ~ 			boolean flag = blockpos.x != pos2.x || blockpos.z != pos2.z;
 
-> CHANGE  35 : 37  @  35 : 37
+> CHANGE  7 : 9  @  7 : 8
 
+~ 					++blockpos.y;
+~ 					l = this.getMaxCurrentStrength(worldIn, blockpos, l);
+
+> CHANGE  3 : 5  @  3 : 4
+
+~ 				--blockpos.y;
+~ 				l = this.getMaxCurrentStrength(worldIn, blockpos, l);
+
+> CHANGE  23 : 26  @  23 : 25
+
+~ 			facings = EnumFacing._VALUES;
 ~ 			for (int m = 0; m < facings.length; ++m) {
 ~ 				this.blocksNeedingUpdate.add(pos1.offset(facings[m]));
 

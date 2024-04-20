@@ -11,13 +11,15 @@
   - Made the integrated PBR resource pack
   - Wrote all desktop emulation code
   - Wrote EaglercraftXBungee
-  - Wrote WebRTC Relay Server
+  - Wrote WebRTC relay server
+  - Wrote voice chat server
   - Wrote the patch and build system
  
  ayunami2000:
  
   - Many bug fixes
   - WebRTC LAN worlds
+  - WebRTC voice chat
   - Added resource packs
   - Added screen recording
   - Added seamless fullscreen

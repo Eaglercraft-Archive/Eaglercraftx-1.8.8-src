@@ -58,7 +58,11 @@ If you would like to host your own relay, the JAR file and instructions can be d
 
 ## PBR Shaders
 
-EaglercraftX 1.8 includes a deferred physically-based renderer modeled after the GTA V rendering engine with many new improvements and a novel raytracing technique for fast realistic reflections. It can be enabled in the "Shaders" menu in the game's options screen. Shader packs in EaglercraftX are just a component of resource packs, so any custom shaders you install will be in the form of a resource pack. EaglercraftX also comes with a very well optimized built-in PBR shader pack and also a concise built-in PBR material texture pack to give all blocks and items in the game realistic lighting and materials that looks better than most vanilla Minecraft shader packs. The default shader and texture packs were created from scratch by lax1dude, shaders packs made for vanilla Minecraft will not work in EaglercraftX and no shaders in EaglercraftX were taken from vanilla Minecraft shader packs.
+EaglercraftX 1.8 includes a deferred physically-based renderer modeled after the GTA V rendering engine with many new improvements and a novel raytracing technique for fast realistic reflections. It can be enabled in the "Shaders" menu in the game's options screen. Shader packs in EaglercraftX are just a component of resource packs, so any custom shaders you install will be in the form of a resource pack. EaglercraftX also comes with a very well optimized built-in PBR shader pack and also a built-in PBR material texture pack to give all blocks and items in the game realistic lighting and materials that looks better than most vanilla Minecraft shader packs. The default shader and texture packs were created from scratch by lax1dude, shaders packs made for vanilla Minecraft will not work in EaglercraftX and no shaders in EaglercraftX were taken from vanilla Minecraft shader packs.
+
+## Voice Chat
+
+EaglercraftX 1.8 includes an integrated voice-chat service that can be used in shared worlds and also on multiplayer servers when it is enabled by the server owner. This feature also uses WebRTC like shared worlds, so be careful that you don't leak your IP address accidentally by using it on a public server. If you own a website and don't want people to use voice chat on it, edit the `eaglercraftXOpts` variable in your index.html and add `allowVoiceClient: false`.
 
 ## Making a Server
 
@@ -95,6 +99,14 @@ By setting `online_mode` to `false` in the BungeeCord `config.yml` the authentic
 ### Built-in HTTP server
 
 When configuring the EaglercraftXBungee `listeners.yml` file, every listener includes an `http_server` section that can be used to configure the listener to also behave like a regular HTTP server when the websocket address is entered into a browser. If this is disabled people will get the normal "404 Websocket Upgrade Failure" instead when they accidentally type your server address into their browser. `root` defines the path to the folder containing index.html and the other files you want to host, relative to the `plugins/EaglercraftXBungee` folder. This can be useful for hosting the client if the offline download doesn't work for some reason but might slow your BungeeCord server down if lots of people are loading it all the time.
+
+### Enabling Voice Chat
+
+Voice chat is disabled by default in EaglercraftXBungee because it is not recommended for use on public servers. To enable it, add or change `allow_voice: true` to your EaglercraftXBungee `listeners.yml` file. The main difference between Eaglercraft 1.5.2 and EaglercraftX 1.8's voice chat feature is that the "Global" channel now only includes other players on the same server as you instead of every single player connected to the same bungeecord proxy. If you would like to disable voice chat on certain servers, add the names of the servers to the `disable_voice_chat_on_servers` list in the EaglercraftXBungee `settings.yml` file. You may have to add this property to the YML file manually if you've upgraded your server from an older version of EaglercraftXBungee.
+
+### Disabling FNAW Skins
+
+Players are known to complain about the high-poly Five Nights At Winstons character skins making PVP harder because of the belief that they change a player's hitbox. If you would like to disable those skins in your PVP worlds you can either set `disable_fnaw_skins_everywhere: true` in your EaglercraftXBungee `settings.yml` file to disable them for all players on your whole BungeeCord proxy, or you can disable them on specific servers by adding the names of the servers to the `disable_fnaw_skins_on_servers` list also in `settings.yml` like with disabling voice chat.
 
 ## Launch Options
 
@@ -140,6 +152,7 @@ The default eaglercraftXOpts values is this:
 - `logInvalidCerts:` print update certificates with invalid signatures to console
 - `enableSignatureBadge:` show a badge on the title screen indicating if digital signature is valid
 - `checkRelaysForUpdates:` proprietary feature used in offline downloads
+- `allowVoiceClient:` can be used to disable the voice chat feature
 
 ## Developing a Client
 

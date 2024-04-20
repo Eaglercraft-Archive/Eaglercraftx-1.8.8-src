@@ -42,9 +42,14 @@ public enum DefaultSkins {
 	CREEPER(20, "Creeper", new ResourceLocation("eagler:skins/21.creeper.png"), SkinModel.STEVE),
 	ZOMBIE(21, "Zombie", new ResourceLocation("eagler:skins/22.zombie.png"), SkinModel.ZOMBIE),
 	PIG(22, "Pig", new ResourceLocation("eagler:skins/23.pig.png"), SkinModel.STEVE),
-	MOOSHROOM(23, "Mooshroom", new ResourceLocation("eagler:skins/24.mooshroom.png"), SkinModel.STEVE);
+	MOOSHROOM(23, "Mooshroom", new ResourceLocation("eagler:skins/24.mooshroom.png"), SkinModel.STEVE),
+	LONG_ARMS(24, "Long Arms", new ResourceLocation("eagler:mesh/longarms.fallback.png"), SkinModel.LONG_ARMS),
+	WEIRD_CLIMBER_DUDE(25, "Weird Climber Dude", new ResourceLocation("eagler:mesh/weirdclimber.fallback.png"), SkinModel.WEIRD_CLIMBER_DUDE),
+	LAXATIVE_DUDE(26, "Laxative Dude", new ResourceLocation("eagler:mesh/laxativedude.fallback.png"), SkinModel.LAXATIVE_DUDE),
+	BABY_CHARLES(27, "Baby Charles", new ResourceLocation("eagler:mesh/charles.fallback.png"), SkinModel.BABY_CHARLES),
+	BABY_WINSTON(28, "Baby Winston", new ResourceLocation("eagler:mesh/winston.fallback.png"), SkinModel.BABY_WINSTON);
 	
-	public static final DefaultSkins[] defaultSkinsMap = new DefaultSkins[24];
+	public static final DefaultSkins[] defaultSkinsMap = new DefaultSkins[29];
 	
 	public final int id;
 	public final String name;

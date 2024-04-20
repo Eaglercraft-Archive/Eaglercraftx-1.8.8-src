@@ -9,6 +9,7 @@ import org.teavm.jso.browser.Window;
 import org.teavm.jso.typedarrays.ArrayBuffer;
 import org.teavm.jso.typedarrays.ArrayBufferView;
 import org.teavm.jso.typedarrays.Float32Array;
+import org.teavm.jso.typedarrays.Int16Array;
 import org.teavm.jso.typedarrays.Int32Array;
 import org.teavm.jso.typedarrays.Int8Array;
 import org.teavm.jso.typedarrays.Uint8Array;
@@ -57,6 +58,10 @@ public class TeaVMUtils {
 		return ((TeaVMArrayObject)(Object)buf).getData().getBuffer();
 	}
 
+	public static ArrayBufferView unwrapArrayBufferView(byte[] buf) {
+		return ((TeaVMArrayObject)(Object)buf).getData();
+	}
+
 	@JSBody(params = { "buf" }, script = "return $rt_createByteArray(buf.buffer)")
 	private static native JSObject wrapByteArray0(JSObject buf);
 
@@ -80,6 +85,10 @@ public class TeaVMUtils {
 		return ((TeaVMArrayObject)(Object)buf).getData().getBuffer();
 	}
 
+	public static ArrayBufferView unwrapArrayBufferView(int[] buf) {
+		return ((TeaVMArrayObject)(Object)buf).getData();
+	}
+
 	@JSBody(params = { "buf" }, script = "return $rt_createIntArray(buf.buffer)")
 	private static native JSObject wrapIntArray0(JSObject buf);
 
@@ -95,11 +104,34 @@ public class TeaVMUtils {
 		return ((TeaVMArrayObject)(Object)buf).getData().getBuffer();
 	}
 
+	public static ArrayBufferView unwrapArrayBufferView(float[] buf) {
+		return ((TeaVMArrayObject)(Object)buf).getData();
+	}
+
 	@JSBody(params = { "buf" }, script = "return $rt_createFloatArray(buf.buffer)")
 	private static native JSObject wrapFloatArray0(JSObject buf);
 
 	public static float[] wrapFloatArray(Float32Array buf) {
 		return (float[])(Object)wrapFloatArray0(buf);
+	}
+
+	public static Int16Array unwrapShortArray(short[] buf) {
+		return Int16Array.create(((TeaVMArrayObject)(Object)buf).getData().getBuffer());
+	}
+
+	public static ArrayBuffer unwrapArrayBuffer(short[] buf) {
+		return ((TeaVMArrayObject)(Object)buf).getData().getBuffer();
+	}
+
+	public static ArrayBufferView unwrapArrayBufferView(short[] buf) {
+		return ((TeaVMArrayObject)(Object)buf).getData();
+	}
+
+	@JSBody(params = { "buf" }, script = "return $rt_createShortArray(buf.buffer)")
+	private static native JSObject wrapShortArray0(JSObject buf);
+
+	public static short[] wrapShortArray(Int16Array buf) {
+		return (short[])(Object)wrapShortArray0(buf);
 	}
 
 	@Async

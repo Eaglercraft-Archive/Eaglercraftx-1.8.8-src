@@ -5,7 +5,7 @@
 # Version: 1.0
 # Author: lax1dude
 
-> INSERT  2 : 8  @  2
+> INSERT  2 : 11  @  2
 
 + import net.lax1dude.eaglercraft.v1_8.minecraft.EaglerTextureAtlasSprite;
 + import net.lax1dude.eaglercraft.v1_8.opengl.EaglercraftGPU;
@@ -13,8 +13,15 @@
 + import net.lax1dude.eaglercraft.v1_8.opengl.WorldRenderer;
 + import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.DeferredStateManager;
 + import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.NameTagRenderer;
++ import net.lax1dude.eaglercraft.v1_8.voice.EnumVoiceChannelStatus;
++ import net.lax1dude.eaglercraft.v1_8.voice.VoiceClientController;
++ import net.lax1dude.eaglercraft.v1_8.voice.VoiceTagRenderer;
 
-> DELETE  3  @  3 : 4
+> INSERT  2 : 3  @  2
+
++ import net.minecraft.client.entity.EntityOtherPlayerMP;
+
+> DELETE  1  @  1 : 2
 
 > DELETE  1  @  1 : 2
 
@@ -35,7 +42,13 @@
 + 	}
 + 
 
-> CHANGE  28 : 30  @  28 : 30
+> INSERT  26 : 29  @  26
+
++ 		if (entity.width == 0 || entity.height == 0) {
++ 			return;
++ 		}
+
+> CHANGE  2 : 4  @  2 : 4
 
 ~ 		EaglerTextureAtlasSprite textureatlassprite = texturemap.getAtlasSprite("minecraft:blocks/fire_layer_0");
 ~ 		EaglerTextureAtlasSprite textureatlassprite1 = texturemap.getAtlasSprite("minecraft:blocks/fire_layer_1");
@@ -63,5 +76,15 @@
 > CHANGE  5 : 6  @  5 : 6
 
 ~ 			EaglercraftGPU.glNormal3f(0.0F, 1.0F, 0.0F);
+
+> INSERT  31 : 38  @  31
+
++ 
++ 			if (entityIn instanceof EntityOtherPlayerMP) {
++ 				if (VoiceClientController.getVoiceStatus() == EnumVoiceChannelStatus.CONNECTED) {
++ 					VoiceTagRenderer.renderVoiceNameTag(Minecraft.getMinecraft(), (EntityOtherPlayerMP) entityIn, b0);
++ 				}
++ 			}
++ 
 
 > EOF

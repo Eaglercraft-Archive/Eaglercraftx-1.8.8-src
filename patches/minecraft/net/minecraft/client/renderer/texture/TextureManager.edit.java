@@ -28,8 +28,8 @@
 > CHANGE  13 : 22  @  13 : 18
 
 ~ 		int glTex;
-~ 		if (resource.cachedPointer != null) {
-~ 			TextureUtil.bindTexture(glTex = ((ITextureObject) resource.cachedPointer).getGlTextureId()); // unsafe, lol
+~ 		if (resource.cachedPointerType == ResourceLocation.CACHED_POINTER_TEXTURE) {
+~ 			TextureUtil.bindTexture(glTex = ((ITextureObject) resource.cachedPointer).getGlTextureId());
 ~ 		} else {
 ~ 			Object object = (ITextureObject) this.mapTextureObjects.get(resource);
 ~ 			if (object == null) {
@@ -37,9 +37,10 @@
 ~ 				this.loadTexture(resource, (ITextureObject) object);
 ~ 			}
 
-> CHANGE  1 : 15  @  1 : 2
+> CHANGE  1 : 16  @  1 : 2
 
 ~ 			resource.cachedPointer = object;
+~ 			resource.cachedPointerType = ResourceLocation.CACHED_POINTER_TEXTURE;
 ~ 			TextureUtil.bindTexture(glTex = ((ITextureObject) object).getGlTextureId());
 ~ 		}
 ~ 		if (DeferredStateManager.isInDeferredPass()) {
@@ -66,15 +67,17 @@
 
 ~ 					return textureObj2.getClass().getName();
 
-> INSERT  5 : 6  @  5
+> INSERT  5 : 7  @  5
 
++ 		textureLocation.cachedPointerType = ResourceLocation.CACHED_POINTER_TEXTURE;
 + 		textureLocation.cachedPointer = textureObj;
 
-> CHANGE  5 : 10  @  5 : 6
+> CHANGE  5 : 11  @  5 : 6
 
-~ 		if (textureLocation.cachedPointer != null) {
+~ 		if (textureLocation.cachedPointerType == ResourceLocation.CACHED_POINTER_TEXTURE) {
 ~ 			return (ITextureObject) textureLocation.cachedPointer;
 ~ 		} else {
+~ 			textureLocation.cachedPointerType = ResourceLocation.CACHED_POINTER_TEXTURE;
 ~ 			return (ITextureObject) (textureLocation.cachedPointer = this.mapTextureObjects.get(textureLocation));
 ~ 		}
 

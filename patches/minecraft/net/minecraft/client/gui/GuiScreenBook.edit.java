@@ -42,4 +42,11 @@
 
 ~ 	protected void mouseClicked(int parInt1, int parInt2, int parInt3) {
 
+> INSERT  102 : 106  @  102
+
++ 
++ 	public boolean blockPTTKey() {
++ 		return this.bookIsUnsigned;
++ 	}
+
 > EOF

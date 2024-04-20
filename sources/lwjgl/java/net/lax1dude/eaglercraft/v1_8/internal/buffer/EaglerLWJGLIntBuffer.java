@@ -1,10 +1,12 @@
 package net.lax1dude.eaglercraft.v1_8.internal.buffer;
 
-import org.lwjgl.system.MemoryUtil;
 import org.lwjgl.system.jemalloc.JEmalloc;
 
+import net.lax1dude.unsafememcpy.UnsafeMemcpy;
+import net.lax1dude.unsafememcpy.UnsafeUtils;
+
 /**
- * Copyright (c) 2022 lax1dude. All Rights Reserved.
+ * Copyright (c) 2022-2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -106,47 +108,45 @@ public class EaglerLWJGLIntBuffer implements IntBuffer {
 	@Override
 	public int get() {
 		if(position >= limit) throw new ArrayIndexOutOfBoundsException(position);
-		return MemoryUtil.memGetInt(address + ((position++) << SHIFT));
+		return UnsafeUtils.getMemInt(address + ((position++) << SHIFT));
 	}
 
 	@Override
 	public IntBuffer put(int b) {
 		if(position >= limit) throw new ArrayIndexOutOfBoundsException(position);
-		MemoryUtil.memPutInt(address + ((position++) << SHIFT), b);
+		UnsafeUtils.setMemInt(address + ((position++) << SHIFT), b);
 		return this;
 	}
 
 	@Override
 	public int get(int index) {
 		if(index >= limit) throw new ArrayIndexOutOfBoundsException(index);
-		return MemoryUtil.memGetInt(address + (index << SHIFT));
+		return UnsafeUtils.getMemInt(address + (index << SHIFT));
 	}
 
 	@Override
 	public IntBuffer put(int index, int b) {
 		if(index >= limit) throw new ArrayIndexOutOfBoundsException(index);
-		MemoryUtil.memPutInt(address + (index << SHIFT), b);
+		UnsafeUtils.setMemInt(address + (index << SHIFT), b);
 		return this;
 	}
 
 	@Override
 	public int getElement(int index) {
 		if(index >= limit) throw new ArrayIndexOutOfBoundsException(index);
-		return MemoryUtil.memGetInt(address + (index << SHIFT));
+		return UnsafeUtils.getMemInt(address + (index << SHIFT));
 	}
 
 	@Override
 	public void putElement(int index, int value) {
 		if(index >= limit) throw new ArrayIndexOutOfBoundsException(index);
-		MemoryUtil.memPutInt(address + (index << SHIFT), value);
+		UnsafeUtils.setMemInt(address + (index << SHIFT), value);
 	}
 
 	@Override
 	public IntBuffer get(int[] dst, int offset, int length) {
 		if(position + length > limit) throw new ArrayIndexOutOfBoundsException(position + length - 1);
-		for(int i = 0; i < length; ++i) {
-			dst[offset + i] = MemoryUtil.memGetInt(address + ((position + i) << SHIFT));
-		}
+		UnsafeMemcpy.memcpyAlignDst(dst, offset << SHIFT, address + (position << SHIFT), length);
 		position += length;
 		return this;
 	}
@@ -154,9 +154,7 @@ public class EaglerLWJGLIntBuffer implements IntBuffer {
 	@Override
 	public IntBuffer get(int[] dst) {
 		if(position + dst.length > limit) throw new ArrayIndexOutOfBoundsException(position + dst.length - 1);
-		for(int i = 0; i < dst.length; ++i) {
-			dst[i] = MemoryUtil.memGetInt(address + ((position + i) << SHIFT));
-		}
+		UnsafeMemcpy.memcpyAlignDst(dst, 0, address + (position << SHIFT), dst.length);
 		position += dst.length;
 		return this;
 	}
@@ -167,14 +165,14 @@ public class EaglerLWJGLIntBuffer implements IntBuffer {
 			EaglerLWJGLIntBuffer c = (EaglerLWJGLIntBuffer)src;
 			int l = c.limit - c.position;
 			if(position + l > limit) throw new ArrayIndexOutOfBoundsException(position + l - 1);
-			MemoryUtil.memCopy(c.address + (c.position << SHIFT), address + (position << SHIFT), l << SHIFT);
+			UnsafeMemcpy.memcpy(address + (position << SHIFT), c.address + (c.position << SHIFT), l << SHIFT);
 			position += l;
 			c.position += l;
 		}else {
 			int l = src.remaining();
 			if(position + l > limit) throw new ArrayIndexOutOfBoundsException(position + l - 1);
 			for(int i = 0; i < l; ++i) {
-				MemoryUtil.memPutInt(address + ((position + l) << SHIFT), src.get());
+				UnsafeUtils.setMemInt(address + ((position + l) << SHIFT), src.get());
 			}
 			position += l;
 		}
@@ -184,9 +182,7 @@ public class EaglerLWJGLIntBuffer implements IntBuffer {
 	@Override
 	public IntBuffer put(int[] src, int offset, int length) {
 		if(position + length > limit) throw new ArrayIndexOutOfBoundsException(position + length - 1);
-		for(int i = 0; i < length; ++i) {
-			MemoryUtil.memPutInt(address + ((position + i) << SHIFT), src[offset + i]);
-		}
+		UnsafeMemcpy.memcpyAlignSrc(address + (position << SHIFT), src, offset << SHIFT, length);
 		position += length;
 		return this;
 	}
@@ -194,9 +190,7 @@ public class EaglerLWJGLIntBuffer implements IntBuffer {
 	@Override
 	public IntBuffer put(int[] src) {
 		if(position + src.length > limit) throw new ArrayIndexOutOfBoundsException(position + src.length - 1);
-		for(int i = 0; i < src.length; ++i) {
-			MemoryUtil.memPutInt(address + ((position + i) << SHIFT), src[i]);
-		}
+		UnsafeMemcpy.memcpyAlignSrc(address + (position << SHIFT), src, 0, src.length);
 		position += src.length;
 		return this;
 	}
@@ -217,7 +211,10 @@ public class EaglerLWJGLIntBuffer implements IntBuffer {
 		
 		int newLen = limit - position;
 		long newAlloc = JEmalloc.nje_malloc(newLen);
-		MemoryUtil.memCopy(address + (position << SHIFT), newAlloc, newLen << SHIFT);
+		if(newAlloc == 0l) {
+			throw new OutOfMemoryError("Native je_malloc call returned null pointer!");
+		}
+		UnsafeMemcpy.memcpy(newAlloc, address + (position << SHIFT), newLen << SHIFT);
 		
 		return new EaglerLWJGLIntBuffer(newAlloc, newLen, true);
 	}

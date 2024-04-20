@@ -124,4 +124,9 @@ public class DesktopClientConfigAdapter implements IClientConfigAdapter {
 		return false;
 	}
 
+	@Override
+	public boolean isAllowVoiceClient() {
+		return false;
+	}
+
 }

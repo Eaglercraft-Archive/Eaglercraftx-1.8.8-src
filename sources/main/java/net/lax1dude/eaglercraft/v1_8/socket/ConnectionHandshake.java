@@ -293,6 +293,19 @@ public class ConnectionHandshake {
 					d.write(packetSkin);
 					PlatformNetworking.writePlayPacket(bao.toByteArray());
 					
+					bao.reset();
+					d.writeByte(HandshakePacketTypes.PROTOCOL_CLIENT_PROFILE_DATA);
+					profileDataType = "cape_v1";
+					d.writeByte(profileDataType.length());
+					d.writeBytes(profileDataType);
+					byte[] packetCape = EaglerProfile.getCapePacket();
+					if(packetCape.length > 0xFFFF) {
+						throw new IOException("Cape packet is too long: " + packetCape.length);
+					}
+					d.writeShort(packetCape.length);
+					d.write(packetCape);
+					PlatformNetworking.writePlayPacket(bao.toByteArray());
+					
 					byte[] packetSignatureData = UpdateService.getClientSignatureData();
 					if(packetSignatureData != null) {
 						bao.reset();

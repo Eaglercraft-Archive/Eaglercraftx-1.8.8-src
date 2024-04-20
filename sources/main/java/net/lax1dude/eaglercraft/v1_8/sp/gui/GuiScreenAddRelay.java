@@ -140,4 +140,7 @@ public class GuiScreenAddRelay extends GuiScreen {
 		super.drawScreen(par1, par2, par3);
 	}
 
+	public boolean blockPTTKey() {
+		return this.serverName.isFocused() || this.serverAddress.isFocused();
+	}
 }

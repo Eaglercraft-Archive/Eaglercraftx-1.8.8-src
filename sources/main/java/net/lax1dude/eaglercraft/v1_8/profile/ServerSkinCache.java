@@ -321,6 +321,7 @@ public class ServerSkinCache {
 		}
 		skinsCache.clear();
 		waitingSkins.clear();
+		evictedSkins.clear();
 	}
 	
 	public void evictSkin(EaglercraftUUID uuid) {

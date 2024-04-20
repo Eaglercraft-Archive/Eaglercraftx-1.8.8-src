@@ -54,7 +54,14 @@
 
 ~ 		this.overlayDebug.renderDebugInfo(scaledresolution);
 
-> INSERT  87 : 90  @  87
+> INSERT  83 : 87  @  83
+
++ 		if (this.mc.currentScreen == null) {
++ 			this.mc.voiceOverlay.drawOverlay();
++ 		}
++ 
+
+> INSERT  4 : 7  @  4
 
 + 		if (this.mc.gameSettings.hudWorld && (mc.currentScreen == null || !(mc.currentScreen instanceof GuiChat))) {
 + 			j -= 10;

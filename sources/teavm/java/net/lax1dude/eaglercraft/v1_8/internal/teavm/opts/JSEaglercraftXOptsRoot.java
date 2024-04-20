@@ -80,4 +80,7 @@ public abstract class JSEaglercraftXOptsRoot implements JSObject {
 	@JSBody(params = { "def" }, script = "return (typeof this.checkRelaysForUpdates === \"boolean\") ? this.checkRelaysForUpdates : def;")
 	public native boolean getCheckRelaysForUpdates(boolean defaultValue);
 
+	@JSBody(params = { "def" }, script = "return (typeof this.allowVoiceClient === \"boolean\") ? this.allowVoiceClient : def;")
+	public native boolean getAllowVoiceClient(boolean defaultValue);
+
 }

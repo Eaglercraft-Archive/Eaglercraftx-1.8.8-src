@@ -55,6 +55,7 @@ public class TeaVMClientConfigAdapter implements IClientConfigAdapter {
 	private boolean logInvalidCerts = false;
 	private boolean checkRelaysForUpdates = false;
 	private boolean enableSignatureBadge = false;
+	private boolean allowVoiceClient = true;
 
 	public void loadNative(JSObject jsObject) {
 		integratedServerOpts = new JSONObject();
@@ -73,12 +74,14 @@ public class TeaVMClientConfigAdapter implements IClientConfigAdapter {
 		useSpecialCursors = eaglercraftXOpts.getHtml5CursorSupport(false);
 		logInvalidCerts = EaglercraftVersion.enableUpdateService && !demoMode && eaglercraftXOpts.getLogInvalidCerts(false);
 		enableSignatureBadge = eaglercraftXOpts.getEnableSignatureBadge(false);
+		allowVoiceClient = eaglercraftXOpts.getAllowVoiceClient(true);
 
 		integratedServerOpts.put("worldsDB", worldsDB);
 		integratedServerOpts.put("demoMode", demoMode);
 		integratedServerOpts.put("lang", defaultLocale);
 		integratedServerOpts.put("allowUpdateSvc", isAllowUpdateSvc);
 		integratedServerOpts.put("allowUpdateDL", isAllowUpdateDL);
+		integratedServerOpts.put("allowVoiceClient", allowVoiceClient);
 		
 		JSEaglercraftXOptsServersArray serversArray = eaglercraftXOpts.getServers();
 		if(serversArray != null) {
@@ -158,6 +161,7 @@ public class TeaVMClientConfigAdapter implements IClientConfigAdapter {
 		useSpecialCursors = eaglercraftOpts.optBoolean("html5CursorSupport", false);
 		logInvalidCerts = EaglercraftVersion.enableUpdateService && !demoMode && eaglercraftOpts.optBoolean("logInvalidCerts", false);
 		enableSignatureBadge = eaglercraftOpts.optBoolean("enableSignatureBadge", false);
+		allowVoiceClient = eaglercraftOpts.optBoolean("allowVoiceClient", true);
 		JSONArray serversArray = eaglercraftOpts.optJSONArray("servers");
 		if(serversArray != null) {
 			for(int i = 0, l = serversArray.length(); i < l; ++i) {
@@ -301,6 +305,11 @@ public class TeaVMClientConfigAdapter implements IClientConfigAdapter {
 	}
 
 	@Override
+	public boolean isAllowVoiceClient() {
+		return allowVoiceClient;
+	}
+
+	@Override
 	public String toString() {
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("lang", defaultLocale);
@@ -317,6 +326,7 @@ public class TeaVMClientConfigAdapter implements IClientConfigAdapter {
 		jsonObject.put("logInvalidCerts", logInvalidCerts);
 		jsonObject.put("checkRelaysForUpdates", checkRelaysForUpdates);
 		jsonObject.put("enableSignatureBadge", enableSignatureBadge);
+		jsonObject.put("allowVoiceClient", allowVoiceClient);
 		JSONArray serversArr = new JSONArray();
 		for(int i = 0, l = defaultServers.size(); i < l; ++i) {
 			DefaultServer srv = defaultServers.get(i);

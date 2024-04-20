@@ -67,4 +67,6 @@ public interface IClientConfigAdapter {
 	boolean isCheckRelaysForUpdates();
 
 	boolean isEnableSignatureBadge();
+
+	boolean isAllowVoiceClient();
 }

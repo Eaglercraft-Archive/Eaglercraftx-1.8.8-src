@@ -60,6 +60,9 @@ public class PlatformAssets {
 	public static final ImageData loadImageFile(InputStream data) {
 		try {
 			BufferedImage img = ImageIO.read(data);
+			if(img == null) {
+				throw new IOException("Data is not a supported image format!");
+			}
 			int w = img.getWidth();
 			int h = img.getHeight();
 			boolean a = img.getColorModel().hasAlpha();

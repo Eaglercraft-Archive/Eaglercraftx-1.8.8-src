@@ -1,10 +1,12 @@
 package net.lax1dude.eaglercraft.v1_8.internal.buffer;
 
-import org.lwjgl.system.MemoryUtil;
 import org.lwjgl.system.jemalloc.JEmalloc;
 
+import net.lax1dude.unsafememcpy.UnsafeMemcpy;
+import net.lax1dude.unsafememcpy.UnsafeUtils;
+
 /**
- * Copyright (c) 2022 lax1dude. All Rights Reserved.
+ * Copyright (c) 2022-2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -104,35 +106,33 @@ public class EaglerLWJGLByteBuffer implements ByteBuffer {
 	@Override
 	public byte get() {
 		if(position >= limit) throw new ArrayIndexOutOfBoundsException(position);
-		return MemoryUtil.memGetByte(address + position++);
+		return UnsafeUtils.getMemByte(address + position++);
 	}
 
 	@Override
 	public ByteBuffer put(byte b) {
 		if(position >= limit) throw new ArrayIndexOutOfBoundsException(position);
-		MemoryUtil.memPutByte(address + position++, b);
+		UnsafeUtils.setMemByte(address + position++, b);
 		return this;
 	}
 
 	@Override
 	public byte get(int index) {
 		if(index >= limit) throw new ArrayIndexOutOfBoundsException(index);
-		return MemoryUtil.memGetByte(address + index);
+		return UnsafeUtils.getMemByte(address + index);
 	}
 
 	@Override
 	public ByteBuffer put(int index, byte b) {
 		if(index >= limit) throw new ArrayIndexOutOfBoundsException(index);
-		MemoryUtil.memPutByte(address + index, b);
+		UnsafeUtils.setMemByte(address + index, b);
 		return this;
 	}
 
 	@Override
 	public ByteBuffer get(byte[] dst, int offset, int length) {
 		if(position + length > limit) throw new ArrayIndexOutOfBoundsException(position + length - 1);
-		for(int i = 0; i < length; ++i) {
-			dst[offset + i] = MemoryUtil.memGetByte(address + position + i);
-		}
+		UnsafeMemcpy.memcpy(dst, offset, address + position, length);
 		position += length;
 		return this;
 	}
@@ -140,9 +140,7 @@ public class EaglerLWJGLByteBuffer implements ByteBuffer {
 	@Override
 	public ByteBuffer get(byte[] dst) {
 		if(position + dst.length > limit) throw new ArrayIndexOutOfBoundsException(position + dst.length - 1);
-		for(int i = 0; i < dst.length; ++i) {
-			dst[position + i] = MemoryUtil.memGetByte(address + position + i);
-		}
+		UnsafeMemcpy.memcpy(dst, 0, address + position, dst.length);
 		position += dst.length;
 		return this;
 	}
@@ -153,14 +151,14 @@ public class EaglerLWJGLByteBuffer implements ByteBuffer {
 			EaglerLWJGLByteBuffer c = (EaglerLWJGLByteBuffer)src;
 			int l = c.limit - c.position;
 			if(position + l > limit) throw new ArrayIndexOutOfBoundsException(position + l - 1);
-			MemoryUtil.memCopy(c.address + c.position, address + position, l);
+			UnsafeMemcpy.memcpy(address + position, c.address + c.position, l);
 			position += l;
 			c.position += l;
 		}else {
 			int l = src.remaining();
 			if(position + l > limit) throw new ArrayIndexOutOfBoundsException(position + l - 1);
 			for(int i = 0; i < l; ++i) {
-				MemoryUtil.memPutByte(address + position + l, src.get());
+				UnsafeUtils.setMemByte(address + position + l, src.get());
 			}
 			position += l;
 		}
@@ -170,9 +168,7 @@ public class EaglerLWJGLByteBuffer implements ByteBuffer {
 	@Override
 	public ByteBuffer put(byte[] src, int offset, int length) {
 		if(position + length > limit) throw new ArrayIndexOutOfBoundsException(position + length - 1);
-		for(int i = 0; i < length; ++i) {
-			MemoryUtil.memPutByte(address + position + i, src[offset + i]);
-		}
+		UnsafeMemcpy.memcpy(address + position, src, offset, length);
 		position += length;
 		return this;
 	}
@@ -180,9 +176,7 @@ public class EaglerLWJGLByteBuffer implements ByteBuffer {
 	@Override
 	public ByteBuffer put(byte[] src) {
 		if(position + src.length > limit) throw new ArrayIndexOutOfBoundsException(position + src.length - 1);
-		for(int i = 0; i < src.length; ++i) {
-			MemoryUtil.memPutByte(address + position + i, src[i]);
-		}
+		UnsafeMemcpy.memcpy(address + position, src, 0, src.length);
 		position += src.length;
 		return this;
 	}
@@ -203,7 +197,10 @@ public class EaglerLWJGLByteBuffer implements ByteBuffer {
 		
 		int newLen = limit - position;
 		long newAlloc = JEmalloc.nje_malloc(newLen);
-		MemoryUtil.memCopy(address + position, newAlloc, newLen);
+		if(newAlloc == 0l) {
+			throw new OutOfMemoryError("Native je_malloc call returned null pointer!");
+		}
+		UnsafeMemcpy.memcpy(newAlloc, address + position, newLen);
 		
 		return new EaglerLWJGLByteBuffer(newAlloc, newLen, true);
 	}
@@ -211,7 +208,7 @@ public class EaglerLWJGLByteBuffer implements ByteBuffer {
 	@Override
 	public char getChar() {
 		if(position + 2 > limit) throw new ArrayIndexOutOfBoundsException(position);
-		char c = (char)MemoryUtil.memGetShort(address + position);
+		char c = UnsafeUtils.getMemChar(address + position);
 		position += 2;
 		return c;
 	}
@@ -219,7 +216,7 @@ public class EaglerLWJGLByteBuffer implements ByteBuffer {
 	@Override
 	public ByteBuffer putChar(char value) {
 		if(position + 2 > limit) throw new ArrayIndexOutOfBoundsException(position);
-		MemoryUtil.memPutShort(address + position, (short)value);
+		UnsafeUtils.setMemChar(address + position, value);
 		position += 2;
 		return this;
 	}
@@ -227,20 +224,20 @@ public class EaglerLWJGLByteBuffer implements ByteBuffer {
 	@Override
 	public char getChar(int index) {
 		if(index + 2 > limit) throw new ArrayIndexOutOfBoundsException(index);
-		return (char)MemoryUtil.memGetShort(address + index);
+		return UnsafeUtils.getMemChar(address + index);
 	}
 
 	@Override
 	public ByteBuffer putChar(int index, char value) {
 		if(index + 2 > limit) throw new ArrayIndexOutOfBoundsException(index);
-		MemoryUtil.memPutShort(address + index, (short)value);
+		UnsafeUtils.setMemChar(address + index, value);
 		return this;
 	}
 
 	@Override
 	public short getShort() {
 		if(position + 2 > limit) throw new ArrayIndexOutOfBoundsException(position);
-		short s = MemoryUtil.memGetShort(address + position);
+		short s = UnsafeUtils.getMemShort(address + position);
 		position += 2;
 		return s;
 	}
@@ -248,7 +245,7 @@ public class EaglerLWJGLByteBuffer implements ByteBuffer {
 	@Override
 	public ByteBuffer putShort(short value) {
 		if(position + 2 > limit) throw new ArrayIndexOutOfBoundsException(position);
-		MemoryUtil.memPutShort(address + position, value);
+		UnsafeUtils.setMemShort(address + position, value);
 		position += 2;
 		return this;
 	}
@@ -256,13 +253,13 @@ public class EaglerLWJGLByteBuffer implements ByteBuffer {
 	@Override
 	public short getShort(int index) {
 		if(index + 2 > limit) throw new ArrayIndexOutOfBoundsException(index);
-		return MemoryUtil.memGetShort(address + index);
+		return UnsafeUtils.getMemShort(address + index);
 	}
 
 	@Override
 	public ByteBuffer putShort(int index, short value) {
 		if(index + 2 > limit) throw new ArrayIndexOutOfBoundsException(index);
-		MemoryUtil.memPutShort(address + index, value);
+		UnsafeUtils.setMemShort(address + index, value);
 		return this;
 	}
 
@@ -274,7 +271,7 @@ public class EaglerLWJGLByteBuffer implements ByteBuffer {
 	@Override
 	public int getInt() {
 		if(position + 4 > limit) throw new ArrayIndexOutOfBoundsException(position);
-		int i = MemoryUtil.memGetInt(address + position);
+		int i = UnsafeUtils.getMemInt(address + position);
 		position += 4;
 		return i;
 	}
@@ -282,7 +279,7 @@ public class EaglerLWJGLByteBuffer implements ByteBuffer {
 	@Override
 	public ByteBuffer putInt(int value) {
 		if(position + 4 > limit) throw new ArrayIndexOutOfBoundsException(position);
-		MemoryUtil.memPutInt(address + position, value);
+		UnsafeUtils.setMemInt(address + position, value);
 		position += 4;
 		return this;
 	}
@@ -290,13 +287,13 @@ public class EaglerLWJGLByteBuffer implements ByteBuffer {
 	@Override
 	public int getInt(int index) {
 		if(index + 4 > limit) throw new ArrayIndexOutOfBoundsException(index);
-		return MemoryUtil.memGetInt(address + index);
+		return UnsafeUtils.getMemInt(address + index);
 	}
 
 	@Override
 	public ByteBuffer putInt(int index, int value) {
 		if(index + 4 > limit) throw new ArrayIndexOutOfBoundsException(index);
-		MemoryUtil.memPutInt(address + index, value);
+		UnsafeUtils.setMemInt(address + index, value);
 		return this;
 	}
 
@@ -308,7 +305,7 @@ public class EaglerLWJGLByteBuffer implements ByteBuffer {
 	@Override
 	public long getLong() {
 		if(position + 8 > limit) throw new ArrayIndexOutOfBoundsException(position);
-		long l = MemoryUtil.memGetLong(address + position);
+		long l = UnsafeUtils.getMemLong(address + position);
 		position += 8;
 		return l;
 	}
@@ -316,7 +313,7 @@ public class EaglerLWJGLByteBuffer implements ByteBuffer {
 	@Override
 	public ByteBuffer putLong(long value) {
 		if(position + 8 > limit) throw new ArrayIndexOutOfBoundsException(position);
-		MemoryUtil.memPutLong(address + position, value);
+		UnsafeUtils.setMemLong(address + position, value);
 		position += 8;
 		return this;
 	}
@@ -324,20 +321,20 @@ public class EaglerLWJGLByteBuffer implements ByteBuffer {
 	@Override
 	public long getLong(int index) {
 		if(index + 8 > limit) throw new ArrayIndexOutOfBoundsException(index);
-		return MemoryUtil.memGetLong(address + index);
+		return UnsafeUtils.getMemLong(address + index);
 	}
 
 	@Override
 	public ByteBuffer putLong(int index, long value) {
 		if(index + 8 > limit) throw new ArrayIndexOutOfBoundsException(index);
-		MemoryUtil.memPutLong(address + index, value);
+		UnsafeUtils.setMemLong(address + index, value);
 		return this;
 	}
 
 	@Override
 	public float getFloat() {
 		if(position + 4 > limit) throw new ArrayIndexOutOfBoundsException(position);
-		float f = MemoryUtil.memGetFloat(address + position);
+		float f = UnsafeUtils.getMemFloat(address + position);
 		position += 4;
 		return f;
 	}
@@ -345,7 +342,7 @@ public class EaglerLWJGLByteBuffer implements ByteBuffer {
 	@Override
 	public ByteBuffer putFloat(float value) {
 		if(position + 4 > limit) throw new ArrayIndexOutOfBoundsException(position);
-		MemoryUtil.memPutFloat(address + position, value);
+		UnsafeUtils.setMemFloat(address + position, value);
 		position += 4;
 		return this;
 	}
@@ -353,13 +350,13 @@ public class EaglerLWJGLByteBuffer implements ByteBuffer {
 	@Override
 	public float getFloat(int index) {
 		if(index + 4 > limit) throw new ArrayIndexOutOfBoundsException(index);
-		return MemoryUtil.memGetFloat(address + index);
+		return UnsafeUtils.getMemFloat(address + index);
 	}
 
 	@Override
 	public ByteBuffer putFloat(int index, float value) {
 		if(index + 4 > limit) throw new ArrayIndexOutOfBoundsException(index);
-		MemoryUtil.memPutFloat(address + index, value);
+		UnsafeUtils.setMemFloat(address + index, value);
 		return this;
 	}
 

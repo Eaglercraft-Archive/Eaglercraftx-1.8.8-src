@@ -13,32 +13,40 @@
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
 
-> INSERT  6 : 7  @  6
+> INSERT  6 : 8  @  6
 
 + 	private byte[] skin;
++ 	private byte[] cape;
 
 > CHANGE  4 : 5  @  4 : 5
 
-~ 	public C00PacketLoginStart(GameProfile profileIn, byte[] skin) {
+~ 	public C00PacketLoginStart(GameProfile profileIn, byte[] skin, byte[] cape) {
 
-> INSERT  1 : 2  @  1
+> INSERT  1 : 3  @  1
 
 + 		this.skin = skin;
++ 		this.cape = cape;
 
-> CHANGE  3 : 5  @  3 : 4
+> CHANGE  3 : 6  @  3 : 4
 
 ~ 		this.profile = new GameProfile((EaglercraftUUID) null, parPacketBuffer.readStringFromBuffer(16));
 ~ 		this.skin = parPacketBuffer.readByteArray();
+~ 		this.cape = parPacketBuffer.readableBytes() > 0 ? parPacketBuffer.readByteArray() : null;
 
-> INSERT  4 : 5  @  4
+> INSERT  4 : 6  @  4
 
 + 		parPacketBuffer.writeByteArray(this.skin);
++ 		parPacketBuffer.writeByteArray(this.cape);
 
-> INSERT  9 : 13  @  9
+> INSERT  9 : 17  @  9
 
 + 
 + 	public byte[] getSkin() {
 + 		return this.skin;
++ 	}
++ 
++ 	public byte[] getCape() {
++ 		return this.cape;
 + 	}
 
 > EOF

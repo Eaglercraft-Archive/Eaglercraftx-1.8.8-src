@@ -7,7 +7,7 @@
 
 > DELETE  2  @  2 : 3
 
-> INSERT  1 : 8  @  1
+> INSERT  1 : 9  @  1
 
 + 
 + import com.google.common.collect.Maps;
@@ -16,19 +16,39 @@
 + import net.lax1dude.eaglercraft.v1_8.opengl.OpenGlHelper;
 + import net.lax1dude.eaglercraft.v1_8.opengl.WorldRenderer;
 + import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.DeferredStateManager;
++ import net.lax1dude.eaglercraft.v1_8.profile.RenderHighPoly;
 
-> DELETE  16  @  16 : 18
+> INSERT  3 : 4  @  3
+
++ import net.minecraft.client.Minecraft;
+
+> DELETE  13  @  13 : 15
 
 > DELETE  2  @  2 : 3
 
 > DELETE  1  @  1 : 55
 
-> CHANGE  163 : 165  @  163 : 164
+> INSERT  81 : 82  @  81
+
++ 	private RenderPlayer eaglerRenderer;
+
+> CHANGE  82 : 88  @  82 : 83
 
 ~ 		this.skinMap.put("slim", new RenderPlayer(this, true, false));
 ~ 		this.skinMap.put("zombie", new RenderPlayer(this, false, true));
+~ 		this.eaglerRenderer = new RenderHighPoly(this, this.playerRenderer.getMainModel(),
+~ 				this.playerRenderer.shadowSize);
+~ 		this.skinMap.put("eagler",
+~ 				Minecraft.getMinecraft().gameSettings.enableFNAWSkins ? this.eaglerRenderer : this.playerRenderer);
 
-> CHANGE  11 : 12  @  11 : 12
+> INSERT  2 : 6  @  2
+
++ 	public void setEnableFNAWSkins(boolean en) {
++ 		this.skinMap.put("eagler", en ? this.eaglerRenderer : this.playerRenderer);
++ 	}
++ 
+
+> CHANGE  9 : 10  @  9 : 10
 
 ~ 			render = this.getEntityClassRenderObject((Class<? extends Entity>) parClass1.getSuperclass());
 

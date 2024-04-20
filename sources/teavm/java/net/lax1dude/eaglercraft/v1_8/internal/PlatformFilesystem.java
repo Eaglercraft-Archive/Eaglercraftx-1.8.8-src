@@ -18,7 +18,7 @@ import org.teavm.jso.indexeddb.IDBRequest;
 import org.teavm.jso.indexeddb.IDBTransaction;
 import org.teavm.jso.indexeddb.IDBVersionChangeEvent;
 import org.teavm.jso.typedarrays.ArrayBuffer;
-import org.teavm.jso.typedarrays.DataView;
+import org.teavm.jso.typedarrays.Int8Array;
 
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.ByteBuffer;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.EaglerArrayBufferAllocator;
@@ -85,11 +85,11 @@ public class PlatformFilesystem {
 		if(ar == null) {
 			return null;
 		}
-		return EaglerArrayBufferAllocator.wrapByteBufferTeaVM(DataView.create(ar));
+		return EaglerArrayBufferAllocator.wrapByteBufferTeaVM(Int8Array.create(ar));
 	}
 
 	public static void eaglerWrite(String pathName, ByteBuffer data) {
-		if(!AsyncHandlers.writeWholeFile(database, pathName, EaglerArrayBufferAllocator.getDataViewStupid(data).getBuffer()).bool) {
+		if(!AsyncHandlers.writeWholeFile(database, pathName, EaglerArrayBufferAllocator.getDataView8Unsigned(data).getBuffer()).bool) {
 			throw new RuntimeException("Failed to write " + data.remaining() + " byte file to indexeddb table: " + pathName);
 		}
 	}

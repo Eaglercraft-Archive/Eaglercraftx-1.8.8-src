@@ -84,4 +84,11 @@
 
 ~ 	protected void actionPerformed(GuiButton parGuiButton) {
 
+> INSERT  139 : 143  @  139
+
++ 
++ 	public boolean blockPTTKey() {
++ 		return searchField.isFocused();
++ 	}
+
 > EOF

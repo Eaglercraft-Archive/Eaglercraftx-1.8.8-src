@@ -26,9 +26,10 @@
 
 > DELETE  2  @  2 : 3
 
-> INSERT  16 : 18  @  16
+> INSERT  16 : 19  @  16
 
 + import net.lax1dude.eaglercraft.v1_8.sp.server.socket.IntegratedServerPlayerNetworkManager;
++ import net.lax1dude.eaglercraft.v1_8.sp.server.voice.IntegratedVoiceService;
 + 
 
 > CHANGE  1 : 3  @  1 : 3
@@ -186,12 +187,21 @@
 + 						s = net.minecraft.util.StringUtils.translateControlCodesAlternate(s);
 + 					}
 
-> INSERT  5 : 24  @  5
+> INSERT  5 : 33  @  5
 
 + 		} else if ("EAG|Skins-1.8".equals(c17packetcustompayload.getChannelName())) {
 + 			byte[] r = new byte[c17packetcustompayload.getBufferData().readableBytes()];
 + 			c17packetcustompayload.getBufferData().readBytes(r);
 + 			((EaglerMinecraftServer) serverController).getSkinService().processPacket(r, playerEntity);
++ 		} else if ("EAG|Capes-1.8".equals(c17packetcustompayload.getChannelName())) {
++ 			byte[] r = new byte[c17packetcustompayload.getBufferData().readableBytes()];
++ 			c17packetcustompayload.getBufferData().readBytes(r);
++ 			((EaglerMinecraftServer) serverController).getCapeService().processPacket(r, playerEntity);
++ 		} else if ("EAG|Voice-1.8".equals(c17packetcustompayload.getChannelName())) {
++ 			IntegratedVoiceService vcs = ((EaglerMinecraftServer) serverController).getVoiceService();
++ 			if (vcs != null) {
++ 				vcs.processPacket(c17packetcustompayload.getBufferData(), playerEntity);
++ 			}
 + 		} else if ("EAG|MyUpdCert-1.8".equals(c17packetcustompayload.getChannelName())) {
 + 			if (playerEntity.updateCertificate == null) {
 + 				PacketBuffer pb = c17packetcustompayload.getBufferData();
