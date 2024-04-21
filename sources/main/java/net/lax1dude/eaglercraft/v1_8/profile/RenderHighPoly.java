@@ -52,11 +52,16 @@ public class RenderHighPoly extends RenderPlayer {
 	public void doRender(AbstractClientPlayer abstractclientplayer, double d0, double d1, double d2, float f,
 			float f1) {
 		if (!abstractclientplayer.isUser() || this.renderManager.livingPlayer == abstractclientplayer) {
+			double nameY = d1;
 			HighPolySkin highPolySkin = abstractclientplayer.getEaglerSkinModel().highPoly;
 			
 			if(highPolySkin == null) {
 				super.doRender(abstractclientplayer, d0, d1, d2, f, f1);
 				return;
+			}else if(highPolySkin == HighPolySkin.LAXATIVE_DUDE) {
+				nameY += 0.1;
+			}else if(highPolySkin == HighPolySkin.BABY_WINSTON) {
+				nameY -= 1.0;
 			}
 			
 			GlStateManager.pushMatrix();
@@ -421,6 +426,9 @@ public class RenderHighPoly extends RenderPlayer {
 			GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
 			GlStateManager.enableCull();
 			GlStateManager.popMatrix();
+			if (!this.renderOutlines) {
+				this.renderName(abstractclientplayer, d0, nameY, d2);
+			}
 		}
 	}
 
