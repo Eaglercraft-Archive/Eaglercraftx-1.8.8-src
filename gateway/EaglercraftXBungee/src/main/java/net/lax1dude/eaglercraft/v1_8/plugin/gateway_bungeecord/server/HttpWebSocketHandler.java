@@ -917,7 +917,7 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 										if("textures".equals(props[i].getName())) {
 											try {
 												String jsonStr = SkinPackets.bytesToAscii(Base64.decodeBase64(props[i].getValue()));
-												JsonObject json = (new JsonParser()).parse(jsonStr).getAsJsonObject();
+												JsonObject json = JsonParser.parseString(jsonStr).getAsJsonObject();
 												JsonObject skinObj = json.getAsJsonObject("SKIN");
 												if(skinObj != null) {
 													JsonElement url = json.get("url");
@@ -990,11 +990,11 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 						};
 						
 						try {
-							PostLoginEvent login = new PostLoginEvent(userCon);
+							bungee.getPluginManager().callEvent(new PostLoginEvent(userCon, server, complete));
+						}catch(NoSuchMethodError err) {
+							PostLoginEvent login = PostLoginEvent.class.getDeclaredConstructor(ProxiedPlayer.class).newInstance(userCon);
 							bungee.getPluginManager().callEvent(login);
 							complete.done(login, null);
-						}catch(NoSuchMethodError err) {
-							bungee.getPluginManager().callEvent(PostLoginEvent.class.getDeclaredConstructor(ProxiedPlayer.class, ServerInfo.class, Callback.class).newInstance(userCon, server, complete));
 						}
 					}
 					

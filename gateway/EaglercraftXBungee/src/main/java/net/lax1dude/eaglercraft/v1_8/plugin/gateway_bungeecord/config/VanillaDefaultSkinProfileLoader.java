@@ -56,7 +56,7 @@ class VanillaDefaultSkinProfileLoader implements Consumer<Response> {
 				doNotify();
 			}else {
 				try {
-					JsonObject json = (new JsonParser()).parse(new String(response.data, StandardCharsets.UTF_8)).getAsJsonObject();
+					JsonObject json = JsonParser.parseString(new String(response.data, StandardCharsets.UTF_8)).getAsJsonObject();
 					JsonElement propsElement = json.get("properties");
 					if(propsElement != null) {
 						JsonArray properties = propsElement.getAsJsonArray();
@@ -115,7 +115,7 @@ class VanillaDefaultSkinProfileLoader implements Consumer<Response> {
 			doNotify();
 		}else {
 			try {
-				JsonObject json = (new JsonParser()).parse(new String(response.data, StandardCharsets.UTF_8)).getAsJsonObject();
+				JsonObject json = JsonParser.parseString(new String(response.data, StandardCharsets.UTF_8)).getAsJsonObject();
 				String uuid = json.get("id").getAsString();
 				URI requestURI = URI.create("https://sessionserver.mojang.com/session/minecraft/profile/" + uuid + "?unsigned=false");
 				BinaryHttpClient.asyncRequest("GET", requestURI, new ProfileSkinConsumerImpl(uuid));

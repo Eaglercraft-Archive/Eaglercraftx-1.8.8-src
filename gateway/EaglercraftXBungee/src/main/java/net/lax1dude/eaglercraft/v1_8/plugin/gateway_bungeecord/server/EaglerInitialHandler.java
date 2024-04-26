@@ -233,7 +233,22 @@ public class EaglerInitialHandler extends InitialHandler {
 	public UUID getOfflineId() {
 		return playerUUID;
 	}
-	
+
+	@Override
+	public UUID getRewriteId() {
+		return playerUUID;
+	}
+
+	@Override
+	public void setUniqueId(UUID uuid) {
+		throw new UnsupportedOperationException("EaglercraftXBungee does not support changing player UUIDs at login! (yet)");
+	}
+
+	@Override
+	public void setOnlineMode(boolean onlineMode) {
+		throw new UnsupportedOperationException("EaglercraftXBungee does not support changing player online mode status at login! (yet)");
+	}
+
 	@Override
 	public String getUUID() {
 		return playerUUID.toString().replace("-", "");

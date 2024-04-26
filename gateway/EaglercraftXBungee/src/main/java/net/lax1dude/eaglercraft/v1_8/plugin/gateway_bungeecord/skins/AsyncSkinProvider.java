@@ -212,7 +212,7 @@ public class AsyncSkinProvider {
 				doAccept(null);
 			}else {
 				try {
-					JsonObject json = (new JsonParser()).parse(new String(response.data, StandardCharsets.UTF_8)).getAsJsonObject();
+					JsonObject json = JsonParser.parseString(new String(response.data, StandardCharsets.UTF_8)).getAsJsonObject();
 					String username = json.get("name").getAsString().toLowerCase();
 					String texture = null;
 					String model = null;
@@ -227,7 +227,7 @@ public class AsyncSkinProvider {
 										JsonObject propObj = prop.getAsJsonObject();
 										if(propObj.get("name").getAsString().equals("textures")) {
 											String value = new String(Base64.decodeBase64(propObj.get("value").getAsString()), StandardCharsets.UTF_8);
-											JsonObject texturesJson = (new JsonParser()).parse(value).getAsJsonObject();
+											JsonObject texturesJson = JsonParser.parseString(value).getAsJsonObject();
 											if(texturesJson != null && texturesJson.has("textures")) {
 												texturesJson = texturesJson.getAsJsonObject("textures");
 												JsonElement skin = texturesJson.get("SKIN");

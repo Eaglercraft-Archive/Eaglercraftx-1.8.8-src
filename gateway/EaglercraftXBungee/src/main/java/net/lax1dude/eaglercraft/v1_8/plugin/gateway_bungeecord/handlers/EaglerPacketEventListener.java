@@ -54,8 +54,9 @@ import net.md_5.bungee.protocol.Property;
  * 
  */
 public class EaglerPacketEventListener implements Listener {
-	
+
 	public static final String FNAW_SKIN_ENABLE_CHANNEL = "EAG|FNAWSEn-1.8";
+	public static final String GET_DOMAIN_CHANNEL = "EAG|GetDomain";
 	
 	public final EaglerXBungee plugin;
 	
@@ -104,7 +105,7 @@ public class EaglerPacketEventListener implements Listener {
 			}
 		}else if(event.getSender() instanceof Server && event.getReceiver() instanceof UserConnection) {
 			UserConnection player = (UserConnection)event.getReceiver();
-			if("EAG|GetDomain".equals(event.getTag()) && player.getPendingConnection() instanceof EaglerInitialHandler) {
+			if(GET_DOMAIN_CHANNEL.equals(event.getTag()) && player.getPendingConnection() instanceof EaglerInitialHandler) {
 				event.setCancelled(true);
 				String domain = ((EaglerInitialHandler)player.getPendingConnection()).getOrigin();
 				if(domain == null) {
@@ -117,7 +118,6 @@ public class EaglerPacketEventListener implements Listener {
 	}
 
 	@EventHandler
-	@SuppressWarnings("deprecation")
 	public void onPostLogin(PostLoginEvent event) {
 		ProxiedPlayer p = event.getPlayer();
 		if(p instanceof UserConnection) {
@@ -132,7 +132,7 @@ public class EaglerPacketEventListener implements Listener {
 						if(pp.getName().equals("textures")) {
 							try {
 								String jsonStr = SkinPackets.bytesToAscii(Base64.decodeBase64(pp.getValue()));
-								JsonObject json = (new JsonParser()).parse(jsonStr).getAsJsonObject();
+								JsonObject json = JsonParser.parseString(jsonStr).getAsJsonObject();
 								JsonObject skinObj = json.getAsJsonObject("SKIN");
 								if(skinObj != null) {
 									JsonElement url = json.get("url");

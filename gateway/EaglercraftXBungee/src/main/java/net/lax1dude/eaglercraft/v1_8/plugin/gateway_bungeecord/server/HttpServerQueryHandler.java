@@ -162,7 +162,7 @@ public abstract class HttpServerQueryHandler extends ChannelInboundHandlerAdapte
 		JsonObject obj = null;
 		if(str.indexOf('{') == 0) {
 			try {
-				obj = (new JsonParser()).parse(str).getAsJsonObject();
+				obj = JsonParser.parseString(str).getAsJsonObject();
 			}catch(JsonParseException ex) {
 			}
 		}

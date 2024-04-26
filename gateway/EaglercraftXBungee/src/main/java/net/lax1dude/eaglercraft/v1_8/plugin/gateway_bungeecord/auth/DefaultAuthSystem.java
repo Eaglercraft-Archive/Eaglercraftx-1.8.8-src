@@ -539,7 +539,7 @@ public class DefaultAuthSystem {
 							String playerName = player.getName();
 							if(!playerName.equals(username)) {
 								EaglerXBungee.logger().info("Player \"" + uuid.toString() + "\" changed their username from \"" + username
-												+ " to \"" + playerName + "\", updating authentication database...");
+												+ "\" to \"" + playerName + "\", updating authentication database...");
 								synchronized(updateMojangUsername) {
 									updateMojangUsername.setString(1, playerName);
 									updateMojangUsername.setString(2, uuidString);

@@ -10,9 +10,13 @@ import java.util.List;
 import java.util.TimerTask;
 import java.util.logging.Logger;
 
+import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelException;
 import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOption;
 import io.netty.channel.ChannelPipeline;
+import io.netty.channel.WriteBufferWaterMark;
 import io.netty.handler.codec.compression.ZlibCodecFactory;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
@@ -50,6 +54,9 @@ public class EaglerPipeline {
 	public static final AttributeKey<InetAddress> REAL_ADDRESS = AttributeKey.valueOf("RealAddress");
 	public static final AttributeKey<String> HOST = AttributeKey.valueOf("Host");
 	public static final AttributeKey<String> ORIGIN = AttributeKey.valueOf("Origin");
+	public static final int LOW_MARK = Integer.getInteger("net.md_5.bungee.low_mark", 524288);
+	public static final int HIGH_MARK = Integer.getInteger("net.md_5.bungee.high_mark", 2097152);
+	public static final WriteBufferWaterMark MARK = new WriteBufferWaterMark(LOW_MARK, HIGH_MARK);
 
 	public static final Collection<Channel> openChannels = new LinkedList();
 
@@ -151,6 +158,11 @@ public class EaglerPipeline {
 
 		@Override
 		protected void initChannel(Channel channel) throws Exception {
+			channel.config().setAllocator(PooledByteBufAllocator.DEFAULT).setWriteBufferWaterMark(MARK);
+			try {
+				channel.config().setOption(ChannelOption.IP_TOS, 24);
+			} catch (ChannelException var3) {
+			}
 			ChannelPipeline pipeline = channel.pipeline();
 			pipeline.addLast("HttpServerCodec", new HttpServerCodec());
 			pipeline.addLast("HttpObjectAggregator", new HttpObjectAggregator(65535));

@@ -57,8 +57,8 @@ import net.md_5.bungee.BungeeCord;
  */
 public class EaglerXBungee extends Plugin {
 
-	public static final String NATIVE_BUNGEECORD_BUILD = "1.20-R0.3-SNAPSHOT:67c65e0:1828";
-	public static final String NATIVE_WATERFALL_BUILD = "1.20-R0.3-SNAPSHOT:da6aaf6:572";
+	public static final String NATIVE_BUNGEECORD_BUILD = "1.20-R0.3-SNAPSHOT:18eae8a:1842";
+	public static final String NATIVE_WATERFALL_BUILD = "1.20-R0.3-SNAPSHOT:37a9ace:577";
 	
 	static {
 		CompatWarning.displayCompatWarning();
@@ -68,7 +68,7 @@ public class EaglerXBungee extends Plugin {
 	private EaglerBungeeConfig conf = null;
 	private EventLoopGroup eventLoopGroup;
 	private Collection<Channel> openChannels;
-	private final Timer closeInactiveConnections;
+	private Timer closeInactiveConnections = null;
 	private Timer skinServiceTasks = null;
 	private Timer authServiceTasks = null;
 	private final ChannelFutureListener newChannelListener;
@@ -80,7 +80,6 @@ public class EaglerXBungee extends Plugin {
 	public EaglerXBungee() {
 		instance = this;
 		openChannels = new LinkedList();
-		closeInactiveConnections = new Timer("EaglerXBungee: Network Tick Tasks");
 		newChannelListener = new ChannelFutureListener() {
 			@Override
 			public void operationComplete(ChannelFuture ch) throws Exception {
@@ -109,7 +108,6 @@ public class EaglerXBungee extends Plugin {
 			}
 		}
 		reloadConfig();
-		closeInactiveConnections.scheduleAtFixedRate(EaglerPipeline.closeInactive, 0l, 250l);
 	}
 
 	@Override
@@ -135,11 +133,18 @@ public class EaglerXBungee extends Plugin {
 		getProxy().registerChannel(EaglerPipeline.UPDATE_CERT_CHANNEL);
 		getProxy().registerChannel(VoiceService.CHANNEL);
 		getProxy().registerChannel(EaglerPacketEventListener.FNAW_SKIN_ENABLE_CHANNEL);
+		getProxy().registerChannel(EaglerPacketEventListener.GET_DOMAIN_CHANNEL);
 		startListeners();
+		if(closeInactiveConnections != null) {
+			closeInactiveConnections.cancel();
+			closeInactiveConnections = null;
+		}
 		if(skinServiceTasks != null) {
 			skinServiceTasks.cancel();
 			skinServiceTasks = null;
 		}
+		closeInactiveConnections = new Timer("EaglerXBungee: Network Tick Tasks");
+		closeInactiveConnections.scheduleAtFixedRate(EaglerPipeline.closeInactive, 0l, 250l);
 		boolean downloadSkins = conf.getDownloadVanillaSkins();
 		if(downloadSkins) {
 			if(skinService == null) {
@@ -211,6 +216,10 @@ public class EaglerXBungee extends Plugin {
 		getProxy().unregisterChannel(VoiceService.CHANNEL);
 		getProxy().unregisterChannel(EaglerPacketEventListener.FNAW_SKIN_ENABLE_CHANNEL);
 		stopListeners();
+		if(closeInactiveConnections != null) {
+			closeInactiveConnections.cancel();
+			closeInactiveConnections = null;
+		}
 		if(skinServiceTasks != null) {
 			skinServiceTasks.cancel();
 			skinServiceTasks = null;

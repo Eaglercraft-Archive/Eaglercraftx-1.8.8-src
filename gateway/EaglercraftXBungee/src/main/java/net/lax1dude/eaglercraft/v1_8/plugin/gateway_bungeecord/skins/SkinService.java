@@ -330,7 +330,7 @@ public class SkinService implements ISkinService {
 								if(pp.getName().equals("textures")) {
 									try {
 										String jsonStr = SkinPackets.bytesToAscii(Base64.decodeBase64(pp.getValue()));
-										JsonObject json = (new JsonParser()).parse(jsonStr).getAsJsonObject();
+										JsonObject json = JsonParser.parseString(jsonStr).getAsJsonObject();
 										JsonObject skinObj = json.getAsJsonObject("SKIN");
 										if(skinObj != null) {
 											JsonElement url = json.get("url");

@@ -227,18 +227,9 @@ public class EaglerBungeeConfig {
 		return ret;
 	}
 	
-	@SuppressWarnings("deprecation")
 	private static JsonObject parseJsonObject(InputStream file) throws IOException {
-		StringBuilder str = new StringBuilder();
-		byte[] buffer = new byte[8192];
-		
-		int i;
-		while((i = file.read(buffer)) > 0) {
-			str.append(new String(buffer, 0, i, "UTF-8"));
-		}
-		
 		try {
-			return (new JsonParser()).parse(str.toString()).getAsJsonObject();
+			return JsonParser.parseReader(new InputStreamReader(file, StandardCharsets.UTF_8)).getAsJsonObject();
 		}catch(JsonSyntaxException ex) {
 			throw new IOException("Invalid JSONObject", ex);
 		}
