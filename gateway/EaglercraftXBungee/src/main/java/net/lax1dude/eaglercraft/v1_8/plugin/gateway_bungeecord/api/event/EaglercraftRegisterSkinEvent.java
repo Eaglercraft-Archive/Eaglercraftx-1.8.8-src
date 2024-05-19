@@ -26,7 +26,6 @@ public class EaglercraftRegisterSkinEvent extends Event {
 	private final UUID uuid;
 	private Property useMojangProfileProperty = null;
 	private boolean useLoginResultTextures = false;
-	private int presetId = -1;
 	private byte[] customTex = null;
 	private String customURL = null;
 
@@ -38,7 +37,6 @@ public class EaglercraftRegisterSkinEvent extends Event {
 	public void setForceUseMojangProfileProperty(Property prop) {
 		useMojangProfileProperty = prop;
 		useLoginResultTextures = false;
-		presetId = -1;
 		customTex = null;
 		customURL = null;
 	}
@@ -46,7 +44,6 @@ public class EaglercraftRegisterSkinEvent extends Event {
 	public void setForceUseLoginResultObjectTextures(boolean b) {
 		useMojangProfileProperty = null;
 		useLoginResultTextures = b;
-		presetId = -1;
 		customTex = null;
 		customURL = null;
 	}
@@ -54,7 +51,6 @@ public class EaglercraftRegisterSkinEvent extends Event {
 	public void setForceUsePreset(int p) {
 		useMojangProfileProperty = null;
 		useLoginResultTextures = false;
-		presetId = p;
 		customTex = new byte[5];
 		customTex[0] = (byte)1;
 		customTex[1] = (byte)(p >> 24);
@@ -67,7 +63,6 @@ public class EaglercraftRegisterSkinEvent extends Event {
 	public void setForceUseCustom(int model, byte[] tex) {
 		useMojangProfileProperty = null;
 		useLoginResultTextures = false;
-		presetId = -1;
 		customTex = new byte[2 + tex.length];
 		customTex[0] = (byte)2;
 		customTex[1] = (byte)model;
@@ -78,7 +73,6 @@ public class EaglercraftRegisterSkinEvent extends Event {
 	public void setForceUseCustomByPacket(byte[] packet) {
 		useMojangProfileProperty = null;
 		useLoginResultTextures = false;
-		presetId = -1;
 		customTex = packet;
 		customURL = null;
 	}
@@ -86,7 +80,6 @@ public class EaglercraftRegisterSkinEvent extends Event {
 	public void setForceUseURL(String url) {
 		useMojangProfileProperty = null;
 		useLoginResultTextures = false;
-		presetId = -1;
 		customTex = null;
 		customURL = url;
 	}

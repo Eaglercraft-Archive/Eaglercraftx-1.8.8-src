@@ -43,6 +43,7 @@ import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.api.event.Eaglerc
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.api.event.EaglercraftIsAuthRequiredEvent.AuthMethod;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.api.event.EaglercraftIsAuthRequiredEvent.AuthResponse;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.api.event.EaglercraftMOTDEvent;
+import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.api.event.EaglercraftRegisterCapeEvent;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.api.event.EaglercraftRegisterSkinEvent;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.auth.DefaultAuthSystem;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.command.CommandConfirmCode;
@@ -950,6 +951,15 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 							}
 						}
 						
+						EaglercraftRegisterCapeEvent registerCapeEvent = new EaglercraftRegisterCapeEvent(usernameStr, clientUUID);
+						
+						bungee.getPluginManager().callEvent(registerCapeEvent);
+						
+						byte[] forceCape = registerCapeEvent.getForceSetUseCustomPacket();
+						if(forceCape != null) {
+							profileData.put("cape_v1", forceCape);
+						}
+						
 						if(profileData.containsKey("cape_v1")) {
 							try {
 								CapePackets.registerEaglerPlayer(clientUUID, profileData.get("cape_v1"),
@@ -1085,6 +1095,7 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 			if(handler != null) {
 				ctx.pipeline().replace(HttpWebSocketHandler.this, "HttpServerQueryHandler", handler);
 				ctx.pipeline().addBefore("HttpServerQueryHandler", "WriteTimeoutHandler", new WriteTimeoutHandler(5l, TimeUnit.SECONDS));
+				ctx.channel().attr(EaglerPipeline.CONNECTION_INSTANCE).get().hasBeenForwarded = true;
 				handler.beginHandleQuery(conf, ctx, str);
 				if(handler instanceof MOTDQueryHandler) {
 					EaglercraftMOTDEvent evt = new EaglercraftMOTDEvent((MOTDQueryHandler)handler);

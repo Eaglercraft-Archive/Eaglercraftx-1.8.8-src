@@ -62,7 +62,7 @@ public class EaglerDrivers {
 				EaglerXBungee.logger().severe("Invalid JDBC driver path: " + address);
 				throw new ExceptionInInitializerError(ex);
 			}
-			classLoader = new URLClassLoader(new URL[] { driverURL }, ClassLoader.getSystemClassLoader());
+			classLoader = URLClassLoader.newInstance(new URL[] { driverURL }, ClassLoader.getSystemClassLoader());
 			driversJARs.put(address, classLoader);
 		}
 		

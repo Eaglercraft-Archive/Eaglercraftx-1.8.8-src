@@ -35,6 +35,7 @@ public interface MOTDConnection {
 	}
 	
 	void sendToUser();
+	void setKeepAlive(boolean enable);
 	
 	String getLine1();
 	String getLine2();

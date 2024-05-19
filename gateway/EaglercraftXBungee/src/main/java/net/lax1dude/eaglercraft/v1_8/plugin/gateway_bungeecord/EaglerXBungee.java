@@ -67,6 +67,7 @@ public class EaglerXBungee extends Plugin {
 	private static EaglerXBungee instance = null;
 	private EaglerBungeeConfig conf = null;
 	private EventLoopGroup eventLoopGroup;
+	private EventLoopGroup eventLoopGroupBoss;
 	private Collection<Channel> openChannels;
 	private Timer closeInactiveConnections = null;
 	private Timer skinServiceTasks = null;
@@ -103,6 +104,7 @@ public class EaglerXBungee extends Plugin {
 		} catch (NoSuchFieldError e) {
 			try {
 				eventLoopGroup = (EventLoopGroup) BungeeCord.class.getField("workerEventLoopGroup").get(getProxy());
+				eventLoopGroupBoss = (EventLoopGroup) BungeeCord.class.getField("bossEventLoopGroup").get(getProxy());
 			} catch (IllegalAccessException | NoSuchFieldException ex) {
 				throw new RuntimeException(ex);
 			}
@@ -273,9 +275,13 @@ public class EaglerXBungee extends Plugin {
 		ServerBootstrap bootstrap = new ServerBootstrap();
 		bootstrap.option(ChannelOption.SO_REUSEADDR, true)
 			.childOption(ChannelOption.TCP_NODELAY, true)
-			.channel(PipelineUtils.getServerChannel(addr))
-			.group(eventLoopGroup)
-			.childAttr(EaglerPipeline.LISTENER, confData)
+			.channel(PipelineUtils.getServerChannel(addr));
+		if(eventLoopGroupBoss != null) {
+			bootstrap.group(eventLoopGroupBoss, eventLoopGroup);
+		}else {
+			bootstrap.group(eventLoopGroup);
+		}
+		bootstrap.childAttr(EaglerPipeline.LISTENER, confData)
 			.attr(EaglerPipeline.LOCAL_ADDRESS, addr)
 			.localAddress(addr)
 			.childHandler(EaglerPipeline.SERVER_CHILD)
