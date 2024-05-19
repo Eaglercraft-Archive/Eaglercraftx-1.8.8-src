@@ -340,9 +340,11 @@ public class LANClientNetworkManager extends EaglercraftNetworkManager {
 					}
 					EaglerInputStream bi = new EaglerInputStream(fullData);
 					int i = (bi.read() << 24) | (bi.read() << 16) | (bi.read() << 8) | bi.read();
-					InputStream inflaterInputStream = EaglerZLIB.newInflaterInputStream(bi);
 					fullData = new byte[i];
-					int r = IOUtils.readFully(inflaterInputStream, fullData);
+					int r;
+					try(InputStream inflaterInputStream = EaglerZLIB.newInflaterInputStream(bi)) {
+						r = IOUtils.readFully(inflaterInputStream, fullData);
+					}
 					if (i != r) {
 						logger.warn("Decompressed packet expected size {} differs from actual size {}!", i, r);
 					}

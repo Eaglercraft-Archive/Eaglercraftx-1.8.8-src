@@ -62,6 +62,14 @@ public class GuiScreenImportProfile extends GuiScreen {
 		this.buttonList.add(new GuiButton(1, this.width / 2 - 100, this.height / 4 + 140, I18n.format("gui.cancel")));
 	}
 
+	@Override
+	public void onGuiClosed() {
+		try {
+			importer.close();
+		} catch (IOException e) {
+		}
+	}
+
 	protected void actionPerformed(GuiButton par1GuiButton) {
 		if(par1GuiButton.id == 0) {
 			if(!doImportProfile && !doImportSettings && !doImportServers && !doImportResourcePacks) {

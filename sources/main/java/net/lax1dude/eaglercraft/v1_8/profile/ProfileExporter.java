@@ -69,97 +69,96 @@ public class ProfileExporter {
 		osb.write(new byte[]{(byte)255,(byte)255,(byte)255,(byte)255}); // this will be replaced with the file count
 		
 		osb.write('G');
-		OutputStream os = EaglerZLIB.newGZIPOutputStream(osb);
-		
-		os.write(new byte[]{(byte)72,(byte)69,(byte)65,(byte)68}); // HEAD
-		os.write(new byte[]{(byte)9,(byte)102,(byte)105,(byte)108,(byte)101,(byte)45,(byte)116,(byte)121,
-				(byte)112,(byte)101}); // 9 + file-type
-		os.write(new byte[]{(byte)0,(byte)0,(byte)0,(byte)14,(byte)101,(byte)112,(byte)107,(byte)47,(byte)112,(byte)114,(byte)111,
-				(byte)102,(byte)105,(byte)108,(byte)101,(byte)49,(byte)56,(byte)56}); // 14 + epk/profile188
-		os.write('>');
-		
-		os.write(new byte[]{(byte)72,(byte)69,(byte)65,(byte)68}); // HEAD
-		os.write(new byte[]{(byte)12,(byte)102,(byte)105,(byte)108,(byte)101,(byte)45,(byte)101,(byte)120,
-				(byte)112,(byte)111,(byte)114,(byte)116,(byte)115,(byte)0,(byte)0,(byte)0,(byte)1}); // 12 + file-exports + 1
-		os.write((doExportProfile ? 1 : 0) | (doExportSettings ? 2 : 0) | (doExportServers ? 4 : 0) | (doExportResourcePacks ? 8 : 0));
-		os.write('>');
-		
 		int fileCount = 2;
-		
-		if(doExportProfile) {
-			byte[] profileData = EaglerProfile.write();
-			if(profileData == null) {
-				throw new IOException("Could not write profile data!");
-			}
-			exportFileToEPK("_eaglercraftX.p", profileData, os);
-			++fileCount;
-		}
-		
-		if(doExportSettings) {
-			logger.info("Exporting game settings...");
-			byte[] gameSettings = Minecraft.getMinecraft().gameSettings.writeOptions();
-			if(gameSettings == null) {
-				throw new IOException("Could not write game settings!");
-			}
-			exportFileToEPK("_eaglercraftX.g", gameSettings, os);
-			++fileCount;
-			logger.info("Exporting relay settings...");
-			byte[] relays = RelayManager.relayManager.write();
-			if(relays == null) {
-				throw new IOException("Could not write relay settings!");
-			}
-			exportFileToEPK("_eaglercraftX.r", relays, os);
-			++fileCount;
-		}
-		
-		if(doExportServers) {
-			logger.info("Exporting server list...");
-			byte[] servers = ServerList.getServerList().writeServerList();
-			if(servers == null) {
-				throw new IOException("Could not write server list!");
-			}
-			exportFileToEPK("_eaglercraftX.s", servers, os);
-			++fileCount;
-		}
-		
-		logger.info("Exporting certificates...");
-		UpdateCertificate cert = UpdateService.getClientCertificate();
-		if(cert != null) {
-			exportFileToEPK("certs/main.cert", cert.rawCertData, os);
-			++fileCount;
-		}
-		Collection<UpdateCertificate> updatesExport = UpdateService.getAvailableUpdates();
-		int cc = 0;
-		for(UpdateCertificate cert2 : updatesExport) {
-			exportFileToEPK("certs/c" + (cc++) + ".cert", cert2.rawCertData, os);
-			++fileCount;
-		}
-		
-		if(doExportResourcePacks) {
-			logger.info("Exporting resource packs...");
-			byte[] packManifest = (new VFile2(EaglerFolderResourcePack.RESOURCE_PACKS + "/manifest.json")).getAllBytes();
-			if(packManifest != null) {
-				exportFileToEPK(EaglerFolderResourcePack.RESOURCE_PACKS + "/manifest.json", packManifest, os);
+		try(OutputStream os = EaglerZLIB.newGZIPOutputStream(osb)) {
+			os.write(new byte[]{(byte)72,(byte)69,(byte)65,(byte)68}); // HEAD
+			os.write(new byte[]{(byte)9,(byte)102,(byte)105,(byte)108,(byte)101,(byte)45,(byte)116,(byte)121,
+					(byte)112,(byte)101}); // 9 + file-type
+			os.write(new byte[]{(byte)0,(byte)0,(byte)0,(byte)14,(byte)101,(byte)112,(byte)107,(byte)47,(byte)112,(byte)114,(byte)111,
+					(byte)102,(byte)105,(byte)108,(byte)101,(byte)49,(byte)56,(byte)56}); // 14 + epk/profile188
+			os.write('>');
+			
+			os.write(new byte[]{(byte)72,(byte)69,(byte)65,(byte)68}); // HEAD
+			os.write(new byte[]{(byte)12,(byte)102,(byte)105,(byte)108,(byte)101,(byte)45,(byte)101,(byte)120,
+					(byte)112,(byte)111,(byte)114,(byte)116,(byte)115,(byte)0,(byte)0,(byte)0,(byte)1}); // 12 + file-exports + 1
+			os.write((doExportProfile ? 1 : 0) | (doExportSettings ? 2 : 0) | (doExportServers ? 4 : 0) | (doExportResourcePacks ? 8 : 0));
+			os.write('>');
+			
+			
+			if(doExportProfile) {
+				byte[] profileData = EaglerProfile.write();
+				if(profileData == null) {
+					throw new IOException("Could not write profile data!");
+				}
+				exportFileToEPK("_eaglercraftX.p", profileData, os);
 				++fileCount;
-				VFile2 baseDir = new VFile2(EaglerFolderResourcePack.RESOURCE_PACKS);
-				List<VFile2> files = baseDir.listFiles(true);
-				logger.info("({} files to export)", files.size());
-				for(int i = 0, l = files.size(); i < l; ++i) {
-					VFile2 f = files.get(i);
-					if(f.getPath().equals(EaglerFolderResourcePack.RESOURCE_PACKS + "/manifest.json")) {
-						continue;
-					}
-					exportFileToEPK(f.getPath(), f.getAllBytes(), os);
+			}
+			
+			if(doExportSettings) {
+				logger.info("Exporting game settings...");
+				byte[] gameSettings = Minecraft.getMinecraft().gameSettings.writeOptions();
+				if(gameSettings == null) {
+					throw new IOException("Could not write game settings!");
+				}
+				exportFileToEPK("_eaglercraftX.g", gameSettings, os);
+				++fileCount;
+				logger.info("Exporting relay settings...");
+				byte[] relays = RelayManager.relayManager.write();
+				if(relays == null) {
+					throw new IOException("Could not write relay settings!");
+				}
+				exportFileToEPK("_eaglercraftX.r", relays, os);
+				++fileCount;
+			}
+			
+			if(doExportServers) {
+				logger.info("Exporting server list...");
+				byte[] servers = ServerList.getServerList().writeServerList();
+				if(servers == null) {
+					throw new IOException("Could not write server list!");
+				}
+				exportFileToEPK("_eaglercraftX.s", servers, os);
+				++fileCount;
+			}
+			
+			logger.info("Exporting certificates...");
+			UpdateCertificate cert = UpdateService.getClientCertificate();
+			if(cert != null) {
+				exportFileToEPK("certs/main.cert", cert.rawCertData, os);
+				++fileCount;
+			}
+			Collection<UpdateCertificate> updatesExport = UpdateService.getAvailableUpdates();
+			int cc = 0;
+			for(UpdateCertificate cert2 : updatesExport) {
+				exportFileToEPK("certs/c" + (cc++) + ".cert", cert2.rawCertData, os);
+				++fileCount;
+			}
+			
+			if(doExportResourcePacks) {
+				logger.info("Exporting resource packs...");
+				byte[] packManifest = (new VFile2(EaglerFolderResourcePack.RESOURCE_PACKS + "/manifest.json")).getAllBytes();
+				if(packManifest != null) {
+					exportFileToEPK(EaglerFolderResourcePack.RESOURCE_PACKS + "/manifest.json", packManifest, os);
 					++fileCount;
-					if(i > 0 && i % 100 == 0) {
-						logger.info("Exported {} files", i);
+					VFile2 baseDir = new VFile2(EaglerFolderResourcePack.RESOURCE_PACKS);
+					List<VFile2> files = baseDir.listFiles(true);
+					logger.info("({} files to export)", files.size());
+					for(int i = 0, l = files.size(); i < l; ++i) {
+						VFile2 f = files.get(i);
+						if(f.getPath().equals(EaglerFolderResourcePack.RESOURCE_PACKS + "/manifest.json")) {
+							continue;
+						}
+						exportFileToEPK(f.getPath(), f.getAllBytes(), os);
+						++fileCount;
+						if(i > 0 && i % 100 == 0) {
+							logger.info("Exported {} files", i);
+						}
 					}
 				}
 			}
+			
+			os.write(new byte[]{(byte)69,(byte)78,(byte)68,(byte)36}); // END$
 		}
-		
-		os.write(new byte[]{(byte)69,(byte)78,(byte)68,(byte)36}); // END$
-		os.close();
 		
 		osb.write(new byte[]{(byte)58,(byte)58,(byte)58,(byte)89,(byte)69,(byte)69,(byte)58,(byte)62}); // :::YEE:>
 		

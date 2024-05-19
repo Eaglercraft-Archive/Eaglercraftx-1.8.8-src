@@ -479,7 +479,7 @@ public class EaglerIntegratedServerWorker {
 			
 			while(true) {
 				mainLoop();
-				EagUtils.sleep(1l);
+				EagUtils.sleep(0l);
 			}
 		}catch(Throwable tt) {
 			if(tt instanceof ReportedException) {

@@ -61,7 +61,7 @@ public class EaglerSkinTexture implements ITextureObject {
 		}
 		System.arraycopy(pixels, 0, this.pixels, 0, pixels.length);
 		if(textureId != -1) {
-			TextureUtil.uploadTextureImageAllocate(textureId, new ImageData(width, height, pixels, true), false, false);
+			TextureUtil.uploadTextureImageSub(textureId, new ImageData(width, height, pixels, true), 0, 0, false, false);
 		}
 	}
 

@@ -102,8 +102,9 @@ public class PlatformInput {
 
 	public static boolean keyboardLockSupported = false;
 	public static boolean lockKeys = false;
-	
+
 	private static boolean vsync = true;
+	private static boolean vsyncSupport = false;
 	
 	@JSBody(params = { }, script = "window.onbeforeunload = () => {return false;};")
 	private static native void onBeforeCloseRegister();
@@ -252,7 +253,18 @@ public class PlatformInput {
 				mouseDY = 0.0D;
 			}
 		});
-		onBeforeCloseRegister();
+
+		try {
+			onBeforeCloseRegister();
+		}catch(Throwable t) {
+		}
+
+		try {
+			asyncRequestAnimationFrame();
+			vsyncSupport = true;
+		}catch(Throwable t) {
+			PlatformRuntime.logger.error("VSync is not supported on this browser!");
+		}
 
 		fullscreenQuery = fullscreenMediaQuery();
 		if (keyboardLockSupported = checkKeyboardLockSupported()) {
@@ -300,6 +312,9 @@ public class PlatformInput {
 		vsync = enable;
 	}
 
+	@JSBody(params = { "doc" }, script = "return (doc.visibilityState === \"visible\");")
+	private static native boolean getVisibilityState(JSObject doc);
+
 	public static void update() {
 		double r = win.getDevicePixelRatio();
 		int w = PlatformRuntime.parent.getClientWidth();
@@ -320,10 +335,14 @@ public class PlatformInput {
 				PlatformRuntime.lastFrame = t;
 			}
 		}
-		if(vsync) {
-			asyncRequestAnimationFrame();
+		if(getVisibilityState(win.getDocument())) {
+			if(vsyncSupport && vsync) {
+				asyncRequestAnimationFrame();
+			}else {
+				EagUtils.sleep(0l);
+			}
 		}else {
-			EagUtils.sleep(0l);
+			EagUtils.sleep(50l);
 		}
 	}
 
@@ -346,6 +365,10 @@ public class PlatformInput {
 				cb.complete(null);
 			}
 		}, 50);
+	}
+
+	public static boolean isVSyncSupported() {
+		return vsyncSupport;
 	}
 
 	static void initFramebuffer(WebGL2RenderingContext ctx, WebGLFramebuffer fbo, int sw, int sh) {
@@ -599,7 +622,7 @@ public class PlatformInput {
 		keyEvents.clear();
 	}
 
-	@JSBody(params = {}, script = "return window.matchMedia('(display-mode: fullscreen)');")
+	@JSBody(params = {}, script = "return window.matchMedia(\"(display-mode: fullscreen)\");")
 	private static native JSObject fullscreenMediaQuery();
 
 	@JSBody(params = { "mediaQuery" }, script = "return mediaQuery.matches;")

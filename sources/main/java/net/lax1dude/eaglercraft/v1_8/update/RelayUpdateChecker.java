@@ -64,7 +64,7 @@ public class RelayUpdateChecker {
 			for(net.lax1dude.eaglercraft.v1_8.sp.relay.RelayEntry etr : EagRuntime.getConfiguration().getRelays()) {
 				relaysList.add(new RelayEntry(etr.address));
 			}
-			byte[] b = PlatformApplication.getLocalStorage("lastRelayUpdate");
+			byte[] b = PlatformApplication.getLocalStorage("lastRelayUpdate", false);
 			if(b != null) {
 				try {
 					lastUpdateCheck = (new DataInputStream(new EaglerInputStream(b))).readLong();
@@ -79,7 +79,7 @@ public class RelayUpdateChecker {
 			try {
 				EaglerOutputStream bao = new EaglerOutputStream(8);
 				(new DataOutputStream(bao)).writeLong(lastUpdateCheck);
-				PlatformApplication.setLocalStorage("lastRelayUpdate", bao.toByteArray());
+				PlatformApplication.setLocalStorage("lastRelayUpdate", bao.toByteArray(), false);
 			} catch (IOException e) {
 			}
 			for (int i = 0, l = relaysList.size(); i < l; ++i) {

@@ -94,7 +94,7 @@ public class UpdateService {
 				}
 			}
 		}
-		byte[] latestUpdate = PlatformApplication.getLocalStorage(EaglercraftVersion.updateLatestLocalStorageKey);
+		byte[] latestUpdate = PlatformApplication.getLocalStorage(EaglercraftVersion.updateLatestLocalStorageKey, false);
 		if(latestUpdate != null) {
 			addCertificateToSet(latestUpdate, false);
 		}
@@ -150,7 +150,7 @@ public class UpdateService {
 									latestUpdateFound = cert;
 									if (saveLatest) {
 										PlatformApplication.setLocalStorage(EaglercraftVersion.updateLatestLocalStorageKey,
-												certificateData);
+												certificateData, false);
 									}
 								}
 							}else if(EagRuntime.getConfiguration().isLogInvalidCerts()) {

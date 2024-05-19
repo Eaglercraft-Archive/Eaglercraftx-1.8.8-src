@@ -2,6 +2,7 @@ package net.lax1dude.eaglercraft.v1_8.internal.teavm.opts;
 
 import org.teavm.jso.JSBody;
 import org.teavm.jso.JSObject;
+import org.teavm.jso.core.JSArrayReader;
 
 /**
  * Copyright (c) 2024 lax1dude. All Rights Reserved.
@@ -27,7 +28,7 @@ public abstract class JSEaglercraftXOptsRoot implements JSObject {
 	public native String getAssetsURI();
 
 	@JSBody(script = "return (typeof this.assetsURI === \"object\") ? this.assetsURI : null;")
-	public native JSEaglercraftXOptsAssetsURIsArray getAssetsURIArray();
+	public native JSArrayReader<JSEaglercraftXOptsAssetsURI> getAssetsURIArray();
 
 	@JSBody(params = { "def" }, script = "return (typeof this.lang === \"string\") ? this.lang : def;")
 	public native String getLang(String defaultValue);
@@ -48,10 +49,10 @@ public abstract class JSEaglercraftXOptsRoot implements JSObject {
 	public native boolean getDemoMode(boolean defaultValue);
 
 	@JSBody(script = "return (typeof this.servers === \"object\") ? this.servers : null;")
-	public native JSEaglercraftXOptsServersArray getServers();
+	public native JSArrayReader<JSEaglercraftXOptsServer> getServers();
 
 	@JSBody(script = "return (typeof this.relays === \"object\") ? this.relays : null;")
-	public native JSEaglercraftXOptsRelaysArray getRelays();
+	public native JSArrayReader<JSEaglercraftXOptsRelay> getRelays();
 
 	@JSBody(params = { "def" }, script = "return (typeof this.checkShaderGLErrors === \"boolean\") ? this.checkShaderGLErrors : def;")
 	public native boolean getCheckShaderGLErrors(boolean defaultValue);
@@ -82,5 +83,14 @@ public abstract class JSEaglercraftXOptsRoot implements JSObject {
 
 	@JSBody(params = { "def" }, script = "return (typeof this.allowVoiceClient === \"boolean\") ? this.allowVoiceClient : def;")
 	public native boolean getAllowVoiceClient(boolean defaultValue);
+
+	@JSBody(params = { "def" }, script = "return (typeof this.allowFNAWSkins === \"boolean\") ? this.allowFNAWSkins : def;")
+	public native boolean getAllowFNAWSkins(boolean defaultValue);
+
+	@JSBody(script = "return (typeof this.hooks === \"object\") ? this.hooks : null;")
+	public native JSEaglercraftXOptsHooks getHooks();
+
+	@JSBody(params = { "def" }, script = "return (typeof this.localStorageNamespace === \"string\") ? this.localStorageNamespace : def;")
+	public native String getLocalStorageNamespace(String defaultValue);
 
 }

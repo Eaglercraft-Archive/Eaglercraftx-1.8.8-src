@@ -10,13 +10,14 @@ import net.lax1dude.eaglercraft.v1_8.sp.relay.RelayManager;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.teavm.jso.JSObject;
+import org.teavm.jso.core.JSArrayReader;
 
 import net.lax1dude.eaglercraft.v1_8.internal.IClientConfigAdapter;
+import net.lax1dude.eaglercraft.v1_8.internal.IClientConfigAdapterHooks;
+import net.lax1dude.eaglercraft.v1_8.internal.teavm.opts.JSEaglercraftXOptsHooks;
 import net.lax1dude.eaglercraft.v1_8.internal.teavm.opts.JSEaglercraftXOptsRelay;
-import net.lax1dude.eaglercraft.v1_8.internal.teavm.opts.JSEaglercraftXOptsRelaysArray;
 import net.lax1dude.eaglercraft.v1_8.internal.teavm.opts.JSEaglercraftXOptsRoot;
 import net.lax1dude.eaglercraft.v1_8.internal.teavm.opts.JSEaglercraftXOptsServer;
-import net.lax1dude.eaglercraft.v1_8.internal.teavm.opts.JSEaglercraftXOptsServersArray;
 import net.lax1dude.eaglercraft.v1_8.sp.relay.RelayEntry;
 
 /**
@@ -56,6 +57,9 @@ public class TeaVMClientConfigAdapter implements IClientConfigAdapter {
 	private boolean checkRelaysForUpdates = false;
 	private boolean enableSignatureBadge = false;
 	private boolean allowVoiceClient = true;
+	private boolean allowFNAWSkins = true;
+	private String localStorageNamespace = "_eaglercraftX";
+	private final TeaVMClientConfigAdapterHooks hooks = new TeaVMClientConfigAdapterHooks();
 
 	public void loadNative(JSObject jsObject) {
 		integratedServerOpts = new JSONObject();
@@ -75,6 +79,12 @@ public class TeaVMClientConfigAdapter implements IClientConfigAdapter {
 		logInvalidCerts = EaglercraftVersion.enableUpdateService && !demoMode && eaglercraftXOpts.getLogInvalidCerts(false);
 		enableSignatureBadge = eaglercraftXOpts.getEnableSignatureBadge(false);
 		allowVoiceClient = eaglercraftXOpts.getAllowVoiceClient(true);
+		allowFNAWSkins = eaglercraftXOpts.getAllowFNAWSkins(true);
+		localStorageNamespace = eaglercraftXOpts.getLocalStorageNamespace(EaglercraftVersion.localStorageNamespace);
+		JSEaglercraftXOptsHooks hooksObj = eaglercraftXOpts.getHooks();
+		if(hooksObj != null) {
+			hooks.loadHooks(hooksObj);
+		}
 
 		integratedServerOpts.put("worldsDB", worldsDB);
 		integratedServerOpts.put("demoMode", demoMode);
@@ -82,8 +92,9 @@ public class TeaVMClientConfigAdapter implements IClientConfigAdapter {
 		integratedServerOpts.put("allowUpdateSvc", isAllowUpdateSvc);
 		integratedServerOpts.put("allowUpdateDL", isAllowUpdateDL);
 		integratedServerOpts.put("allowVoiceClient", allowVoiceClient);
+		integratedServerOpts.put("allowFNAWSkins", allowFNAWSkins);
 		
-		JSEaglercraftXOptsServersArray serversArray = eaglercraftXOpts.getServers();
+		JSArrayReader<JSEaglercraftXOptsServer> serversArray = eaglercraftXOpts.getServers();
 		if(serversArray != null) {
 			for(int i = 0, l = serversArray.getLength(); i < l; ++i) {
 				JSEaglercraftXOptsServer serverEntry = serversArray.get(i);
@@ -95,7 +106,7 @@ public class TeaVMClientConfigAdapter implements IClientConfigAdapter {
 			}
 		}
 		
-		JSEaglercraftXOptsRelaysArray relaysArray = eaglercraftXOpts.getRelays();
+		JSArrayReader<JSEaglercraftXOptsRelay> relaysArray = eaglercraftXOpts.getRelays();
 		if(relaysArray != null) {
 			boolean gotAPrimary = false;
 			for(int i = 0, l = relaysArray.getLength(); i < l; ++i) {
@@ -162,6 +173,8 @@ public class TeaVMClientConfigAdapter implements IClientConfigAdapter {
 		logInvalidCerts = EaglercraftVersion.enableUpdateService && !demoMode && eaglercraftOpts.optBoolean("logInvalidCerts", false);
 		enableSignatureBadge = eaglercraftOpts.optBoolean("enableSignatureBadge", false);
 		allowVoiceClient = eaglercraftOpts.optBoolean("allowVoiceClient", true);
+		allowFNAWSkins = eaglercraftOpts.optBoolean("allowFNAWSkins", true);
+		localStorageNamespace = eaglercraftOpts.optString("localStorageNamespace", EaglercraftVersion.localStorageNamespace);
 		JSONArray serversArray = eaglercraftOpts.optJSONArray("servers");
 		if(serversArray != null) {
 			for(int i = 0, l = serversArray.length(); i < l; ++i) {
@@ -310,6 +323,21 @@ public class TeaVMClientConfigAdapter implements IClientConfigAdapter {
 	}
 
 	@Override
+	public boolean isAllowFNAWSkins() {
+		return allowFNAWSkins;
+	}
+
+	@Override
+	public String getLocalStorageNamespace() {
+		return localStorageNamespace;
+	}
+
+	@Override
+	public IClientConfigAdapterHooks getHooks() {
+		return hooks;
+	}
+
+	@Override
 	public String toString() {
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("lang", defaultLocale);
@@ -327,6 +355,8 @@ public class TeaVMClientConfigAdapter implements IClientConfigAdapter {
 		jsonObject.put("checkRelaysForUpdates", checkRelaysForUpdates);
 		jsonObject.put("enableSignatureBadge", enableSignatureBadge);
 		jsonObject.put("allowVoiceClient", allowVoiceClient);
+		jsonObject.put("allowFNAWSkins", allowFNAWSkins);
+		jsonObject.put("localStorageNamespace", localStorageNamespace);
 		JSONArray serversArr = new JSONArray();
 		for(int i = 0, l = defaultServers.size(); i < l; ++i) {
 			DefaultServer srv = defaultServers.get(i);

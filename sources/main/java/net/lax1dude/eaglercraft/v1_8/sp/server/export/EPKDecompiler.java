@@ -1,6 +1,7 @@
 package net.lax1dude.eaglercraft.v1_8.sp.server.export;
 
 import java.io.ByteArrayInputStream;
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -24,7 +25,7 @@ import net.lax1dude.eaglercraft.v1_8.IOUtils;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-public class EPKDecompiler {
+public class EPKDecompiler implements Closeable {
 
 	public static class FileEntry {
 		public final String type;
@@ -176,6 +177,11 @@ public class EPKDecompiler {
 			charIn[i] = (char)(bytesIn.read() & 0xFF);
 		}
 		return new String(charIn);
+	}
+
+	@Override
+	public void close() throws IOException {
+		zis.close();
 	}
 
 }

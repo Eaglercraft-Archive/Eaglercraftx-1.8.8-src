@@ -1,5 +1,6 @@
 package net.lax1dude.eaglercraft.v1_8.profile;
 
+import java.io.Closeable;
 import java.io.IOException;
 
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
@@ -29,7 +30,7 @@ import net.minecraft.client.multiplayer.ServerList;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-public class ProfileImporter {
+public class ProfileImporter implements Closeable {
 
 	private static final Logger logger = LogManager.getLogger("ProfileImporter");
 
@@ -147,5 +148,10 @@ public class ProfileImporter {
 			}
 		}
 		logger.info("Import complete!");
+	}
+
+	@Override
+	public void close() throws IOException {
+		epkDecompiler.close();
 	}
 }

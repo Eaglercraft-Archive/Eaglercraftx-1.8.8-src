@@ -49,6 +49,10 @@ public class Display {
 		PlatformInput.setVSync(enable);
 	}
 
+	public static boolean isVSyncSupported() {
+		return PlatformInput.isVSyncSupported();
+	}
+
 	public static void update() {
 		PlatformInput.update();
 	}

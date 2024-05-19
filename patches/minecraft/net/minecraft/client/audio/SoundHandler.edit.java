@@ -30,7 +30,9 @@
 
 > DELETE  7  @  7 : 11
 
-> DELETE  3  @  3 : 18
+> CHANGE  3 : 4  @  3 : 18
+
+~ 	private static final Logger tipLogger = LogManager.getLogger("EaglercraftX");
 
 > CHANGE  3 : 4  @  3 : 4
 
@@ -44,7 +46,14 @@
 
 ~ 						for (Entry entry : (Set<Entry>) map.entrySet()) {
 
-> INSERT  14 : 24  @  14
+> INSERT  12 : 16  @  12
+
++ 		if (this.sndRegistry.getObject(new ResourceLocation("minecraft:sounds/music/game/calm1.ogg")) == null) {
++ 			tipLogger.info(
++ 					"Download this resource pack if you want music: https://bafybeiayojww5jfyzvlmtuk7l5ufkt7nlfto7mhwmzf2vs4bvsjd5ouiuq.ipfs.nftstorage.link/?filename=Music_For_Eaglercraft.zip");
++ 		}
+
+> INSERT  2 : 12  @  2
 
 + 	public static class SoundMap {
 + 

@@ -243,9 +243,9 @@ public class IntegratedServerPlayerNetworkManager {
 					temporaryOutputStream.write((len >> 16) & 0xFF);
 					temporaryOutputStream.write((len >> 8) & 0xFF);
 					temporaryOutputStream.write(len & 0xFF);
-					OutputStream os = EaglerZLIB.newDeflaterOutputStream(temporaryOutputStream);
-					temporaryBuffer.readBytes(os, len);
-					os.close();
+					try(OutputStream os = EaglerZLIB.newDeflaterOutputStream(temporaryOutputStream)) {
+						temporaryBuffer.readBytes(os, len);
+					}
 					compressedData = temporaryOutputStream.toByteArray();
 				}catch(IOException ex) {
 					logger.error("Failed to compress packet {}!", pkt.getClass().getSimpleName());

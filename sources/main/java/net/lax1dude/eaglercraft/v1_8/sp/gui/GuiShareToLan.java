@@ -156,7 +156,6 @@ public class GuiShareToLan extends GuiScreen {
 				this.mc.ingameGUI.getChatGUI().printChatMessage(new ChatComponentText(I18n.format("lanServer.opened")
 						.replace("$relay$", LANServerController.getCurrentURI()).replace("$code$", code)));
 			} else {
-				SingleplayerServerController.configureLAN(mc.theWorld.getWorldInfo().getGameType(), false);
 				this.mc.displayGuiScreen(new GuiScreenNoRelays(this, "noRelay.titleFail"));
 			}
 		}

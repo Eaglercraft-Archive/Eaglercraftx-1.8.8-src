@@ -56,11 +56,15 @@ public class GuiScreenImportExportProfile extends GuiScreen {
 			FileChooserResult result = EagRuntime.getFileChooserResult();
 			if(result != null) {
 				mc.loadingScreen.eaglerShow(I18n.format("settingsBackup.importing.1"), "settingsBackup.importing.2");
+				ProfileImporter importer = new ProfileImporter(result.fileData);
 				try {
-					ProfileImporter importer = new ProfileImporter(result.fileData);
 					importer.readHeader();
 					mc.displayGuiScreen(new GuiScreenImportProfile(importer, back));
 				}catch(IOException ex) {
+					try {
+						importer.close();
+					} catch (IOException e) {
+					}
 					EagRuntime.debugPrintStackTrace(ex);
 					mc.displayGuiScreen(new GuiScreenGenericErrorMessage("settingsBackup.importing.failed.1", "settingsBackup.importing.failed.2", back));
 				}

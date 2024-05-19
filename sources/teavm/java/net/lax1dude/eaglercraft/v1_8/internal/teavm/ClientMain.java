@@ -9,6 +9,7 @@ import org.teavm.jso.JSBody;
 import org.teavm.jso.JSFunctor;
 import org.teavm.jso.JSObject;
 import org.teavm.jso.browser.Window;
+import org.teavm.jso.core.JSArrayReader;
 import org.teavm.jso.core.JSError;
 import org.teavm.jso.dom.css.CSSStyleDeclaration;
 import org.teavm.jso.dom.html.HTMLCanvasElement;
@@ -21,7 +22,6 @@ import net.lax1dude.eaglercraft.v1_8.EaglercraftVersion;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformApplication;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformRuntime;
 import net.lax1dude.eaglercraft.v1_8.internal.teavm.opts.JSEaglercraftXOptsAssetsURI;
-import net.lax1dude.eaglercraft.v1_8.internal.teavm.opts.JSEaglercraftXOptsAssetsURIsArray;
 import net.lax1dude.eaglercraft.v1_8.internal.teavm.opts.JSEaglercraftXOptsRoot;
 import net.lax1dude.eaglercraft.v1_8.log4j.ILogRedirector;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
@@ -87,7 +87,7 @@ public class ClientMain {
 				if(epkSingleURL != null) {
 					configEPKFiles = new EPKFileEntry[] { new EPKFileEntry(epkSingleURL, "") };
 				}else {
-					JSEaglercraftXOptsAssetsURIsArray epkURLs = eaglercraftOpts.getAssetsURIArray();
+					JSArrayReader<JSEaglercraftXOptsAssetsURI> epkURLs = eaglercraftOpts.getAssetsURIArray();
 					int len = epkURLs.getLength();
 					if(len == 0) {
 						throw new JSONException("assetsURI array cannot be empty!");

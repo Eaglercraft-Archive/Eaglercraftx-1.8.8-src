@@ -73,14 +73,20 @@ public class GuiScreenEditProfile extends GuiScreen {
 	}
 
 	private void updateOptions() {
+		DefaultSkins[] arr = DefaultSkins.defaultSkinsMap;
+		if(!EagRuntime.getConfiguration().isAllowFNAWSkins()) {
+			DefaultSkins[] arrNoFNAW = new DefaultSkins[arr.length - 5];
+			System.arraycopy(arr, 0, arrNoFNAW, 0, arrNoFNAW.length);
+			arr = arrNoFNAW;
+		}
 		int numCustom = EaglerProfile.customSkins.size();
-		String[] n = new String[numCustom + DefaultSkins.defaultSkinsMap.length];
+		String[] n = new String[numCustom + arr.length];
 		for(int i = 0; i < numCustom; ++i) {
 			n[i] = EaglerProfile.customSkins.get(i).name;
 		}
-		int numDefault = DefaultSkins.defaultSkinsMap.length;
+		int numDefault = arr.length;
 		for(int j = 0; j < numDefault; ++j) {
-			n[numCustom + j] = DefaultSkins.defaultSkinsMap[j].name;
+			n[numCustom + j] = arr[j].name;
 		}
 		dropDownOptions = n;
 	}
@@ -105,6 +111,10 @@ public class GuiScreenEditProfile extends GuiScreen {
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(skinX + 2, skinY - 9, 0.0f);
 		GlStateManager.scale(0.75f, 0.75f, 0.75f);
+
+		if(selectedSlot > dropDownOptions.length - 1) {
+			selectedSlot = 0;
+		}
 
 		int numberOfCustomSkins = EaglerProfile.customSkins.size();
 		int skid = selectedSlot - numberOfCustomSkins;

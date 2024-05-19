@@ -40,44 +40,45 @@ public class WorldConverterEPK {
 			folderName += "_";
 			worldDir = EaglerIntegratedServerWorker.saveFormat.getSaveLoader(folderName, false).getWorldDirectory();
 		}
-		EPKDecompiler dc = new EPKDecompiler(archiveContents);
-		EPKDecompiler.FileEntry f = null;
-		int lastProgUpdate = 0;
-		int prog = 0;
-		String hasReadType = null;
-		boolean has152Format = false;
-		int cnt = 0;
-		while((f = dc.readFile()) != null) {
-			byte[] b = f.data;
-			if(hasReadType == null) {
-				if (f.type.equals("HEAD") && f.name.equals("file-type")
-						&& ((hasReadType = EPKDecompiler.readASCII(f.data)).equals("epk/world188")
-								|| (has152Format = hasReadType.equals("epk/world152")))) {
-					if(has152Format) {
-						logger.warn("World type detected as 1.5.2, it will be converted to 1.8.8 format");
+		try(EPKDecompiler dc = new EPKDecompiler(archiveContents)) {
+			EPKDecompiler.FileEntry f = null;
+			int lastProgUpdate = 0;
+			int prog = 0;
+			String hasReadType = null;
+			boolean has152Format = false;
+			int cnt = 0;
+			while((f = dc.readFile()) != null) {
+				byte[] b = f.data;
+				if(hasReadType == null) {
+					if (f.type.equals("HEAD") && f.name.equals("file-type")
+							&& ((hasReadType = EPKDecompiler.readASCII(f.data)).equals("epk/world188")
+									|| (has152Format = hasReadType.equals("epk/world152")))) {
+						if(has152Format) {
+							logger.warn("World type detected as 1.5.2, it will be converted to 1.8.8 format");
+						}
+						continue;
+					}else {
+						throw new IOException("file does not contain a singleplayer 1.5.2 or 1.8.8 world!");
 					}
-					continue;
-				}else {
-					throw new IOException("file does not contain a singleplayer 1.5.2 or 1.8.8 world!");
 				}
-			}
-			if(f.type.equals("FILE")) {
-				if(f.name.equals("level.dat") || f.name.equals("level.dat_old")) {
-					NBTTagCompound worldDatNBT = CompressedStreamTools.readCompressed(new EaglerInputStream(b));
-					worldDatNBT.getCompoundTag("Data").setString("LevelName", newName);
-					worldDatNBT.getCompoundTag("Data").setLong("LastPlayed", System.currentTimeMillis());
-					EaglerOutputStream tmp = new EaglerOutputStream();
-					CompressedStreamTools.writeCompressed(worldDatNBT, tmp);
-					b = tmp.toByteArray();
-				}
-				VFile2 ff = new VFile2(worldDir, f.name);
-				ff.setAllBytes(b);
-				prog += b.length;
-				++cnt;
-				if(prog - lastProgUpdate > 25000) {
-					lastProgUpdate = prog;
-					logger.info("Extracted {} files, {} bytes from EPK...", cnt, prog);
-					EaglerIntegratedServerWorker.sendProgress("singleplayer.busy.importing.1", prog);
+				if(f.type.equals("FILE")) {
+					if(f.name.equals("level.dat") || f.name.equals("level.dat_old")) {
+						NBTTagCompound worldDatNBT = CompressedStreamTools.readCompressed(new EaglerInputStream(b));
+						worldDatNBT.getCompoundTag("Data").setString("LevelName", newName);
+						worldDatNBT.getCompoundTag("Data").setLong("LastPlayed", System.currentTimeMillis());
+						EaglerOutputStream tmp = new EaglerOutputStream();
+						CompressedStreamTools.writeCompressed(worldDatNBT, tmp);
+						b = tmp.toByteArray();
+					}
+					VFile2 ff = new VFile2(worldDir, f.name);
+					ff.setAllBytes(b);
+					prog += b.length;
+					++cnt;
+					if(prog - lastProgUpdate > 25000) {
+						lastProgUpdate = prog;
+						logger.info("Extracted {} files, {} bytes from EPK...", cnt, prog);
+						EaglerIntegratedServerWorker.sendProgress("singleplayer.busy.importing.1", prog);
+					}
 				}
 			}
 		}

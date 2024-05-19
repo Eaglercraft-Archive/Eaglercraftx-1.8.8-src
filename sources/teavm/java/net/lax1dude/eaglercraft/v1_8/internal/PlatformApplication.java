@@ -95,34 +95,66 @@ public class PlatformApplication {
 	private static native void setClipboard0(String str);
 	
 	public static void setLocalStorage(String name, byte[] data) {
+		setLocalStorage(name, data, true);
+	}
+	
+	public static void setLocalStorage(String name, byte[] data, boolean hooks) {
+		IClientConfigAdapter adapter = PlatformRuntime.getClientConfigAdapter();
+		String eagName = adapter.getLocalStorageNamespace() + "." + name;
+		String b64 = Base64.encodeBase64String(data);
 		try {
 			Storage s = Window.current().getLocalStorage();
 			if(s != null) {
 				if(data != null) {
-					s.setItem("_eaglercraftX." + name, Base64.encodeBase64String(data));
+					s.setItem(eagName, b64);
 				}else {
-					s.removeItem("_eaglercraftX." + name);
+					s.removeItem(eagName);
 				}
 			}
 		}catch(Throwable t) {
 		}
+		if(hooks) {
+			adapter.getHooks().callLocalStorageSavedHook(name, b64);
+		}
 	}
 	
 	public static byte[] getLocalStorage(String name) {
-		try {
-			Storage s = Window.current().getLocalStorage();
-			if(s != null) {
-				String str = s.getItem("_eaglercraftX." + name);
-				if(str != null) {
-					return Base64.decodeBase64(str);
+		return getLocalStorage(name, true);
+	}
+	
+	public static byte[] getLocalStorage(String name, boolean hooks) {
+		IClientConfigAdapter adapter = PlatformRuntime.getClientConfigAdapter();
+		String eagName = adapter.getLocalStorageNamespace() + "." + name;
+		byte[] hooked = null;
+		if(hooks) {
+			String hookedStr = adapter.getHooks().callLocalStorageLoadHook(eagName);
+			if(hookedStr != null) {
+				try {
+					hooked = Base64.decodeBase64(hookedStr);
+				}catch(Throwable t) {
+					PlatformRuntime.logger.error("Invalid Base64 recieved from local storage hook!");
+					hooked = null;
+				}
+			}
+		}
+		if(hooked == null) {
+			try {
+				Storage s = Window.current().getLocalStorage();
+				if(s != null) {
+					String str = s.getItem(eagName);
+					if(str != null) {
+						return Base64.decodeBase64(str);
+					}else {
+						return null;
+					}
 				}else {
 					return null;
 				}
-			}else {
+			}catch(Throwable t) {
 				return null;
 			}
-		}catch(Throwable t) {
-			return null;
+		}else {
+			return hooked;
 		}
 	}
 	

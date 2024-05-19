@@ -148,7 +148,16 @@ public class UpdateCertificate {
 			throw new CertificateInvalidException("SHA256 checksum of signature payload is invalid!");
 		}
 		
-		return new UpdateCertificate(certData, EaglerZLIB.newGZIPInputStream(new EaglerInputStream(signaturePayload)), vers);
+		UpdateCertificate cert;
+		try(InputStream gis = EaglerZLIB.newGZIPInputStream(new EaglerInputStream(signaturePayload))) {
+			cert = new UpdateCertificate(certData, gis, vers);
+		}
+		
+		if(System.currentTimeMillis() < cert.sigTimestamp) {
+			throw new CertificateInvalidException("Update certificate timestamp is from the future!?");
+		}
+		
+		return cert;
 	}
 
 	private UpdateCertificate(byte[] certData, InputStream is, int sigVers) throws IOException {

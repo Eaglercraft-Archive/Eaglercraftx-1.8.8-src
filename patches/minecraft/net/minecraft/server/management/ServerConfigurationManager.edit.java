@@ -225,7 +225,7 @@
 
 ~ 			worldIn.theItemInWorldManager.initializeGameType(parWorld.getWorldInfo().getGameType());
 ~ 		} else {
-~ 			parEntityPlayerMP2.theItemInWorldManager.setGameType(lanGamemode);
+~ 			worldIn.theItemInWorldManager.setGameType(lanGamemode);
 ~ 		}
 
 > CHANGE  7 : 8  @  7 : 8

@@ -230,6 +230,10 @@ public class PlatformInput {
 		glfwSwapBuffers(win);
 	}
 
+	public static boolean isVSyncSupported() {
+		return true;
+	}
+
 	public static boolean wasResized() {
 		boolean b = windowResized;
 		windowResized = false;

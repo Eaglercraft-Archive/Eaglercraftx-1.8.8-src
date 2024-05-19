@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 import net.lax1dude.eaglercraft.v1_8.EaglercraftVersion;
 import net.lax1dude.eaglercraft.v1_8.internal.IClientConfigAdapter;
+import net.lax1dude.eaglercraft.v1_8.internal.IClientConfigAdapterHooks;
 import net.lax1dude.eaglercraft.v1_8.sp.relay.RelayEntry;
 
 /**
@@ -30,6 +31,8 @@ public class DesktopClientConfigAdapter implements IClientConfigAdapter {
 	public static final IClientConfigAdapter instance = new DesktopClientConfigAdapter();
 
 	public final List<DefaultServer> defaultServers = new ArrayList();
+
+	private final DesktopClientConfigAdapterHooks hooks = new DesktopClientConfigAdapterHooks();
 
 	@Override
 	public String getDefaultLocale() {
@@ -129,4 +132,32 @@ public class DesktopClientConfigAdapter implements IClientConfigAdapter {
 		return false;
 	}
 
+	@Override
+	public boolean isAllowFNAWSkins() {
+		return true;
+	}
+
+	@Override
+	public String getLocalStorageNamespace() {
+		return EaglercraftVersion.localStorageNamespace;
+	}
+
+	@Override
+	public IClientConfigAdapterHooks getHooks() {
+		return hooks;
+	}
+
+	private static class DesktopClientConfigAdapterHooks implements IClientConfigAdapterHooks {
+
+		@Override
+		public void callLocalStorageSavedHook(String key, String base64) {
+			
+		}
+
+		@Override
+		public String callLocalStorageLoadHook(String key) {
+			return null;
+		}
+		
+	}
 }

@@ -46,7 +46,7 @@ public enum SkinModel {
 	private SkinModel(int id, HighPolySkin highPoly) {
 		this.id = id;
 		this.width = 256;
-		this.height = 128;
+		this.height = 256;
 		this.profileSkinType = "eagler";
 		this.sanitize = true;
 		this.highPoly = highPoly;

@@ -13,6 +13,7 @@ import org.teavm.jso.dom.html.HTMLDocument;
 import org.teavm.jso.dom.html.HTMLElement;
 
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformApplication;
+import net.lax1dude.eaglercraft.v1_8.internal.PlatformRuntime;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 
 /**
@@ -63,13 +64,13 @@ public class DebugConsoleWindow {
 				destroyWindow();
 			}
 		});
-		if("true".equals(parent.getLocalStorage().getItem("_eaglercraftX.showDebugConsole"))) {
+		if("true".equals(parent.getLocalStorage().getItem(PlatformRuntime.getClientConfigAdapter().getLocalStorageNamespace() + ".showDebugConsole"))) {
 			showDebugConsole0();
 		}
 	}
 
 	public static void showDebugConsole() {
-		parent.getLocalStorage().setItem("_eaglercraftX.showDebugConsole", "true");
+		parent.getLocalStorage().setItem(PlatformRuntime.getClientConfigAdapter().getLocalStorageNamespace() + ".showDebugConsole", "true");
 		showDebugConsole0();
 	}
 

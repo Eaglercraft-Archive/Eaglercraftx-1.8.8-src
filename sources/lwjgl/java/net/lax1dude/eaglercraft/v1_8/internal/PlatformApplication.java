@@ -64,8 +64,12 @@ public class PlatformApplication {
 		String str = glfwGetClipboardString(win);
 		return str == null ? "" : str;
 	}
-	
+
 	public static void setLocalStorage(String name, byte[] data) {
+		setLocalStorage(name, data, true);
+	}
+
+	public static void setLocalStorage(String name, byte[] data, boolean hooks) {
 		if(data == null) {
 			(new File("_eagstorage."+name+".dat")).delete();
 		}else {
@@ -76,8 +80,12 @@ public class PlatformApplication {
 			}
 		}
 	}
-	
+
 	public static byte[] getLocalStorage(String data) {
+		return getLocalStorage(data, true);
+	}
+
+	public static byte[] getLocalStorage(String data, boolean hooks) {
 		File f = new File("_eagstorage."+data+".dat");
 		if(!f.isFile()) {
 			return null;
