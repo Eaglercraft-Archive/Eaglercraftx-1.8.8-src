@@ -21,6 +21,7 @@ import io.netty.handler.codec.http.HttpVersion;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketServerHandshaker;
 import io.netty.handler.codec.http.websocketx.WebSocketServerHandshakerFactory;
+import io.netty.util.ReferenceCountUtil;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.EaglerXBungee;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.config.EaglerListenerConfig;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.config.EaglerRateLimiter;
@@ -54,116 +55,120 @@ public class HttpHandshakeHandler extends ChannelInboundHandlerAdapter {
 	}
 	
 	public void channelRead(final ChannelHandlerContext ctx, Object msg) throws Exception {
-		if (msg instanceof HttpRequest) {
-			EaglerConnectionInstance pingTracker = ctx.channel().attr(EaglerPipeline.CONNECTION_INSTANCE).get();
-			HttpRequest req = (HttpRequest) msg;
-			HttpHeaders headers = req.headers();
-			
-			String rateLimitHost = null;
-			
-			if(conf.isForwardIp()) {
-				String str = headers.get(conf.getForwardIpHeader());
-				if(str != null) {
-					rateLimitHost = str.split(",", 2)[0];
-					try {
-						ctx.channel().attr(EaglerPipeline.REAL_ADDRESS).set(InetAddress.getByName(rateLimitHost));
-					}catch(UnknownHostException ex) {
-						EaglerXBungee.logger().warning("[" + ctx.channel().remoteAddress() + "]: Connected with an invalid '" + conf.getForwardIpHeader() + "' header, disconnecting...");
+		try {
+			if (msg instanceof HttpRequest) {
+				EaglerConnectionInstance pingTracker = ctx.channel().attr(EaglerPipeline.CONNECTION_INSTANCE).get();
+				HttpRequest req = (HttpRequest) msg;
+					HttpHeaders headers = req.headers();
+					
+					String rateLimitHost = null;
+					
+					if(conf.isForwardIp()) {
+						String str = headers.get(conf.getForwardIpHeader());
+						if(str != null) {
+							rateLimitHost = str.split(",", 2)[0];
+							try {
+								ctx.channel().attr(EaglerPipeline.REAL_ADDRESS).set(InetAddress.getByName(rateLimitHost));
+							}catch(UnknownHostException ex) {
+								EaglerXBungee.logger().warning("[" + ctx.channel().remoteAddress() + "]: Connected with an invalid '" + conf.getForwardIpHeader() + "' header, disconnecting...");
+								ctx.close();
+								return;
+							}
+						}else {
+							EaglerXBungee.logger().warning("[" + ctx.channel().remoteAddress() + "]: Connected without a '" + conf.getForwardIpHeader() + "' header, disconnecting...");
+							ctx.close();
+							return;
+						}
+					}else {
+						SocketAddress addr = ctx.channel().remoteAddress();
+						if(addr instanceof InetSocketAddress) {
+							rateLimitHost = ((InetSocketAddress) addr).getAddress().getHostAddress();
+						}
+					}
+					
+					EaglerRateLimiter ipRateLimiter = conf.getRatelimitIp();
+					RateLimitStatus ipRateLimit = RateLimitStatus.OK;
+					
+					if(ipRateLimiter != null && rateLimitHost != null) {
+						ipRateLimit = ipRateLimiter.rateLimit(rateLimitHost);
+					}
+					
+					if(ipRateLimit == RateLimitStatus.LOCKED_OUT) {
 						ctx.close();
 						return;
 					}
-				}else {
-					EaglerXBungee.logger().warning("[" + ctx.channel().remoteAddress() + "]: Connected without a '" + conf.getForwardIpHeader() + "' header, disconnecting...");
-					ctx.close();
-					return;
-				}
-			}else {
-				SocketAddress addr = ctx.channel().remoteAddress();
-				if(addr instanceof InetSocketAddress) {
-					rateLimitHost = ((InetSocketAddress) addr).getAddress().getHostAddress();
-				}
-			}
-			
-			EaglerRateLimiter ipRateLimiter = conf.getRatelimitIp();
-			RateLimitStatus ipRateLimit = RateLimitStatus.OK;
-			
-			if(ipRateLimiter != null && rateLimitHost != null) {
-				ipRateLimit = ipRateLimiter.rateLimit(rateLimitHost);
-			}
-			
-			if(ipRateLimit == RateLimitStatus.LOCKED_OUT) {
-				ctx.close();
-				return;
-			}
-			
-			if(headers.get(HttpHeaderNames.CONNECTION) != null && headers.get(HttpHeaderNames.CONNECTION).toLowerCase().contains("upgrade") &&
-					"websocket".equalsIgnoreCase(headers.get(HttpHeaderNames.UPGRADE))) {
-				
-				String origin = headers.get(HttpHeaderNames.ORIGIN);
-				if(origin != null) {
-					ctx.channel().attr(EaglerPipeline.ORIGIN).set(origin);
-				}
-				
-				//TODO: origin blacklist
-				
-				if(ipRateLimit == RateLimitStatus.OK) {
-					ctx.channel().attr(EaglerPipeline.HOST).set(headers.get(HttpHeaderNames.HOST));
-					ctx.pipeline().replace(this, "HttpWebSocketHandler", new HttpWebSocketHandler(conf));
-				}
-				
-				WebSocketServerHandshakerFactory wsFactory = new WebSocketServerHandshakerFactory(
-						"ws://" + headers.get(HttpHeaderNames.HOST) + req.uri(), null, true, 0xFFFFF);
-				WebSocketServerHandshaker hs = wsFactory.newHandshaker(req);
-				if(hs != null) {
-					pingTracker.isWebSocket = true;
-					ChannelFuture future = hs.handshake(ctx.channel(), req);
-					if(ipRateLimit != RateLimitStatus.OK) {
-						final RateLimitStatus rateLimitTypeFinal = ipRateLimit;
-						future.addListener(new ChannelFutureListener() {
-							@Override
-							public void operationComplete(ChannelFuture paramF) throws Exception {
-								ctx.writeAndFlush(new TextWebSocketFrame(
-										rateLimitTypeFinal == RateLimitStatus.LIMITED_NOW_LOCKED_OUT ? "LOCKED" : "BLOCKED"))
-										.addListener(ChannelFutureListener.CLOSE);
+					
+					if(headers.get(HttpHeaderNames.CONNECTION) != null && headers.get(HttpHeaderNames.CONNECTION).toLowerCase().contains("upgrade") &&
+							"websocket".equalsIgnoreCase(headers.get(HttpHeaderNames.UPGRADE))) {
+						
+						String origin = headers.get(HttpHeaderNames.ORIGIN);
+						if(origin != null) {
+							ctx.channel().attr(EaglerPipeline.ORIGIN).set(origin);
+						}
+						
+						//TODO: origin blacklist
+						
+						if(ipRateLimit == RateLimitStatus.OK) {
+							ctx.channel().attr(EaglerPipeline.HOST).set(headers.get(HttpHeaderNames.HOST));
+							ctx.pipeline().replace(this, "HttpWebSocketHandler", new HttpWebSocketHandler(conf));
+						}
+						
+						WebSocketServerHandshakerFactory wsFactory = new WebSocketServerHandshakerFactory(
+								"ws://" + headers.get(HttpHeaderNames.HOST) + req.uri(), null, true, 0xFFFFF);
+						WebSocketServerHandshaker hs = wsFactory.newHandshaker(req);
+						if(hs != null) {
+							pingTracker.isWebSocket = true;
+							ChannelFuture future = hs.handshake(ctx.channel(), req);
+							if(ipRateLimit != RateLimitStatus.OK) {
+								final RateLimitStatus rateLimitTypeFinal = ipRateLimit;
+								future.addListener(new ChannelFutureListener() {
+									@Override
+									public void operationComplete(ChannelFuture paramF) throws Exception {
+										ctx.writeAndFlush(new TextWebSocketFrame(
+												rateLimitTypeFinal == RateLimitStatus.LIMITED_NOW_LOCKED_OUT ? "LOCKED" : "BLOCKED"))
+												.addListener(ChannelFutureListener.CLOSE);
+									}
+								});
 							}
-						});
-					}
-				}else {
-					WebSocketServerHandshakerFactory.sendUnsupportedVersionResponse(ctx.channel()).addListener(ChannelFutureListener.CLOSE);
-				}
-			}else {
-				if(ipRateLimit != RateLimitStatus.OK) {
-					ByteBuf error429Buffer = ctx.alloc().buffer(error429Bytes.length, error429Bytes.length);
-					error429Buffer.writeBytes(error429Bytes);
-					DefaultFullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.TOO_MANY_REQUESTS, error429Buffer);
-					ctx.writeAndFlush(response).addListener(ChannelFutureListener.CLOSE);
-					return;
-				}
-				pingTracker.isRegularHttp = true;
-				HttpWebServer srv = conf.getWebServer();
-				if(srv != null) {
-					String uri = req.uri();
-					if(uri.startsWith("/")) {
-						uri = uri.substring(1);
-					}
-					int j = uri.indexOf('?');
-					if(j != -1) {
-						uri = uri.substring(0, j);
-					}
-					HttpMemoryCache ch = srv.retrieveFile(uri);
-					if(ch != null) {
-						ctx.writeAndFlush(ch.createHTTPResponse()).addListener(ChannelFutureListener.CLOSE);
+						}else {
+							WebSocketServerHandshakerFactory.sendUnsupportedVersionResponse(ctx.channel()).addListener(ChannelFutureListener.CLOSE);
+						}
 					}else {
-						ctx.writeAndFlush(HttpWebServer.getWebSocket404().createHTTPResponse(HttpResponseStatus.NOT_FOUND))
-							.addListener(ChannelFutureListener.CLOSE);
+						if(ipRateLimit != RateLimitStatus.OK) {
+							ByteBuf error429Buffer = ctx.alloc().buffer(error429Bytes.length, error429Bytes.length);
+							error429Buffer.writeBytes(error429Bytes);
+							DefaultFullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.TOO_MANY_REQUESTS, error429Buffer);
+							ctx.writeAndFlush(response).addListener(ChannelFutureListener.CLOSE);
+							return;
+						}
+						pingTracker.isRegularHttp = true;
+						HttpWebServer srv = conf.getWebServer();
+						if(srv != null) {
+							String uri = req.uri();
+							if(uri.startsWith("/")) {
+								uri = uri.substring(1);
+							}
+							int j = uri.indexOf('?');
+							if(j != -1) {
+								uri = uri.substring(0, j);
+							}
+							HttpMemoryCache ch = srv.retrieveFile(uri);
+							if(ch != null) {
+								ctx.writeAndFlush(ch.createHTTPResponse()).addListener(ChannelFutureListener.CLOSE);
+							}else {
+								ctx.writeAndFlush(HttpWebServer.getWebSocket404().createHTTPResponse(HttpResponseStatus.NOT_FOUND))
+									.addListener(ChannelFutureListener.CLOSE);
+							}
+						}else {
+							ctx.writeAndFlush(HttpWebServer.getWebSocket404().createHTTPResponse(HttpResponseStatus.NOT_FOUND))
+								.addListener(ChannelFutureListener.CLOSE);
+						}
 					}
-				}else {
-					ctx.writeAndFlush(HttpWebServer.getWebSocket404().createHTTPResponse(HttpResponseStatus.NOT_FOUND))
-						.addListener(ChannelFutureListener.CLOSE);
-				}
+			}else {
+				ctx.close();
 			}
-		}else {
-			ctx.close();
+		}finally {
+			ReferenceCountUtil.release(msg);
 		}
 	}
 	

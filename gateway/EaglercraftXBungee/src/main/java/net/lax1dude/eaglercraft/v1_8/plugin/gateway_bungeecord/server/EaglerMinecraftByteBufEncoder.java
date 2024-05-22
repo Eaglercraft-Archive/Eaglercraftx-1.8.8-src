@@ -27,7 +27,7 @@ public class EaglerMinecraftByteBufEncoder extends MessageToMessageEncoder<ByteB
 	
 	@Override
 	protected void encode(ChannelHandlerContext var1, ByteBuf var2, List<Object> var3) throws Exception {
-		var3.add(new BinaryWebSocketFrame(Unpooled.copiedBuffer(var2)));
+		var3.add(new BinaryWebSocketFrame(var2.retain()));
 	}
 
 }

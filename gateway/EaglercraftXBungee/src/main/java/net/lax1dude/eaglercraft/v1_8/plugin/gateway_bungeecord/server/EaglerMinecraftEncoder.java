@@ -4,7 +4,6 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageEncoder;
 import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
@@ -52,7 +51,7 @@ public class EaglerMinecraftEncoder extends MessageToMessageEncoder<DefinedPacke
 			case STATUS:
 				bungeeProtocol = Protocol.STATUS;
 		}
-		ByteBuf buf = Unpooled.buffer();
+		ByteBuf buf = ctx.alloc().buffer();
 		int pk = EaglerProtocolAccessProxy.getPacketId(protocol, protocolVersion, msg, server);
 		DefinedPacket.writeVarInt(pk, buf);
 		try {
@@ -65,11 +64,11 @@ public class EaglerMinecraftEncoder extends MessageToMessageEncoder<DefinedPacke
 				meth.invoke(msg, buf, server ? Direction.TO_CLIENT : Direction.TO_SERVER, protocolVersion);
 			} catch (Exception e1) {
 				buf.release();
-				buf = Unpooled.EMPTY_BUFFER;
+				throw new RuntimeException("Could not call DefinedPacket write method!", e1);
 			}
 		} catch (Exception e) {
 			buf.release();
-			buf = Unpooled.EMPTY_BUFFER;
+			throw new RuntimeException("Could not call DefinedPacket write method!", e);
 		}
 		out.add(new BinaryWebSocketFrame(buf));
 	}

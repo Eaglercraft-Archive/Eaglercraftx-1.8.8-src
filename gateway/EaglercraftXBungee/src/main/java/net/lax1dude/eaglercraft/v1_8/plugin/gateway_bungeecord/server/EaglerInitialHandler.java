@@ -61,6 +61,8 @@ public class EaglerInitialHandler extends InitialHandler {
 	private final int gameProtocolVersion;
 	private final String username;
 	private final UUID playerUUID;
+	private final UUID playerUUIDOffline;
+	private final UUID playerUUIDRewrite;
 	private LoginResult loginResult;
 	private final InetSocketAddress eaglerAddress;
 	private final InetSocketAddress virtualHost;
@@ -79,12 +81,14 @@ public class EaglerInitialHandler extends InitialHandler {
 	private static final Property[] NO_PROPERTIES = new Property[0];
 
 	public EaglerInitialHandler(BungeeCord bungee, EaglerListenerConfig listener, final ChannelWrapper ch,
-			int gameProtocolVersion, String username, UUID playerUUID, InetSocketAddress address, String host,
-			String origin, ClientCertificateHolder clientCertificate) {
+			int gameProtocolVersion, String username, UUID playerUUID, UUID offlineUUID, InetSocketAddress address,
+			String host, String origin, ClientCertificateHolder clientCertificate) {
 		super(bungee, listener);
 		this.gameProtocolVersion = gameProtocolVersion;
 		this.username = username;
 		this.playerUUID = playerUUID;
+		this.playerUUIDOffline = offlineUUID;
+		this.playerUUIDRewrite = bungee.config.isIpForward() ? playerUUID : offlineUUID;
 		this.eaglerAddress = address;
 		this.origin = origin;
 		this.skinLookupRateLimiter = new SimpleRateLimiter();
@@ -125,6 +129,14 @@ public class EaglerInitialHandler extends InitialHandler {
 			super.connected(ch);
 		} catch (Exception e) {
 		}
+	}
+
+	public static UUID generateOfflineUUID(byte[] username) {
+		String offlinePlayerStr = "OfflinePlayer:";
+		byte[] uuidHashGenerator = new byte[offlinePlayerStr.length() + username.length];
+		System.arraycopy(offlinePlayerStr.getBytes(StandardCharsets.US_ASCII), 0, uuidHashGenerator, 0, offlinePlayerStr.length());
+		System.arraycopy(username, 0, uuidHashGenerator, offlinePlayerStr.length(), username.length);
+		return UUID.nameUUIDFromBytes(uuidHashGenerator);
 	}
 
 	void setLoginProfile(LoginResult obj) {
@@ -231,12 +243,12 @@ public class EaglerInitialHandler extends InitialHandler {
 
 	@Override
 	public UUID getOfflineId() {
-		return playerUUID;
+		return playerUUIDOffline;
 	}
 
 	@Override
 	public UUID getRewriteId() {
-		return playerUUID;
+		return playerUUIDRewrite;
 	}
 
 	@Override

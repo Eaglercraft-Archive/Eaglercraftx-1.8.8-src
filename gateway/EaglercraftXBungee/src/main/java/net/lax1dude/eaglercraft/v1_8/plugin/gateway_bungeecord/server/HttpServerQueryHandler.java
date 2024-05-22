@@ -19,6 +19,7 @@ import io.netty.handler.codec.http.websocketx.PingWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.PongWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketFrame;
+import io.netty.util.ReferenceCountUtil;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.EaglerXBungee;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.config.EaglerListenerConfig;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.server.query.QueryManager;
@@ -123,18 +124,22 @@ public abstract class HttpServerQueryHandler extends ChannelInboundHandlerAdapte
 	}
 
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-		if(msg instanceof WebSocketFrame) {
-			if(msg instanceof BinaryWebSocketFrame) {
-				handleBinary(ctx, ((BinaryWebSocketFrame)msg).content());
-			}else if(msg instanceof TextWebSocketFrame) {
-				handleText(ctx, ((TextWebSocketFrame)msg).text());
-			}else if(msg instanceof PingWebSocketFrame) {
-				ctx.writeAndFlush(new PongWebSocketFrame());
-			}else if(msg instanceof CloseWebSocketFrame) {
-				ctx.close();
+		try {
+			if(msg instanceof WebSocketFrame) {
+				if(msg instanceof BinaryWebSocketFrame) {
+					handleBinary(ctx, ((BinaryWebSocketFrame)msg).content());
+				}else if(msg instanceof TextWebSocketFrame) {
+					handleText(ctx, ((TextWebSocketFrame)msg).text());
+				}else if(msg instanceof PingWebSocketFrame) {
+					ctx.writeAndFlush(new PongWebSocketFrame());
+				}else if(msg instanceof CloseWebSocketFrame) {
+					ctx.close();
+				}
+			}else {
+				EaglerXBungee.logger().severe("Unexpected Packet: " + msg.getClass().getSimpleName());
 			}
-		}else {
-			EaglerXBungee.logger().severe("Unexpected Packet: " + msg.getClass().getSimpleName());
+		}finally {
+			ReferenceCountUtil.release(msg);
 		}
 	}
 
@@ -200,15 +205,11 @@ public abstract class HttpServerQueryHandler extends ChannelInboundHandlerAdapte
 	}
 
 	public void sendBinaryResponse(byte[] bytes) {
-		ByteBuf buf = Unpooled.buffer(bytes.length, bytes.length);
-		buf.writeBytes(bytes);
-		context.writeAndFlush(new BinaryWebSocketFrame(buf));
+		context.writeAndFlush(new BinaryWebSocketFrame(Unpooled.wrappedBuffer(bytes)));
 	}
 
 	public void sendBinaryResponseAndClose(byte[] bytes) {
-		ByteBuf buf = Unpooled.buffer(bytes.length, bytes.length);
-		buf.writeBytes(bytes);
-		context.writeAndFlush(new BinaryWebSocketFrame(buf)).addListener(ChannelFutureListener.CLOSE);
+		context.writeAndFlush(new BinaryWebSocketFrame(Unpooled.wrappedBuffer(bytes))).addListener(ChannelFutureListener.CLOSE);
 	}
 
 	public void setKeepAlive(boolean enable) {

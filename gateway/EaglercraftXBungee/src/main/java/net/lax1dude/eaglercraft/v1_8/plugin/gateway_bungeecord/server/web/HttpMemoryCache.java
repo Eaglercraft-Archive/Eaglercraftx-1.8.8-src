@@ -65,7 +65,7 @@ public class HttpMemoryCache {
 	}
 	
 	public DefaultFullHttpResponse createHTTPResponse(HttpResponseStatus code) {
-		DefaultFullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, code, Unpooled.copiedBuffer(fileData));
+		DefaultFullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, code, Unpooled.wrappedBuffer(fileData.retain()));
 		HttpHeaders responseHeaders = response.headers();
 		Date d = new Date();
 		responseHeaders.add(HttpHeaderNames.CONTENT_TYPE, contentType.httpHeader);

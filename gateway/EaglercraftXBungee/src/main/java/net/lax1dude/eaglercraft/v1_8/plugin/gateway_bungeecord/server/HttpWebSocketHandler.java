@@ -35,6 +35,7 @@ import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketFrame;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
+import io.netty.util.ReferenceCountUtil;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.EaglerXBungee;
@@ -106,6 +107,7 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 	private CharSequence clientVersionString;
 	private CharSequence clientUsername;
 	private UUID clientUUID;
+	private UUID offlineUUID;
 	private CharSequence clientRequestedServer;
 	private boolean clientAuth;
 	private byte[] clientAuthUsername;
@@ -125,18 +127,22 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 	}
 	
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-		if(msg instanceof WebSocketFrame) {
-			if(msg instanceof BinaryWebSocketFrame) {
-				handleBinary(ctx, ((BinaryWebSocketFrame)msg).content());
-			}else if(msg instanceof TextWebSocketFrame) {
-				handleText(ctx, ((TextWebSocketFrame)msg).text());
-			}else if(msg instanceof PingWebSocketFrame) {
-				ctx.writeAndFlush(new PongWebSocketFrame());
-			}else if(msg instanceof CloseWebSocketFrame) {
-				ctx.close();
+		try {
+			if(msg instanceof WebSocketFrame) {
+				if(msg instanceof BinaryWebSocketFrame) {
+					handleBinary(ctx, ((BinaryWebSocketFrame)msg).content());
+				}else if(msg instanceof TextWebSocketFrame) {
+					handleText(ctx, ((TextWebSocketFrame)msg).text());
+				}else if(msg instanceof PingWebSocketFrame) {
+					ctx.writeAndFlush(new PongWebSocketFrame());
+				}else if(msg instanceof CloseWebSocketFrame) {
+					ctx.close();
+				}
+			}else {
+				EaglerXBungee.logger().severe("Unexpected Packet: " + msg.getClass().getSimpleName());
 			}
-		}else {
-			EaglerXBungee.logger().severe("Unexpected Packet: " + msg.getClass().getSimpleName());
+		}finally {
+			ReferenceCountUtil.release(msg);
 		}
 	}
 	
@@ -557,11 +563,7 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 						}
 					}
 					
-					String offlinePlayerStr = "OfflinePlayer:";
-					byte[] uuidHashGenerator = new byte[offlinePlayerStr.length() + clientAuthUsername.length];
-					System.arraycopy(offlinePlayerStr.getBytes(StandardCharsets.US_ASCII), 0, uuidHashGenerator, 0, offlinePlayerStr.length());
-					System.arraycopy(clientAuthUsername, 0, uuidHashGenerator, offlinePlayerStr.length(), clientAuthUsername.length);
-					clientUUID = UUID.nameUUIDFromBytes(uuidHashGenerator);
+					clientUUID = offlineUUID = EaglerInitialHandler.generateOfflineUUID(clientAuthUsername);
 					
 					strlen = buffer.readUnsignedByte();
 					clientRequestedServer = buffer.readCharSequence(strlen, StandardCharsets.US_ASCII);
@@ -775,7 +777,7 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 			}
 		}
 		final EaglerInitialHandler initialHandler = new EaglerInitialHandler(bungee, conf, ch, gameProtocolVersion,
-				usernameStr, clientUUID, baseAddress, ctx.channel().attr(EaglerPipeline.HOST).get(),
+				usernameStr, clientUUID, offlineUUID, baseAddress, ctx.channel().attr(EaglerPipeline.HOST).get(),
 				ctx.channel().attr(EaglerPipeline.ORIGIN).get(), cert);
 		if(!blockUpdate) {
 			List<ClientCertificateHolder> set = EaglerUpdateSvc.getCertList();

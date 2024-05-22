@@ -11,6 +11,7 @@ import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.PingWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.PongWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketFrame;
+import io.netty.util.ReferenceCountUtil;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.EaglerXBungee;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.server.bungeeprotocol.EaglerBungeeProtocol;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.server.bungeeprotocol.EaglerProtocolAccessProxy;
@@ -50,6 +51,7 @@ public class EaglerMinecraftDecoder extends MessageToMessageDecoder<WebSocketFra
 		if(frame instanceof BinaryWebSocketFrame) {
 			BinaryWebSocketFrame in = (BinaryWebSocketFrame) frame;
 			ByteBuf buf = in.content();
+			buf.markReaderIndex();
 			int pktId = DefinedPacket.readVarInt(buf);
 			DefinedPacket pkt = EaglerProtocolAccessProxy.createPacket(protocol, protocolVersion, pktId, server);
 			Protocol bungeeProtocol = null;
@@ -72,9 +74,11 @@ public class EaglerMinecraftDecoder extends MessageToMessageDecoder<WebSocketFra
 					EaglerXBungee.logger().severe("[DECODER][" + ctx.channel().remoteAddress() + "] Packet "  +
 							pkt.getClass().getSimpleName() + " had extra bytes! (" + buf.readableBytes() + ")");
 				}else {
+					buf.resetReaderIndex();
 					out.add(this.wrapPacket(pkt, buf, bungeeProtocol));
 				}
 			}else {
+				buf.resetReaderIndex();
 				out.add(this.wrapPacket(null, buf, bungeeProtocol));
 			}
 		}else if(frame instanceof PingWebSocketFrame) {
@@ -103,46 +107,31 @@ public class EaglerMinecraftDecoder extends MessageToMessageDecoder<WebSocketFra
 		this.protocolVersion = protocolVersion;
 	}
 
-
-
 	private PacketWrapper wrapPacket(DefinedPacket packet, ByteBuf buf, Protocol protocol) {
-		ByteBuf cbuf = null;
-
-		PacketWrapper var7;
-		try {
-			cbuf = buf.copy(0, buf.writerIndex());
-			PacketWrapper pkt;
-			if (packetWrapperConstructor != null) {
-				try {
-					pkt = packetWrapperConstructor.newInstance(packet, cbuf);
-					cbuf = null;
-					return pkt;
-				} catch (IllegalAccessException | InvocationTargetException | InstantiationException var14) {
-					throw new RuntimeException(var14);
-				}
-			}
-
+		PacketWrapper pkt;
+		if (packetWrapperConstructor != null) {
 			try {
-				pkt = new PacketWrapper(packet, cbuf, protocol);
-				cbuf = null;
+				pkt = packetWrapperConstructor.newInstance(packet, buf);
+				buf.retain();
 				return pkt;
-			} catch (NoSuchMethodError var15) {
-				try {
-					packetWrapperConstructor = PacketWrapper.class.getDeclaredConstructor(DefinedPacket.class, ByteBuf.class);
-					pkt = packetWrapperConstructor.newInstance(packet, cbuf);
-					cbuf = null;
-					var7 = pkt;
-				} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | InstantiationException var13) {
-					throw new RuntimeException(var13);
-				}
+			} catch (IllegalAccessException | InvocationTargetException | InstantiationException var14) {
+				throw new RuntimeException(var14);
 			}
-		} finally {
-			if (cbuf != null) {
-				cbuf.release();
-			}
-
 		}
 
-		return var7;
+		try {
+			pkt = new PacketWrapper(packet, buf, protocol);
+			buf.retain();
+			return pkt;
+		} catch (NoSuchMethodError var15) {
+			try {
+				packetWrapperConstructor = PacketWrapper.class.getDeclaredConstructor(DefinedPacket.class, ByteBuf.class);
+				pkt = packetWrapperConstructor.newInstance(packet, buf);
+				buf.retain();
+				return pkt;
+			} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | InstantiationException var13) {
+				throw new RuntimeException(var13);
+			}
+		}
 	}
 }
