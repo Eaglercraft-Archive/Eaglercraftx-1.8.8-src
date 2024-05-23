@@ -53,9 +53,11 @@
 
 > DELETE  1  @  1 : 5
 
-> DELETE  2  @  2 : 4
+> CHANGE  2 : 3  @  2 : 5
 
-> CHANGE  3 : 5  @  3 : 9
+~ 		this.maxPlayers = 100;
+
+> CHANGE  2 : 4  @  2 : 8
 
 ~ 	public void initializeConnectionToPlayer(IntegratedServerPlayerNetworkManager netManager, EntityPlayerMP playerIn) {
 ~ 		GameProfile gameprofile1 = playerIn.getGameProfile();
@@ -131,14 +133,12 @@
 + 		}
 + 
 
-> CHANGE  4 : 11  @  4 : 11
+> CHANGE  4 : 9  @  4 : 11
 
 ~ 	public String allowUserToConnect(GameProfile gameprofile) {
-~ 		return this.playerEntityList.size() >= this.maxPlayers && !this.func_183023_f(gameprofile)
-~ 				? "The server is full!"
-~ 				: (doesPlayerAlreadyExist(gameprofile)
-~ 						? "\"" + gameprofile.getName() + "\" is already playing on this world!"
-~ 						: null);
+~ 		return doesPlayerAlreadyExist(gameprofile)
+~ 				? "\"" + gameprofile.getName() + "\" is already playing on this world!"
+~ 				: null;
 ~ 	}
 
 > CHANGE  1 : 7  @  1 : 9

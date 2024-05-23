@@ -79,7 +79,7 @@ public class TeaVMClientConfigAdapter implements IClientConfigAdapter {
 		logInvalidCerts = EaglercraftVersion.enableUpdateService && !demoMode && eaglercraftXOpts.getLogInvalidCerts(false);
 		enableSignatureBadge = eaglercraftXOpts.getEnableSignatureBadge(false);
 		allowVoiceClient = eaglercraftXOpts.getAllowVoiceClient(true);
-		allowFNAWSkins = eaglercraftXOpts.getAllowFNAWSkins(true);
+		allowFNAWSkins = !demoMode && eaglercraftXOpts.getAllowFNAWSkins(true);
 		localStorageNamespace = eaglercraftXOpts.getLocalStorageNamespace(EaglercraftVersion.localStorageNamespace);
 		JSEaglercraftXOptsHooks hooksObj = eaglercraftXOpts.getHooks();
 		if(hooksObj != null) {
