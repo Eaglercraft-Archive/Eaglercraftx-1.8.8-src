@@ -11,6 +11,7 @@
   - Made the integrated PBR resource pack
   - Wrote all desktop emulation code
   - Wrote EaglercraftXBungee
+  - Wrote EaglercraftXVelocity
   - Wrote WebRTC relay server
   - Wrote voice chat server
   - Wrote the patch and build system
@@ -20,6 +21,7 @@
   - Many bug fixes
   - WebRTC LAN worlds
   - WebRTC voice chat
+  - Made velocity plugin work
   - Added resource packs
   - Added screen recording
   - Added seamless fullscreen
@@ -584,6 +586,44 @@
  
  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
  
+ Project Name: BungeeCord
+ Project Author: md_5
+ Project URL: https://www.spigotmc.org/go/bungeecord/
+ 
+ Used For: parsing YAML config files in EaglercraftXVelocity
+ 
+ * Copyright (c) 2012, md_5. All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ * 
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ * 
+ * Redistributions in binary form must reproduce the above copyright notice,
+ * this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution.
+ * 
+ * The name of the author may not be used to endorse or promote products derived
+ * from this software without specific prior written permission.
+ * 
+ * You may not use the software for commercial software hosting services without
+ * written permission from the author.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ 
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ 
  Project Name: 3D Sound System
  Project Author: Paul Lamb
  Project URL: http://www.paulscode.com/forum/index.php?topic=4.0
@@ -706,6 +746,6 @@
  
  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
- Make sure you also update the copy of this file in "sources/resources/assets/eagler/CREDITS"
+ Make sure you also update the copy of this file in "sources/resources/assets/eagler/CREDITS.txt"
  
  The content of both files should match, but not include this notice in the resources one
