@@ -219,6 +219,7 @@ public class HttpWebServer {
 				if(lastMod != file.lastDiskModified) {
 					int fileSize = (int)f.length();
 					try(FileInputStream is = new FileInputStream(f)) {
+						file.fileData.release();
 						file.fileData = Unpooled.buffer(fileSize, fileSize);
 						file.fileData.writeBytes(is, fileSize);
 						file.lastDiskReload = millis;
