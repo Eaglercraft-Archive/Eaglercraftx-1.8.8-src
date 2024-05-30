@@ -136,6 +136,7 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 				}else if(msg instanceof PingWebSocketFrame) {
 					ctx.writeAndFlush(new PongWebSocketFrame());
 				}else if(msg instanceof CloseWebSocketFrame) {
+					connectionClosed = true;
 					ctx.close();
 				}
 			}else {
@@ -171,7 +172,6 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 			if (limit > 0 && bungus.getOnlineCount() >= limit) {
 				sendErrorCode(ctx, HandshakePacketTypes.SERVER_ERROR_CUSTOM_MESSAGE, bungus.getTranslation("proxy_full"))
 					.addListener(ChannelFutureListener.CLOSE);
-				connectionClosed = true;
 				return;
 			}
 			
@@ -186,7 +186,6 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 				if (i >= conf.getMaxPlayer()) {
 					sendErrorCode(ctx, HandshakePacketTypes.SERVER_ERROR_CUSTOM_MESSAGE, bungus.getTranslation("proxy_full"))
 						.addListener(ChannelFutureListener.CLOSE);
-					connectionClosed = true;
 					return;
 				}
 			}
@@ -225,7 +224,6 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 								? HandshakePacketTypes.SERVER_ERROR_RATELIMIT_LOCKED
 								: HandshakePacketTypes.SERVER_ERROR_RATELIMIT_BLOCKED,
 						"Too many logins!").addListener(ChannelFutureListener.CLOSE);
-				connectionClosed = true;
 				return;
 			}
 			
@@ -266,6 +264,7 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 							return;
 						}else if(buffer.readUnsignedByte() != minecraftProtocolVersion) {
 							clientLoginState = HandshakePacketTypes.STATE_CLIENT_COMPLETE;
+							connectionClosed = true;
 							ByteBuf buf = Unpooled.buffer();
 							buf.writeByte(HandshakePacketTypes.PROTOCOL_VERSION_MISMATCH);
 							buf.writeByte(1);
@@ -339,6 +338,7 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 						
 						if(versMisMatch) {
 							clientLoginState = HandshakePacketTypes.STATE_CLIENT_COMPLETE;
+							connectionClosed = true;
 							ByteBuf buf = Unpooled.buffer();
 							buf.writeByte(HandshakePacketTypes.PROTOCOL_VERSION_MISMATCH);
 							
@@ -732,7 +732,6 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 		if (limit > 0 && bungee.getOnlineCount() >= limit) {
 			sendErrorCode(ctx, HandshakePacketTypes.SERVER_ERROR_CUSTOM_MESSAGE, bungee.getTranslation("proxy_full"))
 				.addListener(ChannelFutureListener.CLOSE);
-			connectionClosed = true;
 			return;
 		}
 		
@@ -747,7 +746,6 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 			if (i >= conf.getMaxPlayer()) {
 				sendErrorCode(ctx, HandshakePacketTypes.SERVER_ERROR_CUSTOM_MESSAGE, bungee.getTranslation("proxy_full"))
 					.addListener(ChannelFutureListener.CLOSE);
-				connectionClosed = true;
 				return;
 			}
 		}
@@ -773,7 +771,7 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 		if(!blockUpdate && !updateconf.isDiscardLoginPacketCerts()) {
 			byte[] b = profileData.get("update_cert_v1");
 			if(b != null && b.length < 32759) {
-				EaglerUpdateSvc.sendCertificateToPlayers(EaglerUpdateSvc.tryMakeHolder(b));
+				EaglerUpdateSvc.sendCertificateToPlayers(cert = EaglerUpdateSvc.tryMakeHolder(b));
 			}
 		}
 		final EaglerInitialHandler initialHandler = new EaglerInitialHandler(bungee, conf, ch, gameProtocolVersion,
@@ -1045,9 +1043,9 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 			hasBinaryConnection = false;
 			
 			if(CommandConfirmCode.confirmHash != null && str.equalsIgnoreCase(CommandConfirmCode.confirmHash)) {
+				connectionClosed = true;
 				ctx.writeAndFlush(new TextWebSocketFrame("OK")).addListener(ChannelFutureListener.CLOSE);
 				CommandConfirmCode.confirmHash = null;
-				connectionClosed = true;
 				return;
 			}
 			
@@ -1072,17 +1070,17 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 			}
 			
 			if(queryRateLimit == RateLimitStatus.LOCKED_OUT) {
-				ctx.close();
 				connectionClosed = true;
+				ctx.close();
 				return;
 			}
 			
 			if(queryRateLimit != RateLimitStatus.OK) {
+				connectionClosed = true;
 				final RateLimitStatus rateLimitTypeFinal = queryRateLimit;
 				ctx.writeAndFlush(new TextWebSocketFrame(
 						rateLimitTypeFinal == RateLimitStatus.LIMITED_NOW_LOCKED_OUT ? "{\"type\":\"locked\"}" : "{\"type\":\"blocked\"}"))
 						.addListener(ChannelFutureListener.CLOSE);
-				connectionClosed = true;
 				return;
 			}
 			
