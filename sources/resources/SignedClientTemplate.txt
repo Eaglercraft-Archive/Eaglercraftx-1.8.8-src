@@ -44,6 +44,27 @@ window.eaglercraftXOptsHints = {
 <script type="text/javascript">
 "use strict";
 (function(){
+	function fetchB64PayloadSafe() {
+		const dataURL = window.eaglercraftXClientBundle;
+		if(!dataURL.startsWith("data:application/octet-stream;base64,")) {
+			return fetch(dataURL, { cache: "force-cache" }).then((response) => response.blob());
+		}
+		return new Promise((resolve) => {
+			fetch(dataURL)
+				.then((response) => response.blob())
+				.then((blob) => { resolve(blob); })
+				.catch((err) => {
+					console.error("Caught an error decoding base64 via fetch, doing it the slow way instead...");
+					// MIT License - https://github.com/beatgammit/base64-js
+					const base64js = (function(){return function(){function b(d,e,g){function a(j,i){if(!e[j]){if(!d[j]){var f="function"==typeof require&&require;if(!i&&f)return f(j,!0);if(h)return h(j,!0);var c=new Error("Cannot find module '"+j+"'");throw c.code="MODULE_NOT_FOUND",c}var k=e[j]={exports:{}};d[j][0].call(k.exports,function(b){var c=d[j][1][b];return a(c||b)},k,k.exports,b,d,e,g)}return e[j].exports}for(var h="function"==typeof require&&require,c=0;c<g.length;c++)a(g[c]);return a}return b}()({"/":[function(a,b,c){"use strict";function d(a){var b=a.length;if(0<b%4)throw new Error("Invalid string. Length must be a multiple of 4");var c=a.indexOf("=");-1===c&&(c=b);var d=c===b?0:4-c%4;return[c,d]}function e(a,b,c){return 3*(b+c)/4-c}function f(a){var b,c,f=d(a),g=f[0],j=f[1],k=new Uint8Array(e(a,g,j)),l=0,m=0<j?g-4:g;for(c=0;c<m;c+=4)b=h[a.charCodeAt(c)]<<18|h[a.charCodeAt(c+1)]<<12|h[a.charCodeAt(c+2)]<<6|h[a.charCodeAt(c+3)],k[l++]=255&b>>16,k[l++]=255&b>>8,k[l++]=255&b;return 2===j&&(b=h[a.charCodeAt(c)]<<2|h[a.charCodeAt(c+1)]>>4,k[l++]=255&b),1===j&&(b=h[a.charCodeAt(c)]<<10|h[a.charCodeAt(c+1)]<<4|h[a.charCodeAt(c+2)]>>2,k[l++]=255&b>>8,k[l++]=255&b),k}c.byteLength=function b(a){var c=d(a),e=c[0],f=c[1];return 3*(e+f)/4-f},c.toByteArray=f;for(var g=[],h=[],j="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/",k=0,l=j.length;k<l;++k)g[k]=j[k],h[j.charCodeAt(k)]=k;h[45]=62,h[95]=63},{}]},{},[])("/")})();
+					const bytesDec = base64js.toByteArray(dataURL.substring(37)).buffer;
+					const bytesBlob = new Blob([bytesDec], { type: "application/octet-stream" });
+					window.eaglercraftXClientBundle = URL.createObjectURL(bytesBlob);
+					console.error("Created " + bytesDec.byteLength + " byte object URL: " + window.eaglercraftXClientBundle);
+					resolve(bytesBlob);
+				});
+		});
+	}
 	var ds = new DecompressionStream("gzip");
 	var result = [];
 	function fetchStream(reader) {
@@ -58,9 +79,7 @@ window.eaglercraftXOptsHints = {
 			return reader.read().then(processData);
 		});
 	}
-	fetch(window.eaglercraftXClientBundle, { cache: "force-cache" })
-		.then((response) => response.blob())
-		.then((blob) => fetchStream(blob.stream().pipeThrough(ds).getReader()));
+	fetchB64PayloadSafe().then((blob) => fetchStream(blob.stream().pipeThrough(ds).getReader()));
 })();
 </script>
 <script type="text/javascript">

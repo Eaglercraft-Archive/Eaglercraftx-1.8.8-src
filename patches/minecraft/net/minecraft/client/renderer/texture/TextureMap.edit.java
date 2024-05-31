@@ -43,7 +43,7 @@
 ~ 	private final Map<String, EaglerTextureAtlasSprite> mapRegisteredSprites;
 ~ 	private final Map<String, EaglerTextureAtlasSprite> mapUploadedSprites;
 
-> CHANGE  3 : 9  @  3 : 4
+> CHANGE  3 : 10  @  3 : 4
 
 ~ 	private final EaglerTextureAtlasSprite missingImage;
 ~ 	private final EaglerTextureAtlasSpritePBR missingImagePBR;
@@ -51,6 +51,7 @@
 ~ 	private int height;
 ~ 	private boolean isEaglerPBRMode = false;
 ~ 	public int eaglerPBRMaterialTexture = -1;
+~ 	private boolean hasAllocatedEaglerPBRMaterialTexture = false;
 
 > INSERT  1 : 7  @  1
 
@@ -114,7 +115,7 @@
 + 	}
 + 
 
-> INSERT  8 : 43  @  8
+> INSERT  8 : 44  @  8
 
 + 		if (copyColorFramebuffer != null) {
 + 			for (int l = 0; l < copyColorFramebuffer.length; ++l) {
@@ -126,6 +127,7 @@
 + 		if (isEaglerPBRMode) {
 + 			if (eaglerPBRMaterialTexture == -1) {
 + 				eaglerPBRMaterialTexture = GlStateManager.generateTexture();
++ 				hasAllocatedEaglerPBRMaterialTexture = false;
 + 			}
 + 			if (copyMaterialFramebuffer == null) {
 + 				GlStateManager.bindTexture(eaglerPBRMaterialTexture);
@@ -302,9 +304,17 @@
 ~ 			stitcher.addSprite(this.missingImage);
 ~ 		}
 
-> INSERT  11 : 28  @  11
+> INSERT  9 : 10  @  9
+
++ 		regenerateIfNotAllocated();
+
+> INSERT  2 : 23  @  2
 
 + 		if (isEaglerPBRMode) {
++ 			if (hasAllocatedEaglerPBRMaterialTexture) {
++ 				EaglercraftGPU.regenerateTexture(eaglerPBRMaterialTexture);
++ 			}
++ 			hasAllocatedEaglerPBRMaterialTexture = true;
 + 			TextureUtil.allocateTextureImpl(eaglerPBRMaterialTexture, this.mipmapLevels, stitcher.getCurrentWidth(),
 + 					stitcher.getCurrentHeight() * 2);
 + 		}

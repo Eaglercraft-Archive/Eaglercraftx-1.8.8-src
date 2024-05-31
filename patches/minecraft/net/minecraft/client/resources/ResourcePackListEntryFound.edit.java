@@ -11,4 +11,12 @@
 
 ~ 		return this.field_148319_c.getResourcePackEaglerDisplayName();
 
+> INSERT  5 : 10  @  5
+
++ 
++ 	@Override
++ 	protected String getEaglerFolderName() {
++ 		return field_148319_c.getResourcePackName();
++ 	}
+
 > EOF

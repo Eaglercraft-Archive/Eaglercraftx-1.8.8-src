@@ -153,11 +153,12 @@ public class EaglerFolderResourcePack extends AbstractResourcePack {
 		List<String> fileNames = Lists.newArrayList();
 		
 		logger.info("Counting files...");
-		ZipInputStream ziss = new ZipInputStream(new EaglerInputStream(file));
 		ZipEntry zipEntry;
-		while ((zipEntry = ziss.getNextEntry()) != null) {
-			if (!zipEntry.isDirectory()) {
-				fileNames.add(zipEntry.getName());
+		try(ZipInputStream ziss = new ZipInputStream(new EaglerInputStream(file))) {
+			while ((zipEntry = ziss.getNextEntry()) != null) {
+				if (!zipEntry.isDirectory()) {
+					fileNames.add(zipEntry.getName());
+				}
 			}
 		}
 		
@@ -195,22 +196,30 @@ public class EaglerFolderResourcePack extends AbstractResourcePack {
 			int totalSize = 0;
 			int totalFiles = 0;
 			int lastProg = 0;
-			ziss = new ZipInputStream(new EaglerInputStream(file));
-			while ((zipEntry = ziss.getNextEntry()) != null) {
-				if (!zipEntry.isDirectory()) {
-					fn = zipEntry.getName();
-					if(fn.length() > prefixLen) {
-						byte[] buffer = new byte[(int)zipEntry.getSize()];
-						int i = 0, j;
-						while(i < buffer.length && (j = ziss.read(buffer, i, buffer.length - i)) != -1) {
-							i += j;
-						}
-						(new VFile2(prefix, folderName, fn.substring(prefixLen))).setAllBytes(buffer);
-						totalSize += buffer.length;
-						++totalFiles;
-						if(totalSize - lastProg > 25000) {
-							lastProg = totalSize;
-							logger.info("Extracted {} files, {} bytes from ZIP file...", totalFiles, totalSize);
+			try(ZipInputStream ziss = new ZipInputStream(new EaglerInputStream(file))) {
+				int sz;
+				while ((zipEntry = ziss.getNextEntry()) != null) {
+					if (!zipEntry.isDirectory()) {
+						fn = zipEntry.getName();
+						if(fn.length() > prefixLen) {
+							byte[] buffer;
+							sz = (int)zipEntry.getSize();
+							if(sz >= 0) {
+								buffer = new byte[sz];
+								int i = 0, j;
+								while(i < buffer.length && (j = ziss.read(buffer, i, buffer.length - i)) != -1) {
+									i += j;
+								}
+							}else {
+								buffer = EaglerInputStream.inputStreamToBytes(ziss);
+							}
+							(new VFile2(prefix, folderName, fn.substring(prefixLen))).setAllBytes(buffer);
+							totalSize += buffer.length;
+							++totalFiles;
+							if(totalSize - lastProg > 25000) {
+								lastProg = totalSize;
+								logger.info("Extracted {} files, {} bytes from ZIP file...", totalFiles, totalSize);
+							}
 						}
 					}
 				}

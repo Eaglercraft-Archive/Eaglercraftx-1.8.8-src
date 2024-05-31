@@ -2058,7 +2058,7 @@ public class EaglerDeferredPipeline {
 
 		GlStateManager.disableBlend();
 
-		if(reprojectionEngineEnable || config.realisticWater) {
+		if(reprojectionEngineEnable || config.is_rendering_realisticWater) {
 
 			// =========== SAVE REPROJECTION DATA FOR NEXT FRAME ============= //
 

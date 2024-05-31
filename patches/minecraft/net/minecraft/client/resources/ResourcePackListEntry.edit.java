@@ -15,7 +15,12 @@
 
 > DELETE  6  @  6 : 8
 
-> INSERT  128 : 158  @  128
+> INSERT  104 : 106  @  104
+
++ 	protected abstract String getEaglerFolderName();
++ 
+
+> INSERT  24 : 54  @  24
 
 + 	private void proceedWithBs(int l, boolean deleteInstead) {
 + 		if (!deleteInstead && l != 1) {
@@ -40,7 +45,7 @@
 + 			if (deleteInstead) {
 + 				this.mc.loadingScreen.eaglerShow(I18n.format("resourcePack.load.deleting"), this.func_148312_b());
 + 				EaglerFolderResourcePack.deleteResourcePack(EaglerFolderResourcePack.RESOURCE_PACKS,
-+ 						this.func_148312_b());
++ 						this.getEaglerFolderName());
 + 			} else {
 + 				this.resourcePacksGUI.getSelectedResourcePacks().add(0, this);
 + 			}

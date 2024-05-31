@@ -40,4 +40,8 @@
 ~ 					bufferedimage.drawLayer(bufferedimage1, 0, 0, bufferedimage1.width, bufferedimage1.height, 0, 0,
 ~ 							bufferedimage1.width, bufferedimage1.height);
 
+> INSERT  7 : 8  @  7
+
++ 		regenerateIfNotAllocated();
+
 > EOF

@@ -14,7 +14,11 @@
 + import net.lax1dude.eaglercraft.v1_8.opengl.EaglercraftGPU;
 + 
 
-> CHANGE  8 : 16  @  8 : 10
+> INSERT  6 : 7  @  6
+
++ 	protected boolean hasAllocated;
+
+> CHANGE  2 : 10  @  2 : 4
 
 ~ 		if (blur != parFlag || mipmap != parFlag2) {
 ~ 			this.blur = parFlag;
@@ -29,5 +33,26 @@
 
 ~ 		EaglercraftGPU.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, i);
 ~ 		EaglercraftGPU.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, short1);
+
+> INSERT  15 : 16  @  15
+
++ 			hasAllocated = false;
+
+> INSERT  12 : 26  @  12
+
++ 
++ 	/**
++ 	 * This function is needed due to EaglercraftX's use of glTexStorage2D to
++ 	 * allocate memory for textures, some OpenGL implementations don't like it when
++ 	 * you call glTexStorage2D on the same texture object more than once
++ 	 */
++ 	protected void regenerateIfNotAllocated() {
++ 		if (this.glTextureId != -1) {
++ 			if (hasAllocated) {
++ 				EaglercraftGPU.regenerateTexture(glTextureId);
++ 			}
++ 			hasAllocated = true;
++ 		}
++ 	}
 
 > EOF

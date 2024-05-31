@@ -20,4 +20,8 @@
 
 ~ 			ImageData bufferedimage = TextureUtil.readBufferedImage(inputstream);
 
+> INSERT  15 : 16  @  15
+
++ 			regenerateIfNotAllocated();
+
 > EOF

@@ -488,6 +488,17 @@ public class EaglercraftGPU {
 		return mapTexturesGL.get(tex);
 	}
 
+	public static final void regenerateTexture(int tex) {
+		ITextureGL webglTex = mapTexturesGL.get(tex);
+		if(webglTex != null) {
+			GlStateManager.unbindTextureIfCached(tex);
+			_wglDeleteTextures(webglTex);
+			mapTexturesGL.set(tex, _wglGenTextures());
+		}else {
+			logger.error("Tried to regenerate a missing texture!");
+		}
+	}
+
 	public static final void drawHighPoly(HighPolyMesh mesh) {
 		if(mesh.vertexCount == 0 || mesh.indexCount == 0 || mesh.vertexArray == null) {
 			return;

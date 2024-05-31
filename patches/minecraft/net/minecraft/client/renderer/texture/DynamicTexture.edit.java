@@ -18,4 +18,8 @@
 ~ 		this(bufferedImage.width, bufferedImage.height);
 ~ 		System.arraycopy(bufferedImage.pixels, 0, dynamicTextureData, 0, bufferedImage.pixels.length);
 
+> INSERT  7 : 8  @  7
+
++ 		this.hasAllocated = true;
+
 > EOF

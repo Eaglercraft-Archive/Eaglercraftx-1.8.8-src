@@ -589,18 +589,25 @@ public class GlStateManager {
 	}
 
 	public static final void deleteTexture(int texture) {
+		unbindTextureIfCached(texture);
 		_wglDeleteTextures(EaglercraftGPU.mapTexturesGL.free(texture));
-		boolean f = false;
+	}
+
+	static final void unbindTextureIfCached(int texture) {
+		boolean f1, f2 = false;
 		for(int i = 0; i < boundTexture.length; ++i) {
 			if(boundTexture[i] == texture) {
-				_wglActiveTexture(GL_TEXTURE0 + i);
+				f1 = i != activeTexture;
+				if(f2 || f1) {
+					_wglActiveTexture(GL_TEXTURE0 + i);
+					f2 = f1;
+				}
 				_wglBindTexture(GL_TEXTURE_2D, null);
 				_wglBindTexture(GL_TEXTURE_3D, null);
 				boundTexture[i] = -1;
-				f = true;
 			}
 		}
-		if(f) {
+		if(f2) {
 			_wglActiveTexture(GL_TEXTURE0 + activeTexture);
 		}
 	}

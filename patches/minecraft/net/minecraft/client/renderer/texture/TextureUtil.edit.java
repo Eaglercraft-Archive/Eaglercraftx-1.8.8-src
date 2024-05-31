@@ -111,7 +111,7 @@
 + 	public static int[] convertComponentOrder(int[] arr) {
 + 		for (int i = 0; i < arr.length; ++i) {
 + 			int j = arr[i];
-+ 			arr[i] = (j & 0xFF000000) | ((j >> 16) & 0xFF) | (j & 0xFF00) | ((j << 16) & 0xFF0000);
++ 			arr[i] = ((j >> 16) & 0xFF) | (j & 0xFF00FF00) | ((j << 16) & 0xFF0000);
 + 		}
 + 		return arr;
 + 	}

@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.function.Consumer;
 
+import net.lax1dude.eaglercraft.v1_8.Base64;
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.EaglercraftVersion;
 import net.lax1dude.eaglercraft.v1_8.profile.EaglerProfile;
@@ -377,10 +378,26 @@ public class PlatformRuntime {
 	}
 
 	@Async
-	public static native ArrayBuffer downloadRemoteURI(String assetPackageURI, boolean forceCache);
+	public static native ArrayBuffer downloadRemoteURI(final String assetPackageURI, final boolean forceCache);
 
-	private static void downloadRemoteURI(String assetPackageURI, boolean useCache, final AsyncCallback<ArrayBuffer> cb) {
-		doFetchDownload(assetPackageURI, useCache ? "force-cache" : "no-store", cb::complete);
+	private static void downloadRemoteURI(final String assetPackageURI, final boolean useCache, final AsyncCallback<ArrayBuffer> cb) {
+		doFetchDownload(assetPackageURI, useCache ? "force-cache" : "no-store",
+				assetPackageURI.startsWith("data:application/octet-stream;base64,") ? (data) -> {
+					if(data != null) {
+						cb.complete(data);
+					}else {
+						logger.error("Caught an error decoding base64 via fetch, doing it the slow way instead...");
+						byte[] b = null;
+						try {
+							b = Base64.decodeBase64(assetPackageURI.substring(37));
+						}catch(Throwable t) {
+							logger.error("Failed to manually decode base64!", t);
+							cb.complete(null);
+							return;
+						}
+						cb.complete(TeaVMUtils.unwrapArrayBuffer(b));
+					}
+				} : cb::complete);
 	}
 	
 	public static boolean isDebugRuntime() {

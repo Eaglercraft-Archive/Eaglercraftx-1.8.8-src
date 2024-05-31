@@ -74,13 +74,17 @@ public class WorldConverterMCA {
 				if (f.isDirectory()) continue;
 				String lowerName = f.getName().toLowerCase();
 				if (!(lowerName.endsWith(".dat") || lowerName.endsWith(".dat_old") || lowerName.endsWith(".mca") || lowerName.endsWith(".mcr") || lowerName.endsWith(".bmp"))) continue;
-				EaglerOutputStream baos = new EaglerOutputStream();
-				int len;
-				while ((len = zis.read(bb)) != -1) {
-					baos.write(bb, 0, len);
+				byte[] b;
+				int sz = (int)f.getSize();
+				if(sz >= 0) {
+					b = new byte[sz];
+					int j = 0, k;
+					while(j < b.length && (k = zis.read(b, j, b.length - j)) != -1) {
+						j += k;
+					}
+				}else {
+					b = EaglerInputStream.inputStreamToBytes(zis);
 				}
-				baos.close();
-				byte[] b = baos.toByteArray();
 				String fileName = f.getName().substring(folderPrefixOffset);
 				if (fileName.equals("level.dat") || fileName.equals("level.dat_old")) {
 					NBTTagCompound worldDatNBT = CompressedStreamTools.readCompressed(new EaglerInputStream(b));

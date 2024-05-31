@@ -60,6 +60,10 @@ public class GLObjectMap<T> {
 		return (T) values[obj];
 	}
 	
+	public void set(int obj, T val) {
+		values[obj] = val;
+	}
+	
 	private void resize() {
 		int oldSize = size;
 		size += size / 2;
