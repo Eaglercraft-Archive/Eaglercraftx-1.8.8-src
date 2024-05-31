@@ -28,6 +28,8 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
 import com.github.difflib.DiffUtils;
+import com.github.difflib.patch.AbstractDelta;
+import com.github.difflib.patch.DeltaType;
 import com.github.difflib.patch.Patch;
 
 import net.lax1dude.eaglercraft.v1_8.buildtools.EaglerBuildToolsConfig;
@@ -442,8 +444,13 @@ public class MergePullRequest {
 		}else {
 			List<String> oldLines = Lines.linesList(oldStr);
 			List<String> newLines = Lines.linesList(newStr);
-			Patch<String> deltas = DiffUtils.diff(oldLines, newLines);
-
+			List<AbstractDelta<String>> deltas = DiffUtils.diff(oldLines, newLines).getDeltas();
+			
+			// hack
+			if(deltas.size() == 0 || (deltas.size() == 1 && deltas.get(0).getType() == DeltaType.EQUAL)) {
+				return false;
+			}
+			
 //			List<String> diffFile = UnifiedDiffUtils.generateUnifiedDiff(outName, outName, oldLines, deltas, ApplyPatchesToZip.patchContextLength);
 //			
 //			if(diffFile.size() == 0) {

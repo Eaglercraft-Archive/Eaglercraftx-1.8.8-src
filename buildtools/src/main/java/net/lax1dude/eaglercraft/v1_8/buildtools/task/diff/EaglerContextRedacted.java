@@ -34,6 +34,10 @@ import com.github.difflib.patch.Patch;
 public class EaglerContextRedacted {
 
 	public static void writeContextRedacted(Patch<String> patch, PrintWriter output) {
+		writeContextRedacted(patch.getDeltas(), output);
+	}
+
+	public static void writeContextRedacted(List<AbstractDelta<String>> deltas, PrintWriter output) {
 		Date theDate = new Date();
 		
 		output.println();
@@ -46,7 +50,6 @@ public class EaglerContextRedacted {
 
 		int lastSourcePos = 0;
 		int lastTargetPos = 0;
-		List<AbstractDelta<String>> deltas = patch.getDeltas();
 		delta_itr: for(int i = 0, l = deltas.size(); i < l; ++i) {
 			AbstractDelta<String> delta = deltas.get(i);
 			
