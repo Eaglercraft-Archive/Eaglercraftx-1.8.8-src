@@ -1099,7 +1099,9 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 														con.setActiveSessionHandler(StateRegistry.PLAY, stupid4Constructor.newInstance(player, bungee));
 														
 														bungee.getEventManager().fire(new PostLoginEvent(player)).thenCompose((ignored) -> {
-															ctx.channel().attr(EaglerPipeline.CONNECTION_INSTANCE).get().hasBeenForwarded = true;
+															EaglerConnectionInstance conInstance = ctx.channel().attr(EaglerPipeline.CONNECTION_INSTANCE).get();
+															conInstance.userConnection = player;
+															conInstance.hasBeenForwarded = true;
 															Optional<RegisteredServer> initialFromConfig = player.getNextServerToTry();
 															PlayerChooseInitialServerEvent event2 = new PlayerChooseInitialServerEvent(player, initialFromConfig.orElse(null));
 															return bungee.getEventManager().fire(event2).thenRunAsync(() -> {
