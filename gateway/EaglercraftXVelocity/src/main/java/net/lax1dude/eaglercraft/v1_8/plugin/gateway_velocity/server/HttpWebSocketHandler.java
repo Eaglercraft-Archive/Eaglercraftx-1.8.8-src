@@ -1233,11 +1233,18 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 					EaglerXVelocity.proxy().getEventManager().fire(evt).thenAccept(evt2 -> {
 						if(!handlerF.isClosed()) {
 							((MOTDQueryHandler)handlerF).sendToUser();
+							if(!handlerF.isClosed() && !handlerF.shouldKeepAlive()) {
+								handlerF.close();
+							}
 						}
+					}).exceptionally((excep) -> {
+						EaglerXVelocity.logger().error("Failed to handle EaglercraftMOTDEvent!", excep);
+						if(!handlerF.isClosed()) {
+							handlerF.close();
+						}
+						return null;
 					});
-				}
-				if(!handler.isClosed() && !handler.shouldKeepAlive()) {
-					connectionClosed = true;
+				}else if(!handler.isClosed() && !handler.shouldKeepAlive()) {
 					handler.close();
 				}
 			}else {
