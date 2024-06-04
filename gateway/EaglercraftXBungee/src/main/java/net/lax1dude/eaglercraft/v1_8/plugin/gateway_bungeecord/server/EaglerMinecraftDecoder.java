@@ -108,29 +108,42 @@ public class EaglerMinecraftDecoder extends MessageToMessageDecoder<WebSocketFra
 	}
 
 	private PacketWrapper wrapPacket(DefinedPacket packet, ByteBuf buf, Protocol protocol) {
-		PacketWrapper pkt;
-		if (packetWrapperConstructor != null) {
-			try {
-				pkt = packetWrapperConstructor.newInstance(packet, buf);
-				buf.retain();
-				return pkt;
-			} catch (IllegalAccessException | InvocationTargetException | InstantiationException var14) {
-				throw new RuntimeException(var14);
-			}
+		boolean isInputDirect = buf.isDirect();
+		if(!isInputDirect) {
+			int len = buf.readableBytes();
+			ByteBuf newBuf = buf.alloc().directBuffer(len, len);
+			buf.readBytes(newBuf, len);
+			buf = newBuf;
 		}
-
 		try {
-			pkt = new PacketWrapper(packet, buf, protocol);
-			buf.retain();
-			return pkt;
-		} catch (NoSuchMethodError var15) {
+			PacketWrapper pkt;
+			if (packetWrapperConstructor != null) {
+				try {
+					pkt = packetWrapperConstructor.newInstance(packet, buf);
+					buf.retain();
+					return pkt;
+				} catch (IllegalAccessException | InvocationTargetException | InstantiationException var14) {
+					throw new RuntimeException(var14);
+				}
+			}
+	
 			try {
-				packetWrapperConstructor = PacketWrapper.class.getDeclaredConstructor(DefinedPacket.class, ByteBuf.class);
-				pkt = packetWrapperConstructor.newInstance(packet, buf);
+				pkt = new PacketWrapper(packet, buf, protocol);
 				buf.retain();
 				return pkt;
-			} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | InstantiationException var13) {
-				throw new RuntimeException(var13);
+			} catch (NoSuchMethodError var15) {
+				try {
+					packetWrapperConstructor = PacketWrapper.class.getDeclaredConstructor(DefinedPacket.class, ByteBuf.class);
+					pkt = packetWrapperConstructor.newInstance(packet, buf);
+					buf.retain();
+					return pkt;
+				} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | InstantiationException var13) {
+					throw new RuntimeException(var13);
+				}
+			}
+		}finally {
+			if(!isInputDirect) {
+				buf.release();
 			}
 		}
 	}

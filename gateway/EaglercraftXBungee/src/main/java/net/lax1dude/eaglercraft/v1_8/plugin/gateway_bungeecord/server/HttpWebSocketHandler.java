@@ -815,7 +815,7 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 						
 						EaglerXBungee.logger().info("[" + ctx.channel().remoteAddress() + "]: Logged in as '" + usernameStr + "'");
 						
-						final UserConnection userCon = eaglerCon.userConnection = new UserConnection(bungee, ch, usernameStr, initialHandler);
+						final UserConnection userCon = new UserConnection(bungee, ch, usernameStr, initialHandler);
 						userCon.setCompressionThreshold(-1);
 						try {
 							if (!userCon.init()) {
@@ -991,6 +991,7 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 						Callback<PostLoginEvent> complete = new Callback<PostLoginEvent>() {
 							@Override
 							public void done(PostLoginEvent result, Throwable error) {
+								eaglerCon.userConnection = userCon;
 								eaglerCon.hasBeenForwarded = true;
 								if (ch.isClosed()) {
 									return;

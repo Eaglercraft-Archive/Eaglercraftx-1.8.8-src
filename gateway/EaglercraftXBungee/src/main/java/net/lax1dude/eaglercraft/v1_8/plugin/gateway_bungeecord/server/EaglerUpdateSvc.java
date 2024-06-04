@@ -45,6 +45,7 @@ public class EaglerUpdateSvc {
 
 	private static final List<ClientCertificateHolder> certs = new ArrayList();
 	private static final Map<String,CachedClientCertificate> certsCache = new HashMap();
+	private static final Set<String> deadURLS = new HashSet();
 
 	private static class CachedClientCertificate {
 		private final ClientCertificateHolder cert;
@@ -110,6 +111,8 @@ public class EaglerUpdateSvc {
 				if(code / 100 != 2) {
 					con.disconnect();
 					throw new IOException("Response code was " + code);
+				}else {
+					deadURLS.remove(str);
 				}
 				ByteArrayOutputStream bao = new ByteArrayOutputStream(32767);
 				try(InputStream is = con.getInputStream()) {
@@ -140,8 +143,10 @@ public class EaglerUpdateSvc {
 				}
 				log.info("Downloading new certificate: " + str);
 			}catch(Throwable t) {
-				log.severe("Failed to download certificate: " + str);
-				log.severe("Reason: " + t.toString());
+				if(deadURLS.add(str)) {
+					log.severe("Failed to download certificate: " + str);
+					log.severe("Reason: " + t.toString());
+				}
 			}
 		}
 		long millis = System.currentTimeMillis();
