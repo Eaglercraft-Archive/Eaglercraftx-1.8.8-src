@@ -36,7 +36,7 @@ public class EaglerChannelWrapper extends ChannelWrapper {
 		getHandle().pipeline().get(EaglerMinecraftDecoder.class).setProtocolVersion(protocol);
 	}
 
-	private Protocol lastProtocol = null;
+	private Protocol lastProtocol = Protocol.GAME;
 
 	public Protocol getEncodeProtocol() {
 		EaglerMinecraftEncoder enc;

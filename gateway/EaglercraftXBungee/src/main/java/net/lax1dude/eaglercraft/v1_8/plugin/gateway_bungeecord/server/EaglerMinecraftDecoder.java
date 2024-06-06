@@ -111,7 +111,7 @@ public class EaglerMinecraftDecoder extends MessageToMessageDecoder<WebSocketFra
 		boolean isInputDirect = buf.isDirect();
 		if(!isInputDirect) {
 			int len = buf.readableBytes();
-			ByteBuf newBuf = buf.alloc().directBuffer(len, len);
+			ByteBuf newBuf = buf.alloc().directBuffer(len);
 			buf.readBytes(newBuf, len);
 			buf = newBuf;
 		}
