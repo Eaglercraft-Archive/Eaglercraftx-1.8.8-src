@@ -5,13 +5,14 @@
 # Version: 1.0
 # Author: lax1dude
 
-> INSERT  2 : 7  @  2
+> INSERT  2 : 8  @  2
 
 + import net.lax1dude.eaglercraft.v1_8.minecraft.EaglerTextureAtlasSprite;
 + import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.VertexMarkerState;
 + import net.lax1dude.eaglercraft.v1_8.vector.Matrix4f;
 + import net.lax1dude.eaglercraft.v1_8.vector.Vector3f;
 + import net.lax1dude.eaglercraft.v1_8.vector.Vector4f;
++ import net.minecraft.client.Minecraft;
 
 > DELETE  1  @  1 : 6
 
@@ -70,9 +71,11 @@
 ~ 			float[] sprite, EaglerTextureAtlasSprite modelRotationIn, ModelRotation partRotation,
 ~ 			BlockPartRotation uvLocked, boolean shade, boolean parFlag2, Vector3f calcNormal) {
 
-> CHANGE  1 : 2  @  1 : 2
+> CHANGE  1 : 4  @  1 : 2
 
-~ 		int i = (parFlag2 && stride != 8) ? this.getFaceShadeColor(enumfacing) : -1;
+~ 		int i = (parFlag2 && (stride != 8 || !Minecraft.getMinecraft().gameSettings.shaders))
+~ 				? this.getFaceShadeColor(enumfacing)
+~ 				: -1;
 
 > CHANGE  7 : 9  @  7 : 8
 
@@ -84,12 +87,18 @@
 ~ 			EaglerTextureAtlasSprite sprite, BlockFaceUV faceUV, EnumFacing facing, Vector3f calcNormal) {
 ~ 		int i = storeIndex * stride;
 
-> INSERT  4 : 27  @  4
+> INSERT  4 : 33  @  4
 
 + 		if (stride == 8) {
-+ 			faceData[i] = Float.floatToRawIntBits(position.x * VertexMarkerState.localCoordDeriveHackX);
-+ 			faceData[i + 1] = Float.floatToRawIntBits(position.y * VertexMarkerState.localCoordDeriveHackY);
-+ 			faceData[i + 2] = Float.floatToRawIntBits(position.z * VertexMarkerState.localCoordDeriveHackZ);
++ 			if (!Minecraft.getMinecraft().gameSettings.shaders) {
++ 				faceData[i] = Float.floatToRawIntBits(position.x);
++ 				faceData[i + 1] = Float.floatToRawIntBits(position.y);
++ 				faceData[i + 2] = Float.floatToRawIntBits(position.z);
++ 			} else {
++ 				faceData[i] = Float.floatToRawIntBits(position.x * VertexMarkerState.localCoordDeriveHackX);
++ 				faceData[i + 1] = Float.floatToRawIntBits(position.y * VertexMarkerState.localCoordDeriveHackY);
++ 				faceData[i + 2] = Float.floatToRawIntBits(position.z * VertexMarkerState.localCoordDeriveHackZ);
++ 			}
 + 			if (calcNormal != null) {
 + 				int x = (byte) ((int) (calcNormal.x * 127.0F)) & 255;
 + 				int y = (byte) ((int) (calcNormal.y * 127.0F)) & 255;

@@ -11,8 +11,16 @@
 
 > DELETE  5  @  5 : 6
 
-> CHANGE  15 : 16  @  15 : 16
+> INSERT  2 : 7  @  2
 
-~ 		EaglercraftRandom random = new EaglercraftRandom(parLong1);
++ 
++ 	public MapGenCavesHell(boolean scramble) {
++ 		super(scramble);
++ 	}
++ 
+
+> CHANGE  13 : 14  @  13 : 14
+
+~ 		EaglercraftRandom random = new EaglercraftRandom(parLong1, this.rand.isScramble());
 
 > EOF

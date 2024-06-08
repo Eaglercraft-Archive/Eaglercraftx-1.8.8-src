@@ -11,6 +11,17 @@
 
 > CHANGE  6 : 7  @  6 : 7
 
-~ 	protected EaglercraftRandom rand = new EaglercraftRandom();
+~ 	protected EaglercraftRandom rand;
+
+> INSERT  2 : 10  @  2
+
++ 	public MapGenBase() {
++ 		this(true);
++ 	}
++ 
++ 	public MapGenBase(boolean scramble) {
++ 		rand = new EaglercraftRandom(scramble);
++ 	}
++ 
 
 > EOF

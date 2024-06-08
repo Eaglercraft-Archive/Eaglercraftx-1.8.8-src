@@ -7,4 +7,11 @@
 
 > DELETE  9  @  9 : 11
 
+> INSERT  120 : 124  @  120
+
++ 
++ 	public float getHeldItemBrightnessEagler() {
++ 		return this.block.getLightValue() * 0.06667f;
++ 	}
+
 > EOF

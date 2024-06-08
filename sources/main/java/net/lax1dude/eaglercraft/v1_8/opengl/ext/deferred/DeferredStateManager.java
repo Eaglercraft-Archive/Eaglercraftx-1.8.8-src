@@ -107,7 +107,7 @@ public class DeferredStateManager {
 	}
 
 	public static final boolean isInDeferredPass() {
-		return GlStateManager.isExtensionPipeline();
+		return EaglerDeferredPipeline.instance != null && GlStateManager.isExtensionPipeline();
 	}
 
 	public static final boolean isInForwardPass() {
@@ -153,10 +153,17 @@ public class DeferredStateManager {
 	}
 
 	public static final void reportForwardRenderObjectPosition2(float x, float y, float z) {
-		float posX = (float)((x + TileEntityRendererDispatcher.staticPlayerX) - (MathHelper.floor_double(TileEntityRendererDispatcher.staticPlayerX / 16.0) << 4));
-		float posY = (float)((y + TileEntityRendererDispatcher.staticPlayerY) - (MathHelper.floor_double(TileEntityRendererDispatcher.staticPlayerY / 16.0) << 4));
-		float posZ = (float)((z + TileEntityRendererDispatcher.staticPlayerZ) - (MathHelper.floor_double(TileEntityRendererDispatcher.staticPlayerZ / 16.0) << 4));
-		reportForwardRenderObjectPosition((int)posX, (int)posY, (int)posZ);
+		EaglerDeferredPipeline instance = EaglerDeferredPipeline.instance;
+		if(instance != null && enableForwardRender) {
+			EaglerDeferredConfig cfg = instance.config;
+			if(!cfg.is_rendering_dynamicLights || !cfg.shaderPackInfo.DYNAMIC_LIGHTS) {
+				return;
+			}
+			float posX = (float)((x + TileEntityRendererDispatcher.staticPlayerX) - (MathHelper.floor_double(TileEntityRendererDispatcher.staticPlayerX / 16.0) << 4));
+			float posY = (float)((y + TileEntityRendererDispatcher.staticPlayerY) - (MathHelper.floor_double(TileEntityRendererDispatcher.staticPlayerY / 16.0) << 4));
+			float posZ = (float)((z + TileEntityRendererDispatcher.staticPlayerZ) - (MathHelper.floor_double(TileEntityRendererDispatcher.staticPlayerZ / 16.0) << 4));
+			instance.loadLightSourceBucket((int)posX, (int)posY, (int)posZ);
+		}
 	}
 
 	public static final void setHDRTranslucentPassBlendFunc() {

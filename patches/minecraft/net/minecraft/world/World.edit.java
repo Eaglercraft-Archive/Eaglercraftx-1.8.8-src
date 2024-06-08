@@ -64,7 +64,16 @@
 
 ~ 			return Chunk.getNoSkyLightValue();
 
-> CHANGE  1299 : 1300  @  1299 : 1300
+> CHANGE  74 : 80  @  74 : 75
+
+~ 		if (lightValue < 0) {
+~ 			j += -lightValue;
+~ 			if (j > 15) {
+~ 				j = 15;
+~ 			}
+~ 		} else if (j < lightValue) {
+
+> CHANGE  1224 : 1225  @  1224 : 1225
 
 ~ 						this.worldInfo.setThunderTime((this.rand.nextInt(12000) / 2) + 3600);
 

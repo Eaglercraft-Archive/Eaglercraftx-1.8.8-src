@@ -27,4 +27,11 @@
 
 ~ 			for (int i = 0, l = list.size(); i < l; ++i) {
 
+> INSERT  156 : 160  @  156
+
++ 	protected float getEaglerDynamicLightsValueSimple(float partialTicks) {
++ 		return 1.0f;
++ 	}
++ 
+
 > EOF

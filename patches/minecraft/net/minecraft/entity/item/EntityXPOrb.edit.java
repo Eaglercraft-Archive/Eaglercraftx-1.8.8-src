@@ -9,7 +9,14 @@
 
 + import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.DynamicLightManager;
 
-> INSERT  205 : 216  @  205
+> INSERT  55 : 59  @  55
+
++ 	protected float getEaglerDynamicLightsValueSimple(float partialTicks) {
++ 		return 0.25f;
++ 	}
++ 
+
+> INSERT  150 : 161  @  150
 
 + 
 + 	protected void renderDynamicLightsEaglerAt(double entityX, double entityY, double entityZ, double renderX,

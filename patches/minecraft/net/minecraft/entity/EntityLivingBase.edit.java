@@ -40,7 +40,7 @@
 ~ 		for (int i = 0; i < inv.length; ++i) {
 ~ 			ItemStack itemstack1 = inv[i];
 
-> INSERT  1254 : 1265  @  1254
+> INSERT  1254 : 1277  @  1254
 
 + 
 + 	protected void renderDynamicLightsEaglerAt(double entityX, double entityY, double entityZ, double renderX,
@@ -53,5 +53,17 @@
 + 		}
 + 	}
 + 
++ 	protected float getEaglerDynamicLightsValueSimple(float partialTicks) {
++ 		float f = super.getEaglerDynamicLightsValueSimple(partialTicks);
++ 		ItemStack itm = this.getHeldItem();
++ 		if (itm != null && itm.stackSize > 0) {
++ 			Item item = itm.getItem();
++ 			if (item != null) {
++ 				float f2 = item.getHeldItemBrightnessEagler();
++ 				f = Math.min(f + f2 * 0.5f, 1.0f) + f2 * 0.5f;
++ 			}
++ 		}
++ 		return f;
++ 	}
 
 > EOF

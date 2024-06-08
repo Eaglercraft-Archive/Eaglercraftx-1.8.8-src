@@ -91,7 +91,7 @@
 
 ~ 	public int guiScale = 3;
 
-> INSERT  3 : 17  @  3
+> INSERT  3 : 18  @  3
 
 + 	public boolean hudFps = true;
 + 	public boolean hudCoords = true;
@@ -107,6 +107,7 @@
 + 	public EaglerDeferredConfig deferredShaderConf = new EaglerDeferredConfig();
 + 	public boolean enableUpdateSvc = true;
 + 	public boolean enableFNAWSkins = true;
++ 	public boolean enableDynamicLights = false;
 
 > CHANGE  1 : 7  @  1 : 2
 
@@ -157,7 +158,7 @@
 
 > DELETE  20  @  20 : 37
 
-> INSERT  13 : 62  @  13
+> INSERT  13 : 67  @  13
 
 + 		if (parOptions == GameSettings.Options.HUD_FPS) {
 + 			this.hudFps = !this.hudFps;
@@ -208,6 +209,11 @@
 + 			this.enableVsync = !this.enableVsync;
 + 		}
 + 
++ 		if (parOptions == GameSettings.Options.EAGLER_DYNAMIC_LIGHTS) {
++ 			this.enableDynamicLights = !this.enableDynamicLights;
++ 			this.mc.renderGlobal.loadRenderers();
++ 		}
++ 
 
 > CHANGE  23 : 24  @  23 : 34
 
@@ -217,7 +223,7 @@
 
 > DELETE  2  @  2 : 4
 
-> INSERT  8 : 30  @  8
+> INSERT  8 : 32  @  8
 
 + 		case HUD_COORDS:
 + 			return this.hudCoords;
@@ -241,6 +247,8 @@
 + 			return this.enableFNAWSkins;
 + 		case EAGLER_VSYNC:
 + 			return this.enableVsync;
++ 		case EAGLER_DYNAMIC_LIGHTS:
++ 			return this.enableDynamicLights;
 
 > CHANGE  43 : 46  @  43 : 47
 
@@ -451,11 +459,15 @@
 
 ~ 					for (EnumPlayerModelParts enumplayermodelparts : EnumPlayerModelParts._VALUES) {
 
-> INSERT  4 : 10  @  4
+> INSERT  4 : 14  @  4
 
 + 
 + 					if (astring[0].equals("enableFNAWSkins")) {
 + 						this.enableFNAWSkins = astring[1].equals("true");
++ 					}
++ 
++ 					if (astring[0].equals("enableDynamicLights")) {
++ 						this.enableDynamicLights = astring[1].equals("true");
 + 					}
 + 
 + 					deferredShaderConf.readOption(astring[0], astring[1]);
@@ -509,7 +521,7 @@
 
 > DELETE  13  @  13 : 24
 
-> INSERT  5 : 21  @  5
+> INSERT  5 : 22  @  5
 
 + 			printwriter.println("hudFps:" + this.hudFps);
 + 			printwriter.println("hudWorld:" + this.hudWorld);
@@ -527,6 +539,7 @@
 + 			printwriter.println("voiceSpeakVolume:" + this.voiceSpeakVolume);
 + 			printwriter.println("voicePTTKey:" + this.voicePTTKey);
 + 			printwriter.println("enableFNAWSkins:" + this.enableFNAWSkins);
++ 			printwriter.println("enableDynamicLights:" + this.enableDynamicLights);
 
 > CHANGE  5 : 8  @  5 : 6
 
@@ -576,7 +589,7 @@
 
 > CHANGE  4 : 5  @  4 : 5
 
-~ 		RENDER_DISTANCE("options.renderDistance", true, false, 1.0F, 16.0F, 1.0F),
+~ 		RENDER_DISTANCE("options.renderDistance", true, false, 1.0F, 18.0F, 1.0F),
 
 > CHANGE  8 : 10  @  8 : 12
 
@@ -592,6 +605,6 @@
 ~ 		FOG("options.fog", false, true), FXAA("options.fxaa", false, false),
 ~ 		FULLSCREEN("options.fullscreen", false, true),
 ~ 		FNAW_SKINS("options.skinCustomisation.enableFNAWSkins", false, true),
-~ 		EAGLER_VSYNC("options.vsync", false, true);
+~ 		EAGLER_VSYNC("options.vsync", false, true), EAGLER_DYNAMIC_LIGHTS("options.dynamicLights", false, true);
 
 > EOF

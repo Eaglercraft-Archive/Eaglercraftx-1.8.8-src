@@ -3,7 +3,7 @@ package net.lax1dude.eaglercraft.v1_8;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformRuntime;
 
 /**
- * Copyright (c) 2022 lax1dude. All Rights Reserved.
+ * Copyright (c) 2022-2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -25,19 +25,46 @@ public class EaglercraftRandom {
 
 	private static final double DOUBLE_UNIT = 0x1.0p-53;
 	private long seed = 69;
-
-	private static int yee = 0;
+	private final boolean enableScramble;
 
 	public EaglercraftRandom() {
 		this(PlatformRuntime.randomSeed());
 	}
 
 	public EaglercraftRandom(long seed) {
+		this(seed, true);
+	}
+
+	public EaglercraftRandom(boolean scramble) {
+		this(PlatformRuntime.randomSeed(), scramble);
+	}
+
+	/**
+	 * Older versions of EaglercraftX (and Eaglercraft) are missing the
+	 * "initialScramble" function from their setSeed function, which was what caused
+	 * world generation to not match vanilla. The "enableScramble" boolean is used
+	 * when players play on an old world created before the bug was fixed.
+	 */
+	public EaglercraftRandom(long seed, boolean scramble) {
+		enableScramble = scramble;
 		setSeed(seed);
 	}
 
+	private static long initialScramble(long seed) {
+		return (seed ^ multiplier) & mask;
+	}
+
 	public void setSeed(long yeed) {
-		seed = yeed;
+		if(enableScramble) {
+			seed = initialScramble(yeed);
+		}else {
+			seed = yeed;
+		}
+		haveNextNextGaussian = true;
+	}
+
+	public boolean isScramble() {
+		return enableScramble;
 	}
 
 	protected int next(int bits) {

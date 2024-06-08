@@ -28,4 +28,11 @@
 
 ~ 	protected static EaglercraftRandom itemRand = new EaglercraftRandom();
 
+> INSERT  884 : 888  @  884
+
++ 
++ 	public float getHeldItemBrightnessEagler() {
++ 		return 0.0f;
++ 	}
+
 > EOF

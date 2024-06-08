@@ -36,4 +36,11 @@
 
 ~ 	public void setParticleIcon(EaglerTextureAtlasSprite icon) {
 
+> INSERT  30 : 34  @  30
+
++ 
++ 	protected float getEaglerDynamicLightsValueSimple(float partialTicks) {
++ 		return 0.0f;
++ 	}
+
 > EOF

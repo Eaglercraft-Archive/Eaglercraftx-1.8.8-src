@@ -25,11 +25,11 @@ public class IPCPacketManager {
 	
 	public static final HashMap<Integer, Supplier<IPCPacketBase>> mappings = new HashMap();
 
-	public static final IPCInputStream IPC_INPUT_STREAM = new IPCInputStream();
-	public static final IPCOutputStream IPC_OUTPUT_STREAM = new IPCOutputStream();
+	public final IPCInputStream IPC_INPUT_STREAM = new IPCInputStream();
+	public final IPCOutputStream IPC_OUTPUT_STREAM = new IPCOutputStream();
 
-	public static final DataInputStream IPC_DATA_INPUT_STREAM = new DataInputStream(IPC_INPUT_STREAM);
-	public static final DataOutputStream IPC_DATA_OUTPUT_STREAM = new DataOutputStream(IPC_OUTPUT_STREAM);
+	public final DataInputStream IPC_DATA_INPUT_STREAM = new DataInputStream(IPC_INPUT_STREAM);
+	public final DataOutputStream IPC_DATA_OUTPUT_STREAM = new DataOutputStream(IPC_OUTPUT_STREAM);
 	
 	static {
 		mappings.put(IPCPacket00StartServer.ID, IPCPacket00StartServer::new);
@@ -60,7 +60,7 @@ public class IPCPacketManager {
 		mappings.put(IPCPacketFFProcessKeepAlive.ID, IPCPacketFFProcessKeepAlive::new);
 	}
 	
-	public static byte[] IPCSerialize(IPCPacketBase pkt) throws IOException {
+	public byte[] IPCSerialize(IPCPacketBase pkt) throws IOException {
 		
 		IPC_OUTPUT_STREAM.feedBuffer(new byte[pkt.size() + 1], pkt.getClass().getSimpleName());
 		IPC_OUTPUT_STREAM.write(pkt.id());
@@ -69,7 +69,7 @@ public class IPCPacketManager {
 		return IPC_OUTPUT_STREAM.returnBuffer();
 	}
 	
-	public static IPCPacketBase IPCDeserialize(byte[] pkt) throws IOException {
+	public IPCPacketBase IPCDeserialize(byte[] pkt) throws IOException {
 		
 		IPC_INPUT_STREAM.feedBuffer(pkt);
 		int i = IPC_INPUT_STREAM.read();

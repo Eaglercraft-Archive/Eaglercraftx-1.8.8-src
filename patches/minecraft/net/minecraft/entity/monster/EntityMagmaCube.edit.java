@@ -7,4 +7,11 @@
 
 > DELETE  3  @  3 : 4
 
+> INSERT  39 : 43  @  39
+
++ 	protected float getEaglerDynamicLightsValueSimple(float partialTicks) {
++ 		return 1.0f;
++ 	}
++ 
+
 > EOF

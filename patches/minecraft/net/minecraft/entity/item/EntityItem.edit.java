@@ -25,7 +25,7 @@
 ~ 		for (int i = 0, l = lst.size(); i < l; ++i) {
 ~ 			this.combineItems(lst.get(i));
 
-> INSERT  258 : 267  @  258
+> INSERT  258 : 280  @  258
 
 + 
 + 	public boolean eaglerEmissiveFlag = false;
@@ -35,6 +35,19 @@
 + 		super.renderDynamicLightsEaglerAt(entityX, entityY, entityZ, renderX, renderY, renderZ, partialTicks,
 + 				isInFrustum);
 + 		eaglerEmissiveFlag = Minecraft.getMinecraft().entityRenderer.renderItemEntityLight(this, 0.1f);
++ 	}
++ 
++ 	protected float getEaglerDynamicLightsValueSimple(float partialTicks) {
++ 		float f = super.getEaglerDynamicLightsValueSimple(partialTicks);
++ 		ItemStack itm = this.getEntityItem();
++ 		if (itm != null && itm.stackSize > 0) {
++ 			Item item = itm.getItem();
++ 			if (item != null) {
++ 				float f2 = item.getHeldItemBrightnessEagler() * 0.75f;
++ 				f = Math.min(f + f2 * 0.5f, 1.0f) + f2 * 0.5f;
++ 			}
++ 		}
++ 		return f;
 + 	}
 
 > EOF

@@ -15,8 +15,16 @@
 
 ~ 	private final EaglercraftRandom hellRNG;
 
-> CHANGE  31 : 32  @  31 : 32
+> CHANGE  20 : 22  @  20 : 22
 
-~ 		this.hellRNG = new EaglercraftRandom(parLong1);
+~ 	private final MapGenNetherBridge genNetherBridge;
+~ 	private final MapGenBase netherCaveGenerator;
+
+> CHANGE  9 : 13  @  9 : 10
+
+~ 		boolean scramble = !worldIn.getWorldInfo().isOldEaglercraftRandom();
+~ 		this.hellRNG = new EaglercraftRandom(parLong1, scramble);
+~ 		this.genNetherBridge = new MapGenNetherBridge(scramble);
+~ 		this.netherCaveGenerator = new MapGenCavesHell(scramble);
 
 > EOF

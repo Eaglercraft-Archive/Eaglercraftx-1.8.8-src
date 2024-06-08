@@ -49,8 +49,8 @@ public class InstancedParticleRenderer {
 	private static IUniformGL u_matrixTransform = null;
 	private static FloatBuffer matrixCopyBuffer = null;
 	private static IUniformGL u_texCoordSize2f_particleSize1f = null;
-	private static IUniformGL u_transformParam_1_2_3_4_f = null;
-	private static IUniformGL u_transformParam_5_f = null;
+	private static IUniformGL u_transformParam_1_2_5_f = null;
+	private static IUniformGL u_transformParam_3_4_f = null;
 	private static IUniformGL u_color4f = null;
 
 	private static IBufferArrayGL vertexArray = null;
@@ -154,8 +154,8 @@ public class InstancedParticleRenderer {
 
 		u_matrixTransform = _wglGetUniformLocation(shaderProgram, "u_matrixTransform");
 		u_texCoordSize2f_particleSize1f = _wglGetUniformLocation(shaderProgram, "u_texCoordSize2f_particleSize1f");
-		u_transformParam_1_2_3_4_f = _wglGetUniformLocation(shaderProgram, "u_transformParam_1_2_3_4_f");
-		u_transformParam_5_f = _wglGetUniformLocation(shaderProgram, "u_transformParam_5_f");
+		u_transformParam_1_2_5_f = _wglGetUniformLocation(shaderProgram, "u_transformParam_1_2_5_f");
+		u_transformParam_3_4_f = _wglGetUniformLocation(shaderProgram, "u_transformParam_3_4_f");
 		u_color4f = _wglGetUniformLocation(shaderProgram, "u_color4f");
 
 		_wglUniform1i(_wglGetUniformLocation(shaderProgram, "u_inputTexture"), 0);
@@ -260,17 +260,17 @@ public class InstancedParticleRenderer {
 		}
 
 		if (transformParam1 != stateTransformParam1 || transformParam2 != stateTransformParam2
-				|| transformParam3 != stateTransformParam3 || transformParam4 != stateTransformParam4) {
-			_wglUniform4f(u_transformParam_1_2_3_4_f, transformParam1, transformParam2, transformParam3, transformParam4);
+				|| transformParam5 != stateTransformParam5) {
+			_wglUniform3f(u_transformParam_1_2_5_f, transformParam1, transformParam2, transformParam5);
 			stateTransformParam1 = transformParam1;
 			stateTransformParam2 = transformParam2;
-			stateTransformParam3 = transformParam3;
-			stateTransformParam4 = transformParam4;
+			stateTransformParam5 = transformParam5;
 		}
 
-		if (transformParam5 != stateTransformParam5) {
-			_wglUniform1f(u_transformParam_5_f, transformParam5);
-			stateTransformParam5 = transformParam5;
+		if (transformParam3 != stateTransformParam3 || transformParam4 != stateTransformParam4) {
+			_wglUniform2f(u_transformParam_3_4_f, transformParam3, transformParam4);
+			stateTransformParam3 = transformParam3;
+			stateTransformParam4 = transformParam4;
 		}
 
 		int serial = GlStateManager.stateColorSerial;
@@ -317,6 +317,10 @@ public class InstancedParticleRenderer {
 		particleBuffer.limit(l);
 
 		_wglDrawArraysInstanced(GL_TRIANGLES, 0, 6, particleCount);
+	}
+
+	public static void stupidColorSetHack(IUniformGL color4f) {
+		_wglUniform4f(color4f, GlStateManager.stateColorR, GlStateManager.stateColorG, GlStateManager.stateColorB, GlStateManager.stateColorA);
 	}
 
 }

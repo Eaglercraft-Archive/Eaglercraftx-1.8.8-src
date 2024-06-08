@@ -17,7 +17,18 @@
 
 > DELETE  11  @  11 : 16
 
-> CHANGE  30 : 31  @  30 : 31
+> INSERT  7 : 15  @  7
+
++ 	public MapGenStructure() {
++ 		super();
++ 	}
++ 
++ 	public MapGenStructure(boolean scramble) {
++ 		super(scramble);
++ 	}
++ 
+
+> CHANGE  23 : 24  @  23 : 24
 
 ~ 						HString.format("%d,%d", new Object[] { Integer.valueOf(i), Integer.valueOf(j) }));
 

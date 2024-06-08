@@ -162,7 +162,11 @@
 ~ 	public EaglercraftRandom getRandomWithSeed(long i) {
 ~ 		return new EaglercraftRandom(this.worldObj.getSeed() + (long) (this.xPosition * this.xPosition * 4987142)
 
-> CHANGE  92 : 93  @  92 : 93
+> CHANGE  1 : 2  @  1 : 2
+
+~ 				+ (long) (this.zPosition * 389711) ^ i, !this.worldObj.getWorldInfo().isOldEaglercraftRandom());
+
+> CHANGE  90 : 91  @  90 : 91
 
 ~ 			BlockPos blockpos = (BlockPos) this.tileEntityPosQueue.remove(0);
 

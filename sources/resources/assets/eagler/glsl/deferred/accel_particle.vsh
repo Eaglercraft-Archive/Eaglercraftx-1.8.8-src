@@ -43,8 +43,8 @@ uniform mat4 u_matrixTransform;
 #endif
 
 uniform vec3 u_texCoordSize2f_particleSize1f;
-uniform vec4 u_transformParam_1_2_3_4_f;
-uniform float u_transformParam_5_f;
+uniform vec3 u_transformParam_1_2_5_f;
+uniform vec2 u_transformParam_3_4_f;
 
 void main() {
 	v_color4f = p_color4f.bgra;
@@ -59,11 +59,8 @@ void main() {
 
 	vec3 pos3f = p_position3f;
 	vec2 spos2f = a_position2f * particleSize;
-	pos3f.x += u_transformParam_1_2_3_4_f.x * spos2f.x;
-	pos3f.x += u_transformParam_1_2_3_4_f.w * spos2f.y;
-	pos3f.y += u_transformParam_1_2_3_4_f.y * spos2f.y;
-	pos3f.z += u_transformParam_1_2_3_4_f.z * spos2f.x;
-	pos3f.z += u_transformParam_5_f * spos2f.y;
+	pos3f += u_transformParam_1_2_5_f * spos2f.xyy;
+	pos3f.zx += u_transformParam_3_4_f * spos2f;
 
 #ifdef COMPILE_GBUFFER_VSH
 	gl_Position = u_matrixTransform * vec4(pos3f, 1.0);

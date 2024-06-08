@@ -36,6 +36,6 @@
 
 > CHANGE  2 : 3  @  2 : 3
 
-~ 		this.rand = new EaglercraftRandom(rand.nextLong());
+~ 		this.rand = new EaglercraftRandom(rand.nextLong(), !worldIn.getWorldInfo().isOldEaglercraftRandom());
 
 > EOF

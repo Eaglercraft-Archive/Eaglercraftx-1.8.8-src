@@ -11,7 +11,17 @@
 
 > DELETE  5  @  5 : 9
 
-> CHANGE  44 : 45  @  44 : 45
+> CHANGE  8 : 10  @  8 : 9
+
+~ 	public MapGenVillage(boolean scramble) {
+~ 		super(scramble);
+
+> CHANGE  4 : 6  @  4 : 6
+
+~ 	public MapGenVillage(Map<String, String> parMap, boolean scramble) {
+~ 		this(scramble);
+
+> CHANGE  29 : 30  @  29 : 30
 
 ~ 		EaglercraftRandom random = this.worldObj.setRandomSeed(i1, j1, 10387312);
 

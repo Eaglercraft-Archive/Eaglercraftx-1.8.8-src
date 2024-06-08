@@ -18,20 +18,19 @@
  - **Any portion of the decompiled Minecraft 1.8 source code or resources**
  - **Any portion of Mod Coder Pack and it's config files**
  - **Data that can be used alone to reconstruct portions of the game's source code**
- - **Software configured by default to allow users to play without owning a copy of Minecraft**
 
 ## Getting Started:
 
 ### To compile the latest version of the client, on Windows:
 
-1. Make sure you have at least Java 11 installed and added to your PATH
+1. Make sure you have at least Java 11 installed and added to your PATH, its is recommended to use Java 17
 2. Download (clone) this repository to your computer
 3. Double click `CompileLatestClient.bat`, a GUI resembling a classic windows installer should open
 4. Follow the steps shown to you in the new window to finish compiling
 
 ### To compile the latest version of the client, on Linux/macOS:
 
-1. Make sure you have at least Java 11 installed
+1. Make sure you have at least Java 11 installed, its is recommended to use Java 17
 2. Download (clone) this repository to your computer
 3. Open a terminal in the folder the repository was cloned to
 4. Type `chmod +x CompileLatestClient.sh` and hit enter
@@ -185,7 +184,7 @@ You may want to implement some custom logic for loading/saving certain local sto
 
 Be aware that the client will still save the key to the browser's local storage anyway even if you define a custom save handler, and will just attempt to load the key from the browser's local storage normally if you return null, these are meant to be used like event handlers for creating backups of keys instead of completely replacing the local storage save and load functions.
 
-On a normal client you will only ever need to handle local storage keys called `_eaglercraftX.p` (profile), `_eaglercraftX.g` (game settings), `_eaglercraftX.s` (server list), `_eaglercraftX.r` (shared world relays), feel free to just ignore any other keys. It is guaranteed that the data the client stores will always be valid base64, so it is best practice to decode it to raw binary first if possible to reduce it's size before saving it to something like a MySQL database in your backend if you are trying to implement some kind of profile syncing system for your website. The keys already have GZIP compression applied to them by default so don't bother trying to compress them yourself a second time because it won't reduce their size.
+On a normal client you will only ever need to handle local storage keys called `p` (profile), `g` (game settings), `s` (server list), `r` (shared world relays), in your hooks functions. Feel free to just ignore any other keys. It is guaranteed that the data the client stores will always be valid base64, so it is best practice to decode it to raw binary first if possible to reduce it's size before saving it to something like a MySQL database in your backend if you are trying to implement some kind of profile syncing system for your website. The keys already have GZIP compression applied to them by default so don't bother trying to compress them yourself a second time because it won't reduce their size.
 
 ## Developing a Client
 

@@ -9,7 +9,7 @@
 
 + import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.DynamicLightManager;
 
-> INSERT  90 : 101  @  90
+> INSERT  90 : 109  @  90
 
 + 
 + 	protected void renderDynamicLightsEaglerAt(double entityX, double entityY, double entityZ, double renderX,
@@ -21,6 +21,14 @@
 + 			DynamicLightManager.renderDynamicLight("entity_" + getEntityId() + "_tnt_flash", entityX, entityY + 0.5,
 + 					entityZ, dynamicLightMag, dynamicLightMag * 0.7792f, dynamicLightMag * 0.618f, false);
 + 		}
++ 	}
++ 
++ 	protected float getEaglerDynamicLightsValueSimple(float partialTicks) {
++ 		float f = super.getEaglerDynamicLightsValueSimple(partialTicks);
++ 		if (fuse / 5 % 2 == 0) {
++ 			f = Math.min(f + 0.75f, 1.25f);
++ 		}
++ 		return f;
 + 	}
 
 > EOF

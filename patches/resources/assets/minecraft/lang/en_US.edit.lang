@@ -12,7 +12,7 @@
 ~ eaglercraft.recording.start=Record Screen...
 ~ eaglercraft.soundCategory.voice=Recording Voice
 
-> INSERT  1 : 238  @  1
+> INSERT  1 : 239  @  1
 
 + eaglercraft.resourcePack.prompt.title=What do you want to do with '%s'?
 + eaglercraft.resourcePack.prompt.text=Tip: Hold Shift to skip this screen when selecting a resource pack!
@@ -123,6 +123,7 @@
 + eaglercraft.options.fastMath.0=OFF
 + eaglercraft.options.fastMath.1=Low
 + eaglercraft.options.fastMath.2=High
++ eaglercraft.options.dynamicLights=Dynamic Lights
 + 
 + eaglercraft.key.function=Function
 + eaglercraft.key.zoomCamera=Zoom Camera
@@ -252,7 +253,7 @@
 + eaglercraft.command.clientStub=This command is client side!
 + 
 
-> INSERT  163 : 404  @  163
+> INSERT  163 : 409  @  163
 
 + eaglercraft.singleplayer.busy.killTask=Cancel Task
 + eaglercraft.singleplayer.busy.cancelWarning=Are you sure?
@@ -410,7 +411,12 @@
 + eaglercraft.singleplayer.demo.create.join=Join Shared World
 + eaglercraft.singleplayer.demo.create.join.tooltip=Join someone else's world and play multiplayer
 + 
-+ eaglercraft.createWorld.seedNote=Note: Vanilla seeds do not work!
++ eaglercraft.createWorld.seedNote=Note: Vanilla seeds now work!
++ 
++ eaglercraft.singleplayer.oldseedwarning.title=Old World Detected!
++ eaglercraft.singleplayer.oldseedwarning.msg1=Please use EaglercraftX u32 or older to "Re-Create" this world
++ eaglercraft.singleplayer.oldseedwarning.msg2=The world's seed will not be the same otherwise :(
++ eaglercraft.singleplayer.oldseedwarning.ok=OK
 + 
 + eaglercraft.singleplayer.outdatedLANServerKick=This is a 1.5.2 LAN world!
 + 

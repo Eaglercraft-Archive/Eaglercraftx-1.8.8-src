@@ -15,7 +15,14 @@
 
 ~ 		this.dataWatcher.addObject(16, Byte.valueOf((byte) 0));
 
-> INSERT  185 : 192  @  185
+> INSERT  22 : 26  @  22
+
++ 	protected float getEaglerDynamicLightsValueSimple(float partialTicks) {
++ 		return 1.0f;
++ 	}
++ 
+
+> INSERT  163 : 170  @  163
 
 + 
 + 	protected void renderDynamicLightsEaglerAt(double entityX, double entityY, double entityZ, double renderX,

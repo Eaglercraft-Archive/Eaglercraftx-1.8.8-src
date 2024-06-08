@@ -53,6 +53,8 @@ public class PipelineShaderAccelParticleGBuffer extends ShaderProgram<PipelineSh
 		public IUniformGL u_texCoordSize2f_particleSize1f = null;
 		public IUniformGL u_transformParam_1_2_3_4_f = null;
 		public IUniformGL u_transformParam_5_f = null;
+		public IUniformGL u_transformParam_1_2_5_f = null;
+		public IUniformGL u_transformParam_3_4_f = null;
 		public IUniformGL u_textureYScale2f = null;
 
 		private Uniforms() {
@@ -64,6 +66,8 @@ public class PipelineShaderAccelParticleGBuffer extends ShaderProgram<PipelineSh
 			u_texCoordSize2f_particleSize1f = _wglGetUniformLocation(prog, "u_texCoordSize2f_particleSize1f");
 			u_transformParam_1_2_3_4_f = _wglGetUniformLocation(prog, "u_transformParam_1_2_3_4_f");
 			u_transformParam_5_f = _wglGetUniformLocation(prog, "u_transformParam_5_f");
+			u_transformParam_1_2_5_f = _wglGetUniformLocation(prog, "u_transformParam_1_2_5_f");
+			u_transformParam_3_4_f = _wglGetUniformLocation(prog, "u_transformParam_3_4_f");
 			u_textureYScale2f = _wglGetUniformLocation(prog, "u_textureYScale2f");
 			_wglUniform1i(_wglGetUniformLocation(prog, "u_diffuseTexture"), 0);
 			_wglUniform1i(_wglGetUniformLocation(prog, "u_samplerNormalMaterial"), 2);

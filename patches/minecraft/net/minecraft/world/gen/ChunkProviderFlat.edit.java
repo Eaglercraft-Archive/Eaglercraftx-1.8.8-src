@@ -15,11 +15,32 @@
 
 ~ 	private EaglercraftRandom random;
 
-> CHANGE  10 : 11  @  10 : 11
+> CHANGE  10 : 12  @  10 : 11
 
-~ 		this.random = new EaglercraftRandom(seed);
+~ 		boolean scramble = !worldIn.getWorldInfo().isOldEaglercraftRandom();
+~ 		this.random = new EaglercraftRandom(seed, scramble);
 
-> CHANGE  110 : 112  @  110 : 111
+> CHANGE  9 : 10  @  9 : 10
+
+~ 				this.structureGenerators.add(new MapGenVillage(map1, scramble));
+
+> CHANGE  3 : 4  @  3 : 4
+
+~ 				this.structureGenerators.add(new MapGenScatteredFeature((Map) map.get("biome_1"), scramble));
+
+> CHANGE  3 : 4  @  3 : 4
+
+~ 				this.structureGenerators.add(new MapGenMineshaft((Map) map.get("mineshaft"), scramble));
+
+> CHANGE  3 : 4  @  3 : 4
+
+~ 				this.structureGenerators.add(new MapGenStronghold((Map) map.get("stronghold"), scramble));
+
+> CHANGE  3 : 4  @  3 : 4
+
+~ 				this.structureGenerators.add(new StructureOceanMonument((Map) map.get("oceanmonument"), scramble));
+
+> CHANGE  84 : 86  @  84 : 85
 
 ~ 		for (int m = 0, n = this.structureGenerators.size(); m < n; ++m) {
 ~ 			MapGenStructure mapgenstructure = this.structureGenerators.get(m);

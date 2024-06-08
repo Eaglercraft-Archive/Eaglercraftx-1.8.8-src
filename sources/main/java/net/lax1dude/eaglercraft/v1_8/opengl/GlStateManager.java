@@ -808,6 +808,22 @@ public class GlStateManager {
 		}
 	}
 
+	public static final void getFloat(int pname, FloatBuffer params) {
+		switch(pname) {
+		case GL_MODELVIEW_MATRIX:
+			modelMatrixStack[modelMatrixStackPointer].store(params);
+			break;
+		case GL_PROJECTION_MATRIX:
+			projectionMatrixStack[projectionMatrixStackPointer].store(params);
+			break;
+		case GL_TEXTURE_MATRIX:
+			textureMatrixStack[activeTexture][textureMatrixStackPointer[activeTexture]].store(params);
+			break;
+		default:
+			throw new UnsupportedOperationException("glGetFloat can only be used to retrieve matricies!");
+		}
+	}
+
 	public static final void ortho(double left, double right, double bottom, double top, double zNear, double zFar) {
 		Matrix4f matrix;
 		switch(stateMatrixMode) {

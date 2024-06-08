@@ -17,6 +17,6 @@
 
 > CHANGE  5 : 6  @  5 : 6
 
-~ 		this.random = new EaglercraftRandom(worldIn.getSeed());
+~ 		this.random = new EaglercraftRandom(worldIn.getSeed(), !worldIn.getWorldInfo().isOldEaglercraftRandom());
 
 > EOF

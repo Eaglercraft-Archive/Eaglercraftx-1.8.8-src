@@ -18,7 +18,7 @@
 
 + import java.util.Locale;
 
-> INSERT  1 : 13  @  1
+> INSERT  1 : 14  @  1
 
 + import java.util.TimeZone;
 + 
@@ -31,6 +31,7 @@
 + import net.lax1dude.eaglercraft.v1_8.internal.EnumPlatformType;
 + import net.lax1dude.eaglercraft.v1_8.opengl.EaglercraftGPU;
 + import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
++ import net.lax1dude.eaglercraft.v1_8.opengl.ext.dynamiclights.DynamicLightsStateManager;
 + import net.lax1dude.eaglercraft.v1_8.sp.SingleplayerServerController;
 
 > CHANGE  5 : 6  @  5 : 10
@@ -316,7 +317,13 @@
 
 ~ 					HString.format("Facing: %s (%s) (%.1f / %.1f)",
 
-> CHANGE  5 : 6  @  5 : 6
+> INSERT  3 : 6  @  3
+
++ 			if (DynamicLightsStateManager.isDynamicLightsRender()) {
++ 				arraylist.add(6, DynamicLightsStateManager.getF3String());
++ 			}
+
+> CHANGE  2 : 3  @  2 : 3
 
 ~ 				arraylist.add("Biome: " + chunk.getBiome(blockpos, null).biomeName);
 

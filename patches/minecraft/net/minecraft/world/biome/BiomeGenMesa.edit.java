@@ -24,12 +24,21 @@
 ~ 	public void genTerrainBlocks(World world, EaglercraftRandom random, ChunkPrimer chunkprimer, int i, int j,
 ~ 			double d0) {
 
-> CHANGE  5 : 6  @  5 : 6
+> CHANGE  1 : 2  @  1 : 2
 
-~ 			EaglercraftRandom random1 = new EaglercraftRandom(this.field_150622_aD);
+~ 			this.func_150619_a(world.getSeed(), !world.getWorldInfo().isOldEaglercraftRandom());
 
-> CHANGE  111 : 112  @  111 : 112
+> CHANGE  3 : 5  @  3 : 4
 
-~ 		EaglercraftRandom random = new EaglercraftRandom(parLong1);
+~ 			EaglercraftRandom random1 = new EaglercraftRandom(this.field_150622_aD,
+~ 					!world.getWorldInfo().isOldEaglercraftRandom());
+
+> CHANGE  108 : 109  @  108 : 109
+
+~ 	private void func_150619_a(long parLong1, boolean scrambleRNG) {
+
+> CHANGE  2 : 3  @  2 : 3
+
+~ 		EaglercraftRandom random = new EaglercraftRandom(parLong1, scrambleRNG);
 
 > EOF

@@ -17,6 +17,6 @@
 
 > CHANGE  16 : 17  @  16 : 17
 
-~ 		this.endRNG = new EaglercraftRandom(parLong1);
+~ 		this.endRNG = new EaglercraftRandom(parLong1, !worldIn.getWorldInfo().isOldEaglercraftRandom());
 
 > EOF

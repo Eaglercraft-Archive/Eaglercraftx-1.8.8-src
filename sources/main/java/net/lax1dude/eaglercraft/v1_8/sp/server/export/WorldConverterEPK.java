@@ -12,6 +12,7 @@ import net.lax1dude.eaglercraft.v1_8.sp.server.EaglerIntegratedServerWorker;
 import net.lax1dude.eaglercraft.v1_8.sp.server.EaglerSaveFormat;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.storage.WorldInfo;
 
 /**
  * Copyright (c) 2022-2024 lax1dude, ayunami2000. All Rights Reserved.
@@ -66,6 +67,9 @@ public class WorldConverterEPK {
 						NBTTagCompound worldDatNBT = CompressedStreamTools.readCompressed(new EaglerInputStream(b));
 						worldDatNBT.getCompoundTag("Data").setString("LevelName", newName);
 						worldDatNBT.getCompoundTag("Data").setLong("LastPlayed", System.currentTimeMillis());
+						if(has152Format) {
+							WorldInfo.initEaglerVersion(worldDatNBT.getCompoundTag("Data"));
+						}
 						EaglerOutputStream tmp = new EaglerOutputStream();
 						CompressedStreamTools.writeCompressed(worldDatNBT, tmp);
 						b = tmp.toByteArray();

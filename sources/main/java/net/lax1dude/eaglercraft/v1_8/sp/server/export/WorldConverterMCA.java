@@ -20,6 +20,7 @@ import net.lax1dude.eaglercraft.v1_8.sp.server.EaglerChunkLoader;
 import net.lax1dude.eaglercraft.v1_8.sp.server.EaglerIntegratedServerWorker;
 import net.lax1dude.eaglercraft.v1_8.sp.server.EaglerSaveFormat;
 import net.minecraft.world.chunk.storage.RegionFile;
+import net.minecraft.world.storage.WorldInfo;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -98,9 +99,9 @@ public class WorldConverterMCA {
 					gameRulesNBT.setString("colorCodes", s);
 					gameRulesNBT.setString("doSignEditing", s);
 					worldDatNBT.getCompoundTag("Data").setTag("GameRules", gameRulesNBT);
-	
 					worldDatNBT.getCompoundTag("Data").setString("LevelName", newName);
 					worldDatNBT.getCompoundTag("Data").setLong("LastPlayed", System.currentTimeMillis());
+					WorldInfo.initEaglerVersion(worldDatNBT.getCompoundTag("Data"));
 					EaglerOutputStream bo = new EaglerOutputStream();
 					CompressedStreamTools.writeCompressed(worldDatNBT, bo);
 					b = bo.toByteArray();

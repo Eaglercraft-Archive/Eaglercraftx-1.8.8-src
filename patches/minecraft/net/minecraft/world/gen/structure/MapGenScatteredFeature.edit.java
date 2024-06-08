@@ -11,7 +11,17 @@
 
 > DELETE  6  @  6 : 10
 
-> CHANGE  45 : 46  @  45 : 46
+> CHANGE  8 : 10  @  8 : 9
+
+~ 	public MapGenScatteredFeature(boolean scramble) {
+~ 		super(scramble);
+
+> CHANGE  6 : 8  @  6 : 8
+
+~ 	public MapGenScatteredFeature(Map<String, String> parMap, boolean scramble) {
+~ 		this(scramble);
+
+> CHANGE  28 : 29  @  28 : 29
 
 ~ 		EaglercraftRandom random = this.worldObj.setRandomSeed(i1, j1, 14357617);
 

@@ -5,12 +5,13 @@
 # Version: 1.0
 # Author: lax1dude
 
-> INSERT  2 : 7  @  2
+> INSERT  2 : 8  @  2
 
 + import net.lax1dude.eaglercraft.v1_8.minecraft.EaglerTextureAtlasSprite;
 + import net.lax1dude.eaglercraft.v1_8.opengl.WorldRenderer;
 + import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.BlockVertexIDs;
 + import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.DeferredStateManager;
++ import net.lax1dude.eaglercraft.v1_8.opengl.ext.dynamiclights.DynamicLightsStateManager;
 + import net.minecraft.block.Block;
 
 > DELETE  4  @  4 : 6
@@ -20,10 +21,11 @@
 ~ 	private EaglerTextureAtlasSprite[] atlasSpritesLava = new EaglerTextureAtlasSprite[2];
 ~ 	private EaglerTextureAtlasSprite[] atlasSpritesWater = new EaglerTextureAtlasSprite[2];
 
-> INSERT  15 : 17  @  15
+> INSERT  15 : 18  @  15
 
 + 		BlockPos tmp = new BlockPos(0, 0, 0);
 + 		boolean deferred = DeferredStateManager.isDeferredRenderer();
++ 		boolean isDynamicLights = deferred || DynamicLightsStateManager.isDynamicLightsRender();
 
 > INSERT  1 : 3  @  1
 
@@ -78,7 +80,7 @@
 
 > CHANGE  31 : 36  @  31 : 32
 
-~ 				if (deferred)
+~ 				if (isDynamicLights)
 ~ 					worldRendererIn.genNormals(true, f12 <= -999.0F ? BlockVertexIDs.builtin_water_still_vertex_id
 ~ 							: BlockVertexIDs.builtin_water_flow_vertex_id);
 ~ 
@@ -86,7 +88,7 @@
 
 > INSERT  8 : 11  @  8
 
-+ 					if (deferred)
++ 					if (isDynamicLights)
 + 						worldRendererIn.genNormals(true, f12 <= -999.0F ? BlockVertexIDs.builtin_water_still_vertex_id
 + 								: BlockVertexIDs.builtin_water_flow_vertex_id);
 
@@ -100,7 +102,7 @@
 
 > INSERT  10 : 12  @  10
 
-+ 				if (deferred)
++ 				if (isDynamicLights)
 + 					worldRendererIn.putNormal(0.0f, -1.0f, 0.0f, BlockVertexIDs.builtin_water_still_vertex_id);
 
 > CHANGE  23 : 24  @  23 : 24
@@ -119,7 +121,7 @@
 
 > CHANGE  15 : 29  @  15 : 23
 
-~ 					if (deferred)
+~ 					if (isDynamicLights)
 ~ 						worldRendererIn.putNormal(j1, 0.0f, k1, BlockVertexIDs.builtin_water_flow_vertex_id);
 ~ 					if (!realistic) {
 ~ 						worldRendererIn.pos(d3, d1 + 0.0D, d4).color(f32, f33, f34, 1.0F)
@@ -130,7 +132,7 @@
 ~ 								.tex((double) f27, (double) f29).lightmap(k, l).endVertex();
 ~ 						worldRendererIn.pos(d3, d1 + (double) f39, d4).color(f32, f33, f34, 1.0F)
 ~ 								.tex((double) f41, (double) f28).lightmap(k, l).endVertex();
-~ 						if (deferred)
+~ 						if (isDynamicLights)
 ~ 							worldRendererIn.putNormal(-j1, 0.0f, -k1, BlockVertexIDs.builtin_water_flow_vertex_id);
 ~ 					}
 

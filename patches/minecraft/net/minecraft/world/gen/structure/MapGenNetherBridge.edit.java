@@ -11,7 +11,12 @@
 
 > DELETE  6  @  6 : 10
 
-> CHANGE  36 : 37  @  36 : 37
+> CHANGE  4 : 6  @  4 : 5
+
+~ 	public MapGenNetherBridge(boolean scramble) {
+~ 		super(scramble);
+
+> CHANGE  31 : 32  @  31 : 32
 
 ~ 		public Start(World worldIn, EaglercraftRandom parRandom, int parInt1, int parInt2) {
 

@@ -67,4 +67,13 @@
 + 			return;
 + 		}
 
+> INSERT  3 : 5  @  3
+
++ 		GlStateManager.enablePolygonOffset();
++ 		GlStateManager.doPolygonOffset(-0.025f, 1.0f);
+
+> INSERT  20 : 21  @  20
+
++ 		GlStateManager.disablePolygonOffset();
+
 > EOF

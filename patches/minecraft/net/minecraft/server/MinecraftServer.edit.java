@@ -120,7 +120,15 @@
 
 > DELETE  1  @  1 : 2
 
-> DELETE  32  @  32 : 35
+> INSERT  6 : 11  @  6
+
++ 		if (worldinfo.isOldEaglercraftRandom()) {
++ 			LogManager.getLogger("EaglerMinecraftServer")
++ 					.info("Detected a pre-u34 world, using old EaglercraftRandom implementation for world generation");
++ 		}
++ 
+
+> DELETE  26  @  26 : 29
 
 > CHANGE  3 : 11  @  3 : 5
 

@@ -14,7 +14,7 @@
 ~ import net.lax1dude.eaglercraft.v1_8.Keyboard;
 ~ 
 
-> INSERT  2 : 22  @  2
+> INSERT  2 : 23  @  2
 
 + 
 + import com.google.common.collect.Lists;
@@ -34,6 +34,7 @@
 + import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.EaglerDeferredConfig;
 + import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.EaglerDeferredPipeline;
 + import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.program.SharedPipelineShaders;
++ import net.lax1dude.eaglercraft.v1_8.opengl.ext.dynamiclights.DynamicLightsStateManager;
 + import net.lax1dude.eaglercraft.v1_8.vector.Vector3f;
 + import net.lax1dude.eaglercraft.v1_8.vector.Vector4f;
 
@@ -142,7 +143,7 @@
 + 			this.renderDistanceChunks = this.mc.gameSettings.renderDistanceChunks;
 + 
 
-> INSERT  19 : 75  @  19
+> INSERT  19 : 85  @  19
 
 + 
 + 			if (mc.gameSettings.shaders) {
@@ -199,6 +200,16 @@
 + 					logger.error(ex);
 + 				}
 + 				SharedPipelineShaders.free();
++ 			}
++ 
++ 			if (DeferredStateManager.isDeferredRenderer()) {
++ 				DynamicLightsStateManager.disableDynamicLightsRender(false);
++ 			} else {
++ 				if (mc.gameSettings.enableDynamicLights) {
++ 					DynamicLightsStateManager.enableDynamicLightsRender();
++ 				} else {
++ 					DynamicLightsStateManager.disableDynamicLightsRender(true);
++ 				}
 + 			}
 
 > DELETE  9  @  9 : 13
@@ -600,16 +611,25 @@
 
 > DELETE  17  @  17 : 18
 
-> CHANGE  155 : 157  @  155 : 156
+> CHANGE  155 : 159  @  155 : 156
 
-~ 			worldRendererIn.begin(7, DeferredStateManager.isDeferredRenderer() ? VertexFormat.BLOCK_SHADERS
-~ 					: DefaultVertexFormats.BLOCK);
+~ 			worldRendererIn.begin(7,
+~ 					(DeferredStateManager.isDeferredRenderer() || DynamicLightsStateManager.isDynamicLightsRender())
+~ 							? VertexFormat.BLOCK_SHADERS
+~ 							: DefaultVertexFormats.BLOCK);
 
 > CHANGE  19 : 20  @  19 : 20
 
 ~ 							EaglerTextureAtlasSprite textureatlassprite = this.destroyBlockIcons[i];
 
-> CHANGE  17 : 19  @  17 : 18
+> INSERT  1 : 5  @  1
+
++ 							if (DynamicLightsStateManager.isInDynamicLightsPass()) {
++ 								DynamicLightsStateManager.reportForwardRenderObjectPosition2(blockpos.x, blockpos.y,
++ 										blockpos.z);
++ 							}
+
+> CHANGE  16 : 18  @  16 : 17
 
 ~ 		if (partialTicks == 0 && movingObjectPositionIn != null
 ~ 				&& movingObjectPositionIn.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {

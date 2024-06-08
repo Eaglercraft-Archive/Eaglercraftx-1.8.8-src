@@ -21,4 +21,11 @@
 ~ 			for (int i = 0, l = lst.size(); i < l; ++i) {
 ~ 				lst.get(i).triggerAchievement(AchievementList.killWither);
 
+> INSERT  13 : 17  @  13
+
++ 	protected float getEaglerDynamicLightsValueSimple(float partialTicks) {
++ 		return 1.0f;
++ 	}
++ 
+
 > EOF

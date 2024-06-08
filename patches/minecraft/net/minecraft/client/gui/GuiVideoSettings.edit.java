@@ -21,10 +21,10 @@
 ~ 			GameSettings.Options.VIEW_BOBBING, GameSettings.Options.GUI_SCALE, GameSettings.Options.GAMMA,
 ~ 			GameSettings.Options.RENDER_CLOUDS, GameSettings.Options.PARTICLES, GameSettings.Options.FXAA,
 ~ 			GameSettings.Options.MIPMAP_LEVELS, GameSettings.Options.BLOCK_ALTERNATIVES,
-~ 			GameSettings.Options.ENTITY_SHADOWS, GameSettings.Options.FOG, GameSettings.Options.FULLSCREEN,
-~ 			GameSettings.Options.FNAW_SKINS, GameSettings.Options.HUD_FPS, GameSettings.Options.HUD_COORDS,
-~ 			GameSettings.Options.HUD_PLAYER, GameSettings.Options.HUD_STATS, GameSettings.Options.HUD_WORLD,
-~ 			GameSettings.Options.HUD_24H, GameSettings.Options.CHUNK_FIX };
+~ 			GameSettings.Options.ENTITY_SHADOWS, GameSettings.Options.FOG, GameSettings.Options.EAGLER_DYNAMIC_LIGHTS,
+~ 			GameSettings.Options.FULLSCREEN, GameSettings.Options.FNAW_SKINS, GameSettings.Options.HUD_FPS,
+~ 			GameSettings.Options.HUD_COORDS, GameSettings.Options.HUD_PLAYER, GameSettings.Options.HUD_STATS,
+~ 			GameSettings.Options.HUD_WORLD, GameSettings.Options.HUD_24H, GameSettings.Options.CHUNK_FIX };
 
 > CHANGE  11 : 13  @  11 : 31
 

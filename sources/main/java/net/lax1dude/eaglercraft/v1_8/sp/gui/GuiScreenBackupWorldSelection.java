@@ -11,6 +11,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.storage.WorldInfo;
 
 /**
@@ -38,6 +39,7 @@ public class GuiScreenBackupWorldSelection extends GuiScreen {
 	private GuiButton worldConvert = null;
 	private GuiButton worldBackup = null;
 	private long worldSeed;
+	private boolean oldRNG;
 	private NBTTagCompound levelDat;
 	
 	private String worldName;
@@ -47,6 +49,7 @@ public class GuiScreenBackupWorldSelection extends GuiScreen {
 		this.worldName = worldName;
 		this.levelDat = levelDat;
 		this.worldSeed = levelDat.getCompoundTag("Data").getLong("RandomSeed");
+		this.oldRNG = levelDat.getCompoundTag("Data").getInteger("eaglerVersionSerial") == 0;
 	}
 	
 	public void initGui() {
@@ -62,7 +65,11 @@ public class GuiScreenBackupWorldSelection extends GuiScreen {
 		this.drawDefaultBackground();
 
 		this.drawCenteredString(this.fontRendererObj, I18n.format("singleplayer.backup.title", worldName), this.width / 2, this.height / 5 - 35, 16777215);
-		this.drawCenteredString(this.fontRendererObj, I18n.format("singleplayer.backup.seed") + " " + worldSeed, this.width / 2, this.height / 5 + 62, 0xAAAAFF);
+		if(oldRNG) {
+			this.drawCenteredString(this.fontRendererObj, I18n.format("singleplayer.backup.seed") + " " + worldSeed + " " + EnumChatFormatting.RED + "(pre-u34)", this.width / 2, this.height / 5 + 62, 0xAAAAFF);
+		}else {
+			this.drawCenteredString(this.fontRendererObj, I18n.format("singleplayer.backup.seed") + " " + worldSeed, this.width / 2, this.height / 5 + 62, 0xAAAAFF);
+		}
 		
 		int toolTipColor = 0xDDDDAA;
 		if(worldRecreate.isMouseOver()) {
@@ -85,8 +92,13 @@ public class GuiScreenBackupWorldSelection extends GuiScreen {
 			this.mc.displayGuiScreen(selectWorld);
 		}else if(par1GuiButton.id == 1) {
 			GuiCreateWorld cw = new GuiCreateWorld(selectWorld);
-			cw.func_146318_a(new WorldInfo(this.levelDat.getCompoundTag("Data")));
-			this.mc.displayGuiScreen(cw);
+			WorldInfo inf = new WorldInfo(this.levelDat.getCompoundTag("Data"));
+			cw.func_146318_a(inf);
+			if(inf.isOldEaglercraftRandom()) {
+				this.mc.displayGuiScreen(new GuiScreenOldSeedWarning(cw));
+			}else {
+				this.mc.displayGuiScreen(cw);
+			}
 		}else if(par1GuiButton.id == 2) {
 			this.mc.displayGuiScreen(new GuiRenameWorld(this.selectWorld, this.worldName, true));
 		}else if(par1GuiButton.id == 3) {

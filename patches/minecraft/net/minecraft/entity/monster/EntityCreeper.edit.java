@@ -12,7 +12,7 @@
 
 > DELETE  12  @  12 : 14
 
-> INSERT  204 : 217  @  204
+> INSERT  204 : 226  @  204
 
 + 
 + 	protected void renderDynamicLightsEaglerAt(double entityX, double entityY, double entityZ, double renderX,
@@ -26,6 +26,15 @@
 + 					entityZ, dynamicLightMag, dynamicLightMag * 0.7792f, dynamicLightMag * 0.618f, false);
 + 			DeferredStateManager.setEmissionConstant(1.0f);
 + 		}
++ 	}
++ 
++ 	protected float getEaglerDynamicLightsValueSimple(float partialTicks) {
++ 		float f = super.getEaglerDynamicLightsValueSimple(partialTicks);
++ 		float ff = getCreeperFlashIntensity(partialTicks);
++ 		if ((int) (ff * 10.0F) % 2 != 0) {
++ 			f = Math.min(f + 0.5f, 1.15f);
++ 		}
++ 		return f;
 + 	}
 
 > EOF

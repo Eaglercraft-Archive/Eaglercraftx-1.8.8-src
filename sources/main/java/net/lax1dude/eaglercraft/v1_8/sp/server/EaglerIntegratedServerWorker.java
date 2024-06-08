@@ -60,6 +60,8 @@ public class EaglerIntegratedServerWorker {
 
 	private static final Map<String, IntegratedServerPlayerNetworkManager> openChannels = new HashMap();
 
+	private static final IPCPacketManager packetManagerInstance = new IPCPacketManager();
+
 	private static void processAsyncMessageQueue() {
 		List<IPCPacketData> pktList = ServerPlatformSingleplayer.recieveAllPacket();
 		if(pktList != null) {
@@ -69,7 +71,7 @@ public class EaglerIntegratedServerWorker {
 				if(packetData.channel.equals(SingleplayerServerController.IPC_CHANNEL)) {
 					IPCPacketBase ipc;
 					try {
-						ipc = IPCPacketManager.IPCDeserialize(packetData.contents);
+						ipc = packetManagerInstance.IPCDeserialize(packetData.contents);
 					}catch(IOException ex) {
 						throw new RuntimeException("Failed to deserialize IPC packet", ex);
 					}
@@ -422,7 +424,7 @@ public class EaglerIntegratedServerWorker {
 	public static void sendIPCPacket(IPCPacketBase ipc) {
 		byte[] pkt;
 		try {
-			pkt = IPCPacketManager.IPCSerialize(ipc);
+			pkt = packetManagerInstance.IPCSerialize(ipc);
 		}catch (IOException ex) {
 			throw new RuntimeException("Failed to serialize IPC packet", ex);
 		}

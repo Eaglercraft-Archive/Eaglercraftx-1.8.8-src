@@ -16,9 +16,13 @@
 
 > DELETE  8  @  8 : 9
 
-> CHANGE  90 : 92  @  90 : 92
+> CHANGE  90 : 96  @  90 : 94
 
 ~ 	public EaglercraftRandom getRandomWithSeed(long seed) {
-~ 		return new EaglercraftRandom(this.getWorld().getSeed() + (long) (this.xPosition * this.xPosition * 4987142)
+~ 		return new EaglercraftRandom(
+~ 				this.getWorld().getSeed() + (long) (this.xPosition * this.xPosition * 4987142)
+~ 						+ (long) (this.xPosition * 5947611) + (long) (this.zPosition * this.zPosition) * 4392871L
+~ 						+ (long) (this.zPosition * 389711) ^ seed,
+~ 				!this.getWorld().getWorldInfo().isOldEaglercraftRandom());
 
 > EOF

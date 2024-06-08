@@ -7,7 +7,7 @@
 
 > DELETE  2  @  2 : 3
 
-> INSERT  1 : 10  @  1
+> INSERT  1 : 11  @  1
 
 + 
 + import com.google.common.collect.Maps;
@@ -17,6 +17,7 @@
 + import net.lax1dude.eaglercraft.v1_8.opengl.OpenGlHelper;
 + import net.lax1dude.eaglercraft.v1_8.opengl.WorldRenderer;
 + import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.DeferredStateManager;
++ import net.lax1dude.eaglercraft.v1_8.opengl.ext.dynamiclights.DynamicLightsStateManager;
 + import net.lax1dude.eaglercraft.v1_8.profile.RenderHighPoly;
 
 > INSERT  3 : 4  @  3
@@ -61,7 +62,14 @@
 
 ~ 	public <T extends Entity> Render getEntityRenderObject(Entity entityIn) {
 
-> INSERT  85 : 86  @  85
+> INSERT  82 : 86  @  82
+
++ 		if (DynamicLightsStateManager.isInDynamicLightsPass()) {
++ 			DynamicLightsStateManager.reportForwardRenderObjectPosition2((float) (d0 - viewerPosX),
++ 					(float) (d1 - viewerPosY), (float) (d2 - viewerPosZ));
++ 		}
+
+> INSERT  3 : 4  @  3
 
 + 			DeferredStateManager.setEmissionConstant(1.0f);
 

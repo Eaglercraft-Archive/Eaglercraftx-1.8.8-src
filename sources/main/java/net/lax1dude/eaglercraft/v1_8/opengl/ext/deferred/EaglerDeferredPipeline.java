@@ -2049,6 +2049,8 @@ public class EaglerDeferredPipeline {
 				}
 			}
 
+			truncateOverflowingLightBuffers();
+
 			DeferredStateManager.checkGLError("combineGBuffersAndIlluminate(): RENDER DYNAMIC LIGHTS");
 		}
 
@@ -2305,6 +2307,19 @@ public class EaglerDeferredPipeline {
 		return radius2 >= 0.0f;
 	}
 
+	private void truncateOverflowingLightBuffers() {
+		for(int i = 0; i < this.lightSourceBuckets.length; ++i) {
+			List<DynamicLightInstance> lst = this.lightSourceBuckets[i];
+			int k = lst.size();
+			if(k > MAX_LIGHTS_PER_CHUNK) {
+				lst.sort(comparatorLightRadius);
+				for(int l = MAX_LIGHTS_PER_CHUNK - 1; l >= MAX_LIGHTS_PER_CHUNK; --l) {
+					lst.remove(l);
+				}
+			}
+		}
+	}
+
 	public void updateLightSourceUBO() {
 		if(currentLightSourceBucket == null) {
 			currentBoundLightSourceBucket = null;
@@ -2332,7 +2347,6 @@ public class EaglerDeferredPipeline {
 		}
 	}
 
-	private static final List<DynamicLightInstance> tmpListLights = new ArrayList(32);
 	private static final Comparator<DynamicLightInstance> comparatorLightRadius = (l1, l2) -> {
 		return l1.radius < l2.radius ? 1 : -1;
 	};
@@ -2340,10 +2354,6 @@ public class EaglerDeferredPipeline {
 	private void populateLightSourceUBOFromBucket(List<DynamicLightInstance> lights) {
 		int max = lights.size();
 		if(max > MAX_LIGHTS_PER_CHUNK) {
-			tmpListLights.clear();
-			tmpListLights.addAll(lights);
-			lights = tmpListLights;
-			lights.sort(comparatorLightRadius);
 			max = MAX_LIGHTS_PER_CHUNK;
 		}
 		chunkLightingDataCopyBuffer.clear();

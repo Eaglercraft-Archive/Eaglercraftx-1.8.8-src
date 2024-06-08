@@ -16,7 +16,7 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ import net.lax1dude.eaglercraft.v1_8.HString;
 
-> INSERT  1 : 28  @  1
+> INSERT  1 : 29  @  1
 
 + 
 + import com.google.common.base.Predicate;
@@ -42,6 +42,7 @@
 + import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.ShadersRenderPassFuture;
 + import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.gui.GuiShaderConfig;
 + import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.texture.EmissiveItems;
++ import net.lax1dude.eaglercraft.v1_8.opengl.ext.dynamiclights.DynamicLightsStateManager;
 + import net.lax1dude.eaglercraft.v1_8.vector.Vector4f;
 + import net.lax1dude.eaglercraft.v1_8.voice.VoiceTagRenderer;
 + import net.lax1dude.eaglercraft.v1_8.vector.Matrix4f;
@@ -151,7 +152,13 @@
 ~ 				(float) this.mc.displayWidth / (float) this.mc.displayHeight, 0.05F, farPlane);
 ~ 		DeferredStateManager.setGBufferNearFarPlanes(0.05f, farPlane);
 
-> CHANGE  57 : 58  @  57 : 58
+> INSERT  50 : 53  @  50
+
++ 			if (DynamicLightsStateManager.isInDynamicLightsPass()) {
++ 				DynamicLightsStateManager.reportForwardRenderObjectPosition2(0.0f, 0.0f, 0.0f);
++ 			}
+
+> CHANGE  7 : 8  @  7 : 8
 
 ~ 			GlStateManager.gluPerspective(this.getFOVModifier(partialTicks, false),
 
@@ -176,12 +183,13 @@
 
 ~ 					this.lightmapColors[i] = short1 << 24 | j | k << 8 | l << 16;
 
-> INSERT  3 : 17  @  3
+> INSERT  3 : 18  @  3
 
 + 
 + 				GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
 + 				this.mc.getTextureManager().bindTexture(this.locationLightMap);
-+ 				if (mc.gameSettings.fancyGraphics || mc.gameSettings.ambientOcclusion > 0) {
++ 				if (mc.gameSettings.fancyGraphics || mc.gameSettings.ambientOcclusion > 0
++ 						|| DynamicLightsStateManager.isDynamicLightsRender()) {
 + 					EaglercraftGPU.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 + 					EaglercraftGPU.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 + 				} else {
@@ -283,11 +291,31 @@
 + 		VoiceTagRenderer.clearTagsDrawnSet();
 + 
 
-> CHANGE  4 : 5  @  4 : 5
+> CHANGE  4 : 25  @  4 : 12
 
+~ 		boolean dlights = DynamicLightsStateManager.isDynamicLightsRender();
+~ 		if (dlights) {
+~ 			updateDynamicLightListEagler(partialTicks);
+~ 		}
 ~ 		if (this.mc.gameSettings.anaglyph && !this.mc.gameSettings.shaders) {
+~ 			if (dlights) {
+~ 				GlStateManager.enableExtensionPipeline();
+~ 			}
+~ 			try {
+~ 				anaglyphField = 0;
+~ 				GlStateManager.colorMask(false, true, true, false);
+~ 				this.renderWorldPass(0, partialTicks, finishTimeNano);
+~ 				anaglyphField = 1;
+~ 				GlStateManager.colorMask(true, false, false, false);
+~ 				this.renderWorldPass(1, partialTicks, finishTimeNano);
+~ 				GlStateManager.colorMask(true, true, true, false);
+~ 			} finally {
+~ 				if (dlights) {
+~ 					GlStateManager.disableExtensionPipeline();
+~ 				}
+~ 			}
 
-> CHANGE  8 : 24  @  8 : 9
+> CHANGE  1 : 26  @  1 : 2
 
 ~ 			if (this.mc.gameSettings.shaders) {
 ~ 				try {
@@ -303,7 +331,16 @@
 ~ 				mc.effectRenderer.acceleratedParticleRenderer = EffectRenderer.vanillaAcceleratedParticleRenderer;
 ~ 			} else {
 ~ 				mc.effectRenderer.acceleratedParticleRenderer = EffectRenderer.vanillaAcceleratedParticleRenderer;
-~ 				this.renderWorldPass(2, partialTicks, finishTimeNano);
+~ 				if (dlights) {
+~ 					GlStateManager.enableExtensionPipeline();
+~ 				}
+~ 				try {
+~ 					this.renderWorldPass(2, partialTicks, finishTimeNano);
+~ 				} finally {
+~ 					if (dlights) {
+~ 						GlStateManager.disableExtensionPipeline();
+~ 					}
+~ 				}
 ~ 			}
 
 > INSERT  2 : 6  @  2
@@ -313,9 +350,22 @@
 + 		}
 + 
 
-> DELETE  15  @  15 : 17
+> INSERT  14 : 18  @  14
 
-> CHANGE  12 : 15  @  12 : 14
++ 		boolean isDynamicLights = DynamicLightsStateManager.isDynamicLightsRender();
++ 		if (isDynamicLights) {
++ 			DynamicLightsStateManager.setupInverseViewMatrix();
++ 		}
+
+> DELETE  1  @  1 : 3
+
+> INSERT  6 : 9  @  6
+
++ 		TileEntityRendererDispatcher.staticPlayerX = d0; // hack, needed for some eagler stuff
++ 		TileEntityRendererDispatcher.staticPlayerY = d1;
++ 		TileEntityRendererDispatcher.staticPlayerZ = d2;
+
+> CHANGE  6 : 9  @  6 : 8
 
 ~ 			float vigg = this.getFOVModifier(partialTicks, true);
 ~ 			GlStateManager.gluPerspective(vigg, (float) this.mc.displayWidth / (float) this.mc.displayHeight, 0.05F,
@@ -335,11 +385,59 @@
 
 + 		GlStateManager.shadeModel(7424);
 
-> CHANGE  46 : 47  @  46 : 47
+> INSERT  16 : 19  @  16
 
++ 				if (isDynamicLights) {
++ 					GlStateManager.disableExtensionPipeline();
++ 				}
+
+> INSERT  2 : 5  @  2
+
++ 				if (isDynamicLights) {
++ 					GlStateManager.enableExtensionPipeline();
++ 				}
+
+> INSERT  8 : 11  @  8
+
++ 			if (isDynamicLights) {
++ 				GlStateManager.disableExtensionPipeline();
++ 			}
+
+> INSERT  3 : 6  @  3
+
++ 			if (isDynamicLights) {
++ 				GlStateManager.enableExtensionPipeline();
++ 			}
+
+> CHANGE  17 : 25  @  17 : 18
+
+~ 			if (isDynamicLights) {
+~ 				DynamicLightsStateManager.bindAcceleratedEffectRenderer(effectrenderer);
+~ 				DynamicLightsStateManager.reportForwardRenderObjectPosition2(0.0f, 0.0f, 0.0f);
+~ 			}
 ~ 			effectrenderer.renderParticles(entity, partialTicks, 2);
+~ 			if (isDynamicLights) {
+~ 				effectrenderer.acceleratedParticleRenderer = null;
+~ 			}
 
-> CHANGE  44 : 45  @  44 : 45
+> INSERT  39 : 53  @  39
+
++ 	private void updateDynamicLightListEagler(float partialTicks) {
++ 		DynamicLightsStateManager.clearRenderList();
++ 		Entity entity = this.mc.getRenderViewEntity();
++ 		double d0 = entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * (double) partialTicks;
++ 		double d1 = entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * (double) partialTicks;
++ 		double d2 = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * (double) partialTicks;
++ 		AxisAlignedBB entityAABB = new AxisAlignedBB(d0 - 48.0, d1 - 32.0, d2 - 48.0, d0 + 48.0, d1 + 32.0, d2 + 48.0);
++ 		List<Entity> entities = this.mc.theWorld.getEntitiesWithinAABB(Entity.class, entityAABB);
++ 		for (int i = 0, l = entities.size(); i < l; ++i) {
++ 			entities.get(i).renderDynamicLightsEaglerSimple(partialTicks);
++ 		}
++ 		DynamicLightsStateManager.commitLightSourceBuckets(d0, d1, d2);
++ 	}
++ 
+
+> CHANGE  5 : 6  @  5 : 6
 
 ~ 			GlStateManager.gluPerspective(this.getFOVModifier(partialTicks, true),
 
@@ -359,12 +457,15 @@
 
 + 			boolean df = DeferredStateManager.isInDeferredPass();
 
-> CHANGE  9 : 25  @  9 : 13
+> CHANGE  9 : 28  @  9 : 13
 
 ~ 			if (!df) {
 ~ 				GlStateManager.enableBlend();
 ~ 				GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
 ~ 				GlStateManager.alphaFunc(516, 0.1F);
+~ 				if (DynamicLightsStateManager.isInDynamicLightsPass()) {
+~ 					DynamicLightsStateManager.reportForwardRenderObjectPosition2(0.0f, 0.0f, 0.0f);
+~ 				}
 ~ 			} else {
 ~ 				GlStateManager.enableAlpha();
 ~ 				DeferredStateManager.setHDRTranslucentPassBlendFunc();

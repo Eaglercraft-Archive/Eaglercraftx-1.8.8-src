@@ -15,8 +15,26 @@
 
 ~ 	private EaglercraftRandom rand;
 
-> CHANGE  32 : 33  @  32 : 33
+> CHANGE  15 : 22  @  15 : 22
 
-~ 		this.rand = new EaglercraftRandom(parLong1);
+~ 	private MapGenBase caveGenerator;
+~ 	private MapGenStronghold strongholdGenerator;
+~ 	private MapGenVillage villageGenerator;
+~ 	private MapGenMineshaft mineshaftGenerator;
+~ 	private MapGenScatteredFeature scatteredFeatureGenerator;
+~ 	private MapGenBase ravineGenerator;
+~ 	private StructureOceanMonument oceanMonumentGenerator;
+
+> CHANGE  10 : 19  @  10 : 11
+
+~ 		boolean scramble = !worldIn.getWorldInfo().isOldEaglercraftRandom();
+~ 		this.rand = new EaglercraftRandom(parLong1, scramble);
+~ 		this.caveGenerator = new MapGenCaves(scramble);
+~ 		this.strongholdGenerator = new MapGenStronghold(scramble);
+~ 		this.villageGenerator = new MapGenVillage(scramble);
+~ 		this.mineshaftGenerator = new MapGenMineshaft(scramble);
+~ 		this.scatteredFeatureGenerator = new MapGenScatteredFeature(scramble);
+~ 		this.ravineGenerator = new MapGenRavine(scramble);
+~ 		this.oceanMonumentGenerator = new StructureOceanMonument(scramble);
 
 > EOF

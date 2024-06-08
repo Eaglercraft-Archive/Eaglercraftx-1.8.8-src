@@ -124,8 +124,13 @@ public class GBufferAcceleratedEffectRenderer extends AbstractAcceleratedEffectR
 		shaderProgram.useProgram();
 
 		_wglUniform3f(shaderProgram.uniforms.u_texCoordSize2f_particleSize1f, texCoordWidth, texCoordHeight, 0.0625f);
-		_wglUniform4f(shaderProgram.uniforms.u_transformParam_1_2_3_4_f, f1, f5, f2, f3);
-		_wglUniform1f(shaderProgram.uniforms.u_transformParam_5_f, f4);
+		if(shaderProgram.uniforms.u_transformParam_1_2_5_f != null) {
+			_wglUniform3f(shaderProgram.uniforms.u_transformParam_1_2_5_f, f1, f5, f4);
+			_wglUniform2f(shaderProgram.uniforms.u_transformParam_3_4_f, f2, f3);
+		}else {
+			_wglUniform4f(shaderProgram.uniforms.u_transformParam_1_2_3_4_f, f1, f5, f2, f3);
+			_wglUniform1f(shaderProgram.uniforms.u_transformParam_5_f, f4);
+		}
 		if(isMaterialNormalTexture) {
 			_wglUniform2f(shaderProgram.uniforms.u_textureYScale2f, 0.5f, 0.5f);
 		}else {

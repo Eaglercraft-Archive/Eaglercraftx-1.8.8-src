@@ -11,8 +11,15 @@
 
 > DELETE  6  @  6 : 7
 
-> CHANGE  7 : 8  @  7 : 8
+> INSERT  4 : 8  @  4
 
-~ 		EaglercraftRandom random = new EaglercraftRandom(parLong1);
++ 	public MapGenRavine(boolean scramble) {
++ 		super(scramble);
++ 	}
++ 
+
+> CHANGE  3 : 4  @  3 : 4
+
+~ 		EaglercraftRandom random = new EaglercraftRandom(parLong1, this.rand.isScramble());
 
 > EOF

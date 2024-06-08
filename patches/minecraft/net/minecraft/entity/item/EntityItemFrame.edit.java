@@ -9,7 +9,11 @@
 
 + import net.minecraft.client.Minecraft;
 
-> INSERT  189 : 198  @  189
+> INSERT  5 : 6  @  5
+
++ import net.minecraft.item.Item;
+
+> INSERT  184 : 206  @  184
 
 + 
 + 	public boolean eaglerEmissiveFlag = false;
@@ -19,6 +23,19 @@
 + 		super.renderDynamicLightsEaglerAt(entityX, entityY, entityZ, renderX, renderY, renderZ, partialTicks,
 + 				isInFrustum);
 + 		eaglerEmissiveFlag = Minecraft.getMinecraft().entityRenderer.renderItemEntityLight(this, 0.1f);
++ 	}
++ 
++ 	protected float getEaglerDynamicLightsValueSimple(float partialTicks) {
++ 		float f = super.getEaglerDynamicLightsValueSimple(partialTicks);
++ 		ItemStack itm = this.getDisplayedItem();
++ 		if (itm != null && itm.stackSize > 0) {
++ 			Item item = itm.getItem();
++ 			if (item != null) {
++ 				float f2 = item.getHeldItemBrightnessEagler() * 0.75f;
++ 				f = Math.min(f + f2 * 0.5f, 1.0f) + f2 * 0.5f;
++ 			}
++ 		}
++ 		return f;
 + 	}
 
 > EOF

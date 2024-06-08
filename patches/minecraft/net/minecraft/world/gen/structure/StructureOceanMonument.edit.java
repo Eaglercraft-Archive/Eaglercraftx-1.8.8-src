@@ -11,7 +11,17 @@
 
 > DELETE  11  @  11 : 15
 
-> CHANGE  45 : 46  @  45 : 46
+> CHANGE  8 : 10  @  8 : 9
+
+~ 	public StructureOceanMonument(boolean scramble) {
+~ 		super(scramble);
+
+> CHANGE  4 : 6  @  4 : 6
+
+~ 	public StructureOceanMonument(Map<String, String> parMap, boolean scramble) {
+~ 		this(scramble);
+
+> CHANGE  30 : 31  @  30 : 31
 
 ~ 		EaglercraftRandom random = this.worldObj.setRandomSeed(i1, j1, 10387313);
 

@@ -5,13 +5,14 @@
 # Version: 1.0
 # Author: lax1dude
 
-> INSERT  4 : 9  @  4
+> INSERT  4 : 10  @  4
 
 + 
 + import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 + import net.lax1dude.eaglercraft.v1_8.opengl.WorldRenderer;
 + import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.DeferredStateManager;
 + import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.VertexMarkerState;
++ import net.lax1dude.eaglercraft.v1_8.opengl.ext.dynamiclights.DynamicLightsStateManager;
 
 > DELETE  3  @  3 : 7
 
@@ -52,20 +53,22 @@
 
 ~ 					worldRendererIn, list1, bitset, afloat);
 
-> INSERT  9 : 10  @  9
+> INSERT  9 : 11  @  9
 
 + 		boolean isDeferred = DeferredStateManager.isDeferredRenderer();
++ 		boolean isDynamicLights = isDeferred || DynamicLightsStateManager.isDynamicLightsRender();
 
 > CHANGE  8 : 9  @  8 : 9
 
 ~ 			if (!isDeferred && block$enumoffsettype == Block.EnumOffsetType.XYZ) {
 
-> CHANGE  4 : 8  @  4 : 6
+> CHANGE  4 : 9  @  4 : 6
 
 ~ 		for (int i = 0, l = listQuadsIn.size(); i < l; ++i) {
 ~ 			BakedQuad bakedquad = listQuadsIn.get(i);
-~ 			int[] vertData = isDeferred ? bakedquad.getVertexDataWithNormals() : bakedquad.getVertexData();
-~ 			this.fillQuadBounds(blockIn, vertData, bakedquad.getFace(), quadBounds, boundsFlags, isDeferred ? 8 : 7);
+~ 			int[] vertData = isDynamicLights ? bakedquad.getVertexDataWithNormals() : bakedquad.getVertexData();
+~ 			this.fillQuadBounds(blockIn, vertData, bakedquad.getFace(), quadBounds, boundsFlags,
+~ 					isDynamicLights ? 8 : 7);
 
 > CHANGE  2 : 3  @  2 : 3
 
@@ -101,10 +104,11 @@
 + 	private final BlockPos blockpos5 = new BlockPos(0, 0, 0);
 + 
 
-> CHANGE  2 : 4  @  2 : 3
+> CHANGE  2 : 5  @  2 : 3
 
 ~ 			List<BakedQuad> listQuadsIn, BitSet boundsFlags, float[] quadBounds) {
 ~ 		boolean isDeferred = DeferredStateManager.isDeferredRenderer();
+~ 		boolean isDynamicLights = isDeferred || DynamicLightsStateManager.isDynamicLightsRender();
 
 > CHANGE  11 : 12  @  11 : 12
 
@@ -115,9 +119,9 @@
 ~ 		for (int m = 0, n = listQuadsIn.size(); m < n; ++m) {
 ~ 			BakedQuad bakedquad = listQuadsIn.get(m);
 ~ 			EnumFacing facingIn = bakedquad.getFace();
-~ 			int[] vertData = isDeferred ? bakedquad.getVertexDataWithNormals() : bakedquad.getVertexData();
+~ 			int[] vertData = isDynamicLights ? bakedquad.getVertexDataWithNormals() : bakedquad.getVertexData();
 ~ 			blockPosIn.offsetEvenFaster(facingIn, blockpos0);
-~ 			this.fillQuadBounds(blockIn, vertData, facingIn, quadBounds, boundsFlags, isDeferred ? 8 : 7);
+~ 			this.fillQuadBounds(blockIn, vertData, facingIn, quadBounds, boundsFlags, isDynamicLights ? 8 : 7);
 ~ 			boolean boundsFlags0 = boundsFlags.get(0);
 
 > CHANGE  1 : 2  @  1 : 5

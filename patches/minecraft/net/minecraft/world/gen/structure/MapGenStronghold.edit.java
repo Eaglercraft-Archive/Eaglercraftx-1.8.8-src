@@ -11,15 +11,25 @@
 
 > DELETE  6  @  6 : 10
 
-> CHANGE  14 : 17  @  14 : 15
+> CHANGE  8 : 10  @  8 : 9
+
+~ 	public MapGenStronghold(boolean scramble) {
+~ 		super(scramble);
+
+> CHANGE  5 : 8  @  5 : 6
 
 ~ 		BiomeGenBase[] biomes = BiomeGenBase.getBiomeGenArray();
 ~ 		for (int i = 0; i < biomes.length; ++i) {
 ~ 			BiomeGenBase biomegenbase = biomes[i];
 
-> CHANGE  31 : 32  @  31 : 32
+> CHANGE  7 : 9  @  7 : 9
 
-~ 			EaglercraftRandom random = new EaglercraftRandom();
+~ 	public MapGenStronghold(Map<String, String> parMap, boolean scramble) {
+~ 		this(scramble);
+
+> CHANGE  22 : 23  @  22 : 23
+
+~ 			EaglercraftRandom random = new EaglercraftRandom(!this.worldObj.getWorldInfo().isOldEaglercraftRandom());
 
 > CHANGE  26 : 28  @  26 : 27
 

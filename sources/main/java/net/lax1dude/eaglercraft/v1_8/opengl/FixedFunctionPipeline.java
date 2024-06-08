@@ -19,6 +19,7 @@ import net.lax1dude.eaglercraft.v1_8.internal.PlatformRuntime;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 import net.lax1dude.eaglercraft.v1_8.opengl.StreamBuffer.StreamBufferInstance;
+import net.lax1dude.eaglercraft.v1_8.opengl.ext.dynamiclights.DynamicLightsStateManager;
 import net.lax1dude.eaglercraft.v1_8.vector.Matrix4f;
 import net.lax1dude.eaglercraft.v1_8.vector.Vector4f;
 import net.minecraft.util.MathHelper;
@@ -904,7 +905,9 @@ public class FixedFunctionPipeline {
 					_wglUniform3f(stateLightingAmbientUniform3f, r, g, b);
 				}
 			}
-			
+		}
+		
+		if(stateEnableMCLighting || DynamicLightsStateManager.isInDynamicLightsPass()) {
 			if(!stateHasAttribNormal) {
 				serial = GlStateManager.stateNormalSerial;
 				if(stateNormalSerial != serial) {
