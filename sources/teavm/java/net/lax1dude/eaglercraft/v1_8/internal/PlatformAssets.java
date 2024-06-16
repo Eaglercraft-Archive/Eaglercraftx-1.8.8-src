@@ -16,7 +16,6 @@ import org.teavm.jso.dom.html.HTMLCanvasElement;
 import org.teavm.jso.dom.html.HTMLImageElement;
 import org.teavm.jso.dom.xml.Document;
 import org.teavm.jso.typedarrays.ArrayBuffer;
-import org.teavm.jso.typedarrays.Int32Array;
 import org.teavm.jso.typedarrays.Uint8ClampedArray;
 
 import net.lax1dude.eaglercraft.v1_8.EaglerInputStream;
@@ -54,7 +53,7 @@ public class PlatformAssets {
 			ArrayBuffer file = PlatformRuntime.downloadRemoteURI(
 					ClientMain.configLocalesFolder + "/" + path.substring(22));
 			if(file != null && file.getByteLength() > 0) {
-				data = TeaVMUtils.arrayBufferToBytes(file);
+				data = TeaVMUtils.wrapByteArrayBuffer(file);
 				assets.put(path, data);
 				return data;
 			}else {
@@ -79,11 +78,14 @@ public class PlatformAssets {
 	private static CanvasRenderingContext2D imageLoadContext = null;
 	
 	public static ImageData loadImageFile(byte[] data) {
-		return loadImageFile(TeaVMUtils.unwrapUnsignedByteArray(data).getBuffer());
+		return loadImageFile(TeaVMUtils.unwrapArrayBuffer(data));
 	}
 	
 	@JSBody(params = { }, script = "return { willReadFrequently: true };")
 	public static native JSObject youEagler();
+	
+	@JSBody(params = { "ctx" }, script = "ctx.imageSmoothingEnabled = false;")
+	private static native void disableImageSmoothing(CanvasRenderingContext2D ctx);
 	
 	@Async
 	private static native ImageData loadImageFile(ArrayBuffer data);
@@ -105,6 +107,7 @@ public class PlatformAssets {
 				}
 				if(imageLoadContext == null) {
 					imageLoadContext = (CanvasRenderingContext2D) imageLoadCanvas.getContext("2d", youEagler());
+					disableImageSmoothing(imageLoadContext);
 				}
 				imageLoadContext.clearRect(0, 0, toLoad.getWidth(), toLoad.getHeight());
 				imageLoadContext.drawImage(toLoad, 0, 0, toLoad.getWidth(), toLoad.getHeight());
@@ -116,7 +119,7 @@ public class PlatformAssets {
 					ret.complete(null);
 					return;
 				}
-				ret.complete(new ImageData(pxlsDat.getWidth(), pxlsDat.getHeight(), TeaVMUtils.wrapIntArray(Int32Array.create(pxls.getBuffer())), true));
+				ret.complete(new ImageData(pxlsDat.getWidth(), pxlsDat.getHeight(), TeaVMUtils.wrapIntArrayBuffer(pxls.getBuffer()), true));
 			}
 		});
 		toLoad.addEventListener("error", new EventListener<Event>() {

@@ -69,7 +69,7 @@ void main() {
 	fragPos4f.xyz /= fragPos4f.w;
 	fragPos4f.w = 1.0;
 
-	float l = sqrt(dot(fragPos4f.xyz, fragPos4f.xyz));
+	float l = length(fragPos4f.xyz);
 #ifdef COMPILE_FOG_LINEAR
 	float f = (l - u_linearFogParam2f.x) / (u_linearFogParam2f.y - u_linearFogParam2f.x);
 #else

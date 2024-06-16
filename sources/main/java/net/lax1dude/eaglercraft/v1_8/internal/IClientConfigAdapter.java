@@ -74,6 +74,8 @@ public interface IClientConfigAdapter {
 
 	String getLocalStorageNamespace();
 
+	boolean isEnableMinceraft();
+
 	IClientConfigAdapterHooks getHooks();
 
 }

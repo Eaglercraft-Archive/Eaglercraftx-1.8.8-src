@@ -48,7 +48,9 @@ void main() {
 	}
 
 	vec4 light;
+	float blockLight = v_lightmap2f.x;
 	float diffuse = 0.0;
+	float len;
 	if(u_dynamicLightCount1i > 0) {
 		vec4 worldPosition4f = u_inverseViewMatrix4f * v_position4f;
 		worldPosition4f.xyz /= worldPosition4f.w;
@@ -57,11 +59,13 @@ void main() {
 		for(int i = 0; i < safeLightCount; ++i) {
 			light = u_dynamicLightArray[i];
 			light.xyz = light.xyz - worldPosition4f.xyz;
-			diffuse += max(dot(normalize(light.xyz), normalVector3f) * 0.8 + 0.2, 0.0) * max(light.w - sqrt(dot(light.xyz, light.xyz)), 0.0);
+			len = length(light.xyz);
+			diffuse += max(dot(light.xyz / len, normalVector3f) * 0.8 + 0.2, 0.0) * max(light.w - len, 0.0);
 		}
+		blockLight = min(blockLight + diffuse * 0.066667, 1.0);
 	}
 
-	color *= texture(u_lightmapTexture, vec2(min(v_lightmap2f.x + diffuse * 0.066667, 1.0), v_lightmap2f.y));
+	color *= texture(u_lightmapTexture, vec2(blockLight, v_lightmap2f.y));
 
 	output4f = color;
 }

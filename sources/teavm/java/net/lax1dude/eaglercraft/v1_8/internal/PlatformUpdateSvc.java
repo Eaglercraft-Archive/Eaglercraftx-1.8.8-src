@@ -2,7 +2,6 @@ package net.lax1dude.eaglercraft.v1_8.internal;
 
 import org.teavm.jso.JSBody;
 import org.teavm.jso.typedarrays.ArrayBuffer;
-import org.teavm.jso.typedarrays.Uint8Array;
 
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.internal.teavm.TeaVMUpdateThread;
@@ -62,7 +61,7 @@ public class PlatformUpdateSvc {
 			logger.error("Failed to download client bundle or signature URL!");
 			return null;
 		}
-		return TeaVMUtils.wrapUnsignedByteArray(Uint8Array.create(buf));
+		return TeaVMUtils.wrapByteArrayBuffer(buf);
 	}
 
 	public static byte[] getClientSignatureData() {

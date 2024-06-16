@@ -143,6 +143,11 @@ public class DesktopClientConfigAdapter implements IClientConfigAdapter {
 	}
 
 	@Override
+	public boolean isEnableMinceraft() {
+		return true;
+	}
+
+	@Override
 	public IClientConfigAdapterHooks getHooks() {
 		return hooks;
 	}

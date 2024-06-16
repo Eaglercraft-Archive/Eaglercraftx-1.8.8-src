@@ -23,14 +23,14 @@
 
 ### To compile the latest version of the client, on Windows:
 
-1. Make sure you have at least Java 11 installed and added to your PATH, its is recommended to use Java 17
+1. Make sure you have at least Java 11 installed and added to your PATH, it is recommended to use Java 17
 2. Download (clone) this repository to your computer
 3. Double click `CompileLatestClient.bat`, a GUI resembling a classic windows installer should open
 4. Follow the steps shown to you in the new window to finish compiling
 
 ### To compile the latest version of the client, on Linux/macOS:
 
-1. Make sure you have at least Java 11 installed, its is recommended to use Java 17
+1. Make sure you have at least Java 11 installed, it is recommended to use Java 17
 2. Download (clone) this repository to your computer
 3. Open a terminal in the folder the repository was cloned to
 4. Type `chmod +x CompileLatestClient.sh` and hit enter
@@ -62,6 +62,12 @@ EaglercraftX 1.8 includes a deferred physically-based renderer modeled after the
 ## Voice Chat
 
 EaglercraftX 1.8 includes an integrated voice-chat service that can be used in shared worlds and also on multiplayer servers when it is enabled by the server owner. This feature also uses WebRTC like shared worlds, so be careful that you don't leak your IP address accidentally by using it on a public server. If you own a website and don't want people to use voice chat on it, edit the `eaglercraftXOpts` variable in your index.html and add `allowVoiceClient: false`.
+
+## Resource Packs
+
+EaglercraftX 1.8 allows you to use any vanilla Minecraft 1.8 resource pack in your browser by importing it as a zip file, resource packs are saved to your browser's local storage and are saved between page refreshes. This can be used to add the original C418 soundtrack back into the game, download and import [this pack](https://bafybeiayojww5jfyzvlmtuk7l5ufkt7nlfto7mhwmzf2vs4bvsjd5ouiuq.ipfs.nftstorage.link/?filename=Music_For_Eaglercraft.zip) to add music back to Eaglercraft. A known bug with the debug desktop runtime is that sound files in resource packs do not play, this may be fixed in the future but is not a high priority issue.
+
+If you are creating a resource pack and want to disable the blur filter on the main menu panorama, create a file called `assets/minecraft/textures/gui/title/background/enable_blur.txt` in your pack and set it's contents to `enable_blur=0`
 
 ## Making a Server
 
@@ -156,6 +162,7 @@ The default eaglercraftXOpts values is this:
 - `allowVoiceClient:` can be used to disable the voice chat feature
 - `allowFNAWSkins:` can be used to disable the high poly FNAW skins
 - `localStorageNamespace:` can be used to change the prefix of the local storage keys (Default: `"_eaglercraftX"`)
+- `enableMinceraft:` can be used to disable the "Minceraft" title screen
 - `hooks:` can be used to define JavaScript callbacks for certain events
     * `localStorageSaved:` JavaScript callback to save local storage keys
     * `localStorageLoaded:` JavaScript callback to load local storage keys

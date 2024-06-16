@@ -8,7 +8,6 @@ import net.lax1dude.eaglercraft.v1_8.opengl.FixedFunctionShader.FixedFunctionSta
 import net.lax1dude.eaglercraft.v1_8.opengl.IExtPipelineCompiler;
 import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.program.ShaderSource;
 import net.lax1dude.eaglercraft.v1_8.opengl.ext.dynamiclights.program.DynamicLightsExtPipelineShader;
-import net.lax1dude.eaglercraft.v1_8.vector.Matrix4f;
 import net.minecraft.client.renderer.GLAllocation;
 
 /**

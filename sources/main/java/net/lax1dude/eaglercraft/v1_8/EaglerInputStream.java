@@ -121,20 +121,24 @@ public class EaglerInputStream extends InputStream {
 	}
 
 	public static byte[] inputStreamToBytes(InputStream is) throws IOException {
-		if (is instanceof EaglerInputStream) {
-			return ((EaglerInputStream) is).getAsArray();
-		} else if (is instanceof ByteArrayInputStream) {
-			byte[] ret = new byte[is.available()];
-			is.read(ret);
-			return ret;
-		} else {
-			EaglerOutputStream os = new EaglerOutputStream(1024);
-			byte[] buf = new byte[1024];
-			int i;
-			while ((i = is.read(buf)) != -1) {
-				os.write(buf, 0, i);
+		try {
+			if (is instanceof EaglerInputStream) {
+				return ((EaglerInputStream) is).getAsArray();
+			} else if (is instanceof ByteArrayInputStream) {
+				byte[] ret = new byte[is.available()];
+				is.read(ret);
+				return ret;
+			} else {
+				EaglerOutputStream os = new EaglerOutputStream(1024);
+				byte[] buf = new byte[1024];
+				int i;
+				while ((i = is.read(buf)) != -1) {
+					os.write(buf, 0, i);
+				}
+				return os.toByteArray();
 			}
-			return os.toByteArray();
+		}finally {
+			is.close();
 		}
 	}
 

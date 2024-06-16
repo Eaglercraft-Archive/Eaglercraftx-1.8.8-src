@@ -29,7 +29,6 @@ import org.teavm.jso.dom.html.HTMLCanvasElement;
 import org.teavm.jso.dom.html.HTMLDocument;
 import org.teavm.jso.dom.html.HTMLElement;
 import org.teavm.jso.typedarrays.ArrayBuffer;
-import org.teavm.jso.typedarrays.Uint8Array;
 import org.teavm.jso.webaudio.MediaStream;
 import org.teavm.jso.webgl.WebGLFramebuffer;
 
@@ -311,7 +310,7 @@ public class PlatformRuntime {
 	}
 
 	public static void downloadRemoteURIByteArray(String assetPackageURI, final Consumer<byte[]> cb) {
-		downloadRemoteURI(assetPackageURI, arr -> cb.accept(TeaVMUtils.wrapUnsignedByteArray(Uint8Array.create(arr))));
+		downloadRemoteURI(assetPackageURI, arr -> cb.accept(TeaVMUtils.wrapByteArrayBuffer(arr)));
 	}
 
 	public static void downloadRemoteURI(String assetPackageURI, final Consumer<ArrayBuffer> cb) {

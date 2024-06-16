@@ -3,6 +3,7 @@ package net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.texture;
 import java.io.IOException;
 import java.io.InputStream;
 
+import net.lax1dude.eaglercraft.v1_8.IOUtils;
 import net.lax1dude.eaglercraft.v1_8.opengl.ImageData;
 
 /**
@@ -73,6 +74,17 @@ public class EaglerBitwisePackedTexture {
 			throw new IOException("Invalid footer! (:>)");
 		}
 		return img;
+	}
+
+	public static ImageData loadTextureSafe(InputStream is, int alpha) throws IOException {
+		ImageData bufferedimage;
+		try {
+			bufferedimage = loadTexture(is, alpha);
+		} finally {
+			IOUtils.closeQuietly(is);
+		}
+
+		return bufferedimage;
 	}
 
 }

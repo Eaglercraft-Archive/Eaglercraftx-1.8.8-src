@@ -10,7 +10,6 @@ import org.teavm.jso.JSObject;
 import org.teavm.jso.dom.events.ErrorEvent;
 import org.teavm.jso.dom.events.EventListener;
 import org.teavm.jso.typedarrays.ArrayBuffer;
-import org.teavm.jso.typedarrays.Uint8Array;
 import org.teavm.jso.workers.Worker;
 
 import net.lax1dude.eaglercraft.v1_8.internal.IPCPacketData;
@@ -92,7 +91,7 @@ public class ClientPlatformSingleplayer {
 			}
 			
 			synchronized(messageQueue) {
-				messageQueue.add(new IPCPacketData(channel, TeaVMUtils.wrapUnsignedByteArray(Uint8Array.create(buf))));
+				messageQueue.add(new IPCPacketData(channel, TeaVMUtils.wrapByteArrayBuffer(buf)));
 			}
 		}
 		
@@ -196,10 +195,7 @@ public class ClientPlatformSingleplayer {
 	}
 
 	public static void sendPacket(IPCPacketData packet) {
-		ArrayBuffer arb = ArrayBuffer.create(packet.contents.length);
-		Uint8Array ar = Uint8Array.create(arb);
-		ar.set(packet.contents);
-		sendPacketTeaVM(packet.channel, TeaVMUtils.unwrapUnsignedByteArray(packet.contents).getBuffer());
+		sendPacketTeaVM(packet.channel, TeaVMUtils.unwrapArrayBuffer(packet.contents));
 	}
 
 	public static void sendPacketTeaVM(String channel, ArrayBuffer packet) {

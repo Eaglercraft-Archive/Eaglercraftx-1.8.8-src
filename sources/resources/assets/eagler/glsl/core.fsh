@@ -170,7 +170,7 @@ void main() {
 
 #ifdef COMPILE_ENABLE_FOG
 	vec3 fogPos = v_position4f.xyz / v_position4f.w;
-	float dist = sqrt(dot(fogPos, fogPos));
+	float dist = length(fogPos);
 	float fogDensity = u_fogParameters4f.y;
 	float fogStart = u_fogParameters4f.z;
 	float fogEnd = u_fogParameters4f.w;

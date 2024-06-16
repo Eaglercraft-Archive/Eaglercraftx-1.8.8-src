@@ -24,7 +24,6 @@ import org.teavm.jso.dom.events.Event;
 import org.teavm.jso.dom.events.EventListener;
 import org.teavm.jso.json.JSON;
 import org.teavm.jso.typedarrays.ArrayBuffer;
-import org.teavm.jso.typedarrays.Uint8Array;
 import org.teavm.jso.websocket.WebSocket;
 
 import com.google.common.collect.LinkedListMultimap;
@@ -211,7 +210,7 @@ public class PlatformWebRTC {
 
 			TeaVMUtils.addEventListener(dataChannel, "message", (EventListener<Event>) evt -> {
 				synchronized(clientLANPacketBuffer) {
-					clientLANPacketBuffer.add(TeaVMUtils.wrapUnsignedByteArray(Uint8Array.create(getData(evt))));
+					clientLANPacketBuffer.add(TeaVMUtils.wrapByteArrayBuffer(getData(evt)));
 				}
 			});
 
@@ -326,7 +325,7 @@ public class PlatformWebRTC {
 					serverLANEventBuffer.put(peerId, new LANPeerEvent.LANPeerDataChannelEvent(peerId));
 				}
 				TeaVMUtils.addEventListener(dataChannel, "message", (EventListener<Event>) evt2 -> {
-					LANPeerEvent.LANPeerPacketEvent e = new LANPeerEvent.LANPeerPacketEvent(peerId, TeaVMUtils.wrapUnsignedByteArray(Uint8Array.create(getData(evt2))));
+					LANPeerEvent.LANPeerPacketEvent e = new LANPeerEvent.LANPeerPacketEvent(peerId, TeaVMUtils.wrapByteArrayBuffer(getData(evt2)));
 					synchronized(serverLANEventBuffer) {
 						serverLANEventBuffer.put(peerId, e);
 					}
@@ -538,10 +537,6 @@ public class PlatformWebRTC {
 	@JSBody(params = { "obj" }, script = "return typeof obj === \"string\";")
 	private static native boolean isString(JSObject obj);
 
-	private static ArrayBuffer convertToArrayBuffer(byte[] arr) {
-		return TeaVMUtils.unwrapUnsignedByteArray(arr).getBuffer();
-	}
-
 	private static final Map<String,Long> relayQueryLimited = new HashMap<>();
 	private static final Map<String,Long> relayQueryBlocked = new HashMap<>();
 
@@ -587,7 +582,7 @@ public class PlatformWebRTC {
 			sock.onOpen(evt -> {
 				try {
 					connectionPingStart = System.currentTimeMillis();
-					PlatformNetworking.nativeBinarySend(sock, convertToArrayBuffer(
+					PlatformNetworking.nativeBinarySend(sock, TeaVMUtils.unwrapArrayBuffer(
 							IPacket.writePacket(new IPacket00Handshake(0x03, RelayManager.preferredRelayVersion, ""))
 					));
 				} catch (IOException e) {
@@ -599,7 +594,7 @@ public class PlatformWebRTC {
 			sock.onMessage(evt -> {
 				if(evt.getData() != null && !isString(evt.getData())) {
 					hasRecievedAnyData = true;
-					byte[] arr = TeaVMUtils.wrapUnsignedByteArray(Uint8Array.create(evt.getDataAsArray()));
+					byte[] arr = TeaVMUtils.wrapByteArrayBuffer(evt.getDataAsArray());
 					if(arr.length == 2 && arr[0] == (byte)0xFC) {
 						long millis = System.currentTimeMillis();
 						if(arr[1] == (byte)0x00 || arr[1] == (byte)0x01) {
@@ -842,7 +837,7 @@ public class PlatformWebRTC {
 			sock = s;
 			sock.onOpen(evt -> {
 				try {
-					PlatformNetworking.nativeBinarySend(sock, convertToArrayBuffer(
+					PlatformNetworking.nativeBinarySend(sock, TeaVMUtils.unwrapArrayBuffer(
 							IPacket.writePacket(new IPacket00Handshake(0x04, RelayManager.preferredRelayVersion, ""))
 					));
 				} catch (IOException e) {
@@ -855,7 +850,7 @@ public class PlatformWebRTC {
 			sock.onMessage(evt -> {
 				if(evt.getData() != null && !isString(evt.getData())) {
 					hasRecievedAnyData = true;
-					byte[] arr = TeaVMUtils.wrapUnsignedByteArray(Uint8Array.create(evt.getDataAsArray()));
+					byte[] arr = TeaVMUtils.wrapByteArrayBuffer(evt.getDataAsArray());
 					if(arr.length == 2 && arr[0] == (byte)0xFC) {
 						long millis = System.currentTimeMillis();
 						if(arr[1] == (byte)0x00 || arr[1] == (byte)0x01) {
@@ -1065,7 +1060,7 @@ public class PlatformWebRTC {
 				if(evt.getData() != null && !isString(evt.getData())) {
 					hasRecievedAnyData = true;
 					try {
-						IPacket pkt = IPacket.readPacket(new DataInputStream(new EaglerInputStream(TeaVMUtils.wrapUnsignedByteArray(Uint8Array.create(evt.getDataAsArray())))));
+						IPacket pkt = IPacket.readPacket(new DataInputStream(new EaglerInputStream(TeaVMUtils.wrapByteArrayBuffer(evt.getDataAsArray()))));
 						if(pkt instanceof IPacket70SpecialUpdate) {
 							IPacket70SpecialUpdate ipkt = (IPacket70SpecialUpdate)pkt;
 							if(ipkt.operation == IPacket70SpecialUpdate.OPERATION_UPDATE_CERTIFICATE) {
@@ -1136,7 +1131,7 @@ public class PlatformWebRTC {
 		@Override
 		public void writePacket(IPacket pkt) {
 			try {
-				PlatformNetworking.nativeBinarySend(sock, convertToArrayBuffer(IPacket.writePacket(pkt)));
+				PlatformNetworking.nativeBinarySend(sock, TeaVMUtils.unwrapArrayBuffer(IPacket.writePacket(pkt)));
 			} catch (Throwable e) {
 				logger.error("Relay connection error: {}", e.toString());
 				EagRuntime.debugPrintStackTrace(e);
@@ -1283,7 +1278,7 @@ public class PlatformWebRTC {
 
 	// todo: ArrayBuffer version
 	public static void clientLANSendPacket(byte[] pkt) {
-		rtcLANClient.sendPacketToServer(convertToArrayBuffer(pkt));
+		rtcLANClient.sendPacketToServer(TeaVMUtils.unwrapArrayBuffer(pkt));
 	}
 
 	public static byte[] clientLANReadPacket() {
@@ -1409,7 +1404,7 @@ public class PlatformWebRTC {
 	}
 
 	public static void serverLANWritePacket(String peer, byte[] data) {
-		rtcLANServer.sendPacketToRemoteClient(peer, TeaVMUtils.unwrapUnsignedByteArray(data).getBuffer());
+		rtcLANServer.sendPacketToRemoteClient(peer, TeaVMUtils.unwrapArrayBuffer(data));
 	}
 
 	public static void serverLANCreatePeer(String peer) {

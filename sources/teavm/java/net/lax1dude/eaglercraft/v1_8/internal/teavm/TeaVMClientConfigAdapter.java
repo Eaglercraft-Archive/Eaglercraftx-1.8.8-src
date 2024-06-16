@@ -60,6 +60,7 @@ public class TeaVMClientConfigAdapter implements IClientConfigAdapter {
 	private boolean allowFNAWSkins = true;
 	private String localStorageNamespace = "_eaglercraftX";
 	private final TeaVMClientConfigAdapterHooks hooks = new TeaVMClientConfigAdapterHooks();
+	private boolean enableMinceraft = true;
 
 	public void loadNative(JSObject jsObject) {
 		integratedServerOpts = new JSONObject();
@@ -81,6 +82,7 @@ public class TeaVMClientConfigAdapter implements IClientConfigAdapter {
 		allowVoiceClient = eaglercraftXOpts.getAllowVoiceClient(true);
 		allowFNAWSkins = !demoMode && eaglercraftXOpts.getAllowFNAWSkins(true);
 		localStorageNamespace = eaglercraftXOpts.getLocalStorageNamespace(EaglercraftVersion.localStorageNamespace);
+		enableMinceraft = eaglercraftXOpts.getEnableMinceraft(true);
 		JSEaglercraftXOptsHooks hooksObj = eaglercraftXOpts.getHooks();
 		if(hooksObj != null) {
 			hooks.loadHooks(hooksObj);
@@ -175,6 +177,7 @@ public class TeaVMClientConfigAdapter implements IClientConfigAdapter {
 		allowVoiceClient = eaglercraftOpts.optBoolean("allowVoiceClient", true);
 		allowFNAWSkins = eaglercraftOpts.optBoolean("allowFNAWSkins", true);
 		localStorageNamespace = eaglercraftOpts.optString("localStorageNamespace", EaglercraftVersion.localStorageNamespace);
+		enableMinceraft = eaglercraftOpts.optBoolean("enableMinceraft", true);
 		JSONArray serversArray = eaglercraftOpts.optJSONArray("servers");
 		if(serversArray != null) {
 			for(int i = 0, l = serversArray.length(); i < l; ++i) {
@@ -333,6 +336,11 @@ public class TeaVMClientConfigAdapter implements IClientConfigAdapter {
 	}
 
 	@Override
+	public boolean isEnableMinceraft() {
+		return enableMinceraft;
+	}
+
+	@Override
 	public IClientConfigAdapterHooks getHooks() {
 		return hooks;
 	}
@@ -357,6 +365,7 @@ public class TeaVMClientConfigAdapter implements IClientConfigAdapter {
 		jsonObject.put("allowVoiceClient", allowVoiceClient);
 		jsonObject.put("allowFNAWSkins", allowFNAWSkins);
 		jsonObject.put("localStorageNamespace", localStorageNamespace);
+		jsonObject.put("enableMinceraft", enableMinceraft);
 		JSONArray serversArr = new JSONArray();
 		for(int i = 0, l = defaultServers.size(); i < l; ++i) {
 			DefaultServer srv = defaultServers.get(i);

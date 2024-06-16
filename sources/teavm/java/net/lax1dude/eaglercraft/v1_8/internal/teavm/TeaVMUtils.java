@@ -51,87 +51,197 @@ public class TeaVMUtils {
 	}
 
 	public static Int8Array unwrapByteArray(byte[] buf) {
+		if(buf == null) {
+			return null;
+		}
 		return Int8Array.create(((TeaVMArrayObject)(Object)buf).getData().getBuffer());
 	}
 
 	public static ArrayBuffer unwrapArrayBuffer(byte[] buf) {
+		if(buf == null) {
+			return null;
+		}
 		return ((TeaVMArrayObject)(Object)buf).getData().getBuffer();
 	}
 
 	public static ArrayBufferView unwrapArrayBufferView(byte[] buf) {
+		if(buf == null) {
+			return null;
+		}
 		return ((TeaVMArrayObject)(Object)buf).getData();
 	}
 
-	@JSBody(params = { "buf" }, script = "return $rt_createByteArray(buf.buffer)")
+	@JSBody(params = { "buf" }, script = "return $rt_createByteArray(buf)")
 	private static native JSObject wrapByteArray0(JSObject buf);
 
 	public static byte[] wrapByteArray(Int8Array buf) {
+		if(buf == null) {
+			return null;
+		}
+		return (byte[])(Object)wrapByteArray0(buf.getBuffer());
+	}
+
+	public static byte[] wrapByteArrayBuffer(ArrayBuffer buf) {
+		if(buf == null) {
+			return null;
+		}
 		return (byte[])(Object)wrapByteArray0(buf);
 	}
 
+	public static byte[] wrapByteArrayBufferView(ArrayBufferView buf) {
+		if(buf == null) {
+			return null;
+		}
+		return (byte[])(Object)wrapByteArray0(buf.getBuffer());
+	}
+
 	public static Uint8Array unwrapUnsignedByteArray(byte[] buf) {
+		if(buf == null) {
+			return null;
+		}
 		return Uint8Array.create(((TeaVMArrayObject)(Object)buf).getData().getBuffer());
 	}
 
 	public static byte[] wrapUnsignedByteArray(Uint8Array buf) {
-		return (byte[])(Object)wrapByteArray0(buf);
+		if(buf == null) {
+			return null;
+		}
+		return (byte[])(Object)wrapByteArray0(buf.getBuffer());
 	}
 
 	public static Int32Array unwrapIntArray(int[] buf) {
+		if(buf == null) {
+			return null;
+		}
 		return Int32Array.create(((TeaVMArrayObject)(Object)buf).getData().getBuffer());
 	}
 
 	public static ArrayBuffer unwrapArrayBuffer(int[] buf) {
+		if(buf == null) {
+			return null;
+		}
 		return ((TeaVMArrayObject)(Object)buf).getData().getBuffer();
 	}
 
 	public static ArrayBufferView unwrapArrayBufferView(int[] buf) {
+		if(buf == null) {
+			return null;
+		}
 		return ((TeaVMArrayObject)(Object)buf).getData();
 	}
 
-	@JSBody(params = { "buf" }, script = "return $rt_createIntArray(buf.buffer)")
+	@JSBody(params = { "buf" }, script = "return $rt_createIntArray(buf)")
 	private static native JSObject wrapIntArray0(JSObject buf);
 
 	public static int[] wrapIntArray(Int32Array buf) {
+		if(buf == null) {
+			return null;
+		}
+		return (int[])(Object)wrapIntArray0(buf.getBuffer());
+	}
+
+	public static int[] wrapIntArrayBuffer(ArrayBuffer buf) {
+		if(buf == null) {
+			return null;
+		}
 		return (int[])(Object)wrapIntArray0(buf);
 	}
 
+	public static int[] wrapIntArrayBufferView(ArrayBufferView buf) {
+		if(buf == null) {
+			return null;
+		}
+		return (int[])(Object)wrapIntArray0(buf.getBuffer());
+	}
+
 	public static Float32Array unwrapFloatArray(float[] buf) {
+		if(buf == null) {
+			return null;
+		}
 		return Float32Array.create(((TeaVMArrayObject)(Object)buf).getData().getBuffer());
 	}
 
 	public static ArrayBuffer unwrapArrayBuffer(float[] buf) {
+		if(buf == null) {
+			return null;
+		}
 		return ((TeaVMArrayObject)(Object)buf).getData().getBuffer();
 	}
 
 	public static ArrayBufferView unwrapArrayBufferView(float[] buf) {
+		if(buf == null) {
+			return null;
+		}
 		return ((TeaVMArrayObject)(Object)buf).getData();
 	}
 
-	@JSBody(params = { "buf" }, script = "return $rt_createFloatArray(buf.buffer)")
+	@JSBody(params = { "buf" }, script = "return $rt_createFloatArray(buf)")
 	private static native JSObject wrapFloatArray0(JSObject buf);
 
 	public static float[] wrapFloatArray(Float32Array buf) {
+		if(buf == null) {
+			return null;
+		}
+		return (float[])(Object)wrapFloatArray0(buf.getBuffer());
+	}
+
+	public static float[] wrapFloatArrayBuffer(ArrayBuffer buf) {
+		if(buf == null) {
+			return null;
+		}
 		return (float[])(Object)wrapFloatArray0(buf);
 	}
 
+	public static float[] wrapFloatArrayBufferView(ArrayBufferView buf) {
+		if(buf == null) {
+			return null;
+		}
+		return (float[])(Object)wrapFloatArray0(buf.getBuffer());
+	}
+
 	public static Int16Array unwrapShortArray(short[] buf) {
+		if(buf == null) {
+			return null;
+		}
 		return Int16Array.create(((TeaVMArrayObject)(Object)buf).getData().getBuffer());
 	}
 
 	public static ArrayBuffer unwrapArrayBuffer(short[] buf) {
+		if(buf == null) {
+			return null;
+		}
 		return ((TeaVMArrayObject)(Object)buf).getData().getBuffer();
 	}
 
 	public static ArrayBufferView unwrapArrayBufferView(short[] buf) {
+		if(buf == null) {
+			return null;
+		}
 		return ((TeaVMArrayObject)(Object)buf).getData();
 	}
 
-	@JSBody(params = { "buf" }, script = "return $rt_createShortArray(buf.buffer)")
+	@JSBody(params = { "buf" }, script = "return $rt_createShortArray(buf)")
 	private static native JSObject wrapShortArray0(JSObject buf);
 
 	public static short[] wrapShortArray(Int16Array buf) {
+		if(buf == null) {
+			return null;
+		}
+		return (short[])(Object)wrapShortArray0(buf.getBuffer());
+	}
+
+	public static short[] wrapShortArrayBuffer(ArrayBuffer buf) {
+		if(buf == null) {
+			return null;
+		}
 		return (short[])(Object)wrapShortArray0(buf);
+	}
+
+	public static short[] wrapShortArrayBuffer(ArrayBufferView buf) {
+		if(buf == null) {
+			return null;
+		}
+		return (short[])(Object)wrapShortArray0(buf.getBuffer());
 	}
 
 	@Async
@@ -141,14 +251,6 @@ public class TeaVMUtils {
 		Window.setTimeout(() -> cb.complete(null), millis);
 	}
 
-	public static final byte[] arrayBufferToBytes(ArrayBuffer buf) {
-		if(buf == null) {
-			return null;
-		}
-		
-		return wrapUnsignedByteArray(Uint8Array.create(buf));
-	}
-	
 	public static String tryResolveClassesSource() {
 		String str = dumpJSStackTrace();
 		String[] frames = EagUtils.splitPattern.split(str);

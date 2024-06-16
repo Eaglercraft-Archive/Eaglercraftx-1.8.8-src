@@ -431,7 +431,7 @@ void main() {
 		float type = u_fogParameters4f.x - atmos;
 		fogBlend4f = mix(u_fogColorLight4f, u_fogColorDark4f, lightmapCoords2f.g);
 
-		float l = sqrt(dot(v_position4f.xyz, v_position4f.xyz));
+		float l = length(v_position4f.xyz);
 		if(type == 1.0) {
 			f = (l - u_fogParameters4f.z) / (u_fogParameters4f.w - u_fogParameters4f.z);
 		}else {

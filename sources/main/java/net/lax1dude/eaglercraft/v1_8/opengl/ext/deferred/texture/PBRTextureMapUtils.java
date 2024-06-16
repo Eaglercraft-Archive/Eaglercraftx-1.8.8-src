@@ -73,7 +73,7 @@ public class PBRTextureMapUtils {
 			}catch(Throwable t) {
 			}
 			try {
-				return EaglerBitwisePackedTexture.loadTexture(resMgr.getResource(new ResourceLocation("eagler:glsl/deferred/assets_pbr/" + fname + ".ebp")).getInputStream(), 255);
+				return EaglerBitwisePackedTexture.loadTextureSafe(resMgr.getResource(new ResourceLocation("eagler:glsl/deferred/assets_pbr/" + fname + ".ebp")).getInputStream(), 255);
 			}catch(Throwable t) {
 				// dead code because teavm
 				t.toString();

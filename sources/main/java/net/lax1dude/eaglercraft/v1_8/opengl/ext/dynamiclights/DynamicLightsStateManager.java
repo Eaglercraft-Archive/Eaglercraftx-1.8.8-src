@@ -1,10 +1,9 @@
 package net.lax1dude.eaglercraft.v1_8.opengl.ext.dynamiclights;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import net.lax1dude.eaglercraft.v1_8.opengl.FixedFunctionPipeline;
 import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
@@ -31,14 +30,15 @@ import net.minecraft.util.MathHelper;
 public class DynamicLightsStateManager {
 
 	static final DynamicLightsPipelineCompiler deferredExtPipeline = new DynamicLightsPipelineCompiler();
-	static final Map<String, DynamicLightInstance> lightRenderers = new HashMap();
+	private static List<DynamicLightInstance> lightInstancePool = new ArrayList();
+	private static int instancePoolIndex = 0;
+	private static int maxListLengthTracker = 0;
 	static final List<DynamicLightInstance> lightRenderList = new LinkedList();
 	static final Matrix4f inverseViewMatrix = new Matrix4f();
 	static int inverseViewMatrixSerial = 0;
 	static DynamicLightBucketLoader bucketLoader = null;
 	static DynamicLightsAcceleratedEffectRenderer accelParticleRenderer = null;
 	static int lastTotal = 0;
-	static long renderTimeout = 5000l;
 	private static long lastTick = 0l;
 
 	public static final void enableDynamicLightsRender() {
@@ -52,6 +52,9 @@ public class DynamicLightsStateManager {
 			accelParticleRenderer = new DynamicLightsAcceleratedEffectRenderer();
 			accelParticleRenderer.initialize();
 		}
+		lightRenderList.clear();
+		instancePoolIndex = 0;
+		maxListLengthTracker = 0;
 	}
 
 	public static final void bindAcceleratedEffectRenderer(EffectRenderer renderer) {
@@ -72,6 +75,8 @@ public class DynamicLightsStateManager {
 		}
 		destroyAll();
 		lightRenderList.clear();
+		instancePoolIndex = 0;
+		maxListLengthTracker = 0;
 	}
 
 	public static final boolean isDynamicLightsRender() {
@@ -99,21 +104,27 @@ public class DynamicLightsStateManager {
 
 	public static final void renderDynamicLight(String lightName, double posX, double posY, double posZ, float radius) {
 		if(bucketLoader != null) {
-			DynamicLightInstance dl = lightRenderers.get(lightName);
-			if(dl == null) {
-				lightRenderers.put(lightName, dl = new DynamicLightInstance(lightName));
+			DynamicLightInstance dl;
+			if(instancePoolIndex < lightInstancePool.size()) {
+				dl = lightInstancePool.get(instancePoolIndex);
+			}else {
+				lightInstancePool.add(dl = new DynamicLightInstance());
 			}
+			++instancePoolIndex;
 			dl.updateLight(posX, posY, posZ, radius);
 			lightRenderList.add(dl);
 		}
 	}
 
 	public static final void clearRenderList() {
+		if(instancePoolIndex > maxListLengthTracker) {
+			maxListLengthTracker = instancePoolIndex;
+		}
 		lightRenderList.clear();
+		instancePoolIndex = 0;
 	}
 
 	public static final void commitLightSourceBuckets(double renderPosX, double renderPosY, double renderPosZ) {
-		updateTimers();
 		lastTotal = lightRenderList.size();
 		if(bucketLoader != null) {
 			bucketLoader.clearBuckets();
@@ -131,7 +142,8 @@ public class DynamicLightsStateManager {
 			bucketLoader.setRenderPos(renderPosX, renderPosY, renderPosZ);
 			bucketLoader.truncateOverflowingBuffers();
 		}
-		lightRenderList.clear();
+		updateTimers();
+		clearRenderList();
 	}
 
 	public static final void setupInverseViewMatrix() {
@@ -141,25 +153,21 @@ public class DynamicLightsStateManager {
 
 	private static final void updateTimers() {
 		long millis = System.currentTimeMillis();
-		if(millis - lastTick > 1000l) {
+		if(millis - lastTick > 5000l) {
 			lastTick = millis;
-			Iterator<DynamicLightInstance> itr = lightRenderers.values().iterator();
-			while(itr.hasNext()) {
-				DynamicLightInstance dl = itr.next();
-				if(millis - dl.lastCacheHit > renderTimeout) {
-					dl.destroy();
-					itr.remove();
+			if(maxListLengthTracker < (lightInstancePool.size() >> 1)) {
+				List<DynamicLightInstance> newPool = new ArrayList(Math.max(maxListLengthTracker, 16));
+				for(int i = 0; i < maxListLengthTracker; ++i) {
+					newPool.add(lightInstancePool.get(i));
 				}
+				lightInstancePool = newPool;
 			}
+			maxListLengthTracker = 0;
 		}
 	}
 
 	public static final void destroyAll() {
-		Iterator<DynamicLightInstance> itr = lightRenderers.values().iterator();
-		while(itr.hasNext()) {
-			itr.next().destroy();
-		}
-		lightRenderers.clear();
+		lightInstancePool = new ArrayList();
 	}
 
 	public static String getF3String() {

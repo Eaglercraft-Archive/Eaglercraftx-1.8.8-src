@@ -17,28 +17,19 @@ package net.lax1dude.eaglercraft.v1_8.opengl.ext.dynamiclights;
  */
 class DynamicLightInstance {
 
-	public final String lightName;
-	long lastCacheHit = 0l;
-
 	double posX;
 	double posY;
 	double posZ;
 	float radius;
 
-	public DynamicLightInstance(String lightName) {
-		this.lightName = lightName;
+	public DynamicLightInstance() {
 	}
 
 	public void updateLight(double posX, double posY, double posZ, float radius) {
-		this.lastCacheHit = System.currentTimeMillis();
 		this.posX = posX;
 		this.posY = posY;
 		this.posZ = posZ;
 		this.radius = radius;
-	}
-
-	public void destroy() {
-		
 	}
 
 	public float getRadiusInWorld() {

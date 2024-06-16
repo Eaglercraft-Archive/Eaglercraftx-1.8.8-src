@@ -357,9 +357,10 @@
 ~ 			logger.info("Caught error stitching, removing all assigned resourcepacks");
 ~ 			logger.info(runtimeexception);
 
-> INSERT  9 : 11  @  9
+> INSERT  9 : 12  @  9
 
 + 		ShaderSource.clearCache();
++ 		GuiMainMenu.doResourceReloadHack();
 + 
 
 > CHANGE  7 : 10  @  7 : 19

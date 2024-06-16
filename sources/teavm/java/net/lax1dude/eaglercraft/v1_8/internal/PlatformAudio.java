@@ -214,7 +214,7 @@ public class PlatformAudio {
 		if(buffer == null) {
 			byte[] file = PlatformAssets.getResourceBytes(filename);
 			if(file == null) return null;
-			buffer = new BrowserAudioResource(decodeAudioAsync(TeaVMUtils.unwrapUnsignedByteArray(file).getBuffer(), filename));
+			buffer = new BrowserAudioResource(decodeAudioAsync(TeaVMUtils.unwrapArrayBuffer(file), filename));
 			if(holdInCache) {
 				synchronized(soundCache) {
 					soundCache.put(filename, buffer);

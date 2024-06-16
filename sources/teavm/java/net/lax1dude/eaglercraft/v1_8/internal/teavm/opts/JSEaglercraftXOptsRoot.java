@@ -93,4 +93,7 @@ public abstract class JSEaglercraftXOptsRoot implements JSObject {
 	@JSBody(params = { "def" }, script = "return (typeof this.localStorageNamespace === \"string\") ? this.localStorageNamespace : def;")
 	public native String getLocalStorageNamespace(String defaultValue);
 
+	@JSBody(params = { "def" }, script = "return (typeof this.enableMinceraft === \"boolean\") ? this.enableMinceraft : def;")
+	public native boolean getEnableMinceraft(boolean defaultValue);
+
 }

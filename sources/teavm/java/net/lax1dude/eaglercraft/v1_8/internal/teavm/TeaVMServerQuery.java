@@ -10,7 +10,6 @@ import org.teavm.jso.dom.events.Event;
 import org.teavm.jso.dom.events.EventListener;
 import org.teavm.jso.dom.events.MessageEvent;
 import org.teavm.jso.typedarrays.ArrayBuffer;
-import org.teavm.jso.typedarrays.Uint8Array;
 import org.teavm.jso.websocket.WebSocket;
 
 import net.lax1dude.eaglercraft.v1_8.internal.EnumServerRateLimit;
@@ -116,7 +115,7 @@ public class TeaVMServerQuery implements IServerQuery {
 					}
 				}else {
 					synchronized(queryResponsesBytes) {
-						queryResponsesBytes.add(TeaVMUtils.wrapUnsignedByteArray(Uint8Array.create(evt.getDataAsArray())));
+						queryResponsesBytes.add(TeaVMUtils.wrapByteArrayBuffer(evt.getDataAsArray()));
 					}
 				}
 			}
@@ -143,7 +142,7 @@ public class TeaVMServerQuery implements IServerQuery {
 	@Override
 	public void send(byte[] bytes) {
 		if(open) {
-			nativeBinarySend(sock, TeaVMUtils.unwrapByteArray(bytes).getBuffer());
+			nativeBinarySend(sock, TeaVMUtils.unwrapArrayBuffer(bytes));
 		}
 	}
 

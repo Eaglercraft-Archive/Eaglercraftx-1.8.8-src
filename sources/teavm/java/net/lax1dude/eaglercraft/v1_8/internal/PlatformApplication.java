@@ -19,7 +19,6 @@ import org.teavm.jso.dom.html.HTMLCanvasElement;
 import org.teavm.jso.dom.html.HTMLDocument;
 import org.teavm.jso.dom.html.HTMLInputElement;
 import org.teavm.jso.typedarrays.ArrayBuffer;
-import org.teavm.jso.typedarrays.Uint8Array;
 
 import net.lax1dude.eaglercraft.v1_8.Base64;
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
@@ -200,7 +199,7 @@ public class PlatformApplication {
 			if(name == null) {
 				fileChooserResultObject = null;
 			}else {
-				fileChooserResultObject = new FileChooserResult(name, TeaVMUtils.wrapUnsignedByteArray(Uint8Array.create(buffer)));
+				fileChooserResultObject = new FileChooserResult(name, TeaVMUtils.wrapByteArrayBuffer(buffer));
 			}
 		}
 
@@ -296,7 +295,7 @@ public class PlatformApplication {
 	private static final native void downloadBytesImpl(String str, ArrayBuffer buf);
 
 	public static final void downloadFileWithName(String str, byte[] dat) {
-		downloadBytesImpl(str, TeaVMUtils.unwrapUnsignedByteArray(dat).getBuffer());
+		downloadBytesImpl(str, TeaVMUtils.unwrapArrayBuffer(dat));
 	}
 
 	public static void showDebugConsole() {

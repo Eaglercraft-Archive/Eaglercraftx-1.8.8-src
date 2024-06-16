@@ -8,7 +8,6 @@ import org.teavm.jso.JSBody;
 import org.teavm.jso.JSFunctor;
 import org.teavm.jso.JSObject;
 import org.teavm.jso.typedarrays.ArrayBuffer;
-import org.teavm.jso.typedarrays.Uint8Array;
 
 import net.lax1dude.eaglercraft.v1_8.internal.IClientConfigAdapter;
 import net.lax1dude.eaglercraft.v1_8.internal.IPCPacketData;
@@ -58,7 +57,7 @@ public class ServerPlatformSingleplayer {
 			}
 			
 			synchronized(messageQueue) {
-				messageQueue.add(new IPCPacketData(channel, TeaVMUtils.wrapUnsignedByteArray(Uint8Array.create(buf))));
+				messageQueue.add(new IPCPacketData(channel, TeaVMUtils.wrapByteArrayBuffer(buf)));
 			}
 		}
 		
@@ -79,10 +78,7 @@ public class ServerPlatformSingleplayer {
 	public static native void sendPacketTeaVM(String channel, ArrayBuffer arr);
 
 	public static void sendPacket(IPCPacketData packet) {
-		ArrayBuffer arb = ArrayBuffer.create(packet.contents.length);
-		Uint8Array ar = Uint8Array.create(arb);
-		ar.set(packet.contents);
-		sendPacketTeaVM(packet.channel, arb);
+		sendPacketTeaVM(packet.channel, TeaVMUtils.unwrapArrayBuffer(packet.contents));
 	}
 
 	public static List<IPCPacketData> recieveAllPacket() {

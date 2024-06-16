@@ -16,7 +16,6 @@ import org.teavm.jso.browser.Window;
 import org.teavm.jso.dom.events.Event;
 import org.teavm.jso.dom.events.EventListener;
 import org.teavm.jso.typedarrays.ArrayBuffer;
-import org.teavm.jso.typedarrays.Uint8Array;
 
 import com.google.common.collect.ListMultimap;
 
@@ -220,7 +219,7 @@ public class TeaVMUpdateThread implements Runnable {
 					if(xhr.getStatus() == 200) {
 						ArrayBuffer data = (ArrayBuffer)xhr.getResponse();
 						if(data.getByteLength() == updateCert.bundleDataLength) {
-							cb.complete(TeaVMUtils.wrapUnsignedByteArray(Uint8Array.create(data)));
+							cb.complete(TeaVMUtils.wrapByteArrayBuffer(data));
 						}else {
 							logger.error("Unexpected response length {} (expect: {}) from URL: {}", xhr.getStatus(), xhr.getStatusText(), url);
 							cb.complete(null);

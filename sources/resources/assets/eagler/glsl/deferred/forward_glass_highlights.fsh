@@ -292,7 +292,7 @@ void main() {
 		fogFade = mix(u_fogColorDark4f.a, u_fogColorLight4f.a, lightmapCoords2f.g);
 
 		float f;
-		float l = sqrt(dot(v_position4f.xyz, v_position4f.xyz));
+		float l = length(v_position4f.xyz);
 		if(type == 1.0) {
 			f = (l - u_fogParameters4f.z) / (u_fogParameters4f.w - u_fogParameters4f.z);
 		}else {

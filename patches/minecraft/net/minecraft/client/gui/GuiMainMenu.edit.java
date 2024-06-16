@@ -7,7 +7,9 @@
 
 > DELETE  2  @  2 : 3
 
-> DELETE  3  @  3 : 4
+> CHANGE  3 : 4  @  3 : 4
+
+~ import java.nio.charset.StandardCharsets;
 
 > INSERT  1 : 2  @  1
 
@@ -17,6 +19,7 @@
 
 ~ 
 ~ import net.lax1dude.eaglercraft.v1_8.EagRuntime;
+~ import net.lax1dude.eaglercraft.v1_8.EagUtils;
 ~ import net.lax1dude.eaglercraft.v1_8.EaglerInputStream;
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftVersion;
@@ -25,7 +28,6 @@
 ~ import com.google.common.base.Charsets;
 ~ import com.google.common.collect.Lists;
 ~ 
-~ import net.lax1dude.eaglercraft.v1_8.crypto.MD5Digest;
 ~ import net.lax1dude.eaglercraft.v1_8.crypto.SHA1Digest;
 ~ import net.lax1dude.eaglercraft.v1_8.internal.EnumCursorType;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
@@ -61,12 +63,10 @@
 
 ~ 	private static final EaglercraftRandom RANDOM = new EaglercraftRandom();
 
-> INSERT  1 : 7  @  1
+> INSERT  1 : 5  @  1
 
 + 	private boolean isDefault;
 + 	private static final int lendef = 5987;
-+ 	private static final byte[] md5def = new byte[] { -61, -53, -36, 27, 24, 27, 103, -31, -58, -116, 113, -60, -67, -8,
-+ 			-77, 30 };
 + 	private static final byte[] sha1def = new byte[] { -107, 77, 108, 49, 11, -100, -8, -119, -1, -100, -85, -55, 18,
 + 			-69, -107, 113, -93, -101, -79, 32 };
 
@@ -78,57 +78,104 @@
 
 > DELETE  2  @  2 : 3
 
-> INSERT  3 : 4  @  3
+> INSERT  3 : 6  @  3
 
++ 	private static final ResourceLocation minecraftTitleBlurFlag = new ResourceLocation(
++ 			"textures/gui/title/background/enable_blur.txt");
 + 	private static final ResourceLocation eaglerGuiTextures = new ResourceLocation("eagler:gui/eagler_gui.png");
 
 > DELETE  7  @  7 : 9
 
-> CHANGE  6 : 9  @  6 : 8
+> CHANGE  6 : 11  @  6 : 8
 
 ~ 	private static ResourceLocation backgroundTexture = null;
 ~ 	private GuiUpdateCheckerOverlay updateCheckerOverlay;
 ~ 	private GuiButton downloadOfflineButton;
+~ 	private boolean enableBlur = true;
+~ 	private boolean shouldReload = false;
 
-> DELETE  2  @  2 : 3
+> INSERT  1 : 3  @  1
+
++ 	private static GuiMainMenu instance = null;
++ 
+
+> CHANGE  1 : 2  @  1 : 2
+
+~ 		instance = this;
 
 > INSERT  1 : 2  @  1
 
 + 		updateCheckerOverlay = new GuiUpdateCheckerOverlay(false, this);
 
-> DELETE  38  @  38 : 44
+> CHANGE  38 : 65  @  38 : 43
 
-> INSERT  1 : 25  @  1
+~ 
+~ 		reloadResourceFlags();
+~ 	}
+~ 
+~ 	private void reloadResourceFlags() {
+~ 		if (Minecraft.getMinecraft().isDemo()) {
+~ 			this.isDefault = false;
+~ 		} else {
+~ 			if (!EagRuntime.getConfiguration().isEnableMinceraft()) {
+~ 				this.isDefault = false;
+~ 			} else {
+~ 				try {
+~ 					byte[] bytes = EaglerInputStream.inputStreamToBytesQuiet(Minecraft.getMinecraft()
+~ 							.getResourceManager().getResource(minecraftTitleTextures).getInputStream());
+~ 					if (bytes != null && bytes.length == lendef) {
+~ 						SHA1Digest sha1 = new SHA1Digest();
+~ 						byte[] sha1out = new byte[20];
+~ 						sha1.update(bytes, 0, bytes.length);
+~ 						sha1.doFinal(sha1out, 0);
+~ 						this.isDefault = Arrays.equals(sha1out, sha1def);
+~ 					} else {
+~ 						this.isDefault = false;
+~ 					}
+~ 				} catch (IOException e) {
+~ 					this.isDefault = false;
+~ 				}
+~ 			}
 
-+ 		if (Minecraft.getMinecraft().isDemo()) {
-+ 			this.isDefault = false;
-+ 		} else {
-+ 			MD5Digest md5 = new MD5Digest();
-+ 			SHA1Digest sha1 = new SHA1Digest();
-+ 			byte[] md5out = new byte[16];
-+ 			byte[] sha1out = new byte[20];
-+ 			try {
-+ 				byte[] bytes = EaglerInputStream.inputStreamToBytesQuiet(Minecraft.getMinecraft().getResourceManager()
-+ 						.getResource(minecraftTitleTextures).getInputStream());
-+ 				if (bytes != null) {
-+ 					md5.update(bytes, 0, bytes.length);
-+ 					sha1.update(bytes, 0, bytes.length);
-+ 					md5.doFinal(md5out, 0);
-+ 					sha1.doFinal(sha1out, 0);
-+ 					this.isDefault = bytes.length == lendef && Arrays.equals(md5out, md5def)
-+ 							&& Arrays.equals(sha1out, sha1def);
-+ 				} else {
-+ 					this.isDefault = false;
+> INSERT  2 : 21  @  2
+
++ 		this.enableBlur = true;
++ 
++ 		try {
++ 			byte[] bytes = EaglerInputStream.inputStreamToBytesQuiet(
++ 					Minecraft.getMinecraft().getResourceManager().getResource(minecraftTitleBlurFlag).getInputStream());
++ 			if (bytes != null) {
++ 				String[] blurCfg = EagUtils.linesArray(new String(bytes, StandardCharsets.UTF_8));
++ 				for (int i = 0; i < blurCfg.length; ++i) {
++ 					String s = blurCfg[i];
++ 					if (s.startsWith("enable_blur=")) {
++ 						s = s.substring(12).trim();
++ 						this.enableBlur = s.equals("1") || s.equals("true");
++ 						break;
++ 					}
 + 				}
-+ 			} catch (IOException e) {
-+ 				this.isDefault = false;
 + 			}
++ 		} catch (IOException e) {
++ 			;
 + 		}
 
-> INSERT  4 : 7  @  4
+> INSERT  2 : 8  @  2
+
++ 	public static void doResourceReloadHack() {
++ 		if (instance != null) {
++ 			instance.shouldReload = true;
++ 		}
++ 	}
++ 
+
+> INSERT  2 : 9  @  2
 
 + 		if (downloadOfflineButton != null) {
 + 			downloadOfflineButton.enabled = !UpdateService.shouldDisableDownloadButton();
++ 		}
++ 		if (shouldReload) {
++ 			reloadResourceFlags();
++ 			shouldReload = false;
 + 		}
 
 > CHANGE  6 : 7  @  6 : 7
@@ -256,11 +303,25 @@
 
 > DELETE  1  @  1 : 2
 
-> CHANGE  8 : 9  @  8 : 9
+> CHANGE  8 : 13  @  8 : 9
 
-~ 		GlStateManager.gluPerspective(120.0F, 1.0F, 0.05F, 10.0F);
+~ 		if (enableBlur) {
+~ 			GlStateManager.gluPerspective(120.0F, 1.0F, 0.05F, 10.0F);
+~ 		} else {
+~ 			GlStateManager.gluPerspective(85.0F, (float) width / (float) height, 0.05F, 10.0F);
+~ 		}
 
-> CHANGE  73 : 77  @  73 : 77
+> CHANGE  5 : 8  @  5 : 6
+
+~ 		if (enableBlur) {
+~ 			GlStateManager.rotate(90.0F, 0.0F, 0.0F, 1.0F);
+~ 		}
+
+> CHANGE  5 : 6  @  5 : 6
+
+~ 		byte b0 = enableBlur ? (byte) 8 : (byte) 1;
+
+> CHANGE  61 : 65  @  61 : 65
 
 ~ 		this.mc.getTextureManager().bindTexture(backgroundTexture);
 ~ 		EaglercraftGPU.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -271,11 +332,23 @@
 
 > DELETE  9  @  9 : 10
 
-> DELETE  24  @  24 : 26
+> CHANGE  22 : 27  @  22 : 23
 
-> CHANGE  7 : 8  @  7 : 8
+~ 		if (enableBlur) {
+~ 			this.renderSkybox(i, j, f);
+~ 		} else {
+~ 			this.drawPanorama(i, j, f);
+~ 		}
 
-~ 		if (this.isDefault || (double) this.updateCounter < 1.0E-4D) {
+> DELETE  1  @  1 : 3
+
+> CHANGE  7 : 12  @  7 : 8
+
+~ 		boolean minc = (double) this.updateCounter < 1.0E-4D;
+~ 		if (this.isDefault) {
+~ 			minc = !minc;
+~ 		}
+~ 		if (minc) {
 
 > CHANGE  4 : 5  @  4 : 5
 

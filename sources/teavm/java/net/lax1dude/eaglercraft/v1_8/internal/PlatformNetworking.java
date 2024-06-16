@@ -12,7 +12,6 @@ import org.teavm.jso.dom.events.Event;
 import org.teavm.jso.dom.events.EventListener;
 import org.teavm.jso.dom.events.MessageEvent;
 import org.teavm.jso.typedarrays.ArrayBuffer;
-import org.teavm.jso.typedarrays.Uint8Array;
 import org.teavm.jso.websocket.WebSocket;
 
 import net.lax1dude.eaglercraft.v1_8.internal.teavm.TeaVMServerQuery;
@@ -120,7 +119,7 @@ public class PlatformNetworking {
 					}
 				}else {
 					synchronized(readPackets) {
-						readPackets.add(TeaVMUtils.wrapUnsignedByteArray(Uint8Array.create(evt.getDataAsArray())));
+						readPackets.add(TeaVMUtils.wrapByteArrayBuffer(evt.getDataAsArray()));
 					}
 				}
 			}
@@ -181,7 +180,7 @@ public class PlatformNetworking {
 
 	public static void writePlayPacket(byte[] pkt) {
 		if(sock != null && !sockIsConnecting) {
-			nativeBinarySend(sock, TeaVMUtils.unwrapUnsignedByteArray(pkt).getBuffer());
+			nativeBinarySend(sock, TeaVMUtils.unwrapArrayBuffer(pkt));
 		}
 	}
 
