@@ -168,6 +168,7 @@ public class EaglerXVelocity {
 		EaglerCommand.register(this, new CommandConfirmCode());
 		EaglerCommand.register(this, new CommandDomain());
 		EaglerAuthConfig authConf = conf.getAuthConfig();
+		conf.setCracked(!proxy.getConfiguration().isOnlineMode() || !authConf.isEnableAuthentication());
 		if(authConf.isEnableAuthentication() && authConf.isUseBuiltInAuthentication()) {
 			if(!proxy.getConfiguration().isOnlineMode()) {
 				logger.error("Online mode is set to false! Authentication system has been disabled");
@@ -293,6 +294,7 @@ public class EaglerXVelocity {
 			if(conf == null) {
 				throw new IOException("Config failed to parse!");
 			}
+			conf.setCracked(!proxy.getConfiguration().isOnlineMode() || !conf.getAuthConfig().isEnableAuthentication());
 			HttpWebServer.regenerate404Pages();
 		} catch (IOException e) {
 			throw new IllegalStateException(e);

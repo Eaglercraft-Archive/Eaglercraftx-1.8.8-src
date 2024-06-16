@@ -77,7 +77,6 @@ public class QueryManager {
 		json.addProperty("brand", "lax1dude");
 		json.addProperty("vers", EaglerXVelocityVersion.ID + "/" + EaglerXVelocityVersion.VERSION);
 		json.addProperty("cracked", conf.isCracked());
-		json.addProperty("secure", false);
 		json.addProperty("time", System.currentTimeMillis());
 		json.addProperty("uuid", conf.getServerUUID().toString());
 		return json;
