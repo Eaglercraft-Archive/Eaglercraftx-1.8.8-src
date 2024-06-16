@@ -79,7 +79,6 @@ public class QueryManager {
 		PluginDescription desc = plugin.getDescription();
 		json.addProperty("vers", "EaglerXBungee/" + desc.getVersion());
 		json.addProperty("cracked", conf.isCracked());
-		json.addProperty("secure", false);
 		json.addProperty("time", System.currentTimeMillis());
 		json.addProperty("uuid", conf.getServerUUID().toString());
 		return json;

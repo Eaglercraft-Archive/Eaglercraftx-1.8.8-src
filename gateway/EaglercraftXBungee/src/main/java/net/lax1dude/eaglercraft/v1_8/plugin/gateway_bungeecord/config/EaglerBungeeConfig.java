@@ -267,6 +267,7 @@ public class EaglerBungeeConfig {
 	private final Set<String> disableVoiceOnServers;
 	private final boolean disableFNAWSkinsEverywhere;
 	private final Set<String> disableFNAWSkinsOnServers;
+	private boolean isCrackedFlag;
 	Property[] eaglerPlayersVanillaSkinCached = new Property[] { isEaglerProperty };
 
 	public String getServerName() {
@@ -393,7 +394,11 @@ public class EaglerBungeeConfig {
 	}
 
 	public boolean isCracked() {
-		return true;
+		return isCrackedFlag;
+	}
+
+	public void setCracked(boolean cracked) {
+		isCrackedFlag = cracked;
 	}
 
 	public EaglerAuthConfig getAuthConfig() {

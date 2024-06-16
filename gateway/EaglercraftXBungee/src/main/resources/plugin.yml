@@ -1,5 +1,5 @@
 name: EaglercraftXBungee
 main: net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.EaglerXBungee
-version: 1.2.5
+version: 1.2.6
 description: Plugin to allow EaglercraftX 1.8 players to join your network, or allow EaglercraftX 1.8 players to use your network as a proxy to join other networks
 author: lax1dude

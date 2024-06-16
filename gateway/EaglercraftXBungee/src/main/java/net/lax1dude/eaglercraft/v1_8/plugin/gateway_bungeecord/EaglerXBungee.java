@@ -57,8 +57,8 @@ import net.md_5.bungee.BungeeCord;
  */
 public class EaglerXBungee extends Plugin {
 
-	public static final String NATIVE_BUNGEECORD_BUILD = "1.20-R0.3-SNAPSHOT:e7e0b97:1845";
-	public static final String NATIVE_WATERFALL_BUILD = "1.20-R0.3-SNAPSHOT:a65bb68:578";
+	public static final String NATIVE_BUNGEECORD_BUILD = "1.21-R0.1-SNAPSHOT:8a88ce4:1849";
+	public static final String NATIVE_WATERFALL_BUILD = "1.21-R0.1-SNAPSHOT:de8345a:579";
 	
 	static {
 		CompatWarning.displayCompatWarning();
@@ -121,6 +121,7 @@ public class EaglerXBungee extends Plugin {
 		mgr.registerCommand(this, new CommandConfirmCode());
 		mgr.registerCommand(this, new CommandDomain());
 		EaglerAuthConfig authConf = conf.getAuthConfig();
+		conf.setCracked(!BungeeCord.getInstance().getConfig().isOnlineMode() || !authConf.isEnableAuthentication());
 		if(authConf.isEnableAuthentication() && authConf.isUseBuiltInAuthentication()) {
 			if(!BungeeCord.getInstance().getConfig().isOnlineMode()) {
 				getLogger().severe("Online mode is set to false! Authentication system has been disabled");
@@ -254,6 +255,7 @@ public class EaglerXBungee extends Plugin {
 			if(conf == null) {
 				throw new IOException("Config failed to parse!");
 			}
+			conf.setCracked(!BungeeCord.getInstance().getConfig().isOnlineMode() || !conf.getAuthConfig().isEnableAuthentication());
 			HttpWebServer.regenerate404Pages();
 		} catch (IOException e) {
 			throw new IllegalStateException(e);
