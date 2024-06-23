@@ -6,4 +6,4 @@ download_latest_certs: true
 download_certs_from:
 - 'https://eaglercraft.com/backup.cert'
 - 'https://deev.is/eagler/backup.cert'
-check_for_update_every: 900
+check_for_update_every: 28800

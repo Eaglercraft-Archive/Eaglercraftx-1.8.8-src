@@ -27,7 +27,7 @@ public class EaglerUpdateConfig {
 		int certPacketDataRateLimit = config.getInt("cert_packet_data_rate_limit", 524288);
 		boolean enableEagcertFolder = config.getBoolean("enable_eagcert_folder", true);
 		boolean downloadLatestCerts = config.getBoolean("download_latest_certs", true);
-		int checkForUpdatesEvery = config.getInt("check_for_update_every", 900);
+		int checkForUpdatesEvery = config.getInt("check_for_update_every", 28800);
 		Collection<String> downloadCertURLs = (Collection<String>)config.getList("download_certs_from");
 		return new EaglerUpdateConfig(blockAllClientUpdates, discardLoginPacketCerts, certPacketDataRateLimit,
 				enableEagcertFolder, downloadLatestCerts, checkForUpdatesEvery, downloadCertURLs);

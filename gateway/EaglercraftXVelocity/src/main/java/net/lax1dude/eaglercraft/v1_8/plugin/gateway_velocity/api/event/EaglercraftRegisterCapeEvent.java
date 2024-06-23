@@ -39,9 +39,9 @@ public class EaglercraftRegisterCapeEvent {
 	public void setForceUsePreset(int p) {
 		customTex = new byte[5];
 		customTex[0] = (byte)1;
-		customTex[1] = (byte)(p >> 24);
-		customTex[2] = (byte)(p >> 16);
-		customTex[3] = (byte)(p >> 8);
+		customTex[1] = (byte)(p >>> 24);
+		customTex[2] = (byte)(p >>> 16);
+		customTex[3] = (byte)(p >>> 8);
 		customTex[4] = (byte)(p & 0xFF);
 	}
 
