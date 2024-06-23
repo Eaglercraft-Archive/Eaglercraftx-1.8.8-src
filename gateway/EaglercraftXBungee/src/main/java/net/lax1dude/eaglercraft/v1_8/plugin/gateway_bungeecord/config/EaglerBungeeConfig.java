@@ -121,6 +121,7 @@ public class EaglerBungeeConfig {
 		
 		long websocketKeepAliveTimeout = configYml.getInt("websocket_connection_timeout", 15000);
 		long websocketHandshakeTimeout = configYml.getInt("websocket_handshake_timeout", 5000);
+		long builtinHttpServerTimeout = configYml.getInt("builtin_http_server_timeout", 10000);
 		int websocketCompressionLevel = configYml.getInt("http_websocket_compression_level", 6);
 		
 		boolean downloadVanillaSkins = configYml.getBoolean("download_vanilla_skins_to_clients", false);
@@ -148,12 +149,12 @@ public class EaglerBungeeConfig {
 		Set<String> disableFNAWSkinsOnServers = new HashSet((Collection<String>)configYml.getList("disable_fnaw_skins_on_servers"));
 		
 		final EaglerBungeeConfig ret = new EaglerBungeeConfig(serverName, serverUUID, websocketKeepAliveTimeout,
-				websocketHandshakeTimeout, websocketCompressionLevel, serverListeners, contentTypes,
-				downloadVanillaSkins, validSkinUrls, uuidRateLimitPlayer, uuidRateLimitGlobal, skinRateLimitPlayer,
-				skinRateLimitGlobal, skinCacheURI, keepObjectsDays, keepProfilesDays, maxObjects, maxProfiles,
-				antagonistsRateLimit, sqliteDriverClass, sqliteDriverPath, eaglerPlayersVanillaSkin,
-				enableIsEaglerPlayerProperty, authConfig, updatesConfig, iceServers, voiceChat,
-				disableVoiceOnServers, disableFNAWSkinsEverywhere, disableFNAWSkinsOnServers);
+				websocketHandshakeTimeout, builtinHttpServerTimeout, websocketCompressionLevel, serverListeners,
+				contentTypes, downloadVanillaSkins, validSkinUrls, uuidRateLimitPlayer, uuidRateLimitGlobal,
+				skinRateLimitPlayer, skinRateLimitGlobal, skinCacheURI, keepObjectsDays, keepProfilesDays, maxObjects,
+				maxProfiles, antagonistsRateLimit, sqliteDriverClass, sqliteDriverPath, eaglerPlayersVanillaSkin,
+				enableIsEaglerPlayerProperty, authConfig, updatesConfig, iceServers, voiceChat, disableVoiceOnServers,
+				disableFNAWSkinsEverywhere, disableFNAWSkinsOnServers);
 		
 		if(eaglerPlayersVanillaSkin != null) {
 			VanillaDefaultSkinProfileLoader.lookupVanillaSkinUser(ret);
@@ -241,6 +242,7 @@ public class EaglerBungeeConfig {
 	private final UUID serverUUID;
 	private final long websocketKeepAliveTimeout;
 	private final long websocketHandshakeTimeout;
+	private final long builtinHttpServerTimeout;
 	private final int httpWebsocketCompressionLevel;
 	private final Map<String, EaglerListenerConfig> serverListeners;
 	private final Map<String, HttpContentType> contentTypes;
@@ -284,6 +286,10 @@ public class EaglerBungeeConfig {
 	
 	public long getWebsocketHandshakeTimeout() {
 		return websocketHandshakeTimeout;
+	}
+	
+	public long getBuiltinHttpServerTimeout() {
+		return builtinHttpServerTimeout;
 	}
 	
 	public int getHttpWebsocketCompressionLevel() {
@@ -430,7 +436,7 @@ public class EaglerBungeeConfig {
 	}
 
 	private EaglerBungeeConfig(String serverName, UUID serverUUID, long websocketKeepAliveTimeout,
-			long websocketHandshakeTimeout, int httpWebsocketCompressionLevel,
+			long websocketHandshakeTimeout, long builtinHttpServerTimeout, int httpWebsocketCompressionLevel,
 			Map<String, EaglerListenerConfig> serverListeners, Map<String, HttpContentType> contentTypes,
 			boolean downloadVanillaSkins, Collection<String> validSkinUrls, int uuidRateLimitPlayer,
 			int uuidRateLimitGlobal, int skinRateLimitPlayer, int skinRateLimitGlobal, String skinCacheURI,
@@ -444,6 +450,7 @@ public class EaglerBungeeConfig {
 		this.serverListeners = serverListeners;
 		this.websocketHandshakeTimeout = websocketHandshakeTimeout;
 		this.websocketKeepAliveTimeout = websocketKeepAliveTimeout;
+		this.builtinHttpServerTimeout = builtinHttpServerTimeout;
 		this.httpWebsocketCompressionLevel = httpWebsocketCompressionLevel;
 		this.contentTypes = contentTypes;
 		this.downloadVanillaSkins = downloadVanillaSkins;

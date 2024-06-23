@@ -1038,7 +1038,8 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 		if(connectionClosed) {
 			return;
 		}
-		if(!hasFirstPacket && (conf.isAllowMOTD() || conf.isAllowQuery()) && (str = str.toLowerCase()).startsWith("accept:")) {
+		if (!hasFirstPacket && (conf.isAllowMOTD() || conf.isAllowQuery()) && str.length() < 128
+				&& (str = str.toLowerCase()).startsWith("accept:")) {
 			str = str.substring(7).trim();
 			hasFirstPacket = true;
 			hasBinaryConnection = false;
@@ -1210,7 +1211,7 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 		buffer.writeShort(message.length());
 		for(int i = 0, l = message.length(), j; i < l; ++i) {
 			j = message.charAt(i);
-			buffer.writeByte((j >> 8) & 0xFF);
+			buffer.writeByte((j >>> 8) & 0xFF);
 			buffer.writeByte(j & 0xFF);
 		}
 	}
@@ -1218,7 +1219,7 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 	public static void writeLegacyRedirect(ByteBuf buffer, String redirect) {
 		buffer.writeBytes(legacyRedirectHeader);
 		byte[] redirect_ = redirect.getBytes(StandardCharsets.UTF_8);
-		buffer.writeByte((redirect_.length >> 8) & 0xFF);
+		buffer.writeByte((redirect_.length >>> 8) & 0xFF);
 		buffer.writeByte(redirect_.length & 0xFF);
 		buffer.writeBytes(redirect_);
 	}

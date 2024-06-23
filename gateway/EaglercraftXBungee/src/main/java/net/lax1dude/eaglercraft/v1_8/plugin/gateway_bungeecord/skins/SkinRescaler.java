@@ -21,10 +21,10 @@ public class SkinRescaler {
 		for(int i = 0, j, k; i < imageIn.length; ++i) {
 			j = i << 2;
 			k = imageIn[i];
-			imageOut[j] = (byte)(k >> 24);
+			imageOut[j] = (byte)(k >>> 24);
 			imageOut[j + 1] = (byte)(k & 0xFF);
-			imageOut[j + 2] = (byte)(k >> 8);
-			imageOut[j + 3] = (byte)(k >> 16);
+			imageOut[j + 2] = (byte)(k >>> 8);
+			imageOut[j + 3] = (byte)(k >>> 16);
 		}
 	}
 
@@ -65,10 +65,10 @@ public class SkinRescaler {
 					j = (dstY + y) * imgDstWidth + dstX + x;
 				}
 				j = j << 2;
-				imageOut[j] = (byte)(i >> 24);
+				imageOut[j] = (byte)(i >>> 24);
 				imageOut[j + 1] = (byte)(i & 0xFF);
-				imageOut[j + 2] = (byte)(i >> 8);
-				imageOut[j + 3] = (byte)(i >> 16);
+				imageOut[j + 2] = (byte)(i >>> 8);
+				imageOut[j + 3] = (byte)(i >>> 16);
 			}
 		}
 	}

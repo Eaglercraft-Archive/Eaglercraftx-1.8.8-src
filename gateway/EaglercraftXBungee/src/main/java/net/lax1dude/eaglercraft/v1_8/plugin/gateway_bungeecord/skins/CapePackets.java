@@ -89,9 +89,9 @@ public class CapePackets {
 		byte[] ret = new byte[1 + 16 + 4];
 		ret[0] = (byte)PACKET_OTHER_CAPE_PRESET;
 		SkinPackets.UUIDToBytes(uuid, ret, 1);
-		ret[17] = (byte)(presetId >> 24);
-		ret[18] = (byte)(presetId >> 16);
-		ret[19] = (byte)(presetId >> 8);
+		ret[17] = (byte)(presetId >>> 24);
+		ret[18] = (byte)(presetId >>> 16);
+		ret[19] = (byte)(presetId >>> 8);
 		ret[20] = (byte)(presetId & 0xFF);
 		return ret;
 	}

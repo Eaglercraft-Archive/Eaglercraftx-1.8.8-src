@@ -147,9 +147,9 @@ public class SkinPackets {
 		byte[] ret = new byte[1 + 16 + 4];
 		ret[0] = (byte)PACKET_OTHER_SKIN_PRESET;
 		UUIDToBytes(uuid, ret, 1);
-		ret[17] = (byte)(presetId >> 24);
-		ret[18] = (byte)(presetId >> 16);
-		ret[19] = (byte)(presetId >> 8);
+		ret[17] = (byte)(presetId >>> 24);
+		ret[18] = (byte)(presetId >>> 16);
+		ret[19] = (byte)(presetId >>> 8);
 		ret[20] = (byte)(presetId & 0xFF);
 		return ret;
 	}
@@ -205,21 +205,21 @@ public class SkinPackets {
 	public static void UUIDToBytes(UUID uuid, byte[] bytes, int off) {
 		long msb = uuid.getMostSignificantBits();
 		long lsb = uuid.getLeastSignificantBits();
-		bytes[off] = (byte)(msb >> 56l);
-		bytes[off + 1] = (byte)(msb >> 48l);
-		bytes[off + 2] = (byte)(msb >> 40l);
-		bytes[off + 3] = (byte)(msb >> 32l);
-		bytes[off + 4] = (byte)(msb >> 24l);
-		bytes[off + 5] = (byte)(msb >> 16l);
-		bytes[off + 6] = (byte)(msb >> 8l);
+		bytes[off] = (byte)(msb >>> 56l);
+		bytes[off + 1] = (byte)(msb >>> 48l);
+		bytes[off + 2] = (byte)(msb >>> 40l);
+		bytes[off + 3] = (byte)(msb >>> 32l);
+		bytes[off + 4] = (byte)(msb >>> 24l);
+		bytes[off + 5] = (byte)(msb >>> 16l);
+		bytes[off + 6] = (byte)(msb >>> 8l);
 		bytes[off + 7] = (byte)(msb & 0xFFl);
-		bytes[off + 8] = (byte)(lsb >> 56l);
-		bytes[off + 9] = (byte)(lsb >> 48l);
-		bytes[off + 10] = (byte)(lsb >> 40l);
-		bytes[off + 11] = (byte)(lsb >> 32l);
-		bytes[off + 12] = (byte)(lsb >> 24l);
-		bytes[off + 13] = (byte)(lsb >> 16l);
-		bytes[off + 14] = (byte)(lsb >> 8l);
+		bytes[off + 8] = (byte)(lsb >>> 56l);
+		bytes[off + 9] = (byte)(lsb >>> 48l);
+		bytes[off + 10] = (byte)(lsb >>> 40l);
+		bytes[off + 11] = (byte)(lsb >>> 32l);
+		bytes[off + 12] = (byte)(lsb >>> 24l);
+		bytes[off + 13] = (byte)(lsb >>> 16l);
+		bytes[off + 14] = (byte)(lsb >>> 8l);
 		bytes[off + 15] = (byte)(lsb & 0xFFl);
 	}
 	

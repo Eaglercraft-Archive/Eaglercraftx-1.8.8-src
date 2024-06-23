@@ -71,6 +71,7 @@ public class EaglerPipeline {
 				EaglerBungeeConfig conf = EaglerXBungee.getEagler().getConfig();
 				long handshakeTimeout = conf.getWebsocketHandshakeTimeout();
 				long keepAliveTimeout = conf.getWebsocketKeepAliveTimeout();
+				long httpTimeout = conf.getBuiltinHttpServerTimeout();
 				List<Channel> channelsList;
 				synchronized(openChannels) {
 					long millis = System.currentTimeMillis();
@@ -79,8 +80,8 @@ public class EaglerPipeline {
 						Channel c = channelIterator.next();
 						final EaglerConnectionInstance i = c.attr(EaglerPipeline.CONNECTION_INSTANCE).get();
 						long handshakeTimeoutForConnection = 500l;
-						if(i.isRegularHttp) handshakeTimeoutForConnection = 10000l;
-						if(i.isWebSocket) handshakeTimeoutForConnection = handshakeTimeout;
+						if(i.isRegularHttp) handshakeTimeoutForConnection = httpTimeout;
+						else if(i.isWebSocket) handshakeTimeoutForConnection = handshakeTimeout;
 						if(i == null || (!i.hasBeenForwarded && millis - i.creationTime > handshakeTimeoutForConnection)
 								|| millis - i.lastClientPongPacket > keepAliveTimeout || !c.isActive()) {
 							if(c.isActive()) {

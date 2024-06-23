@@ -140,10 +140,10 @@ public class MOTDQueryHandler extends EaglerQuerySimpleHandler implements MOTDCo
 				byte[] iconPixels = new byte[16384];
 				for(int i = 0, j; i < 4096; ++i) {
 					j = i << 2;
-					iconPixels[j] = (byte)((bitmap[i] >> 16) & 0xFF);
-					iconPixels[j + 1] = (byte)((bitmap[i] >> 8) & 0xFF);
+					iconPixels[j] = (byte)(bitmap[i] >>> 16);
+					iconPixels[j + 1] = (byte)(bitmap[i] >>> 8);
 					iconPixels[j + 2] = (byte)(bitmap[i] & 0xFF);
-					iconPixels[j + 3] = (byte)((bitmap[i] >> 24) & 0xFF);
+					iconPixels[j + 3] = (byte)(bitmap[i] >>> 24);
 				}
 				sendBinaryResponse(iconPixels);
 				iconDirty = false;
