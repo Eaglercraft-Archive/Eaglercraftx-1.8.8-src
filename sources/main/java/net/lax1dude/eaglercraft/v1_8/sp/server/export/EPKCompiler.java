@@ -49,7 +49,7 @@ public class EPKCompiler {
 					EagRuntime.fixDateFormat(new SimpleDateFormat("hh:mm:ss aa")).format(d) + "\n\n #  world name: " + name + "\n\n")
 					.getBytes(StandardCharsets.UTF_8);
 
-			os.write((comment.length >> 8) & 255);
+			os.write((comment.length >>> 8) & 255);
 			os.write(comment.length & 255);
 			os.write(comment);
 			
@@ -134,9 +134,9 @@ public class EPKCompiler {
 			
 			byte[] ret = os.toByteArray();
 
-			ret[lengthIntegerOffset] = (byte)((totalFileCount >> 24) & 0xFF);
-			ret[lengthIntegerOffset + 1] = (byte)((totalFileCount >> 16) & 0xFF);
-			ret[lengthIntegerOffset + 2] = (byte)((totalFileCount >> 8) & 0xFF);
+			ret[lengthIntegerOffset] = (byte)(totalFileCount >>> 24);
+			ret[lengthIntegerOffset + 1] = (byte)(totalFileCount >>> 16);
+			ret[lengthIntegerOffset + 2] = (byte)(totalFileCount >>> 8);
 			ret[lengthIntegerOffset + 3] = (byte)(totalFileCount & 0xFF);
 			
 			return ret;
@@ -147,21 +147,21 @@ public class EPKCompiler {
 	}
 	
 	public static void writeInt(int i, OutputStream os) throws IOException {
-		os.write((i >> 24) & 0xFF);
-		os.write((i >> 16) & 0xFF);
-		os.write((i >> 8) & 0xFF);
+		os.write((i >>> 24) & 0xFF);
+		os.write((i >>> 16) & 0xFF);
+		os.write((i >>> 8) & 0xFF);
 		os.write(i & 0xFF);
 	}
 	
 	public static void writeLong(long i, OutputStream os) throws IOException {
-		os.write((int)((i >> 56) & 0xFF));
-		os.write((int)((i >> 48) & 0xFF));
-		os.write((int)((i >> 40) & 0xFF));
-		os.write((int)((i >> 32) & 0xFF));
-		os.write((int)((i >> 24) & 0xFF));
-		os.write((int)((i >> 16) & 0xFF));
-		os.write((int)((i >> 8) & 0xFF));
-		os.write((int)(i & 0xFF));
+		os.write((int)((i >>> 56l) & 0xFFl));
+		os.write((int)((i >>> 48l) & 0xFFl));
+		os.write((int)((i >>> 40l) & 0xFFl));
+		os.write((int)((i >>> 32l) & 0xFFl));
+		os.write((int)((i >>> 24l) & 0xFFl));
+		os.write((int)((i >>> 16l) & 0xFFl));
+		os.write((int)((i >>> 8l) & 0xFFl));
+		os.write((int)(i & 0xFFl));
 	}
 
 }

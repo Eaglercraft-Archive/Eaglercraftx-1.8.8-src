@@ -72,14 +72,14 @@ public class AcceleratedEffectRenderer implements IAcceleratedParticleEngine {
 	public void drawParticle(float posX, float posY, float posZ, int particleIndexX, int particleIndexY,
 			int lightMapData, int texSize, float particleSize, float r, float g, float b, float a) {
 		InstancedParticleRenderer.appendParticle(posX, posY, posZ, particleIndexX, particleIndexY, lightMapData & 0xFF,
-				(lightMapData >> 16) & 0xFF, (int)(particleSize * 16.0f), texSize, r, g, b, a);
+				(lightMapData >>> 16) & 0xFF, (int)(particleSize * 16.0f), texSize, r, g, b, a);
 	}
 
 	@Override
 	public void drawParticle(float posX, float posY, float posZ, int particleIndexX, int particleIndexY,
 			int lightMapData, int texSize, float particleSize, int rgba) {
 		InstancedParticleRenderer.appendParticle(posX, posY, posZ, particleIndexX, particleIndexY, lightMapData & 0xFF,
-				(lightMapData >> 16) & 0xFF, (int)(particleSize * 16.0f), texSize, rgba);
+				(lightMapData >>> 16) & 0xFF, (int)(particleSize * 16.0f), texSize, rgba);
 	}
 
 }

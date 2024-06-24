@@ -267,8 +267,8 @@ public class WorldRenderer {
 		if (!this.needsUpdate) {
 			j = this.intBuffer.get(i);
 			int k = (int) ((float) (j & 255) * red);
-			int l = (int) ((float) (j >> 8 & 255) * green);
-			int i1 = (int) ((float) (j >> 16 & 255) * blue);
+			int l = (int) ((float) (j >>> 8 & 255) * green);
+			int i1 = (int) ((float) (j >>> 16 & 255) * blue);
 			j = j & -16777216;
 			j = j | i1 << 16 | l << 8 | k;
 		}
@@ -280,10 +280,10 @@ public class WorldRenderer {
 	 */
 	private void putColor(int argb, int parInt2) {
 		int i = this.getColorIndex(parInt2);
-		int j = argb >> 16 & 255;
-		int k = argb >> 8 & 255;
+		int j = argb >>> 16 & 255;
+		int k = argb >>> 8 & 255;
 		int l = argb & 255;
-		int i1 = argb >> 24 & 255;
+		int i1 = argb >>> 24 & 255;
 		this.putColorRGBA(i, j, k, l, i1);
 	}
 

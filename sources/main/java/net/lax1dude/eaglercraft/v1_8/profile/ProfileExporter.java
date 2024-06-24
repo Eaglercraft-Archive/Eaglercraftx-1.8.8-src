@@ -59,7 +59,7 @@ public class ProfileExporter {
 				+ (doExportServers ? "servers " : "") + (doExportResourcePacks ? "resourcePacks" : "") + "\n\n")
 				.getBytes(StandardCharsets.UTF_8);
 
-		osb.write((comment.length >> 8) & 255);
+		osb.write((comment.length >>> 8) & 255);
 		osb.write(comment.length & 255);
 		osb.write(comment);
 		
@@ -164,9 +164,9 @@ public class ProfileExporter {
 		
 		byte[] ret = osb.toByteArray();
 
-		ret[lengthIntegerOffset] = (byte)((fileCount >> 24) & 0xFF);
-		ret[lengthIntegerOffset + 1] = (byte)((fileCount >> 16) & 0xFF);
-		ret[lengthIntegerOffset + 2] = (byte)((fileCount >> 8) & 0xFF);
+		ret[lengthIntegerOffset] = (byte)((fileCount >>> 24) & 0xFF);
+		ret[lengthIntegerOffset + 1] = (byte)((fileCount >>> 16) & 0xFF);
+		ret[lengthIntegerOffset + 2] = (byte)((fileCount >>> 8) & 0xFF);
 		ret[lengthIntegerOffset + 3] = (byte)(fileCount & 0xFF);
 		
 		logger.info("Export complete!");

@@ -2,6 +2,7 @@ package net.lax1dude.eaglercraft.v1_8.internal.lwjgl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import org.json.JSONObject;
 
@@ -163,6 +164,11 @@ public class DesktopClientConfigAdapter implements IClientConfigAdapter {
 		public String callLocalStorageLoadHook(String key) {
 			return null;
 		}
-		
+
+		@Override
+		public void callCrashReportHook(String crashReport, Consumer<String> customMessageCB) {
+			
+		}
+
 	}
 }

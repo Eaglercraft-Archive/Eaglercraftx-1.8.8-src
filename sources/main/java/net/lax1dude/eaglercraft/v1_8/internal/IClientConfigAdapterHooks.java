@@ -1,5 +1,7 @@
 package net.lax1dude.eaglercraft.v1_8.internal;
 
+import java.util.function.Consumer;
+
 /**
  * Copyright (c) 2024 lax1dude. All Rights Reserved.
  * 
@@ -20,5 +22,7 @@ public interface IClientConfigAdapterHooks {
 	void callLocalStorageSavedHook(String key, String base64);
 
 	String callLocalStorageLoadHook(String key);
+
+	void callCrashReportHook(String crashReport, Consumer<String> customMessageCB);
 
 }

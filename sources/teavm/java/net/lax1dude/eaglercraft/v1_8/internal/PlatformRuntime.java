@@ -87,6 +87,7 @@ public class PlatformRuntime {
 		win = Window.current();
 		doc = win.getDocument();
 		DebugConsoleWindow.initialize(win);
+		PlatformApplication.setMCServerWindowGlobal(null);
 		
 		logger.info("Creating main game canvas");
 		

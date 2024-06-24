@@ -239,9 +239,9 @@ public class IntegratedServerPlayerNetworkManager {
 				byte[] compressedData;
 				try {
 					temporaryOutputStream.write(2);
-					temporaryOutputStream.write((len >> 24) & 0xFF);
-					temporaryOutputStream.write((len >> 16) & 0xFF);
-					temporaryOutputStream.write((len >> 8) & 0xFF);
+					temporaryOutputStream.write((len >>> 24) & 0xFF);
+					temporaryOutputStream.write((len >>> 16) & 0xFF);
+					temporaryOutputStream.write((len >>> 8) & 0xFF);
 					temporaryOutputStream.write(len & 0xFF);
 					try(OutputStream os = EaglerZLIB.newDeflaterOutputStream(temporaryOutputStream)) {
 						temporaryBuffer.readBytes(os, len);

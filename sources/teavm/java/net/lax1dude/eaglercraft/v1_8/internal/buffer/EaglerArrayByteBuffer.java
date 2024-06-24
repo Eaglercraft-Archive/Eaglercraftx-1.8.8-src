@@ -348,11 +348,11 @@ public class EaglerArrayByteBuffer implements ByteBuffer {
 	@Override
 	public ByteBuffer putLong(long value) {
 		if(position + 8 > limit) throw new ArrayIndexOutOfBoundsException(position);
-		dataView.setUint32(position, (int) (value & 0xFFFFFFFF), true);
-		dataView.setUint8(position + 4, (short) ((value >> 32) & 0xFF));
-		dataView.setUint8(position + 5, (short) ((value >> 40) & 0xFF));
-		dataView.setUint8(position + 6, (short) ((value >> 48) & 0xFF));
-		dataView.setUint8(position + 7, (short) ((value >> 56) & 0xFF));
+		dataView.setUint32(position, (int) (value & 0xFFFFFFFFl), true);
+		dataView.setUint8(position + 4, (short) ((value >>> 32l) & 0xFFl));
+		dataView.setUint8(position + 5, (short) ((value >>> 40l) & 0xFFl));
+		dataView.setUint8(position + 6, (short) ((value >>> 48l) & 0xFFl));
+		dataView.setUint8(position + 7, (short) ((value >>> 56l) & 0xFFl));
 		position += 8;
 		return this;
 	}
@@ -368,11 +368,11 @@ public class EaglerArrayByteBuffer implements ByteBuffer {
 	@Override
 	public ByteBuffer putLong(int index, long value) {
 		if(index + 8 > limit) throw new ArrayIndexOutOfBoundsException(index);
-		dataView.setUint32(index, (int) (value & 0xFFFFFFFF), true);
-		dataView.setUint8(index + 4, (short) ((value >> 32) & 0xFF));
-		dataView.setUint8(index + 5, (short) ((value >> 40) & 0xFF));
-		dataView.setUint8(index + 6, (short) ((value >> 48) & 0xFF));
-		dataView.setUint8(index + 7, (short) ((value >> 56) & 0xFF));
+		dataView.setUint32(index, (int) (value & 0xFFFFFFFFl), true);
+		dataView.setUint8(index + 4, (short) ((value >>> 32l) & 0xFFl));
+		dataView.setUint8(index + 5, (short) ((value >>> 40l) & 0xFFl));
+		dataView.setUint8(index + 6, (short) ((value >>> 48l) & 0xFFl));
+		dataView.setUint8(index + 7, (short) ((value >>> 56l) & 0xFFl));
 		return this;
 	}
 

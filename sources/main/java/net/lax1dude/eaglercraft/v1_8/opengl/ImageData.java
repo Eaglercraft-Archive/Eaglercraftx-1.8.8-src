@@ -118,14 +118,14 @@ public class ImageData {
 				if((spx & 0xFF000000) == 0xFF000000 || (dpx & 0xFF000000) == 0) {
 					pixels[di] = spx;
 				}else {
-					int sa = (spx >> 24) & 0xFF;
-					int da = (dpx >> 24) & 0xFF;
-					int r = ((spx >> 16) & 0xFF) * sa / 255;
-					int g = ((spx >> 8) & 0xFF) * sa / 255;
+					int sa = (spx >>> 24) & 0xFF;
+					int da = (dpx >>> 24) & 0xFF;
+					int r = ((spx >>> 16) & 0xFF) * sa / 255;
+					int g = ((spx >>> 8) & 0xFF) * sa / 255;
 					int b = (spx & 0xFF) * sa / 255;
 					int aa = (255 - sa) * da;
-					r += ((dpx >> 16) & 0xFF) * aa / 65025;
-					g += ((dpx >> 8) & 0xFF) * aa / 65025;
+					r += ((dpx >>> 16) & 0xFF) * aa / 65025;
+					g += ((dpx >>> 8) & 0xFF) * aa / 65025;
 					b += (dpx & 0xFF) * aa / 65025;
 					sa += da;
 					if(sa > 0xFF) sa = 0xFF;
@@ -138,14 +138,14 @@ public class ImageData {
 	public ImageData swapRB() {
 		for(int i = 0; i < pixels.length; ++i) {
 			int j = pixels[i];
-			pixels[i] = (j & 0xFF00FF00) | ((j & 0x00FF0000) >> 16) |
+			pixels[i] = (j & 0xFF00FF00) | ((j & 0x00FF0000) >>> 16) |
 					((j & 0x000000FF) << 16);
 		}
 		return this;
 	}
 	
 	public static int swapRB(int c) {
-		return (c & 0xFF00FF00) | ((c & 0x00FF0000) >> 16) | ((c & 0x000000FF) << 16);
+		return (c & 0xFF00FF00) | ((c & 0x00FF0000) >>> 16) | ((c & 0x000000FF) << 16);
 	}
 
 }

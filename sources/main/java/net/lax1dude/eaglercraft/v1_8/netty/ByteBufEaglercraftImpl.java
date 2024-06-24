@@ -72,8 +72,8 @@ public class ByteBufEaglercraftImpl extends AbstractByteBuf {
 
 	@Override
 	protected void _setMedium(int index, int value) {
-		internal.put(index, (byte)((value >> 16) & 0xFF));
-		internal.put(index + 1, (byte)((value >> 8) & 0xFF));
+		internal.put(index, (byte)((value >>> 16) & 0xFF));
+		internal.put(index + 1, (byte)((value >>> 8) & 0xFF));
 		internal.put(index + 2, (byte)(value & 0xFF));
 	}
 

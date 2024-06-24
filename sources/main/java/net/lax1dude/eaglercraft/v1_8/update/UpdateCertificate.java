@@ -141,7 +141,7 @@ public class UpdateCertificate {
 		sha256.update(signaturePayload, 0, signaturePayload.length);
 		sha256.doFinal(hash2048, 96);
 		
-		hash2048[0] = (byte)((signaturePayload.length >> 8) & 0xFF);
+		hash2048[0] = (byte)((signaturePayload.length >>> 8) & 0xFF);
 		hash2048[1] = (byte)(signaturePayload.length & 0xFF);
 		
 		if(!Arrays.equals(hash2048, rsa2048sumDec)) {

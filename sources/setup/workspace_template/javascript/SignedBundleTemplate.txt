@@ -1,4 +1,5 @@
 "use strict";
+${classes_js}
 
 // %%%%%%%%% launch options %%%%%%%%%%%%
 
@@ -25,8 +26,6 @@ if(typeof window !== "undefined") {
 }
 
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-${classes_js}
 
 if(typeof window !== "undefined") { window.eaglercraftXOpts.enableSignatureBadge = true; window.eaglercraftXOpts.assetsURI = ${assets_epk}; }
 

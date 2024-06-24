@@ -274,4 +274,8 @@ public class PlatformApplication {
 		
 	}
 
+	public static void setMCServerWindowGlobal(String str) {
+		
+	}
+
 }

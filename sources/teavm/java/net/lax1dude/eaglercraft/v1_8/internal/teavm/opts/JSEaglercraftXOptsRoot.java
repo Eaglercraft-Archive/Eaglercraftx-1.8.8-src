@@ -96,4 +96,7 @@ public abstract class JSEaglercraftXOptsRoot implements JSObject {
 	@JSBody(params = { "def" }, script = "return (typeof this.enableMinceraft === \"boolean\") ? this.enableMinceraft : def;")
 	public native boolean getEnableMinceraft(boolean defaultValue);
 
+	@JSBody(params = { "def" }, script = "return (typeof this.crashOnUncaughtExceptions === \"boolean\") ? this.crashOnUncaughtExceptions : def;")
+	public native boolean getCrashOnUncaughtExceptions(boolean defaultValue);
+
 }

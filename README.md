@@ -163,9 +163,11 @@ The default eaglercraftXOpts values is this:
 - `allowFNAWSkins:` can be used to disable the high poly FNAW skins
 - `localStorageNamespace:` can be used to change the prefix of the local storage keys (Default: `"_eaglercraftX"`)
 - `enableMinceraft:` can be used to disable the "Minceraft" title screen
+- `crashOnUncaughtExceptions:` display crash reports when `window.onerror` is fired
 - `hooks:` can be used to define JavaScript callbacks for certain events
     * `localStorageSaved:` JavaScript callback to save local storage keys
     * `localStorageLoaded:` JavaScript callback to load local storage keys
+    * `crashReportShow:` JavaScript callback when a crash report is shown
 
 ### Using Hooks
 
@@ -192,6 +194,17 @@ You may want to implement some custom logic for loading/saving certain local sto
 Be aware that the client will still save the key to the browser's local storage anyway even if you define a custom save handler, and will just attempt to load the key from the browser's local storage normally if you return null, these are meant to be used like event handlers for creating backups of keys instead of completely replacing the local storage save and load functions.
 
 On a normal client you will only ever need to handle local storage keys called `p` (profile), `g` (game settings), `s` (server list), `r` (shared world relays), in your hooks functions. Feel free to just ignore any other keys. It is guaranteed that the data the client stores will always be valid base64, so it is best practice to decode it to raw binary first if possible to reduce it's size before saving it to something like a MySQL database in your backend if you are trying to implement some kind of profile syncing system for your website. The keys already have GZIP compression applied to them by default so don't bother trying to compress them yourself a second time because it won't reduce their size.
+
+### Crash Report Hook
+
+The `crashReportShow` hook can be used to capture crash reports and append additional text to them. It takes two parameters, the crash report as a string and a callback function for appending text. Do not use the callback function outside the body of the hook.
+
+    hooks: {
+        crashReportShow: function(report, customMessageCB) {
+            // 'report' is crash report as a string
+            customMessageCB("Hello from crashReportShow hook!");
+        }
+    }
 
 ## Developing a Client
 

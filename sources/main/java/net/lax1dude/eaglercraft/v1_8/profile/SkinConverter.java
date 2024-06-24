@@ -42,8 +42,8 @@ public class SkinConverter {
 				i = (y * 23 + x) * 3;
 				j = skinIn.pixels[y * skinIn.width + x];
 				if((j & 0xFF000000) != 0) {
-					skinOut[i] = (byte)(j >> 16);
-					skinOut[i + 1] = (byte)(j >> 8);
+					skinOut[i] = (byte)(j >>> 16);
+					skinOut[i + 1] = (byte)(j >>> 8);
 					skinOut[i + 2] = (byte)(j & 0xFF);
 				}else {
 					skinOut[i] = skinOut[i + 1] = skinOut[i + 2] = 0;
@@ -54,8 +54,8 @@ public class SkinConverter {
 			i = ((y + 6) * 23 + 22) * 3;
 			j = skinIn.pixels[(y + 11) * skinIn.width + 22];
 			if((j & 0xFF000000) != 0) {
-				skinOut[i] = (byte)(j >> 16);
-				skinOut[i + 1] = (byte)(j >> 8);
+				skinOut[i] = (byte)(j >>> 16);
+				skinOut[i + 1] = (byte)(j >>> 8);
 				skinOut[i + 2] = (byte)(j & 0xFF);
 			}else {
 				skinOut[i] = skinOut[i + 1] = skinOut[i + 2] = 0;

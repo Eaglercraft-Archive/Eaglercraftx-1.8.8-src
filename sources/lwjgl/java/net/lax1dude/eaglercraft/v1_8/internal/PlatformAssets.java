@@ -73,7 +73,7 @@ public class PlatformAssets {
 				if(!a) {
 					j = j | 0xFF000000;
 				}
-				pixels[i] = (j & 0xFF00FF00) | ((j & 0x00FF0000) >> 16) |
+				pixels[i] = (j & 0xFF00FF00) | ((j & 0x00FF0000) >>> 16) |
 						((j & 0x000000FF) << 16);
 			}
 			return new ImageData(w, h, pixels, a);

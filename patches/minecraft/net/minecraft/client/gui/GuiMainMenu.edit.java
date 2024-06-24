@@ -342,7 +342,14 @@
 
 > DELETE  1  @  1 : 3
 
-> CHANGE  7 : 12  @  7 : 8
+> CHANGE  3 : 7  @  3 : 5
+
+~ 		if (enableBlur) {
+~ 			this.drawGradientRect(0, 0, this.width, this.height, -2130706433, 16777215);
+~ 			this.drawGradientRect(0, 0, this.width, this.height, 0, Integer.MIN_VALUE);
+~ 		}
+
+> CHANGE  2 : 7  @  2 : 3
 
 ~ 		boolean minc = (double) this.updateCounter < 1.0E-4D;
 ~ 		if (this.isDefault) {

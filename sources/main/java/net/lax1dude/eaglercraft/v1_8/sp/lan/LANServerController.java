@@ -32,7 +32,7 @@ import net.lax1dude.eaglercraft.v1_8.sp.relay.pkt.*;
  */
 public class LANServerController {
 
-	public static final Logger logger = LogManager.getLogger("IntegratedServerLAN");
+	public static final Logger logger = LogManager.getLogger("LANServerController");
 
 	public static final List<String> currentICEServers = new ArrayList();
 

@@ -605,6 +605,10 @@ public class PlatformInput {
 			Window.clearTimeout(mouseUngrabTimeout);
 			mouseUngrabTimeout = -1;
 		}
+		try {
+			win.getDocument().exitPointerLock();
+		}catch(Throwable t) {
+		}
 	}
 
 	public static void pressAnyKeyScreen() {

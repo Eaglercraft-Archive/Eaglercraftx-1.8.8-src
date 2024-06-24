@@ -47,10 +47,10 @@ public class EaglerFontRenderer extends FontRenderer {
 			if ((color & 0xFC000000) == 0) {
 				color |= 0xFF000000;
 			}
-			this.red = (float) (color >> 16 & 255) / 255.0F;
-			this.blue = (float) (color >> 8 & 255) / 255.0F;
+			this.red = (float) (color >>> 16 & 255) / 255.0F;
+			this.blue = (float) (color >>> 8 & 255) / 255.0F;
 			this.green = (float) (color & 255) / 255.0F;
-			this.alpha = (float) (color >> 24 & 255) / 255.0F;
+			this.alpha = (float) (color >>> 24 & 255) / 255.0F;
 			this.posX = x;
 			this.posY = y;
 			this.textColor = color;

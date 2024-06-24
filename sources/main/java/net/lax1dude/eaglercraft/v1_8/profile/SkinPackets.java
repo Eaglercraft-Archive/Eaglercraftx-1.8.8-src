@@ -81,8 +81,8 @@ public class SkinPackets {
 	}
 
 	public static byte[] writeMySkinPreset(int skinId) {
-		return new byte[] { (byte) PACKET_MY_SKIN_PRESET, (byte) (skinId >> 24), (byte) (skinId >> 16),
-				(byte) (skinId >> 8), (byte) (skinId & 0xFF) };
+		return new byte[] { (byte) PACKET_MY_SKIN_PRESET, (byte) (skinId >>> 24), (byte) (skinId >>> 16),
+				(byte) (skinId >>> 8), (byte) (skinId & 0xFF) };
 	}
 
 	public static byte[] writeMySkinCustom(CustomSkin customSkin) {

@@ -559,9 +559,9 @@ public class GuiVoiceMenu extends Gui {
 	}
 	
 	public static int attenuate(int cin, float r, float g, float b, float a) {
-		float var10 = (float) (cin >> 24 & 255) / 255.0F;
-		float var6 = (float) (cin >> 16 & 255) / 255.0F;
-		float var7 = (float) (cin >> 8 & 255) / 255.0F;
+		float var10 = (float) (cin >>> 24 & 255) / 255.0F;
+		float var6 = (float) (cin >>> 16 & 255) / 255.0F;
+		float var7 = (float) (cin >>> 8 & 255) / 255.0F;
 		float var8 = (float) (cin & 255) / 255.0F;
 		var10 *= a;
 		var6 *= r;

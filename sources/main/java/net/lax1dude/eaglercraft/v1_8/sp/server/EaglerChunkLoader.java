@@ -41,8 +41,8 @@ public class EaglerChunkLoader extends AnvilChunkLoader {
 		
 		char[] path = new char[12];
 		for(int i = 5; i >= 0; --i) {
-			path[i] = hex.charAt((unsignedX >> (i * 4)) & 0xF);
-			path[i + 6] = hex.charAt((unsignedZ >> (i * 4)) & 0xF);
+			path[i] = hex.charAt((unsignedX >>> (i << 2)) & 0xF);
+			path[i + 6] = hex.charAt((unsignedZ >>> (i << 2)) & 0xF);
 		}
 		
 		return new String(path);

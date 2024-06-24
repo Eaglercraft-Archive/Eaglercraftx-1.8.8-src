@@ -64,13 +64,15 @@ public class DebugConsoleWindow {
 				destroyWindow();
 			}
 		});
-		if("true".equals(parent.getLocalStorage().getItem(PlatformRuntime.getClientConfigAdapter().getLocalStorageNamespace() + ".showDebugConsole"))) {
+		if(parent.getLocalStorage() != null && "true".equals(parent.getLocalStorage().getItem(PlatformRuntime.getClientConfigAdapter().getLocalStorageNamespace() + ".showDebugConsole"))) {
 			showDebugConsole0();
 		}
 	}
 
 	public static void showDebugConsole() {
-		parent.getLocalStorage().setItem(PlatformRuntime.getClientConfigAdapter().getLocalStorageNamespace() + ".showDebugConsole", "true");
+		if(parent.getLocalStorage() != null) {
+			parent.getLocalStorage().setItem(PlatformRuntime.getClientConfigAdapter().getLocalStorageNamespace() + ".showDebugConsole", "true");
+		}
 		showDebugConsole0();
 	}
 
@@ -108,7 +110,9 @@ public class DebugConsoleWindow {
 				public void handleEvent(Event evt) {
 					if(logger != null) {
 						logger = null;
-						parent.getLocalStorage().setItem("_eaglercraftX.showDebugConsole", "false");
+						if(parent.getLocalStorage() != null) {
+							parent.getLocalStorage().setItem(PlatformRuntime.getClientConfigAdapter().getLocalStorageNamespace() + ".showDebugConsole", "false");
+						}
 					}
 				}
 			};

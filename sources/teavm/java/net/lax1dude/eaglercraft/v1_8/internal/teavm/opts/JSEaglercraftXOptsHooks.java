@@ -26,4 +26,7 @@ public abstract class JSEaglercraftXOptsHooks implements JSObject {
 	@JSBody(script = "return (typeof this.localStorageLoaded === \"function\") ? this.localStorageLoaded : null;")
 	public native JSObject getLocalStorageLoadedHook();
 
+	@JSBody(script = "return (typeof this.crashReportShow === \"function\") ? this.crashReportShow : null;")
+	public native JSObject getCrashReportHook();
+
 }

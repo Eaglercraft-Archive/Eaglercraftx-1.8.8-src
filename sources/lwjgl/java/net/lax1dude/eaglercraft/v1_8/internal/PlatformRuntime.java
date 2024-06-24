@@ -143,7 +143,7 @@ public class PlatformRuntime {
 					windowIcons[i].getRGB(0, 0, w, h, px, 0, w);
 					
 					for(int j = 0; j < px.length; ++j) {
-						px[j] = (px[j] & 0xFF00FF00) | ((px[j] >> 16) & 0xFF) | ((px[j] & 0xFF) << 16); // swap R/B
+						px[j] = (px[j] & 0xFF00FF00) | ((px[j] >>> 16) & 0xFF) | ((px[j] & 0xFF) << 16); // swap R/B
 					}
 					
 					java.nio.ByteBuffer iconBuffer = st.malloc(w * h * 4);

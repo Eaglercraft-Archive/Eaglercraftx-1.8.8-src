@@ -39,7 +39,7 @@ uniform float u_baseScale1f;
 
 #define FAKE_SIN(valueIn, valueOut)\
 	valueOut = abs(1.0 - fract(valueIn * 0.159155) * 2.0);\
-	valueOut = valueOut * valueOut * (3.0 - 2.0 * valueOut) * 2.0 - 1.0;
+	valueOut = valueOut * valueOut * (6.0 - 4.0 * valueOut) - 1.0;
 
 void main() {
 	v_occlusion1f = max(textureLod(u_sunOcclusionValue, vec2(0.5, 0.5), 0.0).r * 1.5 - 0.5, 0.0);

@@ -741,12 +741,13 @@
 + 		}
 + 
 
-> CHANGE  6 : 17  @  6 : 54
+> CHANGE  6 : 18  @  6 : 54
 
 ~ 		Minecraft.getMinecraft().getRenderManager().setEnableFNAWSkins(this.gameSettings.enableFNAWSkins);
 ~ 		session.reset();
 ~ 		SingleplayerServerController.launchEaglercraftServer(folderName, gameSettings.difficulty.getDifficultyId(),
 ~ 				Math.max(gameSettings.renderDistanceChunks, 2), worldSettingsIn);
+~ 		EagRuntime.setMCServerWindowGlobal("singleplayer");
 ~ 		this.displayGuiScreen(new GuiScreenIntegratedServerBusy(
 ~ 				new GuiScreenSingleplayerConnecting(new GuiMainMenu(), "Connecting to " + folderName),
 ~ 				"singleplayer.busy.startingIntegratedServer", "singleplayer.failed.startingIntegratedServer",
@@ -787,7 +788,26 @@
 ~ 				return EaglercraftGPU.glGetString(7937) + " GL version " + EaglercraftGPU.glGetString(7938) + ", "
 ~ 						+ EaglercraftGPU.glGetString(7936);
 
-> DELETE  2  @  2 : 12
+> CHANGE  2 : 5  @  2 : 5
+
+~ 		theCrash.getCategory().addCrashSectionCallable("Is Eagler Shaders", new Callable<String>() {
+~ 			public String call() throws Exception {
+~ 				return Minecraft.this.gameSettings.shaders ? "Yes" : "No";
+
+> CHANGE  2 : 6  @  2 : 5
+
+~ 		theCrash.getCategory().addCrashSectionCallable("Is Dynamic Lights", new Callable<String>() {
+~ 			public String call() throws Exception {
+~ 				return !Minecraft.this.gameSettings.shaders && Minecraft.this.gameSettings.enableDynamicLights ? "Yes"
+~ 						: "No";
+
+> INSERT  2 : 7  @  2
+
++ 		theCrash.getCategory().addCrashSectionCallable("In Ext. Pipeline", new Callable<String>() {
++ 			public String call() throws Exception {
++ 				return GlStateManager.isExtensionPipeline() ? "Yes" : "No";
++ 			}
++ 		});
 
 > CHANGE  2 : 3  @  2 : 6
 
@@ -812,7 +832,11 @@
 
 > DELETE  2  @  2 : 219
 
-> CHANGE  13 : 14  @  13 : 14
+> INSERT  6 : 7  @  6
+
++ 		EagRuntime.setMCServerWindowGlobal(serverDataIn != null ? serverDataIn.serverIP : null);
+
+> CHANGE  7 : 8  @  7 : 8
 
 ~ 		return SingleplayerServerController.isWorldRunning();
 

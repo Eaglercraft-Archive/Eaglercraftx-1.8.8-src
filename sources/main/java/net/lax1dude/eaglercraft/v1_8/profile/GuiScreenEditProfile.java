@@ -345,9 +345,9 @@ public class GuiScreenEditProfile extends GuiScreen {
 						for(int i = 0, j, k; i < 4096; ++i) {
 							j = i << 2;
 							k = loadedSkin.pixels[i];
-							rawSkin[j] = (byte)(k >> 24);
-							rawSkin[j + 1] = (byte)(k >> 16);
-							rawSkin[j + 2] = (byte)(k >> 8);
+							rawSkin[j] = (byte)(k >>> 24);
+							rawSkin[j + 1] = (byte)(k >>> 16);
+							rawSkin[j + 2] = (byte)(k >>> 8);
 							rawSkin[j + 3] = (byte)(k & 0xFF);
 						}
 						for(int y = 20; y < 32; ++y) {

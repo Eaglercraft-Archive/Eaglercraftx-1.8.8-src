@@ -61,6 +61,7 @@ public class TeaVMClientConfigAdapter implements IClientConfigAdapter {
 	private String localStorageNamespace = "_eaglercraftX";
 	private final TeaVMClientConfigAdapterHooks hooks = new TeaVMClientConfigAdapterHooks();
 	private boolean enableMinceraft = true;
+	private boolean crashOnUncaughtExceptions = false;
 
 	public void loadNative(JSObject jsObject) {
 		integratedServerOpts = new JSONObject();
@@ -83,6 +84,7 @@ public class TeaVMClientConfigAdapter implements IClientConfigAdapter {
 		allowFNAWSkins = !demoMode && eaglercraftXOpts.getAllowFNAWSkins(true);
 		localStorageNamespace = eaglercraftXOpts.getLocalStorageNamespace(EaglercraftVersion.localStorageNamespace);
 		enableMinceraft = eaglercraftXOpts.getEnableMinceraft(true);
+		crashOnUncaughtExceptions = eaglercraftXOpts.getCrashOnUncaughtExceptions(false);
 		JSEaglercraftXOptsHooks hooksObj = eaglercraftXOpts.getHooks();
 		if(hooksObj != null) {
 			hooks.loadHooks(hooksObj);
@@ -95,6 +97,7 @@ public class TeaVMClientConfigAdapter implements IClientConfigAdapter {
 		integratedServerOpts.put("allowUpdateDL", isAllowUpdateDL);
 		integratedServerOpts.put("allowVoiceClient", allowVoiceClient);
 		integratedServerOpts.put("allowFNAWSkins", allowFNAWSkins);
+		integratedServerOpts.put("crashOnUncaughtExceptions", crashOnUncaughtExceptions);
 		
 		JSArrayReader<JSEaglercraftXOptsServer> serversArray = eaglercraftXOpts.getServers();
 		if(serversArray != null) {
@@ -178,6 +181,7 @@ public class TeaVMClientConfigAdapter implements IClientConfigAdapter {
 		allowFNAWSkins = eaglercraftOpts.optBoolean("allowFNAWSkins", true);
 		localStorageNamespace = eaglercraftOpts.optString("localStorageNamespace", EaglercraftVersion.localStorageNamespace);
 		enableMinceraft = eaglercraftOpts.optBoolean("enableMinceraft", true);
+		crashOnUncaughtExceptions = eaglercraftOpts.optBoolean("crashOnUncaughtExceptions", false);
 		JSONArray serversArray = eaglercraftOpts.optJSONArray("servers");
 		if(serversArray != null) {
 			for(int i = 0, l = serversArray.length(); i < l; ++i) {
@@ -366,6 +370,7 @@ public class TeaVMClientConfigAdapter implements IClientConfigAdapter {
 		jsonObject.put("allowFNAWSkins", allowFNAWSkins);
 		jsonObject.put("localStorageNamespace", localStorageNamespace);
 		jsonObject.put("enableMinceraft", enableMinceraft);
+		jsonObject.put("crashOnUncaughtExceptions", crashOnUncaughtExceptions);
 		JSONArray serversArr = new JSONArray();
 		for(int i = 0, l = defaultServers.size(); i < l; ++i) {
 			DefaultServer srv = defaultServers.get(i);

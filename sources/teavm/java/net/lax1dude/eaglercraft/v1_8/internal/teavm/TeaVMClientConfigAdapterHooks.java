@@ -1,5 +1,6 @@
 package net.lax1dude.eaglercraft.v1_8.internal.teavm;
 
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import org.teavm.interop.Async;
@@ -34,6 +35,7 @@ public class TeaVMClientConfigAdapterHooks implements IClientConfigAdapterHooks 
 
 	private LocalStorageSaveHook saveHook = null;
 	private LocalStorageLoadHook loadHook = null;
+	private CrashReportHook crashHook = null;
 
 	@JSFunctor
 	private static interface LocalStorageSaveHook extends JSObject {
@@ -65,6 +67,25 @@ public class TeaVMClientConfigAdapterHooks implements IClientConfigAdapterHooks 
 		}
 	}
 
+	@JSFunctor
+	private static interface CrashReportHook extends JSObject {
+		void call(String crashReport, CustomMessageCB customMessageCB);
+	}
+
+	@JSFunctor
+	private static interface CustomMessageCB extends JSObject {
+		void call(String msg);
+	}
+
+	@Override
+	public void callCrashReportHook(String crashReport, Consumer<String> customMessageCB) {
+		if(crashHook != null) {
+			callHookSafeSync("crashReportShow", () -> {
+				crashHook.call(crashReport, (msg) -> customMessageCB.accept(msg));
+			});
+		}
+	}
+
 	private static void callHookSafe(String identifer, Runnable hooker) {
 		Window.setTimeout(() -> {
 			try {
@@ -72,6 +93,22 @@ public class TeaVMClientConfigAdapterHooks implements IClientConfigAdapterHooks 
 			}catch(Throwable t) {
 				logger.error("Caught exception while invoking eaglercraftXOpts \"{}\" hook!", identifer);
 				logger.error(t);
+			}
+		}, 0);
+	}
+
+	@Async
+	private static native void callHookSafeSync(String identifer, Runnable hooker);
+
+	private static void callHookSafeSync(String identifer, Runnable hooker, final AsyncCallback<Void> cb) {
+		Window.setTimeout(() -> {
+			try {
+				hooker.run();
+			}catch(Throwable t) {
+				logger.error("Caught exception while invoking eaglercraftXOpts \"{}\" hook!", identifer);
+				logger.error(t);
+			}finally {
+				cb.complete(null);
 			}
 		}, 0);
 	}
@@ -96,5 +133,6 @@ public class TeaVMClientConfigAdapterHooks implements IClientConfigAdapterHooks 
 	public void loadHooks(JSEaglercraftXOptsHooks hooks) {
 		saveHook = (LocalStorageSaveHook)hooks.getLocalStorageSavedHook();
 		loadHook = (LocalStorageLoadHook)hooks.getLocalStorageLoadedHook();
+		crashHook = (CrashReportHook)hooks.getCrashReportHook();
 	}
 }

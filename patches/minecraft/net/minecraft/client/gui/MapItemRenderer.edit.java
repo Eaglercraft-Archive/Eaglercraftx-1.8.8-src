@@ -33,6 +33,6 @@
 
 > INSERT  1 : 2  @  1
 
-+ 				this.mapTextureData[i] = (c & 0xFF00FF00) | ((c & 0x00FF0000) >> 16) | ((c & 0x000000FF) << 16);
++ 				this.mapTextureData[i] = (c & 0xFF00FF00) | ((c & 0x00FF0000) >>> 16) | ((c & 0x000000FF) << 16);
 
 > EOF

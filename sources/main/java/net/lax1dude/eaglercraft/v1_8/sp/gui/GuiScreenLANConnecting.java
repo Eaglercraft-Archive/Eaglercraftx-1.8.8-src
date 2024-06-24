@@ -8,8 +8,10 @@ import net.lax1dude.eaglercraft.v1_8.sp.relay.RelayServer;
 import net.lax1dude.eaglercraft.v1_8.sp.relay.RelayServerSocket;
 import net.lax1dude.eaglercraft.v1_8.sp.socket.NetHandlerSingleplayerLogin;
 import net.minecraft.client.LoadingScreenRenderer;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiDisconnected;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.network.EnumConnectionState;
 import net.minecraft.network.login.client.C00PacketLoginStart;
@@ -54,6 +56,7 @@ public class GuiScreenLANConnecting extends GuiScreen {
 		this.parent = parent;
 		this.code = code;
 		this.relay = relay;
+		Minecraft.getMinecraft().setServerData(new ServerData("Shared World", "shared:" + relay.address, false));
 	}
 
 	public boolean doesGuiPauseGame() {

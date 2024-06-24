@@ -63,8 +63,8 @@ public class CapePackets {
 	}
 
 	public static byte[] writeMyCapePreset(int capeId) {
-		return new byte[] { (byte) PACKET_MY_CAPE_PRESET, (byte) (capeId >> 24), (byte) (capeId >> 16),
-				(byte) (capeId >> 8), (byte) (capeId & 0xFF) };
+		return new byte[] { (byte) PACKET_MY_CAPE_PRESET, (byte) (capeId >>> 24), (byte) (capeId >>> 16),
+				(byte) (capeId >>> 8), (byte) (capeId & 0xFF) };
 	}
 
 	public static byte[] writeMyCapeCustom(CustomCape customCape) {

@@ -226,6 +226,9 @@ public class EagRuntime {
 		return PlatformRuntime.maxMemory();
 	}
 
+	/**
+	 * Note to skids: This doesn't do anything in TeaVM runtime!
+	 */
 	public static long totalMemory() {
 		return PlatformRuntime.totalMemory();
 	}
@@ -321,5 +324,9 @@ public class EagRuntime {
 	public static <T extends DateFormat> T fixDateFormat(T input) {
 		input.setCalendar(getLocaleCalendar());
 		return input;
+	}
+
+	public static void setMCServerWindowGlobal(String url) {
+		PlatformApplication.setMCServerWindowGlobal(url);
 	}
 }

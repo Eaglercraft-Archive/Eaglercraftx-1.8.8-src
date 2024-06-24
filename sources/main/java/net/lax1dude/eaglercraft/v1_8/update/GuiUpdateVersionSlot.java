@@ -127,13 +127,13 @@ public class GuiUpdateVersionSlot extends GuiSlot {
 			if(strs.size() > 2 && screen.mx > xx + iconSize && screen.my > yy + 8 && screen.mx < xx + getListWidth() - 5 && screen.my < yy + 25) {
 				screen.tooltip = cert.bundleVersionComment;
 			}
-			char[] hexStr1 = new char[] { hexChars[(cert.bundleDataHash[0] >> 4) & 0xF],
-					hexChars[cert.bundleDataHash[1] & 0xF], hexChars[(cert.bundleDataHash[1] >> 4) & 0xF],
-					hexChars[cert.bundleDataHash[1] & 0xF], hexChars[(cert.bundleDataHash[2] >> 4) & 0xF],
+			char[] hexStr1 = new char[] { hexChars[(cert.bundleDataHash[0] >>> 4) & 0xF],
+					hexChars[cert.bundleDataHash[1] & 0xF], hexChars[(cert.bundleDataHash[1] >>> 4) & 0xF],
+					hexChars[cert.bundleDataHash[1] & 0xF], hexChars[(cert.bundleDataHash[2] >>> 4) & 0xF],
 					hexChars[cert.bundleDataHash[2] & 0xF] };
-			char[] hexStr2 = new char[] { hexChars[(cert.bundleDataHash[29] >> 4) & 0xF],
-					hexChars[cert.bundleDataHash[29] & 0xF], hexChars[(cert.bundleDataHash[30] >> 4) & 0xF],
-					hexChars[cert.bundleDataHash[30] & 0xF], hexChars[(cert.bundleDataHash[31] >> 4) & 0xF],
+			char[] hexStr2 = new char[] { hexChars[(cert.bundleDataHash[29] >>> 4) & 0xF],
+					hexChars[cert.bundleDataHash[29] & 0xF], hexChars[(cert.bundleDataHash[30] >>> 4) & 0xF],
+					hexChars[cert.bundleDataHash[30] & 0xF], hexChars[(cert.bundleDataHash[31] >>> 4) & 0xF],
 					hexChars[cert.bundleDataHash[31] & 0xF] };
 			screen.drawString(mc.fontRendererObj,
 					"Author: " + EnumChatFormatting.GRAY + cert.bundleAuthorName + EnumChatFormatting.WHITE + "  Hash: "

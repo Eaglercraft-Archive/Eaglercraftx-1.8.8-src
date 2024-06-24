@@ -413,7 +413,7 @@ public class InstancedFontRenderer {
 		buf.putShort((short)y);
 		buf.put((byte)cx);
 		buf.put((byte)cy);
-		color = ((color >> 1) & 0x7F000000) | (color & 0xFFFFFF);
+		color = ((color >>> 1) & 0x7F000000) | (color & 0xFFFFFF);
 		if(italic) {
 			color |= 0x80000000;
 		}
@@ -438,7 +438,7 @@ public class InstancedFontRenderer {
 		buf.putShort((short)y);
 		buf.put((byte)cx);
 		buf.put((byte)cy);
-		color = ((color >> 1) & 0x7F000000) | (color & 0xFFFFFF);
+		color = ((color >>> 1) & 0x7F000000) | (color & 0xFFFFFF);
 		if(italic) {
 			color |= 0x80000000;
 		}

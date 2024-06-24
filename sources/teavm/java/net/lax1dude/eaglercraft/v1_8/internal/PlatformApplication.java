@@ -309,4 +309,7 @@ public class PlatformApplication {
 	public static boolean isShowingDebugConsole() {
 		return DebugConsoleWindow.isShowingDebugConsole();
 	}
+
+	@JSBody(params = { "str" }, script = "window.minecraftServer = str;")
+	public static native void setMCServerWindowGlobal(String str);
 }

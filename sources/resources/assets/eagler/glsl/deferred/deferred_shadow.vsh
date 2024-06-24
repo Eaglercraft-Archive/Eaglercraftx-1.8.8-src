@@ -53,7 +53,7 @@ uniform vec4 u_wavingBlockParam4f;
 #define DO_COMPILE_STATE_WAVING_BLOCKS
 #define FAKE_SIN(valueIn, valueOut)\
 	valueOut = abs(1.0 - fract(valueIn * 0.159155) * 2.0);\
-	valueOut = valueOut * valueOut * (3.0 - 2.0 * valueOut) * 2.0 - 1.0;
+	valueOut = valueOut * valueOut * (6.0 - 4.0 * valueOut) - 1.0;
 #define LIB_INCLUDE_WAVING_BLOCKS_FUNCTION
 #endif
 

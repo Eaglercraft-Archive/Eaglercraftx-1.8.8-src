@@ -191,12 +191,12 @@ public class ConnectionHandshake {
 						
 						int passLen = password.length();
 						
-						digest.update((byte)((passLen >> 8) & 0xFF));
+						digest.update((byte)((passLen >>> 8) & 0xFF));
 						digest.update((byte)(passLen & 0xFF));
 						
 						for(int i = 0; i < passLen; ++i) {
 							char codePoint = password.charAt(i);
-							digest.update((byte)((codePoint >> 8) & 0xFF));
+							digest.update((byte)((codePoint >>> 8) & 0xFF));
 							digest.update((byte)(codePoint & 0xFF));
 						}
 						

@@ -154,7 +154,7 @@ public class IPacket {
 			is.write(0);
 		}else {
 			int l = txt.length();
-			is.write((l >> 8) & 0xFF);
+			is.write((l >>> 8) & 0xFF);
 			is.write(l & 0xFF);
 			for(int i = 0; i < l; ++i) {
 				is.write((int)txt.charAt(i));

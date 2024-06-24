@@ -3,6 +3,8 @@ package net.lax1dude.eaglercraft.v1_8.internal.teavm;
 import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.json.JSONException;
 import org.teavm.jso.JSBody;
@@ -76,6 +78,7 @@ public class ClientMain {
 			
 			try {
 				JSEaglercraftXOptsRoot eaglercraftOpts = (JSEaglercraftXOptsRoot)opts;
+				crashOnUncaughtExceptions = eaglercraftOpts.getCrashOnUncaughtExceptions(false);
 				
 				configRootElementId = eaglercraftOpts.getContainer();
 				if(configRootElementId == null) {
@@ -119,36 +122,38 @@ public class ClientMain {
 				return;
 			}
 			
-			systemOut.println("ClientMain: [INFO] registering crash handlers");
-			
-			setWindowErrorHandler(new WindowErrorHandler() {
-
-				@Override
-				public void call(String message, String file, int line, int col, JSError error) {
-					StringBuilder str = new StringBuilder();
-					
-					str.append("Native Browser Exception\n");
-					str.append("----------------------------------\n");
-					str.append("  Line: ").append((file == null ? "unknown" : file) + ":" + line + ":" + col).append('\n');
-					str.append("  Type: ").append(error == null ? "generic" : error.getName()).append('\n');
-					
-					if(error != null) {
-						str.append("  Desc: ").append(error.getMessage() == null ? "null" : error.getMessage()).append('\n');
-					}
-					
-					if(message != null) {
-						if(error == null || error.getMessage() == null || !message.endsWith(error.getMessage())) {
-							str.append("  Desc: ").append(message).append('\n');
-						}
-					}
-					
-					str.append("----------------------------------\n\n");
-					str.append(error.getStack() == null ? "No stack trace is available" : error.getStack()).append('\n');
-					
-					showCrashScreen(str.toString());
-				}
+			if(crashOnUncaughtExceptions) {
+				systemOut.println("ClientMain: [INFO] registering crash handlers");
 				
-			});
+				setWindowErrorHandler(new WindowErrorHandler() {
+
+					@Override
+					public void call(String message, String file, int line, int col, JSError error) {
+						StringBuilder str = new StringBuilder();
+						
+						str.append("Native Browser Exception\n");
+						str.append("----------------------------------\n");
+						str.append("  Line: ").append((file == null ? "unknown" : file) + ":" + line + ":" + col).append('\n');
+						str.append("  Type: ").append(error == null ? "generic" : error.getName()).append('\n');
+						
+						if(error != null) {
+							str.append("  Desc: ").append(error.getMessage() == null ? "null" : error.getMessage()).append('\n');
+						}
+						
+						if(message != null) {
+							if(error == null || error.getMessage() == null || !message.endsWith(error.getMessage())) {
+								str.append("  Desc: ").append(message).append('\n');
+							}
+						}
+						
+						str.append("----------------------------------\n\n");
+						str.append(error.getStack() == null ? "No stack trace is available" : error.getStack()).append('\n');
+						
+						showCrashScreen(str.toString());
+					}
+
+				});
+			}
 			
 			systemOut.println("ClientMain: [INFO] initializing eaglercraftx runtime");
 			
@@ -212,6 +217,7 @@ public class ClientMain {
 	public static HTMLElement configRootElement =  null;
 	public static EPKFileEntry[] configEPKFiles = null;
 	public static String configLocalesFolder = null;
+	public static boolean crashOnUncaughtExceptions = false;
 	
 	@JSFunctor
 	private static interface WindowErrorHandler extends JSObject {
@@ -236,61 +242,97 @@ public class ClientMain {
 	private static boolean isCrashed = false;
 
 	public static void showCrashScreen(String t) {
+		StringBuilder strBeforeBuilder = new StringBuilder();
+		strBeforeBuilder.append("Game Crashed! I have fallen and I can't get up!\n\n");
+		strBeforeBuilder.append(t);
+		strBeforeBuilder.append('\n').append('\n');
+		String strBefore = strBeforeBuilder.toString();
+		
+		HTMLDocument doc = Window.current().getDocument();
+		if(configRootElement == null) {
+			configRootElement = doc.getElementById(configRootElementId);
+		}
+
+		HTMLElement el = configRootElement;
+
+		StringBuilder str = new StringBuilder();
+		str.append("eaglercraft.version = \"").append(EaglercraftVersion.projectForkVersion).append("\"\n");
+		str.append("eaglercraft.minecraft = \"1.8.8\"\n");
+		str.append("eaglercraft.brand = \"" + EaglercraftVersion.projectForkVendor + "\"\n");
+		str.append("eaglercraft.username = \"").append(EaglerProfile.getName()).append("\"\n");
+		str.append('\n');
+		str.append(addWebGLToCrash());
+		str.append('\n');
+		str.append("window.eaglercraftXOpts = ");
+		str.append(TeaVMClientConfigAdapter.instance.toString()).append('\n');
+		str.append('\n');
+		str.append("currentTime = ");
+		str.append(EagRuntime.fixDateFormat(new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z")).format(new Date())).append('\n');
+		str.append('\n');
+		addDebugNav(str, "userAgent");
+		addDebugNav(str, "vendor");
+		addDebugNav(str, "language");
+		addDebugNav(str, "hardwareConcurrency");
+		addDebugNav(str, "deviceMemory");
+		addDebugNav(str, "platform");
+		addDebugNav(str, "product");
+		addDebugNavPlugins(str);
+		str.append('\n');
+		addDebug(str, "localStorage");
+		addDebug(str, "sessionStorage");
+		addDebug(str, "indexedDB");
+		str.append('\n');
+		str.append("rootElement.clientWidth = ").append(el == null ? "undefined" : el.getClientWidth()).append('\n');
+		str.append("rootElement.clientHeight = ").append(el == null ? "undefined" : el.getClientHeight()).append('\n');
+		addDebug(str, "innerWidth");
+		addDebug(str, "innerHeight");
+		addDebug(str, "outerWidth");
+		addDebug(str, "outerHeight");
+		addDebug(str, "devicePixelRatio");
+		addDebugScreen(str, "availWidth");
+		addDebugScreen(str, "availHeight");
+		addDebugScreen(str, "colorDepth");
+		addDebugScreen(str, "pixelDepth");
+		str.append('\n');
+		addDebug(str, "minecraftServer");
+		str.append('\n');
+		addDebugLocation(str, "href");
+		str.append('\n');
+		String strAfter = str.toString();
+		
+		String strFinal = strBefore + strAfter;
+		List<String> additionalInfo = new LinkedList();
+		try {
+			TeaVMClientConfigAdapter.instance.getHooks().callCrashReportHook(strFinal, additionalInfo::add);
+		}catch(Throwable tt) {
+			System.err.println("Uncaught exception invoking crash report hook!");
+			EagRuntime.debugPrintStackTraceToSTDERR(tt);
+		}
+		
 		if(!isCrashed) {
 			isCrashed = true;
 			
-			HTMLDocument doc = Window.current().getDocument();
-			if(configRootElement == null) {
-				configRootElement = doc.getElementById(configRootElementId);
+			if(additionalInfo.size() > 0) {
+				try {
+					StringBuilder builderFinal = new StringBuilder();
+					builderFinal.append(strBefore);
+					builderFinal.append("Got the following messages from the crash report hook registered in eaglercraftXOpts:\n\n");
+					for(String str2 : additionalInfo) {
+						builderFinal.append("----------[ CRASH HOOK ]----------\n");
+						builderFinal.append(str2).append('\n');
+						builderFinal.append("----------------------------------\n\n");
+					}
+					builderFinal.append(strAfter);
+					strFinal = builderFinal.toString();
+				}catch(Throwable tt) {
+					System.err.println("Uncaught exception concatenating crash report hook messages!");
+					EagRuntime.debugPrintStackTraceToSTDERR(tt);
+				}
 			}
-
-			HTMLElement el = configRootElement;
-
-			StringBuilder str = new StringBuilder();
-			str.append("Game Crashed! I have fallen and I can't get up!\n\n");
-			str.append(t);
-			str.append('\n').append('\n');
-			str.append("eaglercraft.version = \"").append(EaglercraftVersion.projectForkVersion).append("\"\n");
-			str.append("eaglercraft.minecraft = \"1.8.8\"\n");
-			str.append("eaglercraft.brand = \"" + EaglercraftVersion.projectForkVendor + "\"\n");
-			str.append("eaglercraft.username = \"").append(EaglerProfile.getName()).append("\"\n");
-			str.append('\n');
-			str.append(addWebGLToCrash());
-			str.append('\n');
-			str.append("window.eaglercraftXOpts = ");
-			str.append(TeaVMClientConfigAdapter.instance.toString()).append('\n');
-			str.append('\n');
-			str.append("currentTime = ");
-			str.append(EagRuntime.fixDateFormat(new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z")).format(new Date())).append('\n');
-			str.append('\n');
-			addDebugNav(str, "userAgent");
-			addDebugNav(str, "vendor");
-			addDebugNav(str, "language");
-			addDebugNav(str, "hardwareConcurrency");
-			addDebugNav(str, "deviceMemory");
-			addDebugNav(str, "platform");
-			addDebugNav(str, "product");
-			str.append('\n');
-			str.append("rootElement.clientWidth = ").append(el == null ? "undefined" : el.getClientWidth()).append('\n');
-			str.append("rootElement.clientHeight = ").append(el == null ? "undefined" : el.getClientHeight()).append('\n');
-			addDebug(str, "innerWidth");
-			addDebug(str, "innerHeight");
-			addDebug(str, "outerWidth");
-			addDebug(str, "outerHeight");
-			addDebug(str, "devicePixelRatio");
-			addDebugScreen(str, "availWidth");
-			addDebugScreen(str, "availHeight");
-			addDebugScreen(str, "colorDepth");
-			addDebugScreen(str, "pixelDepth");
-			str.append('\n');
-			addDebug(str, "currentContext");
-			str.append('\n');
-			addDebugLocation(str, "href");
-			str.append('\n');
 			
 			if(el == null) {
 				Window.alert("Root element not found, crash report was printed to console");
-				System.err.println(str.toString());
+				System.err.println(strFinal);
 				return;
 			}
 
@@ -303,7 +345,7 @@ public class ClientMain {
 			div.setAttribute("style", "z-index:100;position:absolute;top:135px;left:10%;right:10%;bottom:50px;background-color:white;border:1px solid #cccccc;overflow-x:hidden;overflow-y:scroll;overflow-wrap:break-word;white-space:pre-wrap;font: 14px monospace;padding:10px;");
 			el.appendChild(img);
 			el.appendChild(div);
-			div.appendChild(doc.createTextNode(str.toString()));
+			div.appendChild(doc.createTextNode(strFinal));
 			
 			PlatformRuntime.removeEventHandlers();
 
@@ -314,10 +356,29 @@ public class ClientMain {
 			for(int i = 0; i < s.length; ++i) {
 				System.err.println("  " + s[i]);
 			}
+			if(additionalInfo.size() > 0) {
+				for(String str2 : additionalInfo) {
+					if(str2 != null) {
+						System.err.println();
+						System.err.println("  ----------[ CRASH HOOK ]----------");
+						s = str2.split("[\\r\\n]+");
+						for(int i = 0; i < s.length; ++i) {
+							System.err.println("  " + s[i]);
+						}
+						System.err.println("  ----------------------------------");
+					}
+				}
+			}
 		}
 	}
 
+	private static String webGLCrashStringCache = null;
+
 	private static String addWebGLToCrash() {
+		if(webGLCrashStringCache != null) {
+			return webGLCrashStringCache;
+		}
+		
 		StringBuilder ret = new StringBuilder();
 		
 		WebGLRenderingContext ctx = PlatformRuntime.webgl;
@@ -328,7 +389,11 @@ public class ClientMain {
 			cvs.setWidth(64);
 			cvs.setHeight(64);
 			
-			ctx = (WebGLRenderingContext)cvs.getContext("webgl");
+			ctx = (WebGLRenderingContext)cvs.getContext("webgl2");
+			
+			if(ctx == null) {
+				ctx = (WebGLRenderingContext)cvs.getContext("webgl");
+			}
 		}
 		
 		if(ctx != null) {
@@ -345,12 +410,13 @@ public class ClientMain {
 			//ret.append('\n').append("\nwebgl.anisotropicGlitch = ").append(DetectAnisotropicGlitch.hasGlitch()).append('\n'); //TODO
 			ret.append('\n').append("webgl.ext.HDR16f = ").append(ctx.getExtension("EXT_color_buffer_half_float") != null).append('\n');
 			ret.append("webgl.ext.HDR32f = ").append(ctx.getExtension("EXT_color_buffer_float") != null).append('\n');
+			ret.append("webgl.ext.HDR32f_linear = ").append(ctx.getExtension("OES_texture_float_linear") != null).append('\n');
 			
 		}else {
 			ret.append("Failed to query GPU info!\n");
 		}
 		
-		return ret.toString();
+		return webGLCrashStringCache = ret.toString();
 	}
 
 	public static void showIncompatibleScreen(String t) {
@@ -486,12 +552,23 @@ public class ClientMain {
 	@JSBody(params = { "v" }, script = "try { return \"\"+window.location[v]; } catch(e) { return \"<error>\"; }")
 	private static native String getStringLocation(String var);
 
+	@JSBody(params = { }, script = "try { var retObj = new Array; if(typeof window.navigator.plugins === \"object\")"
+			+ "{ var len = window.navigator.plugins.length; if(len > 0) { for(var idx = 0; idx < len; ++idx) {"
+			+ "var thePlugin = window.navigator.plugins[idx]; retObj.push({ name: thePlugin.name,"
+			+ "filename: thePlugin.filename, desc: thePlugin.description }); } } } return JSON.stringify(retObj);"
+			+ "} catch(e) { return \"<error>\"; }")
+	private static native String getStringNavPlugins();
+
 	private static void addDebug(StringBuilder str, String var) {
 		str.append("window.").append(var).append(" = ").append(getString(var)).append('\n');
 	}
 
 	private static void addDebugNav(StringBuilder str, String var) {
 		str.append("window.navigator.").append(var).append(" = ").append(getStringNav(var)).append('\n');
+	}
+
+	private static void addDebugNavPlugins(StringBuilder str) {
+		str.append("window.navigator.plugins = ").append(getStringNavPlugins()).append('\n');
 	}
 
 	private static void addDebugScreen(StringBuilder str, String var) {
