@@ -1,0 +1,46 @@
+plugins {
+	id 'java'
+	id 'eclipse'
+}
+
+group = 'net.lax1dude.eaglercraft.v1_8.sp.relay.server'
+version = ''
+
+repositories {
+	mavenCentral()
+}
+
+sourceSets {
+	main {
+		java {
+			srcDirs 'src/main/java'
+			srcDirs '../../sources/protocol-relay/java'
+		}
+	}
+}
+
+dependencies {
+	implementation 'org.java-websocket:Java-WebSocket:1.5.6'
+}
+
+java {
+	sourceCompatibility = JavaVersion.VERSION_1_8
+	targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+jar {
+	compileJava.options.encoding = 'UTF-8'
+	javadoc.options.encoding = 'UTF-8'
+
+	manifest {
+		attributes(
+			'Main-Class': 'net.lax1dude.eaglercraft.v1_8.sp.relay.server.EaglerSPRelay'
+		)
+	}
+
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+	from {
+		configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+	}
+	exclude 'META-INF/versions/9/module-info.class'
+}

@@ -1,0 +1,11 @@
+lib/*
+.idea/*
+*.iml
+out/*
+deps/BungeeCord.jar
+/.gradle/
+/.settings/
+.classpath
+.project
+/build/
+/bin/
