@@ -1,28 +1,31 @@
 
-[STUN]
+[NO_PASSWD]
 url=stun:stun.l.google.com:19302
 
-[STUN]
+[NO_PASSWD]
 url=stun:stun1.l.google.com:19302
 
-[STUN]
+[NO_PASSWD]
 url=stun:stun2.l.google.com:19302
 
-[STUN]
+[NO_PASSWD]
 url=stun:stun3.l.google.com:19302
 
-[STUN]
+[NO_PASSWD]
 url=stun:stun4.l.google.com:19302
 
-[STUN]
-url=stun:openrelay.metered.ca:80
 
-[TURN]
-url=turn:openrelay.metered.ca:443
-username=openrelayproject
-password=openrelayproject
+# These no longer work in 2024, just provided for example:
 
-[TURN]
-url=turn:openrelay.metered.ca:443?transport=tcp
-username=openrelayproject
-password=openrelayproject
+#[NO_PASSWD]
+#url=stun:openrelay.metered.ca:80
+
+#[PASSWD]
+#url=turn:openrelay.metered.ca:443
+#username=openrelayproject
+#password=openrelayproject
+
+#[PASSWD]
+#url=turn:openrelay.metered.ca:443?transport=tcp
+#username=openrelayproject
+#password=openrelayproject

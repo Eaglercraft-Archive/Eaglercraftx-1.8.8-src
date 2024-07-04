@@ -46,12 +46,14 @@ public class DebugLogger implements IRelayLogger {
 	private static final Map<String,DebugLogger> loggers = new HashMap();
 	
 	public static DebugLogger getLogger(String name) {
-		DebugLogger ret = loggers.get(name);
-		if(ret == null) {
-			ret = new DebugLogger(name);
-			loggers.put(name, ret);
+		synchronized(loggers) {
+			DebugLogger ret = loggers.get(name);
+			if(ret == null) {
+				ret = new DebugLogger(name);
+				loggers.put(name, ret);
+			}
+			return ret;
 		}
-		return ret;
 	}
 	
 	private final String name;
@@ -189,7 +191,9 @@ public class DebugLogger implements IRelayLogger {
 	}
 	
 	public void log(Level lvl, Throwable stackTrace) {
-		stackTrace.printStackTrace(getPrintStream(lvl));
+		synchronized(this) {
+			stackTrace.printStackTrace(getPrintStream(lvl));
+		}
 	}
 	
 	public void debug(String msg) {

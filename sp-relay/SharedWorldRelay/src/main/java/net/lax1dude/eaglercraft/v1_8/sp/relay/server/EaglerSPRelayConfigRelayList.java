@@ -55,12 +55,12 @@ public class EaglerSPRelayConfigRelayList {
 			String line;
 			while((line = reader.readLine()) != null) {
 				line = line.trim();
-				if(line.length() == 0) {
+				if(line.length() == 0 || line.startsWith("#")) {
 					continue;
 				}
-				boolean isSTUNHead = line.equals("[STUN]");
-				boolean isTURNHead = line.equals("[TURN]");
-				if(isSTUNHead || isTURNHead) {
+				boolean isNOPASSHead = line.equals("[NO_PASSWD]") || line.equals("[STUN]");
+				boolean isPASSHead = line.equals("[PASSWD]") || line.equals("[TURN]");
+				if(isNOPASSHead || isPASSHead) {
 					if(addType != null) {
 						add(list.getName(), loading, addType, addAddress, addUsername, addPassword);
 					}
@@ -69,9 +69,9 @@ public class EaglerSPRelayConfigRelayList {
 					addPassword = null;
 					addType = null;
 				}
-				if(isSTUNHead) {
+				if(isNOPASSHead) {
 					addType = RelayPacket01ICEServers.RelayType.NO_PASSWD;
-				}else if(isTURNHead) {
+				}else if(isPASSHead) {
 					addType = RelayPacket01ICEServers.RelayType.PASSWD;
 				}else if(line.startsWith("url")) {
 					int spidx = line.indexOf('=') + 1;

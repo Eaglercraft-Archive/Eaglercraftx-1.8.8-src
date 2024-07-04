@@ -53,7 +53,7 @@ public class EaglerSPRelayConfig {
 	private boolean enableRealIpHeader = false;
 	private String realIpHeaderName = "X-Real-IP";
 	private boolean enableShowLocals = true;
-	private String serverComment = "Eags. Public LAN Relay";
+	private String serverComment = "Eags. Shared World Relay";
 
 	public void load(File conf) {
 		if(!conf.isFile()) {
