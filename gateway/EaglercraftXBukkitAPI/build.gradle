@@ -1,0 +1,40 @@
+plugins {
+	id 'java'
+	id 'eclipse'
+}
+
+group = 'net.lax1dude.eaglercraft.v1_8.plugin.bukkit_rpc_helper'
+version = ''
+
+repositories {
+	mavenCentral()
+	maven {
+		url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+	}
+	maven {
+		url = "https://oss.sonatype.org/content/repositories/snapshots/"
+	}
+}
+
+sourceSets {
+	main {
+		java {
+			srcDirs 'src/main/java'
+			srcDirs '../backend-rpc-protocol/src/backend-rpc-protocol/java'
+		}
+	}
+}
+
+dependencies {
+	compileOnly 'org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT' 
+}
+
+java {
+	sourceCompatibility = JavaVersion.VERSION_1_8
+	targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+jar {
+	compileJava.options.encoding = 'UTF-8'
+	javadoc.options.encoding = 'UTF-8'
+}
