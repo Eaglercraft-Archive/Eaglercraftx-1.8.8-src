@@ -21,6 +21,7 @@ sourceSets {
 		java {
 			srcDirs 'src/main/java'
 			srcDirs '../backend-rpc-protocol/src/backend-rpc-protocol/java'
+			srcDirs '../backend-rpc-protocol/src/notif-builder-bungee/java'
 		}
 	}
 }
