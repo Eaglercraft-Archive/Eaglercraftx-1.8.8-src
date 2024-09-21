@@ -5,6 +5,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.api.EaglerXBungeeAPIHelper;
+
 /**
  * Copyright (c) 2022-2023 lax1dude. All Rights Reserved.
  * 
@@ -28,7 +30,7 @@ public class AuthLoadingCache<K, V> {
 		private V instance;
 		
 		private CacheEntry(V instance) {
-			this.lastHit = System.currentTimeMillis();
+			this.lastHit = EaglerXBungeeAPIHelper.steadyTimeMillis();
 			this.instance = instance;
 		}
 		
@@ -49,7 +51,7 @@ public class AuthLoadingCache<K, V> {
 	private long cacheTimer;
 
 	public AuthLoadingCache(CacheLoader<K, V> provider, long cacheTTL) {
-		this.cacheMap = new HashMap();
+		this.cacheMap = new HashMap<>();
 		this.provider = provider;
 		this.cacheTTL = cacheTTL;
 	}
@@ -66,7 +68,7 @@ public class AuthLoadingCache<K, V> {
 			}
 			return loaded;
 		}else {
-			etr.lastHit = System.currentTimeMillis();
+			etr.lastHit = EaglerXBungeeAPIHelper.steadyTimeMillis();
 			return etr.instance;
 		}
 	}
@@ -90,7 +92,7 @@ public class AuthLoadingCache<K, V> {
 	}
 
 	public void tick() {
-		long millis = System.currentTimeMillis();
+		long millis = EaglerXBungeeAPIHelper.steadyTimeMillis();
 		if(millis - cacheTimer > (cacheTTL / 2L)) {
 			cacheTimer = millis;
 			synchronized(cacheMap) {

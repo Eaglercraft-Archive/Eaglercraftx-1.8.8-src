@@ -28,12 +28,13 @@ import net.md_5.bungee.api.plugin.PluginDescription;
  */
 public class QueryManager {
 
-	private static final Map<String, Class<? extends HttpServerQueryHandler>> queryTypes = new HashMap();
+	private static final Map<String, Class<? extends HttpServerQueryHandler>> queryTypes = new HashMap<>();
 
 	static {
 		queryTypes.put("motd", MOTDQueryHandler.class);
 		queryTypes.put("motd.cache", MOTDQueryHandler.class);
 		queryTypes.put("version", VersionQueryHandler.class);
+		queryTypes.put("revoke_session_token", RevokeSessionQueryHandler.class);
 	}
 
 	public static HttpServerQueryHandler createQueryHandler(String type) {

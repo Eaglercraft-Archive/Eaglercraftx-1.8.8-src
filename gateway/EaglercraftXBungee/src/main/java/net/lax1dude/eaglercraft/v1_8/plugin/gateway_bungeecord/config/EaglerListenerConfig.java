@@ -74,8 +74,14 @@ public class EaglerListenerConfig extends ListenerInfo {
 		for(int i = 0, l = serverMOTD.size(); i < l; ++i) {
 			serverMOTD.set(i, ChatColor.translateAlternateColorCodes('&', serverMOTD.get(i)));
 		}
-		boolean allowMOTD = config.getBoolean("allow_motd", false);
-		boolean allowQuery = config.getBoolean("allow_query", false);
+		boolean allowMOTD = config.getBoolean("allow_motd", true);
+		boolean allowQuery = config.getBoolean("allow_query", true);
+		boolean allowV3 = config.getBoolean("allow_protocol_v3", true);
+		boolean allowV4 = config.getBoolean("allow_protocol_v4", true);
+		if(!allowV3 && !allowV4) {
+			throw new IllegalArgumentException("Both v3 and v4 protocol are disabled!");
+		}
+		int defragSendDelay = config.getInt("protocol_v4_defrag_send_delay", 10);
 		
 		int cacheTTL = 7200;
 		boolean cacheAnimation = false;
@@ -102,8 +108,8 @@ public class EaglerListenerConfig extends ListenerInfo {
 				page404 = null;
 			}
 			List<String> defaultIndex = Arrays.asList("index.html", "index.htm");
-			List indexPageRaw = httpServerConf.getList("page_index_name", defaultIndex);
-			List<String> indexPage = new ArrayList(indexPageRaw.size());
+			List<?> indexPageRaw = httpServerConf.getList("page_index_name", defaultIndex);
+			List<String> indexPage = new ArrayList<>(indexPageRaw.size());
 			
 			for(int i = 0, l = indexPageRaw.size(); i < l; ++i) {
 				Object o = indexPageRaw.get(i);
@@ -151,7 +157,8 @@ public class EaglerListenerConfig extends ListenerInfo {
 				cacheTrending, cachePortfolios);
 		return new EaglerListenerConfig(hostv4, hostv6, maxPlayer, tabListType, defaultServer, forceDefaultServer,
 				forwardIp, forwardIpHeader, redirectLegacyClientsTo, serverIcon, serverMOTD, allowMOTD, allowQuery,
-				cacheConfig, httpServer, enableVoiceChat, ratelimitIp, ratelimitLogin, ratelimitMOTD, ratelimitQuery);
+				allowV3, allowV4, defragSendDelay, cacheConfig, httpServer, enableVoiceChat, ratelimitIp,
+				ratelimitLogin, ratelimitMOTD, ratelimitQuery);
 	}
 
 	private final InetSocketAddress address;
@@ -167,6 +174,9 @@ public class EaglerListenerConfig extends ListenerInfo {
 	private final List<String> serverMOTD;
 	private final boolean allowMOTD;
 	private final boolean allowQuery;
+	private final boolean allowV3;
+	private final boolean allowV4;
+	private final int defragSendDelay;
 	private final MOTDCacheConfiguration motdCacheConfig;
 	private final HttpWebServer webServer;
 	private boolean serverIconSet = false;
@@ -180,9 +190,10 @@ public class EaglerListenerConfig extends ListenerInfo {
 	public EaglerListenerConfig(InetSocketAddress address, InetSocketAddress addressV6, int maxPlayer,
 			String tabListType, String defaultServer, boolean forceDefaultServer, boolean forwardIp,
 			String forwardIpHeader, String redirectLegacyClientsTo, String serverIcon, List<String> serverMOTD,
-			boolean allowMOTD, boolean allowQuery, MOTDCacheConfiguration motdCacheConfig, HttpWebServer webServer,
-			boolean enableVoiceChat, EaglerRateLimiter ratelimitIp, EaglerRateLimiter ratelimitLogin,
-			EaglerRateLimiter ratelimitMOTD, EaglerRateLimiter ratelimitQuery) {
+			boolean allowMOTD, boolean allowQuery, boolean allowV3, boolean allowV4, int defragSendDelay,
+			MOTDCacheConfiguration motdCacheConfig, HttpWebServer webServer, boolean enableVoiceChat,
+			EaglerRateLimiter ratelimitIp, EaglerRateLimiter ratelimitLogin, EaglerRateLimiter ratelimitMOTD,
+			EaglerRateLimiter ratelimitQuery) {
 		super(address, String.join("\n", serverMOTD), maxPlayer, 60, Arrays.asList(defaultServer), forceDefaultServer,
 				Collections.emptyMap(), tabListType, false, false, 0, false, false);
 		this.address = address;
@@ -198,6 +209,9 @@ public class EaglerListenerConfig extends ListenerInfo {
 		this.serverMOTD = serverMOTD;
 		this.allowMOTD = allowMOTD;
 		this.allowQuery = allowQuery;
+		this.allowV3 = allowV3;
+		this.allowV4 = allowV4;
+		this.defragSendDelay = defragSendDelay;
 		this.motdCacheConfig = motdCacheConfig;
 		this.webServer = webServer;
 		this.enableVoiceChat = enableVoiceChat;
@@ -272,7 +286,19 @@ public class EaglerListenerConfig extends ListenerInfo {
 	public boolean isAllowQuery() {
 		return allowQuery;
 	}
-	
+
+	public boolean isAllowV3() {
+		return allowV3;
+	}
+
+	public boolean isAllowV4() {
+		return allowV4;
+	}
+
+	public int getDefragSendDelay() {
+		return defragSendDelay;
+	}
+
 	public HttpWebServer getWebServer() {
 		return webServer;
 	}

@@ -14,7 +14,11 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+
+import org.apache.commons.lang3.ArrayUtils;
+
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.EaglerXBungee;
+import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.api.EaglerXBungeeAPIHelper;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.sqlite.EaglerDrivers;
 
 /**
@@ -160,7 +164,7 @@ public class JDBCCacheProvider implements ICacheProvider {
 			throw new CacheException("SQL query failure while loading cached skin", ex);
 		}
 		if(queriedLength == 0) {
-			return new CacheLoadedSkin(uuid, queriedUrls, new byte[0]);
+			return new CacheLoadedSkin(uuid, queriedUrls, ArrayUtils.EMPTY_BYTE_ARRAY);
 		}else {
 			byte[] decompressed = new byte[queriedLength];
 			try {
@@ -305,8 +309,9 @@ public class JDBCCacheProvider implements ICacheProvider {
 	@Override
 	public void flush() {
 		long millis = System.currentTimeMillis();
-		if(millis - lastFlush > 1200000l) { // 30 minutes
-			lastFlush = millis;
+		long steadyMillis = EaglerXBungeeAPIHelper.steadyTimeMillis();
+		if(steadyMillis - lastFlush > 1200000l) { // 30 minutes
+			lastFlush = steadyMillis;
 			try {
 				Date expiryObjects = new Date(millis - keepObjectsDays * 86400000l);
 				Date expiryProfiles = new Date(millis - keepProfilesDays * 86400000l);

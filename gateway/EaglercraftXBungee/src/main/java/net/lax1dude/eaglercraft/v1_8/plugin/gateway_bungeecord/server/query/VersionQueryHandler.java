@@ -27,8 +27,13 @@ public class VersionQueryHandler extends EaglerQuerySimpleHandler {
 	protected void begin(String queryType) {
 		JsonObject responseObj = new JsonObject();
 		JsonArray handshakeVersions = new JsonArray();
-		handshakeVersions.add(2);
-		handshakeVersions.add(3);
+		if(this.getListener().isAllowV3()) {
+			handshakeVersions.add(2);
+			handshakeVersions.add(3);
+		}
+		if(this.getListener().isAllowV4()) {
+			handshakeVersions.add(4);
+		}
 		responseObj.add("handshakeVersions", handshakeVersions);
 		JsonArray protocolVersions = new JsonArray();
 		protocolVersions.add(47);

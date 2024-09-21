@@ -7,6 +7,7 @@ import java.util.List;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.api.EaglerXBungeeAPIHelper;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.api.query.EaglerQuerySimpleHandler;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.api.query.MOTDConnection;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.config.EaglerListenerConfig;
@@ -47,7 +48,7 @@ public class MOTDQueryHandler extends EaglerQuerySimpleHandler implements MOTDCo
 
 	@Override
 	protected void begin(String queryType) {
-		creationTime = System.currentTimeMillis();
+		creationTime = EaglerXBungeeAPIHelper.steadyTimeMillis();
 		subType = queryType;
 		returnType = "MOTD";
 		EaglerListenerConfig listener = getListener();
@@ -60,7 +61,7 @@ public class MOTDQueryHandler extends EaglerQuerySimpleHandler implements MOTDCo
 		}
 		maxPlayers = listener.getMaxPlayers();
 		onlinePlayers = ProxyServer.getInstance().getOnlineCount();
-		players = new ArrayList();
+		players = new ArrayList<>();
 		for(ProxiedPlayer pp : ProxyServer.getInstance().getPlayers()) {
 			players.add(pp.getDisplayName());
 			if(players.size() >= 9) {

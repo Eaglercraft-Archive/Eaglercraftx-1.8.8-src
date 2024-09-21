@@ -23,11 +23,14 @@ import io.netty.handler.codec.http.websocketx.WebSocketServerHandshaker;
 import io.netty.handler.codec.http.websocketx.WebSocketServerHandshakerFactory;
 import io.netty.util.ReferenceCountUtil;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.EaglerXBungee;
+import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.api.event.EaglercraftWebSocketOpenEvent;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.config.EaglerListenerConfig;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.config.EaglerRateLimiter;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.config.RateLimitStatus;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.server.web.HttpMemoryCache;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.server.web.HttpWebServer;
+import net.md_5.bungee.BungeeCord;
+import net.md_5.bungee.api.event.ClientConnectEvent;
 
 /**
  * Copyright (c) 2022-2023 lax1dude. All Rights Reserved.
@@ -63,12 +66,20 @@ public class HttpHandshakeHandler extends ChannelInboundHandlerAdapter {
 					
 					String rateLimitHost = null;
 					
+					SocketAddress addr;
 					if(conf.isForwardIp()) {
 						String str = headers.get(conf.getForwardIpHeader());
 						if(str != null) {
 							rateLimitHost = str.split(",", 2)[0];
 							try {
-								ctx.channel().attr(EaglerPipeline.REAL_ADDRESS).set(InetAddress.getByName(rateLimitHost));
+								InetAddress inetAddr = InetAddress.getByName(rateLimitHost);
+								addr = ctx.channel().remoteAddress();
+								if(addr instanceof InetSocketAddress) {
+									addr = new InetSocketAddress(inetAddr, ((InetSocketAddress)addr).getPort());
+								}else {
+									addr = new InetSocketAddress(inetAddr, 0);
+								}
+								ctx.channel().attr(EaglerPipeline.REAL_ADDRESS).set(inetAddr);
 							}catch(UnknownHostException ex) {
 								EaglerXBungee.logger().warning("[" + ctx.channel().remoteAddress() + "]: Connected with an invalid '" + conf.getForwardIpHeader() + "' header, disconnecting...");
 								ctx.close();
@@ -80,7 +91,7 @@ public class HttpHandshakeHandler extends ChannelInboundHandlerAdapter {
 							return;
 						}
 					}else {
-						SocketAddress addr = ctx.channel().remoteAddress();
+						addr = ctx.channel().remoteAddress();
 						if(addr instanceof InetSocketAddress) {
 							rateLimitHost = ((InetSocketAddress) addr).getAddress().getHostAddress();
 						}
@@ -98,17 +109,31 @@ public class HttpHandshakeHandler extends ChannelInboundHandlerAdapter {
 						return;
 					}
 					
+					ClientConnectEvent evt = BungeeCord.getInstance().getPluginManager().callEvent(new ClientConnectEvent(addr, conf));
+					if(evt.isCancelled()) {
+						ctx.close();
+						return;
+					}
+					
 					if(headers.get(HttpHeaderNames.CONNECTION) != null && headers.get(HttpHeaderNames.CONNECTION).toLowerCase().contains("upgrade") &&
 							"websocket".equalsIgnoreCase(headers.get(HttpHeaderNames.UPGRADE))) {
-						
+
 						String origin = headers.get(HttpHeaderNames.ORIGIN);
 						if(origin != null) {
 							ctx.channel().attr(EaglerPipeline.ORIGIN).set(origin);
 						}
-						
-						//TODO: origin blacklist
+						String userAgent = headers.get(HttpHeaderNames.USER_AGENT);
+						if(userAgent != null) {
+							ctx.channel().attr(EaglerPipeline.USER_AGENT).set(userAgent);
+						}
 						
 						if(ipRateLimit == RateLimitStatus.OK) {
+							EaglercraftWebSocketOpenEvent evt2 = new EaglercraftWebSocketOpenEvent(ctx.channel(), conf, rateLimitHost, origin, userAgent);
+							BungeeCord.getInstance().getPluginManager().callEvent(evt2);
+							if(evt2.isCancelled()) {
+								ctx.close();
+								return;
+							}
 							ctx.channel().attr(EaglerPipeline.HOST).set(headers.get(HttpHeaderNames.HOST));
 							ctx.pipeline().replace(this, "HttpWebSocketHandler", new HttpWebSocketHandler(conf));
 						}

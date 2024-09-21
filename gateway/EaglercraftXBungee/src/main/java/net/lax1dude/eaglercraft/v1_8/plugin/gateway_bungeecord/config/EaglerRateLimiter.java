@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.api.EaglerXBungeeAPIHelper;
 import net.md_5.bungee.config.Configuration;
 
 /**
@@ -95,7 +96,7 @@ public class EaglerRateLimiter {
 		protected long cooldownTimestamp = 0l;
 		
 		protected RateLimitStatus rateLimit() {
-			long millis = System.currentTimeMillis();
+			long millis = EaglerXBungeeAPIHelper.steadyTimeMillis();
 			tick(millis);
 			if(lockoutTimestamp != 0l) {
 				return RateLimitStatus.LOCKED_OUT;
@@ -136,7 +137,7 @@ public class EaglerRateLimiter {
 		}
 	}
 
-	private final Map<String, RateLimiter> ratelimiters = new HashMap();
+	private final Map<String, RateLimiter> ratelimiters = new HashMap<>();
 
 	public RateLimitStatus rateLimit(String addr) {
 		addr = addr.toLowerCase();
@@ -156,7 +157,7 @@ public class EaglerRateLimiter {
 	}
 
 	public void tick() {
-		long millis = System.currentTimeMillis();
+		long millis = EaglerXBungeeAPIHelper.steadyTimeMillis();
 		synchronized(ratelimiters) {
 			Iterator<RateLimiter> itr = ratelimiters.values().iterator();
 			while(itr.hasNext()) {
@@ -181,7 +182,7 @@ public class EaglerRateLimiter {
 		int limitLockout = config.getInt("limit_lockout", -1);
 		int lockoutDuration = config.getInt("lockout_duration", -1);
 		Collection<String> exc = (Collection<String>) config.getList("exceptions");
-		List<String> exceptions = new ArrayList();
+		List<String> exceptions = new ArrayList<>();
 		for(String str : exc) {
 			exceptions.add(str.toLowerCase());
 		}

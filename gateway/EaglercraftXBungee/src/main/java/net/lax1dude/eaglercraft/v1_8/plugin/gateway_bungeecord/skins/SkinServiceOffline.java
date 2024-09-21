@@ -1,6 +1,5 @@
 package net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.skins;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -11,6 +10,8 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
 
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.server.EaglerInitialHandler;
+import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.server.SPacketOtherSkinPresetEAG;
+import net.lax1dude.eaglercraft.v1_8.socket.protocol.util.SkinPacketVersionCache;
 import net.md_5.bungee.UserConnection;
 
 /**
@@ -35,16 +36,16 @@ public class SkinServiceOffline implements ISkinService {
 	private static class CachedSkin {
 
 		protected final UUID uuid;
-		protected final byte[] packet;
+		protected final SkinPacketVersionCache packet;
 
-		protected CachedSkin(UUID uuid, byte[] packet) {
+		protected CachedSkin(UUID uuid, SkinPacketVersionCache packet) {
 			this.uuid = uuid;
 			this.packet = packet;
 		}
 
 	}
 
-	private final Map<UUID, CachedSkin> skinCache = new HashMap();
+	private final Map<UUID, CachedSkin> skinCache = new HashMap<>();
 
 	private final Multimap<UUID, UUID> onlinePlayersFromTexturesMap = MultimapBuilder.hashKeys().hashSetValues().build();
 
@@ -56,20 +57,23 @@ public class SkinServiceOffline implements ISkinService {
 	}
 
 	public void processGetOtherSkin(UUID searchUUID, UserConnection sender) {
-		if(((EaglerInitialHandler)sender.getPendingConnection()).skinLookupRateLimiter.rateLimit(masterRateLimitPerPlayer)) {
+		EaglerInitialHandler initialHandler = (EaglerInitialHandler)sender.getPendingConnection();
+		if(initialHandler.skinLookupRateLimiter.rateLimit(masterRateLimitPerPlayer)) {
 			CachedSkin cached;
 			synchronized(skinCache) {
 				cached = skinCache.get(searchUUID);
 			}
 			if(cached != null) {
-				sender.sendData(SkinService.CHANNEL, cached.packet);
+				initialHandler.sendEaglerMessage(cached.packet.get(initialHandler.getEaglerProtocol()));
 			}else {
-				sender.sendData(SkinService.CHANNEL, SkinPackets.makePresetResponse(searchUUID));
+				initialHandler.sendEaglerMessage(new SPacketOtherSkinPresetEAG(searchUUID.getMostSignificantBits(),
+						searchUUID.getLeastSignificantBits(), (searchUUID.hashCode() & 1) != 0 ? 1 : 0));
 			}
 		}
 	}
 
 	public void processGetOtherSkin(UUID searchUUID, String skinURL, UserConnection sender) {
+		EaglerInitialHandler initialHandler = (EaglerInitialHandler)sender.getPendingConnection();
 		Collection<UUID> uuids;
 		synchronized(onlinePlayersFromTexturesMap) {
 			uuids = onlinePlayersFromTexturesMap.get(searchUUID);
@@ -81,15 +85,23 @@ public class SkinServiceOffline implements ISkinService {
 				while(uuidItr.hasNext()) {
 					cached = skinCache.get(uuidItr.next());
 					if(cached != null) {
-						sender.sendData(SkinService.CHANNEL, SkinPackets.rewriteUUID(searchUUID, cached.packet));
+						initialHandler.sendEaglerMessage(cached.packet.get(initialHandler.getEaglerProtocol(),
+								searchUUID.getMostSignificantBits(), searchUUID.getLeastSignificantBits()));
+						return;
 					}
 				}
 			}
 		}
-		sender.sendData(SkinService.CHANNEL, SkinPackets.makePresetResponse(searchUUID));
+		if(skinURL.startsWith("eagler://")) { // customs skulls from exported singleplayer worlds
+			initialHandler.sendEaglerMessage(new SPacketOtherSkinPresetEAG(searchUUID.getMostSignificantBits(),
+					searchUUID.getLeastSignificantBits(), 0));
+			return;
+		}
+		initialHandler.sendEaglerMessage(new SPacketOtherSkinPresetEAG(searchUUID.getMostSignificantBits(),
+				searchUUID.getLeastSignificantBits(), (searchUUID.hashCode() & 1) != 0 ? 1 : 0));
 	}
 
-	public void registerEaglercraftPlayer(UUID clientUUID, byte[] generatedPacket, int modelId) throws IOException {
+	public void registerEaglercraftPlayer(UUID clientUUID, SkinPacketVersionCache generatedPacket, int modelId) {
 		synchronized(skinCache) {
 			skinCache.put(clientUUID, new CachedSkin(clientUUID, generatedPacket));
 		}
@@ -107,6 +119,16 @@ public class SkinServiceOffline implements ISkinService {
 		}
 	}
 
+	public void processForceSkin(UUID playerUUID, EaglerInitialHandler initialHandler) {
+		CachedSkin cached;
+		synchronized(skinCache) {
+			cached = skinCache.get(playerUUID);
+		}
+		if(cached != null) {
+			initialHandler.sendEaglerMessage(cached.packet.getForceClientV4());
+		}
+	}
+
 	public void flush() {
 		// no
 	}
@@ -115,6 +137,14 @@ public class SkinServiceOffline implements ISkinService {
 		synchronized(skinCache) {
 			skinCache.clear();
 		}
+	}
+
+	public SkinPacketVersionCache getSkin(UUID playerUUID) {
+		CachedSkin cached;
+		synchronized(skinCache) {
+			cached = skinCache.get(playerUUID);
+		}
+		return cached != null ? cached.packet : null;
 	}
 
 }

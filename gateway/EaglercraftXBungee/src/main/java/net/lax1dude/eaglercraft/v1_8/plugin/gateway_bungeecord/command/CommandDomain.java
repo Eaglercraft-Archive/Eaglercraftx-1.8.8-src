@@ -45,7 +45,7 @@ public class CommandDomain extends Command {
 				var1.sendMessage(new TextComponent(ChatColor.RED + "That user is not using Eaglercraft"));
 				return;
 			}
-			String origin = ((EaglerInitialHandler)conn).origin;
+			String origin = ((EaglerInitialHandler)conn).getOrigin();
 			if(origin != null) {
 				var1.sendMessage(new TextComponent(ChatColor.BLUE + "Domain of " + var2[0] + " is '" + origin + "'"));
 			}else {

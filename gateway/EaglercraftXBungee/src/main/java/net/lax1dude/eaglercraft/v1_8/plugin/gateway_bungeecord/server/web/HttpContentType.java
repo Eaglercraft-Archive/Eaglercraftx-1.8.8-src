@@ -27,7 +27,7 @@ public class HttpContentType {
 	public final String cacheControlHeader;
 	public final long fileBrowserCacheTTL;
 	
-	public static final HttpContentType defaultType = new HttpContentType(new HashSet(), "application/octet-stream", null, 14400000l);
+	public static final HttpContentType defaultType = new HttpContentType(new HashSet<>(), "application/octet-stream", null, 14400000l);
 	
 	public HttpContentType(Set<String> extensions, String mimeType, String charset, long fileBrowserCacheTTL) {
 		this.extensions = extensions;

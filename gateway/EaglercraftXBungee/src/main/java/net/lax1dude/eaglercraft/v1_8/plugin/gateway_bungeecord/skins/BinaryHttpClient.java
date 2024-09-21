@@ -9,6 +9,8 @@ import java.util.function.Consumer;
 
 import javax.net.ssl.SSLEngine;
 
+import org.apache.commons.lang3.ArrayUtils;
+
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
@@ -180,7 +182,7 @@ public class BinaryHttpClient {
 					buffer.readBytes(array);
 					buffer.release();
 				}else {
-					array = new byte[0];
+					array = ArrayUtils.EMPTY_BYTE_ARRAY;
 				}
 				responseCallback.accept(new Response(responseCode, array));
 			}finally {

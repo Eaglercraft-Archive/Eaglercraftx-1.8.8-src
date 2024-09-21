@@ -7,7 +7,14 @@ import java.util.Set;
 import java.util.UUID;
 
 import gnu.trove.map.TMap;
+import net.lax1dude.eaglercraft.v1_8.plugin.backend_rpc_protocol.pkt.server.SPacketRPCEventToggledVoice;
+import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.api.EnumVoiceState;
+import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.api.event.EaglercraftVoiceStatusChangeEvent;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.config.EaglerBungeeConfig;
+import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.server.EaglerInitialHandler;
+import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.server.backend_rpc_protocol.EnumSubscribedEvent;
+import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.GameMessagePacket;
+import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.server.SPacketVoiceSignalAllowedEAG;
 import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.UserConnection;
 import net.md_5.bungee.api.config.ServerInfo;
@@ -29,17 +36,15 @@ import net.md_5.bungee.api.config.ServerInfo;
  */
 public class VoiceService {
 
-	public static final String CHANNEL = "EAG|Voice-1.8";
-
-	private final Map<String, VoiceServerImpl> serverMap = new HashMap();
-	private final byte[] disableVoicePacket;
+	private final Map<String, VoiceServerImpl> serverMap = new HashMap<>();
+	private final GameMessagePacket disableVoicePacket;
 
 	public VoiceService(EaglerBungeeConfig conf) {
-		this.disableVoicePacket = VoiceSignalPackets.makeVoiceSignalPacketAllowed(false, null);
+		this.disableVoicePacket = new SPacketVoiceSignalAllowedEAG(false, null);
 		String[] iceServers = conf.getICEServers().toArray(new String[conf.getICEServers().size()]);
-		byte[] iceServersPacket = VoiceSignalPackets.makeVoiceSignalPacketAllowed(true, iceServers);
+		SPacketVoiceSignalAllowedEAG iceServersPacket = new SPacketVoiceSignalAllowedEAG(true, iceServers);
 		TMap<String,ServerInfo> servers = BungeeCord.getInstance().config.getServers();
-		Set<String> keySet = new HashSet(servers.keySet());
+		Set<String> keySet = new HashSet<>(servers.keySet());
 		keySet.removeAll(conf.getDisableVoiceOnServersSet());
 		for(String s : keySet) {
 			serverMap.put(s, new VoiceServerImpl(servers.get(s), iceServersPacket));
@@ -59,7 +64,12 @@ public class VoiceService {
 		if(svr != null) {
 			svr.handlePlayerLoggedIn(player);
 		}else {
-			player.sendData(CHANNEL, disableVoicePacket);
+			EaglerInitialHandler eaglerHandler = (EaglerInitialHandler)player.getPendingConnection();
+			eaglerHandler.sendEaglerMessage(disableVoicePacket);
+			eaglerHandler.fireVoiceStateChange(EaglercraftVoiceStatusChangeEvent.EnumVoiceState.SERVER_DISABLE);
+			if(eaglerHandler.getRPCEventSubscribed(EnumSubscribedEvent.TOGGLE_VOICE)) {
+				eaglerHandler.getRPCSessionHandler().handleVoiceStateTransition(SPacketRPCEventToggledVoice.VOICE_STATE_SERVER_DISABLE);
+			}
 		}
 	}
 
@@ -70,7 +80,7 @@ public class VoiceService {
 		}
 	}
 
-	void handleVoiceSignalPacketTypeRequest(UUID player, UserConnection sender) {
+	public void handleVoiceSignalPacketTypeRequest(UUID player, UserConnection sender) {
 		if(sender.getServer() != null) {
 			VoiceServerImpl svr = serverMap.get(sender.getServer().getInfo().getName());
 			if(svr != null) {
@@ -79,7 +89,7 @@ public class VoiceService {
 		}
 	}
 
-	void handleVoiceSignalPacketTypeConnect(UserConnection sender) {
+	public void handleVoiceSignalPacketTypeConnect(UserConnection sender) {
 		if(sender.getServer() != null) {
 			VoiceServerImpl svr = serverMap.get(sender.getServer().getInfo().getName());
 			if(svr != null) {
@@ -88,7 +98,7 @@ public class VoiceService {
 		}
 	}
 
-	void handleVoiceSignalPacketTypeICE(UUID player, String str, UserConnection sender) {
+	public void handleVoiceSignalPacketTypeICE(UUID player, byte[] str, UserConnection sender) {
 		if(sender.getServer() != null) {
 			VoiceServerImpl svr = serverMap.get(sender.getServer().getInfo().getName());
 			if(svr != null) {
@@ -97,7 +107,7 @@ public class VoiceService {
 		}
 	}
 
-	void handleVoiceSignalPacketTypeDesc(UUID player, String str, UserConnection sender) {
+	public void handleVoiceSignalPacketTypeDesc(UUID player, byte[] str, UserConnection sender) {
 		if(sender.getServer() != null) {
 			VoiceServerImpl svr = serverMap.get(sender.getServer().getInfo().getName());
 			if(svr != null) {
@@ -106,12 +116,30 @@ public class VoiceService {
 		}
 	}
 
-	void handleVoiceSignalPacketTypeDisconnect(UUID player, UserConnection sender) {
+	public void handleVoiceSignalPacketTypeDisconnect(UserConnection sender) {
 		if(sender.getServer() != null) {
 			VoiceServerImpl svr = serverMap.get(sender.getServer().getInfo().getName());
 			if(svr != null) {
-				svr.handleVoiceSignalPacketTypeDisconnect(player, sender);
+				svr.handleVoiceSignalPacketTypeDisconnect(sender);
 			}
+		}
+	}
+
+	public void handleVoiceSignalPacketTypeDisconnectPeer(UUID player, UserConnection sender) {
+		if(sender.getServer() != null) {
+			VoiceServerImpl svr = serverMap.get(sender.getServer().getInfo().getName());
+			if(svr != null) {
+				svr.handleVoiceSignalPacketTypeDisconnectPeer(player, sender);
+			}
+		}
+	}
+
+	public EnumVoiceState getPlayerVoiceState(UUID player, ServerInfo info) {
+		VoiceServerImpl svr = serverMap.get(info.getName());
+		if(svr != null) {
+			return svr.getPlayerVoiceState(player);
+		}else {
+			return EnumVoiceState.SERVER_DISABLE;
 		}
 	}
 

@@ -20,6 +20,7 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.EaglerXBungee;
+import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.api.EaglerXBungeeAPIHelper;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.auth.SHA1Digest;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.config.EaglerUpdateConfig;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.server.EaglerInitialHandler.ClientCertificateHolder;
@@ -43,9 +44,9 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
  */
 public class EaglerUpdateSvc {
 
-	private static final List<ClientCertificateHolder> certs = new ArrayList();
-	private static final Map<String,CachedClientCertificate> certsCache = new HashMap();
-	private static final Set<String> deadURLS = new HashSet();
+	private static final List<ClientCertificateHolder> certs = new ArrayList<>();
+	private static final Map<String,CachedClientCertificate> certsCache = new HashMap<>();
+	private static final Set<String> deadURLS = new HashSet<>();
 
 	private static class CachedClientCertificate {
 		private final ClientCertificateHolder cert;
@@ -61,7 +62,7 @@ public class EaglerUpdateSvc {
 
 	public static void updateTick() {
 		Logger log = EaglerXBungee.logger();
-		long millis = System.currentTimeMillis();
+		long millis = EaglerXBungeeAPIHelper.steadyTimeMillis();
 		EaglerUpdateConfig conf = EaglerXBungee.getEagler().getConfig().getUpdateConfig();
 		if(conf.isDownloadLatestCerts() && millis - lastDownload > (long)conf.getCheckForUpdatesEvery() * 1000l) {
 			lastDownload = millis;
@@ -72,7 +73,7 @@ public class EaglerUpdateSvc {
 				log.severe("Uncaught exception downloading certificates!");
 				t.printStackTrace();
 			}
-			millis = System.currentTimeMillis();
+			millis = EaglerXBungeeAPIHelper.steadyTimeMillis();
 		}
 		if(conf.isEnableEagcertFolder() && millis - lastEnumerate > 5000l) {
 			lastEnumerate = millis;
@@ -95,7 +96,7 @@ public class EaglerUpdateSvc {
 				return;
 			}
 		}
-		Set<String> filenames = new HashSet();
+		Set<String> filenames = new HashSet<>();
 		for(String str : conf.getDownloadCertURLs()) {
 			try {
 				URL url = new URL(str);
@@ -179,7 +180,7 @@ public class EaglerUpdateSvc {
 		}
 		boolean dirty = false;
 		File[] dirList = eagcert.listFiles();
-		Set<String> existingFiles = new HashSet();
+		Set<String> existingFiles = new HashSet<>();
 		for(int i = 0; i < dirList.length; ++i) {
 			File f = dirList[i];
 			String n = f.getName();

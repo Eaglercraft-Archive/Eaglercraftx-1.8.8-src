@@ -1,9 +1,10 @@
-package net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.server.bungeeprotocol;
+package net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.config;
 
-import net.md_5.bungee.protocol.DefinedPacket;
+import java.io.IOException;
+import java.io.OutputStream;
 
 /**
- * Copyright (c) 2022-2023 lax1dude. All Rights Reserved.
+ * Copyright (c) 2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -17,16 +18,14 @@ import net.md_5.bungee.protocol.DefinedPacket;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-public class EaglerProtocolAccessProxy {
-	
-	public static int getPacketId(EaglerBungeeProtocol protocol, int protocolVersion, DefinedPacket pkt, boolean server) {
-		final EaglerBungeeProtocol.DirectionData prot = server ? protocol.TO_CLIENT : protocol.TO_SERVER;
-		return prot.getId((Class) pkt.getClass(), protocolVersion);
+public class TestOutputStream extends OutputStream {
+
+	@Override
+	public void write(int b) throws IOException {
 	}
 
-	public static DefinedPacket createPacket(EaglerBungeeProtocol protocol, int protocolVersion, int packetId, boolean server) {
-		final EaglerBungeeProtocol.DirectionData prot = server ? protocol.TO_CLIENT : protocol.TO_SERVER;
-		return prot.createPacket(packetId, protocolVersion);
+	@Override
+	public void write(byte[] b, int o, int l) throws IOException {
 	}
-	
+
 }

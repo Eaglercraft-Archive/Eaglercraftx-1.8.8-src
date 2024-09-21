@@ -1,6 +1,7 @@
 package net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.server;
 
 import io.netty.channel.Channel;
+import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.api.EaglerXBungeeAPIHelper;
 import net.md_5.bungee.UserConnection;
 
 /**
@@ -33,11 +34,12 @@ public class EaglerConnectionInstance {
 	public boolean isRegularHttp = false;
 	
 	public UserConnection userConnection = null;
+	public HttpServerQueryHandler queryHandler = null;
 	
 	public EaglerConnectionInstance(Channel channel) {
 		this.channel = channel;
 		this.creationTime = this.lastServerPingPacket = this.lastClientPingPacket =
-				this.lastClientPongPacket = System.currentTimeMillis();
+				this.lastClientPongPacket = EaglerXBungeeAPIHelper.steadyTimeMillis();
 	}
 
 }

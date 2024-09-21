@@ -66,7 +66,7 @@ public class EaglerDrivers {
 			driversJARs.put(address, classLoader);
 		}
 		
-		Class loadedDriver;
+		Class<?> loadedDriver;
 		try {
 			loadedDriver = classLoader.loadClass(driverClass);
 		}catch(ClassNotFoundException ex) {
@@ -92,8 +92,8 @@ public class EaglerDrivers {
 		return sqlDriver;
 	}
 
-	private static final Map<String, URLClassLoader> driversJARs = new HashMap();
-	private static final Map<String, Driver> driversDrivers = new HashMap();
+	private static final Map<String, URLClassLoader> driversJARs = new HashMap<>();
+	private static final Map<String, Driver> driversDrivers = new HashMap<>();
 
 	public static Connection connectToDatabase(String address, String driverClass, String driverPath, Properties props)
 			throws SQLException {

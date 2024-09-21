@@ -7,7 +7,7 @@ import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.config.EaglerList
 import net.md_5.bungee.api.plugin.Event;
 
 /**
- * Copyright (c) 2022-2023 lax1dude. All Rights Reserved.
+ * Copyright (c) 2022-2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -43,7 +43,7 @@ public class EaglercraftIsAuthRequiredEvent extends Event {
 	}
 
 	private final EaglerListenerConfig listener;
-	private AuthResponse authResponse; 
+	private AuthResponse authResponse;
 	private final InetAddress authRemoteAddress;
 	private final String authOrigin; 
 	private final boolean wantsAuth;
@@ -53,6 +53,7 @@ public class EaglercraftIsAuthRequiredEvent extends Event {
 	private String eventAuthMessage = "enter the code:";
 	private String kickUserMessage = "Login Denied";
 	private Object authAttachment;
+	private boolean enableCookieAuth;
 	private Consumer<EaglercraftIsAuthRequiredEvent> continueThread;
 	private Runnable continueRunnable;
 	private volatile boolean hasContinue = false;
@@ -115,6 +116,14 @@ public class EaglercraftIsAuthRequiredEvent extends Event {
 
 	public void setAuthAttachment(Object authAttachment) {
 		this.authAttachment = authAttachment;
+	}
+
+	public boolean getEnableCookieAuth() {
+		return enableCookieAuth;
+	}
+
+	public void setEnableCookieAuth(boolean enable) {
+		this.enableCookieAuth = enable;
 	}
 
 	public boolean shouldKickUser() {

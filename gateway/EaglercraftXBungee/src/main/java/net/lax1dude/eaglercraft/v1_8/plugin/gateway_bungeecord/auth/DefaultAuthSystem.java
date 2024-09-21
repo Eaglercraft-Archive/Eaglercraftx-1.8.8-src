@@ -24,6 +24,7 @@ import java.util.UUID;
 import java.util.logging.Level;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang3.ArrayUtils;
 
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.EaglerXBungee;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.api.event.EaglercraftHandleAuthPasswordEvent;
@@ -249,7 +250,7 @@ public class DefaultAuthSystem {
 		this.checkRegistrationByName = databaseConnection.prepareStatement("SELECT Version, MojangUUID, MojangTextures, HashBase, HashSalt, Registered, RegisteredIP, LastLogin, LastLoginIP FROM eaglercraft_accounts WHERE MojangUsername = ?");
 		this.setLastLogin = databaseConnection.prepareStatement("UPDATE eaglercraft_accounts SET LastLogin = ?, LastLoginIP = ? WHERE MojangUUID = ?");
 		this.updateTextures = databaseConnection.prepareStatement("UPDATE eaglercraft_accounts SET MojangTextures = ? WHERE MojangUUID = ?");
-		this.authLoadingCache = new AuthLoadingCache(new AccountLoader(), 120000l);
+		this.authLoadingCache = new AuthLoadingCache<>(new AccountLoader(), 120000l);
 		this.secureRandom = new SecureRandom();
 	}
 
@@ -473,7 +474,7 @@ public class DefaultAuthSystem {
 				Property prop = props[i];
 				if("textures".equals(prop.getName())) {
 					byte[] texturesData = Base64.decodeBase64(prop.getValue());
-					byte[] signatureData = prop.getSignature() == null ? new byte[0] : Base64.decodeBase64(prop.getSignature());
+					byte[] signatureData = prop.getSignature() == null ? ArrayUtils.EMPTY_BYTE_ARRAY : Base64.decodeBase64(prop.getSignature());
 					ByteArrayOutputStream bao = new ByteArrayOutputStream();
 					DataOutputStream dao = new DataOutputStream(bao);
 					dao.writeInt(texturesData.length);
