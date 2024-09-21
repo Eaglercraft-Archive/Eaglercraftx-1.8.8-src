@@ -9,6 +9,7 @@ import com.google.gson.JsonObject;
 import com.velocitypowered.api.proxy.Player;
 
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.EaglerXVelocity;
+import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.api.EaglerXVelocityAPIHelper;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.api.query.EaglerQuerySimpleHandler;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.api.query.MOTDConnection;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.config.EaglerListenerConfig;
@@ -46,7 +47,7 @@ public class MOTDQueryHandler extends EaglerQuerySimpleHandler implements MOTDCo
 
 	@Override
 	protected void begin(String queryType) {
-		creationTime = System.currentTimeMillis();
+		creationTime = EaglerXVelocityAPIHelper.steadyTimeMillis();
 		subType = queryType;
 		returnType = "MOTD";
 		EaglerListenerConfig listener = getListener();
@@ -59,7 +60,7 @@ public class MOTDQueryHandler extends EaglerQuerySimpleHandler implements MOTDCo
 		}
 		maxPlayers = listener.getMaxPlayer();
 		onlinePlayers = EaglerXVelocity.proxy().getPlayerCount();
-		players = new ArrayList();
+		players = new ArrayList<>();
 		for(Player pp : EaglerXVelocity.proxy().getAllPlayers()) {
 			players.add(pp.getUsername());
 			if(players.size() >= 9) {

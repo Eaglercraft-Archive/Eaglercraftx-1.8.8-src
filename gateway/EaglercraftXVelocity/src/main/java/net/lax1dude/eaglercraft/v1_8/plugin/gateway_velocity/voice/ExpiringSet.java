@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 
+import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.api.EaglerXVelocityAPIHelper;
+
 /**
  * Copyright (c) 2022 ayunami2000. All Rights Reserved.
  * 
@@ -42,7 +44,7 @@ public class ExpiringSet<T> extends HashSet<T> {
 
     public void checkForExpirations() {
         Iterator<T> iterator = this.timestamps.keySet().iterator();
-        long now = System.currentTimeMillis();
+        long now = EaglerXVelocityAPIHelper.steadyTimeMillis();
         while (iterator.hasNext()) {
             T element = iterator.next();
             if (super.contains(element)) {
@@ -61,7 +63,7 @@ public class ExpiringSet<T> extends HashSet<T> {
     public boolean add(T o) {
         checkForExpirations();
         boolean success = super.add(o);
-        if (success) timestamps.put(o, System.currentTimeMillis());
+        if (success) timestamps.put(o, EaglerXVelocityAPIHelper.steadyTimeMillis());
         return success;
     }
 

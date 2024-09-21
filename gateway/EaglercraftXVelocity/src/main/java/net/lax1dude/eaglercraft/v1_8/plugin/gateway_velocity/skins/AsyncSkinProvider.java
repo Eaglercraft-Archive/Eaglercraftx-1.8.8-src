@@ -105,7 +105,7 @@ public class AsyncSkinProvider {
 						byte[] loadedPixels = new byte[16384];
 						image.getRGB(0, 0, 64, 64, tmp, 0, 64);
 						SkinRescaler.convertToBytes(tmp, loadedPixels);
-						SkinPackets.setAlphaForChest(loadedPixels, (byte)255, 0);
+						SkinPackets.setAlphaForChestV3(loadedPixels);
 						doAccept(loadedPixels);
 						return;
 					}else if(srcWidth == 64 && srcHeight == 32) {
@@ -113,7 +113,7 @@ public class AsyncSkinProvider {
 						byte[] loadedPixels = new byte[16384];
 						image.getRGB(0, 0, 64, 32, tmp1, 0, 64);
 						SkinRescaler.convert64x32To64x64(tmp1, loadedPixels);
-						SkinPackets.setAlphaForChest(loadedPixels, (byte)255, 0);
+						SkinPackets.setAlphaForChestV3(loadedPixels);
 						doAccept(loadedPixels);
 						return;
 					}else {

@@ -3,6 +3,7 @@ package net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.server;
 import com.velocitypowered.proxy.connection.client.ConnectedPlayer;
 
 import io.netty.channel.Channel;
+import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.api.EaglerXVelocityAPIHelper;
 
 /**
  * Copyright (c) 2022-2024 lax1dude. All Rights Reserved.
@@ -35,11 +36,12 @@ public class EaglerConnectionInstance {
 	
 	public ConnectedPlayer userConnection = null;
 	public EaglerPlayerData eaglerData = null;
+	public HttpServerQueryHandler queryHandler = null;
 	
 	public EaglerConnectionInstance(Channel channel) {
 		this.channel = channel;
 		this.creationTime = this.lastServerPingPacket = this.lastClientPingPacket =
-				this.lastClientPongPacket = System.currentTimeMillis();
+				this.lastClientPongPacket = EaglerXVelocityAPIHelper.steadyTimeMillis();
 	}
 
 }

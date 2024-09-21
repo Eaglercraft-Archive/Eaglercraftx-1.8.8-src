@@ -1,6 +1,5 @@
 package net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.handlers;
 
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.UUID;
@@ -12,8 +11,9 @@ import com.velocitypowered.api.event.PostOrder;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.DisconnectEvent;
 import com.velocitypowered.api.event.connection.PluginMessageEvent;
+import com.velocitypowered.api.event.connection.PluginMessageEvent.ForwardResult;
 import com.velocitypowered.api.event.connection.PostLoginEvent;
-import com.velocitypowered.api.event.player.ServerConnectedEvent;
+import com.velocitypowered.api.event.player.ServerPostConnectEvent;
 import com.velocitypowered.api.event.player.ServerPreConnectEvent;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ServerConnection;
@@ -25,18 +25,18 @@ import com.velocitypowered.api.util.GameProfile.Property;
 import com.velocitypowered.proxy.connection.client.ConnectedPlayer;
 
 import net.kyori.adventure.text.Component;
+import net.lax1dude.eaglercraft.v1_8.plugin.backend_rpc_protocol.EaglerBackendRPCProtocol;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.EaglerXVelocity;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.auth.DefaultAuthSystem;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.config.EaglerAuthConfig;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.server.EaglerPipeline;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.server.EaglerPlayerData;
+import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.server.backend_rpc_protocol.BackendRPCSessionHandler;
+import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.server.protocol.GameProtocolMessageController;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.skins.Base64;
-import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.skins.CapePackets;
-import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.skins.CapeServiceOffline;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.skins.SkinPackets;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.skins.SkinService;
-import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.voice.VoiceService;
-import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.voice.VoiceSignalPackets;
+import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.server.SPacketEnableFNAWSkinsEAG;
 
 /**
  * Copyright (c) 2022-2024 lax1dude, ayunami2000. All Rights Reserved.
@@ -55,8 +55,9 @@ import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.voice.VoiceSignalPa
  */
 public class EaglerPacketEventListener {
 
-	public static final ChannelIdentifier FNAW_SKIN_ENABLE_CHANNEL = new LegacyChannelIdentifier("EAG|FNAWSEn-1.8");
 	public static final ChannelIdentifier GET_DOMAIN_CHANNEL = new LegacyChannelIdentifier("EAG|GetDomain");
+	
+	private static final byte[] EMPTY_BYTE_ARRAY = new byte[0];
 	
 	public final EaglerXVelocity plugin;
 	
@@ -66,51 +67,65 @@ public class EaglerPacketEventListener {
 
 	@Subscribe(order = PostOrder.FIRST)
 	public void onPluginMessage(final PluginMessageEvent event) {
+		ChannelIdentifier tagObj = event.getIdentifier();
+		if(!(tagObj instanceof LegacyChannelIdentifier)) {
+			return;
+		}
+		String tag = tagObj.getId();
 		if(event.getSource() instanceof ConnectedPlayer) {
 			final ConnectedPlayer player = (ConnectedPlayer)event.getSource();
 			EaglerPlayerData eagPlayer = EaglerPipeline.getEaglerHandle(player);
 			if(eagPlayer != null) {
-				if(SkinService.CHANNEL.equals(event.getIdentifier())) {
-					EaglerXVelocity.proxy().getScheduler().buildTask(plugin, new Runnable() {
-						@Override
-						public void run() {
-							try {
-								SkinPackets.processPacket(event.getData(), player, plugin.getSkinService());
-							} catch (IOException e) {
-								player.disconnect(Component.text("Skin packet error!"));
-								EaglerXVelocity.logger().error("Eagler user \"{}\" raised an exception handling skins!", player.getUsername(), e);
-							}
-						}
-					}).schedule();
-				}else if(CapeServiceOffline.CHANNEL.equals(event.getIdentifier())) {
+				GameProtocolMessageController msgController = eagPlayer.getEaglerMessageController();
+				if(msgController != null) {
 					try {
-						CapePackets.processPacket(event.getData(), player, plugin.getCapeService());
-					} catch (IOException e) {
-						player.disconnect(Component.text("Cape packet error!"));
-						EaglerXVelocity.logger().error("Eagler user \"{}\" raised an exception handling capes!", player.getUsername(), e);
-					}
-				}else if(VoiceService.CHANNEL.equals(event.getIdentifier())) {
-					VoiceService svc = plugin.getVoiceService();
-					if(svc != null && eagPlayer.getEaglerListenerConfig().getEnableVoiceChat()) {
-						try {
-							VoiceSignalPackets.processPacket(event.getData(), player, svc);
-						} catch (IOException e) {
-							player.disconnect(Component.text("Voice signal packet error!"));
-							EaglerXVelocity.logger().error("Eagler user \"{}\" raised an exception handling voice signals!", player.getUsername(), e);
+						if(msgController.handlePacket(tag, event.getData())) {
+							event.setResult(ForwardResult.handled());
+							return;
 						}
+					} catch (Throwable e) {
+						player.disconnect(Component.text("Eaglercraft packet error!"));
+						event.setResult(ForwardResult.handled());
+						return;
 					}
+				}
+				if(EaglerBackendRPCProtocol.CHANNEL_NAME.equals(tag)) {
+					player.disconnect(Component.text("Nope!"));
+					event.setResult(ForwardResult.handled());
+					return;
+				}
+				if(EaglerBackendRPCProtocol.CHANNEL_NAME_READY.equals(tag)) {
+					event.setResult(ForwardResult.handled());
+					return;
 				}
 			}
 		}else if(event.getSource() instanceof ServerConnection && event.getTarget() instanceof ConnectedPlayer) {
 			ConnectedPlayer player = (ConnectedPlayer)event.getTarget();
-			if(GET_DOMAIN_CHANNEL.equals(event.getIdentifier())) {
-				EaglerPlayerData eagPlayerData = EaglerPipeline.getEaglerHandle(player);
-				if(eagPlayerData != null) {
+			EaglerPlayerData eagPlayerData = EaglerPipeline.getEaglerHandle(player);
+			if(eagPlayerData != null) {
+				if(EaglerBackendRPCProtocol.CHANNEL_NAME.equals(tag)) {
+					event.setResult(ForwardResult.handled());
+					try {
+						eagPlayerData.handleBackendRPCPacket((ServerConnection)event.getSource(), event.getData());
+					}catch(Throwable t) {
+						EaglerXVelocity.logger().error("[{}]: Caught an exception handling backend RPC packet!", player.getUsername(), t);
+					}
+				}else if("EAG|GetDomain".equals(tag)) {
+					event.setResult(ForwardResult.handled());
 					String domain = eagPlayerData.getOrigin();
 					if(domain == null) {
 						((ServerConnection)event.getSource()).sendPluginMessage(GET_DOMAIN_CHANNEL, new byte[] { 0 });
 					}else {
 						((ServerConnection)event.getSource()).sendPluginMessage(GET_DOMAIN_CHANNEL, domain.getBytes(StandardCharsets.UTF_8));
+					}
+				}
+			}else {
+				if(EaglerBackendRPCProtocol.CHANNEL_NAME.equals(tag)) {
+					event.setResult(ForwardResult.handled());
+					try {
+						BackendRPCSessionHandler.handlePacketOnVanilla((ServerConnection)event.getSource(), player, event.getData());
+					}catch(Throwable t) {
+						EaglerXVelocity.logger().error("[{}]: Caught an exception handling backend RPC packet!", player.getUsername(), t);
 					}
 				}
 			}
@@ -165,28 +180,32 @@ public class EaglerPacketEventListener {
 			ConnectedPlayer player = (ConnectedPlayer)event.getPlayer();
 			EaglerPlayerData eagData = EaglerPipeline.getEaglerHandle(player);
 			if(eagData != null && eagData.getEaglerListenerConfig().getEnableVoiceChat()) {
-				plugin.getVoiceService().handlePlayerLoggedOut(player);
+				plugin.getVoiceService().handlePlayerLoggedOut(eagData);
 			}
 		}
 	}
 
 	@Subscribe
-	public void onServerConnected(ServerConnectedEvent event) {
-		if(event.getPlayer() instanceof ConnectedPlayer) {
-			ConnectedPlayer player = (ConnectedPlayer)event.getPlayer();
-			EaglerPlayerData eagData = EaglerPipeline.getEaglerHandle(player);
-			if(eagData != null) {
-				ServerInfo sv = event.getServer().getServerInfo();
+	public void onServerConnected(ServerPostConnectEvent event) {
+		try {
+			ConnectedPlayer player = (ConnectedPlayer) event.getPlayer();
+			ServerConnection server = player.getConnectedServer();
+			BackendRPCSessionHandler.sendPluginMessage(server, EaglerBackendRPCProtocol.CHANNEL_NAME_READY, EMPTY_BYTE_ARRAY);
+			EaglerPlayerData playerObj = EaglerPipeline.getEaglerHandle(player);
+			if(playerObj != null) {
+				ServerInfo sv = server.getServerInfo();
 				boolean fnawSkins = !plugin.getConfig().getDisableFNAWSkinsEverywhere()
 						&& !plugin.getConfig().getDisableFNAWSkinsOnServersSet().contains(sv.getName());
-				if(fnawSkins != eagData.currentFNAWSkinEnableStatus) {
-					eagData.currentFNAWSkinEnableStatus = fnawSkins;
-					player.sendPluginMessage(FNAW_SKIN_ENABLE_CHANNEL, new byte[] { fnawSkins ? (byte)1 : (byte)0 });
+				if(fnawSkins != playerObj.currentFNAWSkinEnableStatus.getAndSet(fnawSkins)) {
+					playerObj.sendEaglerMessage(new SPacketEnableFNAWSkinsEAG(fnawSkins, false));
 				}
-				if(eagData.getEaglerListenerConfig().getEnableVoiceChat()) {
-					plugin.getVoiceService().handleServerConnected(player, sv);
+				if(playerObj.getEaglerListenerConfig().getEnableVoiceChat()) {
+					plugin.getVoiceService().handleServerConnected(playerObj, sv);
 				}
 			}
+		}catch(Throwable t) {
+			EaglerXVelocity.logger().error("Failed to process server connection ready handler for player \"{}\"",
+					event.getPlayer().getUsername(), t);
 		}
 	}
 
@@ -195,9 +214,16 @@ public class EaglerPacketEventListener {
 		if(event.getPreviousServer() != null && (event.getPlayer() instanceof ConnectedPlayer)) {
 			ConnectedPlayer player = (ConnectedPlayer)event.getPlayer();
 			EaglerPlayerData eagData = EaglerPipeline.getEaglerHandle(player);
-			if(eagData != null && eagData.getEaglerListenerConfig().getEnableVoiceChat()) {
-				plugin.getVoiceService().handleServerDisconnected(player, event.getPreviousServer().getServerInfo());
+			if(eagData != null) {
+				BackendRPCSessionHandler rpcHandler = eagData.getRPCSessionHandler();
+				if(rpcHandler != null) {
+					rpcHandler.handleConnectionLost();
+				}
+				if(eagData.getEaglerListenerConfig().getEnableVoiceChat()) {
+					plugin.getVoiceService().handleServerDisconnected(eagData, event.getPreviousServer().getServerInfo());
+				}
 			}
 		}
 	}
+
 }

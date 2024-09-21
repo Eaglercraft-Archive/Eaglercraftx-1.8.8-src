@@ -21,6 +21,7 @@ import io.netty.handler.codec.http.websocketx.WebSocketServerHandshaker;
 import io.netty.handler.codec.http.websocketx.WebSocketServerHandshakerFactory;
 import io.netty.util.ReferenceCountUtil;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.EaglerXVelocity;
+import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.api.event.EaglercraftWebSocketOpenEvent;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.config.EaglerListenerConfig;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.config.EaglerRateLimiter;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.config.RateLimitStatus;
@@ -68,12 +69,12 @@ public class HttpHandshakeHandler extends ChannelInboundHandlerAdapter {
 						try {
 							ctx.channel().attr(EaglerPipeline.REAL_ADDRESS).set(InetAddress.getByName(rateLimitHost));
 						} catch (UnknownHostException ex) {
-							EaglerXVelocity.logger().warn("[" + ctx.channel().remoteAddress() + "]: Connected with an invalid '" + conf.getForwardIpHeader() + "' header, disconnecting...");
+							EaglerXVelocity.logger().warn("[{}]: Connected with an invalid '{}' header, disconnecting...", ctx.channel().remoteAddress(), conf.getForwardIpHeader());
 							ctx.close();
 							return;
 						}
 					} else {
-						EaglerXVelocity.logger().warn("[" + ctx.channel().remoteAddress() + "]: Connected without a '" + conf.getForwardIpHeader() + "' header, disconnecting...");
+						EaglerXVelocity.logger().warn("[{}]: Connected without a '{}' header, disconnecting...", ctx.channel().remoteAddress(), conf.getForwardIpHeader());
 						ctx.close();
 						return;
 					}
@@ -103,10 +104,23 @@ public class HttpHandshakeHandler extends ChannelInboundHandlerAdapter {
 					if (origin != null) {
 						ctx.channel().attr(EaglerPipeline.ORIGIN).set(origin);
 					}
-
-					//TODO: origin blacklist
+					String userAgent = headers.get(HttpHeaderNames.USER_AGENT);
+					if(userAgent != null) {
+						ctx.channel().attr(EaglerPipeline.USER_AGENT).set(userAgent);
+					}
 
 					if (ipRateLimit == RateLimitStatus.OK) {
+						EaglercraftWebSocketOpenEvent evt = new EaglercraftWebSocketOpenEvent(ctx.channel(), conf, rateLimitHost, origin, userAgent);
+						try {
+							evt = EaglerXVelocity.proxy().getEventManager().fire(evt).join();
+						}catch(Throwable t) {
+							ctx.close();
+							return;
+						}
+						if(evt.isCancelled()) {
+							ctx.close();
+							return;
+						}
 						ctx.channel().attr(EaglerPipeline.HOST).set(headers.get(HttpHeaderNames.HOST));
 						ctx.pipeline().replace(this, "HttpWebSocketHandler", new HttpWebSocketHandler(conf));
 					}
@@ -172,7 +186,7 @@ public class HttpHandshakeHandler extends ChannelInboundHandlerAdapter {
 	
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
 		if (ctx.channel().isActive()) {
-			EaglerXVelocity.logger().warn("[Pre][" + ctx.channel().remoteAddress() + "]: Exception Caught: " + cause.toString(), cause);
+			EaglerXVelocity.logger().warn("[Pre][{}]: Exception Caught: {}", ctx.channel().remoteAddress(), cause.toString(), cause);
 			ctx.close();
 		}
 	}

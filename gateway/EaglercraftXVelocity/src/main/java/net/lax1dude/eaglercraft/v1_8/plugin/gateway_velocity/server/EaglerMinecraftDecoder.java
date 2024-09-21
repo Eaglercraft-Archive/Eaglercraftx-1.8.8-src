@@ -6,6 +6,7 @@ import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.PingWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.PongWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketFrame;
+import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.api.EaglerXVelocityAPIHelper;
 
 import java.util.List;
 
@@ -31,7 +32,7 @@ public class EaglerMinecraftDecoder extends MessageToMessageDecoder<WebSocketFra
 			return;
 		}
 		EaglerConnectionInstance con = ctx.channel().attr(EaglerPipeline.CONNECTION_INSTANCE).get();
-		long millis = System.currentTimeMillis();
+		long millis = EaglerXVelocityAPIHelper.steadyTimeMillis();
 		if(frame instanceof BinaryWebSocketFrame) {
 			out.add(frame.content().retain());
 		}else if(frame instanceof PingWebSocketFrame) {

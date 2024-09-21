@@ -72,6 +72,7 @@ public abstract class HttpServerQueryHandler extends ChannelInboundHandlerAdapte
 	private boolean acceptBinaryPacket = false;
 	private boolean hasClosed = false;
 	private boolean keepAlive = false;
+	private long maxAge = -1l;
 
 	public void beginHandleQuery(EaglerListenerConfig conf, ChannelHandlerContext context, String accept) {
 		this.conf = conf;
@@ -188,6 +189,14 @@ public abstract class HttpServerQueryHandler extends ChannelInboundHandlerAdapte
 		return accept;
 	}
 
+	public String getOrigin() {
+		return context.channel().attr(EaglerPipeline.ORIGIN).get();
+	}
+
+	public String getUserAgent() {
+		return context.channel().attr(EaglerPipeline.USER_AGENT).get();
+	}
+
 	public void sendStringResponse(String type, String str) {
 		context.writeAndFlush(new TextWebSocketFrame(QueryManager.createStringResponse(accept, str).toString()));
 	}
@@ -218,6 +227,14 @@ public abstract class HttpServerQueryHandler extends ChannelInboundHandlerAdapte
 
 	public boolean shouldKeepAlive() {
 		return keepAlive;
+	}
+
+	public long getMaxAge() {
+		return maxAge;
+	}
+
+	public void setMaxAge(long millis) {
+		this.maxAge = millis;
 	}
 
 	protected abstract void begin(String queryType);

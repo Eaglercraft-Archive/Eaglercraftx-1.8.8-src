@@ -47,8 +47,9 @@ public class CommandDomain extends EaglerCommand {
 				var1.sendMessage(Component.text("That user is not using Eaglercraft", NamedTextColor.RED));
 				return;
 			}
-			if(eagPlayer.origin != null) {
-				var1.sendMessage(Component.text("Domain of " + var2[0] + " is '" + eagPlayer.origin + "'", NamedTextColor.BLUE));
+			String origin = eagPlayer.getOrigin();
+			if(origin != null) {
+				var1.sendMessage(Component.text("Domain of " + var2[0] + " is '" + origin + "'", NamedTextColor.BLUE));
 			}else {
 				var1.sendMessage(Component.text("That user's browser did not send an origin header", NamedTextColor.RED));
 			}

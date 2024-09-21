@@ -4,17 +4,18 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import com.google.common.collect.Sets;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.EaglerXVelocity;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.EaglerXVelocityVersion;
+import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.api.EaglerXVelocityAPIHelper;
 
 /**
  * Copyright (c) 2022-2023 lax1dude. All Rights Reserved.
@@ -45,13 +46,13 @@ public class HttpWebServer {
 	public HttpWebServer(File directory, Map<String,HttpContentType> contentTypes, List<String> index, String page404) {
 		this.directory = directory;
 		this.contentTypes = contentTypes;
-		this.filesCache = new HashMap();
+		this.filesCache = new HashMap<>();
 		this.index = index;
 		this.page404 = page404;
 	}
 	
 	public void flushCache() {
-		long millis = System.currentTimeMillis();
+		long millis = EaglerXVelocityAPIHelper.steadyTimeMillis();
 		synchronized(cacheClearLock) {
 			synchronized(filesCache) {
 				Iterator<HttpMemoryCache> itr = filesCache.values().iterator();
@@ -70,7 +71,7 @@ public class HttpWebServer {
 		try {
 			String[] pathSplit = path.split("(\\\\|\\/)+");
 			
-			List<String> pathList = pathSplit.length == 0 ? null : new ArrayList();
+			List<String> pathList = pathSplit.length == 0 ? null : new ArrayList<>();
 			for(int i = 0; i < pathSplit.length; ++i) {
 				pathSplit[i] = pathSplit[i].trim();
 				if(pathSplit[i].length() > 0) {
@@ -198,7 +199,7 @@ public class HttpWebServer {
 			if(ct == null) {
 				ct = HttpContentType.defaultType;
 			}
-			long millis = System.currentTimeMillis();
+			long millis = EaglerXVelocityAPIHelper.steadyTimeMillis();
 			return new HttpMemoryCache(path, requestCachePath, file, ct, millis, millis, path.lastModified());
 		}catch(Throwable t) {
 			return null;
@@ -209,7 +210,7 @@ public class HttpWebServer {
 		if(file.fileObject == null) {
 			return file;
 		}
-		long millis = System.currentTimeMillis();
+		long millis = EaglerXVelocityAPIHelper.steadyTimeMillis();
 		file.lastCacheHit = millis;
 		if(millis - file.lastDiskReload > 4000l) {
 			File f = file.fileObject;
@@ -265,8 +266,8 @@ public class HttpWebServer {
 				+ "The requested resource <span id=\"addr\" style=\"font-family:monospace;font-weight:bold;background-color:#EEEEEE;padding:3px 4px;\">"
 				+ "</span> could not be found on this server!</p><p>" + htmlEntities(EaglerXVelocityVersion.NAME) + "/"
 				+ htmlEntities(EaglerXVelocityVersion.VERSION) + "</p></body></html>").getBytes(StandardCharsets.UTF_8);
-		HttpContentType htmlContentType = new HttpContentType(new HashSet(Arrays.asList("html")), "text/html", "utf-8", 120000l);
-		long millis = System.currentTimeMillis();
+		HttpContentType htmlContentType = new HttpContentType(Sets.newHashSet("html"), "text/html", "utf-8", 120000l);
+		long millis = EaglerXVelocityAPIHelper.steadyTimeMillis();
 		return new HttpMemoryCache(null, "~404", Unpooled.wrappedBuffer(src), htmlContentType, millis, millis, millis);
 	}
 	
@@ -281,8 +282,8 @@ public class HttpWebServer {
 				+ "404 'Websocket Upgrade Failure' (rip)</h1><h3>The URL you have requested is the physical WebSocket address of '" + name + "'</h3><p style=\"font-size:1.2em;"
 				+ "line-height:1.3em;\">To correctly join this server, load the latest EaglercraftX 1.8 client, click the 'Direct Connect' button<br />on the 'Multiplayer' screen, "
 				+ "and enter <span id=\"wsUri\">this URL</span> as the server address</p></body></html>").getBytes(StandardCharsets.UTF_8);
-		HttpContentType htmlContentType = new HttpContentType(new HashSet(Arrays.asList("html")), "text/html", "utf-8", 14400000l);
-		long millis = System.currentTimeMillis();
+		HttpContentType htmlContentType = new HttpContentType(Sets.newHashSet("html"), "text/html", "utf-8", 14400000l);
+		long millis = EaglerXVelocityAPIHelper.steadyTimeMillis();
 		return new HttpMemoryCache(null, "~404", Unpooled.wrappedBuffer(src), htmlContentType, millis, millis, millis);
 	}
 	

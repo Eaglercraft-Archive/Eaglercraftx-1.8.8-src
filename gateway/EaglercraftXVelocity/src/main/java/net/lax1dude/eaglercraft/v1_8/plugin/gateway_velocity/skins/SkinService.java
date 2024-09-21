@@ -18,8 +18,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.velocitypowered.api.proxy.Player;
-import com.velocitypowered.api.proxy.messages.ChannelIdentifier;
-import com.velocitypowered.api.proxy.messages.LegacyChannelIdentifier;
+import com.velocitypowered.api.scheduler.ScheduledTask;
 import com.velocitypowered.api.util.GameProfile;
 import com.velocitypowered.api.util.GameProfile.Property;
 import com.velocitypowered.proxy.connection.client.ConnectedPlayer;
@@ -27,14 +26,17 @@ import com.velocitypowered.proxy.connection.client.ConnectedPlayer;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.EaglerXVelocity;
+import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.api.EaglerXVelocityAPIHelper;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.config.EaglerVelocityConfig;
-import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.server.EaglerPipeline;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.server.EaglerPlayerData;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.skins.AsyncSkinProvider.CacheFetchedProfile;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.skins.AsyncSkinProvider.CancelException;
+import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.server.SPacketForceClientSkinPresetV4EAG;
+import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.server.SPacketOtherSkinPresetEAG;
+import net.lax1dude.eaglercraft.v1_8.socket.protocol.util.SkinPacketVersionCache;
 
 /**
- * Copyright (c) 2022-2023 lax1dude. All Rights Reserved.
+ * Copyright (c) 2022-2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -52,19 +54,17 @@ public class SkinService implements ISkinService {
 
 	public static final int masterRateLimitPerPlayer = 250;
 
-	public static final ChannelIdentifier CHANNEL = new LegacyChannelIdentifier("EAG|Skins-1.8");
-
-	private final Map<UUID, CachedPlayerSkin> onlinePlayersCache = new HashMap();
+	private final Map<UUID, CachedPlayerSkin> onlinePlayersCache = new HashMap<>();
 	private final Multimap<UUID, UUID> onlinePlayersFromTexturesMap = MultimapBuilder.hashKeys().hashSetValues().build();
-	private final Map<UUID, UUID> onlinePlayersToTexturesMap = new HashMap();
-	private final Map<UUID, CachedForeignSkin> foreignSkinCache = new HashMap();
+	private final Map<UUID, UUID> onlinePlayersToTexturesMap = new HashMap<>();
+	private final Map<UUID, CachedForeignSkin> foreignSkinCache = new HashMap<>();
 
-	private final Map<UUID, PendingTextureDownload> pendingTextures = new HashMap();
-	private final Map<UUID, PendingProfileUUIDLookup> pendingUUIDs = new HashMap();
-	private final Map<String, PendingProfileNameLookup> pendingNameLookups = new HashMap();
+	private final Map<UUID, PendingTextureDownload> pendingTextures = new HashMap<>();
+	private final Map<UUID, PendingProfileUUIDLookup> pendingUUIDs = new HashMap<>();
+	private final Map<String, PendingProfileNameLookup> pendingNameLookups = new HashMap<>();
 
-	private final Object2IntMap<UUID> antagonists = new Object2IntOpenHashMap();
-	private long antagonistCooldown = System.currentTimeMillis();
+	private final Object2IntMap<UUID> antagonists = new Object2IntOpenHashMap<>();
+	private long antagonistCooldown = EaglerXVelocityAPIHelper.steadyTimeMillis();
 
 	private final Consumer<Set<UUID>> antagonistLogger = new Consumer<Set<UUID>>() {
 
@@ -93,26 +93,26 @@ public class SkinService implements ISkinService {
 	protected static class CachedForeignSkin {
 
 		protected final UUID uuid;
-		protected final byte[] data;
+		protected final SkinPacketVersionCache data;
 		protected final int modelKnown;
 		protected long lastHit;
 
-		protected CachedForeignSkin(UUID uuid, byte[] data, int modelKnown) {
+		protected CachedForeignSkin(UUID uuid, SkinPacketVersionCache data, int modelKnown) {
 			this.uuid = uuid;
 			this.data = data;
 			this.modelKnown = modelKnown;
-			this.lastHit = System.currentTimeMillis();
+			this.lastHit = EaglerXVelocityAPIHelper.steadyTimeMillis();
 		}
 
 	}
 
 	protected static class CachedPlayerSkin {
 
-		protected final byte[] data;
+		protected final SkinPacketVersionCache data;
 		protected final UUID textureUUID;
 		protected final int modelId;
 
-		protected CachedPlayerSkin(byte[] data, UUID textureUUID, int modelId) {
+		protected CachedPlayerSkin(SkinPacketVersionCache data, UUID textureUUID, int modelId) {
 			this.data = data;
 			this.textureUUID = textureUUID;
 			this.modelId = modelId;
@@ -136,12 +136,12 @@ public class SkinService implements ISkinService {
 				Consumer<Set<UUID>> antagonistsCallback) {
 			this.textureUUID = textureUUID;
 			this.textureURL = textureURL;
-			this.antagonists = new LinkedHashSet();
+			this.antagonists = new LinkedHashSet<>();
 			this.antagonists.add(caller);
-			this.callbacks = new LinkedList();
+			this.callbacks = new LinkedList<>();
 			this.callbacks.add(callback);
 			this.antagonistsCallback = antagonistsCallback;
-			this.initializedTime = System.currentTimeMillis();
+			this.initializedTime = EaglerXVelocityAPIHelper.steadyTimeMillis();
 			this.finalized = false;
 		}
 
@@ -177,12 +177,12 @@ public class SkinService implements ISkinService {
 		protected PendingProfileUUIDLookup(UUID profileUUID, UUID caller, Consumer<CacheFetchedProfile> callback,
 				Consumer<Set<UUID>> antagonistsCallback) {
 			this.profileUUID = profileUUID;
-			this.antagonists = new LinkedHashSet();
+			this.antagonists = new LinkedHashSet<>();
 			this.antagonists.add(caller);
-			this.callbacks = new LinkedList();
+			this.callbacks = new LinkedList<>();
 			this.callbacks.add(callback);
 			this.antagonistsCallback = antagonistsCallback;
-			this.initializedTime = System.currentTimeMillis();
+			this.initializedTime = EaglerXVelocityAPIHelper.steadyTimeMillis();
 			this.finalized = false;
 		}
 
@@ -218,12 +218,12 @@ public class SkinService implements ISkinService {
 		protected PendingProfileNameLookup(String profileName, UUID caller, Consumer<CacheFetchedProfile> callback,
 				Consumer<Set<UUID>> antagonistsCallback) {
 			this.profileName = profileName;
-			this.antagonists = new LinkedHashSet();
+			this.antagonists = new LinkedHashSet<>();
 			this.antagonists.add(caller);
-			this.callbacks = new LinkedList();
+			this.callbacks = new LinkedList<>();
 			this.callbacks.add(callback);
 			this.antagonistsCallback = antagonistsCallback;
-			this.initializedTime = System.currentTimeMillis();
+			this.initializedTime = EaglerXVelocityAPIHelper.steadyTimeMillis();
 			this.finalized = false;
 		}
 
@@ -247,7 +247,7 @@ public class SkinService implements ISkinService {
 	
 	public void init(String uri, String driverClass, String driverPath, int keepObjectsDays, int keepProfilesDays,
 			int maxObjects, int maxProfiles) {
-		antagonistCooldown = System.currentTimeMillis();
+		antagonistCooldown = EaglerXVelocityAPIHelper.steadyTimeMillis();
 		if(cacheProvider == null) {
 			cacheProvider = JDBCCacheProvider.initialize(uri, driverClass, driverPath, keepObjectsDays,
 					keepProfilesDays, maxObjects, maxProfiles);
@@ -255,9 +255,8 @@ public class SkinService implements ISkinService {
 		resetMaps();
 	}
 	
-	public void processGetOtherSkin(final UUID searchUUID, final ConnectedPlayer sender) {
-		EaglerPlayerData eaglerHandler = EaglerPipeline.getEaglerHandle(sender);
-		if(!eaglerHandler.skinLookupRateLimiter.rateLimit(masterRateLimitPerPlayer)) {
+	public void processGetOtherSkin(final UUID searchUUID, final EaglerPlayerData sender) {
+		if(!sender.skinLookupRateLimiter.rateLimit(masterRateLimitPerPlayer)) {
 			return;
 		}
 		
@@ -267,7 +266,7 @@ public class SkinService implements ISkinService {
 		}
 		
 		if(maybeCachedPacket != null) {
-			sender.sendPluginMessage(SkinService.CHANNEL, maybeCachedPacket.data);
+			sender.sendEaglerMessage(maybeCachedPacket.data.get(sender.getEaglerProtocol()));
 		}else {
 			Player player = EaglerXVelocity.proxy().getPlayer(searchUUID).orElse(null);
 			UUID playerTexture;
@@ -286,14 +285,16 @@ public class SkinService implements ISkinService {
 							maybeCachedPacket = onlinePlayersCache.get(uuid);
 						}
 						if(maybeCachedPacket != null) {
-							byte[] rewritten = SkinPackets.rewriteUUID(searchUUID, maybeCachedPacket.data);
+							SkinPacketVersionCache rewritten = SkinPacketVersionCache.rewriteUUID(
+									maybeCachedPacket.data, searchUUID.getMostSignificantBits(),
+									searchUUID.getLeastSignificantBits());
 							if(player != null) {
 								synchronized(onlinePlayersCache) {
 									onlinePlayersCache.put(searchUUID, new CachedPlayerSkin(rewritten,
 											maybeCachedPacket.textureUUID, maybeCachedPacket.modelId));
 								}
 							}
-							sender.sendPluginMessage(SkinService.CHANNEL, rewritten);
+							sender.sendEaglerMessage(rewritten.get(sender.getEaglerProtocol()));
 							return;
 						}
 					}
@@ -306,87 +307,92 @@ public class SkinService implements ISkinService {
 					if(player != null) {
 						synchronized(onlinePlayersCache) {
 							onlinePlayersCache.put(searchUUID,
-									new CachedPlayerSkin(SkinPackets.rewriteUUID(searchUUID, foreignSkin.data),
+									new CachedPlayerSkin(SkinPacketVersionCache.rewriteUUID(foreignSkin.data,
+											searchUUID.getMostSignificantBits(), searchUUID.getLeastSignificantBits()),
 											playerTexture, foreignSkin.modelKnown));
 						}
 						synchronized(foreignSkinCache) {
 							foreignSkinCache.remove(playerTexture);
 						}
 					}else {
-						foreignSkin.lastHit = System.currentTimeMillis();
+						foreignSkin.lastHit = EaglerXVelocityAPIHelper.steadyTimeMillis();
 					}
-					sender.sendPluginMessage(SkinService.CHANNEL, foreignSkin.data);
+					sender.sendEaglerMessage(foreignSkin.data.get(sender.getEaglerProtocol()));
 					return;
 				}
 			}
 			if(player != null && (player instanceof ConnectedPlayer)) {
-				if(player instanceof ConnectedPlayer) {
-					GameProfile loginProfile = player.getGameProfile();
-					if(loginProfile != null) {
-						List<Property> props = loginProfile.getProperties();
-						if(props.size() > 0) {
-							for(int i = 0, l = props.size(); i < l; ++i) {
-								Property pp = props.get(i);
-								if(pp.getName().equals("textures")) {
-									try {
-										String jsonStr = SkinPackets.bytesToAscii(Base64.decodeBase64(pp.getValue()));
-										JsonObject json = JsonParser.parseString(jsonStr).getAsJsonObject();
-										JsonObject skinObj = json.getAsJsonObject("SKIN");
-										if(skinObj != null) {
-											JsonElement url = json.get("url");
-											if(url != null) {
-												String urlStr = url.getAsString();
-												urlStr = SkinService.sanitizeTextureURL(urlStr);
-												if(urlStr == null) {
-													break;
+				GameProfile loginProfile = player.getGameProfile();
+				if(loginProfile != null) {
+					List<Property> props = loginProfile.getProperties();
+					if(props.size() > 0) {
+						for(int i = 0, l = props.size(); i < l; ++i) {
+							Property pp = props.get(i);
+							if(pp.getName().equals("textures")) {
+								try {
+									String jsonStr = SkinPackets.bytesToAscii(Base64.decodeBase64(pp.getValue()));
+									JsonObject json = JsonParser.parseString(jsonStr).getAsJsonObject();
+									JsonObject skinObj = json.getAsJsonObject("SKIN");
+									if(skinObj != null) {
+										JsonElement url = json.get("url");
+										if(url != null) {
+											String urlStr = SkinService.sanitizeTextureURL(url.getAsString());
+											if(urlStr == null) {
+												break;
+											}
+											int model = 0;
+											JsonElement el = skinObj.get("metadata");
+											if(el != null && el.isJsonObject()) {
+												el = el.getAsJsonObject().get("model");
+												if(el != null) {
+													model = SkinPackets.getModelId(el.getAsString());
 												}
-												int model = 0;
-												JsonElement el = skinObj.get("metadata");
-												if(el != null && el.isJsonObject()) {
-													el = el.getAsJsonObject().get("model");
-													if(el != null) {
-														model = SkinPackets.getModelId(el.getAsString());
-													}
+											}
+											UUID skinUUID = SkinPackets.createEaglerURLSkinUUID(urlStr);
+											
+											CachedForeignSkin foreignSkin;
+											synchronized(foreignSkinCache) {
+												foreignSkin = foreignSkinCache.remove(skinUUID);
+											}
+											if(foreignSkin != null) {
+												registerTextureToPlayerAssociation(skinUUID, searchUUID);
+												SkinPacketVersionCache rewrite = SkinPacketVersionCache
+														.rewriteUUIDModel(foreignSkin.data,
+																searchUUID.getMostSignificantBits(),
+																searchUUID.getLeastSignificantBits(), model);
+												synchronized(onlinePlayersCache) {
+													onlinePlayersCache.put(searchUUID, new CachedPlayerSkin(rewrite, skinUUID, model));
 												}
-												UUID skinUUID = SkinPackets.createEaglerURLSkinUUID(urlStr);
-												
-												CachedForeignSkin foreignSkin;
-												synchronized(foreignSkinCache) {
-													foreignSkin = foreignSkinCache.remove(skinUUID);
-												}
-												if(foreignSkin != null) {
-													registerTextureToPlayerAssociation(skinUUID, searchUUID);
-													byte[] rewrite = SkinPackets.rewriteUUIDModel(searchUUID, foreignSkin.data, model);
-													synchronized(onlinePlayersCache) {
-														onlinePlayersCache.put(searchUUID, new CachedPlayerSkin(
-																rewrite, skinUUID, model));
-													}
-													sender.sendPluginMessage(SkinService.CHANNEL, rewrite);
-													return;
-												}
-												
-												// download player skin, put in onlinePlayersCache, no limit
-												
-												if(!isLimitedAsAntagonist(player.getUniqueId())) {
-													processResolveURLTextureForOnline(sender, searchUUID, skinUUID, urlStr, model);
-												}
-												
+												sender.sendEaglerMessage(rewrite.get(sender.getEaglerProtocol()));
 												return;
 											}
+											
+											// download player skin, put in onlinePlayersCache, no limit
+											
+											if(!isLimitedAsAntagonist(player.getUniqueId())) {
+												final int modelf = model;
+												doAsync(() -> {
+													processResolveURLTextureForOnline(sender, searchUUID, skinUUID, urlStr, modelf);
+												});
+											}
+											
+											return;
 										}
-									}catch(Throwable t) {
 									}
+								}catch(Throwable t) {
 								}
 							}
 						}
 					}
 				}
 				if(!isLimitedAsAntagonist(player.getUniqueId())) {
-					if(player.isOnlineMode()) {
-						processResolveProfileTextureByUUIDForOnline(sender, searchUUID);
-					}else {
-						processResolveProfileTextureByNameForOnline(sender, player.getUsername(), searchUUID);
-					}
+					doAsync(() -> {
+						if(player.isOnlineMode()) {
+							processResolveProfileTextureByUUIDForOnline(sender, searchUUID);
+						}else {
+							processResolveProfileTextureByNameForOnline(sender, player.getUsername(), searchUUID);
+						}
+					});
 				}
 			}else {
 				CachedForeignSkin foreignSkin;
@@ -394,23 +400,30 @@ public class SkinService implements ISkinService {
 					foreignSkin = foreignSkinCache.get(searchUUID);
 				}
 				if(foreignSkin != null) {
-					foreignSkin.lastHit = System.currentTimeMillis();
-					sender.sendPluginMessage(SkinService.CHANNEL, foreignSkin.data);
+					foreignSkin.lastHit = EaglerXVelocityAPIHelper.steadyTimeMillis();
+					sender.sendEaglerMessage(foreignSkin.data.get(sender.getEaglerProtocol()));
 				}else {
-					if (eaglerHandler.skinUUIDLookupRateLimiter
+					if (sender.skinUUIDLookupRateLimiter
 							.rateLimit(EaglerXVelocity.getEagler().getConfig().getUuidRateLimitPlayer())
 							&& !isLimitedAsAntagonist(sender.getUniqueId())) {
-						processResolveProfileTextureByUUIDForeign(sender, searchUUID);
+						if(sender.isOnlineMode()) {
+							doAsync(() -> {
+								processResolveProfileTextureByUUIDForeign(sender, searchUUID);
+							});
+						}else {
+							sender.sendEaglerMessage(
+									new SPacketOtherSkinPresetEAG(searchUUID.getMostSignificantBits(),
+											searchUUID.getLeastSignificantBits(), isAlex(searchUUID) ? 1 : 0));
+						}
 					}
 				}
 			}
 		}
 	}
 	
-	public void processGetOtherSkin(UUID searchUUID, String skinURL, ConnectedPlayer sender) {
+	public void processGetOtherSkin(UUID searchUUID, String skinURL, EaglerPlayerData sender) {
 		EaglerVelocityConfig config = EaglerXVelocity.getEagler().getConfig();
-		EaglerPlayerData eaglerHandler = EaglerPipeline.getEaglerHandle(sender);
-		if(!eaglerHandler.skinLookupRateLimiter.rateLimit(masterRateLimitPerPlayer)) {
+		if(!sender.skinLookupRateLimiter.rateLimit(masterRateLimitPerPlayer)) {
 			return;
 		}
 		CachedForeignSkin foreignSkin;
@@ -418,8 +431,8 @@ public class SkinService implements ISkinService {
 			foreignSkin = foreignSkinCache.get(searchUUID);
 		}
 		if(foreignSkin != null) {
-			foreignSkin.lastHit = System.currentTimeMillis();
-			sender.sendPluginMessage(SkinService.CHANNEL, foreignSkin.data);
+			foreignSkin.lastHit = EaglerXVelocityAPIHelper.steadyTimeMillis();
+			sender.sendEaglerMessage(foreignSkin.data.get(sender.getEaglerProtocol()));
 		}else {
 			Collection<UUID> possiblePlayers;
 			synchronized(onlinePlayersFromTexturesMap) {
@@ -433,22 +446,26 @@ public class SkinService implements ISkinService {
 						maybeCachedPacket = onlinePlayersCache.get(uuid);
 					}
 					if(maybeCachedPacket != null) {
-						byte[] rewritten = SkinPackets.rewriteUUID(searchUUID, maybeCachedPacket.data);
-						synchronized(onlinePlayersCache) {
-							onlinePlayersCache.put(searchUUID, maybeCachedPacket);
-						}
-						sender.sendPluginMessage(SkinService.CHANNEL, rewritten);
+						sender.sendEaglerMessage(maybeCachedPacket.data.get(sender.getEaglerProtocol(),
+								searchUUID.getMostSignificantBits(), searchUUID.getLeastSignificantBits()));
 						return;
 					}
 				}
 			}
-			if(eaglerHandler.skinTextureDownloadRateLimiter.rateLimit(config.getSkinRateLimitPlayer()) && !isLimitedAsAntagonist(sender.getUniqueId())) {
-				processResolveURLTextureForForeign(sender, searchUUID, searchUUID, skinURL, -1);
+			if(skinURL.startsWith("eagler://")) { // customs skulls from exported singleplayer worlds
+				sender.sendEaglerMessage(new SPacketOtherSkinPresetEAG(searchUUID.getMostSignificantBits(),
+						searchUUID.getLeastSignificantBits(), 0));
+				return;
+			}
+			if(sender.skinTextureDownloadRateLimiter.rateLimit(config.getSkinRateLimitPlayer()) && !isLimitedAsAntagonist(sender.getUniqueId())) {
+				doAsync(() -> {
+					processResolveURLTextureForForeign(sender, searchUUID, searchUUID, skinURL, -1);
+				});
 			}
 		}
 	}
 	
-	private void processResolveURLTextureForOnline(final ConnectedPlayer initiator, final UUID onlineCacheUUID,
+	private void processResolveURLTextureForOnline(final EaglerPlayerData initiator, final UUID onlineCacheUUID,
 			final UUID skinUUID, final String urlStr, final int modelId) {
 		synchronized(pendingTextures) {
 			PendingTextureDownload alreadyPending = pendingTextures.get(skinUUID);
@@ -463,32 +480,38 @@ public class SkinService implements ISkinService {
 								skin = onlinePlayersCache.get(onlineCacheUUID);
 							}
 							if(skin != null) {
-								initiator.sendPluginMessage(SkinService.CHANNEL, skin.data);
+								initiator.sendEaglerMessage(skin.data.get(initiator.getEaglerProtocol()));
 							}
 						}
 
 					});
 				}
 			}else {
-				PendingTextureDownload newTask = new PendingTextureDownload(
-						skinUUID, urlStr, initiator.getUniqueId(), new Consumer<byte[]>() {
+				PendingTextureDownload newTask = new PendingTextureDownload(skinUUID, urlStr, initiator.getUniqueId(),
+						new Consumer<byte[]>() {
 
-					@Override
-					public void accept(byte[] t) {
-						CachedPlayerSkin skin;
-						if(t != null) {
-							registerTextureToPlayerAssociation(skinUUID, onlineCacheUUID);
-							skin = new CachedPlayerSkin(SkinPackets.makeCustomResponse(onlineCacheUUID, modelId, t), skinUUID, modelId);
-						}else {
-							skin = new CachedPlayerSkin(SkinPackets.makePresetResponse(onlineCacheUUID), null, -1);
+						@Override
+						public void accept(byte[] t) {
+							CachedPlayerSkin skin;
+							if (t != null) {
+								registerTextureToPlayerAssociation(skinUUID, onlineCacheUUID);
+								skin = new CachedPlayerSkin(
+										SkinPacketVersionCache.createCustomV3(
+												onlineCacheUUID.getMostSignificantBits(),
+												onlineCacheUUID.getLeastSignificantBits(), modelId, t),
+										skinUUID, modelId);
+							} else {
+								skin = new CachedPlayerSkin(SkinPacketVersionCache.createPreset(
+										onlineCacheUUID.getMostSignificantBits(),
+										onlineCacheUUID.getLeastSignificantBits()), null, -1);
+							}
+							synchronized (onlinePlayersCache) {
+								onlinePlayersCache.put(onlineCacheUUID, skin);
+							}
+							initiator.sendEaglerMessage(skin.data.get(initiator.getEaglerProtocol()));
 						}
-						synchronized(onlinePlayersCache) {
-							onlinePlayersCache.put(onlineCacheUUID, skin);
-						}
-						initiator.sendPluginMessage(SkinService.CHANNEL, skin.data);
-					}
-					
-				}, antagonistLogger);
+
+					}, antagonistLogger);
 				try {
 					AsyncSkinProvider.downloadSkin(skinUUID, urlStr, cacheProvider, newTask);
 				}catch(CancelException ex) {
@@ -499,7 +522,7 @@ public class SkinService implements ISkinService {
 		}
 	}
 	
-	private void processResolveURLTextureForForeign(final ConnectedPlayer initiator, final UUID foreignCacheUUID,
+	private void processResolveURLTextureForForeign(final EaglerPlayerData initiator, final UUID foreignCacheUUID,
 			final UUID skinUUID, final String urlStr, final int modelId) {
 		synchronized(pendingTextures) {
 			PendingTextureDownload alreadyPending = pendingTextures.get(skinUUID);
@@ -514,30 +537,39 @@ public class SkinService implements ISkinService {
 								skin = foreignSkinCache.get(foreignCacheUUID);
 							}
 							if(skin != null) {
-								initiator.sendPluginMessage(SkinService.CHANNEL, skin.data);
+								initiator.sendEaglerMessage(skin.data.get(initiator.getEaglerProtocol()));
 							}
 						}
 
 					});
 				}
 			}else {
-				PendingTextureDownload newTask = new PendingTextureDownload(skinUUID, urlStr, initiator.getUniqueId(), new Consumer<byte[]>() {
+				PendingTextureDownload newTask = new PendingTextureDownload(skinUUID, urlStr, initiator.getUniqueId(),
+						new Consumer<byte[]>() {
 
-					@Override
-					public void accept(byte[] t) {
-						CachedForeignSkin skin;
-						if(t != null) {
-							skin = new CachedForeignSkin(foreignCacheUUID, SkinPackets.makeCustomResponse(foreignCacheUUID, modelId, t), modelId);
-						}else {
-							skin = new CachedForeignSkin(foreignCacheUUID, SkinPackets.makePresetResponse(foreignCacheUUID), -1);
+						@Override
+						public void accept(byte[] t) {
+							CachedForeignSkin skin;
+							if (t != null) {
+								skin = new CachedForeignSkin(foreignCacheUUID,
+										SkinPacketVersionCache.createCustomV3(
+												foreignCacheUUID.getMostSignificantBits(),
+												foreignCacheUUID.getLeastSignificantBits(), modelId, t),
+										modelId);
+							} else {
+								skin = new CachedForeignSkin(foreignCacheUUID,
+										SkinPacketVersionCache.createPreset(
+												foreignCacheUUID.getMostSignificantBits(),
+												foreignCacheUUID.getLeastSignificantBits()),
+										-1);
+							}
+							synchronized (foreignSkinCache) {
+								foreignSkinCache.put(foreignCacheUUID, skin);
+							}
+							initiator.sendEaglerMessage(skin.data.get(initiator.getEaglerProtocol()));
 						}
-						synchronized(foreignSkinCache) {
-							foreignSkinCache.put(foreignCacheUUID, skin);
-						}
-						initiator.sendPluginMessage(SkinService.CHANNEL, skin.data);
-					}
-					
-				}, antagonistLogger);
+
+					}, antagonistLogger);
 				try {
 					AsyncSkinProvider.downloadSkin(skinUUID, urlStr, cacheProvider, newTask);
 				}catch(CancelException ex) {
@@ -548,7 +580,7 @@ public class SkinService implements ISkinService {
 		}
 	}
 	
-	private void processResolveProfileTextureByUUIDForOnline(final ConnectedPlayer initiator, final UUID playerUUID) {
+	private void processResolveProfileTextureByUUIDForOnline(final EaglerPlayerData initiator, final UUID playerUUID) {
 		synchronized(pendingUUIDs) {
 			PendingProfileUUIDLookup alreadyPending = pendingUUIDs.get(playerUUID);
 			if(alreadyPending != null) {
@@ -563,7 +595,7 @@ public class SkinService implements ISkinService {
 									skin = onlinePlayersCache.get(playerUUID);
 								}
 								if(skin != null) {
-									initiator.sendPluginMessage(SkinService.CHANNEL, skin.data);
+									initiator.sendEaglerMessage(skin.data.get(initiator.getEaglerProtocol()));
 								}
 							}else {
 								processResolveURLTextureForOnline(initiator, playerUUID, t.textureUUID, t.texture,
@@ -581,16 +613,22 @@ public class SkinService implements ISkinService {
 					public void accept(CacheFetchedProfile t) {
 						if(t == null || t.texture == null) {
 							CachedPlayerSkin skin;
-							if(t == null) {
-								skin = new CachedPlayerSkin(SkinPackets.makePresetResponse(playerUUID), null, -1);
-							}else {
-								skin = new CachedPlayerSkin(SkinPackets.makePresetResponse(playerUUID,
-										SkinPackets.getModelId(t.model) == 1 ? 1 : 0), null, -1);
+							if (t == null) {
+								skin = new CachedPlayerSkin(
+										SkinPacketVersionCache.createPreset(playerUUID.getMostSignificantBits(),
+												playerUUID.getLeastSignificantBits()),
+										null, -1);
+							} else {
+								skin = new CachedPlayerSkin(
+										SkinPacketVersionCache.createPreset(playerUUID.getMostSignificantBits(),
+												playerUUID.getLeastSignificantBits(),
+												SkinPackets.getModelId(t.model) == 1 ? 1 : 0),
+										null, -1);
 							}
 							synchronized(onlinePlayersCache) {
 								onlinePlayersCache.put(playerUUID, skin);
 							}
-							initiator.sendPluginMessage(SkinService.CHANNEL, skin.data);
+							initiator.sendEaglerMessage(skin.data.get(initiator.getEaglerProtocol()));
 						}else {
 							processResolveURLTextureForOnline(initiator, playerUUID, t.textureUUID, t.texture,
 									SkinPackets.getModelId(t.model));
@@ -608,7 +646,7 @@ public class SkinService implements ISkinService {
 		}
 	}
 	
-	private void processResolveProfileTextureByNameForOnline(final ConnectedPlayer initiator, final String playerName, final UUID mapUUID) {
+	private void processResolveProfileTextureByNameForOnline(final EaglerPlayerData initiator, final String playerName, final UUID mapUUID) {
 		synchronized(pendingNameLookups) {
 			PendingProfileNameLookup alreadyPending = pendingNameLookups.get(playerName);
 			if(alreadyPending != null) {
@@ -623,7 +661,7 @@ public class SkinService implements ISkinService {
 									skin = onlinePlayersCache.get(t.uuid);
 								}
 								if(skin != null) {
-									initiator.sendPluginMessage(SkinService.CHANNEL, skin.data);
+									initiator.sendEaglerMessage(skin.data.get(initiator.getEaglerProtocol()));
 								}
 							}else {
 								processResolveURLTextureForOnline(initiator, mapUUID, t.textureUUID, t.texture,
@@ -641,16 +679,20 @@ public class SkinService implements ISkinService {
 					public void accept(CacheFetchedProfile t) {
 						if(t == null || t.texture == null) {
 							CachedPlayerSkin skin;
-							if(t == null) {
-								skin = new CachedPlayerSkin(SkinPackets.makePresetResponse(mapUUID), null, -1);
-							}else {
-								skin = new CachedPlayerSkin(SkinPackets.makePresetResponse(mapUUID,
+							if (t == null) {
+								skin = new CachedPlayerSkin(
+										SkinPacketVersionCache.createPreset(mapUUID.getMostSignificantBits(),
+												mapUUID.getLeastSignificantBits()),
+										null, -1);
+							} else {
+								skin = new CachedPlayerSkin(SkinPacketVersionCache.createPreset(
+										mapUUID.getMostSignificantBits(), mapUUID.getLeastSignificantBits(),
 										SkinPackets.getModelId(t.model) == 1 ? 1 : 0), null, -1);
 							}
 							synchronized(onlinePlayersCache) {
 								onlinePlayersCache.put(mapUUID, skin);
 							}
-							initiator.sendPluginMessage(SkinService.CHANNEL, skin.data);
+							initiator.sendEaglerMessage(skin.data.get(initiator.getEaglerProtocol()));
 						}else {
 							processResolveURLTextureForOnline(initiator, mapUUID, t.textureUUID, t.texture,
 									SkinPackets.getModelId(t.model));
@@ -668,7 +710,7 @@ public class SkinService implements ISkinService {
 		}
 	}
 	
-	private void processResolveProfileTextureByUUIDForeign(final ConnectedPlayer initiator, final UUID playerUUID) {
+	private void processResolveProfileTextureByUUIDForeign(final EaglerPlayerData initiator, final UUID playerUUID) {
 		synchronized(pendingUUIDs) {
 			PendingProfileUUIDLookup alreadyPending = pendingUUIDs.get(playerUUID);
 			if(alreadyPending != null) {
@@ -683,7 +725,7 @@ public class SkinService implements ISkinService {
 									skin = foreignSkinCache.get(playerUUID);
 								}
 								if(skin != null) {
-									initiator.sendPluginMessage(SkinService.CHANNEL, skin.data);
+									initiator.sendEaglerMessage(skin.data.get(initiator.getEaglerProtocol()));
 								}
 							}else {
 								processResolveURLTextureForForeign(initiator, playerUUID, t.textureUUID, t.texture,
@@ -701,16 +743,22 @@ public class SkinService implements ISkinService {
 					public void accept(CacheFetchedProfile t) {
 						if(t == null || t.texture == null) {
 							CachedForeignSkin skin;
-							if(t == null) {
-								skin = new CachedForeignSkin(playerUUID, SkinPackets.makePresetResponse(playerUUID), -1);
-							}else {
-								skin = new CachedForeignSkin(playerUUID, SkinPackets.makePresetResponse(
-										playerUUID, SkinPackets.getModelId(t.model) == 1 ? 1 : 0), -1);
+							if (t == null) {
+								skin = new CachedForeignSkin(playerUUID,
+										SkinPacketVersionCache.createPreset(playerUUID.getMostSignificantBits(),
+												playerUUID.getLeastSignificantBits()),
+										-1);
+							} else {
+								skin = new CachedForeignSkin(playerUUID,
+										SkinPacketVersionCache.createPreset(playerUUID.getMostSignificantBits(),
+												playerUUID.getLeastSignificantBits(),
+												SkinPackets.getModelId(t.model) == 1 ? 1 : 0),
+										-1);
 							}
 							synchronized(foreignSkinCache) {
 								foreignSkinCache.put(playerUUID, skin);
 							}
-							initiator.sendPluginMessage(SkinService.CHANNEL, skin.data);
+							initiator.sendEaglerMessage(skin.data.get(initiator.getEaglerProtocol()));
 						}else {
 							processResolveURLTextureForForeign(initiator, playerUUID, t.textureUUID, t.texture,
 									SkinPackets.getModelId(t.model));
@@ -728,7 +776,7 @@ public class SkinService implements ISkinService {
 		}
 	}
 	
-	public void registerEaglercraftPlayer(UUID clientUUID, byte[] generatedPacket, int modelId) {
+	public void registerEaglercraftPlayer(UUID clientUUID, SkinPacketVersionCache generatedPacket, int modelId) {
 		synchronized(foreignSkinCache) {
 			foreignSkinCache.remove(clientUUID);
 		}
@@ -795,9 +843,463 @@ public class SkinService implements ISkinService {
 			}
 		}
 	}
+
+	public void processForceSkin(UUID playerUUID, EaglerPlayerData eaglerHandler) {
+		CachedPlayerSkin maybeCachedPacket;
+		synchronized(onlinePlayersCache) {
+			maybeCachedPacket = onlinePlayersCache.get(playerUUID);
+		}
+		
+		if(maybeCachedPacket != null) {
+			eaglerHandler.sendEaglerMessage(maybeCachedPacket.data.getForceClientV4());
+		}else {
+			UUID playerTexture;
+			synchronized(onlinePlayersToTexturesMap) {
+				playerTexture = onlinePlayersToTexturesMap.get(playerUUID);
+			}
+			if(playerTexture != null) {
+				Collection<UUID> possiblePlayers;
+				synchronized(onlinePlayersFromTexturesMap) {
+					possiblePlayers = onlinePlayersFromTexturesMap.get(playerTexture);
+				}
+				boolean playersExist = possiblePlayers.size() > 0;
+				if(playersExist) {
+					for(UUID uuid : possiblePlayers) {
+						synchronized(onlinePlayersCache) {
+							maybeCachedPacket = onlinePlayersCache.get(uuid);
+						}
+						if(maybeCachedPacket != null) {
+							SkinPacketVersionCache rewritten = SkinPacketVersionCache.rewriteUUID(
+									maybeCachedPacket.data, playerUUID.getMostSignificantBits(),
+									playerUUID.getLeastSignificantBits());
+							synchronized(onlinePlayersCache) {
+								onlinePlayersCache.put(playerUUID, new CachedPlayerSkin(rewritten,
+										maybeCachedPacket.textureUUID, maybeCachedPacket.modelId));
+							}
+							eaglerHandler.sendEaglerMessage(rewritten.getForceClientV4());
+							return;
+						}
+					}
+				}
+				CachedForeignSkin foreignSkin;
+				synchronized(foreignSkinCache) {
+					foreignSkin = foreignSkinCache.get(playerTexture);
+				}
+				if(foreignSkin != null && foreignSkin.modelKnown != -1) {
+					synchronized(onlinePlayersCache) {
+						onlinePlayersCache.put(playerUUID,
+								new CachedPlayerSkin(SkinPacketVersionCache.rewriteUUID(foreignSkin.data,
+										playerUUID.getMostSignificantBits(), playerUUID.getLeastSignificantBits()),
+										playerTexture, foreignSkin.modelKnown));
+					}
+					synchronized(foreignSkinCache) {
+						foreignSkinCache.remove(playerTexture);
+					}
+					eaglerHandler.sendEaglerMessage(foreignSkin.data.getForceClientV4());
+					return;
+				}
+			}
+			GameProfile loginProfile = eaglerHandler.getGameProfile();
+			if(loginProfile != null) {
+				List<Property> props = loginProfile.getProperties();
+				if(props.size() > 0) {
+					for(int i = 0, l = props.size(); i < l; ++i) {
+						Property pp = props.get(i);
+						if(pp.getName().equals("textures")) {
+							try {
+								String jsonStr = SkinPackets.bytesToAscii(Base64.decodeBase64(pp.getValue()));
+								JsonObject json = JsonParser.parseString(jsonStr).getAsJsonObject();
+								JsonObject skinObj = json.getAsJsonObject("SKIN");
+								if(skinObj != null) {
+									JsonElement url = json.get("url");
+									if(url != null) {
+										String urlStr = SkinService.sanitizeTextureURL(url.getAsString());
+										if(urlStr == null) {
+											break;
+										}
+										int model = 0;
+										JsonElement el = skinObj.get("metadata");
+										if(el != null && el.isJsonObject()) {
+											el = el.getAsJsonObject().get("model");
+											if(el != null) {
+												model = SkinPackets.getModelId(el.getAsString());
+											}
+										}
+										UUID skinUUID = SkinPackets.createEaglerURLSkinUUID(urlStr);
+										
+										CachedForeignSkin foreignSkin;
+										synchronized(foreignSkinCache) {
+											foreignSkin = foreignSkinCache.remove(skinUUID);
+										}
+										if(foreignSkin != null) {
+											registerTextureToPlayerAssociation(skinUUID, playerUUID);
+											SkinPacketVersionCache rewrite = SkinPacketVersionCache
+													.rewriteUUIDModel(foreignSkin.data,
+															playerUUID.getMostSignificantBits(),
+															playerUUID.getLeastSignificantBits(), model);
+											synchronized(onlinePlayersCache) {
+												onlinePlayersCache.put(playerUUID, new CachedPlayerSkin(rewrite, skinUUID, model));
+											}
+											eaglerHandler.sendEaglerMessage(rewrite.getForceClientV4());
+											return;
+										}
+										
+										// download player skin, put in onlinePlayersCache, no limit
+										
+										final int modelf = model;
+										doAsync(() -> {
+											processResolveURLTextureForOnlineToForce(eaglerHandler, playerUUID, skinUUID, urlStr, modelf);
+										});
+										
+										return;
+									}
+								}
+							}catch(Throwable t) {
+							}
+						}
+					}
+				}
+				doAsync(() -> {
+					if(eaglerHandler.isOnlineMode()) {
+						processResolveProfileTextureByUUIDForOnlineToForce(eaglerHandler, playerUUID);
+					}else {
+						processResolveProfileTextureByNameForOnlineToForce(eaglerHandler, eaglerHandler.getName(), playerUUID);
+					}
+				});
+			}else {
+				CachedForeignSkin foreignSkin;
+				synchronized(foreignSkinCache) {
+					foreignSkin = foreignSkinCache.get(playerUUID);
+				}
+				if(foreignSkin != null) {
+					foreignSkin.lastHit = EaglerXVelocityAPIHelper.steadyTimeMillis();
+					eaglerHandler.sendEaglerMessage(foreignSkin.data.getForceClientV4());
+				}else {
+					if(eaglerHandler.isOnlineMode()) {
+						doAsync(() -> {
+							processResolveProfileTextureByUUIDForeignToForce(eaglerHandler, playerUUID);
+						});
+					}else {
+						eaglerHandler.sendEaglerMessage(new SPacketForceClientSkinPresetV4EAG(isAlex(playerUUID) ? 1 : 0));
+					}
+				}
+			}
+		}
+	}
+	
+	private void processResolveURLTextureForOnlineToForce(final EaglerPlayerData initiator, final UUID onlineCacheUUID,
+			final UUID skinUUID, final String urlStr, final int modelId) {
+		synchronized(pendingTextures) {
+			PendingTextureDownload alreadyPending = pendingTextures.get(skinUUID);
+			if(alreadyPending != null) {
+				if(alreadyPending.antagonists.add(initiator.getUniqueId())) {
+					alreadyPending.callbacks.add(new Consumer<byte[]>() {
+
+						@Override
+						public void accept(byte[] t) {
+							CachedPlayerSkin skin;
+							synchronized(onlinePlayersCache) {
+								skin = onlinePlayersCache.get(onlineCacheUUID);
+							}
+							if(skin != null) {
+								initiator.sendEaglerMessage(skin.data.getForceClientV4());
+							}
+						}
+
+					});
+				}
+			}else {
+				PendingTextureDownload newTask = new PendingTextureDownload(skinUUID, urlStr, initiator.getUniqueId(),
+						new Consumer<byte[]>() {
+
+						@Override
+						public void accept(byte[] t) {
+							CachedPlayerSkin skin;
+							if (t != null) {
+								registerTextureToPlayerAssociation(skinUUID, onlineCacheUUID);
+								skin = new CachedPlayerSkin(
+										SkinPacketVersionCache.createCustomV3(
+												onlineCacheUUID.getMostSignificantBits(),
+												onlineCacheUUID.getLeastSignificantBits(), modelId, t),
+										skinUUID, modelId);
+							} else {
+								skin = new CachedPlayerSkin(SkinPacketVersionCache.createPreset(
+										onlineCacheUUID.getMostSignificantBits(),
+										onlineCacheUUID.getLeastSignificantBits()), null, -1);
+							}
+							synchronized (onlinePlayersCache) {
+								onlinePlayersCache.put(onlineCacheUUID, skin);
+							}
+							initiator.sendEaglerMessage(skin.data.getForceClientV4());
+						}
+
+					}, antagonistLogger);
+				try {
+					AsyncSkinProvider.downloadSkin(skinUUID, urlStr, cacheProvider, newTask);
+				}catch(CancelException ex) {
+					return;
+				}
+				pendingTextures.put(skinUUID, newTask);
+			}
+		}
+	}
+	
+	private void processResolveURLTextureForForeignToForce(final EaglerPlayerData initiator, final UUID foreignCacheUUID,
+			final UUID skinUUID, final String urlStr, final int modelId) {
+		synchronized(pendingTextures) {
+			PendingTextureDownload alreadyPending = pendingTextures.get(skinUUID);
+			if(alreadyPending != null) {
+				if(alreadyPending.antagonists.add(initiator.getUniqueId())) {
+					alreadyPending.callbacks.add(new Consumer<byte[]>() {
+
+						@Override
+						public void accept(byte[] t) {
+							CachedForeignSkin skin;
+							synchronized(foreignSkinCache) {
+								skin = foreignSkinCache.get(foreignCacheUUID);
+							}
+							if(skin != null) {
+								initiator.sendEaglerMessage(skin.data.getForceClientV4());
+							}
+						}
+
+					});
+				}
+			}else {
+				PendingTextureDownload newTask = new PendingTextureDownload(skinUUID, urlStr, initiator.getUniqueId(),
+						new Consumer<byte[]>() {
+
+						@Override
+						public void accept(byte[] t) {
+							CachedForeignSkin skin;
+							if (t != null) {
+								skin = new CachedForeignSkin(foreignCacheUUID,
+										SkinPacketVersionCache.createCustomV3(
+												foreignCacheUUID.getMostSignificantBits(),
+												foreignCacheUUID.getLeastSignificantBits(), modelId, t),
+										modelId);
+							} else {
+								skin = new CachedForeignSkin(foreignCacheUUID,
+										SkinPacketVersionCache.createPreset(
+												foreignCacheUUID.getMostSignificantBits(),
+												foreignCacheUUID.getLeastSignificantBits()),
+										-1);
+							}
+							synchronized (foreignSkinCache) {
+								foreignSkinCache.put(foreignCacheUUID, skin);
+							}
+							initiator.sendEaglerMessage(skin.data.getForceClientV4());
+						}
+
+					}, antagonistLogger);
+				try {
+					AsyncSkinProvider.downloadSkin(skinUUID, urlStr, cacheProvider, newTask);
+				}catch(CancelException ex) {
+					return;
+				}
+				pendingTextures.put(skinUUID, newTask);
+			}
+		}
+	}
+	
+	private void processResolveProfileTextureByUUIDForOnlineToForce(final EaglerPlayerData initiator, final UUID playerUUID) {
+		synchronized(pendingUUIDs) {
+			PendingProfileUUIDLookup alreadyPending = pendingUUIDs.get(playerUUID);
+			if(alreadyPending != null) {
+				if(alreadyPending.antagonists.add(initiator.getUniqueId())) {
+					alreadyPending.callbacks.add(new Consumer<CacheFetchedProfile>() {
+
+						@Override
+						public void accept(CacheFetchedProfile t) {
+							if(t == null || t.texture == null) {
+								CachedPlayerSkin skin;
+								synchronized(onlinePlayersCache) {
+									skin = onlinePlayersCache.get(playerUUID);
+								}
+								if(skin != null) {
+									initiator.sendEaglerMessage(skin.data.getForceClientV4());
+								}
+							}else {
+								processResolveURLTextureForOnlineToForce(initiator, playerUUID, t.textureUUID, t.texture,
+										SkinPackets.getModelId(t.model));
+							}
+						}
+
+					});
+				}
+			}else {
+				PendingProfileUUIDLookup newTask = new PendingProfileUUIDLookup(
+						playerUUID, initiator.getUniqueId(), new Consumer<CacheFetchedProfile>() {
+
+					@Override
+					public void accept(CacheFetchedProfile t) {
+						if(t == null || t.texture == null) {
+							CachedPlayerSkin skin;
+							if (t == null) {
+								skin = new CachedPlayerSkin(
+										SkinPacketVersionCache.createPreset(playerUUID.getMostSignificantBits(),
+												playerUUID.getLeastSignificantBits()),
+										null, -1);
+							} else {
+								skin = new CachedPlayerSkin(
+										SkinPacketVersionCache.createPreset(playerUUID.getMostSignificantBits(),
+												playerUUID.getLeastSignificantBits(),
+												SkinPackets.getModelId(t.model) == 1 ? 1 : 0),
+										null, -1);
+							}
+							synchronized(onlinePlayersCache) {
+								onlinePlayersCache.put(playerUUID, skin);
+							}
+							initiator.sendEaglerMessage(skin.data.getForceClientV4());
+						}else {
+							processResolveURLTextureForOnlineToForce(initiator, playerUUID, t.textureUUID, t.texture,
+									SkinPackets.getModelId(t.model));
+						}
+					}
+					
+				}, antagonistLogger);
+				try {
+					AsyncSkinProvider.lookupProfileByUUID(playerUUID, cacheProvider, newTask);
+				}catch(CancelException ex) {
+					return;
+				}
+				pendingUUIDs.put(playerUUID, newTask);
+			}
+		}
+	}
+	
+	private void processResolveProfileTextureByNameForOnlineToForce(final EaglerPlayerData initiator, final String playerName, final UUID mapUUID) {
+		synchronized(pendingNameLookups) {
+			PendingProfileNameLookup alreadyPending = pendingNameLookups.get(playerName);
+			if(alreadyPending != null) {
+				if(alreadyPending.antagonists.add(initiator.getUniqueId())) {
+					alreadyPending.callbacks.add(new Consumer<CacheFetchedProfile>() {
+
+						@Override
+						public void accept(CacheFetchedProfile t) {
+							if(t == null || t.texture == null) {
+								CachedPlayerSkin skin;
+								synchronized(onlinePlayersCache) {
+									skin = onlinePlayersCache.get(t.uuid);
+								}
+								if(skin != null) {
+									initiator.sendEaglerMessage(skin.data.getForceClientV4());
+								}
+							}else {
+								processResolveURLTextureForOnlineToForce(initiator, mapUUID, t.textureUUID, t.texture,
+										SkinPackets.getModelId(t.model));
+							}
+						}
+
+					});
+				}
+			}else {
+				PendingProfileNameLookup newTask = new PendingProfileNameLookup(
+						playerName, initiator.getUniqueId(), new Consumer<CacheFetchedProfile>() {
+
+					@Override
+					public void accept(CacheFetchedProfile t) {
+						if(t == null || t.texture == null) {
+							CachedPlayerSkin skin;
+							if (t == null) {
+								skin = new CachedPlayerSkin(
+										SkinPacketVersionCache.createPreset(mapUUID.getMostSignificantBits(),
+												mapUUID.getLeastSignificantBits()),
+										null, -1);
+							} else {
+								skin = new CachedPlayerSkin(SkinPacketVersionCache.createPreset(
+										mapUUID.getMostSignificantBits(), mapUUID.getLeastSignificantBits(),
+										SkinPackets.getModelId(t.model) == 1 ? 1 : 0), null, -1);
+							}
+							synchronized(onlinePlayersCache) {
+								onlinePlayersCache.put(mapUUID, skin);
+							}
+							initiator.sendEaglerMessage(skin.data.getForceClientV4());
+						}else {
+							processResolveURLTextureForOnlineToForce(initiator, mapUUID, t.textureUUID, t.texture,
+									SkinPackets.getModelId(t.model));
+						}
+					}
+					
+				}, antagonistLogger);
+				try {
+					AsyncSkinProvider.lookupProfileByUsername(playerName, cacheProvider, newTask);
+				}catch(CancelException ex) {
+					return;
+				}
+				pendingNameLookups.put(playerName, newTask);
+			}
+		}
+	}
+	
+	private void processResolveProfileTextureByUUIDForeignToForce(final EaglerPlayerData initiator, final UUID playerUUID) {
+		synchronized(pendingUUIDs) {
+			PendingProfileUUIDLookup alreadyPending = pendingUUIDs.get(playerUUID);
+			if(alreadyPending != null) {
+				if(alreadyPending.antagonists.add(initiator.getUniqueId())) {
+					alreadyPending.callbacks.add(new Consumer<CacheFetchedProfile>() {
+
+						@Override
+						public void accept(CacheFetchedProfile t) {
+							if(t == null || t.texture == null) {
+								CachedForeignSkin skin;
+								synchronized(foreignSkinCache) {
+									skin = foreignSkinCache.get(playerUUID);
+								}
+								if(skin != null) {
+									initiator.sendEaglerMessage(skin.data.getForceClientV4());
+								}
+							}else {
+								processResolveURLTextureForForeignToForce(initiator, playerUUID, t.textureUUID, t.texture,
+										SkinPackets.getModelId(t.model));
+							}
+						}
+
+					});
+				}
+			}else {
+				PendingProfileUUIDLookup newTask = new PendingProfileUUIDLookup(
+						playerUUID, initiator.getUniqueId(), new Consumer<CacheFetchedProfile>() {
+
+					@Override
+					public void accept(CacheFetchedProfile t) {
+						if(t == null || t.texture == null) {
+							CachedForeignSkin skin;
+							if (t == null) {
+								skin = new CachedForeignSkin(playerUUID,
+										SkinPacketVersionCache.createPreset(playerUUID.getMostSignificantBits(),
+												playerUUID.getLeastSignificantBits()),
+										-1);
+							} else {
+								skin = new CachedForeignSkin(playerUUID,
+										SkinPacketVersionCache.createPreset(playerUUID.getMostSignificantBits(),
+												playerUUID.getLeastSignificantBits(),
+												SkinPackets.getModelId(t.model) == 1 ? 1 : 0),
+										-1);
+							}
+							synchronized(foreignSkinCache) {
+								foreignSkinCache.put(playerUUID, skin);
+							}
+							initiator.sendEaglerMessage(skin.data.getForceClientV4());
+						}else {
+							processResolveURLTextureForForeignToForce(initiator, playerUUID, t.textureUUID, t.texture,
+									SkinPackets.getModelId(t.model));
+						}
+					}
+					
+				}, antagonistLogger);
+				try {
+					AsyncSkinProvider.lookupProfileByUUID(playerUUID, cacheProvider, newTask);
+				}catch(CancelException ex) {
+					return;
+				}
+				pendingUUIDs.put(playerUUID, newTask);
+			}
+		}
+	}
 	
 	public void flush() {
-		long millis = System.currentTimeMillis();
+		long millis = EaglerXVelocityAPIHelper.steadyTimeMillis();
 		
 		synchronized(foreignSkinCache) {
 			Iterator<CachedForeignSkin> itr = foreignSkinCache.values().iterator();
@@ -872,6 +1374,14 @@ public class SkinService implements ISkinService {
 		cacheProvider.flush();
 	}
 
+	public SkinPacketVersionCache getSkin(UUID playerUUID) {
+		CachedPlayerSkin skin;
+		synchronized(onlinePlayersCache) {
+			skin = onlinePlayersCache.get(playerUUID);
+		}
+		return skin != null ? skin.data : null;
+	}
+
 	public void shutdown() {
 		resetMaps();
 		if(cacheProvider != null) {
@@ -914,6 +1424,10 @@ public class SkinService implements ISkinService {
 		synchronized(antagonists) {
 			antagonists.clear();
 		}
+	}
+	
+	private ScheduledTask doAsync(Runnable handler) {
+		return EaglerXVelocity.proxy().getScheduler().buildTask(EaglerXVelocity.getEagler(), handler).schedule();
 	}
 	
 	public static String sanitizeTextureURL(String url) {

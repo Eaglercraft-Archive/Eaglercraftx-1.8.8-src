@@ -12,10 +12,12 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.Map.Entry;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
+import com.google.common.collect.Sets;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -34,6 +36,8 @@ import com.velocitypowered.api.util.GameProfile;
 import com.velocitypowered.api.util.GameProfile.Property;
 import com.velocitypowered.proxy.VelocityServer;
 import com.velocitypowered.proxy.config.PlayerInfoForwarding;
+import com.velocitypowered.proxy.connection.ConnectionType;
+import com.velocitypowered.proxy.connection.ConnectionTypes;
 import com.velocitypowered.proxy.connection.MinecraftConnection;
 import com.velocitypowered.proxy.connection.client.*;
 import com.velocitypowered.proxy.network.Connections;
@@ -60,11 +64,14 @@ import io.netty.handler.timeout.WriteTimeoutHandler;
 import io.netty.util.ReferenceCountUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.serializer.json.JSONComponentSerializer;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.translation.GlobalTranslator;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.EaglerXVelocity;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.EaglerXVelocityVersion;
+import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.api.EaglerXVelocityAPIHelper;
+import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.api.JSONLegacySerializer;
+import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.api.event.EaglercraftClientBrandEvent;
+import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.api.event.EaglercraftHandleAuthCookieEvent;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.api.event.EaglercraftHandleAuthPasswordEvent;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.api.event.EaglercraftIsAuthRequiredEvent;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.api.event.EaglercraftMOTDEvent;
@@ -75,11 +82,14 @@ import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.api.event.Eaglercra
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.auth.DefaultAuthSystem;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.command.CommandConfirmCode;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.config.*;
+import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.server.protocol.GameProtocolMessageController;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.server.query.MOTDQueryHandler;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.server.query.QueryManager;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.skins.CapePackets;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.skins.SkinPackets;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.skins.SkinService;
+import net.lax1dude.eaglercraft.v1_8.socket.protocol.GamePluginMessageProtocol;
+import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.server.SPacketCustomizePauseMenuV4EAG;
 
 import static com.velocitypowered.proxy.network.Connections.*;
 
@@ -143,16 +153,18 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 	private int clientProtocolVersion = -1;
 	private boolean isProtocolExchanged = false;
 	private int gameProtocolVersion = -1;
-	private CharSequence clientBrandString;
-	private CharSequence clientVersionString;
-	private CharSequence clientUsername;
+	private String clientBrandString;
+	private String clientVersionString;
+	private String clientUsername;
 	private UUID clientUUID;
-	private CharSequence clientRequestedServer;
+	private String clientRequestedServer;
 	private boolean clientAuth;
 	private byte[] clientAuthUsername;
 	private byte[] clientAuthPassword;
+	private boolean clientEnableCookie;
+	private byte[] clientCookieData;
 	private EaglercraftIsAuthRequiredEvent authRequireEvent;
-	private final Map<String, byte[]> profileData = new HashMap();
+	private final Map<String, byte[]> profileData = new HashMap<>();
 	private boolean hasFirstPacket = false;
 	private boolean hasBinaryConnection = false;
 	private boolean connectionClosed = false;
@@ -160,6 +172,9 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 	private String localAddrString; 
 	private Property texturesOverrideProperty;
 	private boolean overrideEaglerToVanillaSkins;
+
+	private static final Set<String> profileDataStandard = Sets.newHashSet(
+			"skin_v1", "skin_v2", "cape_v1", "update_cert_v1", "brand_uuid_v1");
 
 	public HttpWebSocketHandler(EaglerListenerConfig conf) {
 		this.conf = conf;
@@ -218,7 +233,7 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 				
 				if (i >= conf.getMaxPlayer()) {
 					sendErrorCode(ctx, HandshakePacketTypes.SERVER_ERROR_CUSTOM_MESSAGE, "Proxy is full")
-						.addListener(ChannelFutureListener.CLOSE);
+							.addListener(ChannelFutureListener.CLOSE);
 					return;
 				}
 			}
@@ -293,12 +308,12 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 					if(eaglerLegacyProtocolVersion == 1) {
 						if(authConfig.isEnableAuthentication()) {
 							sendErrorCode(ctx, HandshakePacketTypes.SERVER_ERROR_CUSTOM_MESSAGE, "Please update your client to register on this server!")
-								.addListener(ChannelFutureListener.CLOSE);
+										.addListener(ChannelFutureListener.CLOSE);
 							return;
-						}else if(buffer.readUnsignedByte() != minecraftProtocolVersion) {
+						}else if(buffer.readUnsignedByte() != minecraftProtocolVersion || !conf.isAllowV3()) {
 							clientLoginState = HandshakePacketTypes.STATE_CLIENT_COMPLETE;
 							connectionClosed = true;
-							ByteBuf buf = Unpooled.buffer();
+							ByteBuf buf = ctx.alloc().buffer();
 							buf.writeByte(HandshakePacketTypes.PROTOCOL_VERSION_MISMATCH);
 							buf.writeByte(1);
 							buf.writeByte(1);
@@ -310,31 +325,36 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 							return;
 						}
 					}else if(eaglerLegacyProtocolVersion == 2) {
-						int minProtVers = Integer.MAX_VALUE;
-						int maxProtVers = -1;
-						boolean hasV2InList = false;
-						boolean hasV3InList = false;
-						
-						int minGameVers = Integer.MAX_VALUE;
-						int maxGameVers = -1;
-						boolean has47InList = false;
+						//make sure to update VersionQueryHandler too
+						int minServerSupported = conf.isAllowV3() ? 2 : 4;
+						int maxServerSupported = conf.isAllowV4() ? 4 : 3;
+						int minAvailableProtVers = Integer.MAX_VALUE;
+						int maxAvailableProtVers = Integer.MIN_VALUE;
+						int minSupportedProtVers = Integer.MAX_VALUE;
+						int maxSupportedProtVers = Integer.MIN_VALUE;
 						
 						int cnt = buffer.readUnsignedShort();
 						for(int i = 0; i < cnt; ++i) {
 							int j = buffer.readUnsignedShort();
-							if(j == 2) {
-								hasV2InList = true;
+							if(j > maxAvailableProtVers) {
+								maxAvailableProtVers = j;
 							}
-							if(j == 3) {
-								hasV3InList = true;
+							if(j < minAvailableProtVers) {
+								minAvailableProtVers = j;
 							}
-							if(j > maxProtVers) {
-								maxProtVers = j;
-							}
-							if(j < minProtVers) {
-								minProtVers = j;
+							if(j >= minServerSupported && j <= maxServerSupported) {
+								if(j > maxSupportedProtVers) {
+									maxSupportedProtVers = j;
+								}
+								if(j < minSupportedProtVers) {
+									minSupportedProtVers = j;
+								}
 							}
 						}
+						
+						int minGameVers = Integer.MAX_VALUE;
+						int maxGameVers = -1;
+						boolean has47InList = false;
 						
 						cnt = buffer.readUnsignedShort();
 						for(int i = 0; i < cnt; ++i) {
@@ -350,34 +370,41 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 							}
 						}
 						
-						if(minProtVers == Integer.MAX_VALUE || minGameVers == Integer.MAX_VALUE) {
+						if(maxAvailableProtVers == Integer.MIN_VALUE || maxGameVers == Integer.MIN_VALUE) {
 							throw new IOException();
 						}
 						
 						boolean versMisMatch = false;
 						boolean isServerProbablyOutdated = false;
 						boolean isClientProbablyOutdated = false;
-						if(!hasV2InList && !hasV3InList) {
+						if(maxSupportedProtVers == Integer.MIN_VALUE) {
+							clientProtocolVersion = maxAvailableProtVers < 3 ? 2 : 3;
 							versMisMatch = true;
-							isServerProbablyOutdated = minProtVers > 3 && maxProtVers > 3; //make sure to update VersionQueryHandler too
-							isClientProbablyOutdated = minProtVers < 2 && maxProtVers < 2;
+							isServerProbablyOutdated = minAvailableProtVers > maxServerSupported && maxAvailableProtVers > maxServerSupported;
+							isClientProbablyOutdated = minAvailableProtVers < minServerSupported && maxAvailableProtVers < minServerSupported;
 						}else if(!has47InList) {
+							clientProtocolVersion = 3;
 							versMisMatch = true;
 							isServerProbablyOutdated = minGameVers > minecraftProtocolVersion && maxGameVers > minecraftProtocolVersion;
 							isClientProbablyOutdated = minGameVers < minecraftProtocolVersion && maxGameVers < minecraftProtocolVersion;
+						}else {
+							clientProtocolVersion = maxSupportedProtVers;
 						}
-						
-						clientProtocolVersion = hasV3InList ? 3 : 2;
 						
 						if(versMisMatch) {
 							clientLoginState = HandshakePacketTypes.STATE_CLIENT_COMPLETE;
 							connectionClosed = true;
-							ByteBuf buf = Unpooled.buffer();
+							ByteBuf buf = ctx.alloc().buffer();
 							buf.writeByte(HandshakePacketTypes.PROTOCOL_VERSION_MISMATCH);
 							
-							buf.writeShort(2);
-							buf.writeShort(2); // want v2 or v3
-							buf.writeShort(3);
+							buf.writeShort((conf.isAllowV3() ? 2 : 0) + (conf.isAllowV4() ? 1 : 0));
+							if(conf.isAllowV3()) {
+								buf.writeShort(2);
+								buf.writeShort(3);
+							}
+							if(conf.isAllowV4()) {
+								buf.writeShort(4);
+							}
 							
 							buf.writeShort(1);
 							buf.writeShort(minecraftProtocolVersion); // want game version 47
@@ -390,14 +417,14 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 						}
 					}else {
 						sendErrorCode(ctx, HandshakePacketTypes.SERVER_ERROR_CUSTOM_MESSAGE, "Legacy protocol version should always be '2' on post-snapshot clients")
-							.addListener(ChannelFutureListener.CLOSE);
+								.addListener(ChannelFutureListener.CLOSE);
 						return;
 					}
 					
 					int strlen = buffer.readUnsignedByte();
-					CharSequence eaglerBrand = buffer.readCharSequence(strlen, StandardCharsets.US_ASCII);
+					String eaglerBrand = buffer.readCharSequence(strlen, StandardCharsets.US_ASCII).toString();
 					strlen = buffer.readUnsignedByte();
-					CharSequence eaglerVersionString = buffer.readCharSequence(strlen, StandardCharsets.US_ASCII);
+					String eaglerVersionString = buffer.readCharSequence(strlen, StandardCharsets.US_ASCII).toString();
 					
 					if(eaglerLegacyProtocolVersion >= 2) {
 						clientAuth = buffer.readBoolean();
@@ -427,6 +454,19 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 						}
 					}
 
+					EaglercraftClientBrandEvent brandEvent = new EaglercraftClientBrandEvent(eaglerBrand, eaglerVersionString,
+							ctx.channel().attr(EaglerPipeline.ORIGIN).get(), clientProtocolVersion, addr);
+					brandEvent = eaglerXBungee.getProxy().getEventManager().fire(brandEvent).join();
+					if(brandEvent.isCancelled()) {
+						Component kickReason = brandEvent.getMessage();
+						if(kickReason == null) {
+							kickReason = Component.text("End of stream");
+						}
+						sendErrorCode(ctx, HandshakePacketTypes.SERVER_ERROR_CUSTOM_MESSAGE, kickReason)
+								.addListener(ChannelFutureListener.CLOSE);
+						return;
+					}
+
 					final boolean final_useSnapshotFallbackProtocol = useSnapshotFallbackProtocol;
 					Runnable continueThread = () -> {
 						clientLoginState = HandshakePacketTypes.STATE_CLIENT_VERSION;
@@ -434,7 +474,7 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 						clientBrandString = eaglerBrand;
 						clientVersionString = eaglerVersionString;
 						
-						ByteBuf buf = Unpooled.buffer();
+						ByteBuf buf = ctx.alloc().buffer();
 						buf.writeByte(HandshakePacketTypes.PROTOCOL_SERVER_VERSION);
 						
 						if(final_useSnapshotFallbackProtocol) {
@@ -460,7 +500,7 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 							
 							if(meth == -1) {
 								sendErrorCode(ctx, HandshakePacketTypes.SERVER_ERROR_CUSTOM_MESSAGE, "Unsupported authentication method resolved")
-									.addListener(ChannelFutureListener.CLOSE);
+										.addListener(ChannelFutureListener.CLOSE);
 								EaglerXVelocity.logger().error("[{}]: Disconnecting, unsupported AuthMethod: {}", localAddrString, authRequireEvent.getUseAuthType());
 								return;
 							}
@@ -488,28 +528,28 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 									clientAuth, clientAuthUsername, (reqAuthEvent) -> {
 								if(authRequireEvent.shouldKickUser()) {
 									sendErrorCode(ctx, HandshakePacketTypes.SERVER_ERROR_CUSTOM_MESSAGE, authRequireEvent.getKickMessage())
-										.addListener(ChannelFutureListener.CLOSE);
+											.addListener(ChannelFutureListener.CLOSE);
 									return;
 								}
 								
 								AuthResponse resp = authRequireEvent.getAuthRequired();
 								if(resp == null) {
 									sendErrorCode(ctx, HandshakePacketTypes.SERVER_ERROR_CUSTOM_MESSAGE, "IsAuthRequiredEvent was not handled")
-										.addListener(ChannelFutureListener.CLOSE);
-									EaglerXVelocity.logger().error("[{}]: Disconnecting, no installed authentication system handled: {}", localAddrString, authRequireEvent.toString());
+											.addListener(ChannelFutureListener.CLOSE);
+									EaglerXVelocity.logger().error("[{}]: Disconnecting, no installed authentication system handled: {}", localAddrString, authRequireEvent);
 									return;
 								}
 								
 								if(resp == AuthResponse.DENY) {
 									sendErrorCode(ctx, HandshakePacketTypes.SERVER_ERROR_CUSTOM_MESSAGE, authRequireEvent.getKickMessage())
-										.addListener(ChannelFutureListener.CLOSE);
+											.addListener(ChannelFutureListener.CLOSE);
 									return;
 								}
 								
 								AuthMethod type = authRequireEvent.getUseAuthType();
 								if(type == null) {
 									sendErrorCode(ctx, HandshakePacketTypes.SERVER_ERROR_CUSTOM_MESSAGE, "IsAuthRequiredEvent was not fully handled")
-										.addListener(ChannelFutureListener.CLOSE);
+											.addListener(ChannelFutureListener.CLOSE);
 									EaglerXVelocity.logger().error("[{}]: Disconnecting, no authentication method provided by handler", localAddrString);
 									return;
 								}
@@ -517,7 +557,7 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 								int typeId = getAuthMethodId(type);
 								if(typeId == -1) {
 									sendErrorCode(ctx, HandshakePacketTypes.SERVER_ERROR_CUSTOM_MESSAGE, "Unsupported authentication method resolved")
-										.addListener(ChannelFutureListener.CLOSE);
+											.addListener(ChannelFutureListener.CLOSE);
 									EaglerXVelocity.logger().error("[{}]: Disconnecting, unsupported AuthMethod: {}", localAddrString, type);
 									return;
 								}
@@ -531,7 +571,7 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 								}else {
 									if(authRequireEvent.getUseAuthType() == null) {
 										sendErrorCode(ctx, HandshakePacketTypes.SERVER_ERROR_CUSTOM_MESSAGE, "IsAuthRequiredEvent was not fully handled")
-											.addListener(ChannelFutureListener.CLOSE);
+												.addListener(ChannelFutureListener.CLOSE);
 										EaglerXVelocity.logger().error("[{}]: Disconnecting, no authentication method provided by handler", localAddrString);
 										return;
 									}
@@ -568,24 +608,23 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 					clientLoginState = HandshakePacketTypes.STATE_STALLING;
 					
 					int strlen = buffer.readUnsignedByte();
-					clientUsername = buffer.readCharSequence(strlen, StandardCharsets.US_ASCII);
+					clientUsername = buffer.readCharSequence(strlen, StandardCharsets.US_ASCII).toString();
 					
-					String usrs = clientUsername.toString();
-					if(!usrs.equals(usrs.replaceAll("[^A-Za-z0-9_]", "_").trim())) {
+					if(!clientUsername.equals(clientUsername.replaceAll("[^A-Za-z0-9_]", "_"))) {
 						sendLoginDenied(ctx, "Invalid characters in username")
-							.addListener(ChannelFutureListener.CLOSE);
+								.addListener(ChannelFutureListener.CLOSE);
 						return;
 					}
 					
 					if(clientUsername.length() < 3) {
 						sendLoginDenied(ctx, "Username must be at least 3 characters")
-							.addListener(ChannelFutureListener.CLOSE);
+								.addListener(ChannelFutureListener.CLOSE);
 						return;
 					}
 					
 					if(clientUsername.length() > 16) {
 						sendLoginDenied(ctx, "Username must be under 16 characters")
-							.addListener(ChannelFutureListener.CLOSE);
+								.addListener(ChannelFutureListener.CLOSE);
 						return;
 					}
 					
@@ -603,10 +642,27 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 					clientUUID = UUID.nameUUIDFromBytes(uuidHashGenerator);
 					
 					strlen = buffer.readUnsignedByte();
-					clientRequestedServer = buffer.readCharSequence(strlen, StandardCharsets.US_ASCII);
+					clientRequestedServer = buffer.readCharSequence(strlen, StandardCharsets.US_ASCII).toString();
 					strlen = buffer.readUnsignedByte();
 					clientAuthPassword = new byte[strlen];
 					buffer.readBytes(clientAuthPassword);
+					
+					if(clientProtocolVersion >= 4) {
+						clientEnableCookie = buffer.readBoolean();
+						strlen = buffer.readUnsignedByte();
+						if(clientEnableCookie && strlen > 0) {
+							clientCookieData = new byte[strlen];
+							buffer.readBytes(clientCookieData);
+						}else {
+							if(strlen > 0) {
+								throw new IllegalArgumentException("Unexpected cookie");
+							}
+							clientCookieData = null;
+						}
+					}else {
+						clientEnableCookie = false;
+						clientCookieData = null;
+					}
 					
 					if(buffer.isReadable()) {
 						throw new IllegalArgumentException("Packet too long");
@@ -615,15 +671,14 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 					Runnable continueThread = () -> {
 						
 						final VelocityServer bungee = EaglerXVelocity.proxy();
-						String usernameStr = clientUsername.toString();
-						if (bungee.getPlayer(usernameStr).isPresent()) {
+						if (bungee.getPlayer(clientUsername).isPresent()) {
 							sendLoginDenied(ctx, LegacyComponentSerializer.legacySection().serialize(GlobalTranslator.render(Component.translatable("velocity.error.already-connected-proxy"), Locale.getDefault())))
-								.addListener(ChannelFutureListener.CLOSE);
+									.addListener(ChannelFutureListener.CLOSE);
 							return;
 						}
 						
 						clientLoginState = HandshakePacketTypes.STATE_CLIENT_LOGIN;
-						ByteBuf buf = Unpooled.buffer();
+						ByteBuf buf = ctx.alloc().buffer();
 						buf.writeByte(HandshakePacketTypes.PROTOCOL_SERVER_ALLOW_LOGIN);
 						buf.writeByte(clientUsername.length());
 						buf.writeCharSequence(clientUsername, StandardCharsets.US_ASCII);
@@ -635,53 +690,112 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 					EaglerXVelocity eaglerXBungee = EaglerXVelocity.getEagler();
 					EaglerAuthConfig authConfig = eaglerXBungee.getConfig().getAuthConfig();
 					
-					if(authConfig.isEnableAuthentication() && clientAuth) {
-						if(clientAuthPassword.length == 0) {
-							sendLoginDenied(ctx, "Client provided no authentication code")
-								.addListener(ChannelFutureListener.CLOSE);
-							return;
-						}else {
-							try {
-								EaglercraftHandleAuthPasswordEvent handleEvent = new EaglercraftHandleAuthPasswordEvent(
-										conf, remoteAddress, authRequireEvent.getOriginHeader(), clientAuthUsername,
-										authRequireEvent.getSaltingData(), clientUsername, clientUUID, clientAuthPassword,
-										authRequireEvent.getUseAuthType(), authRequireEvent.getAuthMessage(),
-										(Object) authRequireEvent.getAuthAttachment(), clientRequestedServer.toString(),
-										(handleAuthEvent) -> {
-									
-									if(handleAuthEvent.getLoginAllowed() != EaglercraftHandleAuthPasswordEvent.AuthResponse.ALLOW) {
-										sendLoginDenied(ctx, handleAuthEvent.getLoginDeniedMessage()).addListener(ChannelFutureListener.CLOSE);
-										return;
-									}
-									
-									clientUsername = handleAuthEvent.getProfileUsername();
-									clientUUID = handleAuthEvent.getProfileUUID();
-									
-									String texPropOverrideValue = handleAuthEvent.getApplyTexturesPropertyValue();
-									if(texPropOverrideValue != null) {
-										String texPropOverrideSig = handleAuthEvent.getApplyTexturesPropertySignature();
-										texturesOverrideProperty = new Property("textures", texPropOverrideValue, texPropOverrideSig);
-									}
-									
-									overrideEaglerToVanillaSkins = handleAuthEvent.isOverrideEaglerToVanillaSkins();
-									
+					if(authConfig.isEnableAuthentication()) {
+						if(clientAuth && clientAuthPassword.length > 0) {
+							EaglercraftHandleAuthPasswordEvent handleEvent = new EaglercraftHandleAuthPasswordEvent(
+									conf, remoteAddress, authRequireEvent.getOriginHeader(), clientAuthUsername,
+									authRequireEvent.getSaltingData(), clientUsername, clientUUID,
+									clientAuthPassword, clientEnableCookie, clientCookieData,
+									authRequireEvent.getUseAuthType(), authRequireEvent.getAuthMessage(),
+									(Object) authRequireEvent.getAuthAttachment(), clientRequestedServer,
+									(handleAuthEvent) -> {
+								
+								if(handleAuthEvent.getLoginAllowed() != EaglercraftHandleAuthPasswordEvent.AuthResponse.ALLOW) {
+									sendLoginDenied(ctx, handleAuthEvent.getLoginDeniedMessage()).addListener(ChannelFutureListener.CLOSE);
+									return;
+								}
+								
+								clientUsername = handleAuthEvent.getProfileUsername();
+								clientUUID = handleAuthEvent.getProfileUUID();
+								
+								String texPropOverrideValue = handleAuthEvent.getApplyTexturesPropertyValue();
+								if(texPropOverrideValue != null) {
+									String texPropOverrideSig = handleAuthEvent.getApplyTexturesPropertySignature();
+									texturesOverrideProperty = new Property("textures", texPropOverrideValue, texPropOverrideSig);
+								}
+								
+								overrideEaglerToVanillaSkins = handleAuthEvent.isOverrideEaglerToVanillaSkins();
+								
+								continueThread.run();
+							});
+							
+							if(authConfig.isUseBuiltInAuthentication()) {
+								DefaultAuthSystem authSystem = eaglerXBungee.getAuthService();
+								if(authSystem != null) {
+									authSystem.handleAuthPasswordEvent(handleEvent);
+								}
+							}else {
+								eaglerXBungee.getProxy().getEventManager().fire(handleEvent).join();
+							}
+							
+							if(!handleEvent.isAsyncContinue()) {
+								handleEvent.doDirectContinue();
+							}
+						}else if(authRequireEvent.getEnableCookieAuth()) {
+							EaglercraftHandleAuthCookieEvent handleEvent = new EaglercraftHandleAuthCookieEvent(
+									conf, remoteAddress, authRequireEvent.getOriginHeader(), clientAuthUsername,
+									clientUsername, clientUUID, clientEnableCookie, clientCookieData,
+									authRequireEvent.getUseAuthType(), authRequireEvent.getAuthMessage(),
+									(Object) authRequireEvent.getAuthAttachment(),
+									clientRequestedServer, (handleAuthEvent) -> {
+								
+								EaglercraftHandleAuthCookieEvent.AuthResponse resp = handleAuthEvent.getLoginAllowed();
+								
+								if(resp == null) {
+									sendErrorCode(ctx, HandshakePacketTypes.SERVER_ERROR_CUSTOM_MESSAGE, "EaglercraftHandleAuthCookieEvent was not handled")
+											.addListener(ChannelFutureListener.CLOSE);
+											EaglerXVelocity.logger().error(
+													"[{}]: Disconnecting, no installed authentication system handled: {}",
+													localAddrString, handleAuthEvent.toString());
+											return;
+								}
+								
+								if(resp == EaglercraftHandleAuthCookieEvent.AuthResponse.DENY) {
+									sendErrorCode(ctx, HandshakePacketTypes.SERVER_ERROR_CUSTOM_MESSAGE, handleAuthEvent.getLoginDeniedMessage())
+											.addListener(ChannelFutureListener.CLOSE);
+									return;
+								}
+								
+								clientUsername = handleAuthEvent.getProfileUsername();
+								clientUUID = handleAuthEvent.getProfileUUID();
+								
+								String texPropOverrideValue = handleAuthEvent.getApplyTexturesPropertyValue();
+								if(texPropOverrideValue != null) {
+									String texPropOverrideSig = handleAuthEvent.getApplyTexturesPropertySignature();
+									texturesOverrideProperty = new Property("textures", texPropOverrideValue, texPropOverrideSig);
+								}
+								
+								overrideEaglerToVanillaSkins = handleAuthEvent.isOverrideEaglerToVanillaSkins();
+								
+								if(resp == EaglercraftHandleAuthCookieEvent.AuthResponse.ALLOW) {
 									continueThread.run();
-								});
+									return;
+								}
 								
-								if(authConfig.isUseBuiltInAuthentication()) {
-									DefaultAuthSystem authSystem = eaglerXBungee.getAuthService();
-									if(authSystem != null) {
-										authSystem.handleAuthPasswordEvent(handleEvent);
-									}
+								if(!clientAuth && resp == EaglercraftHandleAuthCookieEvent.AuthResponse.REQUIRE_AUTH) {
+									sendErrorCode(ctx, HandshakePacketTypes.SERVER_ERROR_AUTHENTICATION_REQUIRED, HandshakePacketTypes.AUTHENTICATION_REQUIRED
+											+ " [" + getAuthMethodId(authRequireEvent.getUseAuthType()) + "] " + authRequireEvent.getAuthMessage())
+												.addListener(ChannelFutureListener.CLOSE);
+									EaglerXVelocity.logger().info("[{}]: Displaying authentication screen", localAddrString);
+									return;
 								}else {
-									handleEvent = eaglerXBungee.getProxy().getEventManager().fire(handleEvent).join();
+									sendErrorCode(ctx, HandshakePacketTypes.SERVER_ERROR_CUSTOM_MESSAGE, "Failed to handle authentication!")
+												.addListener(ChannelFutureListener.CLOSE);
+									return;
 								}
-								
-								if(!handleEvent.isAsyncContinue()) {
-									handleEvent.doDirectContinue();
-								}
-							}catch(Throwable t) {
-								throw new EventException(t);
+							});
+							
+							handleEvent = eaglerXBungee.getProxy().getEventManager().fire(handleEvent).join();
+							
+							if(!handleEvent.isAsyncContinue()) {
+								handleEvent.doDirectContinue();
+							}
+						}else {
+							if(authRequireEvent.getAuthRequired() != EaglercraftIsAuthRequiredEvent.AuthResponse.SKIP) {
+								sendLoginDenied(ctx, "Client provided no authentication code").addListener(ChannelFutureListener.CLOSE);
+								return;
+							}else {
+								continueThread.run();
 							}
 						}
 					}else {
@@ -691,35 +805,60 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 				}else {
 					clientLoginState = HandshakePacketTypes.STATE_CLIENT_COMPLETE;
 					sendErrorWrong(ctx, op, "STATE_CLIENT_VERSION")
-						.addListener(ChannelFutureListener.CLOSE);
+							.addListener(ChannelFutureListener.CLOSE);
 				}
 			}
 			break;
 			case HandshakePacketTypes.PROTOCOL_CLIENT_PROFILE_DATA: {
 				if(clientLoginState == HandshakePacketTypes.STATE_CLIENT_LOGIN) {
-					
-					if(profileData.size() > 12) {
-						sendErrorCode(ctx, HandshakePacketTypes.SERVER_ERROR_EXCESSIVE_PROFILE_DATA, "Too many profile data packets recieved")
-							.addListener(ChannelFutureListener.CLOSE);
-						return;
-					}
-					
-					int strlen = buffer.readUnsignedByte();
-					String dataType = buffer.readCharSequence(strlen, StandardCharsets.US_ASCII).toString();
-					strlen = buffer.readUnsignedShort();
-					byte[] readData = new byte[strlen];
-					buffer.readBytes(readData);
-					
-					if(buffer.isReadable()) {
-						throw new IllegalArgumentException("Packet too long");
-					}
-					
-					if(!profileData.containsKey(dataType)) {
-						profileData.put(dataType, readData);
+					if(clientProtocolVersion <= 3) {
+						if(profileData.size() >= 12) {
+							sendErrorCode(ctx, HandshakePacketTypes.SERVER_ERROR_EXCESSIVE_PROFILE_DATA, "Too many profile data packets recieved")
+									.addListener(ChannelFutureListener.CLOSE);
+							return;
+						}
+						int strlen = buffer.readUnsignedByte();
+						String dataType = buffer.readCharSequence(strlen, StandardCharsets.US_ASCII).toString();
+						strlen = buffer.readUnsignedShort();
+						byte[] readData = new byte[strlen];
+						buffer.readBytes(readData);
+						
+						if(buffer.isReadable()) {
+							throw new IllegalArgumentException("Packet too long");
+						}
+						
+						if(!profileData.containsKey(dataType)) {
+							profileData.put(dataType, readData);
+						}else {
+							sendErrorCode(ctx, HandshakePacketTypes.SERVER_ERROR_DUPLICATE_PROFILE_DATA, "Multiple profile data packets of the same type recieved")
+									.addListener(ChannelFutureListener.CLOSE);
+							return;
+						}
 					}else {
-						sendErrorCode(ctx, HandshakePacketTypes.SERVER_ERROR_DUPLICATE_PROFILE_DATA, "Multiple profile data packets of the same type recieved")
-							.addListener(ChannelFutureListener.CLOSE);
-						return;
+						int count = buffer.readUnsignedByte();
+						if(profileData.size() + count > 12) {
+							sendErrorCode(ctx, HandshakePacketTypes.SERVER_ERROR_EXCESSIVE_PROFILE_DATA, "Too many profile data packets recieved")
+									.addListener(ChannelFutureListener.CLOSE);
+							return;
+						}
+						for(int i = 0; i < count; ++i) {
+							int strlen = buffer.readUnsignedByte();
+							String dataType = buffer.readCharSequence(strlen, StandardCharsets.US_ASCII).toString();
+							strlen = buffer.readUnsignedShort();
+							byte[] readData = new byte[strlen];
+							buffer.readBytes(readData);
+							if(!profileData.containsKey(dataType)) {
+								profileData.put(dataType, readData);
+							}else {
+								sendErrorCode(ctx, HandshakePacketTypes.SERVER_ERROR_DUPLICATE_PROFILE_DATA, "Multiple profile data packets of the same type recieved")
+										.addListener(ChannelFutureListener.CLOSE);
+								return;
+							}
+						}
+						
+						if(buffer.isReadable()) {
+							throw new IllegalArgumentException("Packet too long");
+						}
 					}
 					
 				}else {
@@ -746,7 +885,7 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 			default:
 				clientLoginState = HandshakePacketTypes.STATE_CLIENT_COMPLETE;
 				sendErrorCode(ctx, HandshakePacketTypes.SERVER_ERROR_UNKNOWN_PACKET, "Unknown Packet #" + op)
-					.addListener(ChannelFutureListener.CLOSE);
+						.addListener(ChannelFutureListener.CLOSE);
 				break;
 			}
 		}catch(Throwable ex) {
@@ -757,7 +896,7 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 			clientLoginState = HandshakePacketTypes.STATE_CLIENT_COMPLETE;
 			sendErrorCode(ctx, HandshakePacketTypes.SERVER_ERROR_INVALID_PACKET, op == -1 ?
 					"Invalid Packet" : "Invalid Packet #" + op)
-				.addListener(ChannelFutureListener.CLOSE);
+					.addListener(ChannelFutureListener.CLOSE);
 		}
 	}
 	
@@ -775,7 +914,7 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 			
 			if (i >= conf.getMaxPlayer()) {
 				sendErrorCode(ctx, HandshakePacketTypes.SERVER_ERROR_CUSTOM_MESSAGE, "Proxy is full")
-					.addListener(ChannelFutureListener.CLOSE);
+						.addListener(ChannelFutureListener.CLOSE);
 				connectionClosed = true;
 				return;
 			}
@@ -794,6 +933,7 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 		if(addr != null) {
 			baseAddress = new InetSocketAddress(addr, baseAddress.getPort());
 		}
+		final InetSocketAddress final_baseAddress = baseAddress;
 
 		ProtocolVersion protocolVers = ProtocolVersion.getProtocolVersion(gameProtocolVersion);
 		if(!protocolVers.isSupported()) {
@@ -820,6 +960,8 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 			throw new RuntimeException(e);
 		}
 
+		con.setType(ConnectionTypes.VANILLA);
+
 		EaglerVelocityConfig eaglerConf = EaglerXVelocity.getEagler().getConfig();
 
 		EaglerUpdateConfig updateconf = eaglerConf.getUpdateConfig();
@@ -833,6 +975,30 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 		}
 		final EaglerPlayerData.ClientCertificateHolder cert = mycert;
 
+		UUID clientBrandUUID = null;
+		String clientBrandAsString = clientBrandString.toString();
+		byte[] brandUUIDBytes = profileData.get("brand_uuid_v1");
+		if(brandUUIDBytes != null) {
+			if(brandUUIDBytes.length == 16) {
+				ByteBuf buf = Unpooled.wrappedBuffer(brandUUIDBytes);
+				clientBrandUUID = new UUID(buf.readLong(), buf.readLong());
+				if (clientBrandUUID.equals(EaglerXVelocityAPIHelper.BRAND_NULL_UUID)
+						|| clientBrandUUID.equals(EaglerXVelocityAPIHelper.BRAND_PENDING_UUID)
+						|| clientBrandUUID.equals(EaglerXVelocityAPIHelper.BRAND_VANILLA_UUID)) {
+					clientBrandUUID = null;
+				}
+			}
+		}else {
+			clientBrandUUID = EaglerXVelocityAPIHelper.makeClientBrandUUIDLegacy(clientBrandAsString);
+		}
+		final UUID final_clientBrandUUID = clientBrandUUID;
+		final Map<String,byte[]> otherProfileData = new HashMap<>();
+		for(Entry<String,byte[]> etr2 : profileData.entrySet()) {
+			String str = etr2.getKey();
+			if(!profileDataStandard.contains(str)) {
+				otherProfileData.put(str, etr2.getValue());
+			}
+		}
 		InitialInboundConnection inboundCon;
 		try {
 			inboundCon = stupidConstructor.newInstance(con, cleanVhost(hostName), fakeHandshake);
@@ -873,8 +1039,8 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 			Optional<Component> disconnectReason = result.getReasonComponent();
 			if (disconnectReason.isPresent()) {
 				sendErrorCode(ctx, HandshakePacketTypes.SERVER_ERROR_CUSTOM_MESSAGE,
-						JSONComponentSerializer.json().serialize(GlobalTranslator.render(disconnectReason.get(), Locale.getDefault())))
-								.addListener(ChannelFutureListener.CLOSE);
+						GlobalTranslator.render(disconnectReason.get(), Locale.getDefault()))
+						.addListener(ChannelFutureListener.CLOSE);
 				return;
 			}
 
@@ -897,7 +1063,7 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 							if (con.isClosed()) {
 								return CompletableFuture.completedFuture(null);
 							} else {
-								GameProfile gp = profileEvent.getGameProfile();
+								GameProfile gp = profileRequestEvent.getGameProfile();
 								if(eaglerConf.getEnableIsEaglerPlayerProperty()) {
 									gp = gp.addProperty(EaglerVelocityConfig.isEaglerProperty);
 								}
@@ -918,28 +1084,31 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 									return CompletableFuture.completedFuture(null);
 								} else {
 									boolean doRegisterSkins = true;
+									boolean doForceSkins = false;
 	
-									EaglercraftRegisterSkinEvent registerSkinEvent = bungee.getEventManager().fire(new EaglercraftRegisterSkinEvent(usernameStr, clientUUID)).join();
-	
+									EaglercraftRegisterSkinEvent registerSkinEvent = bungee.getEventManager()
+											.fire(new EaglercraftRegisterSkinEvent(usernameStr, clientUUID,
+											authRequireEvent != null ? authRequireEvent.getAuthAttachment() : null)).join();
+
 									Property prop = registerSkinEvent.getForceUseMojangProfileProperty();
 									boolean useExistingProp = registerSkinEvent.getForceUseLoginResultObjectTextures();
 									if(prop != null) {
 										texturesOverrideProperty = prop;
 										overrideEaglerToVanillaSkins = true;
+										if(clientProtocolVersion >= 4 && (EaglerXVelocity.getEagler().getSkinService() instanceof SkinService)) {
+											doForceSkins = true;
+										}
 									}else {
 										if(useExistingProp) {
 											overrideEaglerToVanillaSkins = true;
 										}else {
 											byte[] custom = registerSkinEvent.getForceSetUseCustomPacket();
 											if(custom != null) {
+												profileData.remove("skin_v2");
 												profileData.put("skin_v1", custom);
 												overrideEaglerToVanillaSkins = false;
-											}else {
-												String customUrl = registerSkinEvent.getForceSetUseURL();
-												if(customUrl != null) {
-													EaglerXVelocity.getEagler().getSkinService().registerTextureToPlayerAssociation(customUrl, gp.getId());
-													doRegisterSkins = false;
-													overrideEaglerToVanillaSkins = false;
+												if(clientProtocolVersion >= 4) {
+													doForceSkins = true;
 												}
 											}
 										}
@@ -947,11 +1116,13 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 	
 									if(texturesOverrideProperty != null) {
 										gp = gp.addProperties(Arrays.asList(texturesOverrideProperty, EaglerVelocityConfig.isEaglerProperty));
+										player.setGameProfileProperties(gp.getProperties());
 									}else {
 										if(!useExistingProp) {
 											String vanillaSkin = eaglerConf.getEaglerPlayersVanillaSkin();
 											if(vanillaSkin != null) {
 												gp = gp.addProperties(Arrays.asList(eaglerConf.getEaglerPlayersVanillaSkinProperties()));
+												player.setGameProfileProperties(gp.getProperties());
 											}
 										}
 									}
@@ -973,6 +1144,9 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 															}
 														}
 														doRegisterSkins = false;
+														if(clientProtocolVersion >= 4) {
+															doForceSkins = true;
+														}
 													}catch(Throwable t) {
 													}
 													break;
@@ -982,20 +1156,29 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 									}
 	
 									if(doRegisterSkins) {
-										if(profileData.containsKey("skin_v1")) {
+										if(clientProtocolVersion >= 4 && profileData.containsKey("skin_v2")) {
 											try {
-												SkinPackets.registerEaglerPlayer(clientUUID, profileData.get("skin_v1"),
-														EaglerXVelocity.getEagler().getSkinService());
+												SkinPackets.registerEaglerPlayer(clientUUID, profileData.get("skin_v2"),
+														EaglerXVelocity.getEagler().getSkinService(), 4);
 											} catch (Throwable ex) {
 												SkinPackets.registerEaglerPlayerFallback(clientUUID, EaglerXVelocity.getEagler().getSkinService());
-												EaglerXVelocity.logger().info("[" + ctx.channel().remoteAddress() + "]: Invalid skin packet: " + ex.toString());
+												EaglerXVelocity.logger().info("[{}]: Invalid skin packet: {}", ctx.channel().remoteAddress(), ex.toString());
+											}
+										}else if(profileData.containsKey("skin_v1")) {
+											try {
+												SkinPackets.registerEaglerPlayer(clientUUID, profileData.get("skin_v1"),
+														EaglerXVelocity.getEagler().getSkinService(), 3);
+											} catch (Throwable ex) {
+												SkinPackets.registerEaglerPlayerFallback(clientUUID, EaglerXVelocity.getEagler().getSkinService());
+												EaglerXVelocity.logger().info("[{}]: Invalid skin packet: {}", ctx.channel().remoteAddress(), ex.toString());
 											}
 										}else {
 											SkinPackets.registerEaglerPlayerFallback(clientUUID, EaglerXVelocity.getEagler().getSkinService());
 										}
 									}
 	
-									EaglercraftRegisterCapeEvent registerCapeEvent = bungee.getEventManager().fire(new EaglercraftRegisterCapeEvent(usernameStr, clientUUID)).join();
+									EaglercraftRegisterCapeEvent registerCapeEvent = bungee.getEventManager().fire(new EaglercraftRegisterCapeEvent(usernameStr,
+											clientUUID, authRequireEvent != null ? authRequireEvent.getAuthAttachment() : null)).join();
 	
 									byte[] forceCape = registerCapeEvent.getForceSetUseCustomPacket();
 									if(forceCape != null) {
@@ -1008,18 +1191,44 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 													EaglerXVelocity.getEagler().getCapeService());
 										} catch (Throwable ex) {
 											CapePackets.registerEaglerPlayerFallback(clientUUID, EaglerXVelocity.getEagler().getCapeService());
-											EaglerXVelocity.logger().info("[" + ctx.channel().remoteAddress() + "]: Invalid cape packet: " + ex.toString());
+											EaglerXVelocity.logger().info("[{}]: Invalid cape packet: {}", ctx.channel().remoteAddress(), ex.toString());
 										}
 									}else {
 										CapePackets.registerEaglerPlayerFallback(clientUUID, EaglerXVelocity.getEagler().getCapeService());
 									}
 
-									EaglerXVelocity.logger().info("{} has connected", player);
-									if(conf.getEnableVoiceChat()) {
-										EaglerXVelocity.getEagler().getVoiceService().handlePlayerLoggedIn(player);
+									EaglerConnectionInstance connInstance = ctx.channel().attr(EaglerPipeline.CONNECTION_INSTANCE).get();
+									EaglerPlayerData epd = connInstance.eaglerData = new EaglerPlayerData(connInstance,
+											conf, clientProtocolVersion, gameProtocolVersion, clientBrandString,
+											clientVersionString, final_clientBrandUUID, clientUsername, clientUUID,
+											final_baseAddress, ctx.channel().attr(EaglerPipeline.ORIGIN).get(),
+											ctx.channel().attr(EaglerPipeline.USER_AGENT).get(), cert,
+											clientEnableCookie, clientCookieData, otherProfileData, player.getGameProfile());
+
+									epd.messageProtocolController = new GameProtocolMessageController(player,
+											GamePluginMessageProtocol.getByVersion(clientProtocolVersion),
+											GameProtocolMessageController.createServerHandler(clientProtocolVersion, player,
+													epd, EaglerXVelocity.getEagler()), conf.getDefragSendDelay());
+
+									if(doForceSkins) {
+										EaglerXVelocity.getEagler().getSkinService().processForceSkin(clientUUID, epd);
+									}
+									if(forceCape != null && clientProtocolVersion >= 4) {
+										EaglerXVelocity.getEagler().getCapeService().processForceCape(clientUUID, epd);
 									}
 
-									EaglerPlayerData epd = ctx.channel().attr(EaglerPipeline.CONNECTION_INSTANCE).get().eaglerData = new EaglerPlayerData(conf, ctx.channel().attr(EaglerPipeline.ORIGIN).get(), cert);
+									EaglerXVelocity.logger().info("{} has connected", player);
+									if(conf.getEnableVoiceChat()) {
+										EaglerXVelocity.getEagler().getVoiceService().handlePlayerLoggedIn(epd);
+									}
+									
+									if(clientProtocolVersion >= 4) {
+										SPacketCustomizePauseMenuV4EAG pauseMenuPkt = EaglerXVelocity.getEagler().getConfig().getPauseMenuConf().getPacket();
+										if(pauseMenuPkt != null) {
+											epd.sendEaglerMessage(pauseMenuPkt);
+										}
+									}
+									
 									if(!blockUpdate) {
 										List<EaglerPlayerData.ClientCertificateHolder> set = EaglerUpdateSvc.getCertList();
 										synchronized(set) {
@@ -1062,8 +1271,8 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 												if (reason.isPresent()) {
 													bungee.getEventManager().fireAndForget(new DisconnectEvent(player, DisconnectEvent.LoginStatus.CANCELLED_BY_PROXY));
 													sendErrorCode(ctx, HandshakePacketTypes.SERVER_ERROR_CUSTOM_MESSAGE,
-															JSONComponentSerializer.json().serialize(GlobalTranslator.render(reason.get(), Locale.getDefault())))
-																	.addListener(ChannelFutureListener.CLOSE);
+															GlobalTranslator.render(reason.get(), Locale.getDefault()))
+															.addListener(ChannelFutureListener.CLOSE);
 													return;
 												} else {
 													if (!bungee.registerConnection(player)) {
@@ -1274,13 +1483,13 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 	
 	private ChannelFuture sendLoginDenied(ChannelHandlerContext ctx, String reason) {
 		if((!isProtocolExchanged || clientProtocolVersion == 2) && reason.length() > 255) {
-			reason = reason.substring(0, 256);
+			reason = reason.substring(0, 255);
 		}else if(reason.length() > 65535) {
-			reason = reason.substring(0, 65536);
+			reason = reason.substring(0, 65535);
 		}
 		clientLoginState = HandshakePacketTypes.STATE_CLIENT_COMPLETE;
 		connectionClosed = true;
-		ByteBuf buf = Unpooled.buffer();
+		ByteBuf buf = ctx.alloc().buffer();
 		buf.writeByte(HandshakePacketTypes.PROTOCOL_SERVER_DENY_LOGIN);
 		byte[] msg = reason.getBytes(StandardCharsets.UTF_8);
 		if(!isProtocolExchanged || clientProtocolVersion == 2) {
@@ -1298,13 +1507,13 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 	
 	private ChannelFuture sendErrorCode(ChannelHandlerContext ctx, int code, String str) {
 		if((!isProtocolExchanged || clientProtocolVersion == 2) && str.length() > 255) {
-			str = str.substring(0, 256);
+			str = str.substring(0, 255);
 		}else if(str.length() > 65535) {
-			str = str.substring(0, 65536);
+			str = str.substring(0, 65535);
 		}
 		clientLoginState = HandshakePacketTypes.STATE_CLIENT_COMPLETE;
 		connectionClosed = true;
-		ByteBuf buf = Unpooled.buffer();
+		ByteBuf buf = ctx.alloc().buffer();
 		buf.writeByte(HandshakePacketTypes.PROTOCOL_SERVER_ERROR);
 		buf.writeByte(code);
 		byte[] msg = str.getBytes(StandardCharsets.UTF_8);
@@ -1315,6 +1524,14 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 		}
 		buf.writeBytes(msg);
 		return ctx.writeAndFlush(new BinaryWebSocketFrame(buf));
+	}
+	
+	private ChannelFuture sendErrorCode(ChannelHandlerContext ctx, int code, Component comp) {
+		if((!isProtocolExchanged || clientProtocolVersion == 2)) {
+			return sendErrorCode(ctx, code, LegacyComponentSerializer.legacySection().serialize(comp));
+		}else {
+			return sendErrorCode(ctx, code, JSONLegacySerializer.instance.serialize(comp));
+		}
 	}
 	
 	public void channelInactive(ChannelHandlerContext ctx) {

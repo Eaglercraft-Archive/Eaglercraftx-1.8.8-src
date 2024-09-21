@@ -3,10 +3,13 @@ package net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.config;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -27,6 +30,7 @@ import com.google.gson.JsonSyntaxException;
 import com.velocitypowered.api.util.GameProfile.Property;
 
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.EaglerXVelocity;
+import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.api.EaglerXVelocityAPIHelper;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.config.bungee.Configuration;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.config.bungee.ConfigurationProvider;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.config.bungee.YamlConfiguration;
@@ -50,7 +54,7 @@ import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.server.web.HttpCont
 public class EaglerVelocityConfig {
 	
 	public static EaglerVelocityConfig loadConfig(File directory) throws IOException {
-		Map<String, HttpContentType> contentTypes = new HashMap();
+		Map<String, HttpContentType> contentTypes = new HashMap<>();
 		
 		try(InputStream is = new FileInputStream(getConfigFile(directory, "http_mime_types.json"))) {
 			loadMimeTypes(is, contentTypes);
@@ -68,6 +72,7 @@ public class EaglerVelocityConfig {
 		
 		Configuration configYml = prov.load(getConfigFile(directory, "settings.yml"));
 		String serverName = configYml.getString("server_name", "EaglercraftXVelocity Server");
+		EaglerXVelocityAPIHelper.getTemplateGlobals().put("server_name", serverName);
 		String serverUUIDString = configYml.getString("server_uuid", null);
 		if(serverUUIDString == null) {
 			throw new IOException("You must specify a server_uuid!");
@@ -85,7 +90,7 @@ public class EaglerVelocityConfig {
 		
 		Configuration listenerYml = prov.load(getConfigFile(directory, "listeners.yml"));
 		Iterator<String> listeners = listenerYml.getKeys().iterator();
-		Map<String, EaglerListenerConfig> serverListeners = new HashMap();
+		Map<String, EaglerListenerConfig> serverListeners = new HashMap<>();
 		boolean voiceChat = false;
 		
 		while(listeners.hasNext()) {
@@ -119,6 +124,43 @@ public class EaglerVelocityConfig {
 			}
 		}
 		
+		File pauseMenuFolder = new File(directory, "pause_menu");
+		if(!pauseMenuFolder.isDirectory() && !pauseMenuFolder.mkdir()) {
+			throw new IOException("Could not create directory: " + pauseMenuFolder.getAbsolutePath());
+		}
+		
+		File pauseMenuYml = new File(pauseMenuFolder, "pause_menu.yml");
+		if(!pauseMenuYml.isFile()) {
+			try(InputStream is = EaglerVelocityConfig.class.getResourceAsStream("default_pause_menu.yml")) {
+				copyConfigFile(is, pauseMenuYml);
+			}
+			File f2 = new File(pauseMenuFolder, "server_info.html");
+			if(!f2.isFile()) {
+				try(InputStream is = EaglerVelocityConfig.class.getResourceAsStream("default_pause_menu_server_info.html")) {
+					copyConfigFile(is, f2);
+				}
+			}
+			f2 = new File(pauseMenuFolder, "test_image.png");
+			if(!f2.isFile()) {
+				try(InputStream is = EaglerVelocityConfig.class.getResourceAsStream("default_pause_menu_test_image.png")) {
+					copyBinaryFile(is, f2);
+				}
+			}
+			f2 = new File(pauseMenuFolder, "message_api_example.html");
+			if(!f2.isFile()) {
+				try(InputStream is = EaglerVelocityConfig.class.getResourceAsStream("default_message_api_example.html")) {
+					copyConfigFile(is, f2);
+				}
+			}
+			f2 = new File(pauseMenuFolder, "message_api_v1.js");
+			if(!f2.isFile()) {
+				try(InputStream is = EaglerVelocityConfig.class.getResourceAsStream("default_message_api_v1.js")) {
+					copyConfigFile(is, f2);
+				}
+			}
+		}
+		EaglerPauseMenuConfig pauseMenuConfig = EaglerPauseMenuConfig.loadConfig(prov.load(pauseMenuYml), pauseMenuFolder);
+		
 		long websocketKeepAliveTimeout = configYml.getInt("websocket_connection_timeout", 15000);
 		long websocketHandshakeTimeout = configYml.getInt("websocket_handshake_timeout", 5000);
 		long builtinHttpServerTimeout = configYml.getInt("builtin_http_server_timeout", 10000);
@@ -144,9 +186,10 @@ public class EaglerVelocityConfig {
 			eaglerPlayersVanillaSkin = null;
 		}
 		boolean enableIsEaglerPlayerProperty = configYml.getBoolean("enable_is_eagler_player_property", true);
-		Set<String> disableVoiceOnServers = new HashSet((Collection<String>)configYml.getList("disable_voice_chat_on_servers"));
+		Set<String> disableVoiceOnServers = new HashSet<>((Collection<String>)configYml.getList("disable_voice_chat_on_servers"));
 		boolean disableFNAWSkinsEverywhere = configYml.getBoolean("disable_fnaw_skins_everywhere", false);
-		Set<String> disableFNAWSkinsOnServers = new HashSet((Collection<String>)configYml.getList("disable_fnaw_skins_on_servers"));
+		Set<String> disableFNAWSkinsOnServers = new HashSet<>((Collection<String>)configYml.getList("disable_fnaw_skins_on_servers"));
+		boolean enableBackendRPCAPI = configYml.getBoolean("enable_backend_rpc_api", false);
 		
 		final EaglerVelocityConfig ret = new EaglerVelocityConfig(serverName, serverUUID, websocketKeepAliveTimeout,
 				websocketHandshakeTimeout, builtinHttpServerTimeout, websocketCompressionLevel, serverListeners,
@@ -154,7 +197,7 @@ public class EaglerVelocityConfig {
 				skinRateLimitPlayer, skinRateLimitGlobal, skinCacheURI, keepObjectsDays, keepProfilesDays, maxObjects,
 				maxProfiles, antagonistsRateLimit, sqliteDriverClass, sqliteDriverPath, eaglerPlayersVanillaSkin,
 				enableIsEaglerPlayerProperty, authConfig, updatesConfig, iceServers, voiceChat, disableVoiceOnServers,
-				disableFNAWSkinsEverywhere, disableFNAWSkinsOnServers);
+				disableFNAWSkinsEverywhere, disableFNAWSkinsOnServers, enableBackendRPCAPI, pauseMenuConfig);
 		
 		if(eaglerPlayersVanillaSkin != null) {
 			VanillaDefaultSkinProfileLoader.lookupVanillaSkinUser(ret);
@@ -181,6 +224,26 @@ public class EaglerVelocityConfig {
 		return file;
 	}
 	
+	private static void copyConfigFile(InputStream is, File file) throws IOException {
+		try(PrintWriter os = new PrintWriter(new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8))) {
+			BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
+			String line;
+			while((line = reader.readLine()) != null) {
+				os.println(line);
+			}
+		}
+	}
+	
+	private static void copyBinaryFile(InputStream is, File file) throws IOException {
+		try(OutputStream os = new FileOutputStream(file)) {
+			byte[] copyBuffer = new byte[1024];
+			int i;
+			while((i = is.read(copyBuffer)) != -1) {
+				os.write(copyBuffer, 0, i);
+			}
+		}
+	}
+	
 	private static void loadMimeTypes(InputStream file, Map<String, HttpContentType> contentTypes) throws IOException {
 		JsonObject obj = parseJsonObject(file);
 		for(Entry<String, JsonElement> etr : obj.entrySet()) {
@@ -192,7 +255,7 @@ public class EaglerVelocityConfig {
 					EaglerXVelocity.logger().warn("MIME type '{}' defines no extensions!", mime);
 					continue;
 				}
-				HashSet<String> exts = new HashSet();
+				HashSet<String> exts = new HashSet<>();
 				for(int i = 0, l = arr.size(); i < l; ++i) {
 					exts.add(arr.get(i).getAsString());
 				}
@@ -211,13 +274,13 @@ public class EaglerVelocityConfig {
 					contentTypes.put(s, typeObj);
 				}
 			}catch(Throwable t) {
-				EaglerXVelocity.logger().warn("Exception parsing MIME type '{}' - {}", mime, t.toString());
+				EaglerXVelocity.logger().warn("Exception parsing MIME type '{}' - {}", mime, t);
 			}
 		}
 	}
 	
 	private static Collection<String> loadICEServers(Configuration config) {
-		Collection<String> ret = new ArrayList(config.getList("voice_stun_servers"));
+		Collection<String> ret = new ArrayList<>((Collection<String>)config.getList("voice_stun_servers"));
 		Configuration turnServers = config.getSection("voice_turn_servers");
 		Iterator<String> turnItr = turnServers.getKeys().iterator();
 		while(turnItr.hasNext()) {
@@ -228,18 +291,9 @@ public class EaglerVelocityConfig {
 		return ret;
 	}
 	
-	@SuppressWarnings("deprecation")
 	private static JsonObject parseJsonObject(InputStream file) throws IOException {
-		StringBuilder str = new StringBuilder();
-		byte[] buffer = new byte[8192];
-		
-		int i;
-		while((i = file.read(buffer)) > 0) {
-			str.append(new String(buffer, 0, i, "UTF-8"));
-		}
-		
 		try {
-			return JsonParser.parseString(str.toString()).getAsJsonObject();
+			return JsonParser.parseReader(new InputStreamReader(file, StandardCharsets.UTF_8)).getAsJsonObject();
 		}catch(JsonSyntaxException ex) {
 			throw new IOException("Invalid JSONObject", ex);
 		}
@@ -279,6 +333,8 @@ public class EaglerVelocityConfig {
 	private final boolean disableFNAWSkinsEverywhere;
 	private final Set<String> disableFNAWSkinsOnServers;
 	private boolean isCrackedFlag;
+	private final boolean enableBackendRPCAPI;
+	private final EaglerPauseMenuConfig pauseMenuConf;
 	Property[] eaglerPlayersVanillaSkinCached = new Property[] { isEaglerProperty };
 
 	public String getServerName() {
@@ -444,6 +500,14 @@ public class EaglerVelocityConfig {
 		return disableFNAWSkinsOnServers;
 	}
 
+	public boolean getEnableBackendRPCAPI() {
+		return enableBackendRPCAPI;
+	}
+
+	public EaglerPauseMenuConfig getPauseMenuConf() {
+		return pauseMenuConf;
+	}
+
 	private EaglerVelocityConfig(String serverName, UUID serverUUID, long websocketKeepAliveTimeout,
 			long websocketHandshakeTimeout, long builtinHttpServerTimeout, int httpWebsocketCompressionLevel,
 			Map<String, EaglerListenerConfig> serverListeners, Map<String, HttpContentType> contentTypes,
@@ -453,7 +517,8 @@ public class EaglerVelocityConfig {
 			String sqliteDriverClass, String sqliteDriverPath, String eaglerPlayersVanillaSkin,
 			boolean enableIsEaglerPlayerProperty, EaglerAuthConfig authConfig, EaglerUpdateConfig updateConfig,
 			Collection<String> iceServers, boolean enableVoiceChat, Set<String> disableVoiceOnServers,
-			boolean disableFNAWSkinsEverywhere, Set<String> disableFNAWSkinsOnServers) {
+			boolean disableFNAWSkinsEverywhere, Set<String> disableFNAWSkinsOnServers, boolean enableBackendRPCAPI,
+			EaglerPauseMenuConfig pauseMenuConf) {
 		this.serverName = serverName;
 		this.serverUUID = serverUUID;
 		this.serverListeners = serverListeners;
@@ -485,6 +550,8 @@ public class EaglerVelocityConfig {
 		this.disableVoiceOnServers = disableVoiceOnServers;
 		this.disableFNAWSkinsEverywhere = disableFNAWSkinsEverywhere;
 		this.disableFNAWSkinsOnServers = disableFNAWSkinsOnServers;
+		this.enableBackendRPCAPI = enableBackendRPCAPI;
+		this.pauseMenuConf = pauseMenuConf;
 	}
 
 }

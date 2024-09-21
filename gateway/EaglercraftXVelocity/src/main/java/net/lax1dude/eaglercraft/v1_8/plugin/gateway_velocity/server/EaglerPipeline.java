@@ -8,13 +8,13 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.slf4j.Logger;
 
 import com.velocitypowered.api.proxy.Player;
-import com.velocitypowered.api.proxy.messages.ChannelIdentifier;
-import com.velocitypowered.api.proxy.messages.LegacyChannelIdentifier;
 import com.velocitypowered.proxy.connection.client.ConnectedPlayer;
+import com.velocitypowered.proxy.scheduler.VelocityScheduler;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
@@ -29,10 +29,13 @@ import io.netty.handler.codec.http.websocketx.extensions.compression.DeflateFram
 import io.netty.handler.codec.http.websocketx.extensions.compression.PerMessageDeflateServerExtensionHandshaker;
 import io.netty.util.AttributeKey;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.EaglerXVelocity;
+import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.api.EaglerXVelocityAPIHelper;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.config.EaglerVelocityConfig;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.config.EaglerListenerConfig;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.server.EaglerPlayerData.ClientCertificateHolder;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.server.web.HttpWebServer;
+import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.GameMessagePacket;
+import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.server.SPacketUpdateCertEAG;
 
 /**
  * Copyright (c) 2022-2024 lax1dude, ayunami2000. All Rights Reserved.
@@ -58,10 +61,9 @@ public class EaglerPipeline {
 	public static final AttributeKey<InetAddress> REAL_ADDRESS = AttributeKey.valueOf("RealAddress");
 	public static final AttributeKey<String> HOST = AttributeKey.valueOf("Host");
 	public static final AttributeKey<String> ORIGIN = AttributeKey.valueOf("Origin");
+	public static final AttributeKey<String> USER_AGENT = AttributeKey.valueOf("UserAgent");
 
-	public static final Collection<Channel> openChannels = new LinkedList();
-
-	public static final ChannelIdentifier UPDATE_CERT_CHANNEL = new LegacyChannelIdentifier("EAG|UpdateCert-1.8");
+	public static final Collection<Channel> openChannels = new LinkedList<>();
 
 	public static final TimerTask closeInactive = new TimerTask() {
 
@@ -75,7 +77,7 @@ public class EaglerPipeline {
 				long httpTimeout = conf.getBuiltinHttpServerTimeout();
 				List<Channel> channelsList;
 				synchronized(openChannels) {
-					long millis = System.currentTimeMillis();
+					long millis = EaglerXVelocityAPIHelper.steadyTimeMillis();
 					Iterator<Channel> channelIterator = openChannels.iterator();
 					while(channelIterator.hasNext()) {
 						Channel c = channelIterator.next();
@@ -83,7 +85,15 @@ public class EaglerPipeline {
 						long handshakeTimeoutForConnection = 500l;
 						if(i.isRegularHttp) handshakeTimeoutForConnection = httpTimeout;
 						else if(i.isWebSocket) handshakeTimeoutForConnection = handshakeTimeout;
-						if(i == null || (!i.hasBeenForwarded && millis - i.creationTime > handshakeTimeoutForConnection)
+						boolean hasTimeout = !i.hasBeenForwarded;
+						if(i.queryHandler != null) {
+							long l = i.queryHandler.getMaxAge();
+							hasTimeout = l != -1l;
+							if(hasTimeout) {
+								handshakeTimeoutForConnection = l;
+							}
+						}
+						if((hasTimeout && millis - i.creationTime > handshakeTimeoutForConnection)
 								|| millis - i.lastClientPongPacket > keepAliveTimeout || !c.isActive()) {
 							if(c.isActive()) {
 								c.close();
@@ -103,7 +113,7 @@ public class EaglerPipeline {
 							}
 						}
 					}
-					channelsList = new ArrayList(openChannels);
+					channelsList = new ArrayList<>(openChannels);
 				}
 				for(EaglerListenerConfig lst : conf.getServerListeners()) {
 					HttpWebServer srv = lst.getWebServer();
@@ -111,47 +121,88 @@ public class EaglerPipeline {
 						try {
 							srv.flushCache();
 						}catch(Throwable t) {
-							log.error("Failed to flush web server cache for: {}", lst.getAddress().toString());
+							log.error("Failed to flush web server cache for: {}", lst.getAddress());
 							t.printStackTrace();
 						}
 					}
 				}
-				if(!conf.getUpdateConfig().isBlockAllClientUpdates()) {
-					int sizeTracker = 0;
-					for(Channel c : channelsList) {
-						EaglerConnectionInstance conn = c.attr(EaglerPipeline.CONNECTION_INSTANCE).get();
-						if(conn.userConnection == null) {
-							continue;
-						}
-						EaglerPlayerData i = conn.eaglerData;
-						ClientCertificateHolder certHolder = null;
+				final int serverInfoSendRate = Math.max(conf.getPauseMenuConf().getInfoSendRate(), 1);
+				boolean blockAllClientUpdates = conf.getUpdateConfig().isBlockAllClientUpdates();
+				final AtomicInteger sizeTracker = blockAllClientUpdates ? null : new AtomicInteger(0);
+				final int rateLimitParam = conf.getUpdateConfig().getCertPacketDataRateLimit() / 4;
+				VelocityScheduler sched = EaglerXVelocity.proxy().getScheduler();
+				EaglerXVelocity plugin = EaglerXVelocity.getEagler();
+				for(Channel c : channelsList) {
+					final EaglerConnectionInstance conn = c.attr(EaglerPipeline.CONNECTION_INSTANCE).get();
+					if(conn.userConnection == null) {
+						continue;
+					}
+					final EaglerPlayerData i = conn.eaglerData;
+					boolean certToSend = false;
+					if(!blockAllClientUpdates) {
 						synchronized(i.certificatesToSend) {
-							if(i.certificatesToSend.size() > 0) {
-								Iterator<ClientCertificateHolder> itr = i.certificatesToSend.iterator();
-								certHolder = itr.next();
-								itr.remove();
-							}
-						}
-						if(certHolder != null) {
-							int identityHash = certHolder.hashCode();
-							boolean bb;
-							synchronized(i.certificatesSent) {
-								bb = i.certificatesSent.add(identityHash);
-							}
-							if(bb) {
-								conn.userConnection.sendPluginMessage(UPDATE_CERT_CHANNEL, certHolder.data);
-								sizeTracker += certHolder.data.length;
-								if(sizeTracker > (conf.getUpdateConfig().getCertPacketDataRateLimit() / 4)) {
-									break;
-								}
+							if(!i.certificatesToSend.isEmpty()) {
+								certToSend = true;
 							}
 						}
 					}
-					EaglerUpdateSvc.updateTick();	
+					boolean serverInfoToSend = false;
+					synchronized(i.serverInfoSendBuffer) {
+						if(!i.serverInfoSendBuffer.isEmpty()) {
+							serverInfoToSend = true;
+						}
+					}
+					if(certToSend || serverInfoToSend) {
+						final boolean do_certToSend = certToSend;
+						final boolean do_serverInfoToSend = serverInfoToSend;
+						sched.buildTask(plugin, () -> {
+							if(do_certToSend) {
+								ClientCertificateHolder certHolder = null;
+								synchronized(i.certificatesToSend) {
+									if(i.certificatesToSend.size() > 0) {
+										Iterator<ClientCertificateHolder> itr = i.certificatesToSend.iterator();
+										certHolder = itr.next();
+										itr.remove();
+									}
+								}
+								if(certHolder != null && sizeTracker.getAndAdd(certHolder.data.length) < rateLimitParam) {
+									int identityHash = certHolder.hashCode();
+									boolean bb;
+									synchronized(i.certificatesSent) {
+										bb = i.certificatesSent.add(identityHash);
+									}
+									if(bb) {
+										conn.eaglerData.sendEaglerMessage(new SPacketUpdateCertEAG(certHolder.data));
+									}
+								}
+							}
+							if(do_serverInfoToSend) {
+								List<GameMessagePacket> toSend = i.serverInfoSendBuffer;
+								synchronized(toSend) {
+									if(!toSend.isEmpty()) {
+										try {
+											if(serverInfoSendRate == 1) {
+												i.getEaglerMessageController().sendPacketImmediately(toSend.remove(0));
+											}else {
+												for(int j = 0; j < serverInfoSendRate; ++j) {
+													if(!toSend.isEmpty()) {
+														i.getEaglerMessageController().sendPacketImmediately(toSend.remove(0));
+													}else {
+														break;
+													}
+												}
+											}
+										}catch(Throwable t) {
+											log.error("Exception in thread  \"{}\"!", Thread.currentThread().getName(), t);
+										}
+									}
+								}
+							}
+						}).schedule();
+					}
 				}
 			}catch(Throwable t) {
-				log.error("Exception in thread \"{}\"! {}", Thread.currentThread().getName(), t.toString());
-				t.printStackTrace();
+				log.error("Exception in thread \"{}\"!", Thread.currentThread().getName(), t);
 			}
 		}
 	};

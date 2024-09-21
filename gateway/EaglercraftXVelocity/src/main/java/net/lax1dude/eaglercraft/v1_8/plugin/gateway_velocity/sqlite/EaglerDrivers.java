@@ -45,7 +45,7 @@ public class EaglerDrivers {
 				if(!driver.exists()) {
 					try {
 						URL u = new URL("https://repo1.maven.org/maven2/org/xerial/sqlite-jdbc/3.45.0.0/sqlite-jdbc-3.45.0.0.jar");
-						EaglerXVelocity.logger().info("Downloading from maven: " + u.toString());
+						EaglerXVelocity.logger().info("Downloading from maven: {}", u);
 						copyURLToFile(u, driver);
 					} catch (Throwable ex) {
 						EaglerXVelocity.logger().error("Could not download sqlite-jdbc.jar from repo1.maven.org!");
@@ -67,7 +67,7 @@ public class EaglerDrivers {
 			driversJARs.put(address, classLoader);
 		}
 		
-		Class loadedDriver;
+		Class<?> loadedDriver;
 		try {
 			loadedDriver = classLoader.loadClass(driverClass);
 		}catch(ClassNotFoundException ex) {
@@ -93,8 +93,8 @@ public class EaglerDrivers {
 		return sqlDriver;
 	}
 
-	private static final Map<String, URLClassLoader> driversJARs = new HashMap();
-	private static final Map<String, Driver> driversDrivers = new HashMap();
+	private static final Map<String, URLClassLoader> driversJARs = new HashMap<>();
+	private static final Map<String, Driver> driversDrivers = new HashMap<>();
 
 	public static Connection connectToDatabase(String address, String driverClass, String driverPath, Properties props)
 			throws SQLException {

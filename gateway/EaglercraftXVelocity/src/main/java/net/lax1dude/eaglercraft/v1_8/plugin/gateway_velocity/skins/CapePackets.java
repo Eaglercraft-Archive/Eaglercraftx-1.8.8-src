@@ -3,7 +3,9 @@ package net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.skins;
 import java.io.IOException;
 import java.util.UUID;
 
-import com.velocitypowered.proxy.connection.client.ConnectedPlayer;
+import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.GameMessagePacket;
+import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.server.SPacketOtherCapeCustomEAG;
+import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.server.SPacketOtherCapePresetEAG;
 
 /**
  * Copyright (c) 2024 lax1dude. All Rights Reserved.
@@ -24,56 +26,29 @@ public class CapePackets {
 
 	public static final int PACKET_MY_CAPE_PRESET = 0x01;
 	public static final int PACKET_MY_CAPE_CUSTOM = 0x02;
-	public static final int PACKET_GET_OTHER_CAPE = 0x03;
-	public static final int PACKET_OTHER_CAPE_PRESET = 0x04;
-	public static final int PACKET_OTHER_CAPE_CUSTOM = 0x05;
-
-	public static void processPacket(byte[] data, ConnectedPlayer sender, CapeServiceOffline capeService) throws IOException {
-		if(data.length == 0) {
-			throw new IOException("Zero-length packet recieved");
-		}
-		int packetId = (int)data[0] & 0xFF;
-		try {
-			switch(packetId) {
-			case PACKET_GET_OTHER_CAPE:
-				processGetOtherCape(data, sender, capeService);
-				break;
-			default:
-				throw new IOException("Unknown packet type " + packetId);
-			}
-		}catch(IOException ex) {
-			throw ex;
-		}catch(Throwable t) {
-			throw new IOException("Unhandled exception handling cape packet type " + packetId, t);
-		}
-	}
-
-	private static void processGetOtherCape(byte[] data, ConnectedPlayer sender, CapeServiceOffline capeService) throws IOException {
-		if(data.length != 17) {
-			throw new IOException("Invalid length " + data.length + " for skin request packet");
-		}
-		UUID searchUUID = SkinPackets.bytesToUUID(data, 1);
-		capeService.processGetOtherCape(searchUUID, sender);
-	}
 
 	public static void registerEaglerPlayer(UUID clientUUID, byte[] bs, CapeServiceOffline capeService) throws IOException {
 		if(bs.length == 0) {
 			throw new IOException("Zero-length packet recieved");
 		}
-		byte[] generatedPacket;
+		GameMessagePacket generatedPacket;
 		int packetType = (int)bs[0] & 0xFF;
 		switch(packetType) {
 		case PACKET_MY_CAPE_PRESET:
 			if(bs.length != 5) {
 				throw new IOException("Invalid length " + bs.length + " for preset cape packet");
 			}
-			generatedPacket = CapePackets.makePresetResponse(clientUUID, (bs[1] << 24) | (bs[2] << 16) | (bs[3] << 8) | (bs[4] & 0xFF));
+			generatedPacket = new SPacketOtherCapePresetEAG(clientUUID.getMostSignificantBits(),
+					clientUUID.getLeastSignificantBits(), (bs[1] << 24) | (bs[2] << 16) | (bs[3] << 8) | (bs[4] & 0xFF));
 			break;
 		case PACKET_MY_CAPE_CUSTOM:
 			if(bs.length != 1174) {
 				throw new IOException("Invalid length " + bs.length + " for custom cape packet");
 			}
-			generatedPacket = CapePackets.makeCustomResponse(clientUUID, bs, 1, 1173);
+			byte[] capePixels = new byte[bs.length - 1];
+			System.arraycopy(bs, 1, capePixels, 0, capePixels.length);
+			generatedPacket = new SPacketOtherCapeCustomEAG(clientUUID.getMostSignificantBits(),
+					clientUUID.getLeastSignificantBits(), capePixels);
 			break;
 		default:
 			throw new IOException("Unknown skin packet type: " + packetType);
@@ -82,29 +57,8 @@ public class CapePackets {
 	}
 
 	public static void registerEaglerPlayerFallback(UUID clientUUID, CapeServiceOffline capeService) {
-		capeService.registerEaglercraftPlayer(clientUUID, CapePackets.makePresetResponse(clientUUID, 0));
+		capeService.registerEaglercraftPlayer(clientUUID, new SPacketOtherCapePresetEAG(
+				clientUUID.getMostSignificantBits(), clientUUID.getLeastSignificantBits(), 0));
 	}
 
-	public static byte[] makePresetResponse(UUID uuid, int presetId) {
-		byte[] ret = new byte[1 + 16 + 4];
-		ret[0] = (byte)PACKET_OTHER_CAPE_PRESET;
-		SkinPackets.UUIDToBytes(uuid, ret, 1);
-		ret[17] = (byte)(presetId >>> 24);
-		ret[18] = (byte)(presetId >>> 16);
-		ret[19] = (byte)(presetId >>> 8);
-		ret[20] = (byte)(presetId & 0xFF);
-		return ret;
-	}
-
-	public static byte[] makeCustomResponse(UUID uuid, byte[] pixels) {
-		return makeCustomResponse(uuid, pixels, 0, pixels.length);
-	}
-
-	public static byte[] makeCustomResponse(UUID uuid, byte[] pixels, int offset, int length) {
-		byte[] ret = new byte[1 + 16 + length];
-		ret[0] = (byte)PACKET_OTHER_CAPE_CUSTOM;
-		SkinPackets.UUIDToBytes(uuid, ret, 1);
-		System.arraycopy(pixels, offset, ret, 17, length);
-		return ret;
-	}
 }

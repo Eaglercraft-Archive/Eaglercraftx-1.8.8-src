@@ -15,6 +15,7 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.EaglerXVelocity;
+import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.api.EaglerXVelocityAPIHelper;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.sqlite.EaglerDrivers;
 
 /**
@@ -304,9 +305,10 @@ public class JDBCCacheProvider implements ICacheProvider {
 
 	@Override
 	public void flush() {
-		long millis = System.currentTimeMillis();
-		if(millis - lastFlush > 1200000l) { // 30 minutes
-			lastFlush = millis;
+		long steadyMillis = EaglerXVelocityAPIHelper.steadyTimeMillis();
+		if(steadyMillis - lastFlush > 1200000l) { // 30 minutes
+			lastFlush = steadyMillis;
+			long millis = System.currentTimeMillis();
 			try {
 				Date expiryObjects = new Date(millis - keepObjectsDays * 86400000l);
 				Date expiryProfiles = new Date(millis - keepProfilesDays * 86400000l);

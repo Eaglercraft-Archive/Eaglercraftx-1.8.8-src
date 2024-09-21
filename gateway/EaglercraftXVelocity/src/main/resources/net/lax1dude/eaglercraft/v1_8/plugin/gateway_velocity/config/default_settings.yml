@@ -24,3 +24,4 @@ enable_is_eagler_player_property: true
 disable_voice_chat_on_servers: []
 disable_fnaw_skins_everywhere: false
 disable_fnaw_skins_on_servers: []
+enable_backend_rpc_api: false

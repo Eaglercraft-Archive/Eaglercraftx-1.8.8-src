@@ -246,7 +246,7 @@ public class DefaultAuthSystem {
 		this.checkRegistrationByName = databaseConnection.prepareStatement("SELECT Version, MojangUUID, MojangTextures, HashBase, HashSalt, Registered, RegisteredIP, LastLogin, LastLoginIP FROM eaglercraft_accounts WHERE MojangUsername = ?");
 		this.setLastLogin = databaseConnection.prepareStatement("UPDATE eaglercraft_accounts SET LastLogin = ?, LastLoginIP = ? WHERE MojangUUID = ?");
 		this.updateTextures = databaseConnection.prepareStatement("UPDATE eaglercraft_accounts SET MojangTextures = ? WHERE MojangUUID = ?");
-		this.authLoadingCache = new AuthLoadingCache(new AccountLoader(), 120000l);
+		this.authLoadingCache = new AuthLoadingCache<>(new AccountLoader(), 120000l);
 		this.secureRandom = new SecureRandom();
 	}
 
@@ -338,7 +338,7 @@ public class DefaultAuthSystem {
 				}
 			}
 		}catch(SQLException ex) {
-			EaglerXVelocity.logger().error("Could not update last login for \"{}\"", info.mojangUUID.toString(), ex);
+			EaglerXVelocity.logger().error("Could not update last login for \"{}\"", info.mojangUUID, ex);
 		}
 		
 		event.setLoginAllowed();
@@ -538,7 +538,7 @@ public class DefaultAuthSystem {
 							if(!playerName.equals(username)) {
 								EaglerXVelocity.logger().info(
 										"Player \"{}\" changed their username from \"{}\" to \"{}\", updating authentication database...",
-										uuid.toString(), username, playerName);
+										uuid, username, playerName);
 								synchronized(updateMojangUsername) {
 									updateMojangUsername.setString(1, playerName);
 									updateMojangUsername.setString(2, uuidString);
@@ -558,7 +558,7 @@ public class DefaultAuthSystem {
 						}
 					}
 				}catch(SQLException ex) {
-					EaglerXVelocity.logger().error("Could not look up UUID \"{}\" in auth database!", uuid.toString(), ex);
+					EaglerXVelocity.logger().error("Could not look up UUID \"{}\" in auth database!", uuid, ex);
 				}
 			}
 			if(isRegistered) {

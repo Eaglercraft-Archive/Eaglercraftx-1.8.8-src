@@ -1,5 +1,7 @@
 package net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.voice;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -8,9 +10,19 @@ import java.util.Set;
 import java.util.UUID;
 
 import com.velocitypowered.api.proxy.server.ServerInfo;
-import com.velocitypowered.proxy.connection.client.ConnectedPlayer;
 
-import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.server.EaglerPipeline;
+import net.lax1dude.eaglercraft.v1_8.plugin.backend_rpc_protocol.pkt.server.SPacketRPCEventToggledVoice;
+import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.api.EnumVoiceState;
+import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.api.event.EaglercraftVoiceStatusChangeEvent;
+import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.server.EaglerPlayerData;
+import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.server.backend_rpc_protocol.EnumSubscribedEvent;
+import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.GameMessagePacket;
+import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.server.SPacketVoiceSignalConnectV3EAG;
+import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.server.SPacketVoiceSignalConnectV4EAG;
+import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.server.SPacketVoiceSignalDescEAG;
+import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.server.SPacketVoiceSignalDisconnectPeerEAG;
+import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.server.SPacketVoiceSignalGlobalEAG;
+import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.server.SPacketVoiceSignalICEEAG;
 
 /**
  * Copyright (c) 2022-2024 lax1dude, ayunami2000. All Rights Reserved.
@@ -30,9 +42,9 @@ import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.server.EaglerPipeli
 public class VoiceServerImpl {
 
 	private final ServerInfo server;
-	private final byte[] iceServersPacket;
+	private final GameMessagePacket iceServersPacket;
 
-	private final Map<UUID, ConnectedPlayer> voicePlayers = new HashMap<>();
+	private final Map<UUID, EaglerPlayerData> voicePlayers = new HashMap<>();
 	private final Map<UUID, ExpiringSet<UUID>> voiceRequests = new HashMap<>();
 	private final Set<VoicePair> voicePairs = new HashSet<>();
 
@@ -71,27 +83,31 @@ public class VoiceServerImpl {
 		}
 	}
 
-	VoiceServerImpl(ServerInfo server, byte[] iceServersPacket) {
+	VoiceServerImpl(ServerInfo server, GameMessagePacket iceServersPacket) {
 		this.server = server;
 		this.iceServersPacket = iceServersPacket;
 	}
 
-	public void handlePlayerLoggedIn(ConnectedPlayer player) {
-		player.sendPluginMessage(VoiceService.CHANNEL, iceServersPacket);
+	public void handlePlayerLoggedIn(EaglerPlayerData player) {
+		player.sendEaglerMessage(iceServersPacket);
+		player.fireVoiceStateChange(EaglercraftVoiceStatusChangeEvent.EnumVoiceState.DISABLED);
+		if(player.getRPCEventSubscribed(EnumSubscribedEvent.TOGGLE_VOICE)) {
+			player.getRPCSessionHandler().handleVoiceStateTransition(SPacketRPCEventToggledVoice.VOICE_STATE_DISABLED);
+		}
 	}
 
-	public void handlePlayerLoggedOut(ConnectedPlayer player) {
+	public void handlePlayerLoggedOut(EaglerPlayerData player) {
 		removeUser(player.getUniqueId());
 	}
 
-	void handleVoiceSignalPacketTypeRequest(UUID player, ConnectedPlayer sender) {
+	void handleVoiceSignalPacketTypeRequest(UUID player, EaglerPlayerData sender) {
 		synchronized (voicePlayers) {
 			UUID senderUUID = sender.getUniqueId();
 			if (senderUUID.equals(player))
 				return; // prevent duplicates
 			if (!voicePlayers.containsKey(senderUUID))
 				return;
-			ConnectedPlayer targetPlayerCon = voicePlayers.get(player);
+			EaglerPlayerData targetPlayerCon = voicePlayers.get(player);
 			if (targetPlayerCon == null)
 				return;
 			VoicePair newPair = new VoicePair(player, senderUUID);
@@ -116,17 +132,31 @@ public class VoiceServerImpl {
 					voiceRequests.remove(senderUUID);
 				// send each other add data
 				voicePairs.add(newPair);
-				targetPlayerCon.sendPluginMessage(VoiceService.CHANNEL,
-						VoiceSignalPackets.makeVoiceSignalPacketConnect(senderUUID, false));
-				sender.sendPluginMessage(VoiceService.CHANNEL,
-						VoiceSignalPackets.makeVoiceSignalPacketConnect(player, true));
+				if (targetPlayerCon.getEaglerProtocol().ver <= 3) {
+					targetPlayerCon.sendEaglerMessage(new SPacketVoiceSignalConnectV3EAG(
+							senderUUID.getMostSignificantBits(), senderUUID.getLeastSignificantBits(), false, false));
+				} else {
+					targetPlayerCon.sendEaglerMessage(new SPacketVoiceSignalConnectV4EAG(
+							senderUUID.getMostSignificantBits(), senderUUID.getLeastSignificantBits(), false));
+				}
+				if (sender.getEaglerProtocol().ver <= 3) {
+					sender.sendEaglerMessage(new SPacketVoiceSignalConnectV3EAG(
+							player.getMostSignificantBits(), player.getLeastSignificantBits(), false, true));
+				} else {
+					sender.sendEaglerMessage(new SPacketVoiceSignalConnectV4EAG(
+							player.getMostSignificantBits(), player.getLeastSignificantBits(), true));
+				}
 			}
 		}
 	}
 
-	void handleVoiceSignalPacketTypeConnect(ConnectedPlayer sender) {
-		if(!EaglerPipeline.getEaglerHandle(sender).voiceConnectRateLimiter.rateLimit(VOICE_CONNECT_RATELIMIT)) {
+	void handleVoiceSignalPacketTypeConnect(EaglerPlayerData sender) {
+		if(!sender.voiceConnectRateLimiter.rateLimit(VOICE_CONNECT_RATELIMIT)) {
 			return;
+		}
+		sender.fireVoiceStateChange(EaglercraftVoiceStatusChangeEvent.EnumVoiceState.ENABLED);
+		if(sender.getRPCEventSubscribed(EnumSubscribedEvent.TOGGLE_VOICE)) {
+			sender.getRPCSessionHandler().handleVoiceStateTransition(SPacketRPCEventToggledVoice.VOICE_STATE_ENABLED);
 		}
 		synchronized (voicePlayers) {
 			if (voicePlayers.containsKey(sender.getUniqueId())) {
@@ -137,87 +167,103 @@ public class VoiceServerImpl {
 			if (hasNoOtherPlayers) {
 				return;
 			}
-			byte[] packetToBroadcast = VoiceSignalPackets.makeVoiceSignalPacketGlobal(voicePlayers.values());
-			for (ConnectedPlayer userCon : voicePlayers.values()) {
-				userCon.sendPluginMessage(VoiceService.CHANNEL, packetToBroadcast);
+			Collection<SPacketVoiceSignalGlobalEAG.UserData> userDatas = new ArrayList<>(voicePlayers.size());
+			for(EaglerPlayerData userCon : voicePlayers.values()) {
+				UUID uuid = userCon.getUniqueId();
+				userDatas.add(new SPacketVoiceSignalGlobalEAG.UserData(uuid.getMostSignificantBits(),
+						uuid.getLeastSignificantBits(), userCon.getName()));
+			}
+			GameMessagePacket packetToBroadcast = new SPacketVoiceSignalGlobalEAG(userDatas);
+			for (EaglerPlayerData userCon : voicePlayers.values()) {
+				userCon.sendEaglerMessage(packetToBroadcast);
 			}
 		}
 	}
 
-	void handleVoiceSignalPacketTypeICE(UUID player, String str, ConnectedPlayer sender) {
-		ConnectedPlayer pass;
+	void handleVoiceSignalPacketTypeICE(UUID player, byte[] str, EaglerPlayerData sender) {
+		EaglerPlayerData pass;
 		VoicePair pair = new VoicePair(player, sender.getUniqueId());
 		synchronized (voicePlayers) {
 			pass = voicePairs.contains(pair) ? voicePlayers.get(player) : null;
 		}
 		if (pass != null) {
-			pass.sendPluginMessage(VoiceService.CHANNEL,
-					VoiceSignalPackets.makeVoiceSignalPacketICE(sender.getUniqueId(), str));
+			UUID uuid = sender.getUniqueId();
+			pass.sendEaglerMessage(
+					new SPacketVoiceSignalICEEAG(uuid.getMostSignificantBits(), uuid.getLeastSignificantBits(), str));
 		}
 	}
 
-	void handleVoiceSignalPacketTypeDesc(UUID player, String str, ConnectedPlayer sender) {
-		ConnectedPlayer pass;
+	void handleVoiceSignalPacketTypeDesc(UUID player, byte[] str, EaglerPlayerData sender) {
+		EaglerPlayerData pass;
 		VoicePair pair = new VoicePair(player, sender.getUniqueId());
 		synchronized (voicePlayers) {
 			pass = voicePairs.contains(pair) ? voicePlayers.get(player) : null;
 		}
 		if (pass != null) {
-			pass.sendPluginMessage(VoiceService.CHANNEL,
-					VoiceSignalPackets.makeVoiceSignalPacketDesc(sender.getUniqueId(), str));
+			UUID uuid = sender.getUniqueId();
+			pass.sendEaglerMessage(
+					new SPacketVoiceSignalDescEAG(uuid.getMostSignificantBits(), uuid.getLeastSignificantBits(), str));
 		}
 	}
 
-	void handleVoiceSignalPacketTypeDisconnect(UUID player, ConnectedPlayer sender) {
-		if (player != null) {
-			synchronized (voicePlayers) {
-				if (!voicePlayers.containsKey(player)) {
-					return;
+	void handleVoiceSignalPacketTypeDisconnect(EaglerPlayerData sender) {
+		removeUser(sender.getUniqueId());
+	}
+
+	void handleVoiceSignalPacketTypeDisconnectPeer(UUID player, EaglerPlayerData sender) {
+		synchronized (voicePlayers) {
+			if (!voicePlayers.containsKey(player)) {
+				return;
+			}
+			Iterator<VoicePair> pairsItr = voicePairs.iterator();
+			while (pairsItr.hasNext()) {
+				VoicePair voicePair = pairsItr.next();
+				UUID target = null;
+				if (voicePair.uuid1.equals(player)) {
+					target = voicePair.uuid2;
+				} else if (voicePair.uuid2.equals(player)) {
+					target = voicePair.uuid1;
 				}
-				byte[] userDisconnectPacket = null;
-				Iterator<VoicePair> pairsItr = voicePairs.iterator();
-				while (pairsItr.hasNext()) {
-					VoicePair voicePair = pairsItr.next();
-					UUID target = null;
-					if (voicePair.uuid1.equals(player)) {
-						target = voicePair.uuid2;
-					} else if (voicePair.uuid2.equals(player)) {
-						target = voicePair.uuid1;
+				if (target != null) {
+					pairsItr.remove();
+					EaglerPlayerData conn = voicePlayers.get(target);
+					if (conn != null) {
+						conn.sendEaglerMessage(new SPacketVoiceSignalDisconnectPeerEAG(player.getMostSignificantBits(),
+								player.getLeastSignificantBits()));
 					}
-					if (target != null) {
-						pairsItr.remove();
-						ConnectedPlayer conn = voicePlayers.get(target);
-						if (conn != null) {
-							if (userDisconnectPacket == null) {
-								userDisconnectPacket = VoiceSignalPackets.makeVoiceSignalPacketDisconnect(player);
-							}
-							conn.sendPluginMessage(VoiceService.CHANNEL, userDisconnectPacket);
-						}
-						sender.sendPluginMessage(VoiceService.CHANNEL,
-								VoiceSignalPackets.makeVoiceSignalPacketDisconnect(target));
-					}
+					sender.sendEaglerMessage(new SPacketVoiceSignalDisconnectPeerEAG(target.getMostSignificantBits(),
+							target.getLeastSignificantBits()));
 				}
 			}
-		} else {
-			removeUser(sender.getUniqueId());
 		}
 	}
 
 	public void removeUser(UUID user) {
 		synchronized (voicePlayers) {
-			if (voicePlayers.remove(user) == null) {
+			EaglerPlayerData connRemove;
+			if ((connRemove = voicePlayers.remove(user)) == null) {
 				return;
+			}else {
+				connRemove.fireVoiceStateChange(EaglercraftVoiceStatusChangeEvent.EnumVoiceState.DISABLED);
+				if(connRemove.getRPCEventSubscribed(EnumSubscribedEvent.TOGGLE_VOICE)) {
+					connRemove.getRPCSessionHandler().handleVoiceStateTransition(SPacketRPCEventToggledVoice.VOICE_STATE_DISABLED);
+				}
 			}
 			voiceRequests.remove(user);
 			if (voicePlayers.size() > 0) {
-				byte[] voicePlayersPkt = VoiceSignalPackets.makeVoiceSignalPacketGlobal(voicePlayers.values());
-				for (ConnectedPlayer userCon : voicePlayers.values()) {
+				Collection<SPacketVoiceSignalGlobalEAG.UserData> userDatas = new ArrayList<>(voicePlayers.size());
+				for(EaglerPlayerData userCon : voicePlayers.values()) {
+					UUID uuid = userCon.getUniqueId();
+					userDatas.add(new SPacketVoiceSignalGlobalEAG.UserData(uuid.getMostSignificantBits(),
+							uuid.getLeastSignificantBits(), userCon.getName()));
+				}
+				GameMessagePacket voicePlayersPkt = new SPacketVoiceSignalGlobalEAG(userDatas);
+				for (EaglerPlayerData userCon : voicePlayers.values()) {
 					if (!user.equals(userCon.getUniqueId())) {
-						userCon.sendPluginMessage(VoiceService.CHANNEL, voicePlayersPkt);
+						userCon.sendEaglerMessage(voicePlayersPkt);
 					}
 				}
 			}
-			byte[] userDisconnectPacket = null;
 			Iterator<VoicePair> pairsItr = voicePairs.iterator();
 			while (pairsItr.hasNext()) {
 				VoicePair voicePair = pairsItr.next();
@@ -230,17 +276,24 @@ public class VoiceServerImpl {
 				if (target != null) {
 					pairsItr.remove();
 					if (voicePlayers.size() > 0) {
-						ConnectedPlayer conn = voicePlayers.get(target);
+						EaglerPlayerData conn = voicePlayers.get(target);
 						if (conn != null) {
-							if (userDisconnectPacket == null) {
-								userDisconnectPacket = VoiceSignalPackets.makeVoiceSignalPacketDisconnect(user);
-							}
-							conn.sendPluginMessage(VoiceService.CHANNEL, userDisconnectPacket);
+							conn.sendEaglerMessage(new SPacketVoiceSignalDisconnectPeerEAG(
+									user.getMostSignificantBits(), user.getLeastSignificantBits()));
 						}
 					}
 				}
 			}
 		}
+	}
+
+	EnumVoiceState getPlayerVoiceState(UUID uniqueId) {
+		synchronized (voicePlayers) {
+			if(voicePlayers.containsKey(uniqueId)) {
+				return EnumVoiceState.ENABLED;
+			}
+		}
+		return EnumVoiceState.DISABLED;
 	}
 
 }

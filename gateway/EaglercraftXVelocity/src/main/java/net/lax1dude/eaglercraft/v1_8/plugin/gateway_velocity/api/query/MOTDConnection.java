@@ -3,6 +3,7 @@ package net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.api.query;
 import java.net.InetAddress;
 import java.util.List;
 
+import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.api.EaglerXVelocityAPIHelper;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.config.EaglerListenerConfig;
 
 /**
@@ -31,7 +32,7 @@ public interface MOTDConnection {
 	long getConnectionTimestamp();
 	
 	public default long getConnectionAge() {
-		return System.currentTimeMillis() - getConnectionTimestamp();
+		return EaglerXVelocityAPIHelper.steadyTimeMillis() - getConnectionTimestamp();
 	}
 	
 	void sendToUser();

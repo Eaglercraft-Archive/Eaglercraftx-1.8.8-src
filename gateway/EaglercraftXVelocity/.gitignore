@@ -2,3 +2,10 @@ lib/*
 .idea/*
 *.iml
 out/*
+deps/Velocity.jar
+/.gradle/
+/.settings/
+.classpath
+.project
+/build/
+/bin/

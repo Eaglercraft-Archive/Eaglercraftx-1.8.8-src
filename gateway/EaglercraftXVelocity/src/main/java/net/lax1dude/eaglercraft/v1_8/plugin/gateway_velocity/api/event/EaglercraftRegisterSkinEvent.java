@@ -21,30 +21,29 @@ import com.velocitypowered.api.util.GameProfile.Property;
  */
 public class EaglercraftRegisterSkinEvent {
 
+	private final Object authAttachment;
 	private final String username;
 	private final UUID uuid;
 	private Property useMojangProfileProperty = null;
 	private boolean useLoginResultTextures = false;
 	private byte[] customTex = null;
-	private String customURL = null;
 
-	public EaglercraftRegisterSkinEvent(String username, UUID uuid) {
+	public EaglercraftRegisterSkinEvent(String username, UUID uuid, Object authAttachment) {
 		this.username = username;
 		this.uuid = uuid;
+		this.authAttachment = authAttachment;
 	}
 
 	public void setForceUseMojangProfileProperty(Property prop) {
 		useMojangProfileProperty = prop;
 		useLoginResultTextures = false;
 		customTex = null;
-		customURL = null;
 	}
 
 	public void setForceUseLoginResultObjectTextures(boolean b) {
 		useMojangProfileProperty = null;
 		useLoginResultTextures = b;
 		customTex = null;
-		customURL = null;
 	}
 
 	public void setForceUsePreset(int p) {
@@ -56,9 +55,11 @@ public class EaglercraftRegisterSkinEvent {
 		customTex[2] = (byte)(p >>> 16);
 		customTex[3] = (byte)(p >>> 8);
 		customTex[4] = (byte)(p & 0xFF);
-		customURL = null;
 	}
 
+	/**
+	 * @param tex raw 64x64 pixel RGBA texture (16384 bytes long)
+	 */
 	public void setForceUseCustom(int model, byte[] tex) {
 		useMojangProfileProperty = null;
 		useLoginResultTextures = false;
@@ -66,21 +67,12 @@ public class EaglercraftRegisterSkinEvent {
 		customTex[0] = (byte)2;
 		customTex[1] = (byte)model;
 		System.arraycopy(tex, 0, customTex, 2, tex.length);
-		customURL = null;
 	}
 
 	public void setForceUseCustomByPacket(byte[] packet) {
 		useMojangProfileProperty = null;
 		useLoginResultTextures = false;
 		customTex = packet;
-		customURL = null;
-	}
-
-	public void setForceUseURL(String url) {
-		useMojangProfileProperty = null;
-		useLoginResultTextures = false;
-		customTex = null;
-		customURL = url;
 	}
 
 	public String getUsername() {
@@ -103,8 +95,8 @@ public class EaglercraftRegisterSkinEvent {
 		return customTex;
 	}
 
-	public String getForceSetUseURL() {
-		return customURL;
+	public <T> T getAuthAttachment() {
+		return (T)authAttachment;
 	}
 
 }
