@@ -122,13 +122,22 @@ public class SetupWorkspace {
 
 		File repoSources = new File("./sources");
 		File repoSourcesSetup = new File(repoSources, "setup/workspace_template");
-		File repoSourcesGame = new File(repoSources, "main/java");
+		File repoSourcesMain = new File(repoSources, "main/java");
 		File repoSourcesTeaVM = new File(repoSources, "teavm/java");
 		File repoSourcesLWJGL = new File(repoSources, "lwjgl/java");
+		File repoSourcesProtoGame = new File(repoSources, "protocol-game/java");
+		File repoSourcesProtoRelay = new File(repoSources, "protocol-relay/java");
+		File repoSourcesBootMenu = new File(repoSources, "teavm-boot-menu/java");
+		File repoSourcesTeavmCRes = new File(repoSources, "teavmc-classpath/resources");
 		File repoSourcesResources = new File(repoSources, "resources");
 		File srcMainJava = new File(workspaceDirectory, "src/main/java");
+		File srcGameJava = new File(workspaceDirectory, "src/game/java");
 		File srcLWJGLJava = new File(workspaceDirectory, "src/lwjgl/java");
 		File srcTeaVMJava = new File(workspaceDirectory, "src/teavm/java");
+		File srcProtoGame = new File(workspaceDirectory, "src/protocol-game/java");
+		File srcProtoRelay = new File(workspaceDirectory, "src/protocol-relay/java");
+		File srcBootMenu = new File(workspaceDirectory, "src/teavm-boot-menu/java");
+		File srcTeavmCRes = new File(workspaceDirectory, "src/teavmc-classpath/resources");
 		File resourcesExtractTo = new File(workspaceDirectory, "desktopRuntime/resources");
 		File mcLanguagesZip = new File(mcTmpDirectory, "minecraft_languages.zip");
 		File mcLanguagesExtractTo = new File(workspaceDirectory, "javascript/lang");
@@ -174,10 +183,54 @@ public class SetupWorkspace {
 		System.out.println("Copying files from \"/sources/main/java/\" to workspace...");
 		
 		try {
-			FileUtils.copyDirectory(repoSourcesGame, srcMainJava);
+			FileUtils.copyDirectory(repoSourcesMain, srcMainJava);
 		}catch(IOException ex) {
 			System.err.println("ERROR: could not copy \"/sources/main/java/\" to \"" + srcMainJava.getAbsolutePath() + "\"!");
 			throw ex;
+		}
+		
+		if(repoSourcesProtoGame.isDirectory()) {
+			System.out.println("Copying files from \"/sources/protocol-game/java/\" to workspace...");
+			
+			try {
+				FileUtils.copyDirectory(repoSourcesProtoGame, srcProtoGame);
+			}catch(IOException ex) {
+				System.err.println("ERROR: could not copy \"/sources/protocol-game/java/\" to \"" + srcProtoGame.getAbsolutePath() + "\"!");
+				throw ex;
+			}
+		}
+
+		if(repoSourcesProtoRelay.isDirectory()) {
+			System.out.println("Copying files from \"/sources/protocol-relay/java/\" to workspace...");
+	
+			try {
+				FileUtils.copyDirectory(repoSourcesProtoRelay, srcProtoRelay);
+			}catch(IOException ex) {
+				System.err.println("ERROR: could not copy \"/sources/protocol-relay/java/\" to \"" + srcProtoRelay.getAbsolutePath() + "\"!");
+				throw ex;
+			}
+		}
+
+		if(repoSourcesTeavmCRes.isDirectory()) {
+			System.out.println("Copying files from \"/sources/teavmc-classpath/resources/\" to workspace...");
+			
+			try {
+				FileUtils.copyDirectory(repoSourcesTeavmCRes, srcTeavmCRes);
+			}catch(IOException ex) {
+				System.err.println("ERROR: could not copy \"/sources/teavmc-classpath/resources/\" to \"" + srcTeavmCRes.getAbsolutePath() + "\"!");
+				throw ex;
+			}
+		}
+
+		if(repoSourcesBootMenu.isDirectory()) {
+			System.out.println("Copying files from \"/sources/teavm-boot-menu/java/\" to workspace...");
+			
+			try {
+				FileUtils.copyDirectory(repoSourcesBootMenu, srcBootMenu);
+			}catch(IOException ex) {
+				System.err.println("ERROR: could not copy \"/sources/teavm-boot-menu/java/\" to \"" + srcBootMenu.getAbsolutePath() + "\"!");
+				throw ex;
+			}
 		}
 
 		if(repoSourcesLWJGL.isDirectory()) {
@@ -255,18 +308,18 @@ public class SetupWorkspace {
 			minecraftResJar = tmpPatchedPatchResOut;
 			
 		}else {
-			System.out.println("Extracting files from \"minecraft_src_javadoc.jar\" to \"/src/main/java/\"...");
+			System.out.println("Extracting files from \"minecraft_src_javadoc.jar\" to \"/src/game/java/\"...");
 		}
 			
 		try {
-			if(!srcMainJava.isDirectory() && !srcMainJava.mkdirs()) {
+			if(!srcGameJava.isDirectory() && !srcGameJava.mkdirs()) {
 				System.err.println("ERROR: Could not create destination directory!");
 				return false;
 			}
-			extractJarTo(minecraftJavadocTmp, srcMainJava);
+			extractJarTo(minecraftJavadocTmp, srcGameJava);
 		}catch(IOException ex) {
 			System.err.println("ERROR: could not extract \"" + minecraftJavadocTmp.getName() + ".jar\" to \"" +
-					srcMainJava.getAbsolutePath() + "\"!");
+					srcGameJava.getAbsolutePath() + "\"!");
 			throw ex;
 		}
 		
@@ -364,8 +417,11 @@ public class SetupWorkspace {
 		dotClasspathFile = dotClasspathFile.replace("${LIBRARY_CLASSPATH}", String.join(System.lineSeparator(), classpathEntries));
 		FileUtils.writeStringToFile(new File(desktopRuntimeProjectDir, ".classpath"), dotClasspathFile, "UTF-8");
 		
-		dotProjectFile = dotProjectFile.replace("${LWJGL_SRC_FOLDER}", bsToS((new File(workspaceDirectory, "src/lwjgl/java")).getAbsolutePath()));
 		dotProjectFile = dotProjectFile.replace("${MAIN_SRC_FOLDER}", bsToS((new File(workspaceDirectory, "src/main/java")).getAbsolutePath()));
+		dotProjectFile = dotProjectFile.replace("${GAME_SRC_FOLDER}", bsToS((new File(workspaceDirectory, "src/game/java")).getAbsolutePath()));
+		dotProjectFile = dotProjectFile.replace("${PROTO_GAME_SRC_FOLDER}", bsToS((new File(workspaceDirectory, "src/protocol-game/java")).getAbsolutePath()));
+		dotProjectFile = dotProjectFile.replace("${PROTO_RELAY_SRC_FOLDER}", bsToS((new File(workspaceDirectory, "src/protocol-relay/java")).getAbsolutePath()));
+		dotProjectFile = dotProjectFile.replace("${LWJGL_SRC_FOLDER}", bsToS((new File(workspaceDirectory, "src/lwjgl/java")).getAbsolutePath()));
 		FileUtils.writeStringToFile(new File(desktopRuntimeProjectDir, ".project"), dotProjectFile, "UTF-8");
 		
 		debugRuntimeLaunchConfig = debugRuntimeLaunchConfig.replace("${MAIN_CLASS_FILE}", mainClassConfFile);

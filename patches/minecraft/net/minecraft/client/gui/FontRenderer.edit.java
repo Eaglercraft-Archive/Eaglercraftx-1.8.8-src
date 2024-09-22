@@ -7,12 +7,13 @@
 
 > DELETE  2  @  2 : 6
 
-> CHANGE  4 : 11  @  4 : 6
+> CHANGE  4 : 12  @  4 : 6
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
 ~ import net.lax1dude.eaglercraft.v1_8.HString;
 ~ import net.lax1dude.eaglercraft.v1_8.IOUtils;
+~ import net.lax1dude.eaglercraft.v1_8.minecraft.FontMappingHelper;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.ImageData;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.WorldRenderer;
@@ -50,7 +51,24 @@
 ~ 	protected boolean underlineStyle;
 ~ 	protected boolean strikethroughStyle;
 
-> CHANGE  43 : 44  @  43 : 44
+> INSERT  1 : 15  @  1
+
++ 	protected static char[] codepointLookup = new char[] { 192, 193, 194, 200, 202, 203, 205, 211, 212, 213, 218, 223,
++ 			227, 245, 287, 304, 305, 338, 339, 350, 351, 372, 373, 382, 519, 0, 0, 0, 0, 0, 0, 0, 32, 33, 34, 35, 36,
++ 			37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63,
++ 			64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90,
++ 			91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113,
++ 			114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 0, 199, 252, 233, 226, 228, 224, 229, 231,
++ 			234, 235, 232, 239, 238, 236, 196, 197, 201, 230, 198, 244, 246, 242, 251, 249, 255, 214, 220, 248, 163,
++ 			216, 215, 402, 225, 237, 243, 250, 241, 209, 170, 186, 191, 174, 172, 189, 188, 161, 171, 187, 9617, 9618,
++ 			9619, 9474, 9508, 9569, 9570, 9558, 9557, 9571, 9553, 9559, 9565, 9564, 9563, 9488, 9492, 9524, 9516, 9500,
++ 			9472, 9532, 9566, 9567, 9562, 9556, 9577, 9574, 9568, 9552, 9580, 9575, 9576, 9572, 9573, 9561, 9560, 9554,
++ 			9555, 9579, 9578, 9496, 9484, 9608, 9604, 9612, 9616, 9600, 945, 946, 915, 960, 931, 963, 956, 964, 934,
++ 			920, 937, 948, 8734, 8709, 8712, 8745, 8801, 177, 8805, 8804, 8992, 8993, 247, 8776, 176, 8729, 183, 8730,
++ 			8319, 178, 9632, 0 };
++ 
+
+> CHANGE  42 : 43  @  42 : 43
 
 ~ 		ImageData bufferedimage;
 
@@ -60,7 +78,11 @@
 ~ 		int j = bufferedimage.height;
 ~ 		int[] aint = bufferedimage.pixels;
 
-> CHANGE  68 : 87  @  68 : 78
+> CHANGE  54 : 55  @  54 : 56
+
+~ 			int i = FontMappingHelper.lookupChar(parChar1, false);
+
+> CHANGE  12 : 31  @  12 : 22
 
 ~ 		Tessellator tessellator = Tessellator.getInstance();
 ~ 		WorldRenderer worldrenderer = tessellator.getWorldRenderer();
@@ -130,7 +152,20 @@
 
 ~ 				int i1 = "0123456789abcdefklmnor".indexOf(Character.toLowerCase(parString1.charAt(i + 1)));
 
-> CHANGE  133 : 134  @  133 : 134
+> CHANGE  39 : 40  @  39 : 41
+
+~ 				int j = FontMappingHelper.lookupChar(c0, false);
+
+> INSERT  2 : 3  @  2
+
++ 					char[] chars = FontRenderer.codepointLookup;
+
+> CHANGE  3 : 5  @  3 : 8
+
+~ 						j = this.fontRandom.nextInt(chars.length);
+~ 						c1 = chars[j];
+
+> CHANGE  82 : 83  @  82 : 83
 
 ~ 	private int renderStringAligned(String text, int x, int y, int wrapWidth, int color, boolean parFlag) {
 
@@ -153,7 +188,11 @@
 
 + 		return (int) this.posX;
 
-> INSERT  119 : 122  @  119
+> CHANGE  42 : 43  @  42 : 44
+
+~ 			int i = FontMappingHelper.lookupChar(character, false);
+
+> INSERT  75 : 78  @  75
 
 + 		if ((textColor & -67108864) == 0) {
 + 			textColor |= -16777216;

@@ -20,7 +20,6 @@ import org.teavm.jso.typedarrays.ArrayBuffer;
 import com.google.common.collect.ListMultimap;
 
 import net.lax1dude.eaglercraft.v1_8.Base64;
-import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.EagUtils;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformApplication;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformAssets;
@@ -28,7 +27,9 @@ import net.lax1dude.eaglercraft.v1_8.internal.PlatformUpdateSvc;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 import net.lax1dude.eaglercraft.v1_8.update.UpdateCertificate;
+import net.lax1dude.eaglercraft.v1_8.update.UpdateDataObj;
 import net.lax1dude.eaglercraft.v1_8.update.UpdateProgressStruct;
+import net.lax1dude.eaglercraft.v1_8.update.UpdateResultObj;
 import net.lax1dude.eaglercraft.v1_8.update.UpdateService;
 
 /**
@@ -61,6 +62,7 @@ public class TeaVMUpdateThread implements Runnable {
 	@Override
 	public void run() {
 		boolean success = false;
+		boolean hasCompleted = false;
 		try {
 			logger.info("Starting update thread...");
 			updateProg.clear();
@@ -68,7 +70,7 @@ public class TeaVMUpdateThread implements Runnable {
 			updateProg.statusString1 = updateCert.bundleDisplayName + " - " + updateCert.bundleDisplayVersion;
 			updateProg.statusString2 = "Please Wait";
 
-			List<String> urlListA = new ArrayList();
+			List<String> urlListA = new ArrayList<>();
 			ListMultimap<String,String> downloadSources = updateCert.getSourceMultimap();
 
 			List<String> ls = downloadSources.get("list");
@@ -115,7 +117,7 @@ public class TeaVMUpdateThread implements Runnable {
 				}
 			}
 			
-			List<String> urlListB = new ArrayList();
+			List<String> urlListB = new ArrayList<>();
 			ls = downloadSources.get("use-proxy");
 			for(int k = 0, l = ls.size(); k < l; ++k) {
 				String str1 = ls.get(k);
@@ -147,7 +149,7 @@ public class TeaVMUpdateThread implements Runnable {
 				logger.info("Verifying downloaded file...");
 				if(updateCert.isBundleDataValid(b)) {
 					logger.info("Success! Signature is valid!");
-					downloadSignedOffline(updateCert, b);
+					PlatformUpdateSvc.setUpdateResultTeaVM(UpdateResultObj.createSuccess(new UpdateDataObj(updateCert, b)));
 					success = true;
 					return;
 				}
@@ -162,11 +164,17 @@ public class TeaVMUpdateThread implements Runnable {
 		}catch(Throwable t) {
 			logger.error("Uncaught exception downloading updates!");
 			logger.error(t);
+			hasCompleted = true;
+			PlatformUpdateSvc.setUpdateResultTeaVM(UpdateResultObj.createFailure(t.toString()));
 		}finally {
 			PlatformUpdateSvc.updateThread = null;
 			updateProg.isBusy = false;
 			if(!success) {
-				logger.error("Failed to download updates! No valid URL was found for {}", updateCert.bundleDisplayVersion);
+				String str = "Failed to download updates! No valid URL was found for " + updateCert.bundleDisplayVersion;
+				logger.error(str);
+				if(!hasCompleted) {
+					PlatformUpdateSvc.setUpdateResultTeaVM(UpdateResultObj.createFailure(str));
+				}
 				Window.alert("ERROR: Failed to download updates!\n\nIf you are on a device with restricted internet access, try a different device or connect to a different WiFi network\n\nCheck the debug console for more info");
 			}else {
 				UpdateService.dismiss(updateCert);
@@ -254,7 +262,7 @@ public class TeaVMUpdateThread implements Runnable {
 	}
 
 	public static byte[] generateSignedOffline(UpdateCertificate cert, byte[] data) {
-		return generateSignedOffline(cert.rawCertData, data, EagRuntime.fixDateFormat(new SimpleDateFormat("MM/dd/yyyy")).format(new Date(cert.sigTimestamp)));
+		return generateSignedOffline(cert.rawCertData, data, (new SimpleDateFormat("MM/dd/yyyy")).format(new Date(cert.sigTimestamp)));
 	}
 
 	public static byte[] generateSignedOffline(byte[] cert, byte[] data, String date) {

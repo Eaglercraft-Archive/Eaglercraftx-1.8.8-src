@@ -19,6 +19,7 @@ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 import net.lax1dude.eaglercraft.v1_8.sp.server.EaglerChunkLoader;
 import net.lax1dude.eaglercraft.v1_8.sp.server.EaglerIntegratedServerWorker;
 import net.lax1dude.eaglercraft.v1_8.sp.server.EaglerSaveFormat;
+import net.lax1dude.eaglercraft.v1_8.sp.server.WorldsDB;
 import net.minecraft.world.chunk.storage.RegionFile;
 import net.minecraft.world.storage.WorldInfo;
 import net.minecraft.nbt.CompressedStreamTools;
@@ -47,7 +48,7 @@ public class WorldConverterMCA {
 		logger.info("Importing world \"{}\" from MCA", newName);
 		String folderName = newName.replaceAll("[\\./\"]", "_");
 		VFile2 worldDir = EaglerIntegratedServerWorker.saveFormat.getSaveLoader(folderName, false).getWorldDirectory();
-		while((new VFile2(worldDir, "level.dat")).exists() || (new VFile2(worldDir, "level.dat_old")).exists()) {
+		while(WorldsDB.newVFile(worldDir, "level.dat").exists() || WorldsDB.newVFile(worldDir, "level.dat_old").exists()) {
 			folderName += "_";
 			worldDir = EaglerIntegratedServerWorker.saveFormat.getSaveLoader(folderName, false).getWorldDirectory();
 		}
@@ -105,11 +106,11 @@ public class WorldConverterMCA {
 					EaglerOutputStream bo = new EaglerOutputStream();
 					CompressedStreamTools.writeCompressed(worldDatNBT, bo);
 					b = bo.toByteArray();
-					VFile2 ff = new VFile2(worldDir, fileName);
+					VFile2 ff = WorldsDB.newVFile(worldDir, fileName);
 					ff.setAllBytes(b);
 					prog += b.length;
 				} else if ((fileName.endsWith(".mcr") || fileName.endsWith(".mca")) && (fileName.startsWith("region/") || fileName.startsWith("DIM1/region/") || fileName.startsWith("DIM-1/region/"))) {
-					VFile2 chunkFolder = new VFile2(worldDir, fileName.startsWith("DIM1") ? "level1" : (fileName.startsWith("DIM-1") ? "level-1" : "level0"));
+					VFile2 chunkFolder = WorldsDB.newVFile(worldDir, fileName.startsWith("DIM1") ? "level1" : (fileName.startsWith("DIM-1") ? "level-1" : "level0"));
 					RegionFile mca = new RegionFile(new RandomAccessMemoryFile(b, b.length));
 					int loadChunksCount = 0;
 					for(int j = 0; j < 32; ++j) {
@@ -130,7 +131,7 @@ public class WorldConverterMCA {
 								}
 								int chunkX = chunkLevel.getInteger("xPos");
 								int chunkZ = chunkLevel.getInteger("zPos");
-								VFile2 chunkOut = new VFile2(chunkFolder, EaglerChunkLoader.getChunkPath(chunkX, chunkZ) + ".dat");
+								VFile2 chunkOut = WorldsDB.newVFile(chunkFolder, EaglerChunkLoader.getChunkPath(chunkX, chunkZ) + ".dat");
 								if(chunkOut.exists()) {
 									logger.error("{}: Chunk already exists: {}", fileName, chunkOut.getPath());
 									continue;
@@ -152,7 +153,7 @@ public class WorldConverterMCA {
 				} else if (fileName.startsWith("playerdata/") || fileName.startsWith("stats/")) {
 					//TODO: LAN player inventories
 				} else if (fileName.startsWith("data/") || fileName.startsWith("players/") || fileName.startsWith("eagler/skulls/")) {
-					VFile2 ff = new VFile2(worldDir, fileName);
+					VFile2 ff = WorldsDB.newVFile(worldDir, fileName);
 					ff.setAllBytes(b);
 					prog += b.length;
 				} else if (!fileName.equals("level.dat_mcr") && !fileName.equals("session.lock")) {
@@ -184,7 +185,7 @@ public class WorldConverterMCA {
 			zos.setComment("contains backup of world '" + folderName + "'");
 			worldFolder = EaglerIntegratedServerWorker.saveFormat.getSaveLoader(folderName, false).getWorldDirectory();
 			logger.info("Exporting world directory \"{}\" as MCA", worldFolder.getPath());
-			VFile2 vf = new VFile2(worldFolder, "level.dat");
+			VFile2 vf = WorldsDB.newVFile(worldFolder, "level.dat");
 			byte[] b;
 			int lastProgUpdate = 0;
 			int prog = 0;
@@ -196,7 +197,7 @@ public class WorldConverterMCA {
 				prog += b.length;
 				safe = true;
 			}
-			vf = new VFile2(worldFolder, "level.dat_old");
+			vf = WorldsDB.newVFile(worldFolder, "level.dat_old");
 			if(vf.exists()) {
 				zos.putNextEntry(new ZipEntry(folderName + "/level.dat_old"));
 				b = vf.getAllBytes();
@@ -212,11 +213,11 @@ public class WorldConverterMCA {
 			String[] dstFolderNames = new String[] { "/region/", "/DIM-1/region/", "/DIM1/region/" };
 			List<VFile2> fileList;
 			for(int i = 0; i < 3; ++i) {
-				vf = new VFile2(worldFolder, srcFolderNames[i]);
+				vf = WorldsDB.newVFile(worldFolder, srcFolderNames[i]);
 				fileList = vf.listFiles(true);
 				String regionFolder = folderName + dstFolderNames[i];
 				logger.info("Converting chunks in \"{}\" as MCA to \"{}\"...", vf.getPath(), regionFolder);
-				Map<String,RegionFile> regionFiles = new HashMap();
+				Map<String,RegionFile> regionFiles = new HashMap<>();
 				for(int k = 0, l = fileList.size(); k < l; ++k) {
 					VFile2 chunkFile = fileList.get(k);
 					NBTTagCompound chunkNBT;
@@ -266,7 +267,7 @@ public class WorldConverterMCA {
 				}
 			}
 			logger.info("Copying extra world data...");
-			fileList = (new VFile2(worldFolder, "data")).listFiles(false);
+			fileList = WorldsDB.newVFile(worldFolder, "data").listFiles(false);
 			for(int k = 0, l = fileList.size(); k < l; ++k) {
 				VFile2 dataFile = fileList.get(k);
 				zos.putNextEntry(new ZipEntry(folderName + "/data/" + dataFile.getName()));
@@ -278,7 +279,7 @@ public class WorldConverterMCA {
 					EaglerIntegratedServerWorker.sendProgress("singleplayer.busy.exporting.2", prog);
 				}
 			}
-			fileList = (new VFile2(worldFolder, "players")).listFiles(false);
+			fileList = WorldsDB.newVFile(worldFolder, "players").listFiles(false);
 			for(int k = 0, l = fileList.size(); k < l; ++k) {
 				VFile2 dataFile = fileList.get(k);
 				zos.putNextEntry(new ZipEntry(folderName + "/players/" + dataFile.getName()));
@@ -290,7 +291,7 @@ public class WorldConverterMCA {
 					EaglerIntegratedServerWorker.sendProgress("singleplayer.busy.exporting.2", prog);
 				}
 			}
-			fileList = (new VFile2(worldFolder, "eagler/skulls")).listFiles(false);
+			fileList = WorldsDB.newVFile(worldFolder, "eagler/skulls").listFiles(false);
 			for(int k = 0, l = fileList.size(); k < l; ++k) {
 				VFile2 dataFile = fileList.get(k);
 				zos.putNextEntry(new ZipEntry(folderName + "/eagler/skulls/" + dataFile.getName()));

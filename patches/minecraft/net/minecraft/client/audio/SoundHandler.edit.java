@@ -13,11 +13,9 @@
 
 > DELETE  2  @  2 : 3
 
-> CHANGE  1 : 13  @  1 : 11
+> CHANGE  1 : 11  @  1 : 11
 
 ~ import java.util.Set;
-~ 
-~ import net.lax1dude.eaglercraft.v1_8.internal.PlatformAudio;
 ~ 
 ~ import com.google.common.collect.Lists;
 ~ 
@@ -77,14 +75,7 @@
 ~ 		} catch (IOException e) {
 ~ 			throw new RuntimeException("Exception caught reading JSON", e);
 
-> INSERT  122 : 126  @  122
-
-+ 		if (category == SoundCategory.VOICE) {
-+ 			PlatformAudio.setMicVol(volume);
-+ 		}
-+ 
-
-> CHANGE  13 : 19  @  13 : 15
+> CHANGE  135 : 141  @  135 : 137
 
 ~ 			SoundCategory cat = soundeventaccessorcomposite.getSoundCategory();
 ~ 			for (int i = 0; i < categories.length; ++i) {

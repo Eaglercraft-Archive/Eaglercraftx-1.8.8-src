@@ -18,6 +18,7 @@ package net.lax1dude.eaglercraft.v1_8.internal;
 public enum EnumPlatformANGLE {
 
 	DEFAULT(225281 /* GLFW_ANGLE_PLATFORM_TYPE_NONE */, "default", "Default"),
+	D3D9(225284 /* GLFW_ANGLE_PLATFORM_TYPE_D3D9 */, "d3d9", "Direct3D9"),
 	D3D11(225285 /* GLFW_ANGLE_PLATFORM_TYPE_D3D11 */, "d3d11", "Direct3D11"),
 	OPENGL(225282 /* GLFW_ANGLE_PLATFORM_TYPE_OPENGL */, "opengl", "OpenGL"),
 	OPENGLES(225283 /* GLFW_ANGLE_PLATFORM_TYPE_OPENGLES */, "opengles", "OpenGL ES"),
@@ -41,6 +42,8 @@ public enum EnumPlatformANGLE {
 	public static EnumPlatformANGLE fromId(String id) {
 		if(id.equals("d3d11") || id.equals("d3d") || id.equals("dx11")) {
 			return D3D11;
+		}else if(id.equals("d3d9") || id.equals("dx9")) {
+			return D3D9;
 		}else if(id.equals("opengl")) {
 			return OPENGL;
 		}else if(id.equals("opengles")) {
@@ -58,6 +61,8 @@ public enum EnumPlatformANGLE {
 		str = str.toLowerCase();
 		if(str.contains("direct3d11") || str.contains("d3d11")) {
 			return D3D11;
+		}else if(str.contains("direct3d9") || str.contains("d3d9")) {
+			return D3D9;
 		}else if(str.contains("opengl es")) {
 			return OPENGLES;
 		}else if(str.contains("opengl")) {

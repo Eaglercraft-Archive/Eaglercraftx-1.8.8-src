@@ -29,7 +29,7 @@ public class PipelineShaderLightingPoint extends ShaderProgram<PipelineShaderLig
 
 	public static PipelineShaderLightingPoint compile(boolean shadows)
 			throws ShaderException {
-		List<String> compileFlags = new ArrayList(2);
+		List<String> compileFlags = new ArrayList<>(2);
 		if(shadows) {
 			compileFlags.add("COMPILE_PARABOLOID_SHADOW");
 		}

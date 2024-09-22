@@ -35,7 +35,11 @@
 + 			return true;
 + 		}
 
-> INSERT  21 : 25  @  21
+> CHANGE  17 : 18  @  17 : 18
+
+~ 			this.renderLivingLabel(entity, entity.getDisplayNameProfanityFilter().getFormattedText(), x, y, z, 64);
+
+> INSERT  3 : 7  @  3
 
 + 	public static void renderNameAdapter(Render r, Entity e, double x, double y, double z) {
 + 		r.renderName(e, x, y, z);

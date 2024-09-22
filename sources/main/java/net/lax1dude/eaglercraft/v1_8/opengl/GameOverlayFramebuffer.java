@@ -5,10 +5,13 @@ import net.lax1dude.eaglercraft.v1_8.internal.IRenderbufferGL;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.ByteBuffer;
 
 import static net.lax1dude.eaglercraft.v1_8.opengl.RealOpenGLEnums.*;
+
+import net.lax1dude.eaglercraft.v1_8.EagRuntime;
+
 import static net.lax1dude.eaglercraft.v1_8.internal.PlatformOpenGL.*;
 
 /**
- * Copyright (c) 2022-2023 lax1dude. All Rights Reserved.
+ * Copyright (c) 2022-2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -40,10 +43,20 @@ public class GameOverlayFramebuffer {
 
 	private int framebufferColor = -1;
 
-	public void beginRender(int width, int height) {
+	private final boolean enableDepth;
+
+	public GameOverlayFramebuffer() {
+		this(true);
+	}
+
+	public GameOverlayFramebuffer(boolean enableDepth) {
+		this.enableDepth = enableDepth;
+	}
+
+	public boolean beginRender(int width, int height) {
 		if(framebuffer == null) {
 			framebuffer = _wglCreateFramebuffer();
-			depthBuffer = _wglCreateRenderbuffer();
+			depthBuffer = enableDepth ? _wglCreateRenderbuffer() : null;
 			framebufferColor = GlStateManager.generateTexture();
 			_wglBindFramebuffer(_GL_FRAMEBUFFER, framebuffer);
 			GlStateManager.bindTexture(framebufferColor);
@@ -52,29 +65,35 @@ public class GameOverlayFramebuffer {
 			_wglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 			_wglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 			_wglFramebufferTexture2D(_GL_FRAMEBUFFER, _GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, EaglercraftGPU.getNativeTexture(framebufferColor), 0);
-			_wglBindRenderbuffer(_GL_RENDERBUFFER, depthBuffer);
-			_wglFramebufferRenderbuffer(_GL_FRAMEBUFFER, _GL_DEPTH_ATTACHMENT, _GL_RENDERBUFFER, depthBuffer);
+			if(enableDepth) {
+				_wglBindRenderbuffer(_GL_RENDERBUFFER, depthBuffer);
+				_wglFramebufferRenderbuffer(_GL_FRAMEBUFFER, _GL_DEPTH_ATTACHMENT, _GL_RENDERBUFFER, depthBuffer);
+			}
 		}
 
-		if(currentWidth != width || currentHeight != height) {
+		boolean resized = currentWidth != width || currentHeight != height;
+		if(resized) {
 			currentWidth = width;
 			currentHeight = height;
 			GlStateManager.bindTexture(framebufferColor);
-			_wglTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, (ByteBuffer)null);
-			_wglBindRenderbuffer(_GL_RENDERBUFFER, depthBuffer);
-			_wglRenderbufferStorage(_GL_RENDERBUFFER, _GL_DEPTH_COMPONENT16, width, height);
+			EaglercraftGPU.glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, (ByteBuffer)null);
+			if(enableDepth) {
+				_wglBindRenderbuffer(_GL_RENDERBUFFER, depthBuffer);
+				_wglRenderbufferStorage(_GL_RENDERBUFFER, _GL_DEPTH_COMPONENT16, width, height);
+			}
 		}
 
 		_wglBindFramebuffer(_GL_FRAMEBUFFER, framebuffer);
+		return resized;
 	}
 
 	public void endRender() {
 		_wglBindFramebuffer(_GL_FRAMEBUFFER, null);
-		age = System.currentTimeMillis();
+		age = EagRuntime.steadyTimeMillis();
 	}
 
 	public long getAge() {
-		return age == -1l ? -1l : (System.currentTimeMillis() - age);
+		return age == -1l ? -1l : (EagRuntime.steadyTimeMillis() - age);
 	}
 
 	public int getTexture() {
@@ -84,7 +103,9 @@ public class GameOverlayFramebuffer {
 	public void destroy() {
 		if(framebuffer != null) {
 			_wglDeleteFramebuffer(framebuffer);
-			_wglDeleteRenderbuffer(depthBuffer);
+			if(enableDepth) {
+				_wglDeleteRenderbuffer(depthBuffer);
+			}
 			GlStateManager.deleteTexture(framebufferColor);
 			framebuffer = null;
 			depthBuffer = null;

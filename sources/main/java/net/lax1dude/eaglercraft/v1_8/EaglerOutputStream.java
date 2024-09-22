@@ -74,6 +74,11 @@ public class EaglerOutputStream extends OutputStream {
 		return count;
 	}
 
+	public void skipBytes(int num) {
+		ensureCapacity(count + num);
+		count += num;
+	}
+
 	public void close() throws IOException {
 	}
 }

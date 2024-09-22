@@ -34,7 +34,7 @@ public class EmissiveItems implements IResourceManagerReloadListener {
 
 	private static final Logger logger = LogManager.getLogger("EmissiveItemsCSV");
 
-	private static final Map<String,float[]> entries = new HashMap();
+	private static final Map<String,float[]> entries = new HashMap<>();
 
 	public static float[] getItemEmission(ItemStack itemStack) {
 		return getItemEmission(itemStack.getItem(), itemStack.getItemDamage());

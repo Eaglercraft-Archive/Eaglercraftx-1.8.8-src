@@ -32,7 +32,7 @@ public class PipelineShaderAccelParticleForward extends ShaderProgram<PipelineSh
 				ShaderSource.accel_particle_vsh, "COMPILE_FORWARD_VSH");
 		IShaderGL accelParticleFSH = null;
 		try {
-			List<String> lst = new ArrayList(2);
+			List<String> lst = new ArrayList<>(2);
 			if(dynamicLights) {
 				lst.add("COMPILE_DYNAMIC_LIGHTS");
 			}

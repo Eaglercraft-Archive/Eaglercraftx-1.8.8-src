@@ -1,0 +1,8 @@
+{
+	"client_launch_type": "STANDARD_OFFLINE_V1",
+	"client_launch_opts_var": "eaglercraftXOpts",
+	"client_launch_opts_assetsURI_var": "assetsURI",
+	"client_launch_opts_container_var": "container",
+	"client_launch_main_func": "main",
+	"clear_cookies_before_launch": false
+}

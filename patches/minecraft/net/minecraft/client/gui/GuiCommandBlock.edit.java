@@ -5,12 +5,13 @@
 # Version: 1.0
 # Author: lax1dude
 
-> CHANGE  2 : 6  @  2 : 7
+> CHANGE  2 : 7  @  2 : 7
 
 ~ import net.lax1dude.eaglercraft.v1_8.netty.Unpooled;
 ~ import net.lax1dude.eaglercraft.v1_8.Keyboard;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
+~ import net.lax1dude.eaglercraft.v1_8.minecraft.EnumInputEvent;
 
 > DELETE  5  @  5 : 8
 
@@ -26,11 +27,23 @@
 
 ~ 	protected void mouseClicked(int parInt1, int parInt2, int parInt3) {
 
-> INSERT  46 : 50  @  46
+> INSERT  46 : 62  @  46
 
 + 
 + 	public boolean blockPTTKey() {
-+ 		return commandTextField.isFocused();
++ 		return commandTextField.isFocused() || previousOutputTextField.isFocused();
 + 	}
++ 
++ 	@Override
++ 	public boolean showCopyPasteButtons() {
++ 		return commandTextField.isFocused() || previousOutputTextField.isFocused();
++ 	}
++ 
++ 	@Override
++ 	public void fireInputEvent(EnumInputEvent event, String param) {
++ 		commandTextField.fireInputEvent(event, param);
++ 		previousOutputTextField.fireInputEvent(event, param);
++ 	}
++ 
 
 > EOF

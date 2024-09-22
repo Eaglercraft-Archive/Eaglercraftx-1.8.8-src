@@ -2,6 +2,7 @@ package net.lax1dude.eaglercraft.v1_8.sp.gui;
 
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.Keyboard;
+import net.lax1dude.eaglercraft.v1_8.minecraft.EnumInputEvent;
 import net.lax1dude.eaglercraft.v1_8.sp.relay.RelayManager;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -143,4 +144,16 @@ public class GuiScreenAddRelay extends GuiScreen {
 	public boolean blockPTTKey() {
 		return this.serverName.isFocused() || this.serverAddress.isFocused();
 	}
+
+	@Override
+	public boolean showCopyPasteButtons() {
+		return this.serverName.isFocused() || this.serverAddress.isFocused();
+	}
+
+	@Override
+	public void fireInputEvent(EnumInputEvent event, String param) {
+		this.serverName.fireInputEvent(event, param);
+		this.serverAddress.fireInputEvent(event, param);
+	}
+
 }

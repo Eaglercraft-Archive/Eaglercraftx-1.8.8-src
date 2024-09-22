@@ -5,19 +5,25 @@
 # Version: 1.0
 # Author: lax1dude
 
-> DELETE  5  @  5 : 6
-
-> CHANGE  1 : 3  @  1 : 3
+> CHANGE  5 : 7  @  5 : 9
 
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 
-> CHANGE  84 : 86  @  84 : 86
+> DELETE  5  @  5 : 6
+
+> DELETE  3  @  3 : 7
+
+> DELETE  24  @  24 : 25
+
+> CHANGE  43 : 45  @  43 : 48
 
 ~ 		for (int i = 0, l = this.executingTaskEntries.size(); i < l; ++i) {
 ~ 			this.executingTaskEntries.get(i).action.updateTask();
 
-> CHANGE  11 : 13  @  11 : 12
+> DELETE  1  @  1 : 3
+
+> CHANGE  8 : 10  @  8 : 9
 
 ~ 		for (int i = 0, l = this.taskEntries.size(); i < l; ++i) {
 ~ 			EntityAITasks.EntityAITaskEntry entityaitasks$entityaitaskentry = this.taskEntries.get(i);

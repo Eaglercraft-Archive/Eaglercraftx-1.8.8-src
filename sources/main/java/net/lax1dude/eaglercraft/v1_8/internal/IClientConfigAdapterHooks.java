@@ -25,4 +25,6 @@ public interface IClientConfigAdapterHooks {
 
 	void callCrashReportHook(String crashReport, Consumer<String> customMessageCB);
 
+	void callScreenChangedHook(String screenName, int scaledWidth, int scaledHeight, int realWidth, int realHeight, int scaleFactor);
+
 }

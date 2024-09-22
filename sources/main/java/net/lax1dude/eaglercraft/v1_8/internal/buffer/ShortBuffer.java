@@ -17,11 +17,7 @@ package net.lax1dude.eaglercraft.v1_8.internal.buffer;
  */
 public interface ShortBuffer extends Buffer {
 
-	ShortBuffer slice();
-
 	ShortBuffer duplicate();
-
-	ShortBuffer asReadOnlyBuffer();
 
 	short get();
 
@@ -45,10 +41,6 @@ public interface ShortBuffer extends Buffer {
 
 	ShortBuffer put(short[] src);
 
-	int getArrayOffset();
-
-	ShortBuffer compact();
-
 	boolean isDirect();
 
 	ShortBuffer mark();
@@ -64,5 +56,7 @@ public interface ShortBuffer extends Buffer {
 	ShortBuffer limit(int newLimit);
 
 	ShortBuffer position(int newPosition);
-	
+
+	short[] array();
+
 }

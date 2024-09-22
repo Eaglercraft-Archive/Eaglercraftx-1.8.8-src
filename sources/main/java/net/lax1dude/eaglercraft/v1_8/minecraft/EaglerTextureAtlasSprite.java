@@ -1,7 +1,6 @@
 package net.lax1dude.eaglercraft.v1_8.minecraft;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -229,10 +228,10 @@ public class EaglerTextureAtlasSprite {
 			int l = i;
 			this.height = this.width;
 			if (meta.getFrameCount() > 0) {
-				Iterator iterator = meta.getFrameIndexSet().iterator();
+				Iterator<Integer> iterator = meta.getFrameIndexSet().iterator();
 
 				while (iterator.hasNext()) {
-					int i1 = ((Integer) iterator.next()).intValue();
+					int i1 = iterator.next().intValue();
 					if (i1 >= j1) {
 						throw new RuntimeException("invalid frameindex " + i1);
 					}
@@ -243,7 +242,7 @@ public class EaglerTextureAtlasSprite {
 
 				this.animationMetadata = meta;
 			} else {
-				ArrayList arraylist = Lists.newArrayList();
+				List<AnimationFrame> arraylist = Lists.newArrayList();
 
 				for (int l1 = 0; l1 < j1; ++l1) {
 					this.framesTextureData.add(getFrameTextureData(aint, k1, l, l1));
@@ -258,10 +257,10 @@ public class EaglerTextureAtlasSprite {
 	}
 
 	public void generateMipmaps(int level) {
-		ArrayList arraylist = Lists.newArrayList();
+		List<int[][]> arraylist = Lists.newArrayList();
 
 		for (int i = 0; i < this.framesTextureData.size(); ++i) {
-			final int[][] aint = (int[][]) this.framesTextureData.get(i);
+			final int[][] aint = this.framesTextureData.get(i);
 			if (aint != null) {
 				try {
 					arraylist.add(TextureUtil.generateMipmapData(level, this.width, aint));

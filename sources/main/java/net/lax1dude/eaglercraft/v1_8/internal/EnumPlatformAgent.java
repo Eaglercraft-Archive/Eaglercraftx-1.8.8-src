@@ -35,12 +35,15 @@ public enum EnumPlatformAgent {
 	}
 	
 	public static EnumPlatformAgent getFromUA(String ua) {
+		if(ua == null) {
+			return UNKNOWN;
+		}
 		ua = " " + ua.toLowerCase();
 		if(ua.contains(" edg/")) {
 			return EDGE;
 		}else if(ua.contains(" opr/")) {
 			return OPERA;
-		}else if(ua.contains(" chrome/")) {
+		}else if(ua.contains(" chrome/") || ua.contains(" chromium/")) {
 			return CHROME;
 		}else if(ua.contains(" firefox/")) {
 			return FIREFOX;

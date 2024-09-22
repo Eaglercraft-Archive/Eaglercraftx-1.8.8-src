@@ -3,6 +3,7 @@ package net.lax1dude.eaglercraft.v1_8.sp.lan;
 import java.util.Iterator;
 import java.util.List;
 
+import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.EagUtils;
 import net.lax1dude.eaglercraft.v1_8.internal.IPCPacketData;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformWebRTC;
@@ -10,8 +11,8 @@ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 import net.lax1dude.eaglercraft.v1_8.sp.SingleplayerServerController;
 import net.lax1dude.eaglercraft.v1_8.sp.internal.ClientPlatformSingleplayer;
-import net.lax1dude.eaglercraft.v1_8.sp.relay.pkt.IPacket03ICECandidate;
-import net.lax1dude.eaglercraft.v1_8.sp.relay.pkt.IPacket04Description;
+import net.lax1dude.eaglercraft.v1_8.sp.relay.pkt.RelayPacket03ICECandidate;
+import net.lax1dude.eaglercraft.v1_8.sp.relay.pkt.RelayPacket04Description;
 
 /**
  * Copyright (c) 2022-2024 lax1dude, ayunami2000. All Rights Reserved.
@@ -47,12 +48,12 @@ class LANClientPeer {
 	protected void handleICECandidates(String candidates) {
 		if(state == SENT_DESCRIPTION) {
 			PlatformWebRTC.serverLANPeerICECandidates(clientId, candidates);
-			long millis = System.currentTimeMillis();
+			long millis = EagRuntime.steadyTimeMillis();
 			do {
 				LANPeerEvent evt;
 				if((evt = PlatformWebRTC.serverLANGetEvent(clientId)) != null) {
 					if(evt instanceof LANPeerEvent.LANPeerICECandidateEvent) {
-						LANServerController.lanRelaySocket.writePacket(new IPacket03ICECandidate(clientId, ((LANPeerEvent.LANPeerICECandidateEvent)evt).candidates));
+						LANServerController.lanRelaySocket.writePacket(new RelayPacket03ICECandidate(clientId, ((LANPeerEvent.LANPeerICECandidateEvent)evt).candidates));
 						state = SENT_ICE_CANDIDATE;
 						return;
 					}else if(evt instanceof LANPeerEvent.LANPeerDisconnectEvent) {
@@ -64,7 +65,7 @@ class LANClientPeer {
 					return;
 				}
 				EagUtils.sleep(20l);
-			}while(System.currentTimeMillis() - millis < 5000l);
+			}while(EagRuntime.steadyTimeMillis() - millis < 5000l);
 			logger.error("Getting server ICE candidates for '{}' timed out!", clientId);
 			disconnect();
 		}else {
@@ -75,12 +76,12 @@ class LANClientPeer {
 	protected void handleDescription(String description) {
 		if(state == PRE) {
 			PlatformWebRTC.serverLANPeerDescription(clientId, description);
-			long millis = System.currentTimeMillis();
+			long millis = EagRuntime.steadyTimeMillis();
 			do {
 				LANPeerEvent evt;
 				if((evt = PlatformWebRTC.serverLANGetEvent(clientId)) != null) {
 					if(evt instanceof LANPeerEvent.LANPeerDescriptionEvent) {
-						LANServerController.lanRelaySocket.writePacket(new IPacket04Description(clientId, ((LANPeerEvent.LANPeerDescriptionEvent)evt).description));
+						LANServerController.lanRelaySocket.writePacket(new RelayPacket04Description(clientId, ((LANPeerEvent.LANPeerDescriptionEvent)evt).description));
 						state = SENT_DESCRIPTION;
 						return;
 					}else if(evt instanceof LANPeerEvent.LANPeerDisconnectEvent) {
@@ -92,7 +93,7 @@ class LANClientPeer {
 					return;
 				}
 				EagUtils.sleep(20l);
-			}while(System.currentTimeMillis() - millis < 5000l);
+			}while(EagRuntime.steadyTimeMillis() - millis < 5000l);
 			logger.error("Getting server description for '{}' timed out!", clientId);
 			disconnect();
 		}else {
@@ -102,7 +103,7 @@ class LANClientPeer {
 
 	protected void handleSuccess() {
 		if(state == SENT_ICE_CANDIDATE) {
-			long millis = System.currentTimeMillis();
+			long millis = EagRuntime.steadyTimeMillis();
 			do {
 				LANPeerEvent evt;
 				while((evt = PlatformWebRTC.serverLANGetEvent(clientId)) != null && evt instanceof LANPeerEvent.LANPeerICECandidateEvent) {
@@ -122,7 +123,7 @@ class LANClientPeer {
 					return;
 				}
 				EagUtils.sleep(20l);
-			}while(System.currentTimeMillis() - millis < 5000l);
+			}while(EagRuntime.steadyTimeMillis() - millis < 5000l);
 			logger.error("Getting server description for '{}' timed out!", clientId);
 			disconnect();
 		}else {

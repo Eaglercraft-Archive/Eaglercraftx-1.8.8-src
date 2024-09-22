@@ -3,8 +3,10 @@ package net.lax1dude.eaglercraft.v1_8.profile;
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.Keyboard;
 import net.lax1dude.eaglercraft.v1_8.Mouse;
+import net.lax1dude.eaglercraft.v1_8.PointerInputAbstraction;
 import net.lax1dude.eaglercraft.v1_8.internal.EnumCursorType;
 import net.lax1dude.eaglercraft.v1_8.internal.FileChooserResult;
+import net.lax1dude.eaglercraft.v1_8.minecraft.EnumInputEvent;
 import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 import net.lax1dude.eaglercraft.v1_8.opengl.ImageData;
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -57,7 +59,6 @@ public class GuiScreenEditProfile extends GuiScreen {
 
 	public GuiScreenEditProfile(GuiScreen parent) {
 		this.parent = parent;
-		updateOptions();
 	}
 
 	public void initGui() {
@@ -66,10 +67,12 @@ public class GuiScreenEditProfile extends GuiScreen {
 		usernameField = new GuiTextField(0, fontRendererObj, width / 2 - 20 + 1, height / 6 + 24 + 1, 138, 20);
 		usernameField.setFocused(true);
 		usernameField.setText(EaglerProfile.getName());
+		usernameField.setMaxStringLength(16);
 		selectedSlot = EaglerProfile.presetSkinId == -1 ? EaglerProfile.customSkinId : (EaglerProfile.presetSkinId + EaglerProfile.customSkins.size());
 		buttonList.add(new GuiButton(0, width / 2 - 100, height / 6 + 168, I18n.format("gui.done")));
 		buttonList.add(new GuiButton(1, width / 2 - 21, height / 6 + 110, 71, 20, I18n.format("editProfile.addSkin")));
 		buttonList.add(new GuiButton(2, width / 2 - 21 + 71, height / 6 + 110, 72, 20, I18n.format("editProfile.clearSkin")));
+		updateOptions();
 	}
 
 	private void updateOptions() {
@@ -330,7 +333,7 @@ public class GuiScreenEditProfile extends GuiScreen {
 		if(EagRuntime.fileChooserHasResult()) {
 			FileChooserResult result = EagRuntime.getFileChooserResult();
 			if(result != null) {
-				ImageData loadedSkin = ImageData.loadImageFile(result.fileData);
+				ImageData loadedSkin = ImageData.loadImageFile(result.fileData, ImageData.getMimeFromType(result.fileName));
 				if(loadedSkin != null) {
 					boolean isLegacy = loadedSkin.width == 64 && loadedSkin.height == 32;
 					boolean isModern = loadedSkin.width == 64 && loadedSkin.height == 64;
@@ -367,12 +370,12 @@ public class GuiScreenEditProfile extends GuiScreen {
 						EagRuntime.showPopup("The selected image '" + result.fileName + "' is not the right size!\nEaglercraft only supports 64x32 or 64x64 skins");
 					}
 				}else {
-					EagRuntime.showPopup("The selected file '" + result.fileName + "' is not a PNG file!");
+					EagRuntime.showPopup("The selected file '" + result.fileName + "' is not a supported format!");
 				}
 			}
 		}
 		if(dropDownOpen) {
-			if(Mouse.isButtonDown(0)) {
+			if(PointerInputAbstraction.getVCursorButtonDown(0)) {
 				int skinX = width / 2 - 20;
 				int skinY = height / 6 + 103;
 				int skinWidth = 140;
@@ -530,6 +533,16 @@ public class GuiScreenEditProfile extends GuiScreen {
 			name = name.substring(0, 16);
 		}
 		EaglerProfile.setName(name);
+	}
+
+	@Override
+	public boolean showCopyPasteButtons() {
+		return usernameField.isFocused();
+	}
+
+	@Override
+	public void fireInputEvent(EnumInputEvent event, String param) {
+		usernameField.fireInputEvent(event, param);
 	}
 
 }

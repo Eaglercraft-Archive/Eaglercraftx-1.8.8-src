@@ -28,4 +28,8 @@
 
 ~ 			this.field_146253_i.add(0, new ChatLine(parInt2, (IChatComponent) list.get(j), parInt1));
 
+> CHANGE  62 : 63  @  62 : 63
+
+~ 			ScaledResolution scaledresolution = mc.scaledResolution;
+
 > EOF

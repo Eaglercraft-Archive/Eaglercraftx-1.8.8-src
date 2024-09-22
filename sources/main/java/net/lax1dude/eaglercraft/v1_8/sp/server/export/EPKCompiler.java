@@ -7,8 +7,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.zip.CRC32;
 
-import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.EaglerOutputStream;
+import net.lax1dude.eaglercraft.v1_8.EaglerZLIB;
 
 /**
  * Copyright (c) 2022-2024 lax1dude. All Rights Reserved.
@@ -28,11 +28,16 @@ import net.lax1dude.eaglercraft.v1_8.EaglerOutputStream;
 public class EPKCompiler {
 
 	private final EaglerOutputStream os;
+	private final OutputStream dos;
 	private final CRC32 checkSum = new CRC32();
 	private int lengthIntegerOffset = 0;
 	private int totalFileCount = 0;
 
 	public EPKCompiler(String name, String owner, String type) {
+		this(name, owner, type, false, true, null);
+	}
+
+	public EPKCompiler(String name, String owner, String type, boolean gzip, boolean world, String commentStr) {
 		os = new EaglerOutputStream(0x200000);
 		try {
 			
@@ -44,10 +49,11 @@ public class EPKCompiler {
 			os.write(filename.length);
 			os.write(filename);
 			
-			byte[] comment = ("\n\n #  Eagler EPK v2.0 (c) " + EagRuntime.fixDateFormat(new SimpleDateFormat("yyyy")).format(d) + " " +
-					owner + "\n #  export: on " + EagRuntime.fixDateFormat(new SimpleDateFormat("MM/dd/yyyy")).format(d) + " at " +
-					EagRuntime.fixDateFormat(new SimpleDateFormat("hh:mm:ss aa")).format(d) + "\n\n #  world name: " + name + "\n\n")
-					.getBytes(StandardCharsets.UTF_8);
+			byte[] comment = (world ? ("\n\n #  Eagler EPK v2.0 (c) "
+					+ (new SimpleDateFormat("yyyy")).format(d) + " " + owner
+					+ "\n #  export: on " + (new SimpleDateFormat("MM/dd/yyyy")).format(d)
+					+ " at " + (new SimpleDateFormat("hh:mm:ss aa")).format(d)
+					+ "\n\n #  world name: " + name + "\n\n") : commentStr).getBytes(StandardCharsets.UTF_8);
 
 			os.write((comment.length >>> 8) & 255);
 			os.write(comment.length & 255);
@@ -58,40 +64,50 @@ public class EPKCompiler {
 			lengthIntegerOffset = os.size();
 			os.write(new byte[]{(byte)255,(byte)255,(byte)255,(byte)255}); // this will be replaced with the file count
 			
-			os.write('0'); // compression type: none
+			if(gzip) {
+				os.write('G'); // compression type: gzip
+				dos = EaglerZLIB.newGZIPOutputStream(os);
+			}else {
+				os.write('0'); // compression type: none
+				dos = os;
+			}
 			
-			os.write(new byte[]{(byte)72,(byte)69,(byte)65,(byte)68}); // HEAD
-			os.write(new byte[]{(byte)9,(byte)102,(byte)105,(byte)108,(byte)101,(byte)45,(byte)116,(byte)121,
+			dos.write(new byte[]{(byte)72,(byte)69,(byte)65,(byte)68}); // HEAD
+			dos.write(new byte[]{(byte)9,(byte)102,(byte)105,(byte)108,(byte)101,(byte)45,(byte)116,(byte)121,
 					(byte)112,(byte)101}); // 9 + file-type
 			
 			byte[] typeBytes = type.getBytes(StandardCharsets.UTF_8);
-			writeInt(typeBytes.length, os);
-			os.write(typeBytes); // write type
-			os.write('>');
+			writeInt(typeBytes.length, dos);
+			dos.write(typeBytes); // write type
+			dos.write('>');
 			
 			++totalFileCount;
 			
-			os.write(new byte[]{(byte)72,(byte)69,(byte)65,(byte)68}); // HEAD
-			os.write(new byte[]{(byte)10,(byte)119,(byte)111,(byte)114,(byte)108,(byte)100,(byte)45,(byte)110,
-					(byte)97,(byte)109,(byte)101}); // 10 + world-name
+			if(world) {
+				dos.write(new byte[]{(byte)72,(byte)69,(byte)65,(byte)68}); // HEAD
+				dos.write(new byte[]{(byte)10,(byte)119,(byte)111,(byte)114,(byte)108,(byte)100,(byte)45,(byte)110,
+						(byte)97,(byte)109,(byte)101}); // 10 + world-name
+				
+				byte[] nameBytes = name.getBytes(StandardCharsets.UTF_8);
+				writeInt(nameBytes.length, dos);
+				dos.write(nameBytes); // write name
+				dos.write('>');
+				
+				++totalFileCount;
+			}
 			
-			byte[] nameBytes = name.getBytes(StandardCharsets.UTF_8);
-			writeInt(nameBytes.length, os);
-			os.write(nameBytes); // write name
-			os.write('>');
-			
-			++totalFileCount;
-			
-			os.write(new byte[]{(byte)72,(byte)69,(byte)65,(byte)68}); // HEAD
-			os.write(new byte[]{(byte)11,(byte)119,(byte)111,(byte)114,(byte)108,(byte)100,(byte)45,(byte)111,
-					(byte)119,(byte)110,(byte)101,(byte)114}); // 11 + world-owner
-			
-			byte[] ownerBytes = owner.getBytes(StandardCharsets.UTF_8);
-			writeInt(ownerBytes.length, os);
-			os.write(ownerBytes); // write owner
-			os.write('>');
-			
-			++totalFileCount;
+			if(world && owner != null) {
+				dos.write(new byte[]{(byte)72,(byte)69,(byte)65,(byte)68}); // HEAD
+				dos.write(new byte[]{(byte)11,(byte)119,(byte)111,(byte)114,(byte)108,(byte)100,(byte)45,(byte)111,
+						(byte)119,(byte)110,(byte)101,(byte)114}); // 11 + world-owner
+				
+				byte[] ownerBytes = owner.getBytes(StandardCharsets.UTF_8);
+				writeInt(ownerBytes.length, dos);
+				dos.write(ownerBytes); // write owner
+				dos.write('>');
+				
+				++totalFileCount;
+			}
 			
 		}catch(IOException ex) {
 			throw new RuntimeException("This happened somehow", ex);
@@ -105,19 +121,19 @@ public class EPKCompiler {
 			checkSum.update(dat, 0, dat.length);
 			long sum = checkSum.getValue();
 			
-			os.write(new byte[]{(byte)70,(byte)73,(byte)76,(byte)69}); // FILE
+			dos.write(new byte[]{(byte)70,(byte)73,(byte)76,(byte)69}); // FILE
 			
 			byte[] nameBytes = name.getBytes(StandardCharsets.UTF_8);
-			os.write(nameBytes.length);
-			os.write(nameBytes);
+			dos.write(nameBytes.length);
+			dos.write(nameBytes);
 			
-			writeInt(dat.length + 5, os);
-			writeInt((int)sum, os);
+			writeInt(dat.length + 5, dos);
+			writeInt((int)sum, dos);
 			
-			os.write(dat);
+			dos.write(dat);
 			
-			os.write(':');
-			os.write('>');
+			dos.write(':');
+			dos.write('>');
 			
 			++totalFileCount;
 			
@@ -128,8 +144,9 @@ public class EPKCompiler {
 	
 	public byte[] complete() {
 		try {
+			dos.write(new byte[]{(byte)69,(byte)78,(byte)68,(byte)36}); // END$
+			dos.close();
 			
-			os.write(new byte[]{(byte)69,(byte)78,(byte)68,(byte)36}); // END$
 			os.write(new byte[]{(byte)58,(byte)58,(byte)58,(byte)89,(byte)69,(byte)69,(byte)58,(byte)62}); // :::YEE:>
 			
 			byte[] ret = os.toByteArray();

@@ -98,7 +98,7 @@ public class GuiScreenRelay extends GuiScreen implements GuiYesNoCallback {
 				selected = 0;
 			}
 		} else if(btn.id == 4) {
-			long millis = System.currentTimeMillis();
+			long millis = EagRuntime.steadyTimeMillis();
 			if(millis - lastRefresh > 700l) {
 				lastRefresh = millis;
 				slots.relayManager.ping();
@@ -106,14 +106,14 @@ public class GuiScreenRelay extends GuiScreen implements GuiYesNoCallback {
 			lastRefresh += 60l;
 		} else if(btn.id == 5) {
 			slots.relayManager.loadDefaults();
-			long millis = System.currentTimeMillis();
+			long millis = EagRuntime.steadyTimeMillis();
 			if(millis - lastRefresh > 700l) {
 				lastRefresh = millis;
 				slots.relayManager.ping();
 			}
 			lastRefresh += 60l;
 		} else if(btn.id == 6) {
-			EagRuntime.downloadFileWithName("EaglerSPRelay.zip", EagRuntime.getResourceBytes("relay_download.zip"));
+			EagRuntime.downloadFileWithName("EaglerSPRelay.zip", EagRuntime.getRequiredResourceBytes("relay_download.zip"));
 		}
 	}
 
@@ -213,6 +213,12 @@ public class GuiScreenRelay extends GuiScreen implements GuiYesNoCallback {
 	public void handleMouseInput() throws IOException {
 		super.handleMouseInput();
 		this.slots.handleMouseInput();
+	}
+
+	@Override
+	public void handleTouchInput() throws IOException {
+		super.handleTouchInput();
+		this.slots.handleTouchInput();
 	}
 
 }

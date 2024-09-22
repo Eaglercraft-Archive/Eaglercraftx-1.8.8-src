@@ -56,6 +56,22 @@ public class ImageData {
 		return new ImageData(pw, ph, img, alpha);
 	}
 
+	public static String getMimeFromType(String nameOrPath) {
+		if(nameOrPath == null) return "image/png";
+		nameOrPath = nameOrPath.toLowerCase();
+		if(nameOrPath.endsWith(".png")) {
+			return "image/png";
+		}else if(nameOrPath.endsWith(".jpg") || nameOrPath.endsWith(".jpeg")) {
+			return "image/jpeg";
+		}else if(nameOrPath.endsWith(".gif")) {
+			return "image/gif";
+		}else if(nameOrPath.endsWith(".bmp")) {
+			return "image/bmp";
+		}else {
+			return "image/png"; // rip
+		}
+	}
+
 	public static final ImageData loadImageFile(String path) {
 		byte[] fileData = EagRuntime.getResourceBytes(path);
 		if(fileData != null) {
@@ -71,6 +87,23 @@ public class ImageData {
 
 	public static final ImageData loadImageFile(byte[] data) {
 		return PlatformAssets.loadImageFile(data);
+	}
+
+	public static final ImageData loadImageFile(String path, String mime) {
+		byte[] fileData = EagRuntime.getResourceBytes(path);
+		if(fileData != null) {
+			return loadImageFile(fileData, mime);
+		}else {
+			return null;
+		}
+	}
+
+	public static final ImageData loadImageFile(InputStream data, String mime) {
+		return PlatformAssets.loadImageFile(data, mime);
+	}
+
+	public static final ImageData loadImageFile(byte[] data, String mime) {
+		return PlatformAssets.loadImageFile(data, mime);
 	}
 
 	public void getRGB(int startX, int startY, int w, int h,
@@ -146,6 +179,23 @@ public class ImageData {
 	
 	public static int swapRB(int c) {
 		return (c & 0xFF00FF00) | ((c & 0x00FF0000) >>> 16) | ((c & 0x000000FF) << 16);
+	}
+	
+	public static int[] swapRB(int[] arr) {
+		for(int i = 0; i < arr.length; ++i) {
+			int j = arr[i];
+			arr[i] = (j & 0xFF00FF00) | ((j & 0x00FF0000) >>> 16) |
+					((j & 0x000000FF) << 16);
+		}
+		return arr;
+	}
+
+	public boolean isNPOT() {
+		return (width & (width - 1)) != 0 || (height & (height - 1)) != 0;
+	}
+
+	public static boolean isNPOTStatic(int w, int h) {
+		return (w & (w - 1)) != 0 || (h & (h - 1)) != 0;
 	}
 
 }

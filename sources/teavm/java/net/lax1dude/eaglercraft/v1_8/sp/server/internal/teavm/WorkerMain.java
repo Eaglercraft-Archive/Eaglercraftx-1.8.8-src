@@ -77,7 +77,7 @@ public class WorkerMain {
 		public void onMessage(String msg);
 	}
 
-	@JSBody(params = { "wb" }, script = "onmessage = function(o) { wb(o.data.msg); };")
+	@JSBody(params = { "wb" }, script = "__eaglerXOnMessage = function(o) { wb(o.data.msg); }; addEventListener(\"message\", function(evt) { __eaglerXOnMessage(evt); });")
 	private static native void setOnMessage(WorkerArgumentsPacketHandler cb);
 
 	@Async

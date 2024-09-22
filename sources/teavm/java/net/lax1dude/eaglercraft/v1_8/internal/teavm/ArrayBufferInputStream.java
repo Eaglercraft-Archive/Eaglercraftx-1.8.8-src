@@ -1,12 +1,14 @@
 package net.lax1dude.eaglercraft.v1_8.internal.teavm;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 import org.teavm.jso.typedarrays.ArrayBuffer;
+import org.teavm.jso.typedarrays.Int8Array;
 import org.teavm.jso.typedarrays.Uint8Array;
 
 /**
- * Copyright (c) 2022 lax1dude. All Rights Reserved.
+ * Copyright (c) 2022-2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -21,16 +23,17 @@ import org.teavm.jso.typedarrays.Uint8Array;
  * 
  */
 public class ArrayBufferInputStream extends InputStream {
-	
+
+	private int mark = -1;
 	private int position;
 	private int limit;
 	private final ArrayBuffer buffer;
 	private final Uint8Array typed;
-	
+
 	public ArrayBufferInputStream(ArrayBuffer bufferIn) {
 		this(bufferIn, 0, bufferIn.getByteLength());
 	}
-	
+
 	public ArrayBufferInputStream(ArrayBuffer bufferIn, int off, int len) {
 		if(off + len > bufferIn.getByteLength()) {
 			throw new IllegalArgumentException("offset " + off + " and length " + len + " are out of bounds for a "
@@ -66,15 +69,14 @@ public class ArrayBufferInputStream extends InputStream {
 			return -1;
 		}
 		
-		for(int i = 0; i < len; ++i) {
-			b[off + i] = (byte)typed.get(position + i);
-		}
+		TeaVMUtils.unwrapArrayBufferView(b).set(Int8Array.create(buffer, position, len), off);
 		
 		position += len;
 		
 		return len;
 	}
-	
+
+	@Override
 	public long skip(long n) {
 		int avail = limit - position;
 		if(n > avail) {
@@ -83,7 +85,7 @@ public class ArrayBufferInputStream extends InputStream {
 		position += (int)n;
 		return n;
 	}
-	
+
 	@Override
 	public int available() {
 		return limit - position;
@@ -101,4 +103,21 @@ public class ArrayBufferInputStream extends InputStream {
 		return buffer;
 	}
 
+	@Override
+	public boolean markSupported() {
+		return true;
+	}
+
+	@Override
+	public synchronized void mark(int readlimit) {
+		mark = position;
+	}
+
+	@Override
+	public synchronized void reset() throws IOException {
+		if(mark == -1) {
+			throw new IOException("Cannot reset, stream has no mark!");
+		}
+		position = mark;
+	}
 }

@@ -10,6 +10,7 @@ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 import net.lax1dude.eaglercraft.v1_8.sp.server.EaglerIntegratedServerWorker;
 import net.lax1dude.eaglercraft.v1_8.sp.server.EaglerSaveFormat;
+import net.lax1dude.eaglercraft.v1_8.sp.server.WorldsDB;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.storage.WorldInfo;
@@ -37,7 +38,7 @@ public class WorldConverterEPK {
 		logger.info("Importing world \"{}\" from EPK", newName);
 		String folderName = newName.replaceAll("[\\./\"]", "_");
 		VFile2 worldDir = EaglerIntegratedServerWorker.saveFormat.getSaveLoader(folderName, false).getWorldDirectory();
-		while((new VFile2(worldDir, "level.dat")).exists() || (new VFile2(worldDir, "level.dat_old")).exists()) {
+		while(WorldsDB.newVFile(worldDir, "level.dat").exists() || WorldsDB.newVFile(worldDir, "level.dat_old").exists()) {
 			folderName += "_";
 			worldDir = EaglerIntegratedServerWorker.saveFormat.getSaveLoader(folderName, false).getWorldDirectory();
 		}
@@ -74,7 +75,7 @@ public class WorldConverterEPK {
 						CompressedStreamTools.writeCompressed(worldDatNBT, tmp);
 						b = tmp.toByteArray();
 					}
-					VFile2 ff = new VFile2(worldDir, f.name);
+					VFile2 ff = WorldsDB.newVFile(worldDir, f.name);
 					ff.setAllBytes(b);
 					prog += b.length;
 					++cnt;

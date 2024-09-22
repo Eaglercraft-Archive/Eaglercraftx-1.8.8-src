@@ -31,7 +31,7 @@ public class DesktopClientConfigAdapter implements IClientConfigAdapter {
 
 	public static final IClientConfigAdapter instance = new DesktopClientConfigAdapter();
 
-	public final List<DefaultServer> defaultServers = new ArrayList();
+	public final List<DefaultServer> defaultServers = new ArrayList<>();
 
 	private final DesktopClientConfigAdapterHooks hooks = new DesktopClientConfigAdapterHooks();
 
@@ -52,17 +52,17 @@ public class DesktopClientConfigAdapter implements IClientConfigAdapter {
 
 	@Override
 	public String getWorldsDB() {
-		return "desktop";
+		return "worlds";
 	}
 
 	@Override
 	public String getResourcePacksDB() {
-		return "desktop";
+		return "resourcePacks";
 	}
 
 	@Override
 	public JSONObject getIntegratedServerOpts() {
-		return new JSONObject("{\"container\":null,\"worldsDB\":\"desktop\"}");
+		return new JSONObject("{\"container\":null,\"worldsDB\":\"worlds\"}");
 	}
 
 	private final List<RelayEntry> relays = new ArrayList<>();
@@ -149,6 +149,51 @@ public class DesktopClientConfigAdapter implements IClientConfigAdapter {
 	}
 
 	@Override
+	public boolean isEnableServerCookies() {
+		return true;
+	}
+
+	@Override
+	public boolean isAllowServerRedirects() {
+		return true;
+	}
+
+	@Override
+	public boolean isOpenDebugConsoleOnLaunch() {
+		return false;
+	}
+
+	@Override
+	public boolean isForceWebViewSupport() {
+		return false;
+	}
+
+	@Override
+	public boolean isEnableWebViewCSP() {
+		return true;
+	}
+
+	@Override
+	public boolean isAllowBootMenu() {
+		return false;
+	}
+
+	@Override
+	public boolean isForceProfanityFilter() {
+		return false;
+	}
+
+	@Override
+	public boolean isEaglerNoDelay() {
+		return false;
+	}
+
+	@Override
+	public boolean isRamdiskMode() {
+		return false;
+	}
+
+	@Override
 	public IClientConfigAdapterHooks getHooks() {
 		return hooks;
 	}
@@ -170,5 +215,12 @@ public class DesktopClientConfigAdapter implements IClientConfigAdapter {
 			
 		}
 
+		@Override
+		public void callScreenChangedHook(String screenName, int scaledWidth, int scaledHeight, int realWidth,
+				int realHeight, int scaleFactor) {
+			
+		}
+
 	}
+
 }

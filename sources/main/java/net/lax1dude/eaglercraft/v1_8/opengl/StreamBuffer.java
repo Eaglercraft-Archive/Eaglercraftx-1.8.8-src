@@ -74,7 +74,7 @@ public class StreamBuffer {
 			next.vertexBuffer = _wglGenBuffers();
 		}
 		if(next.vertexArray == null) {
-			next.vertexArray = _wglGenVertexArrays();
+			next.vertexArray = EaglercraftGPU.createGLBufferArray();
 			initializer.initialize(next.vertexArray, next.vertexBuffer);
 		}
 		if(next.vertexBufferSize < requiredMemory) {
@@ -100,7 +100,7 @@ public class StreamBuffer {
 						newArray[i] = buffers[i];
 					}else {
 						if(buffers[i].vertexArray != null) {
-							_wglDeleteVertexArrays(buffers[i].vertexArray);
+							EaglercraftGPU.destroyGLBufferArray(buffers[i].vertexArray);
 						}
 						if(buffers[i].vertexBuffer != null) {
 							_wglDeleteBuffers(buffers[i].vertexBuffer);
@@ -135,7 +135,7 @@ public class StreamBuffer {
 		for(int i = 0; i < buffers.length; ++i) {
 			StreamBufferInstance next = buffers[i];
 			if(next.vertexArray != null) {
-				_wglDeleteVertexArrays(next.vertexArray);
+				EaglercraftGPU.destroyGLBufferArray(next.vertexArray);
 			}
 			if(next.vertexBuffer != null) {
 				_wglDeleteBuffers(next.vertexBuffer);

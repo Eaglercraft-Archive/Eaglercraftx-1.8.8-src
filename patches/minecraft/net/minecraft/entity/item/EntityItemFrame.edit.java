@@ -31,7 +31,7 @@
 + 		if (itm != null && itm.stackSize > 0) {
 + 			Item item = itm.getItem();
 + 			if (item != null) {
-+ 				float f2 = item.getHeldItemBrightnessEagler() * 0.75f;
++ 				float f2 = item.getHeldItemBrightnessEagler(itm) * 0.75f;
 + 				f = Math.min(f + f2 * 0.5f, 1.0f) + f2 * 0.5f;
 + 			}
 + 		}

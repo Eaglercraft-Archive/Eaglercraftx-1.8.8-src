@@ -7,6 +7,9 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import net.lax1dude.eaglercraft.v1_8.buildtools.gui.TeaVMBinaries;
@@ -33,6 +36,7 @@ public class TeaVMBridge {
 	/**
 	 * <h3>List of required options:</h3>
 	 * <table>
+	 * <tr><td><b>compileClassPathEntries</b></td><td>-&gt; Additional compiler class path entries</td></tr>
 	 * <tr><td><b>classPathEntries</b></td><td>-&gt; BuildStrategy.setClassPathEntries(List&lt;String&gt;)</td></tr>
 	 * <tr><td><b>entryPointName</b></td><td>-&gt; BuildStrategy.setEntryPointName(String)</td></tr>
 	 * <tr><td><b>mainClass</b></td><td>-&gt; BuildStrategy.setMainClass(String)</td></tr>
@@ -45,14 +49,20 @@ public class TeaVMBridge {
 	 * <br>
 	 */
 	public static boolean compileTeaVM(Map<String, Object> options) throws TeaVMClassLoadException, TeaVMRuntimeException {
-		File[] cp = TeaVMBinaries.getTeaVMCompilerClasspath();
-		URL[] urls = new URL[cp.length];
+		List<File> philes = new ArrayList<>();
+		List<String> things = (List<String>)options.get("compileClassPathEntries");
+		for(int i = 0, l = things.size(); i < l; ++i) {
+			philes.add(new File(things.get(i)));
+		}
+		philes.addAll(Arrays.asList(TeaVMBinaries.getTeaVMCompilerClasspath()));
 		
-		for(int i = 0; i < cp.length; ++i) {
+		URL[] urls = new URL[philes.size()];
+		
+		for(int i = 0; i < urls.length; ++i) {
 			try {
-				urls[i] = cp[i].toURI().toURL();
+				urls[i] = philes.get(i).toURI().toURL();
 			} catch (MalformedURLException e) {
-				throw new TeaVMClassLoadException("Could not resolve URL for: " + cp[i].getAbsolutePath(), e);
+				throw new TeaVMClassLoadException("Could not resolve URL for: " + philes.get(i).getAbsolutePath(), e);
 			}
 		}
 		

@@ -7,10 +7,9 @@ import java.util.Map;
 import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
-import net.lax1dude.eaglercraft.v1_8.netty.Unpooled;
+import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.GameMessagePacket;
+import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.server.SPacketOtherCapePresetEAG;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.play.server.S3FPacketCustomPayload;
 
 /**
  * Copyright (c) 2024 lax1dude. All Rights Reserved.
@@ -33,19 +32,7 @@ public class IntegratedCapeService {
 
 	public static final int masterRateLimitPerPlayer = 250;
 
-	public static final String CHANNEL = "EAG|Capes-1.8";
-
-	private final Map<EaglercraftUUID, byte[]> capesCache = new HashMap();
-
-	public void processPacket(byte[] packetData, EntityPlayerMP sender) {
-		try {
-			IntegratedCapePackets.processPacket(packetData, sender, this);
-		} catch (IOException e) {
-			logger.error("Invalid skin request packet recieved from player {}!", sender.getName());
-			logger.error(e);
-			sender.playerNetServerHandler.kickPlayerFromServer("Invalid skin request packet recieved!");
-		}
-	}
+	private final Map<EaglercraftUUID, GameMessagePacket> capesCache = new HashMap<>();
 
 	public void processLoginPacket(byte[] packetData, EntityPlayerMP sender) {
 		try {
@@ -57,16 +44,16 @@ public class IntegratedCapeService {
 		}
 	}
 
-	public void registerEaglercraftPlayer(EaglercraftUUID playerUUID, byte[] capePacket) {
+	public void registerEaglercraftPlayer(EaglercraftUUID playerUUID, GameMessagePacket capePacket) {
 		capesCache.put(playerUUID, capePacket);
 	}
 
 	public void processGetOtherCape(EaglercraftUUID searchUUID, EntityPlayerMP sender) {
-		byte[] maybeCape = capesCache.get(searchUUID);
+		GameMessagePacket maybeCape = capesCache.get(searchUUID);
 		if(maybeCape == null) {
-			maybeCape = IntegratedCapePackets.makePresetResponse(searchUUID, 0);
+			maybeCape = new SPacketOtherCapePresetEAG(searchUUID.msb, searchUUID.lsb, 0);
 		}
-		sender.playerNetServerHandler.sendPacket(new S3FPacketCustomPayload(CHANNEL, new PacketBuffer(Unpooled.buffer(maybeCape, maybeCape.length).writerIndex(maybeCape.length))));
+		sender.playerNetServerHandler.sendEaglerMessage(maybeCape);
 	}
 
 	public void unregisterPlayer(EaglercraftUUID playerUUID) {

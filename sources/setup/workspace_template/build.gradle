@@ -1,16 +1,31 @@
+import org.teavm.gradle.api.OptimizationLevel
+
+buildscript {
+    dependencies {
+        classpath files("src/teavmc-classpath/resources")
+    }
+}
+
 plugins {
-    id 'java'
-    id 'eclipse'
-    id 'org.teavm' version '0.9.2'
+    id "java"
+    id "eclipse"
+    id "org.teavm" version "0.9.2"
 }
 
 sourceSets {
     main {
         java {
-            srcDir 'src/main/java'
-            srcDir 'src/teavm/java'
+            srcDirs(
+                "src/main/java",
+                "src/game/java",
+               	"src/protocol-game/java",
+                "src/protocol-relay/java",
+                "src/teavm/java",
+                "src/teavm-boot-menu/java"
+            )
         }
     }
+    
 }
 
 repositories {
@@ -20,20 +35,38 @@ repositories {
 dependencies {
     teavm(teavm.libs.jso)
     teavm(teavm.libs.jsoApis)
+    compileOnly "org.teavm:teavm-core:0.9.2" // workaround for a few hacks
 }
+
+def folder = "javascript"
+def name = "classes.js"
 
 teavm.js {
     obfuscated = true
     sourceMap = true
-    targetFileName = "../classes.js"
-    optimization = org.teavm.gradle.api.OptimizationLevel.BALANCED // no fps boost was observed with "AGGRESSIVE"
+    targetFileName = "../" + name
+    optimization = OptimizationLevel.BALANCED // Change to "AGGRESSIVE" for release
     outOfProcess = false
     fastGlobalAnalysis = false
     processMemory = 512
-    entryPointName = 'main'
-    mainClass = 'net.lax1dude.eaglercraft.v1_8.internal.teavm.MainClass'
-    outputDir = file("javascript")
-    properties = null
-    sourceMap = true
+    entryPointName = "main"
+    mainClass = "net.lax1dude.eaglercraft.v1_8.internal.teavm.MainClass"
+    outputDir = file(folder)
+    properties = [ "java.util.TimeZone.autodetect": "true" ]
     debugInformation = false
+}
+
+tasks.named("generateJavaScript") {
+    doLast {
+    
+        // NOTE: This step may break at any time, and is not required for 99% of browsers
+        
+        def phile = file(folder + "/" + name)
+        def dest = phile.getText("UTF-8")
+        def i = dest.substring(0, dest.indexOf("=\$rt_globals.Symbol('jsoClass');")).lastIndexOf("let ")
+        dest = dest.substring(0, i) + "var" + dest.substring(i + 3)
+        def j = dest.indexOf("function(\$rt_globals,\$rt_exports){")
+        dest = dest.substring(0, j + 34) + "\n" + file(folder + "/ES6ShimScript.txt").getText("UTF-8") + "\n" + dest.substring(j + 34)
+        phile.write(dest, "UTF-8")
+    }
 }

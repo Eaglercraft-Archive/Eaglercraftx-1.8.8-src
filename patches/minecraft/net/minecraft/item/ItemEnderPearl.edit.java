@@ -22,4 +22,11 @@
 ~ 				--itemstack.stackSize;
 ~ 			}
 
+> INSERT  9 : 13  @  9
+
++ 
++ 	public boolean shouldUseOnTouchEagler(ItemStack itemStack) {
++ 		return true;
++ 	}
+
 > EOF

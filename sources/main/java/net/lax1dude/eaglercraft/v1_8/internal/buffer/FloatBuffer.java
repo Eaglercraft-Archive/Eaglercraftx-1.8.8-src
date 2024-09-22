@@ -17,11 +17,7 @@ package net.lax1dude.eaglercraft.v1_8.internal.buffer;
  */
 public interface FloatBuffer extends Buffer {
 
-	FloatBuffer slice();
-
 	FloatBuffer duplicate();
-
-	FloatBuffer asReadOnlyBuffer();
 
 	float get();
 
@@ -45,10 +41,6 @@ public interface FloatBuffer extends Buffer {
 
 	FloatBuffer put(float[] src);
 
-	int getArrayOffset();
-
-	FloatBuffer compact();
-
 	boolean isDirect();
 
 	FloatBuffer mark();
@@ -64,6 +56,8 @@ public interface FloatBuffer extends Buffer {
 	FloatBuffer limit(int newLimit);
 
 	FloatBuffer position(int newPosition);
-	
+
+	float[] array();
+
 }
 

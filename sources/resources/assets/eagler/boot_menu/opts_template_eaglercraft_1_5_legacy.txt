@@ -1,0 +1,32 @@
+[NBT]{
+	servers: [
+		{
+			name: "Local Test Server",
+			ip: "localhost:25565",
+			hideAddress: false
+		}
+	],
+	mainMenu: {
+		itemLink: "",
+		itemLine0: "",
+		itemLine1: "",
+		itemLine2: "",
+		splashes: [
+			"Darviglet!",
+			"eaglerenophile!",
+			"You Eagler!",
+			"Yeeeeeee!",
+			"yeee",
+			"EEEEEEEEE!",
+			"You Darvig!",
+			"You Vigg!",
+			":>",
+			"|>",
+			"You Yumpster!"
+		]
+	},
+	profanity: false,
+	hide_down: false,
+	serverListTitle: "",
+	serverListLink: ""
+}[/NBT]

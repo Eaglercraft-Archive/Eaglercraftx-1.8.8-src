@@ -105,7 +105,7 @@ public class EaglerFolderResourcePack extends AbstractResourcePack {
 		}
 		try {
 			JSONArray json = (new JSONObject(str)).getJSONArray("resourcePacks");
-			List<EaglerFolderResourcePack> ret = new ArrayList(json.length());
+			List<EaglerFolderResourcePack> ret = new ArrayList<>(json.length());
 			for(int i = 0, l = json.length(); i < l; ++i) {
 				JSONObject jp = json.getJSONObject(i);
 				String folderName = jp.getString("folder");

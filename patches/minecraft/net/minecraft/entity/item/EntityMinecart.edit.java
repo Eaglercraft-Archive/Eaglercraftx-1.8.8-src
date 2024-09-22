@@ -25,14 +25,32 @@
 ~ 		this.dataWatcher.addObject(20, Integer.valueOf(0));
 ~ 		this.dataWatcher.addObject(21, Integer.valueOf(6));
 
-> CHANGE  198 : 202  @  198 : 200
+> DELETE  101  @  101 : 102
+
+> DELETE  32  @  32 : 34
+
+> CHANGE  62 : 66  @  62 : 64
 
 ~ 			List<Entity> lst = this.worldObj.getEntitiesWithinAABBExcludingEntity(this,
 ~ 					this.getEntityBoundingBox().expand(0.20000000298023224D, 0.0D, 0.20000000298023224D));
 ~ 			for (int i = 0, m = lst.size(); i < m; ++i) {
 ~ 				Entity entity = lst.get(i);
 
-> CHANGE  585 : 588  @  585 : 588
+> INSERT  533 : 537  @  533
+
++ 	public String getNameProfanityFilter() {
++ 		return getName();
++ 	}
++ 
+
+> INSERT  23 : 27  @  23
+
++ 	public IChatComponent getDisplayNameProfanityFilter() {
++ 		return getDisplayName();
++ 	}
++ 
+
+> CHANGE  29 : 32  @  29 : 32
 
 ~ 			EntityMinecart.EnumMinecartType[] types = values();
 ~ 			for (int i = 0; i < types.length; ++i) {

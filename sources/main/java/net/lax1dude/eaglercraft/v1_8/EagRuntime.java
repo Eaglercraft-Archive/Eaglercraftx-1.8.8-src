@@ -3,17 +3,16 @@ package net.lax1dude.eaglercraft.v1_8;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringReader;
+import java.io.InputStreamReader;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.ByteBuffer;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.FloatBuffer;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.IntBuffer;
 import java.nio.charset.StandardCharsets;
-import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.function.Consumer;
 
+import net.lax1dude.eaglercraft.v1_8.internal.EaglerMissingResourceException;
 import net.lax1dude.eaglercraft.v1_8.internal.EnumPlatformANGLE;
 import net.lax1dude.eaglercraft.v1_8.internal.EnumPlatformAgent;
 import net.lax1dude.eaglercraft.v1_8.internal.EnumPlatformOS;
@@ -26,6 +25,7 @@ import net.lax1dude.eaglercraft.v1_8.internal.PlatformRuntime;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 import net.lax1dude.eaglercraft.v1_8.opengl.EaglercraftGPU;
+import net.lax1dude.eaglercraft.v1_8.recording.ScreenRecordingController;
 import net.lax1dude.eaglercraft.v1_8.update.UpdateService;
 
 /**
@@ -70,6 +70,8 @@ public class EagRuntime {
 		UpdateService.initialize();
 		EaglerXBungeeVersion.initialize();
 		EaglercraftGPU.warmUpCache();
+		ScreenRecordingController.initialize();
+		PlatformRuntime.postCreate();
 	}
 
 	public static void destroy() {
@@ -119,11 +121,23 @@ public class EagRuntime {
 	public static void freeFloatBuffer(FloatBuffer byteBuffer) {
 		PlatformRuntime.freeFloatBuffer(byteBuffer);
 	}
-	
+
+	public static boolean getResourceExists(String path) {
+		return PlatformAssets.getResourceExists(path);
+	}
+
 	public static byte[] getResourceBytes(String path) {
 		return PlatformAssets.getResourceBytes(path);
 	}
-	
+
+	public static byte[] getRequiredResourceBytes(String path) {
+		byte[] ret = PlatformAssets.getResourceBytes(path);
+		if(ret == null) {
+			throw new EaglerMissingResourceException("Could not load required resource from EPK: " + path);
+		}
+		return ret;
+	}
+
 	public static InputStream getResourceStream(String path) {
 		byte[] b = PlatformAssets.getResourceBytes(path);
 		if(b != null) {
@@ -132,29 +146,54 @@ public class EagRuntime {
 			return null;
 		}
 	}
-	
+
+	public static InputStream getRequiredResourceStream(String path) {
+		byte[] ret = PlatformAssets.getResourceBytes(path);
+		if(ret == null) {
+			throw new EaglerMissingResourceException("Could not load required resource from EPK: " + path);
+		}
+		return new EaglerInputStream(ret);
+	}
+
 	public static String getResourceString(String path) {
 		byte[] bytes = PlatformAssets.getResourceBytes(path);
 		return bytes != null ? new String(bytes, StandardCharsets.UTF_8) : null;
 	}
-	
+
+	public static String getRequiredResourceString(String path) {
+		byte[] ret = PlatformAssets.getResourceBytes(path);
+		if(ret == null) {
+			throw new EaglerMissingResourceException("Could not load required resource from EPK: " + path);
+		}
+		return new String(ret, StandardCharsets.UTF_8);
+	}
+
 	public static List<String> getResourceLines(String path) {
 		byte[] bytes = PlatformAssets.getResourceBytes(path);
 		if(bytes != null) {
-			List<String> ret = new ArrayList();
+			List<String> ret = new ArrayList<>();
 			try {
-				BufferedReader rd = new BufferedReader(new StringReader(path));
+				BufferedReader rd = new BufferedReader(new InputStreamReader(new EaglerInputStream(bytes), StandardCharsets.UTF_8));
 				String s;
 				while((s = rd.readLine()) != null) {
 					ret.add(s);
 				}
 			}catch(IOException ex) {
 				// ??
+				return null;
 			}
 			return ret;
 		}else {
 			return null;
 		}
+	}
+
+	public static List<String> getRequiredResourceLines(String path) {
+		List<String> ret = getResourceLines(path);
+		if(ret == null) {
+			throw new EaglerMissingResourceException("Could not load required resource from EPK: " + path);
+		}
+		return ret;
 	}
 
 	public static void debugPrintStackTraceToSTDERR(Throwable t) {
@@ -180,7 +219,7 @@ public class EagRuntime {
 	}
 	
 	public static String[] getStackTraceElements(Throwable t) {
-		List<String> lst = new ArrayList();
+		List<String> lst = new ArrayList<>();
 		PlatformRuntime.getStackTrace(t, (s) -> {
 			lst.add(s);
 		});
@@ -222,17 +261,23 @@ public class EagRuntime {
 		PlatformRuntime.exit();
 	}
 
+	/**
+	 * Note to skids: This doesn't do anything in javascript runtime!
+	 */
 	public static long maxMemory() {
 		return PlatformRuntime.maxMemory();
 	}
 
 	/**
-	 * Note to skids: This doesn't do anything in TeaVM runtime!
+	 * Note to skids: This doesn't do anything in javascript runtime!
 	 */
 	public static long totalMemory() {
 		return PlatformRuntime.totalMemory();
 	}
 
+	/**
+	 * Note to skids: This doesn't do anything in javascript runtime!
+	 */
 	public static long freeMemory() {
 		return PlatformRuntime.freeMemory();
 	}
@@ -289,18 +334,6 @@ public class EagRuntime {
 		return PlatformRuntime.getClientConfigAdapter();
 	}
 
-	public static String getRecText() {
-		return PlatformRuntime.getRecText();
-	}
-
-	public static void toggleRec() {
-		PlatformRuntime.toggleRec();
-	}
-
-	public static boolean recSupported() {
-		return PlatformRuntime.recSupported();
-	}
-
 	public static void openCreditsPopup(String text) {
 		PlatformApplication.openCreditsPopup(text);
 	}
@@ -317,16 +350,24 @@ public class EagRuntime {
 		PlatformApplication.showDebugConsole();
 	}
 
-	public static Calendar getLocaleCalendar() {
-		return Calendar.getInstance(); //TODO: fix teavm calendar's time zone offset
-	}
-
-	public static <T extends DateFormat> T fixDateFormat(T input) {
-		input.setCalendar(getLocaleCalendar());
-		return input;
+	public static void setDisplayBootMenuNextRefresh(boolean en) {
+		PlatformRuntime.setDisplayBootMenuNextRefresh(en);
 	}
 
 	public static void setMCServerWindowGlobal(String url) {
 		PlatformApplication.setMCServerWindowGlobal(url);
 	}
+
+	public static long steadyTimeMillis() {
+		return PlatformRuntime.steadyTimeMillis();
+	}
+
+	public static long nanoTime() {
+		return PlatformRuntime.nanoTime();
+	}
+
+	public static void immediateContinue() {
+		PlatformRuntime.immediateContinue();
+	}
+
 }

@@ -27,11 +27,9 @@ public class EaglerArrayIntBuffer implements IntBuffer {
 	int position;
 	int limit;
 	int mark;
-	
+
 	private static final int SHIFT = 2;
-	
-	static final Int32Array ZERO_LENGTH_BUFFER = Int32Array.create(0);
-	
+
 	EaglerArrayIntBuffer(Int32Array typedArray) {
 		this.typedArray = typedArray;
 		this.capacity = typedArray.getLength();
@@ -39,7 +37,7 @@ public class EaglerArrayIntBuffer implements IntBuffer {
 		this.limit = this.capacity;
 		this.mark = -1;
 	}
-	
+
 	EaglerArrayIntBuffer(Int32Array typedArray, int position, int limit, int mark) {
 		this.typedArray = typedArray;
 		this.capacity = typedArray.getLength();
@@ -47,7 +45,7 @@ public class EaglerArrayIntBuffer implements IntBuffer {
 		this.limit = limit;
 		this.mark = mark;
 	}
-	
+
 	@Override
 	public int capacity() {
 		return capacity;
@@ -74,33 +72,13 @@ public class EaglerArrayIntBuffer implements IntBuffer {
 	}
 
 	@Override
-	public boolean isReadOnly() {
-		return false;
-	}
-
-	@Override
 	public boolean hasArray() {
 		return false;
 	}
 
 	@Override
-	public Object array() {
+	public int[] array() {
 		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public int arrayOffset() {
-		return position;
-	}
-
-	@Override
-	public IntBuffer slice() {
-		if(position == limit) {
-			return new EaglerArrayIntBuffer(ZERO_LENGTH_BUFFER);
-		}else {
-			if(position > limit) throw new ArrayIndexOutOfBoundsException(position);
-			return new EaglerArrayIntBuffer(Int32Array.create(typedArray.getBuffer(), typedArray.getByteOffset() + (position << SHIFT), limit - position));
-		}
 	}
 
 	@Override
@@ -109,51 +87,46 @@ public class EaglerArrayIntBuffer implements IntBuffer {
 	}
 
 	@Override
-	public IntBuffer asReadOnlyBuffer() {
-		return new EaglerArrayIntBuffer(typedArray, position, limit, mark);
-	}
-
-	@Override
 	public int get() {
-		if(position >= limit) throw new ArrayIndexOutOfBoundsException(position);
+		if(position >= limit) throw Buffer.makeIOOBE(position);
 		return typedArray.get(position++);
 	}
 
 	@Override
 	public IntBuffer put(int b) {
-		if(position >= limit) throw new ArrayIndexOutOfBoundsException(position);
+		if(position >= limit) throw Buffer.makeIOOBE(position);
 		typedArray.set(position++, b);
 		return this;
 	}
 
 	@Override
 	public int get(int index) {
-		if(index >= limit) throw new ArrayIndexOutOfBoundsException(index);
+		if(index < 0 || index >= limit) throw Buffer.makeIOOBE(index);
 		return typedArray.get(index);
 	}
 
 	@Override
 	public IntBuffer put(int index, int b) {
-		if(index >= limit) throw new ArrayIndexOutOfBoundsException(index);
+		if(index < 0 || index >= limit) throw Buffer.makeIOOBE(index);
 		typedArray.set(index, b);
 		return this;
 	}
 
 	@Override
 	public int getElement(int index) {
-		if(index >= limit) throw new ArrayIndexOutOfBoundsException(index);
+		if(index < 0 || index >= limit) throw Buffer.makeIOOBE(index);
 		return typedArray.get(index);
 	}
 
 	@Override
 	public void putElement(int index, int value) {
-		if(index >= limit) throw new ArrayIndexOutOfBoundsException(index);
+		if(index < 0 || index >= limit) throw Buffer.makeIOOBE(index);
 		typedArray.set(index, value);
 	}
 
 	@Override
 	public IntBuffer get(int[] dst, int offset, int length) {
-		if(position + length > limit) throw new ArrayIndexOutOfBoundsException(position + length - 1);
+		if(position + length > limit) throw Buffer.makeIOOBE(position + length - 1);
 		TeaVMUtils.unwrapArrayBufferView(dst).set(Int32Array.create(typedArray.getBuffer(), typedArray.getByteOffset() + (position << SHIFT), length), offset);
 		position += length;
 		return this;
@@ -161,7 +134,7 @@ public class EaglerArrayIntBuffer implements IntBuffer {
 
 	@Override
 	public IntBuffer get(int[] dst) {
-		if(position + dst.length > limit) throw new ArrayIndexOutOfBoundsException(position + dst.length - 1);
+		if(position + dst.length > limit) throw Buffer.makeIOOBE(position + dst.length - 1);
 		TeaVMUtils.unwrapArrayBufferView(dst).set(Int32Array.create(typedArray.getBuffer(), typedArray.getByteOffset() + (position << SHIFT), dst.length));
 		position += dst.length;
 		return this;
@@ -172,13 +145,13 @@ public class EaglerArrayIntBuffer implements IntBuffer {
 		if(src instanceof EaglerArrayIntBuffer) {
 			EaglerArrayIntBuffer c = (EaglerArrayIntBuffer)src;
 			int l = c.limit - c.position;
-			if(position + l > limit) throw new ArrayIndexOutOfBoundsException(position + l - 1);
+			if(position + l > limit) throw Buffer.makeIOOBE(position + l - 1);
 			typedArray.set(Int32Array.create(c.typedArray.getBuffer(), c.typedArray.getByteOffset() + (c.position << SHIFT), l), position);
 			position += l;
 			c.position += l;
 		}else {
 			int l = src.remaining();
-			if(position + l > limit) throw new ArrayIndexOutOfBoundsException(position + l - 1);
+			if(position + l > limit) throw Buffer.makeIOOBE(position + l - 1);
 			for(int i = 0; i < l; ++i) {
 				typedArray.set(position + l, src.get());
 			}
@@ -189,7 +162,7 @@ public class EaglerArrayIntBuffer implements IntBuffer {
 
 	@Override
 	public IntBuffer put(int[] src, int offset, int length) {
-		if(position + length > limit) throw new ArrayIndexOutOfBoundsException(position + length - 1);
+		if(position + length > limit) throw Buffer.makeIOOBE(position + length - 1);
 		if(offset == 0 && length == src.length) {
 			typedArray.set(TeaVMUtils.unwrapArrayBufferView(src), position);
 		}else {
@@ -201,30 +174,10 @@ public class EaglerArrayIntBuffer implements IntBuffer {
 
 	@Override
 	public IntBuffer put(int[] src) {
-		if(position + src.length > limit) throw new ArrayIndexOutOfBoundsException(position + src.length - 1);
+		if(position + src.length > limit) throw Buffer.makeIOOBE(position + src.length - 1);
 		typedArray.set(TeaVMUtils.unwrapArrayBufferView(src), position);
 		position += src.length;
 		return this;
-	}
-
-	@Override
-	public int getArrayOffset() {
-		return position;
-	}
-
-	@Override
-	public IntBuffer compact() {
-		if(limit > capacity) throw new ArrayIndexOutOfBoundsException(limit);
-		if(position > limit) throw new ArrayIndexOutOfBoundsException(position);
-		
-		if(position == limit) {
-			return new EaglerArrayIntBuffer(ZERO_LENGTH_BUFFER);
-		}
-		
-		Int32Array dst = Int32Array.create(limit - position);
-		dst.set(Int32Array.create(typedArray.getBuffer(), typedArray.getByteOffset() + (position << SHIFT), limit - position));
-		
-		return new EaglerArrayIntBuffer(dst);
 	}
 
 	@Override
@@ -241,7 +194,7 @@ public class EaglerArrayIntBuffer implements IntBuffer {
 	@Override
 	public IntBuffer reset() {
 		int m = mark;
-		if(m < 0) throw new ArrayIndexOutOfBoundsException("Invalid mark: " + m);
+		if(m < 0) throw new IndexOutOfBoundsException("Invalid mark: " + m);
 		position = m;
 		return this;
 	}
@@ -271,14 +224,14 @@ public class EaglerArrayIntBuffer implements IntBuffer {
 
 	@Override
 	public IntBuffer limit(int newLimit) {
-		if(newLimit < 0 || newLimit > capacity) throw new ArrayIndexOutOfBoundsException(newLimit);
+		if(newLimit < 0 || newLimit > capacity) throw Buffer.makeIOOBE(newLimit);
 		limit = newLimit;
 		return this;
 	}
 
 	@Override
 	public IntBuffer position(int newPosition) {
-		if(newPosition < 0 || newPosition > limit) throw new ArrayIndexOutOfBoundsException(newPosition);
+		if(newPosition < 0 || newPosition > limit) throw Buffer.makeIOOBE(newPosition);
 		position = newPosition;
 		return this;
 	}

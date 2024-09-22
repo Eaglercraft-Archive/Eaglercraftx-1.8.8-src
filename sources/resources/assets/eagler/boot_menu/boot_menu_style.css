@@ -1,0 +1,328 @@
+@font-face {
+	font-family: "{% global `root_class_gen` %}_font0";
+	src: url("data:font/woff;base64,{% embed base64 `web_cl_eagleiii_8x16.woff` %}") format("woff");
+}
+.{% global `root_class_gen` %} {
+	font: 24px "{% global `root_class_gen` %}_font0";
+	color: #CCCCCC;
+	background-color: #000000;
+	user-select: none;
+	width: 100%;
+	height: 100%;
+	overflow-y: auto;
+}
+.{% global `root_class_gen` %}::-moz-selection {
+	color: #000000;
+	background-color: #CCCCCC;
+}
+.{% global `root_class_gen` %}::selection {
+	color: #000000;
+	background-color: #CCCCCC;
+}
+.{% global `root_class_gen` %}::-webkit-scrollbar {
+	width: 12px;
+}
+.{% global `root_class_gen` %} ::-webkit-scrollbar {
+	width: 12px;
+}
+.{% global `root_class_gen` %}::-webkit-scrollbar-track, .{% global `root_class_gen` %} ::-webkit-scrollbar-track {
+	background-color: #000000;
+}
+.{% global `root_class_gen` %}::-webkit-scrollbar-thumb, .{% global `root_class_gen` %} ::-webkit-scrollbar-thumb {
+	background-color: #CCCCCC;
+}
+.{% global `root_class_gen` %}::-webkit-scrollbar-button, .{% global `root_class_gen` %} ::-webkit-scrollbar-button {
+	display: none;
+}
+.{% global `root_class_gen` %}::-webkit-scrollbar-corner, .{% global `root_class_gen` %} ::-webkit-scrollbar-corner {
+	background-color: #CCCCCC;
+}
+.{% global `root_class_gen` %} ._eaglercraftX_boot_menu_inner {
+	width: 100%;
+	height: 100%;
+	min-height: 480px;
+	display: flex;
+	flex-flow: column;
+}
+.{% global `root_class_gen` %} p {
+	margin-block-start: 0px;
+	margin-block-end: 0px;
+	-webkit-margin-before:0px;
+	-webkit-margin-after:0px;
+}
+.{% global `root_class_gen` %} ._eaglercraftX_boot_menu_header {
+	flex: 0 1 auto;
+}
+.{% global `root_class_gen` %} ._eaglercraftX_boot_menu_header_title {
+	text-align: center;
+	padding: 32px 0px 0px 0px;
+	color: #CCCCCC;
+	white-space: pre-wrap;
+}
+.{% global `root_class_gen` %} ._eaglercraftX_boot_menu_content {
+	flex: 1 1 auto;
+	position: relative;
+}
+.{% global `root_class_gen` %} ._eaglercraftX_boot_menu_content_inner {
+	position: absolute;
+	top: 32px;
+	left: 32px;
+	bottom: 32px;
+	right: 32px;
+	border: 2px solid white;
+	z-index: 1;
+}
+.{% global `root_class_gen` %} ._eaglercraftX_boot_menu_popup {
+	position: absolute;
+	top: 128px;
+	left: 64px;
+	bottom: 64px;
+	right: 64px;
+	z-index: 10;
+}
+.{% global `root_class_gen` %} ._eaglercraftX_boot_menu_popup_inner {
+	width: 50%;
+	min-width: min(calc(100% - 20px), 400px);
+	max-width: 800px;
+	max-height: calc(100% - 20px);
+	margin-left: auto;
+	margin-right: auto;
+	border: 2px solid white;
+	background-color: #000000;
+	padding: 10px;
+	overflow-y: auto;
+}
+.{% global `root_class_gen` %} ._eaglercraftX_boot_menu_popup_confirm_title {
+	text-align: center;
+	padding: 16px;
+	color: #CCCCCC;
+	white-space: pre-wrap;
+}
+.{% global `root_class_gen` %} ._eaglercraftX_boot_menu_popup_confirm_opts {
+	text-align: center;
+	padding: 16px;
+	color: #CCCCCC;
+}
+.{% global `root_class_gen` %} ._eaglercraftX_boot_menu_popup_confirm_opt {
+	cursor: pointer;
+}
+.{% global `root_class_gen` %} ._eaglercraftX_boot_menu_popup_confirm_opt_selected {
+	color: #000000;
+	background-color: #CCCCCC;
+}
+.{% global `root_class_gen` %} ._eaglercraftX_boot_menu_popup_confirm_opt_disabled {
+	color: #888888;
+	cursor: default;
+}
+.{% global `root_class_gen` %} ._eaglercraftX_boot_menu_popup_selection_title {
+	text-align: center;
+	padding: 16px;
+	color: #CCCCCC;
+}
+.{% global `root_class_gen` %} ._eaglercraftX_boot_menu_popup_selection {
+	width: calc(100% - 8px);
+	padding: 8px 4px;
+}
+.{% global `root_class_gen` %} ._eaglercraftX_boot_menu_popup_input_title {
+	text-align: center;
+	padding: 16px;
+	color: #CCCCCC;
+	white-space: pre-wrap;
+}
+.{% global `root_class_gen` %} ._eaglercraftX_boot_menu_popup_input_opts {
+	text-align: center;
+	padding: 16px;
+	color: #CCCCCC;
+}
+.{% global `root_class_gen` %} ._eaglercraftX_boot_menu_popup_input_opt {
+	cursor: pointer;
+}
+.{% global `root_class_gen` %} ._eaglercraftX_boot_menu_popup_input_opt_selected {
+	color: #000000;
+	background-color: #CCCCCC;
+}
+.{% global `root_class_gen` %} ._eaglercraftX_boot_menu_popup_input_opt_disabled {
+	color: #888888;
+	cursor: default;
+}
+.{% global `root_class_gen` %} ._eaglercraftX_boot_menu_popup_input_val_container {
+	text-align: center;
+}
+.{% global `root_class_gen` %} ._eaglercraftX_boot_menu_popup_input_val {
+	min-width: 15em;
+	width: calc(90% - 50px);
+	font: 24px "{% global `root_class_gen` %}_font0";
+	outline: none;
+	resize: none;
+	background-color: #000000;
+	color: #CCCCCC;
+	border: 2px solid white;
+	padding: 2px 4px;
+}
+.{% global `root_class_gen` %} ._eaglercraftX_boot_menu_popup_input_val:disabled {
+	color: #888888;
+}
+.{% global `root_class_gen` %} ._eaglercraftX_boot_menu_popup_input_val::-moz-selection {
+	color: #000000;
+	background-color: #CCCCCC;
+}
+.{% global `root_class_gen` %} ._eaglercraftX_boot_menu_popup_input_val::selection {
+	color: #000000;
+	background-color: #CCCCCC;
+}
+.{% global `root_class_gen` %} ._eaglercraftX_boot_menu_content_view_selection {
+	width: 100%;
+	height: 100%;
+}
+.{% global `root_class_gen` %} ._eaglercraftX_boot_menu_content_selection {
+	width: calc(100% - 8px);
+	height: calc(100% - 16px);
+	padding: 8px 4px;
+	overflow-y: auto;
+}
+.{% global `root_class_gen` %} ._eaglercraftX_boot_menu_content_item {
+	width: 100%;
+	overflow-y: auto;
+	cursor: pointer;
+}
+.{% global `root_class_gen` %} ._eaglercraftX_boot_menu_content_item::before {
+	content: "\00a0";
+}
+.{% global `root_class_gen` %} ._eaglercraftX_boot_menu_content_item_selected {
+	color: #000000;
+	background-color: #CCCCCC;
+}
+.{% global `root_class_gen` %} ._eaglercraftX_boot_menu_content_item_selected::before {
+	content: "*";
+}
+.{% global `root_class_gen` %} ._eaglercraftX_boot_menu_content_item_disabled {
+	color: #888888;
+	cursor: default;
+}
+.{% global `root_class_gen` %} ._eaglercraftX_boot_menu_content_view_editor {
+	width: 100%;
+	height: 100%;
+	position: relative;
+}
+.{% global `root_class_gen` %} ._eaglercraftX_boot_menu_launch_conf {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	height: calc(25% - 20px);
+	padding: 10px;
+	overflow-x: hidden;
+	overflow-y: auto;
+	color: #CCCCCC;
+}
+.{% global `root_class_gen` %} ._eaglercraftX_boot_menu_launch_conf_item_wide {
+	width: 100%;
+}
+.{% global `root_class_gen` %} ._eaglercraftX_boot_menu_launch_conf_item {
+	display: inline-block;
+	padding: 20px;
+}
+.{% global `root_class_gen` %} ._eaglercraftX_boot_menu_launch_conf_item input[type=text] {
+	min-width: 15em;
+	font: 24px "{% global `root_class_gen` %}_font0";
+	outline: none;
+	resize: none;
+	background-color: #000000;
+	color: #CCCCCC;
+	border: 2px solid white;
+	padding: 2px 4px;
+}
+.{% global `root_class_gen` %} ._eaglercraftX_boot_menu_launch_conf_item input[type=text]:disabled {
+	color: #888888;
+}
+.{% global `root_class_gen` %} ._eaglercraftX_boot_menu_launch_conf_item input[type=checkbox] {
+	zoom: 2;
+	padding: 2px 4px;
+}
+.{% global `root_class_gen` %} ._eaglercraftX_boot_menu_launch_conf_item select {
+	font: 24px "{% global `root_class_gen` %}_font0";
+	outline: none;
+	resize: none;
+	background-color: #000000;
+	color: #CCCCCC;
+	border: 2px solid white;
+	padding: 2px 4px;
+}
+.{% global `root_class_gen` %} ._eaglercraftX_boot_menu_launch_conf_item option:checked {
+	background-color: #CCCCCC;
+	color: #000000;
+}
+.{% global `root_class_gen` %} ._eaglercraftX_boot_menu_launch_conf_item option:disabled {
+	color: #888888;
+}
+.{% global `root_class_gen` %} ._eaglercraftX_boot_menu_launch_conf_item input::-moz-selection {
+	color: #000000;
+	background-color: #CCCCCC;
+}
+.{% global `root_class_gen` %} ._eaglercraftX_boot_menu_launch_conf_item input::selection {
+	color: #000000;
+	background-color: #CCCCCC;
+}
+.{% global `root_class_gen` %} ._eaglercraftX_boot_menu_launch_conf_val_profile_name {
+	width: calc(100% - 10em);
+	font: 24px "{% global `root_class_gen` %}_font0";
+	outline: none;
+	resize: none;
+	background-color: #000000;
+	color: #CCCCCC;
+	border: 2px solid white;
+	padding: 2px 4px;
+}
+.{% global `root_class_gen` %} ._eaglercraftX_boot_menu_launch_conf_val_profile_name::-moz-selection {
+	color: #000000;
+	background-color: #CCCCCC;
+}
+.{% global `root_class_gen` %} ._eaglercraftX_boot_menu_launch_conf_val_profile_name::selection {
+	color: #000000;
+	background-color: #CCCCCC;
+}
+.{% global `root_class_gen` %} ._eaglercraftX_boot_menu_launch_conf_val_profile_name:disabled {
+	color: #888888;
+}
+.{% global `root_class_gen` %} ._eaglercraftX_boot_menu_launch_conf_val_data_format {
+	padding: 2px 4px;
+	border: 2px solid white;
+}
+.{% global `root_class_gen` %} ._eaglercraftX_boot_menu_launch_opt_editor {
+	position: absolute;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+	height: calc(75% - 22px);
+	width: calc(100% - 20px);
+	margin: 0px;
+	padding: 10px;
+	font: 24px "{% global `root_class_gen` %}_font0";
+	border: none;
+	border-top: 2px solid white;
+	outline: none;
+	resize: none;
+	background-color: #000000;
+	color: #CCCCCC;
+	overflow: auto;
+	tab-size: 4;
+}
+.{% global `root_class_gen` %} ._eaglercraftX_boot_menu_launch_opt_editor:disabled {
+	color: #888888;
+}
+.{% global `root_class_gen` %} ._eaglercraftX_boot_menu_launch_opt_editor::-moz-selection {
+	color: #000000;
+	background-color: #CCCCCC;
+}
+.{% global `root_class_gen` %} ._eaglercraftX_boot_menu_launch_opt_editor::selection {
+	color: #000000;
+	background-color: #CCCCCC;
+}
+.{% global `root_class_gen` %} ._eaglercraftX_boot_menu_footer {
+	flex: 0 1 auto;
+}
+.{% global `root_class_gen` %} ._eaglercraftX_boot_menu_footer_text {
+	text-align: left;
+	padding: 0px 0px 32px 64px;
+	color: #CCCCCC;
+}

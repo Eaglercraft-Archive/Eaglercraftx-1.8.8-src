@@ -35,7 +35,7 @@ public class GuiShaderConfigList extends GuiListExtended {
 
 	private final GuiShaderConfig screen;
 
-	private final List<IGuiListEntry> list = new ArrayList();
+	private final List<IGuiListEntry> list = new ArrayList<>();
 
 	private static abstract class ShaderOption {
 
@@ -56,7 +56,7 @@ public class GuiShaderConfigList extends GuiListExtended {
 	}
 
 	private static List<String> loadDescription(String key) {
-		List<String> ret = new ArrayList();
+		List<String> ret = new ArrayList<>();
 		String msg;
 		int i = 0;
 		while(true) {
@@ -112,7 +112,7 @@ public class GuiShaderConfigList extends GuiListExtended {
 		this.list.add(new ListEntrySpacing());
 		this.list.add(new ListEntrySpacing());
 		this.list.add(new ListEntryHeader(I18n.format("shaders.gui.headerTier1")));
-		List<ShaderOption> opts = new ArrayList();
+		List<ShaderOption> opts = new ArrayList<>();
 		EaglerDeferredConfig conf = mcIn.gameSettings.deferredShaderConf;
 		if(conf.shaderPackInfo.WAVING_BLOCKS) {
 			opts.add(new ShaderOption(loadShaderLbl("WAVING_BLOCKS"), loadShaderDesc("WAVING_BLOCKS")) {
@@ -550,6 +550,7 @@ public class GuiShaderConfigList extends GuiListExtended {
 
 		@Override
 		public boolean mousePressed(int var1, int var2, int var3, int var4, int var5, int var6) {
+			if(var4 != 0) return false;
 			if(this.button1 != null) {
 				if(this.button1.yPosition + 15 < bottom && this.button1.yPosition + 5 > top) {
 					if(this.button1.mousePressed(mc, var2, var3)) {
@@ -610,7 +611,7 @@ public class GuiShaderConfigList extends GuiListExtended {
 	}
 
 	private void renderTooltip(int x, int y, int width, List<String> msg) {
-		ArrayList tooltipList = new ArrayList(msg.size() * 2);
+		List<String> tooltipList = new ArrayList<>(msg.size() * 2);
 		for(int i = 0, l = msg.size(); i < l; ++i) {
 			String s = msg.get(i);
 			if(s.length() > 0) {

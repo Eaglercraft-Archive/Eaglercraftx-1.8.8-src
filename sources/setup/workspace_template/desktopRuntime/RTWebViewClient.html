@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+
+<!--
+Copyright (c) 2024 lax1dude. All Rights Reserved.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGE.
+-->
+
+<html style="width:100%;height:100%;">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Eaglercraft Desktop Runtime</title>
+		<link type="image/png" rel="shortcut icon" id="vigg" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAIAAAD8GO2jAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAFiUAABYlAUlSJPAAAAR/SURBVEhLtZXZK3ZRFMYPcqXc+gv413DHxVuGIpIhkciQWaRccCNjSCkligwXSOZ5nmfv9zvn2e8+58V753sudmuvvdZ61l5r7XOc8H+GS/D19aUNkPz5+aktQH5/f//4+LBKZKuRkpUtQjCUYG5gD2T38vLy/PwsDfL9/f3Dw8PT05M0b29vnKLhCKCBT4L4gvBLBIei4//4+Hh1dUVEQutUuLu7E83FxQUGnKLBWKfQaA3S+AREVxaEOD8/Pzk50XpzcyMDcH19zdZG3N3d3dzc3Nvb01aX5pQUpQGGQJxcQpfNysoKhUIdHR1o1tbWbInYAgxIPDMzMy8vLzc3FxqOdMoRqwJK8G8ALUYIhHMiSEhIwI6CyIb0qQzC4eGhsXCc1tZWnZIEKzdQJQSXgKxfX18RCM3Z5eWlcfVAxKOjo+Pj49PTU88lTOk2NjbMsePc3t6SAfcgFdszOyMuAdeBg0CQi2lhYUHOeOLDCisN8FzcPFZXV3t7ezHY3t5GQ+6it+2xMASsKhEEWKsmRLRBBUpPvpJ/TpFKFBwKYAiITmicsbYhdHfJAltqhUCVsCQhwslmeXmZxiBQT9c0Ar9E2O3v72sYSE0N1yQArkKy0kBMXLqlZqIZHR3t6empqqqSDcBdhXEJSJ/bUc3q6uq+vj629GB9fR1WsLW1NTs7u7S0RN2locMjIyOEm5ubQ7+4uJienk4/+vv77Y1hwhLBEKhwWHitdVFfX9/Y2Gg2HuLi4owUAysrK8yCG97rh0+ApP5Q2ZycHFlPTExUVFRIBvn5+WhKSkp2dnaMKhptbW2426GgQ/rwuAQCZ1hwFayLiork9hMFBQV1dXVmE0BLS4vqw3QFB8kn4IAxoGPkYpxi4FeDmpqas7Mz4pClAgqGwD48rjY2NmacYqC0tJQ1KSlJWyE5OZkpUKkBAxZVIntAoZh04+Q48fHxPNGBgYHExMT29naj9cBodnZ2mo3jlJWVMeW2OGQck4B1amqqoaGhqamJjx2lGxwcpL0mUgR8fJhsWqJtSkoKU2SbHHUDpkhPBujd8xuQG6PJRM/Pz09PT7O1NNnZ2Tw3fgZkXVhYKCUlUhBATP+hCVyKZGky17RV0g04laayslJ6hlVeFHB4eFhKaogGd0LxtmTgE+hbhKDnPjMzgw8E3qGL2tpaBWpubjYqj2BoaEj6rq4uNATRZ0ZwCbiL6gXEzINk5vCBQJ9rMD4+rkA8QNK036uDg4Py8vLu7m680KjIBNR3zBDoWQM1g98snyB+VSoRW8C/UwR81/SvhgNj9JOTkwwVERUdRBEI0BAdLRVERkhLS8vIyEDQlrsTPTU1lVFhKxARvZgUlFLbegCf4BvIsbi4mIg4E5EogIHhiKCMtU0WUFiVy06j5fAJIDdSBDQw+PegDfBRcbOPwH4F9LuFWIIQdQNKwWqzIE0aoFUaBsw+SQuFw0uNtC9A+F4i3QNrbg3IDn+SAsHh+wYiEpeyBEMLv/cAO6KzAijxxB+Y4wisBhssJUhjEbPJf4Nw+B+JXqLW3bw+wQAAAABJRU5ErkJggg==" />
+		<script type="text/javascript">
+			"use strict";
+			(function() {
+				var webSocketURI = "${client_websocket_uri}";
+				if(webSocketURI === ("$" + "{client_websocket_uri}")) {
+					alert("Don't open this file in your browser");
+					window.addEventListener("load", function() {
+						document.body.innerHTML = "<p style=\"text-align:center;\">cunt</p>";
+					});
+					return;
+				}
+				var eaglercraftXOpts = {eaglercraftXOpts};
+				var cspAttrSupport = false;
+				var checkSupport = function() {
+					if(eaglercraftXOpts.forceWebViewSupport) {
+						cspAttrSupport = true;
+						return true;
+					}else {
+						var tempIFrameElement = document.createElement("iframe");
+						cspAttrSupport = eaglercraftXOpts.enableWebViewCSP && (typeof tempIFrameElement.csp === "string");
+						return (typeof tempIFrameElement.allow === "string") && (typeof tempIFrameElement.sandbox === "object");
+					}
+				};
+				var supported = false;
+				try {
+					supported = checkSupport();
+				}catch(ex) {
+					supported = false;
+				}
+				console.log("CSP attribute support detected as " + cspAttrSupport);
+				if(!supported) {
+					console.error("Required IFrame safety features are not supported!");
+					window.addEventListener("load", function() {
+						document.getElementById("view_loading").style.display = "none";
+						document.getElementById("view_safety_error").style.display = "block";
+					});
+					return;
+				}
+				var websocketInstance = null;
+				var hasOpened = false;
+				var webviewOptions = null;
+				var webviewResetSerial = 0;
+				var hasErrored = false;
+				var hasRegisteredOnMsgHandler = false;
+				var currentMessageHandler = null;
+				var currentIFrame = null;
+				var currentMessageChannelName = null;
+				var elements = {};
+				var loadElements = function() {
+					var jsel = document.getElementsByClassName("__jsel");
+					for(var i = 0; i < jsel.length; ++i) {
+						var el = jsel[i];
+						if(el.id.length > 0) {
+							elements[el.id] = el;
+						}
+					}
+				};
+				function loadEagtekIcon() {
+					var faviconSrc = document.getElementById("vigg").href;
+					var imgElements = document.getElementsByClassName("eagtek_icon");
+					for(var i = 0; i < imgElements.length; ++i) {
+						imgElements[i].src = faviconSrc;
+					}
+				}
+				function setupElementListeners() {
+					elements.button_allow.addEventListener("click", function() {
+						if(websocketInstance !== null) {
+							if(elements.chkbox_remember.checked) {
+								websocketInstance.send(JSON.stringify({$:7,perm:"ALLOW"}));
+							}
+							beginShowingDirect();
+						}
+					});
+					elements.button_block.addEventListener("click", function() {
+						if(websocketInstance !== null) {
+							if(elements.chkbox_remember.checked) {
+								websocketInstance.send(JSON.stringify({$:7,perm:"BLOCK"}));
+							}
+							beginShowingContentBlocked();
+						}
+					});
+					elements.button_re_evaluate.addEventListener("click", function() {
+						if(websocketInstance !== null) {
+							websocketInstance.send(JSON.stringify({$:7,perm:"NOT_SET"}));
+							beginShowingEnableJavaScript();
+						}
+					});
+				}
+				window.specialHack = function() {
+					if(websocketInstance !== null) {
+						websocketInstance.send(JSON.stringify({$:7,perm:"NOT_SET"}));
+					}
+				};
+				var handleHandshake = function(pkt) {
+					webviewOptions = {};
+					webviewOptions.contentMode = pkt.contentMode || "BLOB_BASED";
+					webviewOptions.fallbackTitle = pkt.fallbackTitle || "Server Info";
+					document.title = webviewOptions.fallbackTitle + " - Eaglercraft Desktop Runtime";
+					webviewOptions.scriptEnabled = !!pkt.scriptEnabled;
+					webviewOptions.strictCSPEnable = !!pkt.strictCSPEnable || false;
+					webviewOptions.serverMessageAPIEnabled = !!pkt.serverMessageAPIEnabled;
+					webviewOptions.url = pkt.url;
+					webviewOptions.blob = pkt.blob;
+					webviewOptions.hasApprovedJS = pkt.hasApprovedJS || "NOT_SET";
+					if(webviewOptions.scriptEnabled) {
+						if(webviewOptions.hasApprovedJS === "NOT_SET") {
+							beginShowingEnableJavaScript();
+						}else if(webviewOptions.hasApprovedJS === "ALLOW") {
+							beginShowingDirect();
+						}else if(webviewOptions.hasApprovedJS === "BLOCK") {
+							beginShowingContentBlocked();
+						}else {
+							setErrored("Unknown JS permission state: " + webviewOptions.hasApprovedJS);
+						}
+					}else {
+						beginShowingDirect();
+					}
+				};
+				var handleServerError = function(pkt) {
+					console.error("Recieved error from server: " + pkt.msg);
+					setErrored(pkt.msg);
+				};
+				var handleServerWebViewStrMsg = function(pkt) {
+					var w;
+					if(currentMessageChannelName !== null && currentIFrame !== null && (w = currentIFrame.contentWindow) !== null) {
+						w.postMessage({ver:1,channel:currentMessageChannelName,type:"string",data:pkt.msg}, "*");
+					}else {
+						console.error("Server tried to send the WebView a message, but the message channel is not open!");
+					}
+				};
+				var handleServerWebViewBinMsg = function(arr) {
+					var w;
+					if(currentMessageChannelName !== null && currentIFrame !== null && (w = currentIFrame.contentWindow) !== null) {
+						w.postMessage({ver:1,channel:currentMessageChannelName,type:"binary",data:arr}, "*");
+					}else {
+						console.error("Server tried to send the WebView a message, but the message channel is not open!");
+					}
+				};
+				var hideAllViews = function() {
+					if(currentIFrame !== null) {
+						++webviewResetSerial;
+						if(currentIFrame.parentNode) currentIFrame.parentNode.removeChild(currentIFrame);
+						currentIFrame = null;
+					}
+					elements.view_loading.style.display = "none";
+					elements.view_iframe.style.display = "none";
+					elements.view_allow_javascript.style.display = "none";
+					elements.view_javascript_blocked.style.display = "none";
+					elements.view_safety_error.style.display = "none";
+				};
+				var setErrored = function(str) {
+					if(hasErrored) return;
+					hasErrored = true;
+					hideAllViews();
+					elements.loading_text.style.color = "#CC0000";
+					elements.loading_text.innerText = str;
+					elements.view_loading.style.display = "block";
+					if(websocketInstance !== null) {
+						websocketInstance.close();
+						websocketInstance = null;
+					}
+				};
+				var registerMessageHandler = function() {
+					if(!hasRegisteredOnMsgHandler) {
+						hasRegisteredOnMsgHandler = true;
+						window.addEventListener("message", function(evt) {
+							if(currentIFrame !== null && currentMessageHandler !== null && evt.source === currentIFrame.contentWindow) {
+								currentMessageHandler(evt);
+							}
+						});
+					}
+				};
+				var beginShowingDirect = function() {
+					if(hasErrored) return;
+					hideAllViews();
+					if(!eaglercraftXOpts.forceWebViewSupport) {
+						try {
+							currentIFrame = document.createElement("iframe");
+							currentIFrame.allow = "";
+							if(currentIFrame.allow != "") throw "Failed to set allow to \"\"";
+							currentIFrame.referrerPolicy = "strict-origin";
+							var requiredSandboxTokens = [ "allow-downloads" ];
+							if(webviewOptions.scriptEnabled) {
+								requiredSandboxTokens.push("allow-scripts");
+								requiredSandboxTokens.push("allow-pointer-lock");
+							}
+							currentIFrame.sandbox = requiredSandboxTokens.join(" ");
+							for(var i = 0; i < requiredSandboxTokens.length; ++i) {
+								if(!currentIFrame.sandbox.contains(requiredSandboxTokens[i])) {
+									throw ("Failed to set sandbox attribute: " + requiredSandboxTokens[i]);
+								}
+							}
+							var sbox = currentIFrame.sandbox;
+							for(var i = 0; i < sbox.length; ++i) {
+								if(!requiredSandboxTokens.includes(sbox.item(i))) {
+									throw ("Unknown sandbox attribute detected: " + sbox.item(i));
+								}
+							}
+						}catch(ex) {
+							if(typeof ex === "string") {
+								console.error("Caught safety error: " + ex);
+								beginShowingSafetyError();
+							}else {webviewOptions
+								console.error("Fatal error while creating iframe!");
+								console.error(ex);
+								setErrored("Fatal error while creating iframe!");
+							}
+							return;
+						}
+					}else {
+						currentIFrame = document.createElement("iframe");
+						try {
+							currentIFrame.allow = "";
+						}catch(ex) {
+						}
+						try {
+							currentIFrame.referrerPolicy = "strict-origin";
+						}catch(ex) {
+						}
+						try {
+							var sandboxTokens = [ "allow-downloads", "allow-same-origin" ];
+							if(webviewOptions.scriptEnabled) {
+								sandboxTokens.push("allow-scripts");
+								sandboxTokens.push("allow-pointer-lock");
+							}
+							currentIFrame.sandbox = sandboxTokens.join(" ");
+						}catch(ex) {
+						}
+					}
+					currentIFrame.credentialless = true;
+					currentIFrame.loading = "lazy";
+					var cspWarn = false;
+					if(webviewOptions.contentMode === "BLOB_BASED") {
+						if(cspAttrSupport && eaglercraftXOpts.enableWebViewCSP) {
+							if(typeof currentIFrame.csp === "string") {
+								var csp = "default-src 'none';";
+								var protos = (webviewOptions.strictCSPEnable ? "" : " http: https:");
+								if(webviewOptions.scriptEnabled) {
+									csp += (" script-src 'unsafe-eval' 'unsafe-inline' data: blob:" + protos + ";");
+									csp += (" style-src 'unsafe-eval' 'unsafe-inline' data: blob:" + protos + ";");
+									csp += (" img-src data: blob:" + protos + ";");
+									csp += (" font-src data: blob:" + protos + ";");
+									csp += (" child-src data: blob:" + protos + ";");
+									csp += (" frame-src data: blob:;");
+									csp += (" media-src data: mediastream: blob:" + protos + ";");
+									csp += (" connect-src data: blob:" + protos + ";");
+									csp += (" worker-src data: blob:" + protos + ";");
+								}else {
+									csp += (" style-src data: 'unsafe-inline'" + protos + ";");
+									csp += (" img-src data:" + protos + ";");
+									csp += (" font-src data:" + protos + ";");
+									csp += (" media-src data:" + protos + ";");
+								}
+								currentIFrame.csp = csp;
+							}else {
+								console.error("This browser does not support CSP attribute on iframes! (try Chrome)");
+								cspWarn = true;
+							}
+						}else {
+							cspWarn = true;
+						}
+						if(cspWarn && webviewOptions.strictCSPEnable) {
+							console.error("Strict CSP was requested for this webview, but that feature is not available!");
+						}
+					}else {
+						cspWarn = true;
+					}
+					currentIFrame.style.border = "none";
+					currentIFrame.style.backgroundColor = "white";
+					currentIFrame.style.width = "100%";
+					currentIFrame.style.height = "100%";
+					elements.view_iframe.appendChild(currentIFrame);
+					elements.view_iframe.style.display = "block";
+					if(webviewOptions.contentMode === "BLOB_BASED") {
+						currentIFrame.srcdoc = webviewOptions.blob;
+					}else {
+						currentIFrame.src = webviewOptions.url;
+					}
+					currentIFrame.focus();
+					if(webviewOptions.scriptEnabled && webviewOptions.serverMessageAPIEnabled) {
+						var resetSer = webviewResetSerial;
+						var curIFrame = currentIFrame;
+						registerMessageHandler();
+						currentMessageHandler = function(evt) {
+							if(resetSer === webviewResetSerial && curIFrame === currentIFrame) {
+								handleMessageRawFromFrame(evt.data);
+							}
+						};
+					}
+				};
+				var handleMessageRawFromFrame = function(obj) {
+					if(hasErrored) return;
+					if((typeof obj === "object") && (obj.ver === 1) && ((typeof obj.channel === "string") && obj.channel.length > 0)) {
+						if(typeof obj.open === "boolean") {
+							sendMessageEnToServer(obj.open, obj.channel);
+							return;
+						}else if(typeof obj.data === "string") {
+							sendMessageToServerStr(obj.channel, obj.data);
+							return;
+						}else if(obj.data instanceof ArrayBuffer) {
+							sendMessageToServerBin(obj.channel, obj.data);
+							return;
+						}
+					}
+					console.error("WebView sent an invalid message!");	
+				};
+				var sendMessageEnToServer = function(messageChannelOpen, channelName) {
+					if(channelName.length > 255) {
+						console.error("WebView tried to " + (messageChannelOpen ? "open" : "close") + " a channel, but channel name is too long, max is 255 characters!");
+						return;
+					}
+					if(messageChannelOpen && currentMessageChannelName !== null) {
+						console.error("WebView tried to open channel, but a channel is already open!");
+						sendMessageEnToServer(false, currentMessageChannelName);
+					}
+					if(!messageChannelOpen && currentMessageChannelName !== null && currentMessageChannelName === channelName) {
+						console.error("WebView tried to close the wrong channel!");
+					}
+					if(!messageChannelOpen && currentMessageChannelName === null) {
+						console.error("WebView tried to close channel, but the channel is not open!");
+						return;
+					}
+					if(websocketInstance !== null) {
+						if(messageChannelOpen) {
+							websocketInstance.send(JSON.stringify({$:3,channel:channelName}));
+							console.log("WebView opened message channel to server: \"" + channelName + "\"");
+							currentMessageChannelName = channelName;
+						}else {
+							websocketInstance.send(JSON.stringify({$:4}));
+							console.log("WebView closed message channel to server: \"" + currentMessageChannelName + "\"");
+							currentMessageChannelName = null;
+						}
+					}else {
+						console.error("WebView tried to send a message, but no websocket is open!");
+					}
+				};
+				var sendMessageToServerStr = function(channelName, msg) {
+					if(channelName.length > 255) {
+						console.error("WebView tried to send a message packet, but channel name is too long, max is 255 characters!");
+						return;
+					}
+					if(channelName !== currentMessageChannelName) {
+						console.error("WebView tried to send a message packet, but the channel is not open!");
+						return;
+					}
+					if(websocketInstance !== null) {	
+						websocketInstance.send(JSON.stringify({$:5,msg:msg}));
+					}else {
+						console.error("WebView tried to send a message, but no callback for sending packets is set!");
+					}
+				};
+				var sendMessageToServerBin = function(channelName, msg) {
+					if(channelName.length > 255) {
+						console.error("WebView tried to send a message packet, but channel name is too long, max is 255 characters!");
+						return;
+					}
+					if(channelName !== currentMessageChannelName) {
+						console.error("WebView tried to send a message packet, but the channel is not open!");
+						return;
+					}
+					if(websocketInstance !== null) {
+						websocketInstance.send(msg);
+					}else {
+						console.error("WebView tried to send a message, but no callback for sending packets is set!");
+					}
+				};
+				var beginShowingEnableJavaScript = function() {
+					if(hasErrored) return;
+					hideAllViews();
+					if(webviewOptions.contentMode !== "BLOB_BASED") {
+						elements.strict_csp_value.innerText = "Impossible";
+						elements.strict_csp_value.style.color = "red";
+					}else if(!cspAttrSupport || !eaglercraftXOpts.enableWebViewCSP) {
+						elements.strict_csp_value.innerText = "Unsupported";
+						elements.strict_csp_value.style.color = "red";
+					}else if(webviewOptions.strictCSPEnable) {
+						elements.strict_csp_value.innerText = "Enabled";
+						elements.strict_csp_value.style.color = "green";
+					}else {
+						elements.strict_csp_value.innerText = "Disabled";
+						elements.strict_csp_value.style.color = "red";
+					}
+					if(webviewOptions.serverMessageAPIEnabled) {
+						elements.message_api_value.innerText = "Enabled";
+						elements.message_api_value.style.color = "red";
+					}else {
+						elements.message_api_value.innerText = "Disabled";
+						elements.message_api_value.style.color = "green";
+					}
+					elements.view_allow_javascript.style.display = "block";
+				};
+				var beginShowingContentBlocked = function() {
+					if(hasErrored) return;
+					hideAllViews();
+					elements.view_javascript_blocked.style.display = "block";
+				};
+				var beginShowingSafetyError = function() {
+					if(hasErrored) return;
+					hasErrored = true;
+					hideAllViews();
+					elements.view_safety_error.style.display = "block";
+				};
+				window.addEventListener("load", function() {
+					loadElements();
+					loadEagtekIcon();
+					setupElementListeners();
+					websocketInstance = new WebSocket(webSocketURI);
+					websocketInstance.binaryType = "arraybuffer";
+					websocketInstance.addEventListener("open", function(evt) {
+						console.log("Connection to server opened");
+						hasOpened = true;
+						websocketInstance.send(JSON.stringify({$:0,cspSupport:cspAttrSupport}));
+					});
+					websocketInstance.addEventListener("message", function(evt) {
+						try {
+							if(typeof evt.data === "string") {
+								var pkt = JSON.parse(evt.data);
+								if(typeof pkt.$ !== "number") {
+									throw "Packet type is invalid";
+								}
+								if(webviewOptions === null) {
+									if(pkt.$ === 1) {
+										handleHandshake(pkt);
+									}else if(pkt.$ === 2) {
+										handleServerError(pkt);
+									}else {
+										throw "Unknown packet type " + pkt.$ + " for state handshake!"
+									}
+								}else {
+									if(pkt.$ === 2) {
+										handleServerError(pkt);
+									}else if(pkt.$ === 6) {
+										handleServerWebViewStrMsg(pkt);
+									}else {
+										throw "Unknown packet type " + pkt.$ + " for state open!"
+									}
+								}
+							}else {
+								handleServerWebViewBinMsg(evt.data);
+							}
+						}catch(ex) {
+							console.error("Caught exception processing message from server!");
+							console.error(ex);
+						}
+					});
+					websocketInstance.addEventListener("close", function(evt) {
+						websocketInstance = null;
+						setErrored("Connection to EaglercraftX client lost!");
+					});
+					websocketInstance.addEventListener("error", function(evt) {
+						console.error("WebSocket error: " + evt);
+					});
+				});
+			})();
+		</script>
+	</head>
+	<body style="margin:0px;width:100%;height:100%;overflow:hidden;font-family:sans-serif;user-select:none;">
+		<div id="view_loading" style="width:100%;height:100%;display:block;" class="__jsel">
+			<div style="padding-top:13vh;">
+				<h2 style="text-align:center;" id="loading_text" class="__jsel">Please Wait...</h2>
+			</div>
+		</div>
+		<div id="view_iframe" style="width:100%;height:100%;display:none;" class="__jsel">
+		</div>
+		<div id="view_allow_javascript" style="width:100%;height:100%;display:none;" class="__jsel">
+			<div style="padding-top:13vh;">
+				<div style="margin:auto;max-width:450px;border:6px double black;text-align:center;padding:20px;">
+					<h2><img width="32" height="32" style="vertical-align:middle;" class="eagtek_icon">&emsp;Allow JavaScript</h2>
+					<p style="font-family:monospace;text-decoration:underline;word-wrap:break-word;" id="target_url"></p>
+					<h4 style="line-height:1.4em;">Strict CSP: <span id="strict_csp_value" class="__jsel"></span>&ensp;|&ensp;Message API: <span id="message_api_value" class="__jsel"></span></h4>
+					<p><input id="chkbox_remember" type="checkbox" class="__jsel" checked> Remember my choice</p>
+					<p><button style="font-size:1.5em;" id="button_allow" class="__jsel">Allow</button>&emsp;<button style="font-size:1.5em;" id="button_block" class="__jsel">Block</button></p>
+				</div>
+			</div>
+		</div>
+		<div id="view_javascript_blocked" style="width:100%;height:100%;display:none;" class="__jsel">
+			<div style="padding-top:13vh;">
+				<h1 style="text-align:center;"><img width="48" height="48" style="vertical-align:middle;" class="eagtek_icon">&emsp;Content Blocked</h1>
+				<h4 style="text-align:center;">You chose to block JavaScript execution for this embed</h4>
+				<p style="text-align:center;"><button style="font-size:1.0em;" id="button_re_evaluate" class="__jsel">Re-evaluate</button></p>
+			</div>
+		</div>
+		<div id="view_safety_error" style="width:100%;height:100%;display:none;" class="__jsel">
+			<div style="padding-top:13vh;">
+				<h1 style="text-align:center;"><img width="48" height="48" style="vertical-align:middle;" class="eagtek_icon">&emsp;IFrame Safety Error</h1>
+				<h4 style="text-align:center;">The content cannot be displayed safely!</h4>
+				<h4 style="text-align:center;">Check console for more details</h4>
+			</div>
+		</div>
+	</body>
+</html>

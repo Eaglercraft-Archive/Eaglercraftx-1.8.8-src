@@ -44,7 +44,6 @@ public class FixedFunctionShader {
 
 	public class FixedFunctionConstants {
 
-		public static final String VERSION = "#version 300 es";
 		public static final String FILENAME_VSH = "/assets/eagler/glsl/core.vsh";
 		public static final String FILENAME_FSH = "/assets/eagler/glsl/core.fsh";
 

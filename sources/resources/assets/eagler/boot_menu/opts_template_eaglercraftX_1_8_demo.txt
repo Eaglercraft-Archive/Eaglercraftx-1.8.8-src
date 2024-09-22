@@ -1,0 +1,66 @@
+{
+	"joinServer": null,
+	"servers": [
+		{
+			"addr": "ws://localhost:8081/",
+			"hideAddr": false,
+			"name": "Local test server"
+		}
+	],
+	"relays": [
+		{
+			"addr": "wss://relay.deev.is/",
+			"primary": "$random_relay_primary_0",
+			"comment": "lax1dude relay #1"
+		},
+		{
+			"addr": "wss://relay.lax1dude.net/",
+			"primary": "$random_relay_primary_1",
+			"comment": "lax1dude relay #2"
+		},
+		{
+			"addr": "wss://relay.shhnowisnottheti.me/",
+			"primary": "$random_relay_primary_2",
+			"comment": "ayunami relay #1"
+		}
+	],
+	"openDebugConsoleOnLaunch": false,
+	"showBootMenuOnLaunch": false,
+	"bootMenuBlocksUnsignedClients": false,
+	"allowBootMenu": true,
+	"forceWebViewSupport": false,
+	"enableServerCookies": true,
+	"enableDownloadOfflineButton": true,
+	"resourcePacksDB": "resourcePacks",
+	"enableWebViewCSP": true,
+	"checkRelaysForUpdates": true,
+	"allowServerRedirects": true,
+	"allowUpdateSvc": true,
+	"html5CursorSupport": false,
+	"allowFNAWSkins": true,
+	"allowVoiceClient": true,
+	"worldsDB": "worlds",
+	"demoMode": true,
+	"localStorageNamespace": "_eaglercraftX",
+	"enableSignatureBadge": false,
+	"lang": "en_US",
+	"enableMinceraft": true,
+	"autoFixLegacyStyleAttr": true,
+	"allowUpdateDL": true,
+	"logInvalidCerts": false,
+	"checkShaderGLErrors": false,
+	"crashOnUncaughtExceptions": false,
+	"forceWebGL1": false,
+	"forceWebGL2": false,
+	"allowExperimentalWebGL1": true,
+	"useWebGLExt": true,
+	"useDelayOnSwap": false,
+	"useJOrbisAudioDecoder": false,
+	"useXHRFetch": false,
+	"useVisualViewport": true,
+	"deobfStackTraces": true,
+	"disableBlobURLs": false,
+	"eaglerNoDelay": false,
+	"ramdiskMode": false,
+	"singleThreadMode": false
+}

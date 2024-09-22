@@ -29,8 +29,9 @@
 
 ~ 	protected void mouseClicked(int parInt1, int parInt2, int parInt3) {
 
-> CHANGE  25 : 28  @  25 : 28
+> CHANGE  24 : 28  @  24 : 28
 
+~ 		ScaledResolution scaledresolution = mc.scaledResolution;
 ~ 		GlStateManager.viewport((scaledresolution.getScaledWidth() - 290 - 12) / 2 * scaledresolution.getScaleFactor(),
 ~ 				(scaledresolution.getScaledHeight() - 220 + 10) / 2 * scaledresolution.getScaleFactor(),
 ~ 				290 * scaledresolution.getScaleFactor(), 220 * scaledresolution.getScaleFactor());

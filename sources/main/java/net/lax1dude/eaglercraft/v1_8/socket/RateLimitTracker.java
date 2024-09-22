@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import net.lax1dude.eaglercraft.v1_8.EagRuntime;
+
 /**
  * Copyright (c) 2022-2023 lax1dude, ayunami2000. All Rights Reserved.
  * 
@@ -23,12 +25,12 @@ public class RateLimitTracker {
 
 	private static long lastTickUpdate = 0l;
 
-	private static final Map<String, Long> blocks = new HashMap();
-	private static final Map<String, Long> lockout = new HashMap();
+	private static final Map<String, Long> blocks = new HashMap<>();
+	private static final Map<String, Long> lockout = new HashMap<>();
 
 	public static boolean isLockedOut(String addr) {
 		Long lockoutStatus = lockout.get(addr);
-		return lockoutStatus != null && System.currentTimeMillis() - lockoutStatus.longValue() < 300000l;
+		return lockoutStatus != null && EagRuntime.steadyTimeMillis() - lockoutStatus.longValue() < 300000l;
 	}
 
 	public static boolean isProbablyLockedOut(String addr) {
@@ -36,17 +38,17 @@ public class RateLimitTracker {
 	}
 
 	public static void registerBlock(String addr) {
-		blocks.put(addr, System.currentTimeMillis());
+		blocks.put(addr, EagRuntime.steadyTimeMillis());
 	}
 
 	public static void registerLockOut(String addr) {
-		long millis = System.currentTimeMillis();
+		long millis = EagRuntime.steadyTimeMillis();
 		blocks.put(addr, millis);
 		lockout.put(addr, millis);
 	}
 
 	public static void tick() {
-		long millis = System.currentTimeMillis();
+		long millis = EagRuntime.steadyTimeMillis();
 		if(millis - lastTickUpdate > 5000l) {
 			lastTickUpdate = millis;
 			Iterator<Long> blocksItr = blocks.values().iterator();

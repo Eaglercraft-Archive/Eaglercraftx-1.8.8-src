@@ -1,5 +1,6 @@
 package net.lax1dude.eaglercraft.v1_8;
 
+import net.lax1dude.eaglercraft.v1_8.internal.EnumFireKeyboardEvent;
 import net.lax1dude.eaglercraft.v1_8.internal.KeyboardConstants;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformInput;
 
@@ -58,6 +59,10 @@ public class Keyboard {
 
 	public static boolean isRepeatEvent() {
 		return PlatformInput.keyboardIsRepeatEvent();
+	}
+
+	public static void fireEvent(EnumFireKeyboardEvent eventType, int eagKey, char keyChar) {
+		PlatformInput.keyboardFireEvent(eventType, eagKey, keyChar);
 	}
 
 }

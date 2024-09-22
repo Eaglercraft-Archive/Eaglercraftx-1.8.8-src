@@ -1,5 +1,7 @@
 package net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred;
 
+import net.lax1dude.eaglercraft.v1_8.EagRuntime;
+
 /**
  * Copyright (c) 2023 lax1dude. All Rights Reserved.
  * 
@@ -35,7 +37,7 @@ class DynamicLightInstance {
 	}
 
 	public void updateLight(double posX, double posY, double posZ, float red, float green, float blue) {
-		this.lastCacheHit = System.currentTimeMillis();
+		this.lastCacheHit = EagRuntime.steadyTimeMillis();
 		this.posX = posX;
 		this.posY = posY;
 		this.posZ = posZ;

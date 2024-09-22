@@ -1,6 +1,9 @@
 package net.lax1dude.eaglercraft.v1_8.sp.gui;
 
+import net.lax1dude.eaglercraft.v1_8.sp.SingleplayerServerController;
+import net.lax1dude.eaglercraft.v1_8.sp.internal.ClientPlatformSingleplayer;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 
@@ -40,6 +43,9 @@ public class GuiScreenIntegratedServerFailed extends GuiScreen {
 	public void initGui() {
 		this.buttonList.clear();
 		this.buttonList.add(new GuiButton(0, this.width / 2 - 100, this.height / 6 + 96, I18n.format("singleplayer.crashed.continue")));
+		if(!ClientPlatformSingleplayer.isRunningSingleThreadMode() && ClientPlatformSingleplayer.isSingleThreadModeSupported()) {
+			this.buttonList.add(new GuiButton(1, this.width / 2 - 100, this.height / 6 + 126, I18n.format("singleplayer.crashed.singleThreadCont")));
+		}
 	}
 
 	public void drawScreen(int par1, int par2, float par3) {
@@ -52,6 +58,12 @@ public class GuiScreenIntegratedServerFailed extends GuiScreen {
 	protected void actionPerformed(GuiButton par1GuiButton) {
 		if(par1GuiButton.id == 0) {
 			this.mc.displayGuiScreen(cont);
+		}else if(par1GuiButton.id == 1) {
+			if(SingleplayerServerController.canKillWorker()) {
+				SingleplayerServerController.killWorker();
+			}
+			this.mc.displayGuiScreen(new GuiScreenIntegratedServerStartup(new GuiMainMenu(), true));
 		}
 	}
+
 }

@@ -226,20 +226,18 @@ void main() {
 #ifdef COMPILE_ENABLE_TEXTURE2D
 	vec2 texCoords2f;
 #ifdef COMPILE_ENABLE_TEX_GEN
+	vec4 tmpVec4 = vec4(v_objectPosition3f, 1.0);
 	vec4 texGenVector;
-	vec4 texGenPosSrc[2];
-	texGenPosSrc[0] = vec4(v_objectPosition3f, 1.0);
-	texGenPosSrc[1] = v_position4f;
-	texGenVector.x = dot(texGenPosSrc[u_texGenPlane4i.x], u_texGenS4f);
-	texGenVector.y = dot(texGenPosSrc[u_texGenPlane4i.y], u_texGenT4f);
-	texGenVector.z = dot(texGenPosSrc[u_texGenPlane4i.z], u_texGenR4f);
-	texGenVector.w = dot(texGenPosSrc[u_texGenPlane4i.w], u_texGenQ4f);
-	texGenVector = vec4(mat4x3(
+	texGenVector.x = dot(u_texGenPlane4i.x == 1 ? v_position4f : tmpVec4, u_texGenS4f);
+	texGenVector.y = dot(u_texGenPlane4i.y == 1 ? v_position4f : tmpVec4, u_texGenT4f);
+	texGenVector.z = dot(u_texGenPlane4i.z == 1 ? v_position4f : tmpVec4, u_texGenR4f);
+	texGenVector.w = dot(u_texGenPlane4i.w == 1 ? v_position4f : tmpVec4, u_texGenQ4f);
+	texGenVector.xyz = mat4x3(
 		u_textureMat4f01[0].xyw,
 		u_textureMat4f01[1].xyw,
 		u_textureMat4f01[2].xyw,
 		u_textureMat4f01[3].xyw
-	) * texGenVector, 0.0);
+	) * texGenVector;
 	texCoords2f = texGenVector.xy / texGenVector.z;
 #else
 	

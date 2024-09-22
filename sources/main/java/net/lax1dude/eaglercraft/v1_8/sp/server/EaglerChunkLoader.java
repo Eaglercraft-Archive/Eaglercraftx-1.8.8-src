@@ -71,7 +71,7 @@ public class EaglerChunkLoader extends AnvilChunkLoader {
 
 	@Override
 	public Chunk loadChunk(World var1, int var2, int var3) throws IOException {
-		VFile2 file = new VFile2(chunkDirectory, getChunkPath(var2, var3) + ".dat");
+		VFile2 file = WorldsDB.newVFile(chunkDirectory, getChunkPath(var2, var3) + ".dat");
 		if(!file.exists()) {
 			return null;
 		}
@@ -93,7 +93,7 @@ public class EaglerChunkLoader extends AnvilChunkLoader {
 		this.writeChunkToNBT(var2, var1, chunkData);
 		NBTTagCompound fileData = new NBTTagCompound();
 		fileData.setTag("Level", chunkData);
-		VFile2 file = new VFile2(chunkDirectory, getChunkPath(var2.xPosition, var2.zPosition) + ".dat");
+		VFile2 file = WorldsDB.newVFile(chunkDirectory, getChunkPath(var2.xPosition, var2.zPosition) + ".dat");
 		try(OutputStream os = file.getOutputStream()) {
 			CompressedStreamTools.writeCompressed(fileData, os);
 		}

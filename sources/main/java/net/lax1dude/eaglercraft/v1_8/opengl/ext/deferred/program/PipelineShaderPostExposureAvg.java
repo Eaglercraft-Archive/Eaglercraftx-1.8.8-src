@@ -28,7 +28,7 @@ import net.lax1dude.eaglercraft.v1_8.internal.IUniformGL;
 public class PipelineShaderPostExposureAvg extends ShaderProgram<PipelineShaderPostExposureAvg.Uniforms> {
 
 	public static PipelineShaderPostExposureAvg compile(boolean luma) throws ShaderException {
-		List<String> compileFlags = new ArrayList(1);
+		List<String> compileFlags = new ArrayList<>(1);
 		if(luma) {
 			compileFlags.add("CALCULATE_LUMINANCE");
 		}

@@ -257,7 +257,23 @@
 ~ 			for (int k = 0, l = aentityvillager$itradelist2.size(); k < l; ++k) {
 ~ 				aentityvillager$itradelist2.get(k).modifyMerchantRecipeList(this.buyingList, this.rand);
 
-> CHANGE  236 : 237  @  236 : 237
+> CHANGE  9 : 18  @  9 : 10
+
+~ 		return getDisplayNameImpl(false);
+~ 	}
+~ 
+~ 	public IChatComponent getDisplayNameProfanityFilter() {
+~ 		return getDisplayNameImpl(true);
+~ 	}
+~ 
+~ 	private IChatComponent getDisplayNameImpl(boolean filter) {
+~ 		String s = filter ? this.getCustomNameTagProfanityFilter() : this.getCustomNameTag();
+
+> CHANGE  53 : 54  @  53 : 54
+
+~ 				return filter ? super.getDisplayNameProfanityFilter() : super.getDisplayName();
+
+> CHANGE  172 : 173  @  172 : 173
 
 ~ 		public void modifyMerchantRecipeList(MerchantRecipeList recipeList, EaglercraftRandom random) {
 

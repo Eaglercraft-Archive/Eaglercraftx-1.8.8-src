@@ -41,7 +41,7 @@
 > CHANGE  1 : 25  @  1 : 9
 
 ~ 	public static void initClient() {
-~ 		try (InputStream inputstream = EagRuntime.getResourceStream("/assets/minecraft/lang/en_US.lang")) {
+~ 		try (InputStream inputstream = EagRuntime.getRequiredResourceStream("/assets/minecraft/lang/en_US.lang")) {
 ~ 			initServer(IOUtils.readLines(inputstream, StandardCharsets.UTF_8));
 ~ 			fallbackInstance = new StringTranslate();
 ~ 			fallbackInstance.replaceWith(instance.languageList);
@@ -69,13 +69,17 @@
 
 > INSERT  2 : 3  @  2
 
-+ 		instance.lastUpdateTimeInMilliseconds = System.currentTimeMillis();
++ 		instance.lastUpdateTimeInMilliseconds = EagRuntime.steadyTimeMillis();
 
 > CHANGE  6 : 7  @  6 : 7
 
 ~ 	public static void replaceWith(Map<String, String> parMap) {
 
-> CHANGE  5 : 6  @  5 : 6
+> CHANGE  2 : 3  @  2 : 3
+
+~ 		instance.lastUpdateTimeInMilliseconds = EagRuntime.steadyTimeMillis();
+
+> CHANGE  2 : 3  @  2 : 3
 
 ~ 	public String translateKey(String key) {
 

@@ -7,11 +7,12 @@
 
 > DELETE  2  @  2 : 4
 
-> INSERT  1 : 5  @  1
+> INSERT  1 : 6  @  1
 
 + 
 + import net.lax1dude.eaglercraft.v1_8.netty.Unpooled;
 + import net.lax1dude.eaglercraft.v1_8.Keyboard;
++ import net.lax1dude.eaglercraft.v1_8.minecraft.EnumInputEvent;
 + import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 
 > DELETE  1  @  1 : 2
@@ -28,11 +29,22 @@
 
 ~ 	protected void mouseClicked(int parInt1, int parInt2, int parInt3) {
 
-> INSERT  46 : 50  @  46
+> INSERT  46 : 61  @  46
 
 + 
 + 	public boolean blockPTTKey() {
 + 		return nameField.isFocused();
 + 	}
++ 
++ 	@Override
++ 	public boolean showCopyPasteButtons() {
++ 		return nameField.isFocused();
++ 	}
++ 
++ 	@Override
++ 	public void fireInputEvent(EnumInputEvent event, String param) {
++ 		nameField.fireInputEvent(event, param);
++ 	}
++ 
 
 > EOF

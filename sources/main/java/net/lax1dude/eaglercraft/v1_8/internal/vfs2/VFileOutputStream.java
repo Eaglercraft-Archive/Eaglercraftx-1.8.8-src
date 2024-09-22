@@ -3,7 +3,6 @@ package net.lax1dude.eaglercraft.v1_8.internal.vfs2;
 import java.io.IOException;
 
 import net.lax1dude.eaglercraft.v1_8.EaglerOutputStream;
-import net.lax1dude.eaglercraft.v1_8.internal.PlatformFilesystem;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformRuntime;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.ByteBuffer;
 
@@ -41,7 +40,7 @@ class VFileOutputStream extends EaglerOutputStream {
 				copyBuffer.put(buf, 0, count);
 				copyBuffer.flip();
 				try {
-					PlatformFilesystem.eaglerWrite(vfsFile.path, copyBuffer);
+					vfsFile.getFS().eaglerWrite(vfsFile.path, copyBuffer);
 				}catch(Throwable t) {
 					throw new IOException("Could not write stream contents to file!", t);
 				}

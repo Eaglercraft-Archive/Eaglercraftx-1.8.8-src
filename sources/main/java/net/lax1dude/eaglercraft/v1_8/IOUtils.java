@@ -32,7 +32,7 @@ public class IOUtils {
 			return Arrays.asList(
 					new String(((EaglerInputStream) parInputStream).getAsArray(), charset).split("(\\r\\n|\\n|\\r)"));
 		}else {
-			List<String> ret = new ArrayList();
+			List<String> ret = new ArrayList<>();
 			try(InputStream is = parInputStream) {
 				BufferedReader rd = new BufferedReader(new InputStreamReader(is, charset));
 				String s;

@@ -88,7 +88,7 @@ public class GuiScreenIntegratedServerBusy extends GuiScreen {
 	}
 	
 	public void initGui() {
-		if(startStartTime == 0) this.startStartTime = System.currentTimeMillis();
+		if(startStartTime == 0) this.startStartTime = EagRuntime.steadyTimeMillis();
 		areYouSure = 0;
 		this.buttonList.add(killTask = new GuiButton(0, this.width / 2 - 100, this.height / 3 + 50, I18n.format("singleplayer.busy.killTask")));
 		killTask.enabled = false;
@@ -102,7 +102,7 @@ public class GuiScreenIntegratedServerBusy extends GuiScreen {
 		this.drawDefaultBackground();
 		int top = this.height / 3;
 		
-		long millis = System.currentTimeMillis();
+		long millis = EagRuntime.steadyTimeMillis();
 		
 		String str = I18n.format(currentStatus);
 		
@@ -128,7 +128,7 @@ public class GuiScreenIntegratedServerBusy extends GuiScreen {
 	}
 	
 	public void updateScreen() {
-		long millis = System.currentTimeMillis();
+		long millis = EagRuntime.steadyTimeMillis();
 		if(millis - startStartTime > 6000l && SingleplayerServerController.canKillWorker()) {
 			killTask.enabled = true;
 		}
@@ -161,6 +161,10 @@ public class GuiScreenIntegratedServerBusy extends GuiScreen {
 	}
 
 	public boolean shouldHangupIntegratedServer() {
+		return false;
+	}
+
+	public boolean canCloseGui() {
 		return false;
 	}
 

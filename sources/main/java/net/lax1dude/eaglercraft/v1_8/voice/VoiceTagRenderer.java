@@ -33,7 +33,7 @@ public class VoiceTagRenderer {
 
 	private static final ResourceLocation voiceGuiIcons = new ResourceLocation("eagler:gui/eagler_gui.png");
 
-	private static final Set<EaglercraftUUID> voiceTagsDrawnThisFrame = new HashSet();
+	private static final Set<EaglercraftUUID> voiceTagsDrawnThisFrame = new HashSet<>();
 
 	public static void renderVoiceNameTag(Minecraft mc, EntityOtherPlayerMP player, int offset) {
 		EaglercraftUUID uuid = player.getUniqueID();

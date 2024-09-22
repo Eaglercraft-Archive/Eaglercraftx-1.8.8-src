@@ -16,7 +16,9 @@
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
 ~ import net.lax1dude.eaglercraft.v1_8.sp.server.EaglerMinecraftServer;
 
-> DELETE  42  @  42 : 53
+> DELETE  25  @  25 : 26
+
+> DELETE  16  @  16 : 27
 
 > CHANGE  12 : 14  @  12 : 14
 
@@ -27,7 +29,28 @@
 
 ~ 	private final Map<EaglercraftUUID, Entity> entitiesByUuid = Maps.newHashMap();
 
-> CHANGE  143 : 145  @  143 : 144
+> CHANGE  23 : 25  @  23 : 26
+
+~ 	public WorldServer(MinecraftServer server, ISaveHandler saveHandlerIn, WorldInfo info, int dimensionId) {
+~ 		super(saveHandlerIn, info, WorldProvider.getProviderForDimension(dimensionId), false);
+
+> DELETE  64  @  64 : 65
+
+> DELETE  6  @  6 : 7
+
+> DELETE  11  @  11 : 12
+
+> DELETE  1  @  1 : 2
+
+> DELETE  1  @  1 : 2
+
+> DELETE  1  @  1 : 2
+
+> DELETE  2  @  2 : 3
+
+> DELETE  1  @  1 : 2
+
+> CHANGE  22 : 24  @  22 : 23
 
 ~ 			for (int k = 0, l = this.playerEntities.size(); k < l; ++k) {
 ~ 				EntityPlayer entityplayer = this.playerEntities.get(k);
@@ -43,7 +66,17 @@
 ~ 			for (int k = 0, l = this.playerEntities.size(); k < l; ++k) {
 ~ 				EntityPlayer entityplayer = this.playerEntities.get(k);
 
-> CHANGE  88 : 91  @  88 : 89
+> DELETE  48  @  48 : 49
+
+> DELETE  2  @  2 : 3
+
+> DELETE  1  @  1 : 2
+
+> DELETE  11  @  11 : 12
+
+> DELETE  19  @  19 : 20
+
+> CHANGE  2 : 5  @  2 : 3
 
 ~ 					ExtendedBlockStorage[] vigg = chunk.getBlockStorageArray();
 ~ 					for (int m = 0; m < vigg.length; ++m) {
@@ -53,15 +86,25 @@
 
 + 									++EaglerMinecraftServer.counterTileUpdate;
 
-> INSERT  47 : 48  @  47
+> DELETE  5  @  5 : 7
+
+> DELETE  1  @  1 : 2
+
+> INSERT  38 : 39  @  38
 
 + 						++EaglerMinecraftServer.counterTileUpdate;
 
-> INSERT  95 : 96  @  95
+> DELETE  65  @  65 : 67
+
+> DELETE  12  @  12 : 14
+
+> INSERT  14 : 15  @  14
 
 + 								++EaglerMinecraftServer.counterTileUpdate;
 
-> CHANGE  160 : 161  @  160 : 161
+> DELETE  15  @  15 : 16
+
+> CHANGE  144 : 145  @  144 : 145
 
 ~ 			EaglercraftRandom random = new EaglercraftRandom(this.getSeed());
 

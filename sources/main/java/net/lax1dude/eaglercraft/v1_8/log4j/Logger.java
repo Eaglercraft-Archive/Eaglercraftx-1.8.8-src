@@ -101,7 +101,7 @@ public class Logger {
 		log(Level.FATAL, msg);
 	}
 	
-	private static final SimpleDateFormat fmt = EagRuntime.fixDateFormat(new SimpleDateFormat("hh:mm:ss+SSS"));
+	private static final SimpleDateFormat fmt = new SimpleDateFormat("hh:mm:ss+SSS");
 	private static final Date dateInstance = new Date();
 	
 	public void log(Level level, String msg) {

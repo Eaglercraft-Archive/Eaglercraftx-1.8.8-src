@@ -1,7 +1,7 @@
 #line 2
 
 /*
- * Copyright (c) 2022-2023 lax1dude. All Rights Reserved.
+ * Copyright (c) 2022-2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -16,21 +16,17 @@
  * 
  */
 
-precision lowp int;
-precision mediump float;
-precision mediump sampler2D;
+EAGLER_IN(vec2, v_texCoord2f)
+EAGLER_IN(vec4, v_color4f)
 
-in vec2 v_texCoord2f;
-in vec4 v_color4f;
-
-layout(location = 0) out vec4 output4f;
+EAGLER_FRAG_OUT()
 
 uniform sampler2D u_inputTexture;
 uniform vec4 u_colorBias4f;
 
 void main() {
-	output4f = texture(u_inputTexture, v_texCoord2f) * v_color4f + u_colorBias4f;
-	if(output4f.a < 0.004) {
+	EAGLER_FRAG_COLOR = EAGLER_TEXTURE_2D(u_inputTexture, v_texCoord2f) * v_color4f + u_colorBias4f;
+	if(EAGLER_FRAG_COLOR.a < 0.004) {
 		discard;
 	}
 }

@@ -56,7 +56,7 @@ public class IntegratedServerPlayerNetworkManager {
 
 	private boolean firstPacket = true;
 
-	private List<byte[]> fragmentedPacket = new ArrayList();
+	private List<byte[]> fragmentedPacket = new ArrayList<>();
 
 	public static final int fragmentSize = 0xFF00;
 	public static final int compressionThreshold = 1024;
@@ -124,8 +124,7 @@ public class IntegratedServerPlayerNetworkManager {
 							kickDAO.write(0x00);
 							kickDAO.write(msg.length());
 							for(int j = 0, l = msg.length(); j < l; ++j) {
-								kickDAO.write(0);
-								kickDAO.write(msg.codePointAt(j));
+								kickDAO.writeChar(msg.charAt(j));
 							}
 						}catch(IOException ex) {
 							throw new RuntimeException(ex);

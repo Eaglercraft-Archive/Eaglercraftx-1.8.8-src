@@ -20,6 +20,8 @@ import net.lax1dude.eaglercraft.v1_8.internal.PlatformInput;
 public class Display {
 
 	private static long lastSwap = 0l;
+	private static long lastDPIUpdate = -250l;
+	private static float cacheDPI = 1.0f;
 
 	public static int getWidth() {
 		return PlatformInput.getWindowWidth();
@@ -27,6 +29,22 @@ public class Display {
 	
 	public static int getHeight() {
 		return PlatformInput.getWindowHeight();
+	}
+
+	public static int getVisualViewportX() {
+		return PlatformInput.getVisualViewportX();
+	}
+
+	public static int getVisualViewportY() {
+		return PlatformInput.getVisualViewportY();
+	}
+
+	public static int getVisualViewportW() {
+		return PlatformInput.getVisualViewportW();
+	}
+
+	public static int getVisualViewportH() {
+		return PlatformInput.getVisualViewportH();
 	}
 
 	public static boolean isActive() {
@@ -61,22 +79,30 @@ public class Display {
 		boolean limitFPS = limitFramerate > 0 && limitFramerate < 1000;
 		
 		if(limitFPS) {
-			long millis = System.currentTimeMillis();
+			long millis = EagRuntime.steadyTimeMillis();
 			long frameMillis = (1000l / limitFramerate) - (millis - lastSwap);
 			if(frameMillis > 0l) {
 				EagUtils.sleep(frameMillis);
 			}
 		}
 		
-		lastSwap = System.currentTimeMillis();
+		lastSwap = EagRuntime.steadyTimeMillis();
 	}
 
 	public static boolean contextLost() {
 		return PlatformInput.contextLost();
 	}
-	
+
 	public static boolean wasResized() {
 		return PlatformInput.wasResized();
+	}
+
+	public static boolean wasVisualViewportResized() {
+		return PlatformInput.wasVisualViewportResized();
+	}
+
+	public static boolean supportsFullscreen() {
+		return PlatformInput.supportsFullscreen();
 	}
 
 	public static boolean isFullscreen() {
@@ -85,6 +111,15 @@ public class Display {
 
 	public static void toggleFullscreen() {
 		PlatformInput.toggleFullscreen();
+	}
+
+	public static float getDPI() {
+		long millis = EagRuntime.steadyTimeMillis();
+		if(millis - lastDPIUpdate > 250l) {
+			lastDPIUpdate = millis;
+			cacheDPI = PlatformInput.getDPI();
+		}
+		return cacheDPI;
 	}
 
 }

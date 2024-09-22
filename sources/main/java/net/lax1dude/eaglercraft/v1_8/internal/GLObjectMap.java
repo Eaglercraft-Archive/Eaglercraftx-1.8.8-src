@@ -71,4 +71,11 @@ public class GLObjectMap<T> {
 		values = new Object[size];
 		System.arraycopy(oldValues, 0, values, 0, oldSize);
 	}
+
+	public void clear() {
+		if(allocatedObjects == 0) return;
+		values = new Object[size];
+		insertIndex = 0;
+		allocatedObjects = 0;
+	}
 }

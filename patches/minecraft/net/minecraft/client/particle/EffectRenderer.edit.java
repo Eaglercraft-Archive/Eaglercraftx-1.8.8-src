@@ -14,12 +14,13 @@
 ~ import net.lax1dude.eaglercraft.v1_8.minecraft.IAcceleratedParticleEngine;
 ~ 
 
-> INSERT  1 : 9  @  1
+> INSERT  1 : 10  @  1
 
 + 
 + import com.google.common.collect.Lists;
 + import com.google.common.collect.Maps;
 + 
++ import net.lax1dude.eaglercraft.v1_8.opengl.EaglercraftGPU;
 + import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 + import net.lax1dude.eaglercraft.v1_8.opengl.WorldRenderer;
 + import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.DeferredStateManager;
@@ -43,10 +44,15 @@
 > INSERT  2 : 5  @  2
 
 + 	public static final AcceleratedEffectRenderer vanillaAcceleratedParticleRenderer = new AcceleratedEffectRenderer();
-+ 	public IAcceleratedParticleEngine acceleratedParticleRenderer = vanillaAcceleratedParticleRenderer;
++ 	public IAcceleratedParticleEngine acceleratedParticleRenderer = null;
 + 
 
-> CHANGE  104 : 106  @  104 : 105
+> INSERT  13 : 15  @  13
+
++ 		this.acceleratedParticleRenderer = EaglercraftGPU.checkInstancingCapable() ? vanillaAcceleratedParticleRenderer
++ 				: null;
+
+> CHANGE  91 : 93  @  91 : 92
 
 ~ 		for (int i = 0, l = this.particleEmitters.size(); i < l; ++i) {
 ~ 			EntityParticleEmitter entityparticleemitter = this.particleEmitters.get(i);
@@ -117,17 +123,20 @@
 + 						texCoordWidth = 1.0f / blockMap.getWidth();
 + 						texCoordHeight = 1.0f / blockMap.getHeight();
 
-> INSERT  7 : 11  @  7
+> INSERT  7 : 13  @  7
 
 + 					boolean legacyRenderingHasOccured = false;
 + 
-+ 					acceleratedParticleRenderer.begin(partialTicks);
++ 					if (acceleratedParticleRenderer != null) {
++ 						acceleratedParticleRenderer.begin(partialTicks);
++ 					}
 + 
 
-> CHANGE  4 : 9  @  4 : 5
+> CHANGE  4 : 10  @  4 : 5
 
-~ 							if (!entityfx.renderAccelerated(acceleratedParticleRenderer, entityIn, partialTicks, f, f4,
-~ 									f1, f2, f3)) {
+~ 							if (acceleratedParticleRenderer == null
+~ 									|| !entityfx.renderAccelerated(acceleratedParticleRenderer, entityIn, partialTicks,
+~ 											f, f4, f1, f2, f3)) {
 ~ 								entityfx.renderParticle(worldrenderer, entityIn, partialTicks, f, f4, f1, f2, f3);
 ~ 								legacyRenderingHasOccured = true;
 ~ 							}
@@ -142,7 +151,7 @@
 ~ 											: (l == 1 ? "TERRAIN_TEXTURE"
 ~ 													: (l == 3 ? "ENTITY_PARTICLE_TEXTURE" : "Unknown - " + l));
 
-> CHANGE  6 : 13  @  6 : 7
+> CHANGE  6 : 15  @  6 : 7
 
 ~ 					if (legacyRenderingHasOccured) {
 ~ 						tessellator.draw();
@@ -150,6 +159,8 @@
 ~ 						worldrenderer.finishDrawing();
 ~ 					}
 ~ 
-~ 					acceleratedParticleRenderer.draw(texCoordWidth, texCoordHeight);
+~ 					if (acceleratedParticleRenderer != null) {
+~ 						acceleratedParticleRenderer.draw(texCoordWidth, texCoordHeight);
+~ 					}
 
 > EOF

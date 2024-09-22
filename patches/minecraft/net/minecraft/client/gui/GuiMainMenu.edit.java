@@ -182,16 +182,15 @@
 
 ~ 	protected void keyTyped(char parChar1, int parInt1) {
 
-> CHANGE  3 : 9  @  3 : 7
+> CHANGE  3 : 8  @  3 : 6
 
 ~ 		if (viewportTexture == null) {
 ~ 			viewportTexture = new DynamicTexture(256, 256);
 ~ 			backgroundTexture = this.mc.getTextureManager().getDynamicTextureLocation("background", viewportTexture);
 ~ 		}
 ~ 		this.updateCheckerOverlay.setResolution(mc, width, height);
-~ 		Calendar calendar = EagRuntime.getLocaleCalendar();
 
-> DELETE  9  @  9 : 10
+> DELETE  10  @  10 : 11
 
 > INSERT  1 : 8  @  1
 

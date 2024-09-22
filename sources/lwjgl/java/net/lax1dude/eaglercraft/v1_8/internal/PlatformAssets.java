@@ -43,7 +43,11 @@ public class PlatformAssets {
 		}
 	}
 	
-	public static final byte[] getResourceBytes(String path) {
+	public static boolean getResourceExists(String path) {
+		return (new File("resources", path)).isFile();
+	}
+	
+	public static byte[] getResourceBytes(String path) {
 		File loadFile = new File("resources", path);
 		byte[] ret = new byte[(int) loadFile.length()];
 		try(FileInputStream is = new FileInputStream(loadFile)) {
@@ -56,8 +60,12 @@ public class PlatformAssets {
 			return null;
 		}
 	}
-	
-	public static final ImageData loadImageFile(InputStream data) {
+
+	public static ImageData loadImageFile(InputStream data) {
+		return loadImageFile(data, "image/png");
+	}
+
+	public static ImageData loadImageFile(InputStream data, String mime) {
 		try {
 			BufferedImage img = ImageIO.read(data);
 			if(img == null) {
@@ -81,9 +89,13 @@ public class PlatformAssets {
 			return null;
 		}
 	}
-	
-	public static final ImageData loadImageFile(byte[] data) {
-		return loadImageFile(new EaglerInputStream(data));
+
+	public static ImageData loadImageFile(byte[] data) {
+		return loadImageFile(new EaglerInputStream(data), "image/png");
 	}
-	
+
+	public static ImageData loadImageFile(byte[] data, String mime) {
+		return loadImageFile(new EaglerInputStream(data), mime);
+	}
+
 }

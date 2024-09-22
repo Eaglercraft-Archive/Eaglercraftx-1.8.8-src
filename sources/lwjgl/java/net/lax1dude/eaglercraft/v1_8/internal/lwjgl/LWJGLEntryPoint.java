@@ -6,7 +6,6 @@ import javax.swing.UnsupportedLookAndFeelException;
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.EagUtils;
 import net.lax1dude.eaglercraft.v1_8.internal.EnumPlatformANGLE;
-import net.lax1dude.eaglercraft.v1_8.internal.PlatformFilesystem;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformInput;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformRuntime;
 import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.program.ShaderSource;
@@ -82,11 +81,12 @@ public class LWJGLEntryPoint {
 				PlatformInput.setStartupFullscreen(true);
 			}else if(args[i].equalsIgnoreCase("highp")) {
 				ShaderSource.setHighP(true);
-			}else if(args[i].startsWith("jdbc:")) {
-				if(i < args.length - 1) {
-					PlatformFilesystem.setUseJDBC(args[i]);
-					PlatformFilesystem.setJDBCDriverClass(args[++i]);
-				}
+			}else if(args[i].equalsIgnoreCase("gles=200")) {
+				PlatformRuntime.requestGL(200);
+			}else if(args[i].equalsIgnoreCase("gles=300")) {
+				PlatformRuntime.requestGL(300);
+			}else if(args[i].equalsIgnoreCase("gles=310")) {
+				PlatformRuntime.requestGL(310);
 			}else {
 				EnumPlatformANGLE angle = EnumPlatformANGLE.fromId(args[i]);
 				if(angle != EnumPlatformANGLE.DEFAULT) {

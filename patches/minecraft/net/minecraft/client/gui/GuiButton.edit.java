@@ -46,4 +46,12 @@
 ~ 				GlStateManager.popMatrix();
 ~ 			}
 
+> INSERT  32 : 37  @  32
+
++ 
++ 	public boolean isSliderTouchEvents() {
++ 		return false;
++ 	}
++ 
+
 > EOF

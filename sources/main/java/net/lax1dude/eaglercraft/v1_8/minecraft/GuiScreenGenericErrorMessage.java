@@ -1,5 +1,7 @@
 package net.lax1dude.eaglercraft.v1_8.minecraft;
 
+import org.apache.commons.lang3.StringUtils;
+
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
@@ -26,8 +28,8 @@ public class GuiScreenGenericErrorMessage extends GuiScreen {
 	private GuiScreen cont;
 
 	public GuiScreenGenericErrorMessage(String str1, String str2, GuiScreen cont) {
-		this.str1 = I18n.format(str1);
-		this.str2 = I18n.format(str2);
+		this.str1 = StringUtils.isAllEmpty(str1) ? "" : I18n.format(str1);
+		this.str2 = StringUtils.isAllEmpty(str2) ? "" : I18n.format(str2);
 		this.cont = cont;
 	}
 

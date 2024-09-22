@@ -2,6 +2,7 @@ package net.lax1dude.eaglercraft.v1_8.profile;
 
 import static net.lax1dude.eaglercraft.v1_8.opengl.RealOpenGLEnums.*;
 
+import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 import net.lax1dude.eaglercraft.v1_8.opengl.EaglerMeshLoader;
@@ -158,7 +159,7 @@ public class RenderHighPoly extends RenderPlayer {
 				
 				if(highPolySkin.headModel != null) {
 					if(highPolySkin == HighPolySkin.BABY_CHARLES) {
-						long millis = System.currentTimeMillis();
+						long millis = EagRuntime.steadyTimeMillis();
 						float partialTicks = (float) ((millis - abstractclientplayer.eaglerHighPolyAnimationTick) * 0.02);
 						//long l50 = millis / 50l * 50l;
 						//boolean runTick = par1EntityPlayer.eaglerHighPolyAnimationTick < l50 && millis >= l50;

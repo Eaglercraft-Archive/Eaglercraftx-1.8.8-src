@@ -2,6 +2,7 @@ package net.lax1dude.eaglercraft.v1_8.internal.vfs2;
 
 import java.util.List;
 
+import net.lax1dude.eaglercraft.v1_8.internal.IEaglerFilesystem;
 import net.lax1dude.eaglercraft.v1_8.internal.VFSFilenameIterator;
 
 /**
@@ -21,15 +22,17 @@ import net.lax1dude.eaglercraft.v1_8.internal.VFSFilenameIterator;
  */
 class VFSListFilesIteratorImpl implements VFSFilenameIterator {
 
+	protected IEaglerFilesystem fs;
 	protected List<VFile2> list;
 
-	VFSListFilesIteratorImpl(List<VFile2> list) {
+	VFSListFilesIteratorImpl(IEaglerFilesystem fs, List<VFile2> list) {
+		this.fs = fs;
 		this.list = list;
 	}
 
 	@Override
 	public void next(String entry) {
-		list.add(new VFile2(entry));
+		list.add(VFile2.create(fs, entry));
 	}
 
 }

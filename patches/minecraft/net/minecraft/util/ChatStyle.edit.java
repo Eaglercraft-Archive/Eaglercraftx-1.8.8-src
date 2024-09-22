@@ -80,7 +80,7 @@
 
 + 				}
 
-> CHANGE  1 : 12  @  1 : 13
+> CHANGE  1 : 13  @  1 : 12
 
 ~ 				if (jsonobject.has("hoverEvent")) {
 ~ 					JSONObject jsonobject2 = jsonobject.getJSONObject("hoverEvent");
@@ -88,13 +88,22 @@
 ~ 						String jsonprimitive2 = jsonobject2.getString("action");
 ~ 						HoverEvent.Action hoverevent$action = jsonprimitive2 == null ? null
 ~ 								: HoverEvent.Action.getValueByCanonicalName(jsonprimitive2);
-~ 						IChatComponent ichatcomponent = JSONTypeProvider.deserializeNoCast(jsonobject2.get("value"),
-~ 								IChatComponent.class);
-~ 						if (hoverevent$action != null && ichatcomponent != null
-~ 								&& hoverevent$action.shouldAllowInChat()) {
-~ 							chatstyle.chatHoverEvent = new HoverEvent(hoverevent$action, ichatcomponent);
+~ 						Object val = jsonobject2.opt("value");
+~ 						if (val == null) {
+~ 							val = jsonobject2.opt("contents");
+~ 							if (val == null) {
+~ 								throw new JSONException(
+~ 										"JSONObject[\"value\"] or JSONObject[\"contents\"] could not be found");
 
-> DELETE  2  @  2 : 4
+> INSERT  2 : 7  @  2
+
++ 						IChatComponent ichatcomponent = JSONTypeProvider.deserializeNoCast(val, IChatComponent.class);
++ 						if (hoverevent$action != null && ichatcomponent != null
++ 								&& hoverevent$action.shouldAllowInChat()) {
++ 							chatstyle.chatHoverEvent = new HoverEvent(hoverevent$action, ichatcomponent);
++ 						}
+
+> DELETE  1  @  1 : 3
 
 > CHANGE  1 : 3  @  1 : 3
 

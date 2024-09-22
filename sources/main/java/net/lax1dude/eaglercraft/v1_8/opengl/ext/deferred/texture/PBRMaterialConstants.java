@@ -34,7 +34,7 @@ public class PBRMaterialConstants implements IResourceManagerReloadListener {
 	public static final Logger logger = LogManager.getLogger("PBRMaterialConstants");
 
 	public final ResourceLocation resourceLocation;
-	public final Map<String,Integer> spriteNameToMaterialConstants = new HashMap();
+	public final Map<String,Integer> spriteNameToMaterialConstants = new HashMap<>();
 
 	public int defaultMaterial = 0x00000A77;
 

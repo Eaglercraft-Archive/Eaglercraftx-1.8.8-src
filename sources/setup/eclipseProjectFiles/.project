@@ -16,14 +16,29 @@
 	</natures>
 	<linkedResources>
 		<link>
-			<name>src_lwjgl_java</name>
-			<type>2</type>
-			<location>${LWJGL_SRC_FOLDER}</location>
-		</link>
-		<link>
 			<name>src_main_java</name>
 			<type>2</type>
 			<location>${MAIN_SRC_FOLDER}</location>
+		</link>
+		<link>
+			<name>src_game_java</name>
+			<type>2</type>
+			<location>${GAME_SRC_FOLDER}</location>
+		</link>
+		<link>
+			<name>src_protocol-game_java</name>
+			<type>2</type>
+			<location>${PROTO_GAME_SRC_FOLDER}</location>
+		</link>
+		<link>
+			<name>src_protocol-relay_java</name>
+			<type>2</type>
+			<location>${PROTO_RELAY_SRC_FOLDER}</location>
+		</link>
+		<link>
+			<name>src_lwjgl_java</name>
+			<type>2</type>
+			<location>${LWJGL_SRC_FOLDER}</location>
 		</link>
 	</linkedResources>
 </projectDescription>

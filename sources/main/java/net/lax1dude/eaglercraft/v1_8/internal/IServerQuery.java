@@ -2,6 +2,8 @@ package net.lax1dude.eaglercraft.v1_8.internal;
 
 import org.json.JSONObject;
 
+import net.lax1dude.eaglercraft.v1_8.EagRuntime;
+
 /**
  * Copyright (c) 2022 lax1dude. All Rights Reserved.
  * 
@@ -42,6 +44,8 @@ public interface IServerQuery {
 
 	}
 
+	void update();
+
 	void send(String str);
 
 	default void send(JSONObject json) {
@@ -73,8 +77,8 @@ public interface IServerQuery {
 	EnumServerRateLimit getRateLimit();
 
 	default boolean awaitResponseAvailable(long timeout) {
-		long start = System.currentTimeMillis();
-		while(isOpen() && responsesAvailable() <= 0 && (timeout <= 0l || System.currentTimeMillis() - start < timeout)) {
+		long start = EagRuntime.steadyTimeMillis();
+		while(isOpen() && responsesAvailable() <= 0 && (timeout <= 0l || EagRuntime.steadyTimeMillis() - start < timeout)) {
 			try {
 				Thread.sleep(0l, 250000);
 			} catch (InterruptedException e) {
@@ -88,8 +92,8 @@ public interface IServerQuery {
 	}
 	
 	default boolean awaitResponseBinaryAvailable(long timeout) {
-		long start = System.currentTimeMillis();
-		while(isOpen() && binaryResponsesAvailable() <= 0 && (timeout <= 0l || System.currentTimeMillis() - start < timeout)) {
+		long start = EagRuntime.steadyTimeMillis();
+		while(isOpen() && binaryResponsesAvailable() <= 0 && (timeout <= 0l || EagRuntime.steadyTimeMillis() - start < timeout)) {
 			try {
 				Thread.sleep(0l, 250000);
 			} catch (InterruptedException e) {

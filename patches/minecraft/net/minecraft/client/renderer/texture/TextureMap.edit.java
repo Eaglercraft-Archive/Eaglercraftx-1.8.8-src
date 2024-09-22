@@ -43,7 +43,7 @@
 ~ 	private final Map<String, EaglerTextureAtlasSprite> mapRegisteredSprites;
 ~ 	private final Map<String, EaglerTextureAtlasSprite> mapUploadedSprites;
 
-> CHANGE  3 : 10  @  3 : 4
+> CHANGE  3 : 11  @  3 : 4
 
 ~ 	private final EaglerTextureAtlasSprite missingImage;
 ~ 	private final EaglerTextureAtlasSpritePBR missingImagePBR;
@@ -52,6 +52,7 @@
 ~ 	private boolean isEaglerPBRMode = false;
 ~ 	public int eaglerPBRMaterialTexture = -1;
 ~ 	private boolean hasAllocatedEaglerPBRMaterialTexture = false;
+~ 	private boolean isGLES2 = false;
 
 > INSERT  1 : 7  @  1
 
@@ -67,7 +68,11 @@
 ~ 		this.missingImage = new EaglerTextureAtlasSprite("missingno");
 ~ 		this.missingImagePBR = new EaglerTextureAtlasSpritePBR("missingno");
 
-> INSERT  11 : 27  @  11
+> INSERT  2 : 3  @  2
+
++ 		this.isGLES2 = EaglercraftGPU.checkOpenGLESVersion() == 200;
+
+> INSERT  9 : 25  @  9
 
 + 		this.missingImagePBR.setIconWidth(16);
 + 		this.missingImagePBR.setIconHeight(16);
@@ -308,8 +313,9 @@
 
 + 		regenerateIfNotAllocated();
 
-> INSERT  2 : 23  @  2
+> INSERT  2 : 24  @  2
 
++ 
 + 		if (isEaglerPBRMode) {
 + 			if (hasAllocatedEaglerPBRMaterialTexture) {
 + 				EaglercraftGPU.regenerateTexture(eaglerPBRMaterialTexture);
@@ -423,12 +429,21 @@
 ~ 					textureatlassprite = EaglerTextureAtlasSprite.makeAtlasSprite(location);
 ~ 				}
 
-> CHANGE  15 : 17  @  15 : 17
+> CHANGE  12 : 18  @  12 : 13
+
+~ 		if (!isGLES2) {
+~ 			this.mipmapLevels = mipmapLevelsIn;
+~ 		} else {
+~ 			this.mipmapLevels = 0; // Due to limitations in OpenGL ES 2.0 texture completeness, its easier to just
+~ 									// make this zero
+~ 		}
+
+> CHANGE  2 : 4  @  2 : 4
 
 ~ 	public EaglerTextureAtlasSprite getMissingSprite() {
 ~ 		return isEaglerPBRMode ? missingImagePBR : missingImage;
 
-> INSERT  1 : 23  @  1
+> INSERT  1 : 27  @  1
 
 + 
 + 	public int getWidth() {
@@ -444,12 +459,16 @@
 + 	}
 + 
 + 	public void setBlurMipmapDirect0(boolean parFlag, boolean parFlag2) {
-+ 		super.setBlurMipmapDirect0(parFlag, parFlag2);
-+ 		if (isEaglerPBRMode && eaglerPBRMaterialTexture != -1) {
-+ 			GlStateManager.setActiveTexture(33986);
-+ 			GlStateManager.bindTexture(eaglerPBRMaterialTexture);
++ 		if (isGLES2) {
++ 			super.setBlurMipmapDirect0(parFlag, false);
++ 		} else {
 + 			super.setBlurMipmapDirect0(parFlag, parFlag2);
-+ 			GlStateManager.setActiveTexture(33984);
++ 			if (isEaglerPBRMode && eaglerPBRMaterialTexture != -1) {
++ 				GlStateManager.setActiveTexture(33986);
++ 				GlStateManager.bindTexture(eaglerPBRMaterialTexture);
++ 				super.setBlurMipmapDirect0(parFlag, parFlag2);
++ 				GlStateManager.setActiveTexture(33984);
++ 			}
 + 		}
 + 	}
 

@@ -31,7 +31,7 @@
 
 > INSERT  7 : 9  @  7
 
-+ 	private static final Set<String> hasShownMissing = new HashSet();
++ 	private static final Set<String> hasShownMissing = new HashSet<>();
 + 
 
 > CHANGE  4 : 5  @  4 : 5

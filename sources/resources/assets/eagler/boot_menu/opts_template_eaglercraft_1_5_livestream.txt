@@ -1,0 +1,63 @@
+{
+	"joinServer": null,
+	"servers": [
+		{
+			"serverName": "Local Test Server",
+			"serverAddress": "localhost:25565",
+			"hideAddress": false
+		}
+	],
+	"relays": [
+		{
+			"addr": "wss://relay.deev.is/",
+			"name": "lax1dude relay #1",
+			"primary": "$random_relay_primary_0"
+		},
+		{
+			"addr": "wss://relay.lax1dude.net/",
+			"name": "lax1dude relay #2",
+			"primary": "$random_relay_primary_1"
+		},
+		{
+			"addr": "wss://relay.shhnowisnottheti.me/",
+			"name": "ayunami relay #1",
+			"primary": "$random_relay_primary_2"
+		}
+	],
+	"mainMenu": {
+		"splashes": [
+			"Darviglet!",
+			"eaglerenophile!",
+			"You Eagler!",
+			"Yeeeeeee!",
+			"yeee",
+			"EEEEEEEEE!",
+			"You Darvig!",
+			"You Vigg!",
+			":>",
+			"|>",
+			"You Yumpster!"
+		],
+		"eaglerLogo": false,
+		"itemLink": null,
+		"itemLine0": null,
+		"itemLine1": null,
+		"itemLine2": null
+	},
+	"worldsFolder": "MAIN",
+	"assetOverrides": {
+		"title/no-pano-blur.flag": "false",
+		"records/wait.mp3": "wait.mp3",
+		"records/mellohi.mp3": "https://stream.nightride.fm/chillsynth.m4a",
+		"records/far.mp3": "https://stream.nightride.fm/nightride.m4a",
+		"records/cat.mp3": "http://usa9.fastcast4u.com/proxy/jamz?mp=/1",
+		"records/ward.mp3": "http://fr4.1mix.co.uk:8000/192h",
+		"records/strad.mp3": "http://listen.011fm.com:8028/stream15",
+		"records/blocks.mp3": "https://www.ophanim.net:8444/s/9780",
+		"records/13.mp3": "https://s2.radio.co/s2b2b68744/listen"
+	},
+	"profanity": false,
+	"hideDownServers": false,
+	"serverListTitle": null,
+	"serverListLink": null
+}

@@ -1,5 +1,6 @@
 package net.lax1dude.eaglercraft.v1_8.sp.relay;
 
+import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.EagUtils;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformWebRTC;
 import net.lax1dude.eaglercraft.v1_8.sp.relay.RelayQuery.VersionMismatch;
@@ -105,23 +106,26 @@ public class RelayServer {
 	}
 	
 	public void update() {
-		if(query != null && !query.isQueryOpen()) {
-			if(query.isQueryFailed()) {
-				queriedVersion = -1;
-				queriedComment = null;
-				queriedVendor = null;
-				queriedCompatible = VersionMismatch.UNKNOWN;
-				ping = 0l;
-			}else {
-				queriedVersion = query.getVersion();
-				queriedComment = query.getComment();
-				queriedVendor = query.getBrand();
-				ping = query.getPing();
-				queriedCompatible = query.getCompatible();
-				workingPing = ping;
+		if(query != null) {
+			query.update();
+			if(!query.isQueryOpen()) {
+				if(query.isQueryFailed()) {
+					queriedVersion = -1;
+					queriedComment = null;
+					queriedVendor = null;
+					queriedCompatible = VersionMismatch.UNKNOWN;
+					ping = 0l;
+				}else {
+					queriedVersion = query.getVersion();
+					queriedComment = query.getComment();
+					queriedVendor = query.getBrand();
+					ping = query.getPing();
+					queriedCompatible = query.getCompatible();
+					workingPing = ping;
+				}
+				lastPing = EagRuntime.steadyTimeMillis();
+				query = null;
 			}
-			lastPing = System.currentTimeMillis();
-			query = null;
 		}
 	}
 	

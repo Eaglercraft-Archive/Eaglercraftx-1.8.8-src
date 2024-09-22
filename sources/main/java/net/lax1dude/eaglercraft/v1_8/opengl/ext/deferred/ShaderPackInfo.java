@@ -52,7 +52,7 @@ public class ShaderPackInfo {
 		vers = json.optString("vers", "Unknown");
 		author = json.optString("author", "Unknown");
 		apiVers = json.optInt("api_vers", -1);
-		supportedFeatures = new HashSet();
+		supportedFeatures = new HashSet<>();
 		JSONArray features = json.getJSONArray("features");
 		if(features.length() == 0) {
 			throw new JSONException("No supported features list has been defined for this shader pack!");

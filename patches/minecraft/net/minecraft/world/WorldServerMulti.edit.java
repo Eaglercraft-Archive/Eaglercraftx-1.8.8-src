@@ -5,6 +5,13 @@
 # Version: 1.0
 # Author: lax1dude
 
-> DELETE  5  @  5 : 8
+> DELETE  2  @  2 : 3
+
+> DELETE  2  @  2 : 5
+
+> CHANGE  8 : 10  @  8 : 11
+
+~ 	public WorldServerMulti(MinecraftServer server, ISaveHandler saveHandlerIn, int dimensionId, WorldServer delegate) {
+~ 		super(server, saveHandlerIn, new DerivedWorldInfo(delegate.getWorldInfo()), dimensionId);
 
 > EOF

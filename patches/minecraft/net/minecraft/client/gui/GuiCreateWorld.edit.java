@@ -7,10 +7,11 @@
 
 > DELETE  2  @  2 : 3
 
-> CHANGE  1 : 3  @  1 : 6
+> CHANGE  1 : 4  @  1 : 6
 
 ~ 
 ~ import net.lax1dude.eaglercraft.v1_8.Keyboard;
+~ import net.lax1dude.eaglercraft.v1_8.minecraft.EnumInputEvent;
 
 > DELETE  7  @  7 : 8
 
@@ -41,5 +42,20 @@
 ~ 			this.drawString(this.fontRendererObj, I18n.format(
 ~ 					StringUtils.isNotEmpty(field_146335_h.text) ? "createWorld.seedNote" : "selectWorld.seedInfo",
 ~ 					new Object[0]), this.width / 2 - 100, 85, -6250336);
+
+> INSERT  47 : 59  @  47
+
++ 
++ 	@Override
++ 	public boolean showCopyPasteButtons() {
++ 		return field_146333_g.isFocused() || field_146335_h.isFocused();
++ 	}
++ 
++ 	@Override
++ 	public void fireInputEvent(EnumInputEvent event, String param) {
++ 		field_146333_g.fireInputEvent(event, param);
++ 		field_146335_h.fireInputEvent(event, param);
++ 	}
++ 
 
 > EOF

@@ -5,8 +5,9 @@
 # Version: 1.0
 # Author: lax1dude
 
-> INSERT  2 : 4  @  2
+> INSERT  2 : 5  @  2
 
++ import net.lax1dude.eaglercraft.v1_8.EaglercraftVersion;
 + import net.lax1dude.eaglercraft.v1_8.sp.lan.LANClientNetworkManager;
 + import net.lax1dude.eaglercraft.v1_8.sp.socket.ClientIntegratedServerNetworkManager;
 
@@ -22,7 +23,11 @@
 
 ~ 	public EntityPlayerSP(Minecraft mcIn, World worldIn, NetHandlerPlayClient netHandler, StatFileWriter statWriter) {
 
-> DELETE  2  @  2 : 3
+> INSERT  1 : 2  @  1
+
++ 		this.clientBrandUUIDCache = EaglercraftVersion.clientBrandUUID;
+
+> DELETE  1  @  1 : 2
 
 > INSERT  2 : 3  @  2
 

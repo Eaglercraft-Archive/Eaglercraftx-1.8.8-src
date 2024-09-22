@@ -23,7 +23,7 @@ import java.util.function.Supplier;
  */
 public class IPCPacketManager {
 	
-	public static final HashMap<Integer, Supplier<IPCPacketBase>> mappings = new HashMap();
+	public static final HashMap<Integer, Supplier<IPCPacketBase>> mappings = new HashMap<>();
 
 	public final IPCInputStream IPC_INPUT_STREAM = new IPCInputStream();
 	public final IPCOutputStream IPC_OUTPUT_STREAM = new IPCOutputStream();
@@ -55,8 +55,9 @@ public class IPCPacketManager {
 		mappings.put(IPCPacket17ConfigureLAN.ID, IPCPacket17ConfigureLAN::new);
 		mappings.put(IPCPacket18ClearPlayers.ID, IPCPacket18ClearPlayers::new);
 		mappings.put(IPCPacket19Autosave.ID, IPCPacket19Autosave::new);
-		mappings.put(IPCPacket20LoggerMessage.ID, IPCPacket20LoggerMessage::new);
-		mappings.put(IPCPacket21EnableLogging.ID, IPCPacket21EnableLogging::new);
+		mappings.put(IPCPacket1ALoggerMessage.ID, IPCPacket1ALoggerMessage::new);
+		mappings.put(IPCPacket1BEnableLogging.ID, IPCPacket1BEnableLogging::new);
+		mappings.put(IPCPacket1CIssueDetected.ID, IPCPacket1CIssueDetected::new);
 		mappings.put(IPCPacketFFProcessKeepAlive.ID, IPCPacketFFProcessKeepAlive::new);
 	}
 	

@@ -147,7 +147,11 @@
 ~ 		for (int i = 0, l = this.layerRenderers.size(); i < l; ++i) {
 ~ 			LayerRenderer layerrenderer = this.layerRenderers.get(i);
 
-> INSERT  30 : 34  @  30
+> CHANGE  26 : 27  @  26 : 27
+
+~ 				String s = entitylivingbase.getDisplayNameProfanityFilter().getFormattedText();
+
+> INSERT  3 : 7  @  3
 
 + 					if (DeferredStateManager.isInDeferredPass()) {
 + 						NameTagRenderer.renderNameTag(entitylivingbase, null, d0, d1, d2, -69);

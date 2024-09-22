@@ -28,10 +28,7 @@ public class EaglerXBungeeVersion {
 	private static String pluginFilename = null;
 
 	public static void initialize() {
-		String pluginVersionJson = EagRuntime.getResourceString("plugin_version.json");
-		if(pluginVersionJson == null) {
-			throw new RuntimeException("File \"plugin_version.json\" is missing in the epk!");
-		}
+		String pluginVersionJson = EagRuntime.getRequiredResourceString("plugin_version.json");
 		JSONObject json = new JSONObject(pluginVersionJson);
 		pluginName = json.getString("pluginName");
 		pluginVersion = json.getString("pluginVersion");
@@ -76,11 +73,7 @@ public class EaglerXBungeeVersion {
 	}
 
 	public static byte[] getPluginDownload() {
-		byte[] ret = EagRuntime.getResourceBytes(pluginFileEPK);
-		if(ret == null) {
-			throw new RuntimeException("File \"" + pluginFileEPK + "\" is missing in the epk!");
-		}
-		return ret;
+		return EagRuntime.getRequiredResourceBytes(pluginFileEPK);
 	}
 
 	public static void startPluginDownload() {

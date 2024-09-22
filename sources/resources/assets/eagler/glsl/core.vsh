@@ -1,7 +1,7 @@
 #line 2
 
 /*
- * Copyright (c) 2022-2023 lax1dude. All Rights Reserved.
+ * Copyright (c) 2022-2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -16,39 +16,39 @@
  * 
  */
 
-in vec3 a_position3f;
+EAGLER_IN_AUTO(vec3, a_position3f)
 
 #if defined(COMPILE_ENABLE_TEX_GEN) || defined(COMPILE_ENABLE_FOG)
 #define _COMPILE_VARYING_POSITION
 #endif
 
 #ifdef _COMPILE_VARYING_POSITION
-out vec4 v_position4f;
+EAGLER_OUT(vec4, v_position4f)
 #endif
 
 #ifdef COMPILE_ENABLE_TEX_GEN
-out vec3 v_objectPosition3f;
+EAGLER_OUT(vec3, v_objectPosition3f)
 #endif
 
 #ifdef COMPILE_TEXTURE_ATTRIB
-in vec2 a_texture2f;
-out vec2 v_texture2f;
+EAGLER_IN_AUTO(vec2, a_texture2f)
+EAGLER_OUT(vec2, v_texture2f)
 uniform mat4 u_textureMat4f01;
 #endif
 
 #ifdef COMPILE_COLOR_ATTRIB
-in vec4 a_color4f;
-out vec4 v_color4f;
+EAGLER_IN_AUTO(vec4, a_color4f)
+EAGLER_OUT(vec4, v_color4f)
 #endif
 
 #ifdef COMPILE_NORMAL_ATTRIB
-in vec4 a_normal4f;
-out vec3 v_normal3f;
+EAGLER_IN_AUTO(vec4, a_normal4f)
+EAGLER_OUT(vec3, v_normal3f)
 #endif
 
 #ifdef COMPILE_LIGHTMAP_ATTRIB
-in vec2 a_lightmap2f;
-out vec2 v_lightmap2f;
+EAGLER_IN_AUTO(vec2, a_lightmap2f)
+EAGLER_OUT(vec2, v_lightmap2f)
 uniform mat4 u_textureMat4f02;
 #endif
 
@@ -92,8 +92,8 @@ void main() {
 #endif
 
 #ifdef _COMPILE_VARYING_POSITION
-	gl_Position = u_projectionMat4f * v_position4f;
+	EAGLER_VERT_POSITION = u_projectionMat4f * v_position4f;
 #else
-	gl_Position = u_modelviewProjMat4f * vec4(a_position3f, 1.0);
+	EAGLER_VERT_POSITION = u_modelviewProjMat4f * vec4(a_position3f, 1.0);
 #endif
 }

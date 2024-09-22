@@ -2,7 +2,10 @@ package net.lax1dude.eaglercraft.v1_8.sp.gui;
 
 import java.io.IOException;
 
+import net.lax1dude.eaglercraft.v1_8.EagRuntime;
+import net.lax1dude.eaglercraft.v1_8.EaglercraftVersion;
 import net.lax1dude.eaglercraft.v1_8.profile.EaglerProfile;
+import net.lax1dude.eaglercraft.v1_8.socket.ConnectionHandshake;
 import net.lax1dude.eaglercraft.v1_8.sp.SingleplayerServerController;
 import net.lax1dude.eaglercraft.v1_8.sp.socket.ClientIntegratedServerNetworkManager;
 import net.lax1dude.eaglercraft.v1_8.sp.socket.NetHandlerSingleplayerLogin;
@@ -47,7 +50,7 @@ public class GuiScreenSingleplayerConnecting extends GuiScreen {
 	}
 	
 	public void initGui() {
-		if(startStartTime == 0) this.startStartTime = System.currentTimeMillis();
+		if(startStartTime == 0) this.startStartTime = EagRuntime.steadyTimeMillis();
 		this.buttonList.add(killTask = new GuiButton(0, this.width / 2 - 100, this.height / 3 + 50, I18n.format("singleplayer.busy.killTask")));
 		killTask.enabled = false;
 	}
@@ -57,7 +60,7 @@ public class GuiScreenSingleplayerConnecting extends GuiScreen {
 		float f = 2.0f;
 		int top = this.height / 3;
 		
-		long millis = System.currentTimeMillis();
+		long millis = EagRuntime.steadyTimeMillis();
 		
 		long dots = (millis / 500l) % 4l;
 		this.drawString(fontRendererObj, message + (dots > 0 ? "." : "") + (dots > 1 ? "." : "") + (dots > 2 ? "." : ""), (this.width - this.fontRendererObj.getStringWidth(message)) / 2, top + 10, 0xFFFFFF);
@@ -88,7 +91,9 @@ public class GuiScreenSingleplayerConnecting extends GuiScreen {
 						this.mc.clearTitles();
 						this.networkManager.setConnectionState(EnumConnectionState.LOGIN);
 						this.networkManager.setNetHandler(new NetHandlerSingleplayerLogin(this.networkManager, this.mc, this.menu));
-						this.networkManager.sendPacket(new C00PacketLoginStart(this.mc.getSession().getProfile(), EaglerProfile.getSkinPacket(), EaglerProfile.getCapePacket()));
+						this.networkManager.sendPacket(new C00PacketLoginStart(this.mc.getSession().getProfile(),
+								EaglerProfile.getSkinPacket(3), EaglerProfile.getCapePacket(),
+								ConnectionHandshake.getSPHandshakeProtocolData(), EaglercraftVersion.clientBrandUUID));
 					}
 					try {
 						this.networkManager.processReceivedPackets();
@@ -106,7 +111,7 @@ public class GuiScreenSingleplayerConnecting extends GuiScreen {
 			}
 		}
 		
-		long millis = System.currentTimeMillis();
+		long millis = EagRuntime.steadyTimeMillis();
 		if(millis - startStartTime > 6000l && SingleplayerServerController.canKillWorker()) {
 			killTask.enabled = true;
 		}
@@ -124,4 +129,9 @@ public class GuiScreenSingleplayerConnecting extends GuiScreen {
 	public boolean shouldHangupIntegratedServer() {
 		return false;
 	}
+
+	public boolean canCloseGui() {
+		return false;
+	}
+
 }

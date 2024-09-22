@@ -32,7 +32,7 @@ public class BlockVertexIDs implements IResourceManagerReloadListener {
 
 	private static final Logger logger = LogManager.getLogger("BlockVertexIDsCSV");
 
-	public static final Map<String,Integer> modelToID = new HashMap();
+	public static final Map<String,Integer> modelToID = new HashMap<>();
 
 	public static int builtin_water_still_vertex_id = 0;
 	public static int builtin_water_flow_vertex_id = 0;

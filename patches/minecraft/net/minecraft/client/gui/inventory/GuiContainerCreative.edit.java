@@ -7,14 +7,16 @@
 
 > DELETE  2  @  2 : 3
 
-> INSERT  4 : 11  @  4
+> INSERT  4 : 13  @  4
 
 + 
 + import com.google.common.collect.Lists;
 + 
 + import net.lax1dude.eaglercraft.v1_8.Keyboard;
 + import net.lax1dude.eaglercraft.v1_8.Mouse;
++ import net.lax1dude.eaglercraft.v1_8.PointerInputAbstraction;
 + import net.lax1dude.eaglercraft.v1_8.internal.EnumCursorType;
++ import net.lax1dude.eaglercraft.v1_8.minecraft.EnumInputEvent;
 + import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 
 > DELETE  4  @  4 : 7
@@ -64,13 +66,41 @@
 ~ 			for (int m = 0; m < CreativeTabs.creativeTabArray.length; ++m) {
 ~ 				CreativeTabs creativetabs = CreativeTabs.creativeTabArray[m];
 
-> CHANGE  127 : 130  @  127 : 129
+> INSERT  10 : 26  @  10
+
++ 	@Override
++ 	protected void touchTapped(int touchX, int touchY, int uid) {
++ 		int l = touchX - this.guiLeft;
++ 		int i1 = touchY - this.guiTop;
++ 
++ 		for (int m = 0; m < CreativeTabs.creativeTabArray.length; ++m) {
++ 			CreativeTabs creativetabs = CreativeTabs.creativeTabArray[m];
++ 			if (this.func_147049_a(creativetabs, l, i1)) {
++ 				this.setCurrentCreativeTab(creativetabs);
++ 				break;
++ 			}
++ 		}
++ 
++ 		super.touchTapped(touchX, touchY, uid);
++ 	}
++ 
+
+> CHANGE  93 : 94  @  93 : 94
+
+~ 		boolean flag = PointerInputAbstraction.getVCursorButtonDown(0);
+
+> CHANGE  23 : 26  @  23 : 25
 
 ~ 		for (int m = 0; m < CreativeTabs.creativeTabArray.length; ++m) {
 ~ 			if (this.renderCreativeInventoryHoveringText(CreativeTabs.creativeTabArray[m], i, j)) {
 ~ 				Mouse.showCursor(EnumCursorType.HAND);
 
-> CHANGE  24 : 26  @  24 : 25
+> CHANGE  16 : 18  @  16 : 17
+
+~ 			List list = itemstack.getTooltipProfanityFilter(this.mc.thePlayer,
+~ 					this.mc.gameSettings.advancedItemTooltips);
+
+> CHANGE  7 : 9  @  7 : 8
 
 ~ 					for (int m = 0; m < CreativeTabs.creativeTabArray.length; ++m) {
 ~ 						CreativeTabs creativetabs1 = CreativeTabs.creativeTabArray[m];
@@ -84,11 +114,22 @@
 
 ~ 	protected void actionPerformed(GuiButton parGuiButton) {
 
-> INSERT  139 : 143  @  139
+> INSERT  139 : 154  @  139
 
 + 
 + 	public boolean blockPTTKey() {
 + 		return searchField.isFocused();
 + 	}
++ 
++ 	@Override
++ 	public boolean showCopyPasteButtons() {
++ 		return searchField.isFocused();
++ 	}
++ 
++ 	@Override
++ 	public void fireInputEvent(EnumInputEvent event, String param) {
++ 		searchField.fireInputEvent(event, param);
++ 	}
++ 
 
 > EOF

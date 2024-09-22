@@ -34,14 +34,19 @@ import net.minecraft.util.MathHelper;
 public class DynamicLightBucketLoader {
 
 	public IBufferGL buffer_chunkLightingData;
+	public IBufferGL buffer_chunkLightingDataZero;
 	private ByteBuffer chunkLightingDataCopyBuffer;
-	private boolean isChunkLightingEnabled = false;
 	public ListSerial<DynamicLightInstance> currentBoundLightSourceBucket;
 
 	public final ListSerial<DynamicLightInstance>[] lightSourceBuckets;
+	private final int[] lightSourceBucketsSerials;
+	private final int[] lightSourceRenderPosSerials;
 	public ListSerial<DynamicLightInstance> currentLightSourceBucket;
+	private int currentLightSourceBucketId = -1;
+	private int lightingBufferSliceLength = -1;
 
 	public static final int MAX_LIGHTS_PER_CHUNK = 12;
+	public static final int LIGHTING_BUFFER_LENGTH = 16 * MAX_LIGHTS_PER_CHUNK + 16;
 
 	private final int lightSourceBucketsWidth;
 	private final int lightSourceBucketsHeight;
@@ -49,29 +54,42 @@ public class DynamicLightBucketLoader {
 	private double currentRenderX = 0.0;
 	private double currentRenderY = 0.0;
 	private double currentRenderZ = 0.0;
+	private int currentRenderPosSerial = 0;
 
 	public DynamicLightBucketLoader() {
 		this.lightSourceBucketsWidth = 5;
 		this.lightSourceBucketsHeight = 3;
 		int cnt = 5 * 3 * 5;
 		this.lightSourceBuckets = new ListSerial[cnt];
+		this.lightSourceBucketsSerials = new int[cnt];
+		this.lightSourceRenderPosSerials = new int[cnt];
 	}
 
 	public void initialize() {
 		destroy();
 		
-		buffer_chunkLightingData = _wglGenBuffers();
-		EaglercraftGPU.bindGLUniformBuffer(buffer_chunkLightingData);
-		int lightingDataLength = 4 * MAX_LIGHTS_PER_CHUNK + 4;
-		chunkLightingDataCopyBuffer = EagRuntime.allocateByteBuffer(lightingDataLength << 2);
-		for(int i = 0; i < lightingDataLength; ++i) {
+		int alignment = EaglercraftGPU.getUniformBufferOffsetAlignment();
+		lightingBufferSliceLength = MathHelper.ceiling_float_int((float)LIGHTING_BUFFER_LENGTH / (float)alignment) * alignment;
+		
+		chunkLightingDataCopyBuffer = EagRuntime.allocateByteBuffer(LIGHTING_BUFFER_LENGTH);
+		for(int i = 0; i < LIGHTING_BUFFER_LENGTH; i += 4) {
 			chunkLightingDataCopyBuffer.putInt(0);
 		}
 		chunkLightingDataCopyBuffer.flip();
-		_wglBufferData(_GL_UNIFORM_BUFFER, chunkLightingDataCopyBuffer, GL_DYNAMIC_DRAW);
+		
+		buffer_chunkLightingData = _wglGenBuffers();
+		EaglercraftGPU.bindGLUniformBuffer(buffer_chunkLightingData);
+		int cnt = lightSourceBucketsWidth * lightSourceBucketsHeight * lightSourceBucketsWidth;
+		_wglBufferData(_GL_UNIFORM_BUFFER, cnt * lightingBufferSliceLength, GL_DYNAMIC_DRAW);
+		
+		buffer_chunkLightingDataZero = _wglGenBuffers();
+		EaglercraftGPU.bindGLUniformBuffer(buffer_chunkLightingDataZero);
+		_wglBufferData(_GL_UNIFORM_BUFFER, chunkLightingDataCopyBuffer, GL_STATIC_DRAW);
 		
 		for(int i = 0; i < this.lightSourceBuckets.length; ++i) {
-			this.lightSourceBuckets[i] = new ArrayListSerial(16);
+			this.lightSourceBuckets[i] = new ArrayListSerial<>(16);
+			this.lightSourceBucketsSerials[i] = -1;
+			this.lightSourceRenderPosSerials[i] = -1;
 		}
 	}
 
@@ -81,7 +99,7 @@ public class DynamicLightBucketLoader {
 		}
 	}
 
-	public void loadLightSourceBucket(int relativeBlockX, int relativeBlockY, int relativeBlockZ) {
+	public void bindLightSourceBucket(int relativeBlockX, int relativeBlockY, int relativeBlockZ, int uboIndex) {
 		int hw = lightSourceBucketsWidth / 2;
 		int hh = lightSourceBucketsHeight / 2;
 		int bucketX = (relativeBlockX >> 4) + hw;
@@ -89,12 +107,47 @@ public class DynamicLightBucketLoader {
 		int bucketZ = (relativeBlockZ >> 4) + hw;
 		if(bucketX >= 0 && bucketY >= 0 && bucketZ >= 0 && bucketX < lightSourceBucketsWidth
 				&& bucketY < lightSourceBucketsHeight && bucketZ < lightSourceBucketsWidth) {
-			currentLightSourceBucket = lightSourceBuckets[bucketY * lightSourceBucketsWidth * lightSourceBucketsWidth
-					+ bucketZ * lightSourceBucketsWidth + bucketX];
+			currentLightSourceBucketId = bucketY * lightSourceBucketsWidth * lightSourceBucketsWidth
+					+ bucketZ * lightSourceBucketsWidth + bucketX;
+			currentLightSourceBucket = lightSourceBuckets[currentLightSourceBucketId];
+			int ser = currentLightSourceBucket.getEaglerSerial();
+			int max = currentLightSourceBucket.size();
+			if(max > 0) {
+				EaglercraftGPU.bindGLUniformBuffer(buffer_chunkLightingData);
+				int offset = currentLightSourceBucketId * lightingBufferSliceLength;
+				if (lightSourceBucketsSerials[currentLightSourceBucketId] != ser
+						|| lightSourceRenderPosSerials[currentLightSourceBucketId] != currentRenderPosSerial) {
+					lightSourceBucketsSerials[currentLightSourceBucketId] = ser;
+					lightSourceRenderPosSerials[currentLightSourceBucketId] = currentRenderPosSerial;
+					if(max > MAX_LIGHTS_PER_CHUNK) {
+						max = MAX_LIGHTS_PER_CHUNK;
+					}
+					chunkLightingDataCopyBuffer.clear();
+					chunkLightingDataCopyBuffer.putInt(max);
+					chunkLightingDataCopyBuffer.putInt(0); //padding
+					chunkLightingDataCopyBuffer.putInt(0); //padding
+					chunkLightingDataCopyBuffer.putInt(0); //padding
+					for(int i = 0; i < max; ++i) {
+						DynamicLightInstance dl = currentLightSourceBucket.get(i);
+						chunkLightingDataCopyBuffer.putFloat((float)(dl.posX - currentRenderX));
+						chunkLightingDataCopyBuffer.putFloat((float)(dl.posY - currentRenderY));
+						chunkLightingDataCopyBuffer.putFloat((float)(dl.posZ - currentRenderZ));
+						chunkLightingDataCopyBuffer.putFloat(dl.radius);
+					}
+					chunkLightingDataCopyBuffer.flip();
+					_wglBufferSubData(_GL_UNIFORM_BUFFER, offset, chunkLightingDataCopyBuffer);
+				}
+				EaglercraftGPU.bindUniformBufferRange(uboIndex, buffer_chunkLightingData, offset, LIGHTING_BUFFER_LENGTH);
+			}else {
+				EaglercraftGPU.bindGLUniformBuffer(buffer_chunkLightingDataZero);
+				EaglercraftGPU.bindUniformBufferRange(uboIndex, buffer_chunkLightingDataZero, 0, LIGHTING_BUFFER_LENGTH);
+			}
 		}else {
+			currentLightSourceBucketId = -1;
 			currentLightSourceBucket = null;
+			EaglercraftGPU.bindGLUniformBuffer(buffer_chunkLightingDataZero);
+			EaglercraftGPU.bindUniformBufferRange(uboIndex, buffer_chunkLightingDataZero, 0, LIGHTING_BUFFER_LENGTH);
 		}
-		updateLightSourceUBO();
 	}
 
 	public ListSerial<DynamicLightInstance> getLightSourceBucketRelativeChunkCoords(int cx, int cy, int cz) {
@@ -188,8 +241,8 @@ public class DynamicLightBucketLoader {
 	}
 
 	public void truncateOverflowingBuffers() {
-		for(int i = 0; i < this.lightSourceBuckets.length; ++i) {
-			List<DynamicLightInstance> lst = this.lightSourceBuckets[i];
+		for(int i = 0; i < lightSourceBuckets.length; ++i) {
+			List<DynamicLightInstance> lst = lightSourceBuckets[i];
 			int k = lst.size();
 			if(k > MAX_LIGHTS_PER_CHUNK) {
 				lst.sort(comparatorLightRadius);
@@ -200,74 +253,18 @@ public class DynamicLightBucketLoader {
 		}
 	}
 
-	public void updateLightSourceUBO() {
-		if(currentLightSourceBucket == null) {
-			currentBoundLightSourceBucket = null;
-			if(isChunkLightingEnabled) {
-				isChunkLightingEnabled = false;
-				EaglercraftGPU.bindGLUniformBuffer(buffer_chunkLightingData);
-				chunkLightingDataCopyBuffer.clear();
-				chunkLightingDataCopyBuffer.putInt(0);
-				chunkLightingDataCopyBuffer.flip();
-				_wglBufferSubData(_GL_UNIFORM_BUFFER, 0, chunkLightingDataCopyBuffer);
-			}
-		}else {
-			boolean isNew;
-			if(!isChunkLightingEnabled) {
-				isChunkLightingEnabled = true;
-				isNew = true;
-			}else {
-				isNew = currentLightSourceBucket != currentBoundLightSourceBucket;
-			}
-			currentBoundLightSourceBucket = currentLightSourceBucket;
-			if(isNew || currentBoundLightSourceBucket.eaglerCheck()) {
-				populateLightSourceUBOFromBucket(currentBoundLightSourceBucket);
-				currentBoundLightSourceBucket.eaglerResetCheck();
-			}
-		}
-	}
-
 	private static final Comparator<DynamicLightInstance> comparatorLightRadius = (l1, l2) -> {
 		return l1.radius < l2.radius ? 1 : -1;
 	};
 
-	private void populateLightSourceUBOFromBucket(List<DynamicLightInstance> lights) {
-		int max = lights.size();
-		if(max > MAX_LIGHTS_PER_CHUNK) {
-			//tmpListLights.clear();
-			//tmpListLights.addAll(lights);
-			//lights = tmpListLights;
-			//lights.sort(comparatorLightRadius);
-			max = MAX_LIGHTS_PER_CHUNK;
-		}
-		chunkLightingDataCopyBuffer.clear();
-		chunkLightingDataCopyBuffer.putInt(max);
-		if(max > 0) {
-			chunkLightingDataCopyBuffer.putInt(0); //padding
-			chunkLightingDataCopyBuffer.putInt(0); //padding
-			chunkLightingDataCopyBuffer.putInt(0); //padding
-			for(int i = 0; i < max; ++i) {
-				DynamicLightInstance dl = lights.get(i);
-				chunkLightingDataCopyBuffer.putFloat((float)(dl.posX - currentRenderX));
-				chunkLightingDataCopyBuffer.putFloat((float)(dl.posY - currentRenderY));
-				chunkLightingDataCopyBuffer.putFloat((float)(dl.posZ - currentRenderZ));
-				chunkLightingDataCopyBuffer.putFloat(dl.radius);
-			}
-		}
-		chunkLightingDataCopyBuffer.flip();
-		EaglercraftGPU.bindGLUniformBuffer(buffer_chunkLightingData);
-		_wglBufferSubData(_GL_UNIFORM_BUFFER, 0, chunkLightingDataCopyBuffer);
-	}
-
 	public void setRenderPos(double currentRenderX, double currentRenderY, double currentRenderZ) {
-		this.currentRenderX = currentRenderX;
-		this.currentRenderY = currentRenderY;
-		this.currentRenderZ = currentRenderZ;
-	}
-
-	public void bindUniformBuffer(int index) {
-		EaglercraftGPU.bindGLUniformBuffer(buffer_chunkLightingData);
-		EaglercraftGPU.bindUniformBufferRange(index, buffer_chunkLightingData, 0, chunkLightingDataCopyBuffer.capacity());
+		if (this.currentRenderX != currentRenderX || this.currentRenderY != currentRenderY
+				|| this.currentRenderZ != currentRenderZ || this.currentRenderPosSerial == 0) {
+			this.currentRenderX = currentRenderX;
+			this.currentRenderY = currentRenderY;
+			this.currentRenderZ = currentRenderZ;
+			++this.currentRenderPosSerial;
+		}
 	}
 
 	public void destroy() {
@@ -279,8 +276,16 @@ public class DynamicLightBucketLoader {
 			_wglDeleteBuffers(buffer_chunkLightingData);
 			buffer_chunkLightingData = null;
 		}
-		for(int i = 0; i < this.lightSourceBuckets.length; ++i) {
-			this.lightSourceBuckets[i] = null;
+		if(buffer_chunkLightingDataZero != null) {
+			_wglDeleteBuffers(buffer_chunkLightingDataZero);
+			buffer_chunkLightingDataZero = null;
 		}
+		for(int i = 0; i < lightSourceBuckets.length; ++i) {
+			lightSourceBuckets[i] = null;
+			lightSourceBucketsSerials[i] = -1;
+			lightSourceRenderPosSerials[i] = -1;
+		}
+		currentLightSourceBucket = null;
+		currentLightSourceBucketId = -1;
 	}
 }

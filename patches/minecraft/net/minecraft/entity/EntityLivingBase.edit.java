@@ -25,7 +25,11 @@
 ~ 	private static final EaglercraftUUID sprintingSpeedBoostModifierUUID = EaglercraftUUID
 ~ 			.fromString("662A6B8D-DA3E-4C1C-8813-96EA6097278D");
 
-> CHANGE  264 : 265  @  264 : 265
+> DELETE  120  @  120 : 121
+
+> DELETE  88  @  88 : 89
+
+> CHANGE  54 : 55  @  54 : 55
 
 ~ 	public EaglercraftRandom getRNG() {
 
@@ -40,7 +44,27 @@
 ~ 		for (int i = 0; i < inv.length; ++i) {
 ~ 			ItemStack itemstack1 = inv[i];
 
-> INSERT  1254 : 1277  @  1254
+> DELETE  941  @  941 : 942
+
+> DELETE  1  @  1 : 3
+
+> DELETE  33  @  33 : 34
+
+> DELETE  62  @  62 : 63
+
+> DELETE  6  @  6 : 7
+
+> DELETE  1  @  1 : 2
+
+> DELETE  2  @  2 : 4
+
+> DELETE  13  @  13 : 15
+
+> DELETE  4  @  4 : 6
+
+> DELETE  3  @  3 : 5
+
+> INSERT  173 : 196  @  173
 
 + 
 + 	protected void renderDynamicLightsEaglerAt(double entityX, double entityY, double entityZ, double renderX,
@@ -59,7 +83,7 @@
 + 		if (itm != null && itm.stackSize > 0) {
 + 			Item item = itm.getItem();
 + 			if (item != null) {
-+ 				float f2 = item.getHeldItemBrightnessEagler();
++ 				float f2 = item.getHeldItemBrightnessEagler(itm);
 + 				f = Math.min(f + f2 * 0.5f, 1.0f) + f2 * 0.5f;
 + 			}
 + 		}

@@ -1,4 +1,4 @@
-# 144 files to delete:
+# 145 files to delete:
 net/minecraft/client/renderer/VertexBufferUploader.java
 net/minecraft/realms/DisconnectedRealmsScreen.java
 net/minecraft/client/stream/Metadata.java
@@ -45,6 +45,7 @@ net/minecraft/network/NettyEncryptingDecoder.java
 net/minecraft/server/integrated/IntegratedPlayerList.java
 net/minecraft/client/renderer/WorldVertexBufferUploader.java
 net/minecraft/network/PingResponseHandler.java
+net/minecraft/profiler/Profiler.java
 net/minecraft/client/stream/NullStream.java
 net/minecraft/network/NetworkSystem.java
 net/minecraft/client/shader/Shader.java

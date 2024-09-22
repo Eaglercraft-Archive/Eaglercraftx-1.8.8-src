@@ -38,7 +38,7 @@
 
 + 			hasAllocated = false;
 
-> INSERT  12 : 26  @  12
+> INSERT  12 : 28  @  12
 
 + 
 + 	/**
@@ -49,7 +49,9 @@
 + 	protected void regenerateIfNotAllocated() {
 + 		if (this.glTextureId != -1) {
 + 			if (hasAllocated) {
-+ 				EaglercraftGPU.regenerateTexture(glTextureId);
++ 				if (EaglercraftGPU.checkTexStorageCapable()) {
++ 					EaglercraftGPU.regenerateTexture(glTextureId);
++ 				}
 + 			}
 + 			hasAllocated = true;
 + 		}

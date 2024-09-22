@@ -30,7 +30,7 @@ public class PipelineShaderShadowsSun extends ShaderProgram<PipelineShaderShadow
 	public static PipelineShaderShadowsSun compile(int shadowsSun, boolean shadowsSunSmooth, boolean coloredShadows)
 			throws ShaderException {
 		IShaderGL shadowShader = null;
-		List<String> compileFlags = new ArrayList(2);
+		List<String> compileFlags = new ArrayList<>(2);
 		if(shadowsSun == 0) {
 			throw new IllegalStateException("Enable shadows to compile this shader");
 		}

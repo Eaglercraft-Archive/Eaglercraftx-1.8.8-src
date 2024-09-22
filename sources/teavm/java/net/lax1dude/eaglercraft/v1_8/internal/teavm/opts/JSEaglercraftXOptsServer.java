@@ -23,6 +23,9 @@ public abstract class JSEaglercraftXOptsServer implements JSObject {
 	@JSBody(script = "return (typeof this.addr === \"string\") ? this.addr : null;")
 	public native String getAddr();
 
+	@JSBody(params = { "def" }, script = "return (typeof this.hideAddr === \"boolean\") ? this.hideAddr : def;")
+	public native boolean getHideAddr(boolean defaultValue);
+
 	@JSBody(params = { "def" }, script = "return (typeof this.name === \"string\") ? this.name : def;")
 	public native String getName(String defaultValue);
 

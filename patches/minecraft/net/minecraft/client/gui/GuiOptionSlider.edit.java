@@ -11,4 +11,22 @@
 
 > DELETE  1  @  1 : 3
 
+> CHANGE  4 : 5  @  4 : 5
+
+~ 	public float sliderValue;
+
+> INSERT  21 : 25  @  21
+
++ 	public GameSettings.Options getEnumOptions() {
++ 		return options;
++ 	}
++ 
+
+> INSERT  40 : 44  @  40
+
++ 
++ 	public boolean isSliderTouchEvents() {
++ 		return true;
++ 	}
+
 > EOF

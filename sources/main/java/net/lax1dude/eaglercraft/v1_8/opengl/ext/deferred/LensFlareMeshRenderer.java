@@ -8,7 +8,6 @@ import java.io.DataInputStream;
 import java.io.IOException;
 
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
-import net.lax1dude.eaglercraft.v1_8.EaglerInputStream;
 import net.lax1dude.eaglercraft.v1_8.internal.IBufferArrayGL;
 import net.lax1dude.eaglercraft.v1_8.internal.IBufferGL;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.ByteBuffer;
@@ -20,6 +19,7 @@ import net.lax1dude.eaglercraft.v1_8.vector.Matrix3f;
 import net.lax1dude.eaglercraft.v1_8.vector.Vector3f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
 
 /**
  * Copyright (c) 2023 lax1dude. All Rights Reserved.
@@ -38,8 +38,8 @@ import net.minecraft.util.MathHelper;
  */
 public class LensFlareMeshRenderer {
 
-	public static final String streaksTextureLocation ="assets/eagler/glsl/deferred/lens_streaks.bmp";
-	public static final String ghostsTextureLocation = "assets/eagler/glsl/deferred/lens_ghosts.bmp";
+	public static final ResourceLocation streaksTextureLocation = new ResourceLocation("eagler:glsl/deferred/lens_streaks.bmp");
+	public static final ResourceLocation ghostsTextureLocation = new ResourceLocation("eagler:glsl/deferred/lens_ghosts.bmp");
 	public static final int ghostsSpriteCount = 4;
 
 	static IBufferArrayGL streaksVertexArray = null;
@@ -157,11 +157,8 @@ public class LensFlareMeshRenderer {
 
 		streaksTexture = GlStateManager.generateTexture();
 		GlStateManager.bindTexture(streaksTexture);
-		byte[] flareTex = EagRuntime.getResourceBytes(streaksTextureLocation);
-		if(flareTex == null) {
-			throw new RuntimeException("Could not locate: " + streaksTextureLocation);
-		}
-		try(DataInputStream dis = new DataInputStream(new EaglerInputStream(flareTex))) {
+		try (DataInputStream dis = new DataInputStream(
+				Minecraft.getMinecraft().getResourceManager().getResource(streaksTextureLocation).getInputStream())) {
 			loadFlareTexture(copyBuffer, dis);
 		}catch(IOException ex) {
 			EagRuntime.freeByteBuffer(copyBuffer);
@@ -170,11 +167,8 @@ public class LensFlareMeshRenderer {
 
 		ghostsTexture = GlStateManager.generateTexture();
 		GlStateManager.bindTexture(ghostsTexture);
-		flareTex = EagRuntime.getResourceBytes(ghostsTextureLocation);
-		if(flareTex == null) {
-			throw new RuntimeException("Could not locate: " + ghostsTextureLocation);
-		}
-		try(DataInputStream dis = new DataInputStream(new EaglerInputStream(flareTex))) {
+		try (DataInputStream dis = new DataInputStream(
+				Minecraft.getMinecraft().getResourceManager().getResource(ghostsTextureLocation).getInputStream())) {
 			loadFlareTexture(copyBuffer, dis);
 		}catch(IOException ex) {
 			EagRuntime.freeByteBuffer(copyBuffer);

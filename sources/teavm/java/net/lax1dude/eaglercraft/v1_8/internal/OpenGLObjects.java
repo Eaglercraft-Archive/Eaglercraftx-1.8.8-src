@@ -29,85 +29,127 @@ import net.lax1dude.eaglercraft.v1_8.internal.teavm.WebGLVertexArray;
 class OpenGLObjects {
 
 	static class BufferGL implements IBufferGL {
-		
+
+		private static int hashGen = 0;
 		final WebGLBuffer ptr;
-		
+		final int hash;
+
 		BufferGL(WebGLBuffer ptr) {
 			this.ptr = ptr;
+			this.hash = ++hashGen;
+		}
+
+		public int hashCode() {
+			return hash;
 		}
 
 		@Override
 		public void free() {
 			PlatformOpenGL._wglDeleteBuffers(this);
 		}
-		
+
 	}
 
 	static class BufferArrayGL implements IBufferArrayGL {
-		
+
+		private static int hashGen = 0;
 		final WebGLVertexArray ptr;
-		
+		final int hash;
+
 		BufferArrayGL(WebGLVertexArray ptr) {
 			this.ptr = ptr;
+			this.hash = ++hashGen;
+		}
+
+		public int hashCode() {
+			return hash;
 		}
 
 		@Override
 		public void free() {
 			PlatformOpenGL._wglDeleteVertexArrays(this);
 		}
-		
+
 	}
 
 	static class TextureGL implements ITextureGL {
-		
+
+		private static int hashGen = 0;
 		final WebGLTexture ptr;
-		
+		final int hash;
+
 		TextureGL(WebGLTexture ptr) {
 			this.ptr = ptr;
+			this.hash = ++hashGen;
+		}
+
+		public int hashCode() {
+			return hash;
 		}
 
 		@Override
 		public void free() {
 			PlatformOpenGL._wglDeleteTextures(this);
 		}
-		
+
 	}
 
 	static class ProgramGL implements IProgramGL {
-		
+
+		private static int hashGen = 0;
 		final WebGLProgram ptr;
-		
+		final int hash;
+
 		ProgramGL(WebGLProgram ptr) {
 			this.ptr = ptr;
+			this.hash = ++hashGen;
+		}
+
+		public int hashCode() {
+			return hash;
 		}
 
 		@Override
 		public void free() {
 			PlatformOpenGL._wglDeleteProgram(this);
 		}
-		
+
 	}
 
 	static class UniformGL implements IUniformGL {
-		
+
+		private static int hashGen = 0;
 		final WebGLUniformLocation ptr;
-		
+		final int hash;
+
 		UniformGL(WebGLUniformLocation ptr) {
 			this.ptr = ptr;
+			this.hash = ++hashGen;
+		}
+
+		public int hashCode() {
+			return hash;
 		}
 
 		@Override
 		public void free() {
 		}
-		
+
 	}
 
 	static class ShaderGL implements IShaderGL {
-		
+
+		private static int hashGen = 0;
 		final WebGLShader ptr;
+		final int hash;
 		
 		ShaderGL(WebGLShader ptr) {
 			this.ptr = ptr;
+			this.hash = ++hashGen;
+		}
+
+		public int hashCode() {
+			return hash;
 		}
 
 		@Override
@@ -118,48 +160,69 @@ class OpenGLObjects {
 	}
 
 	static class FramebufferGL implements IFramebufferGL {
-		
+
+		private static int hashGen = 0;
 		final WebGLFramebuffer ptr;
+		final int hash;
 		
 		FramebufferGL(WebGLFramebuffer ptr) {
 			this.ptr = ptr;
+			this.hash = ++hashGen;
+		}
+
+		public int hashCode() {
+			return hash;
 		}
 
 		@Override
 		public void free() {
 			PlatformOpenGL._wglDeleteFramebuffer(this);
 		}
-		
+
 	}
 
 	static class RenderbufferGL implements IRenderbufferGL {
-		
+
+		private static int hashGen = 0;
 		final WebGLRenderbuffer ptr;
-		
+		final int hash;
+
 		RenderbufferGL(WebGLRenderbuffer ptr) {
 			this.ptr = ptr;
+			this.hash = ++hashGen;
+		}
+
+		public int hashCode() {
+			return hash;
 		}
 
 		@Override
 		public void free() {
 			PlatformOpenGL._wglDeleteRenderbuffer(this);
 		}
-		
+
 	}
 
 	static class QueryGL implements IQueryGL {
-		
+
+		private static int hashGen = 0;
 		final WebGLQuery ptr;
-		
+		final int hash;
+
 		QueryGL(WebGLQuery ptr) {
 			this.ptr = ptr;
+			this.hash = ++hashGen;
+		}
+
+		public int hashCode() {
+			return hash;
 		}
 
 		@Override
 		public void free() {
 			PlatformOpenGL._wglDeleteQueries(this);
 		}
-		
+
 	}
-	
+
 }

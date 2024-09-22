@@ -46,7 +46,7 @@ public class PlatformAudio {
 		
 		protected PaulscodeAudioHandle(String sourceName) {
 			this.sourceName = sourceName;
-			this.stall = System.currentTimeMillis();
+			this.stall = PlatformRuntime.steadyTimeMillis();
 		}
 
 		@Override
@@ -64,7 +64,7 @@ public class PlatformAudio {
 
 		@Override
 		public void restart() {
-			this.stall = System.currentTimeMillis();
+			this.stall = PlatformRuntime.steadyTimeMillis();
 			sndSystem.rewind(sourceName);
 			sndSystem.play(sourceName);
 		}
@@ -91,7 +91,7 @@ public class PlatformAudio {
 
 		@Override
 		public boolean shouldFree() {
-			return !sndSystem.playing(sourceName) && System.currentTimeMillis() - this.stall > 250l; //TODO: I hate this hack
+			return !sndSystem.playing(sourceName) && PlatformRuntime.steadyTimeMillis() - this.stall > 250l; //TODO: I hate this hack
 		}
 		
 	}
@@ -125,7 +125,7 @@ public class PlatformAudio {
 	private static SoundSystem sndSystem = null;
 	
 	static void platformInitialize() {
-		logger.info("Eaglercraft still uses Paul Lamb's SoundSystem but with LWJGL3");
+		logger.info("Eaglercraft uses Paul Lamb's SoundSystem (with LWJGL3)");
 		logger.info("    \"Author: Paul Lamb, www.paulscode.com\"");
 		try {
 			SoundSystemConfig.addLibrary(LibraryLWJGLOpenAL.class);

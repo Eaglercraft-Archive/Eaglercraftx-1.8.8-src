@@ -1,5 +1,6 @@
 package net.lax1dude.eaglercraft.v1_8.internal.vfs2;
 
+import net.lax1dude.eaglercraft.v1_8.internal.IEaglerFilesystem;
 import net.lax1dude.eaglercraft.v1_8.internal.VFSFilenameIterator;
 
 /**
@@ -19,15 +20,17 @@ import net.lax1dude.eaglercraft.v1_8.internal.VFSFilenameIterator;
  */
 class VFSFilenameIteratorImpl implements VFSFilenameIterator {
 
+	protected IEaglerFilesystem fs;
 	protected VFSIterator2 itr;
 
-	VFSFilenameIteratorImpl(VFSIterator2 itr) {
+	VFSFilenameIteratorImpl(IEaglerFilesystem fs, VFSIterator2 itr) {
+		this.fs = fs;
 		this.itr = itr;
 	}
 
 	@Override
 	public void next(String entry) {
-		itr.next(new VFile2(entry));
+		itr.next(VFile2.create(fs, entry));
 	}
 
 }

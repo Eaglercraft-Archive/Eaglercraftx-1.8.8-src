@@ -13,11 +13,10 @@ import net.lax1dude.eaglercraft.v1_8.internal.buffer.ByteBuffer;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.FloatBuffer;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
-import net.lax1dude.eaglercraft.v1_8.opengl.FixedFunctionShader.FixedFunctionConstants;
 import net.lax1dude.eaglercraft.v1_8.vector.Matrix4f;
 
 /**
- * Copyright (c) 2022 lax1dude. All Rights Reserved.
+ * Copyright (c) 2022-2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -36,7 +35,10 @@ public class InstancedParticleRenderer {
 	private static final Logger logger = LogManager.getLogger("InstancedParticleRenderer");
 
 	public static final String vertexShaderPath = "/assets/eagler/glsl/accel_particle.vsh";
+	public static final String vertexShaderPrecision = "precision lowp int;\nprecision highp float;\nprecision mediump sampler2D;\n";
+
 	public static final String fragmentShaderPath = "/assets/eagler/glsl/accel_particle.fsh";
+	public static final String fragmentShaderPrecision = "precision lowp int;\nprecision mediump float;\nprecision mediump sampler2D;\n";
 
 	private static ByteBuffer particleBuffer = null;
 	private static int particleCount = 0;
@@ -79,20 +81,13 @@ public class InstancedParticleRenderer {
 	private static float stateTransformParam5 = -999.0f;
 
 	static void initialize() {
-		String vertexSource = EagRuntime.getResourceString(vertexShaderPath);
-		if(vertexSource == null) {
-			throw new RuntimeException("InstancedParticleRenderer shader \"" + vertexShaderPath + "\" is missing!");
-		}
-
-		String fragmentSource = EagRuntime.getResourceString(fragmentShaderPath);
-		if(fragmentSource == null) {
-			throw new RuntimeException("InstancedParticleRenderer shader \"" + fragmentShaderPath + "\" is missing!");
-		}
+		String vertexSource = EagRuntime.getRequiredResourceString(vertexShaderPath);
+		String fragmentSource = EagRuntime.getRequiredResourceString(fragmentShaderPath);
 
 		IShaderGL vert = _wglCreateShader(GL_VERTEX_SHADER);
 		IShaderGL frag = _wglCreateShader(GL_FRAGMENT_SHADER);
 
-		_wglShaderSource(vert, FixedFunctionConstants.VERSION + "\n" + vertexSource);
+		_wglShaderSource(vert, GLSLHeader.getVertexHeaderCompat(vertexSource, vertexShaderPrecision));
 		_wglCompileShader(vert);
 
 		if(_wglGetShaderi(vert, GL_COMPILE_STATUS) != GL_TRUE) {
@@ -107,7 +102,7 @@ public class InstancedParticleRenderer {
 			throw new IllegalStateException("Vertex shader \"" + vertexShaderPath + "\" could not be compiled!");
 		}
 
-		_wglShaderSource(frag, FixedFunctionConstants.VERSION + "\n" + fragmentSource);
+		_wglShaderSource(frag, GLSLHeader.getFragmentHeaderCompat(fragmentSource, fragmentShaderPrecision));
 		_wglCompileShader(frag);
 
 		if(_wglGetShaderi(frag, GL_COMPILE_STATUS) != GL_TRUE) {
@@ -126,6 +121,10 @@ public class InstancedParticleRenderer {
 
 		_wglAttachShader(shaderProgram, vert);
 		_wglAttachShader(shaderProgram, frag);
+
+		if(EaglercraftGPU.checkOpenGLESVersion() == 200) {
+			VSHInputLayoutParser.applyLayout(shaderProgram, VSHInputLayoutParser.getShaderInputs(vertexSource));
+		}
 
 		_wglLinkProgram(shaderProgram);
 
@@ -161,7 +160,7 @@ public class InstancedParticleRenderer {
 		_wglUniform1i(_wglGetUniformLocation(shaderProgram, "u_inputTexture"), 0);
 		_wglUniform1i(_wglGetUniformLocation(shaderProgram, "u_lightmapTexture"), 1);
 
-		vertexArray = _wglGenVertexArrays();
+		vertexArray = EaglercraftGPU.createGLBufferArray();
 		vertexBuffer = _wglGenBuffers();
 		instancesBuffer = _wglGenBuffers();
 
@@ -174,37 +173,37 @@ public class InstancedParticleRenderer {
 
 		EaglercraftGPU.bindGLBufferArray(vertexArray);
 
-		EaglercraftGPU.bindGLArrayBuffer(vertexBuffer);
+		EaglercraftGPU.bindVAOGLArrayBufferNow(vertexBuffer);
 		_wglBufferData(GL_ARRAY_BUFFER, verts, GL_STATIC_DRAW);
 
 		EagRuntime.freeFloatBuffer(verts);
 
-		_wglEnableVertexAttribArray(0);
-		_wglVertexAttribPointer(0, 2, GL_FLOAT, false, 8, 0);
-		_wglVertexAttribDivisor(0, 0);
+		EaglercraftGPU.enableVertexAttribArray(0);
+		EaglercraftGPU.vertexAttribPointer(0, 2, GL_FLOAT, false, 8, 0);
+		EaglercraftGPU.vertexAttribDivisor(0, 0);
 
-		EaglercraftGPU.bindGLArrayBuffer(instancesBuffer);
+		EaglercraftGPU.bindVAOGLArrayBufferNow(instancesBuffer);
 		_wglBufferData(GL_ARRAY_BUFFER, particleBuffer.remaining(), GL_STREAM_DRAW);
 
-		_wglEnableVertexAttribArray(1);
-		_wglVertexAttribPointer(1, 3, GL_FLOAT, false, 24, 0);
-		_wglVertexAttribDivisor(1, 1);
+		EaglercraftGPU.enableVertexAttribArray(1);
+		EaglercraftGPU.vertexAttribPointer(1, 3, GL_FLOAT, false, 24, 0);
+		EaglercraftGPU.vertexAttribDivisor(1, 1);
 
-		_wglEnableVertexAttribArray(2);
-		_wglVertexAttribPointer(2, 2, GL_UNSIGNED_SHORT, false, 24, 12);
-		_wglVertexAttribDivisor(2, 1);
+		EaglercraftGPU.enableVertexAttribArray(2);
+		EaglercraftGPU.vertexAttribPointer(2, 2, GL_UNSIGNED_SHORT, false, 24, 12);
+		EaglercraftGPU.vertexAttribDivisor(2, 1);
 
-		_wglEnableVertexAttribArray(3);
-		_wglVertexAttribPointer(3, 2, GL_UNSIGNED_BYTE, true, 24, 16);
-		_wglVertexAttribDivisor(3, 1);
+		EaglercraftGPU.enableVertexAttribArray(3);
+		EaglercraftGPU.vertexAttribPointer(3, 2, GL_UNSIGNED_BYTE, true, 24, 16);
+		EaglercraftGPU.vertexAttribDivisor(3, 1);
 
-		_wglEnableVertexAttribArray(4);
-		_wglVertexAttribPointer(4, 2, GL_UNSIGNED_BYTE, false, 24, 18);
-		_wglVertexAttribDivisor(4, 1);
+		EaglercraftGPU.enableVertexAttribArray(4);
+		EaglercraftGPU.vertexAttribPointer(4, 2, GL_UNSIGNED_BYTE, false, 24, 18);
+		EaglercraftGPU.vertexAttribDivisor(4, 1);
 
-		_wglEnableVertexAttribArray(5);
-		_wglVertexAttribPointer(5, 4, GL_UNSIGNED_BYTE, true, 24, 20);
-		_wglVertexAttribDivisor(5, 1);
+		EaglercraftGPU.enableVertexAttribArray(5);
+		EaglercraftGPU.vertexAttribPointer(5, 4, GL_UNSIGNED_BYTE, true, 24, 20);
+		EaglercraftGPU.vertexAttribDivisor(5, 1);
 
 	}
 
@@ -316,11 +315,43 @@ public class InstancedParticleRenderer {
 		particleBuffer.position(p);
 		particleBuffer.limit(l);
 
-		_wglDrawArraysInstanced(GL_TRIANGLES, 0, 6, particleCount);
+		EaglercraftGPU.doDrawArraysInstanced(GL_TRIANGLES, 0, 6, particleCount);
 	}
 
 	public static void stupidColorSetHack(IUniformGL color4f) {
 		_wglUniform4f(color4f, GlStateManager.stateColorR, GlStateManager.stateColorG, GlStateManager.stateColorB, GlStateManager.stateColorA);
+	}
+
+	public static void destroy() {
+		if(particleBuffer != null) {
+			EagRuntime.freeByteBuffer(particleBuffer);
+			particleBuffer = null;
+		}
+		if(shaderProgram != null) {
+			_wglDeleteProgram(shaderProgram);
+			shaderProgram = null;
+		}
+		if(matrixCopyBuffer != null) {
+			EagRuntime.freeFloatBuffer(matrixCopyBuffer);
+			matrixCopyBuffer = null;
+		}
+		u_matrixTransform = null;
+		u_texCoordSize2f_particleSize1f = null;
+		u_transformParam_1_2_5_f = null;
+		u_transformParam_3_4_f = null;
+		u_color4f = null;
+		if(vertexArray != null) {
+			EaglercraftGPU.destroyGLBufferArray(vertexArray);
+			vertexArray = null;
+		}
+		if(vertexBuffer != null) {
+			_wglDeleteBuffers(vertexBuffer);
+			vertexBuffer = null;
+		}
+		if(instancesBuffer != null) {
+			_wglDeleteBuffers(instancesBuffer);
+			instancesBuffer = null;
+		}
 	}
 
 }

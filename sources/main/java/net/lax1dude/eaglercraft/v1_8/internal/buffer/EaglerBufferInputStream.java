@@ -3,7 +3,6 @@ package net.lax1dude.eaglercraft.v1_8.internal.buffer;
 import java.io.IOException;
 import java.io.InputStream;
 
-
 /**
  * Copyright (c) 2022 lax1dude. All Rights Reserved.
  * 

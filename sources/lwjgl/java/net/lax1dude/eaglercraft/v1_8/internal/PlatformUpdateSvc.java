@@ -2,6 +2,7 @@ package net.lax1dude.eaglercraft.v1_8.internal;
 
 import net.lax1dude.eaglercraft.v1_8.update.UpdateCertificate;
 import net.lax1dude.eaglercraft.v1_8.update.UpdateProgressStruct;
+import net.lax1dude.eaglercraft.v1_8.update.UpdateResultObj;
 
 /**
  * Copyright (c) 2024 lax1dude. All Rights Reserved.
@@ -44,6 +45,15 @@ public class PlatformUpdateSvc {
 
 	public static UpdateProgressStruct getUpdatingStatus() {
 		return dummyStruct;
+	}
+
+	public static UpdateResultObj getUpdateResult() {
+		return null;
+	}
+
+	public static void installSignedClient(UpdateCertificate clientCert, byte[] clientPayload, boolean setDefault,
+			boolean setTimeout) {
+
 	}
 
 	public static void quine(String filename, byte[] cert, byte[] data, String date) {

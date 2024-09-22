@@ -11,4 +11,11 @@
 
 > DELETE  1  @  1 : 4
 
+> INSERT  106 : 110  @  106
+
++ 
++ 	public boolean isSliderTouchEvents() {
++ 		return true;
++ 	}
+
 > EOF

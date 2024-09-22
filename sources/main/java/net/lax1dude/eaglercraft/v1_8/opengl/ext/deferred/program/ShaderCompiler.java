@@ -10,7 +10,7 @@ import net.lax1dude.eaglercraft.v1_8.internal.IProgramGL;
 import net.lax1dude.eaglercraft.v1_8.internal.IShaderGL;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
-import net.lax1dude.eaglercraft.v1_8.opengl.FixedFunctionShader;
+import net.lax1dude.eaglercraft.v1_8.opengl.GLSLHeader;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -47,7 +47,7 @@ public class ShaderCompiler {
 	public static IShaderGL compileShader(String name, int stage, String filename, String source, List<String> compileFlags) throws ShaderCompileException {
 		logger.info("Compiling Shader: " + filename);
 		StringBuilder srcCat = new StringBuilder();
-		srcCat.append(FixedFunctionShader.FixedFunctionConstants.VERSION).append('\n');
+		srcCat.append(GLSLHeader.getHeader()).append('\n');
 		
 		if(compileFlags != null && compileFlags.size() > 0) {
 			for(int i = 0, l = compileFlags.size(); i < l; ++i) {

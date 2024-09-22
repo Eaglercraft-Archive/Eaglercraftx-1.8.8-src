@@ -62,7 +62,11 @@
 ~ 				modelplayer_.bipedRightArmwear.showModel = clientPlayer.isWearing(EnumPlayerModelParts.RIGHT_SLEEVE);
 ~ 			}
 
-> CHANGE  50 : 60  @  50 : 58
+> CHANGE  41 : 42  @  41 : 42
+
+~ 						score.getScorePoints() + " " + scoreobjective.getDisplayNameProfanityFilter(), d0, d1, d2, 64);
+
+> CHANGE  8 : 18  @  8 : 16
 
 ~ 		if (!zombieModel) {
 ~ 			float f = 1.0F;

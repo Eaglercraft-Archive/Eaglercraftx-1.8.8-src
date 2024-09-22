@@ -17,7 +17,29 @@
 
 > DELETE  5  @  5 : 6
 
-> CHANGE  211 : 212  @  211 : 212
+> DELETE  9  @  9 : 10
+
+> CHANGE  25 : 26  @  25 : 26
+
+~ 			EnumDifficulty parEnumDifficulty) {
+
+> CHANGE  1 : 2  @  1 : 2
+
+~ 				WorldProvider.getProviderForDimension(parInt1), true);
+
+> DELETE  17  @  17 : 19
+
+> DELETE  8  @  8 : 9
+
+> DELETE  1  @  1 : 2
+
+> DELETE  1  @  1 : 2
+
+> DELETE  24  @  24 : 25
+
+> DELETE  2  @  2 : 3
+
+> CHANGE  113 : 114  @  113 : 114
 
 ~ 		EaglercraftRandom random = new EaglercraftRandom();
 

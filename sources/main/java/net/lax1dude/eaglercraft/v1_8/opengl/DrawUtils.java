@@ -3,15 +3,16 @@ package net.lax1dude.eaglercraft.v1_8.opengl;
 import static net.lax1dude.eaglercraft.v1_8.internal.PlatformOpenGL.*;
 import static net.lax1dude.eaglercraft.v1_8.opengl.RealOpenGLEnums.*;
 
+import java.util.List;
+
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.internal.IBufferArrayGL;
 import net.lax1dude.eaglercraft.v1_8.internal.IBufferGL;
 import net.lax1dude.eaglercraft.v1_8.internal.IShaderGL;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.FloatBuffer;
-import net.lax1dude.eaglercraft.v1_8.opengl.FixedFunctionShader.FixedFunctionConstants;
 
 /**
- * Copyright (c) 2022-2023 lax1dude. All Rights Reserved.
+ * Copyright (c) 2022-2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -28,17 +29,19 @@ import net.lax1dude.eaglercraft.v1_8.opengl.FixedFunctionShader.FixedFunctionCon
 public class DrawUtils {
 
 	public static final String vertexShaderPath = "/assets/eagler/glsl/local.vsh";
+	public static final String vertexShaderPrecision = "precision highp float;\n";
 
 	public static IBufferArrayGL standardQuad2DVAO = null;
 	public static IBufferArrayGL standardQuad3DVAO = null;
 	public static IBufferGL standardQuadVBO = null;
 
 	public static IShaderGL vshLocal = null;
+	public static List<VSHInputLayoutParser.ShaderInput> vshLocalLayout = null;
 
 	static void init() {
 		if(standardQuad2DVAO == null) {
-			standardQuad2DVAO = _wglGenVertexArrays();
-			standardQuad3DVAO = _wglGenVertexArrays();
+			standardQuad2DVAO = EaglercraftGPU.createGLBufferArray();
+			standardQuad3DVAO = EaglercraftGPU.createGLBufferArray();
 			standardQuadVBO = _wglGenBuffers();
 
 			FloatBuffer verts = EagRuntime.allocateFloatBuffer(18);
@@ -48,30 +51,29 @@ public class DrawUtils {
 			});
 			verts.flip();
 
-			EaglercraftGPU.bindGLArrayBuffer(standardQuadVBO);
+			EaglercraftGPU.bindVAOGLArrayBufferNow(standardQuadVBO);
 			_wglBufferData(GL_ARRAY_BUFFER, verts, GL_STATIC_DRAW);
 			EagRuntime.freeFloatBuffer(verts);
 
 			EaglercraftGPU.bindGLBufferArray(standardQuad2DVAO);
 
-			_wglEnableVertexAttribArray(0);
-			_wglVertexAttribPointer(0, 2, GL_FLOAT, false, 12, 0);
+			EaglercraftGPU.enableVertexAttribArray(0);
+			EaglercraftGPU.vertexAttribPointer(0, 2, GL_FLOAT, false, 12, 0);
 
 			EaglercraftGPU.bindGLBufferArray(standardQuad3DVAO);
 
-			_wglEnableVertexAttribArray(0);
-			_wglVertexAttribPointer(0, 3, GL_FLOAT, false, 12, 0);
+			EaglercraftGPU.enableVertexAttribArray(0);
+			EaglercraftGPU.vertexAttribPointer(0, 3, GL_FLOAT, false, 12, 0);
 		}
 
 		if(vshLocal == null) {
-			String vertexSource = EagRuntime.getResourceString(vertexShaderPath);
-			if(vertexSource == null) {
-				throw new RuntimeException("vertex shader \"" + vertexShaderPath + "\" is missing!");
-			}
-	
+			String vertexSource = EagRuntime.getRequiredResourceString(vertexShaderPath);
+
+			vshLocalLayout = VSHInputLayoutParser.getShaderInputs(vertexSource);
+
 			vshLocal = _wglCreateShader(GL_VERTEX_SHADER);
-	
-			_wglShaderSource(vshLocal, FixedFunctionConstants.VERSION + "\n" + vertexSource);
+
+			_wglShaderSource(vshLocal, GLSLHeader.getVertexHeaderCompat(vertexSource, vertexShaderPrecision));
 			_wglCompileShader(vshLocal);
 	
 			if(_wglGetShaderi(vshLocal, GL_COMPILE_STATUS) != GL_TRUE) {
@@ -90,12 +92,32 @@ public class DrawUtils {
 
 	public static void drawStandardQuad2D() {
 		EaglercraftGPU.bindGLBufferArray(standardQuad2DVAO);
-		_wglDrawArrays(GL_TRIANGLES, 0, 6);
+		EaglercraftGPU.doDrawArrays(GL_TRIANGLES, 0, 6);
 	}
 
 	public static void drawStandardQuad3D() {
 		EaglercraftGPU.bindGLBufferArray(standardQuad3DVAO);
-		_wglDrawArrays(GL_TRIANGLES, 0, 6);
+		EaglercraftGPU.doDrawArrays(GL_TRIANGLES, 0, 6);
+	}
+
+	public static void destroy() {
+		if(standardQuad2DVAO != null) {
+			EaglercraftGPU.destroyGLBufferArray(standardQuad2DVAO);
+			standardQuad2DVAO = null;
+		}
+		if(standardQuad3DVAO != null) {
+			EaglercraftGPU.destroyGLBufferArray(standardQuad3DVAO);
+			standardQuad3DVAO = null;
+		}
+		if(standardQuadVBO != null) {
+			_wglDeleteBuffers(standardQuadVBO);
+			standardQuadVBO = null;
+		}
+		if(vshLocal != null) {
+			vshLocal.free();
+			vshLocal = null;
+			vshLocalLayout = null;
+		}
 	}
 
 }

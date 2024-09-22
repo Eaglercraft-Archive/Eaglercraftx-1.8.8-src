@@ -6,6 +6,13 @@ import net.lax1dude.eaglercraft.v1_8.internal.buffer.FloatBuffer;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.IntBuffer;
 
 import static org.lwjgl.opengles.GLES30.*;
+import static org.lwjgl.opengles.ANGLEInstancedArrays.*;
+import static org.lwjgl.opengles.EXTInstancedArrays.*;
+import static org.lwjgl.opengles.EXTTextureStorage.*;
+import static org.lwjgl.opengles.OESVertexArrayObject.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.lwjgl.opengles.GLESCapabilities;
 
@@ -26,10 +33,103 @@ import org.lwjgl.opengles.GLESCapabilities;
  */
 public class PlatformOpenGL {
 
+	private static int glesVers = -1;
+
+	private static boolean hasANGLEInstancedArrays = false;
+	private static boolean hasEXTColorBufferFloat = false;
+	private static boolean hasEXTColorBufferHalfFloat = false;
+	private static boolean hasEXTGPUShader5 = false;
+	private static boolean hasEXTInstancedArrays = false;
+	private static boolean hasEXTShaderTextureLOD = false;
+	private static boolean hasEXTTextureStorage = false;
+	private static boolean hasOESFBORenderMipmap = false;
+	private static boolean hasOESGPUShader5 = false;
+	private static boolean hasOESVertexArrayObject = false;
+	private static boolean hasOESTextureFloat = false;
+	private static boolean hasOESTextureFloatLinear = false;
+	private static boolean hasOESTextureHalfFloat = false;
+	private static boolean hasOESTextureHalfFloatLinear = false;
+	private static boolean hasEXTTextureFilterAnisotropic = false;
+
+	private static boolean hasFBO16FSupport = false;
+	private static boolean hasFBO32FSupport = false;
+	private static boolean hasLinearHDR16FSupport = false;
 	private static boolean hasLinearHDR32FSupport = false;
 
-	static void setCurrentContext(GLESCapabilities caps) {
+	private static final int VAO_IMPL_NONE = -1;
+	private static final int VAO_IMPL_CORE = 0;
+	private static final int VAO_IMPL_OES = 1;
+	private static int vertexArrayImpl = VAO_IMPL_NONE;
+
+	private static final int INSTANCE_IMPL_NONE = -1;
+	private static final int INSTANCE_IMPL_CORE = 0;
+	private static final int INSTANCE_IMPL_ANGLE = 1;
+	private static final int INSTANCE_IMPL_EXT = 2;
+	private static int instancingImpl = INSTANCE_IMPL_NONE;
+
+	private static final int TEX_STORAGE_IMPL_NONE = -1;
+	private static final int TEX_STORAGE_IMPL_CORE = 0;
+	private static final int TEX_STORAGE_IMPL_EXT = 1;
+	private static int texStorageImpl = TEX_STORAGE_IMPL_NONE;
+
+	static void setCurrentContext(int glesVersIn, GLESCapabilities caps) {
+		glesVers = glesVersIn;
+
+		hasANGLEInstancedArrays = glesVersIn == 200 && caps.GL_ANGLE_instanced_arrays;
+		hasOESTextureFloat = glesVersIn == 200 && caps.GL_OES_texture_float;
+		hasOESTextureFloatLinear = glesVersIn >= 300 && caps.GL_OES_texture_float_linear;
+		hasOESTextureHalfFloat = glesVersIn == 200 && caps.GL_OES_texture_half_float;
+		hasOESTextureHalfFloatLinear = glesVersIn == 200 && caps.GL_OES_texture_half_float_linear;
+		hasEXTColorBufferFloat = (glesVersIn == 310 || glesVersIn == 300) && caps.GL_EXT_color_buffer_float;
+		hasEXTColorBufferHalfFloat = !hasEXTColorBufferFloat
+				&& (glesVersIn == 310 || glesVersIn == 300 || glesVersIn == 200) && caps.GL_EXT_color_buffer_half_float;
+		hasEXTInstancedArrays = !hasANGLEInstancedArrays && glesVersIn == 200 && caps.GL_EXT_instanced_arrays;
+		hasEXTShaderTextureLOD = glesVersIn == 200 && caps.GL_EXT_shader_texture_lod;
+		hasEXTTextureStorage = glesVersIn == 200 && caps.GL_EXT_texture_storage;
+		hasOESGPUShader5 = glesVersIn == 310 && caps.GL_OES_gpu_shader5;
+		hasEXTGPUShader5 = !hasOESGPUShader5 && glesVersIn == 310 && caps.GL_EXT_gpu_shader5;
+		hasOESFBORenderMipmap = glesVersIn == 200 && caps.GL_OES_fbo_render_mipmap;
+		hasOESVertexArrayObject = glesVersIn == 200 && caps.GL_OES_vertex_array_object;
 		hasLinearHDR32FSupport = caps.GL_OES_texture_float_linear;
+		hasEXTTextureFilterAnisotropic = caps.GL_EXT_texture_filter_anisotropic;
+		
+		hasFBO16FSupport = glesVersIn >= 320 || ((glesVersIn >= 300 || hasOESTextureFloat) && (hasEXTColorBufferFloat || hasEXTColorBufferHalfFloat));
+		hasFBO32FSupport = glesVersIn >= 320 || ((glesVersIn >= 300 || hasOESTextureHalfFloat) && hasEXTColorBufferFloat);
+		hasLinearHDR16FSupport = glesVersIn >= 300 || hasOESTextureHalfFloatLinear;
+		hasLinearHDR32FSupport = glesVersIn >= 300 && hasOESTextureFloatLinear;
+		
+		if(glesVersIn >= 300) {
+			vertexArrayImpl = VAO_IMPL_CORE;
+			instancingImpl = INSTANCE_IMPL_CORE;
+			texStorageImpl = TEX_STORAGE_IMPL_CORE;
+		}else if(glesVersIn == 200) {
+			vertexArrayImpl = hasOESVertexArrayObject ? VAO_IMPL_OES : VAO_IMPL_NONE;
+			instancingImpl = hasANGLEInstancedArrays ? INSTANCE_IMPL_ANGLE : (hasEXTInstancedArrays ? INSTANCE_IMPL_EXT : INSTANCE_IMPL_NONE);
+			texStorageImpl = hasEXTTextureStorage ? TEX_STORAGE_IMPL_EXT : TEX_STORAGE_IMPL_NONE;
+		}else {
+			vertexArrayImpl = VAO_IMPL_NONE;
+			instancingImpl = INSTANCE_IMPL_NONE;
+			texStorageImpl = TEX_STORAGE_IMPL_NONE;
+		}
+	}
+
+	public static final List<String> dumpActiveExtensions() {
+		List<String> exts = new ArrayList<>();
+		if(hasANGLEInstancedArrays) exts.add("ANGLE_instanced_arrays");
+		if(hasEXTColorBufferFloat) exts.add("EXT_color_buffer_float");
+		if(hasEXTColorBufferHalfFloat) exts.add("EXT_color_buffer_half_float");
+		if(hasEXTGPUShader5) exts.add("EXT_gpu_shader5");
+		if(hasEXTInstancedArrays) exts.add("EXT_instanced_arrays");
+		if(hasEXTTextureStorage) exts.add("EXT_texture_storage");
+		if(hasOESFBORenderMipmap) exts.add("OES_fbo_render_mipmap");
+		if(hasOESGPUShader5) exts.add("OES_gpu_shader5");
+		if(hasOESVertexArrayObject) exts.add("OES_vertex_array_object");
+		if(hasOESTextureFloat) exts.add("OES_texture_float");
+		if(hasOESTextureFloatLinear) exts.add("OES_texture_float_linear");
+		if(hasOESTextureHalfFloat) exts.add("OES_texture_half_float");
+		if(hasOESTextureHalfFloatLinear) exts.add("OES_texture_half_float_linear");
+		if(hasEXTTextureFilterAnisotropic) exts.add("EXT_texture_filter_anisotropic");
+		return exts;
 	}
 
 	public static final void _wglEnable(int glEnum) {
@@ -89,15 +189,43 @@ public class PlatformOpenGL {
 	}
 
 	public static final void _wglDrawBuffers(int buffer) {
-		glDrawBuffers(buffer);
+		if(glesVers == 200) {
+			if(buffer != 0x8CE0) { // GL_COLOR_ATTACHMENT0
+				throw new UnsupportedOperationException();
+			}
+		}else {
+			glDrawBuffers(buffer);
+		}
 	}
 
 	public static final void _wglDrawBuffers(int[] buffers) {
-		glDrawBuffers(buffers);
+		if(glesVers == 200) {
+			if(buffers.length != 1 || buffers[0] != 0x8CE0) { // GL_COLOR_ATTACHMENT0
+				throw new UnsupportedOperationException();
+			}
+		}else {
+			glDrawBuffers(buffers);
+		}
 	}
 
 	public static final void _wglReadBuffer(int buffer) {
 		glReadBuffer(buffer);
+	}
+
+	public static final void _wglReadPixels(int x, int y, int width, int height, int format, int type, ByteBuffer data) {
+		nglReadPixels(x, y, width, height, format, type, EaglerLWJGLAllocator.getAddress(data));
+	}
+
+	public static final void _wglReadPixels_u16(int x, int y, int width, int height, int format, int type, ByteBuffer data) {
+		nglReadPixels(x, y, width, height, format, type, EaglerLWJGLAllocator.getAddress(data));
+	}
+
+	public static final void _wglReadPixels(int x, int y, int width, int height, int format, int type, IntBuffer data) {
+		nglReadPixels(x, y, width, height, format, type, EaglerLWJGLAllocator.getAddress(data));
+	}
+
+	public static final void _wglReadPixels(int x, int y, int width, int height, int format, int type, FloatBuffer data) {
+		nglReadPixels(x, y, width, height, format, type, EaglerLWJGLAllocator.getAddress(data));
 	}
 
 	public static final void _wglPolygonOffset(float f1, float f2) {
@@ -117,7 +245,14 @@ public class PlatformOpenGL {
 	}
 
 	public static final IBufferArrayGL _wglGenVertexArrays() {
-		return new OpenGLObjects.BufferArrayGL(glGenVertexArrays());
+		switch(vertexArrayImpl) {
+		case VAO_IMPL_CORE:
+			return new OpenGLObjects.BufferArrayGL(glGenVertexArrays());
+		case VAO_IMPL_OES:
+			return new OpenGLObjects.BufferArrayGL(glGenVertexArraysOES());
+		default:
+			throw new UnsupportedOperationException();
+		}
 	}
 
 	public static final IProgramGL _wglCreateProgram() {
@@ -149,7 +284,17 @@ public class PlatformOpenGL {
 	}
 
 	public static final void _wglDeleteVertexArrays(IBufferArrayGL obj) {
-		glDeleteVertexArrays(((OpenGLObjects.BufferArrayGL) obj).ptr);
+		int ptr = ((OpenGLObjects.BufferArrayGL) obj).ptr;
+		switch(vertexArrayImpl) {
+		case VAO_IMPL_CORE:
+			glDeleteVertexArrays(ptr);
+			break;
+		case VAO_IMPL_OES:
+			glDeleteVertexArraysOES(ptr);
+			break;
+		default:
+			throw new UnsupportedOperationException();
+		}
 	}
 
 	public static final void _wglDeleteProgram(IProgramGL obj) {
@@ -211,7 +356,17 @@ public class PlatformOpenGL {
 	}
 
 	public static final void _wglBindVertexArray(IBufferArrayGL obj) {
-		glBindVertexArray(obj == null ? 0 : ((OpenGLObjects.BufferArrayGL) obj).ptr);
+		int ptr = obj == null ? 0 : ((OpenGLObjects.BufferArrayGL) obj).ptr;
+		switch(vertexArrayImpl) {
+		case VAO_IMPL_CORE:
+			glBindVertexArray(ptr);
+			break;
+		case VAO_IMPL_OES:
+			glBindVertexArrayOES(ptr);
+			break;
+		default:
+			throw new UnsupportedOperationException();
+		}
 	}
 
 	public static final void _wglEnableVertexAttribArray(int index) {
@@ -228,7 +383,19 @@ public class PlatformOpenGL {
 	}
 
 	public static final void _wglVertexAttribDivisor(int index, int divisor) {
-		glVertexAttribDivisor(index, divisor);
+		switch(instancingImpl) {
+		case INSTANCE_IMPL_CORE:
+			glVertexAttribDivisor(index, divisor);
+			break;
+		case INSTANCE_IMPL_ANGLE:
+			glVertexAttribDivisorANGLE(index, divisor);
+			break;
+		case INSTANCE_IMPL_EXT:
+			glVertexAttribDivisorEXT(index, divisor);
+			break;
+		default:
+			throw new UnsupportedOperationException();
+		}
 	}
 
 	public static final void _wglActiveTexture(int texture) {
@@ -313,7 +480,16 @@ public class PlatformOpenGL {
 	}
 
 	public static final void _wglTexStorage2D(int target, int levels, int internalFormat, int w, int h) {
-		glTexStorage2D(target, levels, internalFormat, w, h);
+		switch(texStorageImpl) {
+		case TEX_STORAGE_IMPL_CORE:
+			glTexStorage2D(target, levels, internalFormat, w, h);
+			break;
+		case TEX_STORAGE_IMPL_EXT:
+			glTexStorage2DEXT(target, levels, internalFormat, w, h);
+			break;
+		default:
+			throw new UnsupportedOperationException();
+		}
 	}
 
 	public static final void _wglPixelStorei(int pname, int value) {
@@ -377,7 +553,19 @@ public class PlatformOpenGL {
 	}
 
 	public static final void _wglDrawArraysInstanced(int mode, int first, int count, int instanced) {
-		glDrawArraysInstanced(mode, first, count, instanced);
+		switch(instancingImpl) {
+		case INSTANCE_IMPL_CORE:
+			glDrawArraysInstanced(mode, first, count, instanced);
+			break;
+		case INSTANCE_IMPL_ANGLE:
+			glDrawArraysInstancedANGLE(mode, first, count, instanced);
+			break;
+		case INSTANCE_IMPL_EXT:
+			glDrawArraysInstancedEXT(mode, first, count, instanced);
+			break;
+		default:
+			throw new UnsupportedOperationException();
+		}
 	}
 
 	public static final void _wglDrawElements(int mode, int count, int type, int offset) {
@@ -385,7 +573,19 @@ public class PlatformOpenGL {
 	}
 
 	public static final void _wglDrawElementsInstanced(int mode, int count, int type, int offset, int instanced) {
-		glDrawElementsInstanced(mode, count, type, offset, instanced);
+		switch(instancingImpl) {
+		case INSTANCE_IMPL_CORE:
+			glDrawElementsInstanced(mode, count, type, offset, instanced);
+			break;
+		case INSTANCE_IMPL_ANGLE:
+			glDrawElementsInstancedANGLE(mode, count, type, offset, instanced);
+			break;
+		case INSTANCE_IMPL_EXT:
+			glDrawElementsInstancedEXT(mode, count, type, offset, instanced);
+			break;
+		default:
+			throw new UnsupportedOperationException();
+		}
 	}
 
 	public static final IUniformGL _wglGetUniformLocation(IProgramGL obj, String name) {
@@ -533,11 +733,79 @@ public class PlatformOpenGL {
 		return glGetError();
 	}
 
-	public static final boolean checkHDRFramebufferSupport(int bits) {
-		return true;
+	public static final int checkOpenGLESVersion() {
+		return glesVers;
 	}
 
+	public static final boolean checkEXTGPUShader5Capable() {
+		return hasEXTGPUShader5;
+	}
+
+	public static final boolean checkOESGPUShader5Capable() {
+		return hasOESGPUShader5;
+	}
+
+	public static final boolean checkFBORenderMipmapCapable() {
+		return hasOESFBORenderMipmap;
+	}
+
+	public static final boolean checkVAOCapable() {
+		return vertexArrayImpl != VAO_IMPL_NONE;
+	}
+
+	public static final boolean checkInstancingCapable() {
+		return instancingImpl != INSTANCE_IMPL_NONE;
+	}
+
+	public static final boolean checkTexStorageCapable() {
+		return texStorageImpl != TEX_STORAGE_IMPL_NONE;
+	}
+
+	public static final boolean checkTextureLODCapable() {
+		return glesVers >= 300 || hasEXTShaderTextureLOD;
+	}
+
+	public static final boolean checkNPOTCapable() {
+		return glesVers >= 300;
+	}
+
+	public static final boolean checkHDRFramebufferSupport(int bits) {
+		switch(bits) {
+		case 16:
+			return hasFBO16FSupport;
+		case 32:
+			return hasFBO32FSupport;
+		default:
+			return false;
+		}
+	}
+
+	public static final boolean checkLinearHDRFilteringSupport(int bits) {
+		switch(bits) {
+		case 16:
+			return hasLinearHDR16FSupport;
+		case 32:
+			return hasLinearHDR32FSupport;
+		default:
+			return false;
+		}
+	}
+
+	// legacy
 	public static final boolean checkLinearHDR32FSupport() {
 		return hasLinearHDR32FSupport;
 	}
+
+	public static final boolean checkAnisotropicFilteringSupport() {
+		return hasEXTTextureFilterAnisotropic;
+	}
+
+	public static final String[] getAllExtensions() {
+		return glGetString(GL_EXTENSIONS).split(" ");
+	}
+
+	public static final void enterVAOEmulationHook() {
+		
+	}
+
 }

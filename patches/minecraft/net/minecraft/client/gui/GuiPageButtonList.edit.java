@@ -10,9 +10,11 @@
 + import java.util.List;
 + 
 
-> CHANGE  4 : 5  @  4 : 5
+> CHANGE  4 : 7  @  4 : 5
 
 ~ 
+~ import net.lax1dude.eaglercraft.v1_8.PointerInputAbstraction;
+~ import net.lax1dude.eaglercraft.v1_8.minecraft.EnumInputEvent;
 
 > DELETE  1  @  1 : 9
 
@@ -45,5 +47,54 @@
 
 ~ 				for (int k = 0; k < astring.length; ++k) {
 ~ 					((GuiTextField) this.field_178072_w.get(j)).setText(astring[k]);
+
+> INSERT  31 : 46  @  31
+
++ 	public boolean isTextFieldFocused() {
++ 		for (GuiTextField txt : field_178072_w) {
++ 			if (txt.isFocused()) {
++ 				return true;
++ 			}
++ 		}
++ 		return false;
++ 	}
++ 
++ 	public void fireInputEvent(EnumInputEvent event, String param) {
++ 		for (GuiTextField txt : field_178072_w) {
++ 			txt.fireInputEvent(event, param);
++ 		}
++ 	}
++ 
+
+> CHANGE  93 : 100  @  93 : 95
+
+~ 			if (k != 0 && k != 12345)
+~ 				return false;
+~ 			boolean touchMode = PointerInputAbstraction.isTouchMode();
+~ 			boolean flag = this.field_178029_b != null && (!touchMode || stupidCheck(this.field_178029_b, k))
+~ 					&& this.func_178026_a(this.field_178029_b, i, j, k);
+~ 			boolean flag1 = this.field_178030_c != null && (!touchMode || stupidCheck(this.field_178030_c, k))
+~ 					&& this.func_178026_a(this.field_178030_c, i, j, k);
+
+> INSERT  3 : 11  @  3
+
++ 		private static boolean stupidCheck(Gui gui, int k) {
++ 			if (gui instanceof GuiButton) {
++ 				return ((GuiButton) gui).isSliderTouchEvents() == (k == 12345);
++ 			} else {
++ 				return k != 12345;
++ 			}
++ 		}
++ 
+
+> CHANGE  32 : 39  @  32 : 34
+
+~ 			if (k != 0 && k != 12345)
+~ 				return;
+~ 			boolean touchMode = PointerInputAbstraction.isTouchMode();
+~ 			if (!touchMode || stupidCheck(field_178029_b, k))
+~ 				this.func_178016_b(this.field_178029_b, i, j, k);
+~ 			if (!touchMode || stupidCheck(field_178030_c, k))
+~ 				this.func_178016_b(this.field_178030_c, i, j, k);
 
 > EOF

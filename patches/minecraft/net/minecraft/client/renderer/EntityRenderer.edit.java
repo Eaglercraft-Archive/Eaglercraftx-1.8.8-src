@@ -11,10 +11,12 @@
 ~ 
 ~ import java.util.Arrays;
 
-> CHANGE  1 : 3  @  1 : 2
+> CHANGE  1 : 5  @  1 : 2
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ import net.lax1dude.eaglercraft.v1_8.HString;
+~ import net.lax1dude.eaglercraft.v1_8.PointerInputAbstraction;
+~ 
 
 > INSERT  1 : 29  @  1
 
@@ -23,7 +25,7 @@
 + import com.google.common.base.Predicates;
 + 
 + import net.lax1dude.eaglercraft.v1_8.Display;
-+ import net.lax1dude.eaglercraft.v1_8.Mouse;
++ import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 + import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 + import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 + import net.lax1dude.eaglercraft.v1_8.opengl.EaglercraftGPU;
@@ -47,7 +49,11 @@
 + import net.lax1dude.eaglercraft.v1_8.voice.VoiceTagRenderer;
 + import net.lax1dude.eaglercraft.v1_8.vector.Matrix4f;
 
-> CHANGE  10 : 13  @  10 : 20
+> INSERT  6 : 7  @  6
+
++ import net.minecraft.client.gui.GuiScreen;
+
+> CHANGE  4 : 7  @  4 : 14
 
 ~ import net.minecraft.client.particle.EntityFX;
 ~ import net.minecraft.client.renderer.RenderGlobal.ChunkCullAdapter;
@@ -137,7 +143,11 @@
 
 > DELETE  1  @  1 : 8
 
-> CHANGE  111 : 112  @  111 : 112
+> DELETE  6  @  6 : 7
+
+> DELETE  79  @  79 : 81
+
+> CHANGE  23 : 24  @  23 : 24
 
 ~ 	public float getFOVModifier(float partialTicks, boolean parFlag) {
 
@@ -179,7 +189,9 @@
 + 	}
 + 
 
-> CHANGE  117 : 118  @  117 : 118
+> DELETE  10  @  10 : 11
+
+> CHANGE  106 : 107  @  106 : 107
 
 ~ 					this.lightmapColors[i] = short1 << 24 | j | k << 8 | l << 16;
 
@@ -201,17 +213,45 @@
 + 				GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
 + 
 
-> DELETE  23  @  23 : 28
+> DELETE  1  @  1 : 2
 
-> INSERT  4 : 7  @  4
+> CHANGE  10 : 11  @  10 : 11
+
+~ 		boolean flag = Display.isActive() || mc.gameSettings.touchscreen;
+
+> CHANGE  1 : 2  @  1 : 2
+
+~ 				&& (!this.mc.gameSettings.touchscreen || !PointerInputAbstraction.getVCursorButtonDown(1))) {
+
+> DELETE  7  @  7 : 14
+
+> INSERT  3 : 6  @  3
 
 + 			if (this.mc.gameSettings.keyBindZoomCamera.isKeyDown()) {
 + 				f *= 0.7f;
 + 			}
 
-> DELETE  39  @  39 : 52
+> DELETE  23  @  23 : 24
 
-> CHANGE  4 : 45  @  4 : 5
+> CHANGE  2 : 3  @  2 : 3
+
+~ 			final ScaledResolution scaledresolution = mc.scaledResolution;
+
+> CHANGE  2 : 4  @  2 : 4
+
+~ 			final int j1 = PointerInputAbstraction.getVCursorX() * l / this.mc.displayWidth;
+~ 			final int k1 = i1 - PointerInputAbstraction.getVCursorY() * i1 / this.mc.displayHeight - 1;
+
+> DELETE  2  @  2 : 3
+
+> DELETE  5  @  5 : 18
+
+> CHANGE  1 : 3  @  1 : 3
+
+~ 				final boolean b = !this.mc.gameSettings.hideGUI || this.mc.currentScreen != null;
+~ 				if (b) {
+
+> CHANGE  1 : 14  @  1 : 2
 
 ~ 					long framebufferAge = this.overlayFramebuffer.getAge();
 ~ 					if (framebufferAge == -1l || framebufferAge > (Minecraft.getDebugFPS() < 25 ? 125l : 75l)) {
@@ -220,10 +260,16 @@
 ~ 						GlStateManager.clearColor(0.0f, 0.0f, 0.0f, 0.0f);
 ~ 						GlStateManager.clear(16640);
 ~ 						GlStateManager.enableOverlayFramebufferBlending();
-~ 						this.mc.ingameGUI.renderGameOverlay(parFloat1);
+~ 						if (b) {
+~ 							this.mc.ingameGUI.renderGameOverlay(parFloat1);
+~ 						}
 ~ 						GlStateManager.disableOverlayFramebufferBlending();
 ~ 						this.overlayFramebuffer.endRender();
 ~ 					}
+
+> CHANGE  1 : 32  @  1 : 3
+
+~ 				if (b) {
 ~ 					this.setupOverlayRendering();
 ~ 					GlStateManager.disableLighting();
 ~ 					GlStateManager.enableBlend();
@@ -235,7 +281,7 @@
 ~ 					GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 ~ 					GlStateManager.enableBlend();
 ~ 					GlStateManager.blendFunc(1, 771);
-~ 					GlStateManager.disableAlpha();
+~ 					GlStateManager.enableAlpha();
 ~ 					GlStateManager.disableDepth();
 ~ 					GlStateManager.depthMask(false);
 ~ 					Tessellator tessellator = Tessellator.getInstance();
@@ -248,14 +294,45 @@
 ~ 					tessellator.draw();
 ~ 					GlStateManager.depthMask(true);
 ~ 					GlStateManager.enableDepth();
-~ 					GlStateManager.enableAlpha();
 ~ 					GlStateManager.disableBlend();
 ~ 					if (this.mc.gameSettings.hudPlayer) { // give the player model HUD good fps
 ~ 						this.mc.ingameGUI.drawEaglerPlayerOverlay(l - 3,
 ~ 								3 + this.mc.ingameGUI.overlayDebug.playerOffset, parFloat1);
 ~ 					}
+~ 				}
 
-> CHANGE  23 : 24  @  23 : 24
+> INSERT  10 : 12  @  10
+
++ 			this.mc.notifRenderer.renderOverlay(j1, k1);
++ 
+
+> INSERT  2 : 4  @  2
+
++ 				float f = 1.0f;
++ 				final float[] ff = new float[] { 1.0f };
+
+> CHANGE  2 : 20  @  2 : 3
+
+~ 					f = mc.currentScreen.getEaglerScale();
+~ 					int mx, my;
+~ 					if (f == 1.0f) {
+~ 						mx = j1;
+~ 						my = k1;
+~ 					} else {
+~ 						mx = GuiScreen.applyEaglerScale(f, j1, l);
+~ 						my = GuiScreen.applyEaglerScale(f, k1, i1);
+~ 						GlStateManager.pushMatrix();
+~ 						float fff = (1.0f - f) * 0.5f;
+~ 						GlStateManager.translate(fff * l, fff * i1, 0.0f);
+~ 						GlStateManager.scale(f, f, f);
+~ 					}
+~ 					ff[0] = f;
+~ 					this.mc.currentScreen.drawScreen(mx, my, parFloat1);
+~ 					if (f != 1.0f) {
+~ 						GlStateManager.popMatrix();
+~ 					}
+
+> CHANGE  5 : 6  @  5 : 6
 
 ~ 							return EntityRenderer.this.mc.currentScreen.getClass().getName();
 
@@ -263,16 +340,31 @@
 
 ~ 							return HString.format("Scaled: (%d, %d). Absolute: (%d, %d)",
 
-> CHANGE  6 : 7  @  6 : 7
+> CHANGE  1 : 3  @  1 : 2
+
+~ 											Integer.valueOf(PointerInputAbstraction.getVCursorX()),
+~ 											Integer.valueOf(PointerInputAbstraction.getVCursorY()) });
+
+> CHANGE  4 : 5  @  4 : 5
 
 ~ 							return HString.format("Scaled: (%d, %d). Absolute: (%d, %d). Scale factor of %d",
 
-> INSERT  9 : 11  @  9
+> INSERT  7 : 12  @  7
 
-+ 
++ 					crashreportcategory.addCrashSectionCallable("Eagler Scale", new Callable<String>() {
++ 						public String call() throws Exception {
++ 							return "" + ff[0];
++ 						}
++ 					});
+
+> DELETE  2  @  2 : 3
+
+> INSERT  1 : 3  @  1
+
 + 				this.mc.voiceOverlay.drawOverlay();
++ 			}
 
-> DELETE  6  @  6 : 8
+> DELETE  4  @  4 : 6
 
 > CHANGE  32 : 33  @  32 : 33
 
@@ -291,7 +383,7 @@
 + 		VoiceTagRenderer.clearTagsDrawnSet();
 + 
 
-> CHANGE  4 : 25  @  4 : 12
+> CHANGE  3 : 24  @  3 : 12
 
 ~ 		boolean dlights = DynamicLightsStateManager.isDynamicLightsRender();
 ~ 		if (dlights) {
@@ -315,7 +407,7 @@
 ~ 				}
 ~ 			}
 
-> CHANGE  1 : 26  @  1 : 2
+> CHANGE  1 : 28  @  1 : 2
 
 ~ 			if (this.mc.gameSettings.shaders) {
 ~ 				try {
@@ -330,7 +422,9 @@
 ~ 				}
 ~ 				mc.effectRenderer.acceleratedParticleRenderer = EffectRenderer.vanillaAcceleratedParticleRenderer;
 ~ 			} else {
-~ 				mc.effectRenderer.acceleratedParticleRenderer = EffectRenderer.vanillaAcceleratedParticleRenderer;
+~ 				mc.effectRenderer.acceleratedParticleRenderer = EaglercraftGPU.checkInstancingCapable()
+~ 						? EffectRenderer.vanillaAcceleratedParticleRenderer
+~ 						: null;
 ~ 				if (dlights) {
 ~ 					GlStateManager.enableExtensionPipeline();
 ~ 				}
@@ -343,29 +437,34 @@
 ~ 				}
 ~ 			}
 
-> INSERT  2 : 6  @  2
+> CHANGE  2 : 5  @  2 : 3
 
-+ 		if (fxaa) {
-+ 			EffectPipelineFXAA.end();
-+ 		}
-+ 
+~ 		if (fxaa) {
+~ 			EffectPipelineFXAA.end();
+~ 		}
 
-> INSERT  14 : 18  @  14
+> DELETE  7  @  7 : 8
+
+> DELETE  3  @  3 : 4
+
+> INSERT  1 : 5  @  1
 
 + 		boolean isDynamicLights = DynamicLightsStateManager.isDynamicLightsRender();
 + 		if (isDynamicLights) {
 + 			DynamicLightsStateManager.setupInverseViewMatrix();
 + 		}
 
-> DELETE  1  @  1 : 3
+> DELETE  1  @  1 : 4
 
-> INSERT  6 : 9  @  6
+> INSERT  5 : 8  @  5
 
 + 		TileEntityRendererDispatcher.staticPlayerX = d0; // hack, needed for some eagler stuff
 + 		TileEntityRendererDispatcher.staticPlayerY = d1;
 + 		TileEntityRendererDispatcher.staticPlayerZ = d2;
 
-> CHANGE  6 : 9  @  6 : 8
+> DELETE  3  @  3 : 4
+
+> CHANGE  2 : 5  @  2 : 4
 
 ~ 			float vigg = this.getFOVModifier(partialTicks, true);
 ~ 			GlStateManager.gluPerspective(vigg, (float) this.mc.displayWidth / (float) this.mc.displayHeight, 0.05F,
@@ -375,7 +474,15 @@
 
 ~ 			GlStateManager.gluPerspective(vigg, (float) this.mc.displayWidth / (float) this.mc.displayHeight, 0.05F,
 
-> INSERT  26 : 27  @  26
+> DELETE  10  @  10 : 11
+
+> DELETE  3  @  3 : 4
+
+> DELETE  3  @  3 : 4
+
+> DELETE  3  @  3 : 4
+
+> INSERT  3 : 4  @  3
 
 + 		GlStateManager.disableBlend();
 
@@ -385,11 +492,13 @@
 
 + 		GlStateManager.shadeModel(7424);
 
-> INSERT  16 : 19  @  16
+> DELETE  5  @  5 : 6
 
-+ 				if (isDynamicLights) {
-+ 					GlStateManager.disableExtensionPipeline();
-+ 				}
+> CHANGE  9 : 12  @  9 : 10
+
+~ 				if (isDynamicLights) {
+~ 					GlStateManager.disableExtensionPipeline();
+~ 				}
 
 > INSERT  2 : 5  @  2
 
@@ -397,19 +506,23 @@
 + 					GlStateManager.enableExtensionPipeline();
 + 				}
 
-> INSERT  8 : 11  @  8
+> CHANGE  8 : 11  @  8 : 9
 
-+ 			if (isDynamicLights) {
-+ 				GlStateManager.disableExtensionPipeline();
-+ 			}
+~ 			if (isDynamicLights) {
+~ 				GlStateManager.disableExtensionPipeline();
+~ 			}
 
-> INSERT  3 : 6  @  3
+> INSERT  2 : 5  @  2
 
 + 			if (isDynamicLights) {
 + 				GlStateManager.enableExtensionPipeline();
 + 			}
 
-> CHANGE  17 : 25  @  17 : 18
+> DELETE  2  @  2 : 3
+
+> DELETE  9  @  9 : 10
+
+> CHANGE  3 : 11  @  3 : 5
 
 ~ 			if (isDynamicLights) {
 ~ 				DynamicLightsStateManager.bindAcceleratedEffectRenderer(effectrenderer);
@@ -420,7 +533,15 @@
 ~ 				effectrenderer.acceleratedParticleRenderer = null;
 ~ 			}
 
-> INSERT  39 : 53  @  39
+> DELETE  5  @  5 : 6
+
+> DELETE  12  @  12 : 13
+
+> DELETE  7  @  7 : 8
+
+> DELETE  3  @  3 : 4
+
+> INSERT  8 : 22  @  8
 
 + 	private void updateDynamicLightListEagler(float partialTicks) {
 + 		DynamicLightsStateManager.clearRenderList();
@@ -437,7 +558,9 @@
 + 	}
 + 
 
-> CHANGE  5 : 6  @  5 : 6
+> DELETE  2  @  2 : 3
+
+> CHANGE  2 : 3  @  2 : 3
 
 ~ 			GlStateManager.gluPerspective(this.getFOVModifier(partialTicks, true),
 
@@ -523,7 +646,11 @@
 ~ 				EaglerDeferredPipeline.instance.setForwardRenderLightFactors(1.0f, 1.0f, 1.0f, 1.0f);
 ~ 			}
 
-> CHANGE  153 : 154  @  153 : 154
+> CHANGE  6 : 7  @  6 : 7
+
+~ 		ScaledResolution scaledresolution = mc.scaledResolution;
+
+> CHANGE  146 : 147  @  146 : 147
 
 ~ 		GlStateManager.clearColor(this.fogColorRed, this.fogColorGreen, this.fogColorBlue, 1.0F);
 
@@ -539,7 +666,7 @@
 
 > INSERT  14 : 17  @  14
 
-+ 		} else if (!this.mc.gameSettings.fog) {
++ 		} else if (partialTicks != -1 && !this.mc.gameSettings.fog) {
 + 			GlStateManager.setFog(2048);
 + 			GlStateManager.setFogDensity(0.0F);
 
@@ -553,7 +680,7 @@
 
 > DELETE  9  @  9 : 10
 
-> INSERT  12 : 988  @  12
+> INSERT  12 : 952  @  12
 
 + 
 + 	private static final Vector4f tmpVec4f_1 = new Vector4f();
@@ -570,28 +697,23 @@
 + 			EaglerDeferredPipeline.renderSuspended();
 + 			return;
 + 		}
-+ 		mc.mcProfiler.endStartSection("eaglercraftShaders");
 + 		EaglerDeferredPipeline.instance.setPartialTicks(partialTicks);
 + 		eagPartialTicks = partialTicks;
 + 		EaglerDeferredConfig conf = mc.gameSettings.deferredShaderConf;
 + 		boolean flag = isDrawBlockOutline();
 + 		GlStateManager.viewport(0, 0, mc.displayWidth, mc.displayHeight);
-+ 		mc.mcProfiler.startSection("camera");
 + 		setupCameraTransform(partialTicks, 2);
 + 		EaglerDeferredPipeline.instance.loadViewMatrix();
 + 		ActiveRenderInfo.updateRenderInfo(mc.thePlayer, mc.gameSettings.thirdPersonView == 2);
-+ 		mc.mcProfiler.endStartSection("culling");
 + 		Frustum frustum = new Frustum();
 + 		Entity entity = mc.getRenderViewEntity();
 + 		if (entity == null) {
 + 			entity = mc.thePlayer;
 + 		}
-+ 		double d0 = EaglerDeferredPipeline.instance.currentRenderX = entity.lastTickPosX
-+ 				+ (entity.posX - entity.lastTickPosX) * (double) partialTicks;
-+ 		double d1 = EaglerDeferredPipeline.instance.currentRenderY = entity.lastTickPosY
-+ 				+ (entity.posY - entity.lastTickPosY) * (double) partialTicks;
-+ 		double d2 = EaglerDeferredPipeline.instance.currentRenderZ = entity.lastTickPosZ
-+ 				+ (entity.posZ - entity.lastTickPosZ) * (double) partialTicks;
++ 		double d0 = entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * (double) partialTicks;
++ 		double d1 = entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * (double) partialTicks;
++ 		double d2 = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * (double) partialTicks;
++ 		EaglerDeferredPipeline.instance.setRenderPosGlobal(d0, d1, d2);
 + 		EaglerDeferredPipeline.instance.updateReprojectionCoordinates(d0, d1, d2);
 + 		float eyeHeight = entity.getEyeHeight();
 + 		frustum.setPosition(d0, d1, d2);
@@ -603,7 +725,7 @@
 + //		}
 + //		System.out.println(builder.toString());
 + 
-+ 		float waveTimer = (float) ((System.currentTimeMillis() % 600000l) * 0.001);
++ 		float waveTimer = (float) ((EagRuntime.steadyTimeMillis() % 600000l) * 0.001);
 + 		DeferredStateManager.setWaterWindOffset(0.0f, 0.0f, waveTimer, waveTimer);
 + 
 + 		float blockWaveDistX = (float) (d0 - blockWaveOffsetX);
@@ -628,7 +750,6 @@
 + 
 + 		// if (mc.gameSettings.renderDistanceChunks >= 4) vanilla shows sky not fog
 + 
-+ 		mc.mcProfiler.endStartSection("terrain_setup");
 + 		mc.renderGlobal.setupTerrain(entity, (double) partialTicks, frustum, frameCount++, mc.thePlayer.isSpectator());
 + 
 + 		// clear some state:
@@ -646,10 +767,7 @@
 + 
 + 		EaglerDeferredPipeline.instance.beginDrawMainGBufferTerrain();
 + 
-+ 		mc.mcProfiler.endStartSection("updatechunks");
 + 		mc.renderGlobal.updateChunks(finishTimeNano);
-+ 
-+ 		mc.mcProfiler.endStartSection("terrain");
 + 
 + 		mc.renderGlobal.renderBlockLayer(EnumWorldBlockLayer.SOLID, (double) partialTicks, 2, entity);
 + 		GlStateManager.enableAlpha();
@@ -679,20 +797,17 @@
 + 		NameTagRenderer.doRenderNameTags = true;
 + 		NameTagRenderer.nameTagsCount = 0;
 + 		GlStateManager.pushMatrix();
-+ 		mc.mcProfiler.endStartSection("entities");
 + 		DeferredStateManager.setDefaultMaterialConstants();
 + 		DeferredStateManager.startUsingEnvMap();
 + 		mc.renderGlobal.renderEntities(entity, frustum, partialTicks);
 + 		GlStateManager.matrixMode(5888);
 + 		GlStateManager.popMatrix();
-+ 		mc.mcProfiler.endStartSection("litParticles");
 + 		EntityFX.interpPosX = d0;
 + 		EntityFX.interpPosY = d1;
 + 		EntityFX.interpPosZ = d2;
 + 		enableLightmap();
 + 		GlStateManager.pushMatrix();
 + 		mc.effectRenderer.renderLitParticles(entity, partialTicks);
-+ 		mc.mcProfiler.endStartSection("gbufferParticles");
 + 		GlStateManager.matrixMode(5888);
 + 		GlStateManager.popMatrix();
 + 		GlStateManager.pushMatrix();
@@ -706,9 +821,7 @@
 + 		DynamicLightManager.setIsRenderingLights(false);
 + 		NameTagRenderer.doRenderNameTags = false;
 + 
-+ 		mc.mcProfiler.endStartSection("endDrawMainGBuffer");
 + 		EaglerDeferredPipeline.instance.endDrawMainGBuffer();
-+ 		mc.mcProfiler.endStartSection("shadowSetup");
 + 
 + 		// calculate sun matrix and angle:
 + 
@@ -1113,11 +1226,9 @@
 + 			}
 + 		}
 + 
-+ 		mc.mcProfiler.endStartSection("combineGBuffersAndIlluminate");
 + 		EaglerDeferredPipeline.instance.combineGBuffersAndIlluminate();
 + 
 + 		if (conf.is_rendering_useEnvMap) {
-+ 			mc.mcProfiler.endStartSection("envMap");
 + 			DeferredStateManager.forwardCallbackHandler = null;
 + 			EaglerDeferredPipeline.instance.beginDrawEnvMap();
 + 			GlStateManager.enableCull();
@@ -1188,15 +1299,12 @@
 + 		}
 + 
 + 		if (conf.is_rendering_realisticWater) {
-+ 			mc.mcProfiler.endStartSection("realisticWaterMask");
 + 			EaglerDeferredPipeline.instance.beginDrawRealisticWaterMask();
 + 			enableLightmap();
 + 			mc.renderGlobal.renderBlockLayer(EnumWorldBlockLayer.REALISTIC_WATER, (double) partialTicks, 2, entity);
 + 			disableLightmap();
 + 			EaglerDeferredPipeline.instance.endDrawRealisticWaterMask();
 + 		}
-+ 
-+ 		mc.mcProfiler.endStartSection("setupShaderFog");
 + 
 + 		int dim = mc.theWorld.provider.getDimensionId();
 + 		float ff;
@@ -1262,16 +1370,13 @@
 + 		DeferredStateManager.setDefaultMaterialConstants();
 + 
 + 		if (conf.is_rendering_realisticWater) {
-+ 			mc.mcProfiler.endStartSection("realisticWaterSurface");
 + 			EaglerDeferredPipeline.instance.beginDrawRealisticWaterSurface();
 + 			mc.renderGlobal.renderBlockLayer(EnumWorldBlockLayer.REALISTIC_WATER, (double) partialTicks, 2, entity);
 + 			EaglerDeferredPipeline.instance.endDrawRealisticWaterSurface();
 + 		}
 + 
-+ 		mc.mcProfiler.endStartSection("gbufferFog");
 + 		EaglerDeferredPipeline.instance.applyGBufferFog();
 + 
-+ 		mc.mcProfiler.endStartSection("translucentEntities");
 + 		EaglerDeferredPipeline.instance.beginDrawTranslucentEntities();
 + 
 + 		TileEntityRendererDispatcher.staticPlayerX = d0;
@@ -1295,13 +1400,10 @@
 + 		DeferredStateManager.forwardCallbackGBuffer.reset();
 + 
 + 		EaglerDeferredPipeline.instance.beginDrawTranslucentBlocks();
-+ 		mc.mcProfiler.endStartSection("translucentBlocks");
 + 		mc.getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
 + 		mc.renderGlobal.renderBlockLayer(EnumWorldBlockLayer.TRANSLUCENT, (double) partialTicks, 2, entity);
 + 
 + 		EaglerDeferredPipeline.instance.beginDrawMainGBufferDestroyProgress();
-+ 
-+ 		mc.mcProfiler.endStartSection("destroyProgress");
 + 
 + 		GlStateManager.enableBlend();
 + 		GlStateManager.tryBlendFuncSeparate(0, 770, 0, 0);
@@ -1314,7 +1416,6 @@
 + 		EaglerDeferredPipeline.instance.endDrawMainGBufferDestroyProgress();
 + 
 + 		if (mc.effectRenderer.hasParticlesInAlphaLayer()) {
-+ 			mc.mcProfiler.endStartSection("transparentParticles");
 + 			GlStateManager.pushMatrix();
 + 			mc.effectRenderer.acceleratedParticleRenderer = EaglerDeferredPipeline.instance.forwardEffectRenderer;
 + 			DeferredStateManager.setHDRTranslucentPassBlendFunc();
@@ -1330,22 +1431,18 @@
 + 		}
 + 
 + 		if (conf.is_rendering_useEnvMap) {
-+ 			mc.mcProfiler.endStartSection("glassHighlights");
 + 			EaglerDeferredPipeline.instance.beginDrawGlassHighlights();
 + 			mc.renderGlobal.renderBlockLayer(EnumWorldBlockLayer.GLASS_HIGHLIGHTS, (double) partialTicks, 2, entity);
 + 			EaglerDeferredPipeline.instance.endDrawGlassHighlights();
 + 		}
 + 
-+ 		mc.mcProfiler.endStartSection("saveReprojData");
 + 		EaglerDeferredPipeline.instance.saveReprojData();
 + 
-+ 		mc.mcProfiler.endStartSection("rainSnow");
 + 		renderRainSnow(partialTicks);
 + 
 + 		GlStateManager.disableBlend();
 + 
 + 		if (renderHand) {
-+ 			mc.mcProfiler.endStartSection("renderHandOverlay");
 + 			EaglerDeferredPipeline.instance.beginDrawHandOverlay();
 + 			DeferredStateManager.reportForwardRenderObjectPosition2(0.0f, 0.0f, 0.0f);
 + 			DeferredStateManager.forwardCallbackHandler = DeferredStateManager.forwardCallbackGBuffer;
@@ -1371,7 +1468,6 @@
 + 			GlStateManager.disableAlpha();
 + 		}
 + 
-+ 		mc.mcProfiler.endStartSection("endDrawDeferred");
 + 		EaglerDeferredPipeline.instance.endDrawHDRTranslucent();
 + 
 + 		EaglerDeferredPipeline.instance.endDrawDeferred();
@@ -1391,11 +1487,9 @@
 + 		if (!DebugFramebufferView.debugViewShown) {
 + 			GlStateManager.disableAlpha();
 + 			if (isDrawBlockOutline()) {
-+ 				this.mc.mcProfiler.endStartSection("outline");
 + 				mc.renderGlobal.drawSelectionBox(mc.thePlayer, this.mc.objectMouseOver, 0, partialTicks);
 + 			}
 + 			GlStateManager.enableAlpha();
-+ 			this.mc.mcProfiler.endStartSection("nameTags");
 + 			if (NameTagRenderer.nameTagsCount > 0) {
 + 				enableLightmap();
 + 				Arrays.sort(NameTagRenderer.nameTagsThisFrame, 0, NameTagRenderer.nameTagsCount, (n1, n2) -> {
@@ -1422,11 +1516,8 @@
 + 			}
 + 			disableLightmap();
 + 			GlStateManager.disableLighting();
-+ 			this.mc.mcProfiler.endStartSection("worldBorder");
 + 			mc.renderGlobal.renderWorldBorder(entity, partialTicks);
 + 		}
-+ 
-+ 		mc.mcProfiler.endSection();
 + 	}
 + 
 + 	public boolean renderHeldItemLight(EntityLivingBase entityLiving, float mag) {

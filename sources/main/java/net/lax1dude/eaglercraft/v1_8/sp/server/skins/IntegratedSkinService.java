@@ -7,17 +7,19 @@ import java.util.Iterator;
 import java.util.Map;
 
 import net.lax1dude.eaglercraft.v1_8.Base64;
+import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
 import net.lax1dude.eaglercraft.v1_8.crypto.SHA1Digest;
 import net.lax1dude.eaglercraft.v1_8.internal.vfs2.VFile2;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
-import net.lax1dude.eaglercraft.v1_8.netty.Unpooled;
+import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.GameMessagePacket;
+import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.server.SPacketOtherSkinPresetEAG;
+import net.lax1dude.eaglercraft.v1_8.socket.protocol.util.SkinPacketVersionCache;
+import net.lax1dude.eaglercraft.v1_8.sp.server.WorldsDB;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.play.server.S3FPacketCustomPayload;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.nbt.NBTTagCompound;
@@ -43,8 +45,6 @@ public class IntegratedSkinService {
 
 	public static final Logger logger = LogManager.getLogger("IntegratedSkinService");
 
-	public static final String CHANNEL = "EAG|Skins-1.8";
-
 	public static final byte[] skullNotFoundTexture = new byte[4096];
 
 	static {
@@ -62,8 +62,8 @@ public class IntegratedSkinService {
 
 	public final VFile2 skullsDirectory;
 
-	public final Map<EaglercraftUUID,byte[]> playerSkins = new HashMap();
-	public final Map<String,CustomSkullData> customSkulls = new HashMap();
+	public final Map<EaglercraftUUID,SkinPacketVersionCache> playerSkins = new HashMap<>();
+	public final Map<String,CustomSkullData> customSkulls = new HashMap<>();
 
 	private long lastFlush = 0l;
 
@@ -71,19 +71,9 @@ public class IntegratedSkinService {
 		this.skullsDirectory = skullsDirectory;
 	}
 
-	public void processPacket(byte[] packetData, EntityPlayerMP sender) {
+	public void processLoginPacket(byte[] packetData, EntityPlayerMP sender, int protocolVers) {
 		try {
-			IntegratedSkinPackets.processPacket(packetData, sender, this);
-		} catch (IOException e) {
-			logger.error("Invalid skin request packet recieved from player {}!", sender.getName());
-			logger.error(e);
-			sender.playerNetServerHandler.kickPlayerFromServer("Invalid skin request packet recieved!");
-		}
-	}
-
-	public void processLoginPacket(byte[] packetData, EntityPlayerMP sender) {
-		try {
-			IntegratedSkinPackets.registerEaglerPlayer(sender.getUniqueID(), packetData, this);
+			IntegratedSkinPackets.registerEaglerPlayer(sender.getUniqueID(), packetData, this, protocolVers);
 		} catch (IOException e) {
 			logger.error("Invalid skin data packet recieved from player {}!", sender.getName());
 			logger.error(e);
@@ -92,36 +82,39 @@ public class IntegratedSkinService {
 	}
 
 	public void processPacketGetOtherSkin(EaglercraftUUID searchUUID, EntityPlayerMP sender) {
-		byte[] playerSkin = playerSkins.get(searchUUID);
-		if(playerSkin == null) {
-			playerSkin = IntegratedSkinPackets.makePresetResponse(searchUUID);
+		SkinPacketVersionCache playerSkin = playerSkins.get(searchUUID);
+		GameMessagePacket toSend = null;
+		if(playerSkin != null) {
+			toSend = playerSkin.get(sender.playerNetServerHandler.getEaglerMessageProtocol());
+		}else {
+			toSend = IntegratedSkinPackets.makePresetResponse(searchUUID);
 		}
-		sender.playerNetServerHandler.sendPacket(new S3FPacketCustomPayload(CHANNEL, new PacketBuffer(Unpooled.buffer(playerSkin, playerSkin.length).writerIndex(playerSkin.length))));
+		sender.playerNetServerHandler.sendEaglerMessage(toSend);
 	}
 
 	public void processPacketGetOtherSkin(EaglercraftUUID searchUUID, String urlStr, EntityPlayerMP sender) {
 		urlStr = urlStr.toLowerCase();
-		byte[] playerSkin;
+		GameMessagePacket playerSkin;
 		if(!urlStr.startsWith("eagler://")) {
-			playerSkin = IntegratedSkinPackets.makePresetResponse(searchUUID, 0);
+			playerSkin = new SPacketOtherSkinPresetEAG(searchUUID.msb, searchUUID.lsb, 0);
 		}else {
 			urlStr = urlStr.substring(9);
 			if(urlStr.contains(VFile2.pathSeperator)) {
-				playerSkin = IntegratedSkinPackets.makePresetResponse(searchUUID, 0);
+				playerSkin = new SPacketOtherSkinPresetEAG(searchUUID.msb, searchUUID.lsb, 0);
 			}else {
 				CustomSkullData sk = customSkulls.get(urlStr);
 				if(sk == null) {
 					customSkulls.put(urlStr, sk = loadCustomSkull(urlStr));
 				}else {
-					sk.lastHit = System.currentTimeMillis();
+					sk.lastHit = EagRuntime.steadyTimeMillis();
 				}
-				playerSkin = IntegratedSkinPackets.makeCustomResponse(searchUUID, 0, sk.getFullSkin());
+				playerSkin = sk.getSkinPacket(searchUUID, sender.playerNetServerHandler.getEaglerMessageProtocol());
 			}
 		}
-		sender.playerNetServerHandler.sendPacket(new S3FPacketCustomPayload(CHANNEL, new PacketBuffer(Unpooled.buffer(playerSkin, playerSkin.length).writerIndex(playerSkin.length))));
+		sender.playerNetServerHandler.sendEaglerMessage(playerSkin);
 	}
 
-	public void processPacketPlayerSkin(EaglercraftUUID clientUUID, byte[] generatedPacket, int skinModel) {
+	public void processPacketPlayerSkin(EaglercraftUUID clientUUID, SkinPacketVersionCache generatedPacket, int skinModel) {
 		playerSkins.put(clientUUID, generatedPacket);
 	}
 
@@ -188,12 +181,12 @@ public class IntegratedSkinService {
 		}
 		String str = "skin-" + new String(hashText) + ".bmp";
 		customSkulls.put(str, new CustomSkullData(str, skullData));
-		(new VFile2(skullsDirectory, str)).setAllBytes(skullData);
+		WorldsDB.newVFile(skullsDirectory, str).setAllBytes(skullData);
 		return str;
 	}
 
 	private CustomSkullData loadCustomSkull(String urlStr) {
-		byte[] data = (new VFile2(skullsDirectory, urlStr)).getAllBytes();
+		byte[] data = WorldsDB.newVFile(skullsDirectory, urlStr).getAllBytes();
 		if(data == null) {
 			return new CustomSkullData(urlStr, skullNotFoundTexture);
 		}else {
@@ -202,7 +195,7 @@ public class IntegratedSkinService {
 	}
 
 	public void flushCache() {
-		long cur = System.currentTimeMillis();
+		long cur = EagRuntime.steadyTimeMillis();
 		if(cur - lastFlush > 300000l) {
 			lastFlush = cur;
 			Iterator<CustomSkullData> customSkullsItr = customSkulls.values().iterator();

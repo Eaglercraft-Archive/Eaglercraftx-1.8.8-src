@@ -7,11 +7,12 @@
 
 > DELETE  2  @  2 : 3
 
-> INSERT  1 : 4  @  1
+> INSERT  1 : 5  @  1
 
 + 
 + import com.google.common.collect.Lists;
 + 
++ import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 
 > DELETE  4  @  4 : 6
 
@@ -21,13 +22,29 @@
 ~ 		for (int i = 0, l = lst.size(); i < l; ++i) {
 ~ 			lst.get(i).onCenterChanged(this, x, z);
 
-> CHANGE  32 : 35  @  32 : 34
+> CHANGE  6 : 7  @  6 : 7
+
+~ 			double d0 = (double) ((float) (EagRuntime.steadyTimeMillis() - this.startTime)
+
+> CHANGE  12 : 13  @  12 : 13
+
+~ 		return this.getStatus() != EnumBorderStatus.STATIONARY ? this.endTime - EagRuntime.steadyTimeMillis() : 0L;
+
+> CHANGE  9 : 10  @  9 : 10
+
+~ 		this.endTime = EagRuntime.steadyTimeMillis();
+
+> CHANGE  2 : 5  @  2 : 4
 
 ~ 		List<IBorderListener> lst = this.getListeners();
 ~ 		for (int i = 0, l = lst.size(); i < l; ++i) {
 ~ 			lst.get(i).onSizeChanged(this, newSize);
 
-> CHANGE  10 : 13  @  10 : 12
+> CHANGE  7 : 8  @  7 : 8
+
+~ 		this.startTime = EagRuntime.steadyTimeMillis();
+
+> CHANGE  2 : 5  @  2 : 4
 
 ~ 		List<IBorderListener> lst = this.getListeners();
 ~ 		for (int i = 0, l = lst.size(); i < l; ++i) {

@@ -103,7 +103,7 @@ public class CloudRenderWorker {
 	static void initialize() {
 		destroy();
 
-		cloudStartTimer = System.currentTimeMillis();
+		cloudStartTimer = EagRuntime.steadyTimeMillis();
 		cloudRenderProgress = 0;
 		cloudRenderPeriod = 500;
 		cloudRenderPhase = 0;
@@ -168,7 +168,7 @@ public class CloudRenderWorker {
 		_wglTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 		_wglTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		_wglTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		byte[] cloudShapeTexture = EagRuntime.getResourceBytes("/assets/eagler/glsl/deferred/clouds_shapes.bmp");
+		byte[] cloudShapeTexture = EagRuntime.getRequiredResourceBytes("/assets/eagler/glsl/deferred/clouds_shapes.bmp");
 		cloudNoiseDatBuffer = EagRuntime.allocateByteBuffer(cloudShapeTexture.length);
 		cloudNoiseDatBuffer.put(cloudShapeTexture);
 		cloudNoiseDatBuffer.flip();
@@ -207,7 +207,7 @@ public class CloudRenderWorker {
 	}
 
 	static void update() {
-		long millis = System.currentTimeMillis();
+		long millis = EagRuntime.steadyTimeMillis();
 		int cloudProgress = (int)(millis - cloudStartTimer);
 		int totalCloudSteps = 32 + 32 - 1;
 		int currentCloudStep = cloudProgress * totalCloudSteps / cloudRenderPeriod;
@@ -268,7 +268,7 @@ public class CloudRenderWorker {
 			cloudColorB += (currentSunAngle.z - cloudColorB) * 0.1f;
 			_wglUniform3f(shader_clouds_sample.uniforms.u_sunColor3f, cloudColorR, cloudColorG, cloudColorB);
 			
-			float cloudDensityTimer = (float)((System.currentTimeMillis() % 10000000l) * 0.001);
+			float cloudDensityTimer = (float)((EagRuntime.steadyTimeMillis() % 10000000l) * 0.001);
 			cloudDensityTimer += MathHelper.sin(cloudDensityTimer * 1.5f) * 1.5f;
 			float x = cloudDensityTimer * 0.004f;
 			float f1 = MathHelper.sin(x + 0.322f) * 0.544f + MathHelper.sin(x * 4.5f + 1.843f) * 0.69f + MathHelper.sin(x * 3.4f + 0.8f) * 0.6f + MathHelper.sin(x * 6.1f + 1.72f) * 0.7f;
@@ -404,7 +404,7 @@ public class CloudRenderWorker {
 		
 		if(b) {
 			cloudRenderProgress = 0;
-			cloudStartTimer = System.currentTimeMillis();
+			cloudStartTimer = EagRuntime.steadyTimeMillis();
 			cloudProgress = 0;
 			cloudRenderPhase = (cloudRenderPhase + 1) % 3;
 		}else {
@@ -539,7 +539,7 @@ public class CloudRenderWorker {
 	}
 
 	private static void updateShape() {
-		long millis = System.currentTimeMillis();
+		long millis = EagRuntime.steadyTimeMillis();
 		float dt = (float)((millis - shapeUpdateTimer) * 0.001);
 		shapeUpdateTimer = millis;
 		if(millis > nextShapeAppearance) {

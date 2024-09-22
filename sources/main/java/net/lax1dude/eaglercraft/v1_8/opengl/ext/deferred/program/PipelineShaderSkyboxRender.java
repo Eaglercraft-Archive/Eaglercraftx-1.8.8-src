@@ -28,7 +28,7 @@ import java.util.List;
 public class PipelineShaderSkyboxRender extends ShaderProgram<PipelineShaderSkyboxRender.Uniforms> {
 
 	public static PipelineShaderSkyboxRender compile(boolean paraboloid, boolean clouds) throws ShaderException {
-		List<String> compileFlags = new ArrayList();
+		List<String> compileFlags = new ArrayList<>();
 		if(paraboloid) {
 			compileFlags.add("COMPILE_PARABOLOID_SKY");
 		}

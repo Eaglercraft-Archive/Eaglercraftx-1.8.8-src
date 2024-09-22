@@ -46,7 +46,7 @@ public class GuiHandshakeApprove extends GuiScreen {
 	public void initGui() {
 		this.buttonList.clear();
 		titleString = I18n.format("handshakeApprove." + message + ".title");
-		bodyLines = new ArrayList();
+		bodyLines = new ArrayList<>();
 		int i = 0;
 		boolean wasNull = true;
 		while(true) {

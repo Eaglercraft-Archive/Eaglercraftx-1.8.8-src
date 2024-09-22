@@ -1,6 +1,7 @@
 package net.lax1dude.eaglercraft.v1_8.sp.gui;
 
 import net.lax1dude.eaglercraft.v1_8.Keyboard;
+import net.lax1dude.eaglercraft.v1_8.minecraft.EnumInputEvent;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
@@ -86,6 +87,16 @@ public class GuiScreenLANConnect extends GuiScreen {
 		}else if(par1GuiButton.id == 0) {
 			mc.displayGuiScreen(new GuiScreenLANConnecting(parent, this.codeTextField.getText().trim()));
 		}
+	}
+
+	@Override
+	public boolean showCopyPasteButtons() {
+		return codeTextField.isFocused();
+	}
+
+	@Override
+	public void fireInputEvent(EnumInputEvent event, String param) {
+		codeTextField.fireInputEvent(event, param);
 	}
 
 }

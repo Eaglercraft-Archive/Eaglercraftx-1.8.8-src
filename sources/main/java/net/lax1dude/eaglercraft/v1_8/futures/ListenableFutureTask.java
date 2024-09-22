@@ -22,7 +22,7 @@ import java.util.concurrent.Executor;
  */
 public class ListenableFutureTask<V> extends FutureTask<V> implements ListenableFuture<V> {
 	
-	private final List<Runnable> listeners = new ArrayList();
+	private final List<Runnable> listeners = new ArrayList<>();
 
 	public ListenableFutureTask(Callable<V> callable) {
 		super(callable);
@@ -54,7 +54,7 @@ public class ListenableFutureTask<V> extends FutureTask<V> implements Listenable
 	}
 
 	public static <V> ListenableFutureTask<V> create(Callable<V> callableToSchedule) {
-		return new ListenableFutureTask(callableToSchedule);
+		return new ListenableFutureTask<>(callableToSchedule);
 	}
 	
 }

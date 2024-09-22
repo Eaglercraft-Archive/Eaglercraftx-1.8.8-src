@@ -70,7 +70,7 @@ void main() {
 	originalViewSpacePos.xyz /= originalViewSpacePos.w;
 	originalViewSpacePos.w = 1.0;
 	
-	vec4 noiseVec = textureLod(u_noiseConstantTexture, u_randomizerDataMatrix2f * (v_position2f + originalViewSpacePos.xy + normal3f.xz), 0.0);
+	vec4 noiseVec = textureLod(u_noiseConstantTexture, 13.3725 / fract((u_randomizerDataMatrix2f * (v_position2f * 0.42695346 + originalViewSpacePos.xy * 1.373769945645 + normal3f.xz * 42.69456453)) * 1.123234234), 0.0);
 	noiseVec.xyz *= 2.0;
 	noiseVec.xyz -= 1.0;
 	

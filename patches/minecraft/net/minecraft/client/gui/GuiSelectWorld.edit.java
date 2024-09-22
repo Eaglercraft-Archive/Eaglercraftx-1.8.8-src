@@ -9,12 +9,13 @@
 
 + import java.util.ArrayList;
 
-> CHANGE  2 : 7  @  2 : 3
+> CHANGE  2 : 8  @  2 : 3
 
 ~ 
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 ~ import net.lax1dude.eaglercraft.v1_8.sp.gui.GuiScreenLANConnect;
 ~ import net.lax1dude.eaglercraft.v1_8.sp.gui.GuiScreenLANNotSupported;
+~ import net.lax1dude.eaglercraft.v1_8.sp.ipc.IPCPacket1CIssueDetected;
 ~ import net.lax1dude.eaglercraft.v1_8.sp.lan.LANServerController;
 
 > CHANGE  1 : 2  @  1 : 9
@@ -44,18 +45,27 @@
 + import net.lax1dude.eaglercraft.v1_8.sp.gui.GuiScreenLANInfo;
 + 
 
-> INSERT  17 : 19  @  17
+> INSERT  17 : 20  @  17
 
 + 	private boolean hasRequestedWorlds = false;
 + 	private boolean waitingForWorlds = false;
++ 	private boolean ramdiskMode = false;
 
 > INSERT  3 : 4  @  3
 
 + 		this.field_146639_s = new ArrayList();
 
-> DELETE  4  @  4 : 13
+> INSERT  3 : 4  @  3
 
-> INSERT  13 : 30  @  13
++ 		this.ramdiskMode = SingleplayerServerController.isIssueDetected(IPCPacket1CIssueDetected.ISSUE_RAMDISK_MODE);
+
+> DELETE  1  @  1 : 10
+
+> CHANGE  8 : 9  @  8 : 9
+
+~ 		this.field_146638_t = new GuiSelectWorld.List(this.mc, ramdiskMode ? -10 : 0);
+
+> INSERT  4 : 21  @  4
 
 + 	public void updateScreen() {
 + 		if (!hasRequestedWorlds && SingleplayerServerController.isReady()) {
@@ -75,8 +85,13 @@
 + 	}
 + 
 
-> CHANGE  5 : 6  @  5 : 6
+> CHANGE  5 : 11  @  5 : 6
 
+~ 	public void handleTouchInput() throws IOException {
+~ 		super.handleTouchInput();
+~ 		this.field_146638_t.handleTouchInput();
+~ 	}
+~ 
 ~ 	private void func_146627_h() {
 
 > CHANGE  29 : 30  @  29 : 30
@@ -118,8 +133,13 @@
 
 > DELETE  1  @  1 : 3
 
-> INSERT  7 : 22  @  7
+> INSERT  7 : 27  @  7
 
++ 
++ 		if (ramdiskMode) {
++ 			this.drawCenteredString(this.fontRendererObj, I18n.format("selectWorld.ramdiskWarning"), this.width / 2,
++ 					height - 68, 11184810);
++ 		}
 + 
 + 		GlStateManager.pushMatrix();
 + 		GlStateManager.scale(0.75f, 0.75f, 0.75f);
@@ -154,5 +174,11 @@
 + 		super.mouseClicked(xx, yy, btn);
 + 	}
 + 
+
+> CHANGE  10 : 13  @  10 : 12
+
+~ 		public List(Minecraft mcIn, int i) {
+~ 			super(mcIn, GuiSelectWorld.this.width, GuiSelectWorld.this.height, 32, GuiSelectWorld.this.height - 64 + i,
+~ 					36);
 
 > EOF

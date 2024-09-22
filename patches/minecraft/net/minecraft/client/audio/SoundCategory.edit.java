@@ -12,11 +12,7 @@
 + import com.google.common.collect.Maps;
 + 
 
-> CHANGE  2 : 3  @  2 : 3
-
-~ 	MOBS("hostile", 5), ANIMALS("neutral", 6), PLAYERS("player", 7), AMBIENT("ambient", 8), VOICE("voice", 9);
-
-> INSERT  1 : 3  @  1
+> INSERT  4 : 6  @  4
 
 + 	public static final SoundCategory[] _VALUES = values();
 + 

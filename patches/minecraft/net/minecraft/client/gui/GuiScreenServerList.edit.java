@@ -5,10 +5,11 @@
 # Version: 1.0
 # Author: lax1dude
 
-> CHANGE  2 : 4  @  2 : 6
+> CHANGE  2 : 5  @  2 : 6
 
 ~ import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 ~ import net.lax1dude.eaglercraft.v1_8.Keyboard;
+~ import net.lax1dude.eaglercraft.v1_8.minecraft.EnumInputEvent;
 
 > DELETE  2  @  2 : 3
 
@@ -58,5 +59,19 @@
 ~ 			this.drawString(this.fontRendererObj, I18n.format("addServer.enterIp", new Object[0]), this.width / 2 - 100,
 ~ 					100, 10526880);
 ~ 		}
+
+> INSERT  3 : 14  @  3
+
++ 
++ 	@Override
++ 	public boolean showCopyPasteButtons() {
++ 		return field_146302_g.isFocused();
++ 	}
++ 
++ 	@Override
++ 	public void fireInputEvent(EnumInputEvent event, String param) {
++ 		field_146302_g.fireInputEvent(event, param);
++ 	}
++ 
 
 > EOF

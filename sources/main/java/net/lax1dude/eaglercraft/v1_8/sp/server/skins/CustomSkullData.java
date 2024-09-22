@@ -1,5 +1,12 @@
 package net.lax1dude.eaglercraft.v1_8.sp.server.skins;
 
+import net.lax1dude.eaglercraft.v1_8.EagRuntime;
+import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
+import net.lax1dude.eaglercraft.v1_8.socket.protocol.GamePluginMessageProtocol;
+import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.GameMessagePacket;
+import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.server.SPacketOtherSkinCustomV3EAG;
+import net.lax1dude.eaglercraft.v1_8.socket.protocol.util.SkinPacketVersionCache;
+
 /**
  * Copyright (c) 2022-2024 lax1dude. All Rights Reserved.
  * 
@@ -19,21 +26,25 @@ public class CustomSkullData {
 
 	public String skinURL;
 	public long lastHit;
-	public byte[] skinData;
+	public SkinPacketVersionCache skinData;
 
 	public CustomSkullData(String skinURL, byte[] skinData) {
 		this.skinURL = skinURL;
-		this.lastHit = System.currentTimeMillis();
-		this.skinData = skinData;
+		this.lastHit = EagRuntime.steadyTimeMillis();
+		if(skinData.length != 16384) {
+			byte[] fixed = new byte[16384];
+			System.arraycopy(skinData, 0, fixed, 0, skinData.length > fixed.length ? fixed.length : skinData.length);
+			skinData = fixed;
+		}
+		this.skinData = SkinPacketVersionCache.createCustomV3(0l, 0l, 0, skinData);
 	}
 
 	public byte[] getFullSkin() {
-		if(skinData.length == 16384) {
-			return skinData;
-		}
-		byte[] ret = new byte[16384];
-		System.arraycopy(skinData, 0, ret, 0, skinData.length > ret.length ? ret.length : skinData.length);
-		return ret;
+		return ((SPacketOtherSkinCustomV3EAG)skinData.getV3()).customSkin;
+	}
+
+	public GameMessagePacket getSkinPacket(EaglercraftUUID uuid, GamePluginMessageProtocol protocol) {
+		return SkinPacketVersionCache.rewriteUUID(skinData.get(protocol), uuid.getMostSignificantBits(), uuid.getLeastSignificantBits());
 	}
 
 }

@@ -10,6 +10,7 @@ import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -65,13 +66,22 @@ public class PullRequestTask {
 		File originalSourceMainJar = new File(EaglerBuildToolsConfig.getTemporaryDirectory(), "MinecraftSrc/minecraft_src_patch.jar");
 		File minecraftJavadocTmp = new File(EaglerBuildToolsConfig.getTemporaryDirectory(), "MinecraftSrc/minecraft_src_javadoc.jar");
 		File originalSourceMain = new File(EaglerBuildTools.repositoryRoot, "sources/main/java");
+		File originalSourceProtoGame = new File(EaglerBuildTools.repositoryRoot, "sources/protocol-game/java");
+		File originalSourceProtoRelay = new File(EaglerBuildTools.repositoryRoot, "sources/protocol-relay/java");
 		File originalSourceTeaVM = new File(EaglerBuildTools.repositoryRoot, "sources/teavm/java");
+		File originalSourceTeaVMC = new File(EaglerBuildTools.repositoryRoot, "sources/teavmc-classpath/resources");
+		File originalSourceBootMenu = new File(EaglerBuildTools.repositoryRoot, "sources/teavm-boot-menu/java");
 		File originalSourceLWJGL = new File(EaglerBuildTools.repositoryRoot, "sources/lwjgl/java");
 		File originalUnpatchedSourceResourcesJar = new File(EaglerBuildToolsConfig.getTemporaryDirectory(), "MinecraftSrc/minecraft_res.jar");
 		File originalSourceResourcesJar = new File(EaglerBuildToolsConfig.getTemporaryDirectory(), "MinecraftSrc/minecraft_res_patch.jar");
 		File originalSourceResources = new File(EaglerBuildTools.repositoryRoot, "sources/resources");
 		File diffFromMain = new File(EaglerBuildToolsConfig.getWorkspaceDirectory(), "src/main/java");
+		File diffFromGame = new File(EaglerBuildToolsConfig.getWorkspaceDirectory(), "src/game/java");
+		File diffFromProtoGame = new File(EaglerBuildToolsConfig.getWorkspaceDirectory(), "src/protocol-game/java");
+		File diffFromProtoRelay = new File(EaglerBuildToolsConfig.getWorkspaceDirectory(), "src/protocol-relay/java");
 		File diffFromTeaVM = new File(EaglerBuildToolsConfig.getWorkspaceDirectory(), "src/teavm/java");
+		File diffFromBootMenu = new File(EaglerBuildToolsConfig.getWorkspaceDirectory(), "src/teavm-boot-menu/java");
+		File diffFromTeaVMC = new File(EaglerBuildToolsConfig.getWorkspaceDirectory(), "src/teavmc-classpath/resources");
 		File diffFromLWJGL = new File(EaglerBuildToolsConfig.getWorkspaceDirectory(), "src/lwjgl/java");
 		File diffFromResources = new File(EaglerBuildToolsConfig.getWorkspaceDirectory(), "desktopRuntime/resources");
 		File pullRequestTo = new File(EaglerBuildTools.repositoryRoot, "pullrequest");
@@ -111,11 +121,41 @@ public class PullRequestTask {
 		File pullRequestToResources = new File(pullRequestTo, "resources");
 
 		boolean flag = false;
-		int i = copyAllModified(diffFromTeaVM, originalSourceTeaVM);
+		int i = copyAllModified(diffFromMain, originalSourceMain);
+		if(i > 0) {
+			flag = true;
+		}
+		System.out.println("Found " + i + " changed files in /src/main/java/");
+		
+		i = copyAllModified(diffFromProtoGame, originalSourceProtoGame);
+		if(i > 0) {
+			flag = true;
+		}
+		System.out.println("Found " + i + " changed files in /src/protocol-game/java/");
+		
+		i = copyAllModified(diffFromProtoRelay, originalSourceProtoRelay);
+		if(i > 0) {
+			flag = true;
+		}
+		System.out.println("Found " + i + " changed files in /src/protocol-relay/java/");
+		
+		i = copyAllModified(diffFromTeaVM, originalSourceTeaVM);
 		if(i > 0) {
 			flag = true;
 		}
 		System.out.println("Found " + i + " changed files in /src/teavm/java/");
+		
+		i = copyAllModified(diffFromBootMenu, originalSourceBootMenu);
+		if(i > 0) {
+			flag = true;
+		}
+		System.out.println("Found " + i + " changed files in /src/teavm-boot-menu/java/");
+		
+		i = copyAllModified(diffFromTeaVMC, originalSourceTeaVMC);
+		if(i > 0) {
+			flag = true;
+		}
+		System.out.println("Found " + i + " changed files in /src/teavmc-classpath/resources/");
 		
 		i = copyAllModified(diffFromLWJGL, originalSourceLWJGL);
 		if(i > 0) {
@@ -123,12 +163,12 @@ public class PullRequestTask {
 		}
 		System.out.println("Found " + i + " changed files in /src/lwjgl/java/");
 		
-		i = createDiffFiles(originalSourceMain, minecraftJavadocTmp, originalUnpatchedSourceMainJar, 
-				originalSourceMainJar, diffFromMain, pullRequestToMain, true);
+		i = createDiffFiles(null, minecraftJavadocTmp, originalUnpatchedSourceMainJar, 
+				originalSourceMainJar, diffFromGame, pullRequestToMain, true);
 		if(i > 0) {
 			flag = true;
 		}
-		System.out.println("Found " + i + " changed files in /src/main/java/");
+		System.out.println("Found " + i + " changed files in /src/game/java/");
 		
 		i = createDiffFiles(originalSourceResources, originalSourceResourcesJar, originalUnpatchedSourceResourcesJar, 
 				null, diffFromResources, pullRequestToResources, false);
@@ -197,9 +237,9 @@ public class PullRequestTask {
 			if(newPath.startsWith("/")) {
 				newPath = newPath.substring(1);
 			}
-			File orig = new File(folderOriginal, newPath);
+			File orig = folderOriginal != null ? new File(folderOriginal, newPath) : null;
 			byte[] jarData = null;
-			boolean replacedFileExists = orig.exists();
+			boolean replacedFileExists = orig != null && orig.exists();
 			if(replacedFileExists) {
 				filesReplaced.add(newPath);
 				if(copyFileIfChanged(wf, orig)) {
@@ -253,9 +293,13 @@ public class PullRequestTask {
 					++cnt;
 				}
 			}else {
-				filesReplaced.add(newPath);
-				FileUtils.copyFile(wf, orig);
-				++cnt;
+				if(folderOriginal == null) {
+					System.err.println("Detected a new file in src/game/java, it will be ignored! Do not created new files! (" + newPath + ")");
+				}else {
+					filesReplaced.add(newPath);
+					FileUtils.copyFile(wf, orig);
+					++cnt;
+				}
 			}
 		}
 		
@@ -276,6 +320,10 @@ public class PullRequestTask {
 					++cnt;
 				}
 			}
+		}
+		
+		if(folderOriginal != null) {
+			cnt += removeAllDeleted(folderEdited, folderOriginal);
 		}
 		
 		return cnt;
@@ -344,6 +392,33 @@ public class PullRequestTask {
 				++cnt;
 			}
 		}
+		cnt += removeAllDeleted(inDir, outDir);
+		return cnt;
+	}
+	
+	private static int removeAllDeleted(File inDir, File outDir) throws IOException {
+		if(!inDir.isDirectory()) {
+			return 0;
+		}
+		int cnt = 0;
+		Collection<File> existingFiles = FileUtils.listFiles(outDir, null, true);
+		String existingPrefix = outDir.getAbsolutePath();
+		for(File wf : existingFiles) {
+			String editedPath = wf.getAbsolutePath().replace(existingPrefix, "");
+			if(editedPath.indexOf('\\') != -1) {
+				editedPath = editedPath.replace('\\', '/');
+			}
+			if(editedPath.startsWith("/")) {
+				editedPath = editedPath.substring(1);
+			}
+			File edited = new File(inDir, editedPath);
+			if(!edited.isFile()) {
+				if(!wf.delete()) {
+					throw new IOException("Could not delete file: " + wf.getAbsolutePath());
+				}
+				++cnt;
+			}
+		}
 		return cnt;
 	}
 	
@@ -392,15 +467,6 @@ public class PullRequestTask {
 		return hex32(crc.getValue());
 	}
 	
-	private static boolean checkCRC32(File in1, File in2) throws IOException {
-		CRC32 crc = new CRC32();
-		crc.update(FileUtils.readFileToByteArray(in1));
-		long v1 = crc.getValue();
-		crc.reset();
-		crc.update(FileUtils.readFileToByteArray(in2));
-		return v1 != crc.getValue();
-	}
-	
 	private static boolean copyFileIfChanged(File in1, File in2) throws IOException {
 		if(!in2.exists()) {
 			FileUtils.copyFile(in1, in2);
@@ -409,20 +475,14 @@ public class PullRequestTask {
 		if(in1.lastModified() == in2.lastModified()) {
 			return false;
 		}
-		CRC32 crc = new CRC32();
 		byte[] f1 = FileUtils.readFileToByteArray(in1);
-		crc.update(f1);
-		long v1 = crc.getValue();
-		crc.reset();
 		byte[] f2 = FileUtils.readFileToByteArray(in2);
-		crc.update(f2);
-		if(v1 != crc.getValue()) {
-			//System.out.println("changed: " + in1.getAbsolutePath());
+		if(!Arrays.equals(f1, f2)) {
 			FileUtils.writeByteArrayToFile(in2, f1);
 			return true;
 		}else {
 			return false;
 		}
 	}
-	
+
 }

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
 import net.lax1dude.eaglercraft.v1_8.Keyboard;
 import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
@@ -82,7 +83,7 @@ public class GuiVoiceOverlay extends Gui {
 			mc.getTextureManager().bindTexture(voiceGuiIcons);
 			
 			if((mc.currentScreen == null || !mc.currentScreen.blockPTTKey()) && Keyboard.isKeyDown(mc.gameSettings.voicePTTKey)) {
-				long millis = System.currentTimeMillis();
+				long millis = EagRuntime.steadyTimeMillis();
 				if(pttTimer == 0l) {
 					pttTimer = millis;
 				}
@@ -118,7 +119,7 @@ public class GuiVoiceOverlay extends Gui {
 					Set<EaglercraftUUID> speakers = VoiceClientController.getVoiceSpeaking();
 					Set<EaglercraftUUID> muted = VoiceClientController.getVoiceMuted();
 					
-					List<EaglercraftUUID> listenerList = new ArrayList();
+					List<EaglercraftUUID> listenerList = new ArrayList<>();
 					listenerList.addAll(listeners);
 					listenerList.removeAll(muted);
 					
@@ -145,7 +146,7 @@ public class GuiVoiceOverlay extends Gui {
 						hh -= 15;
 					}
 					
-					List<String> listenerListStr = new ArrayList(Math.min(5, listenerList.size()));
+					List<String> listenerListStr = new ArrayList<>(Math.min(5, listenerList.size()));
 					
 					int left = 50;
 					for(int i = 0, l = listenerList.size(); i < l && i < 5; ++i) {
@@ -196,7 +197,7 @@ public class GuiVoiceOverlay extends Gui {
 				Set<EaglercraftUUID> speakers = VoiceClientController.getVoiceSpeaking();
 				Set<EaglercraftUUID> muted = VoiceClientController.getVoiceMuted();
 				
-				List<EaglercraftUUID> listenerList = new ArrayList();
+				List<EaglercraftUUID> listenerList = new ArrayList<>();
 				listenerList.addAll(speakers);
 				listenerList.removeAll(muted);
 				
@@ -209,7 +210,7 @@ public class GuiVoiceOverlay extends Gui {
 					hh -= 15;
 				}
 				
-				List<String> listenerListStr = new ArrayList(Math.min(5, listenerList.size()));
+				List<String> listenerListStr = new ArrayList<>(Math.min(5, listenerList.size()));
 				
 				int left = 50;
 				for(int i = 0, l = listenerList.size(); i < l && i < 5; ++i) {

@@ -25,6 +25,10 @@ class OpenGLObjects {
 			this.ptr = ptr;
 		}
 
+		public int hashCode() {
+			return ptr;
+		}
+
 		@Override
 		public void free() {
 			PlatformOpenGL._wglDeleteBuffers(this);
@@ -38,6 +42,10 @@ class OpenGLObjects {
 		
 		BufferArrayGL(int ptr) {
 			this.ptr = ptr;
+		}
+
+		public int hashCode() {
+			return ptr;
 		}
 
 		@Override
@@ -55,6 +63,10 @@ class OpenGLObjects {
 			this.ptr = ptr;
 		}
 
+		public int hashCode() {
+			return ptr;
+		}
+
 		@Override
 		public void free() {
 			PlatformOpenGL._wglDeleteTextures(this);
@@ -68,6 +80,10 @@ class OpenGLObjects {
 		
 		ProgramGL(int ptr) {
 			this.ptr = ptr;
+		}
+
+		public int hashCode() {
+			return ptr;
 		}
 
 		@Override
@@ -85,6 +101,10 @@ class OpenGLObjects {
 			this.ptr = ptr;
 		}
 
+		public int hashCode() {
+			return ptr;
+		}
+
 		@Override
 		public void free() {
 		}
@@ -97,6 +117,10 @@ class OpenGLObjects {
 		
 		ShaderGL(int ptr) {
 			this.ptr = ptr;
+		}
+
+		public int hashCode() {
+			return ptr;
 		}
 
 		@Override
@@ -114,6 +138,10 @@ class OpenGLObjects {
 			this.ptr = ptr;
 		}
 
+		public int hashCode() {
+			return ptr;
+		}
+
 		@Override
 		public void free() {
 			PlatformOpenGL._wglDeleteFramebuffer(this);
@@ -129,6 +157,10 @@ class OpenGLObjects {
 			this.ptr = ptr;
 		}
 
+		public int hashCode() {
+			return ptr;
+		}
+
 		@Override
 		public void free() {
 			PlatformOpenGL._wglDeleteRenderbuffer(this);
@@ -142,6 +174,10 @@ class OpenGLObjects {
 		
 		QueryGL(int ptr) {
 			this.ptr = ptr;
+		}
+
+		public int hashCode() {
+			return ptr;
 		}
 
 		@Override

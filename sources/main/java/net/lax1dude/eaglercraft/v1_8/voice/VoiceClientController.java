@@ -1,6 +1,7 @@
 package net.lax1dude.eaglercraft.v1_8.voice;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -16,9 +17,11 @@ import net.lax1dude.eaglercraft.v1_8.internal.PlatformVoiceClient;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 import net.lax1dude.eaglercraft.v1_8.profile.EaglerProfile;
+import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.GameMessagePacket;
+import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.client.*;
+import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.server.SPacketVoiceSignalGlobalEAG;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.network.PacketBuffer;
 
 /**
  * Copyright (c) 2022-2024 lax1dude, ayunami2000. All Rights Reserved.
@@ -43,7 +46,8 @@ public class VoiceClientController {
 
 	private static boolean clientSupport = false;
 	private static boolean serverSupport = false;
-	private static Consumer<PacketBuffer> packetSendCallback = null;
+	private static Consumer<GameMessagePacket> packetSendCallback = null;
+	private static int protocolVersion = -1;
 	private static EnumVoiceChannelType voiceChannel = EnumVoiceChannelType.NONE;
 	private static final HashSet<EaglercraftUUID> nearbyPlayers = new HashSet<>();
 	private static final ExpiringSet<EaglercraftUUID> recentlyNearbyPlayers = new ExpiringSet<>(5000, uuid -> {
@@ -71,23 +75,31 @@ public class VoiceClientController {
 		return serverSupport;
 	}
 
-	public static void initializeVoiceClient(Consumer<PacketBuffer> signalSendCallbackIn) {
+	public static void initializeVoiceClient(Consumer<GameMessagePacket> signalSendCallbackIn, int proto) {
 		packetSendCallback = signalSendCallbackIn;
+		protocolVersion = proto;
 		uuidToNameLookup.clear();
 		if (getVoiceChannel() != EnumVoiceChannelType.NONE) sendInitialVoice();
 	}
 
-	public static void handleVoiceSignalPacket(PacketBuffer packetData) {
-		VoiceSignalPackets.handleVoiceSignal(packetData);
-	}
-
-	static void handleVoiceSignalPacketTypeGlobal(EaglercraftUUID[] voicePlayers, String[] voiceNames) {
+	public static void handleVoiceSignalPacketTypeGlobal(EaglercraftUUID[] voicePlayers, String[] voiceNames) {
 		uuidToNameLookup.clear();
 		for (int i = 0; i < voicePlayers.length; i++) {
 			if(voiceNames != null) {
 				uuidToNameLookup.put(voicePlayers[i], voiceNames[i]);
 			}
 			sendPacketRequestIfNeeded(voicePlayers[i]);
+		}
+	}
+
+	public static void handleVoiceSignalPacketTypeGlobalNew(Collection<SPacketVoiceSignalGlobalEAG.UserData> voicePlayers) {
+		uuidToNameLookup.clear();
+		for (SPacketVoiceSignalGlobalEAG.UserData player : voicePlayers) {
+			EaglercraftUUID uuid = new EaglercraftUUID(player.uuidMost, player.uuidLeast);
+			if(player.username != null) {
+				uuidToNameLookup.put(uuid, player.username);
+			}
+			sendPacketRequestIfNeeded(uuid);
 		}
 	}
 
@@ -110,7 +122,7 @@ public class VoiceClientController {
 		activateVoice(false);
 	}
 
-	static void handleVoiceSignalPacketTypeAllowed(boolean voiceAvailableStat, String[] servs) {
+	public static void handleVoiceSignalPacketTypeAllowed(boolean voiceAvailableStat, String[] servs) {
 		serverSupport = voiceAvailableStat;
 		PlatformVoiceClient.setICEServers(servs);
 		if(isSupported()) {
@@ -120,23 +132,23 @@ public class VoiceClientController {
 		}
 	}
 
-	static void handleVoiceSignalPacketTypeConnect(EaglercraftUUID user, boolean offer) {
+	public static void handleVoiceSignalPacketTypeConnect(EaglercraftUUID user, boolean offer) {
 		PlatformVoiceClient.signalConnect(user, offer);
 	}
 
-	static void handleVoiceSignalPacketTypeConnectAnnounce(EaglercraftUUID user) {
+	public static void handleVoiceSignalPacketTypeConnectAnnounce(EaglercraftUUID user) {
 		sendPacketRequest(user);
 	}
 
-	static void handleVoiceSignalPacketTypeDisconnect(EaglercraftUUID user) {
+	public static void handleVoiceSignalPacketTypeDisconnect(EaglercraftUUID user) {
 		PlatformVoiceClient.signalDisconnect(user, true);
 	}
 
-	static void handleVoiceSignalPacketTypeICECandidate(EaglercraftUUID user, String ice) {
+	public static void handleVoiceSignalPacketTypeICECandidate(EaglercraftUUID user, String ice) {
 		PlatformVoiceClient.signalICECandidate(user, ice);
 	}
 
-	static void handleVoiceSignalPacketTypeDescription(EaglercraftUUID user, String desc) {
+	public static void handleVoiceSignalPacketTypeDescription(EaglercraftUUID user, String desc) {
 		PlatformVoiceClient.signalDescription(user, desc);
 	}
 
@@ -211,7 +223,7 @@ public class VoiceClientController {
 			for (EaglercraftUUID uuid : antiConcurrentModificationUUIDs) {
 				PlatformVoiceClient.signalDisconnect(uuid, false);
 			}
-			sendPacketDisconnect(null);
+			sendPacketDisconnect();
 			activateVoice(false);
 		} else if (voiceChannel == EnumVoiceChannelType.PROXIMITY) {
 			for (EaglercraftUUID uuid : nearbyPlayers) {
@@ -222,7 +234,7 @@ public class VoiceClientController {
 			}
 			nearbyPlayers.clear();
 			recentlyNearbyPlayers.clear();
-			sendPacketDisconnect(null);
+			sendPacketDisconnect();
 		} else if(voiceChannel == EnumVoiceChannelType.GLOBAL) {
 			Set<EaglercraftUUID> antiConcurrentModificationUUIDs = new HashSet<>(listeningSet);
 			antiConcurrentModificationUUIDs.removeAll(nearbyPlayers);
@@ -230,7 +242,7 @@ public class VoiceClientController {
 			for (EaglercraftUUID uuid : antiConcurrentModificationUUIDs) {
 				PlatformVoiceClient.signalDisconnect(uuid, false);
 			}
-			sendPacketDisconnect(null);
+			sendPacketDisconnect();
 		}
 		voiceChannel = channel;
 		if (channel != EnumVoiceChannelType.NONE) {
@@ -340,23 +352,35 @@ public class VoiceClientController {
 	}
 
 	public static void sendPacketICE(EaglercraftUUID peerId, String candidate) {
-		packetSendCallback.accept(VoiceSignalPackets.makeVoiceSignalPacketICE(peerId, candidate));
+		packetSendCallback.accept(new CPacketVoiceSignalICEEAG(peerId.msb, peerId.lsb, candidate));
 	}
 
 	public static void sendPacketDesc(EaglercraftUUID peerId, String desc) {
-		packetSendCallback.accept(VoiceSignalPackets.makeVoiceSignalPacketDesc(peerId, desc));
+		packetSendCallback.accept(new CPacketVoiceSignalDescEAG(peerId.msb, peerId.lsb, desc));
 	}
 
-	public static void sendPacketDisconnect(EaglercraftUUID peerId) {
-		packetSendCallback.accept(VoiceSignalPackets.makeVoiceSignalPacketDisconnect(peerId));
+	public static void sendPacketDisconnect() {
+		if(protocolVersion <= 3) {
+			packetSendCallback.accept(new CPacketVoiceSignalDisconnectV3EAG());
+		}else {
+			packetSendCallback.accept(new CPacketVoiceSignalDisconnectV4EAG());
+		}
+	}
+
+	public static void sendPacketDisconnectPeer(EaglercraftUUID peerId) {
+		if(protocolVersion <= 3) {
+			packetSendCallback.accept(new CPacketVoiceSignalDisconnectV3EAG(true, peerId.msb, peerId.lsb));
+		}else {
+			packetSendCallback.accept(new CPacketVoiceSignalDisconnectPeerV4EAG(peerId.msb, peerId.lsb));
+		}
 	}
 
 	public static void sendPacketConnect() {
-		packetSendCallback.accept(VoiceSignalPackets.makeVoiceSignalPacketConnect());
+		packetSendCallback.accept(new CPacketVoiceSignalConnectEAG());
 	}
 
 	public static void sendPacketRequest(EaglercraftUUID peerId) {
-		packetSendCallback.accept(VoiceSignalPackets.makeVoiceSignalPacketRequest(peerId));
+		packetSendCallback.accept(new CPacketVoiceSignalRequestEAG(peerId.msb, peerId.lsb));
 	}
 
 	private static void sendPacketRequestIfNeeded(EaglercraftUUID uuid) {

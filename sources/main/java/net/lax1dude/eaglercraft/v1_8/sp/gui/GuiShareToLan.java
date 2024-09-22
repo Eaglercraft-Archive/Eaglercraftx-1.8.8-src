@@ -1,6 +1,7 @@
 package net.lax1dude.eaglercraft.v1_8.sp.gui;
 
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformWebRTC;
+import net.lax1dude.eaglercraft.v1_8.minecraft.EnumInputEvent;
 import net.lax1dude.eaglercraft.v1_8.sp.SingleplayerServerController;
 import net.lax1dude.eaglercraft.v1_8.sp.lan.LANServerController;
 import net.minecraft.client.LoadingScreenRenderer;
@@ -198,4 +199,15 @@ public class GuiShareToLan extends GuiScreen {
 	public boolean blockPTTKey() {
 		return this.codeTextField.isFocused();
 	}
+
+	@Override
+	public boolean showCopyPasteButtons() {
+		return this.codeTextField.isFocused();
+	}
+
+	@Override
+	public void fireInputEvent(EnumInputEvent event, String param) {
+		this.codeTextField.fireInputEvent(event, param);
+	}
+
 }

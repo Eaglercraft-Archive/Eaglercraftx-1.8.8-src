@@ -11,7 +11,11 @@
 
 > DELETE  3  @  3 : 4
 
-> INSERT  114 : 146  @  114
+> CHANGE  48 : 49  @  48 : 49
+
+~ 		ScaledResolution scaledresolution = mc.scaledResolution;
+
+> INSERT  65 : 97  @  65
 
 + 	public int getHeight() {
 + 		if (this.theAchievement != null && this.notificationTime != 0L && Minecraft.getMinecraft().thePlayer != null) {

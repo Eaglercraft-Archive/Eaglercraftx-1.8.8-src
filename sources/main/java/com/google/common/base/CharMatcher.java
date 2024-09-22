@@ -140,9 +140,9 @@ public abstract class CharMatcher implements Predicate<Character> {
 	}
 
 	// Must be in ascending order.
-	private static final String ZEROES = "0\u0660\u06f0\u07c0\u0966\u09e6\u0a66\u0ae6\u0b66\u0be6"
-			+ "\u0c66\u0ce6\u0d66\u0e50\u0ed0\u0f20\u1040\u1090\u17e0\u1810\u1946\u19d0\u1b50\u1bb0"
-			+ "\u1c40\u1c50\ua620\ua8d0\ua900\uaa50\uff10";
+	private static final String ZEROES = new String(new char[] { '0', 0x0660, 0x06f0, 0x07c0, 0x0966, 0x09e6, 0x0a66,
+			0x0ae6, 0x0b66, 0x0be6, 0x0c66, 0x0ce6, 0x0d66, 0x0e50, 0x0ed0, 0x0f20, 0x1040, 0x1090, 0x17e0, 0x1810,
+			0x1946, 0x19d0, 0x1b50, 0x1bb0, 0x1c40, 0x1c50, 0xa620, 0xa8d0, 0xa900, 0xaa50, 0xff10 });
 
 	private static final String NINES;
 	static {
@@ -234,10 +234,10 @@ public abstract class CharMatcher implements Predicate<Character> {
 	 * FORMAT, SURROGATE, and PRIVATE_USE according to ICU4J.
 	 */
 	public static final CharMatcher INVISIBLE = new RangesMatcher("CharMatcher.INVISIBLE",
-			("\u0000\u007f\u00ad\u0600\u061c\u06dd\u070f\u1680\u180e\u2000\u2028\u205f\u2066\u2067\u2068"
-					+ "\u2069\u206a\u3000\ud800\ufeff\ufff9\ufffa").toCharArray(),
-			("\u0020\u00a0\u00ad\u0604\u061c\u06dd\u070f\u1680\u180e\u200f\u202f\u2064\u2066\u2067\u2068"
-					+ "\u2069\u206f\u3000\uf8ff\ufeff\ufff9\ufffb").toCharArray());
+			new char[] { 0x0000, 0x007f, 0x00ad, 0x0600, 0x061c, 0x06dd, 0x070f, 0x1680, 0x180e, 0x2000, 0x2028, 0x205f,
+					0x2066, 0x2067, 0x2068, 0x2069, 0x206a, 0x3000, 0xd800, 0xfeff, 0xfff9, 0xfffa },
+			new char[] { 0x0020, 0x00a0, 0x00ad, 0x0604, 0x061c, 0x06dd, 0x070f, 0x1680, 0x180e, 0x200f, 0x202f, 0x2064,
+					0x2066, 0x2067, 0x2068, 0x2069, 0x206f, 0x3000, 0xf8ff, 0xfeff, 0xfff9, 0xfffb });
 
 	private static String showCharacter(char c) {
 		String hex = "0123456789ABCDEF";
@@ -260,8 +260,8 @@ public abstract class CharMatcher implements Predicate<Character> {
 	 * keep it up to date.
 	 */
 	public static final CharMatcher SINGLE_WIDTH = new RangesMatcher("CharMatcher.SINGLE_WIDTH",
-			"\u0000\u05be\u05d0\u05f3\u0600\u0750\u0e00\u1e00\u2100\ufb50\ufe70\uff61".toCharArray(),
-			"\u04f9\u05be\u05ea\u05f4\u06ff\u077f\u0e7f\u20af\u213a\ufdff\ufeff\uffdc".toCharArray());
+			new char[] { 0x0000, 0x05be, 0x05d0, 0x05f3, 0x0600, 0x0750, 0x0e00, 0x1e00, 0x2100, 0xfb50, 0xfe70, 0xff61 },
+			new char[] { 0x04f9, 0x05be, 0x05ea, 0x05f4, 0x06ff, 0x077f, 0x0e7f, 0x20af, 0x213a, 0xfdff, 0xfeff, 0xffdc });
 
 	/** Matches any character. */
 	public static final CharMatcher ANY = new FastMatcher("CharMatcher.ANY") {
@@ -1474,9 +1474,9 @@ public abstract class CharMatcher implements Predicate<Character> {
 		return description;
 	}
 
-	static final String WHITESPACE_TABLE = "" + "\u2002\u3000\r\u0085\u200A\u2005\u2000\u3000"
-			+ "\u2029\u000B\u3000\u2008\u2003\u205F\u3000\u1680" + "\u0009\u0020\u2006\u2001\u202F\u00A0\u000C\u2009"
-			+ "\u3000\u2004\u3000\u3000\u2028\n\u2007\u3000";
+	static final String WHITESPACE_TABLE = new String(new char[] { 0x2002, 0x3000, '\r', 0x0085, 0x200A, 0x2005, 0x2000,
+			0x3000, 0x2029, 0x000B, 0x3000, 0x2008, 0x2003, 0x205F, 0x3000, 0x1680, 0x0009, 0x0020, 0x2006, 0x2001,
+			0x202F, 0x00A0, 0x000C, 0x2009, 0x3000, 0x2004, 0x3000, 0x3000, 0x2028, '\n', 0x2007, 0x3000 });
 	static final int WHITESPACE_MULTIPLIER = 1682554634;
 	static final int WHITESPACE_SHIFT = Integer.numberOfLeadingZeros(WHITESPACE_TABLE.length() - 1);
 

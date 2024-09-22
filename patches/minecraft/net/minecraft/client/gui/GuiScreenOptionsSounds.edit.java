@@ -21,4 +21,11 @@
 
 ~ 	protected void actionPerformed(GuiButton parGuiButton) {
 
+> INSERT  90 : 94  @  90
+
++ 
++ 		public boolean isSliderTouchEvents() {
++ 			return true;
++ 		}
+
 > EOF

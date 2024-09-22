@@ -11,11 +11,16 @@
 
 ~ 	protected void keyTyped(char parChar1, int parInt1) {
 
-> INSERT  24 : 28  @  24
+> INSERT  24 : 33  @  24
 
 + 
 + 	public boolean shouldHangupIntegratedServer() {
 + 		return false;
 + 	}
++ 
++ 	public boolean canCloseGui() {
++ 		return false;
++ 	}
++ 
 
 > EOF

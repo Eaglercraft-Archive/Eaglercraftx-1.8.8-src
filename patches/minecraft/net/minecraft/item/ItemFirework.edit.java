@@ -11,4 +11,11 @@
 
 + 
 
+> INSERT  45 : 49  @  45
+
++ 
++ 	public boolean shouldUseOnTouchEagler(ItemStack itemStack) {
++ 		return true;
++ 	}
+
 > EOF

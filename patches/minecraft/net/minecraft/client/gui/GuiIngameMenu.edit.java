@@ -5,10 +5,14 @@
 # Version: 1.0
 # Author: lax1dude
 
-> CHANGE  2 : 14  @  2 : 9
+> CHANGE  2 : 21  @  2 : 9
 
 ~ import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 ~ import net.lax1dude.eaglercraft.v1_8.Mouse;
+~ import net.lax1dude.eaglercraft.v1_8.PauseMenuCustomizeState;
+~ import net.lax1dude.eaglercraft.v1_8.minecraft.GuiButtonWithStupidIcons;
+~ import net.lax1dude.eaglercraft.v1_8.notifications.GuiButtonNotifBell;
+~ import net.lax1dude.eaglercraft.v1_8.notifications.GuiScreenNotifications;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 ~ import net.lax1dude.eaglercraft.v1_8.sp.SingleplayerServerController;
 ~ import net.lax1dude.eaglercraft.v1_8.sp.gui.GuiScreenLANInfo;
@@ -17,6 +21,9 @@
 ~ import net.lax1dude.eaglercraft.v1_8.sp.lan.LANServerController;
 ~ import net.lax1dude.eaglercraft.v1_8.update.GuiUpdateCheckerOverlay;
 ~ import net.lax1dude.eaglercraft.v1_8.voice.GuiVoiceMenu;
+~ import net.lax1dude.eaglercraft.v1_8.webview.GuiScreenPhishingWaring;
+~ import net.lax1dude.eaglercraft.v1_8.webview.GuiScreenRecieveServerInfo;
+~ import net.lax1dude.eaglercraft.v1_8.webview.GuiScreenServerInfo;
 ~ import net.minecraft.client.Minecraft;
 ~ import net.minecraft.client.audio.PositionedSoundRecord;
 
@@ -28,7 +35,7 @@
 
 > DELETE  2  @  2 : 4
 
-> INSERT  1 : 15  @  1
+> INSERT  1 : 16  @  1
 
 + 	private GuiButton lanButton;
 + 
@@ -36,6 +43,7 @@
 + 
 + 	private GuiUpdateCheckerOverlay updateCheckerOverlay;
 + 	private GuiVoiceMenu voiceMenu;
++ 	private GuiButtonNotifBell notifBellButton;
 + 
 + 	public GuiIngameMenu() {
 + 		updateCheckerOverlay = new GuiUpdateCheckerOverlay(true, this);
@@ -51,14 +59,56 @@
 
 + 		this.updateCheckerOverlay.setResolution(mc, width, height);
 
-> CHANGE  12 : 14  @  12 : 15
+> CHANGE  2 : 6  @  2 : 4
 
-~ 		this.buttonList.add(lanButton = new GuiButton(7, this.width / 2 + 2, this.height / 4 + 96 + b0, 98, 20,
-~ 				I18n.format(LANServerController.isLANOpen() ? "menu.closeLan" : "menu.openToLan", new Object[0])));
+~ 		this.buttonList.add(new GuiButtonWithStupidIcons(1, this.width / 2 - 100, this.height / 4 + 120 + b0,
+~ 				I18n.format("menu.returnToMenu", new Object[0]), PauseMenuCustomizeState.icon_disconnect_L,
+~ 				PauseMenuCustomizeState.icon_disconnect_L_aspect, PauseMenuCustomizeState.icon_disconnect_R,
+~ 				PauseMenuCustomizeState.icon_disconnect_R_aspect));
 
-> CHANGE  4 : 9  @  4 : 5
+> INSERT  2 : 6  @  2
 
++ 			if (this.mc.thePlayer != null && this.mc.thePlayer.sendQueue.getEaglerMessageProtocol().ver >= 4) {
++ 				this.buttonList.add(notifBellButton = new GuiButtonNotifBell(11, width - 22, height - 22));
++ 				notifBellButton.setUnread(mc.thePlayer.sendQueue.getNotifManager().getUnread());
++ 			}
+
+> CHANGE  2 : 40  @  2 : 14
+
+~ 		this.buttonList.add(new GuiButtonWithStupidIcons(4, this.width / 2 - 100, this.height / 4 + 24 + b0,
+~ 				I18n.format("menu.returnToGame", new Object[0]), PauseMenuCustomizeState.icon_backToGame_L,
+~ 				PauseMenuCustomizeState.icon_backToGame_L_aspect, PauseMenuCustomizeState.icon_backToGame_R,
+~ 				PauseMenuCustomizeState.icon_backToGame_R_aspect));
+~ 		this.buttonList.add(new GuiButtonWithStupidIcons(0, this.width / 2 - 100, this.height / 4 + 96 + b0, 98, 20,
+~ 				I18n.format("menu.options", new Object[0]), PauseMenuCustomizeState.icon_options_L,
+~ 				PauseMenuCustomizeState.icon_options_L_aspect, PauseMenuCustomizeState.icon_options_R,
+~ 				PauseMenuCustomizeState.icon_options_R_aspect));
+~ 		this.buttonList
+~ 				.add(lanButton = new GuiButtonWithStupidIcons(7, this.width / 2 + 2, this.height / 4 + 96 + b0, 98, 20,
+~ 						I18n.format(LANServerController.isLANOpen() ? "menu.closeLan" : "menu.openToLan",
+~ 								new Object[0]),
+~ 						PauseMenuCustomizeState.icon_discord_L, PauseMenuCustomizeState.icon_discord_L_aspect,
+~ 						PauseMenuCustomizeState.icon_discord_R, PauseMenuCustomizeState.icon_discord_R_aspect));
+~ 		this.buttonList.add(new GuiButtonWithStupidIcons(5, this.width / 2 - 100, this.height / 4 + 48 + b0, 98, 20,
+~ 				I18n.format("gui.achievements", new Object[0]), PauseMenuCustomizeState.icon_achievements_L,
+~ 				PauseMenuCustomizeState.icon_achievements_L_aspect, PauseMenuCustomizeState.icon_achievements_R,
+~ 				PauseMenuCustomizeState.icon_achievements_R_aspect));
+~ 		this.buttonList.add(new GuiButtonWithStupidIcons(6, this.width / 2 + 2, this.height / 4 + 48 + b0, 98, 20,
+~ 				I18n.format("gui.stats", new Object[0]), PauseMenuCustomizeState.icon_statistics_L,
+~ 				PauseMenuCustomizeState.icon_statistics_L_aspect, PauseMenuCustomizeState.icon_statistics_R,
+~ 				PauseMenuCustomizeState.icon_statistics_R_aspect));
 ~ 		lanButton.enabled = SingleplayerServerController.isWorldRunning();
+~ 		if (PauseMenuCustomizeState.discordButtonMode != PauseMenuCustomizeState.DISCORD_MODE_NONE) {
+~ 			lanButton.enabled = true;
+~ 			lanButton.id = 8;
+~ 			lanButton.displayString = "" + PauseMenuCustomizeState.discordButtonText;
+~ 		}
+~ 		if (PauseMenuCustomizeState.serverInfoMode != PauseMenuCustomizeState.DISCORD_MODE_NONE) {
+~ 			this.buttonList.add(new GuiButtonWithStupidIcons(9, this.width / 2 - 100, this.height / 4 + 72 + b0,
+~ 					PauseMenuCustomizeState.serverInfoButtonText, PauseMenuCustomizeState.icon_serverInfo_L,
+~ 					PauseMenuCustomizeState.icon_serverInfo_L_aspect, PauseMenuCustomizeState.icon_serverInfo_R,
+~ 					PauseMenuCustomizeState.icon_serverInfo_R_aspect));
+~ 		}
 ~ 		if (!hasSentAutoSave) {
 ~ 			hasSentAutoSave = true;
 ~ 			SingleplayerServerController.autoSave();
@@ -80,7 +130,7 @@
 
 ~ 				this.mc.shutdownIntegratedServer(new GuiMultiplayer(new GuiMainMenu()));
 
-> CHANGE  16 : 30  @  16 : 17
+> CHANGE  16 : 69  @  16 : 17
 
 ~ 			if (!LANServerController.supported()) {
 ~ 				mc.displayGuiScreen(new GuiScreenLANNotSupported(this));
@@ -96,8 +146,47 @@
 ~ 						new GuiShareToLan(this, this.mc.playerController.getCurrentGameType().getName())));
 ~ 			}
 ~ 			break;
+~ 		case 8:
+~ 			if (PauseMenuCustomizeState.discordButtonMode == PauseMenuCustomizeState.DISCORD_MODE_INVITE_URL
+~ 					&& PauseMenuCustomizeState.discordInviteURL != null) {
+~ 				EagRuntime.openLink(PauseMenuCustomizeState.discordInviteURL);
+~ 			}
+~ 			break;
+~ 		case 9:
+~ 			switch (PauseMenuCustomizeState.serverInfoMode) {
+~ 			case PauseMenuCustomizeState.SERVER_INFO_MODE_EXTERNAL_URL:
+~ 				if (PauseMenuCustomizeState.serverInfoURL != null) {
+~ 					EagRuntime.openLink(PauseMenuCustomizeState.serverInfoURL);
+~ 				}
+~ 				break;
+~ 			case PauseMenuCustomizeState.SERVER_INFO_MODE_SHOW_EMBED_OVER_HTTP:
+~ 				if (PauseMenuCustomizeState.serverInfoURL != null) {
+~ 					GuiScreen screen = GuiScreenServerInfo.createForCurrentState(this,
+~ 							PauseMenuCustomizeState.serverInfoURL);
+~ 					if (!this.mc.gameSettings.hasHiddenPhishWarning && !GuiScreenPhishingWaring.hasShownMessage) {
+~ 						screen = new GuiScreenPhishingWaring(screen);
+~ 					}
+~ 					this.mc.displayGuiScreen(screen);
+~ 				}
+~ 				break;
+~ 			case PauseMenuCustomizeState.SERVER_INFO_MODE_SHOW_EMBED_OVER_WS:
+~ 				if (PauseMenuCustomizeState.serverInfoHash != null) {
+~ 					GuiScreen screen = new GuiScreenRecieveServerInfo(this, PauseMenuCustomizeState.serverInfoHash);
+~ 					if (!this.mc.gameSettings.hasHiddenPhishWarning && !GuiScreenPhishingWaring.hasShownMessage) {
+~ 						screen = new GuiScreenPhishingWaring(screen);
+~ 					}
+~ 					this.mc.displayGuiScreen(screen);
+~ 				}
+~ 				break;
+~ 			default:
+~ 				break;
+~ 			}
+~ 			break;
+~ 		case 11:
+~ 			this.mc.displayGuiScreen(new GuiScreenNotifications(this));
+~ 			break;
 
-> CHANGE  6 : 13  @  6 : 7
+> CHANGE  6 : 16  @  6 : 7
 
 ~ 		if (EagRuntime.getConfiguration().isAllowVoiceClient()
 ~ 				&& (!mc.isSingleplayer() || LANServerController.isHostingLAN())) {
@@ -106,13 +195,34 @@
 ~ 		if (Mouse.isActuallyGrabbed()) {
 ~ 			Mouse.setGrabbed(false);
 ~ 		}
+~ 		if (notifBellButton != null && mc.thePlayer != null) {
+~ 			notifBellButton.setUnread(mc.thePlayer.sendQueue.getNotifManager().getUnread());
+~ 		}
 
-> CHANGE  4 : 5  @  4 : 5
+> CHANGE  4 : 80  @  4 : 7
 
-~ 		this.drawCenteredString(this.fontRendererObj, I18n.format("menu.game", new Object[0]), this.width / 2, 20,
-
-> CHANGE  1 : 55  @  1 : 2
-
+~ 		String titleStr = I18n.format("menu.game", new Object[0]);
+~ 		int titleStrWidth = fontRendererObj.getStringWidth(titleStr);
+~ 		this.drawString(this.fontRendererObj, titleStr, (this.width - titleStrWidth) / 2, 20, 16777215);
+~ 		if (PauseMenuCustomizeState.icon_title_L != null) {
+~ 			mc.getTextureManager().bindTexture(PauseMenuCustomizeState.icon_title_L);
+~ 			GlStateManager.pushMatrix();
+~ 			GlStateManager.translate(
+~ 					(this.width - titleStrWidth) / 2 - 6 - 16 * PauseMenuCustomizeState.icon_title_L_aspect, 16, 0.0f);
+~ 			float f2 = 16.0f / 256.0f;
+~ 			GlStateManager.scale(f2 * PauseMenuCustomizeState.icon_title_L_aspect, f2, f2);
+~ 			this.drawTexturedModalRect(0, 0, 0, 0, 256, 256);
+~ 			GlStateManager.popMatrix();
+~ 		}
+~ 		if (PauseMenuCustomizeState.icon_title_R != null) {
+~ 			mc.getTextureManager().bindTexture(PauseMenuCustomizeState.icon_title_L);
+~ 			GlStateManager.pushMatrix();
+~ 			GlStateManager.translate((this.width - titleStrWidth) / 2 + titleStrWidth + 6, 16, 0.0f);
+~ 			float f2 = 16.0f / 256.0f;
+~ 			GlStateManager.scale(f2 * PauseMenuCustomizeState.icon_title_R_aspect, f2, f2);
+~ 			this.drawTexturedModalRect(0, 0, 0, 0, 256, 256);
+~ 			GlStateManager.popMatrix();
+~ 		}
 ~ 
 ~ 		this.updateCheckerOverlay.drawScreen(i, j, f);
 ~ 
@@ -168,7 +278,7 @@
 ~ 		} catch (GuiVoiceMenu.AbortedException ex) {
 ~ 		}
 
-> INSERT  1 : 80  @  1
+> INSERT  1 : 84  @  1
 
 + 
 + 	protected void keyTyped(char par1, int par2) {
@@ -248,6 +358,10 @@
 + 			super.mouseReleased(par1, par2, par3);
 + 		} catch (GuiVoiceMenu.AbortedException ex) {
 + 		}
++ 	}
++ 
++ 	protected boolean isPartOfPauseMenu() {
++ 		return true;
 + 	}
 
 > EOF

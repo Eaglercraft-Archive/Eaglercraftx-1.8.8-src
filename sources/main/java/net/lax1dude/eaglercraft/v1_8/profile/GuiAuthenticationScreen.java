@@ -2,7 +2,7 @@ package net.lax1dude.eaglercraft.v1_8.profile;
 
 import net.lax1dude.eaglercraft.v1_8.Keyboard;
 import net.lax1dude.eaglercraft.v1_8.internal.KeyboardConstants;
-import net.lax1dude.eaglercraft.v1_8.internal.PlatformNetworking;
+import net.lax1dude.eaglercraft.v1_8.minecraft.EnumInputEvent;
 import net.lax1dude.eaglercraft.v1_8.socket.ConnectionHandshake;
 import net.lax1dude.eaglercraft.v1_8.socket.HandshakePacketTypes;
 import net.minecraft.client.gui.GuiButton;
@@ -92,9 +92,6 @@ public class GuiAuthenticationScreen extends GuiScreen {
 			this.mc.displayGuiScreen(new GuiConnecting(retAfterAuthScreen, password.getText()));
 		}else {
 			this.mc.displayGuiScreen(parent);
-			if (!PlatformNetworking.playConnectionState().isClosed()) {
-				PlatformNetworking.playDisconnect();
-			}
 		}
 	}
 
@@ -120,6 +117,16 @@ public class GuiAuthenticationScreen extends GuiScreen {
 	protected void mouseClicked(int parInt1, int parInt2, int parInt3) {
 		super.mouseClicked(parInt1, parInt2, parInt3);
 		this.password.mouseClicked(parInt1, parInt2, parInt3);
+	}
+
+	@Override
+	public boolean showCopyPasteButtons() {
+		return password.isFocused();
+	}
+
+	@Override
+	public void fireInputEvent(EnumInputEvent event, String param) {
+		password.fireInputEvent(event, param);
 	}
 
 }

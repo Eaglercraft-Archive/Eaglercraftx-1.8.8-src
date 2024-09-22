@@ -29,7 +29,7 @@ public class EaglerSaveHandler extends SaveHandler {
 	}
 
 	public IChunkLoader getChunkLoader(WorldProvider provider) {
-		return new EaglerChunkLoader(new VFile2(this.getWorldDirectory(), "level" + provider.getDimensionId()));
+		return new EaglerChunkLoader(WorldsDB.newVFile(this.getWorldDirectory(), "level" + provider.getDimensionId()));
 	}
 
 	public void saveWorldInfoWithPlayer(WorldInfo worldInformation, NBTTagCompound tagCompound) {

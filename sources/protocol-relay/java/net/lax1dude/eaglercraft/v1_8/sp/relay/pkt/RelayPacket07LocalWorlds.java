@@ -64,7 +64,7 @@ public class RelayPacket07LocalWorlds extends RelayPacket {
 	public void read(DataInputStream input) throws IOException {
 		int l = input.read();
 		if(worldsList == null) {
-			worldsList = new ArrayList(l);
+			worldsList = new ArrayList<>(l);
 		}else {
 			worldsList.clear();
 		}

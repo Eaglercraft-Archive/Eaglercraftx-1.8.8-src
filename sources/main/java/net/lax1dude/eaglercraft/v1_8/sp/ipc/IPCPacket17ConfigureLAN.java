@@ -30,7 +30,7 @@ public class IPCPacket17ConfigureLAN implements IPCPacketBase {
 	public final List<String> iceServers;
 	
 	public IPCPacket17ConfigureLAN() {
-		iceServers = new ArrayList();
+		iceServers = new ArrayList<>();
 	}
 	
 	public IPCPacket17ConfigureLAN(int gamemode, boolean cheats, List<String> iceServers) {

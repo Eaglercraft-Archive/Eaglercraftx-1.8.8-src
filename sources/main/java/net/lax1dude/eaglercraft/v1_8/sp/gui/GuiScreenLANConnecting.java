@@ -1,7 +1,9 @@
 package net.lax1dude.eaglercraft.v1_8.sp.gui;
 
+import net.lax1dude.eaglercraft.v1_8.EaglercraftVersion;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformWebRTC;
 import net.lax1dude.eaglercraft.v1_8.profile.EaglerProfile;
+import net.lax1dude.eaglercraft.v1_8.socket.ConnectionHandshake;
 import net.lax1dude.eaglercraft.v1_8.sp.lan.LANClientNetworkManager;
 import net.lax1dude.eaglercraft.v1_8.sp.relay.RelayManager;
 import net.lax1dude.eaglercraft.v1_8.sp.relay.RelayServer;
@@ -120,9 +122,15 @@ public class GuiScreenLANConnecting extends GuiScreen {
 				this.mc.clearTitles();
 				networkManager.setConnectionState(EnumConnectionState.LOGIN);
 				networkManager.setNetHandler(new NetHandlerSingleplayerLogin(networkManager, mc, parent));
-				networkManager.sendPacket(new C00PacketLoginStart(this.mc.getSession().getProfile(), EaglerProfile.getSkinPacket(), EaglerProfile.getCapePacket()));
+				networkManager.sendPacket(new C00PacketLoginStart(this.mc.getSession().getProfile(),
+						EaglerProfile.getSkinPacket(3), EaglerProfile.getCapePacket(),
+						ConnectionHandshake.getSPHandshakeProtocolData(), EaglercraftVersion.clientBrandUUID));
 			}
 		}
+	}
+
+	public boolean canCloseGui() {
+		return false;
 	}
 
 }

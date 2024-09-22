@@ -30,7 +30,7 @@ public class PipelineShaderGBufferCombine extends ShaderProgram<PipelineShaderGB
 
 	public static PipelineShaderGBufferCombine compile(boolean ssao, boolean env, boolean ssr) throws ShaderException {
 		IShaderGL coreGBuffer = null;
-		List<String> compileFlags = new ArrayList(2);
+		List<String> compileFlags = new ArrayList<>(2);
 		if(ssao) {
 			compileFlags.add("COMPILE_GLOBAL_AMBIENT_OCCLUSION");
 		}

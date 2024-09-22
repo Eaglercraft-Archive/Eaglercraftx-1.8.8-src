@@ -5,10 +5,11 @@
 # Version: 1.0
 # Author: lax1dude
 
-> INSERT  2 : 5  @  2
+> INSERT  2 : 6  @  2
 
 + import java.io.IOException;
 + 
++ import net.lax1dude.eaglercraft.v1_8.ClientUUIDLoadingCache;
 + import net.lax1dude.eaglercraft.v1_8.socket.EaglercraftNetworkManager;
 
 > DELETE  6  @  6 : 7
@@ -17,7 +18,7 @@
 
 + import net.minecraft.util.ChatComponentText;
 
-> CHANGE  228 : 240  @  228 : 229
+> CHANGE  228 : 242  @  228 : 229
 
 ~ 			try {
 ~ 				this.netClientHandler.getNetworkManager().processReceivedPackets();
@@ -31,6 +32,8 @@
 ~ 			}
 ~ 			this.netClientHandler.getSkinCache().flush();
 ~ 			this.netClientHandler.getCapeCache().flush();
+~ 			this.netClientHandler.getNotifManager().runTick();
+~ 			ClientUUIDLoadingCache.update();
 
 > CHANGE  96 : 98  @  96 : 98
 

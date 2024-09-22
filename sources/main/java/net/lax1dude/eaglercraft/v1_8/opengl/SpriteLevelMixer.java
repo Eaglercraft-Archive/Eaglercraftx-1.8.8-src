@@ -10,7 +10,6 @@ import net.lax1dude.eaglercraft.v1_8.internal.IUniformGL;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.FloatBuffer;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
-import net.lax1dude.eaglercraft.v1_8.opengl.FixedFunctionShader.FixedFunctionConstants;
 import net.lax1dude.eaglercraft.v1_8.vector.Matrix3f;
 
 /**
@@ -33,6 +32,7 @@ public class SpriteLevelMixer {
 	private static final Logger LOGGER = LogManager.getLogger("SpriteLevelMixer");
 
 	public static final String fragmentShaderPath = "/assets/eagler/glsl/texture_mix.fsh";
+	public static final String fragmentShaderPrecision = "precision lowp int;\nprecision highp float;\nprecision highp sampler2D;\n";
 
 	private static IProgramGL shaderProgram = null;
 
@@ -61,15 +61,11 @@ public class SpriteLevelMixer {
 	private static final Matrix3f identityMatrix = new Matrix3f();
 
 	static void initialize() {
-
-		String fragmentSource = EagRuntime.getResourceString(fragmentShaderPath);
-		if(fragmentSource == null) {
-			throw new RuntimeException("SpriteLevelMixer shader \"" + fragmentShaderPath + "\" is missing!");
-		}
+		String fragmentSource = EagRuntime.getRequiredResourceString(fragmentShaderPath);
 
 		IShaderGL frag = _wglCreateShader(GL_FRAGMENT_SHADER);
 
-		_wglShaderSource(frag, FixedFunctionConstants.VERSION + "\n" + fragmentSource);
+		_wglShaderSource(frag, GLSLHeader.getFragmentHeaderCompat(fragmentSource, fragmentShaderPrecision));
 		_wglCompileShader(frag);
 
 		if(_wglGetShaderi(frag, GL_COMPILE_STATUS) != GL_TRUE) {
@@ -88,6 +84,10 @@ public class SpriteLevelMixer {
 
 		_wglAttachShader(shaderProgram, DrawUtils.vshLocal);
 		_wglAttachShader(shaderProgram, frag);
+
+		if(EaglercraftGPU.checkOpenGLESVersion() == 200) {
+			VSHInputLayoutParser.applyLayout(shaderProgram, DrawUtils.vshLocalLayout);
+		}
 
 		_wglLinkProgram(shaderProgram);
 
@@ -155,7 +155,14 @@ public class SpriteLevelMixer {
 	public static void drawSprite(float level) {
 		EaglercraftGPU.bindGLShaderProgram(shaderProgram);
 		
-		_wglUniform1f(u_textureLod1f, level);
+		if(EaglercraftGPU.checkTextureLODCapable()) {
+			_wglUniform1f(u_textureLod1f, level);
+		}else {
+			if(level != 0.0f) {
+				LOGGER.error("Tried to copy from mipmap level {}, but this GPU does not support textureLod!", level);
+			}
+			_wglUniform1f(u_textureLod1f, 0.0f);
+		}
 		
 		if(blendColorChanged) {
 			_wglUniform4f(u_blendFactor4f, blendColorR, blendColorG, blendColorB, blendColorA);
@@ -176,6 +183,21 @@ public class SpriteLevelMixer {
 		}
 		
 		DrawUtils.drawStandardQuad2D();
+	}
+
+	public static void destroy() {
+		if(matrixCopyBuffer != null) {
+			EagRuntime.freeFloatBuffer(matrixCopyBuffer);
+			matrixCopyBuffer = null;
+		}
+		if(shaderProgram != null) {
+			_wglDeleteProgram(shaderProgram);
+			shaderProgram = null;
+		}
+		u_textureLod1f = null;
+		u_blendFactor4f = null;
+		u_blendBias4f = null;
+		u_matrixTransform = null;
 	}
 
 }

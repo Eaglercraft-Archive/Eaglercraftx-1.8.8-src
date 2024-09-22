@@ -5,8 +5,10 @@
 # Version: 1.0
 # Author: lax1dude
 
-> CHANGE  2 : 4  @  2 : 3
+> CHANGE  2 : 6  @  2 : 3
 
+~ import org.apache.commons.lang3.StringUtils;
+~ 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
 ~ import net.lax1dude.eaglercraft.v1_8.sp.SingleplayerServerController;
 
@@ -48,8 +50,19 @@
 ~ 				s = nbttagcompound.getString("Owner");
 ~ 			}
 
-> CHANGE  83 : 84  @  83 : 84
+> INSERT  82 : 86  @  82
 
-~ 			EaglercraftUUID uuid = EaglercraftUUID.fromString(this.getOwnerId());
++ 		String ownerName = this.getOwnerId();
++ 		if (StringUtils.isEmpty(ownerName)) {
++ 			return null;
++ 		}
+
+> CHANGE  1 : 2  @  1 : 2
+
+~ 			EaglercraftUUID uuid = EaglercraftUUID.fromString(ownerName);
+
+> CHANGE  2 : 3  @  2 : 3
+
+~ 			return this.worldObj.getPlayerEntityByName(ownerName);
 
 > EOF

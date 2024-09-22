@@ -10,9 +10,7 @@
 ~ import static net.lax1dude.eaglercraft.v1_8.internal.PlatformOpenGL._wglBindFramebuffer;
 ~ 
 
-> DELETE  2  @  2 : 6
-
-> DELETE  1  @  1 : 2
+> DELETE  2  @  2 : 8
 
 > CHANGE  2 : 3  @  2 : 6
 
@@ -20,15 +18,10 @@
 
 > DELETE  1  @  1 : 4
 
-> CHANGE  1 : 56  @  1 : 4
+> CHANGE  1 : 74  @  1 : 4
 
 ~ 
-~ import net.lax1dude.eaglercraft.v1_8.internal.PlatformInput;
-~ 
-~ import org.apache.commons.lang3.Validate;
-~ 
-~ import com.google.common.collect.Lists;
-~ 
+~ import net.lax1dude.eaglercraft.v1_8.ClientUUIDLoadingCache;
 ~ import net.lax1dude.eaglercraft.v1_8.Display;
 ~ import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 ~ import net.lax1dude.eaglercraft.v1_8.EagUtils;
@@ -37,16 +30,30 @@
 ~ import net.lax1dude.eaglercraft.v1_8.IOUtils;
 ~ import net.lax1dude.eaglercraft.v1_8.Keyboard;
 ~ import net.lax1dude.eaglercraft.v1_8.Mouse;
+~ import net.lax1dude.eaglercraft.v1_8.PauseMenuCustomizeState;
+~ import net.lax1dude.eaglercraft.v1_8.PointerInputAbstraction;
+~ import net.lax1dude.eaglercraft.v1_8.Touch;
+~ import net.lax1dude.eaglercraft.v1_8.cookie.ServerCookieDataStore;
+~ import net.lax1dude.eaglercraft.v1_8.internal.PlatformInput;
+~ 
+~ import org.apache.commons.lang3.Validate;
+~ 
+~ import com.google.common.collect.Lists;
+~ 
 ~ import net.lax1dude.eaglercraft.v1_8.futures.Executors;
 ~ import net.lax1dude.eaglercraft.v1_8.futures.FutureTask;
 ~ import net.lax1dude.eaglercraft.v1_8.futures.ListenableFuture;
 ~ import net.lax1dude.eaglercraft.v1_8.futures.ListenableFutureTask;
 ~ import net.lax1dude.eaglercraft.v1_8.internal.EnumPlatformType;
 ~ import net.lax1dude.eaglercraft.v1_8.internal.PlatformRuntime;
+~ import net.lax1dude.eaglercraft.v1_8.internal.PlatformWebRTC;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 ~ import net.lax1dude.eaglercraft.v1_8.minecraft.EaglerFolderResourcePack;
 ~ import net.lax1dude.eaglercraft.v1_8.minecraft.EaglerFontRenderer;
+~ import net.lax1dude.eaglercraft.v1_8.minecraft.EnumInputEvent;
+~ import net.lax1dude.eaglercraft.v1_8.minecraft.GuiScreenGenericErrorMessage;
+~ import net.lax1dude.eaglercraft.v1_8.notifications.ServerNotificationRenderer;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.EaglerMeshLoader;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.EaglercraftGPU;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
@@ -61,6 +68,7 @@
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.texture.MetalsLUT;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.texture.PBRTextureMapUtils;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.texture.TemperaturesLUT;
+~ import net.lax1dude.eaglercraft.v1_8.profanity_filter.GuiScreenContentWarning;
 ~ import net.lax1dude.eaglercraft.v1_8.profile.EaglerProfile;
 ~ import net.lax1dude.eaglercraft.v1_8.profile.GuiScreenEditProfile;
 ~ import net.lax1dude.eaglercraft.v1_8.profile.SkinPreviewRenderer;
@@ -74,9 +82,17 @@
 ~ import net.lax1dude.eaglercraft.v1_8.sp.gui.GuiScreenIntegratedServerBusy;
 ~ import net.lax1dude.eaglercraft.v1_8.sp.gui.GuiScreenSingleplayerConnecting;
 ~ import net.lax1dude.eaglercraft.v1_8.sp.lan.LANServerController;
+~ import net.lax1dude.eaglercraft.v1_8.touch_gui.TouchControls;
+~ import net.lax1dude.eaglercraft.v1_8.touch_gui.TouchOverlayRenderer;
+~ import net.lax1dude.eaglercraft.v1_8.update.GuiUpdateDownloadSuccess;
+~ import net.lax1dude.eaglercraft.v1_8.update.GuiUpdateInstallOptions;
 ~ import net.lax1dude.eaglercraft.v1_8.update.RelayUpdateChecker;
+~ import net.lax1dude.eaglercraft.v1_8.update.UpdateDataObj;
+~ import net.lax1dude.eaglercraft.v1_8.update.UpdateResultObj;
+~ import net.lax1dude.eaglercraft.v1_8.update.UpdateService;
 ~ import net.lax1dude.eaglercraft.v1_8.voice.GuiVoiceOverlay;
 ~ import net.lax1dude.eaglercraft.v1_8.voice.VoiceClientController;
+~ import net.lax1dude.eaglercraft.v1_8.webview.WebViewOverlayController;
 
 > DELETE  2  @  2 : 4
 
@@ -114,9 +130,7 @@
 
 > DELETE  8  @  8 : 12
 
-> DELETE  1  @  1 : 3
-
-> DELETE  1  @  1 : 3
+> DELETE  1  @  1 : 6
 
 > INSERT  6 : 9  @  6
 
@@ -124,7 +138,11 @@
 + import net.minecraft.util.ChatStyle;
 + import net.minecraft.util.EnumChatFormatting;
 
-> INSERT  11 : 12  @  11
+> INSERT  7 : 8  @  7
+
++ import net.minecraft.util.MovingObjectPosition.MovingObjectType;
+
+> INSERT  4 : 5  @  4
 
 + import net.minecraft.util.StringTranslate;
 
@@ -140,7 +158,11 @@
 
 ~ 	public static final boolean isRunningOnMac = false;
 
-> DELETE  12  @  12 : 14
+> INSERT  10 : 11  @  10
+
++ 	public float displayDPI;
+
+> DELETE  2  @  2 : 4
 
 > INSERT  11 : 12  @  11
 
@@ -156,11 +178,13 @@
 
 ~ 	private EaglercraftNetworkManager myNetworkManager;
 
-> DELETE  9  @  9 : 11
+> DELETE  1  @  1 : 2
+
+> DELETE  7  @  7 : 9
 
 > CHANGE  4 : 5  @  4 : 7
 
-~ 	private final List<FutureTask<?>> scheduledTasks = new LinkedList();
+~ 	private final List<FutureTask<?>> scheduledTasks = new LinkedList<>();
 
 > INSERT  14 : 18  @  14
 
@@ -169,15 +193,20 @@
 + 	public int bungeeOutdatedMsgTimer = 0;
 + 	private boolean isLANOpen = false;
 
-> INSERT  1 : 9  @  1
+> INSERT  1 : 14  @  1
 
 + 	public SkullCommand eagskullCommand;
 + 
 + 	public GuiVoiceOverlay voiceOverlay;
++ 	public ServerNotificationRenderer notifRenderer;
++ 	public TouchOverlayRenderer touchOverlayRenderer;
 + 
 + 	public float startZoomValue = 18.0f;
 + 	public float adjustedZoomValue = 18.0f;
 + 	public boolean isZoomKey = false;
++ 	private String reconnectURI = null;
++ 	public boolean mouseGrabSupported = false;
++ 	public ScaledResolution scaledResolution = null;
 + 
 
 > CHANGE  2 : 3  @  2 : 5
@@ -192,7 +221,11 @@
 
 ~ 		logger.info("Setting user: " + this.session.getProfile().getName());
 
-> CHANGE  6 : 11  @  6 : 10
+> INSERT  2 : 3  @  2
+
++ 		this.displayDPI = 1.0f;
+
+> CHANGE  4 : 9  @  4 : 8
 
 ~ 		String serverToJoin = EagRuntime.getConfiguration().getServerToJoin();
 ~ 		if (serverToJoin != null) {
@@ -247,16 +280,20 @@
 ~ 		EaglerFolderResourcePack.deleteOldResourcePacks(EaglerFolderResourcePack.SERVER_RESOURCE_PACKS, 604800000L);
 ~ 		this.mcResourcePackRepository = new ResourcePackRepository(this.mcDefaultResourcePack, this.metadataSerializer_,
 
-> DELETE  8  @  8 : 11
+> INSERT  4 : 5  @  4
+
++ 		this.scaledResolution = new ScaledResolution(this);
+
+> DELETE  4  @  4 : 7
 
 > CHANGE  3 : 5  @  3 : 5
 
-~ 		this.fontRendererObj = new EaglerFontRenderer(this.gameSettings,
+~ 		this.fontRendererObj = EaglerFontRenderer.createSupportedFontRenderer(this.gameSettings,
 ~ 				new ResourceLocation("textures/font/ascii.png"), this.renderEngine, false);
 
 > CHANGE  5 : 6  @  5 : 6
 
-~ 		this.standardGalacticFontRenderer = new EaglerFontRenderer(this.gameSettings,
+~ 		this.standardGalacticFontRenderer = EaglerFontRenderer.createSupportedFontRenderer(this.gameSettings,
 
 > INSERT  5 : 12  @  5
 
@@ -284,15 +321,25 @@
 
 + 		SkinPreviewRenderer.initialize();
 
-> INSERT  2 : 14  @  2
+> INSERT  2 : 24  @  2
 
++ 
++ 		this.mouseGrabSupported = Mouse.isMouseGrabSupported();
++ 		PointerInputAbstraction.init(this);
++ 
 + 		this.eagskullCommand = new SkullCommand(this);
 + 		this.voiceOverlay = new GuiVoiceOverlay(this);
-+ 		ScaledResolution voiceRes = new ScaledResolution(this);
-+ 		this.voiceOverlay.setResolution(voiceRes.getScaledWidth(), voiceRes.getScaledHeight());
++ 		this.voiceOverlay.setResolution(scaledResolution.getScaledWidth(), scaledResolution.getScaledHeight());
++ 
++ 		this.notifRenderer = new ServerNotificationRenderer();
++ 		this.notifRenderer.init();
++ 		this.notifRenderer.setResolution(this, scaledResolution.getScaledWidth(), scaledResolution.getScaledHeight(),
++ 				scaledResolution.getScaleFactor());
++ 		this.touchOverlayRenderer = new TouchOverlayRenderer(this);
 + 
 + 		ServerList.initServerList(this);
 + 		EaglerProfile.read();
++ 		ServerCookieDataStore.load();
 + 
 + 		GuiScreen mainMenu = new GuiMainMenu();
 + 		if (isDemo()) {
@@ -303,24 +350,35 @@
 
 ~ 			mainMenu = new GuiConnecting(mainMenu, this, this.serverName, this.serverPort);
 
-> INSERT  2 : 4  @  2
+> INSERT  2 : 10  @  2
 
-+ 		this.displayGuiScreen(new GuiScreenEditProfile(mainMenu));
++ 		mainMenu = new GuiScreenEditProfile(mainMenu);
++ 
++ 		if (!EagRuntime.getConfiguration().isForceProfanityFilter() && !gameSettings.hasShownProfanityFilter) {
++ 			mainMenu = new GuiScreenContentWarning(mainMenu);
++ 		}
++ 
++ 		this.displayGuiScreen(mainMenu);
 + 
 
-> DELETE  3  @  3 : 15
+> DELETE  3  @  3 : 6
 
-> CHANGE  16 : 17  @  16 : 24
+> CHANGE  1 : 7  @  1 : 9
 
-~ 		throw new UnsupportedOperationException("wtf u trying to twitch stream in a browser game?");
+~ 		while (Mouse.next())
+~ 			;
+~ 		while (Keyboard.next())
+~ 			;
+~ 		while (Touch.next())
+~ 			;
 
-> CHANGE  2 : 5  @  2 : 24
+> CHANGE  15 : 18  @  15 : 24
 
 ~ 	private void createDisplay() {
 ~ 		Display.create();
 ~ 		Display.setTitle("Eaglercraft 1.8.8");
 
-> DELETE  2  @  2 : 39
+> DELETE  2  @  2 : 63
 
 > CHANGE  1 : 2  @  1 : 11
 
@@ -363,41 +421,68 @@
 + 		GuiMainMenu.doResourceReloadHack();
 + 
 
-> CHANGE  7 : 10  @  7 : 19
+> CHANGE  7 : 12  @  7 : 19
 
 ~ 	private void updateDisplayMode() {
 ~ 		this.displayWidth = Display.getWidth();
 ~ 		this.displayHeight = Display.getHeight();
+~ 		this.displayDPI = Display.getDPI();
+~ 		this.scaledResolution = new ScaledResolution(this);
 
-> CHANGE  2 : 6  @  2 : 46
+> CHANGE  2 : 6  @  2 : 51
 
 ~ 	private void drawSplashScreen(TextureManager textureManagerInstance) {
 ~ 		Display.update();
 ~ 		updateDisplayMode();
 ~ 		GlStateManager.viewport(0, 0, displayWidth, displayHeight);
 
-> DELETE  2  @  2 : 5
+> CHANGE  2 : 4  @  2 : 4
 
-> CHANGE  16 : 17  @  16 : 17
+~ 		GlStateManager.ortho(0.0D, (double) scaledResolution.getScaledWidth(),
+~ 				(double) scaledResolution.getScaledHeight(), 0.0D, 1000.0D, 3000.0D);
+
+> CHANGE  12 : 13  @  12 : 13
 
 ~ 					new DynamicTexture(ImageData.loadImageFile(inputstream)));
 
-> DELETE  24  @  24 : 26
+> CHANGE  20 : 22  @  20 : 22
+
+~ 		this.func_181536_a((scaledResolution.getScaledWidth() - short1) / 2,
+~ 				(scaledResolution.getScaledHeight() - short2) / 2, 0, 0, short1, short2, 255, 255, 255, 255);
+
+> DELETE  2  @  2 : 4
 
 > DELETE  26  @  26 : 30
 
-> CHANGE  31 : 42  @  31 : 32
+> INSERT  17 : 18  @  17
 
-~ 	public void shutdownIntegratedServer(GuiScreen cont) {
-~ 		if (SingleplayerServerController.shutdownEaglercraftServer()
-~ 				|| SingleplayerServerController.getStatusState() == IntegratedServerState.WORLD_UNLOADING) {
-~ 			displayGuiScreen(new GuiScreenIntegratedServerBusy(cont, "singleplayer.busy.stoppingIntegratedServer",
-~ 					"singleplayer.failed.stoppingIntegratedServer", SingleplayerServerController::isReady));
-~ 		} else {
-~ 			displayGuiScreen(cont);
-~ 		}
-~ 	}
-~ 
++ 		this.scaledResolution = new ScaledResolution(this);
+
+> CHANGE  2 : 4  @  2 : 6
+
+~ 			((GuiScreen) guiScreenIn).setWorldAndResolution(this, scaledResolution.getScaledWidth(),
+~ 					scaledResolution.getScaledHeight());
+
+> INSERT  5 : 9  @  5
+
++ 		EagRuntime.getConfiguration().getHooks().callScreenChangedHook(
++ 				currentScreen != null ? currentScreen.getClass().getName() : null, scaledResolution.getScaledWidth(),
++ 				scaledResolution.getScaledHeight(), displayWidth, displayHeight, scaledResolution.getScaleFactor());
++ 	}
+
+> INSERT  1 : 9  @  1
+
++ 	public void shutdownIntegratedServer(GuiScreen cont) {
++ 		if (SingleplayerServerController.shutdownEaglercraftServer()
++ 				|| SingleplayerServerController.getStatusState() == IntegratedServerState.WORLD_UNLOADING) {
++ 			displayGuiScreen(new GuiScreenIntegratedServerBusy(cont, "singleplayer.busy.stoppingIntegratedServer",
++ 					"singleplayer.failed.stoppingIntegratedServer", SingleplayerServerController::isReady));
++ 		} else {
++ 			displayGuiScreen(cont);
++ 		}
+
+> CHANGE  2 : 3  @  2 : 3
+
 ~ 	public void checkGLError(String message) {
 
 > CHANGE  1 : 2  @  1 : 2
@@ -435,79 +520,77 @@
 
 > DELETE  3  @  3 : 5
 
-> CHANGE  5 : 6  @  5 : 6
+> CHANGE  4 : 5  @  4 : 6
 
 ~ 		if (Display.isCloseRequested()) {
 
-> CHANGE  14 : 15  @  14 : 15
+> INSERT  3 : 6  @  3
+
++ 		PointerInputAbstraction.runGameLoop();
++ 		this.gameSettings.touchscreen = PointerInputAbstraction.isTouchMode();
++ 
+
+> DELETE  8  @  8 : 9
+
+> CHANGE  2 : 3  @  2 : 3
 
 ~ 				Util.func_181617_a((FutureTask) this.scheduledTasks.remove(0), logger);
 
-> CHANGE  7 : 18  @  7 : 8
+> DELETE  3  @  3 : 4
+
+> DELETE  1  @  1 : 2
+
+> CHANGE  1 : 15  @  1 : 2
 
 ~ 		if (this.timer.elapsedTicks > 1) {
-~ 			long watchdog = System.currentTimeMillis();
+~ 			long watchdog = EagRuntime.steadyTimeMillis();
 ~ 			for (int j = 0; j < this.timer.elapsedTicks; ++j) {
 ~ 				this.runTick();
-~ 				long millis = System.currentTimeMillis();
+~ 				if (j < this.timer.elapsedTicks - 1) {
+~ 					PointerInputAbstraction.runGameLoop();
+~ 				}
+~ 				long millis = EagRuntime.steadyTimeMillis();
 ~ 				if (millis - watchdog > 50l) {
 ~ 					watchdog = millis;
-~ 					EagUtils.sleep(0l);
+~ 					EagRuntime.immediateContinue();
 ~ 				}
 ~ 			}
 ~ 		} else if (this.timer.elapsedTicks == 1) {
 
-> DELETE  10  @  10 : 18
+> DELETE  3  @  3 : 4
 
-> CHANGE  1 : 4  @  1 : 5
+> DELETE  2  @  2 : 3
+
+> DELETE  1  @  1 : 11
+
+> CHANGE  1 : 12  @  1 : 7
 
 ~ 		if (!Display.contextLost()) {
-~ 			this.mcProfiler.startSection("EaglercraftGPU_optimize");
 ~ 			EaglercraftGPU.optimize();
-
-> CHANGE  1 : 11  @  1 : 2
-
 ~ 			_wglBindFramebuffer(0x8D40, null);
 ~ 			GlStateManager.viewport(0, 0, this.displayWidth, this.displayHeight);
 ~ 			GlStateManager.clearColor(0.0f, 0.0f, 0.0f, 1.0f);
 ~ 			GlStateManager.pushMatrix();
 ~ 			GlStateManager.clear(16640);
-~ 			this.mcProfiler.startSection("display");
 ~ 			GlStateManager.enableTexture2D();
 ~ 			if (this.thePlayer != null && this.thePlayer.isEntityInsideOpaqueBlock()) {
 ~ 				this.gameSettings.thirdPersonView = 0;
 ~ 			}
 
-> CHANGE  1 : 6  @  1 : 5
+> CHANGE  1 : 3  @  1 : 5
 
-~ 			this.mcProfiler.endSection();
 ~ 			if (!this.skipRenderWorld) {
-~ 				this.mcProfiler.endStartSection("gameRenderer");
 ~ 				this.entityRenderer.func_181560_a(this.timer.renderPartialTicks, i);
-~ 				this.mcProfiler.endSection();
 
-> CHANGE  2 : 18  @  2 : 7
+> CHANGE  2 : 5  @  2 : 7
 
-~ 			this.mcProfiler.endSection();
-~ 			if (this.gameSettings.showDebugInfo && this.gameSettings.showDebugProfilerChart
-~ 					&& !this.gameSettings.hideGUI) {
-~ 				if (!this.mcProfiler.profilingEnabled) {
-~ 					this.mcProfiler.clearProfiling();
-~ 				}
-~ 
-~ 				this.mcProfiler.profilingEnabled = true;
-~ 				this.displayDebugInfo(i1);
-~ 			} else {
-~ 				this.mcProfiler.profilingEnabled = false;
-~ 				this.prevFrameTime = System.nanoTime();
-~ 			}
-~ 
 ~ 			this.guiAchievement.updateAchievementWindow();
+~ 			this.touchOverlayRenderer.render(displayWidth, displayHeight, scaledResolution);
 ~ 			GlStateManager.popMatrix();
 
-> DELETE  2  @  2 : 11
+> DELETE  2  @  2 : 12
 
-> DELETE  2  @  2 : 10
+> DELETE  1  @  1 : 9
 
 > INSERT  1 : 2  @  1
 
@@ -526,93 +609,160 @@
 
 > DELETE  3  @  3 : 7
 
-> INSERT  8 : 9  @  8
+> DELETE  3  @  3 : 4
 
-+ 		Mouse.tickCursorShape();
+> DELETE  1  @  1 : 2
 
-> INSERT  5 : 10  @  5
+> CHANGE  2 : 3  @  2 : 3
 
-+ 		if (Display.isVSyncSupported()) {
-+ 			Display.setVSync(this.gameSettings.enableVsync);
-+ 		} else {
-+ 			this.gameSettings.enableVsync = false;
-+ 		}
+~ 		Mouse.tickCursorShape();
 
-> DELETE  34  @  34 : 52
+> CHANGE  3 : 8  @  3 : 4
 
-> CHANGE  39 : 40  @  39 : 40
+~ 		if (Display.isVSyncSupported()) {
+~ 			Display.setVSync(this.gameSettings.enableVsync);
+~ 		} else {
+~ 			this.gameSettings.enableVsync = false;
+~ 		}
 
-~ 			EaglercraftGPU.glLineWidth(1.0F);
+> DELETE  1  @  1 : 2
 
-> CHANGE  9 : 10  @  9 : 10
+> CHANGE  4 : 7  @  4 : 5
 
-~ 					(double) ((float) j - (float) short1 * 0.6F - 16.0F), 0.0D).color(0, 0, 0, 100).endVertex();
+~ 		float dpiFetch = -1.0f;
+~ 		if (!this.fullscreen
+~ 				&& (Display.wasResized() || (dpiFetch = Math.max(Display.getDPI(), 1.0f)) != this.displayDPI)) {
 
-> CHANGE  1 : 2  @  1 : 2
+> INSERT  2 : 3  @  2
 
-~ 					.color(0, 0, 0, 100).endVertex();
++ 			float f = this.displayDPI;
 
-> CHANGE  1 : 2  @  1 : 2
+> CHANGE  2 : 4  @  2 : 3
 
-~ 					.color(0, 0, 0, 100).endVertex();
+~ 			this.displayDPI = dpiFetch == -1.0f ? Math.max(Display.getDPI(), 1.0f) : dpiFetch;
+~ 			if (this.displayWidth != i || this.displayHeight != j || this.displayDPI != f) {
 
-> CHANGE  1 : 2  @  1 : 2
+> DELETE  22  @  22 : 180
 
-~ 					(double) ((float) j - (float) short1 * 0.6F - 16.0F), 0.0D).color(0, 0, 0, 100).endVertex();
+> CHANGE  5 : 7  @  5 : 6
 
-> DELETE  110  @  110 : 114
+~ 		boolean touch = PointerInputAbstraction.isTouchMode();
+~ 		if (touch || Display.isActive()) {
 
-> CHANGE  108 : 109  @  108 : 148
+> CHANGE  2 : 5  @  2 : 3
+
+~ 				if (!touch && mouseGrabSupported) {
+~ 					this.mouseHelper.grabMouseCursor();
+~ 				}
+
+> CHANGE  10 : 13  @  10 : 11
+
+~ 			if (!PointerInputAbstraction.isTouchMode() && mouseGrabSupported) {
+~ 				this.mouseHelper.ungrabMouseCursor();
+~ 			}
+
+> DELETE  6  @  6 : 10
+
+> CHANGE  55 : 56  @  55 : 56
+
+~ 	public void rightClickMouse() {
+
+> CHANGE  52 : 53  @  52 : 92
 
 ~ 		Display.toggleFullscreen();
 
 > INSERT  5 : 6  @  5
 
-+ 		ScaledResolution scaledresolution = new ScaledResolution(this);
++ 		this.scaledResolution = new ScaledResolution(this);
+
+> CHANGE  1 : 2  @  1 : 3
+
+~ 			this.currentScreen.onResize(this, scaledResolution.getScaledWidth(), scaledResolution.getScaledHeight());
+
+> DELETE  3  @  3 : 5
+
+> CHANGE  1 : 3  @  1 : 5
+
+~ 		if (voiceOverlay != null) {
+~ 			voiceOverlay.setResolution(scaledResolution.getScaledWidth(), scaledResolution.getScaledHeight());
+
+> INSERT  1 : 5  @  1
+
++ 		if (notifRenderer != null) {
++ 			notifRenderer.setResolution(this, scaledResolution.getScaledWidth(), scaledResolution.getScaledHeight(),
++ 					scaledResolution.getScaleFactor());
++ 		}
+
+> INSERT  1 : 4  @  1
+
++ 		EagRuntime.getConfiguration().getHooks().callScreenChangedHook(
++ 				currentScreen != null ? currentScreen.getClass().getName() : null, scaledResolution.getScaledWidth(),
++ 				scaledResolution.getScaledHeight(), displayWidth, displayHeight, scaledResolution.getScaleFactor());
+
+> CHANGE  11 : 50  @  11 : 12
+
+~ 		RateLimitTracker.tick();
+~ 
+~ 		boolean isHostingLAN = LANServerController.isHostingLAN();
+~ 		this.isGamePaused = !isHostingLAN && this.isSingleplayer() && this.theWorld != null && this.thePlayer != null
+~ 				&& this.currentScreen != null && this.currentScreen.doesGuiPauseGame();
+~ 
+~ 		if (isLANOpen && !isHostingLAN) {
+~ 			ingameGUI.getChatGUI().printChatMessage(new ChatComponentTranslation("lanServer.relayDisconnected"));
+~ 		}
+~ 		isLANOpen = isHostingLAN;
+~ 
+~ 		if (wasPaused != isGamePaused) {
+~ 			SingleplayerServerController.setPaused(this.isGamePaused);
+~ 			wasPaused = isGamePaused;
+~ 		}
+~ 
+~ 		PlatformWebRTC.runScheduledTasks();
+~ 		WebViewOverlayController.runTick();
+~ 		SingleplayerServerController.runTick();
+~ 		RelayUpdateChecker.runTick();
+~ 
+~ 		UpdateResultObj update = UpdateService.getUpdateResult();
+~ 		if (update != null) {
+~ 			if (update.isSuccess()) {
+~ 				UpdateDataObj updateSuccess = update.getSuccess();
+~ 				if (EagRuntime.getConfiguration().isAllowBootMenu()) {
+~ 					if (currentScreen == null || (!(currentScreen instanceof GuiUpdateDownloadSuccess)
+~ 							&& !(currentScreen instanceof GuiUpdateInstallOptions))) {
+~ 						displayGuiScreen(new GuiUpdateDownloadSuccess(currentScreen, updateSuccess));
+~ 					}
+~ 				} else {
+~ 					UpdateService.quine(updateSuccess.clientSignature, updateSuccess.clientBundle);
+~ 				}
+~ 			} else {
+~ 				displayGuiScreen(
+~ 						new GuiScreenGenericErrorMessage("updateFailed.title", update.getFailure(), currentScreen));
+~ 			}
+~ 		}
+~ 
+
+> CHANGE  4 : 6  @  4 : 5
+
+~ 		VoiceClientController.tickVoiceClient(this);
+~ 
 
 > DELETE  1  @  1 : 2
 
-> DELETE  4  @  4 : 6
+> CHANGE  4 : 8  @  4 : 5
 
-> CHANGE  1 : 2  @  1 : 7
+~ 		if (this.thePlayer != null && this.thePlayer.sendQueue != null) {
+~ 			this.thePlayer.sendQueue.getEaglerMessageController().flush();
+~ 		}
+~ 
 
-~ 		this.voiceOverlay.setResolution(scaledresolution.getScaledWidth(), scaledresolution.getScaledHeight());
-
-> INSERT  11 : 30  @  11
-
-+ 		RateLimitTracker.tick();
-+ 
-+ 		boolean isHostingLAN = LANServerController.isHostingLAN();
-+ 		this.isGamePaused = !isHostingLAN && this.isSingleplayer() && this.theWorld != null && this.thePlayer != null
-+ 				&& this.currentScreen != null && this.currentScreen.doesGuiPauseGame();
-+ 
-+ 		if (isLANOpen && !isHostingLAN) {
-+ 			ingameGUI.getChatGUI().printChatMessage(new ChatComponentTranslation("lanServer.relayDisconnected"));
-+ 		}
-+ 		isLANOpen = isHostingLAN;
-+ 
-+ 		if (wasPaused != isGamePaused) {
-+ 			SingleplayerServerController.setPaused(this.isGamePaused);
-+ 			wasPaused = isGamePaused;
-+ 		}
-+ 
-+ 		SingleplayerServerController.runTick();
-+ 		RelayUpdateChecker.runTick();
-+ 
-
-> INSERT  5 : 8  @  5
-
-+ 		this.mcProfiler.endStartSection("eaglerVoice");
-+ 		VoiceClientController.tickVoiceClient(this);
-+ 
-
-> INSERT  10 : 11  @  10
+> INSERT  2 : 4  @  2
 
 + 			GlStateManager.viewport(0, 0, displayWidth, displayHeight); // to be safe
++ 			GlStateManager.enableAlpha();
 
 > INSERT  8 : 14  @  8
 
-+ 			if (this.currentScreen == null && this.dontPauseTimer <= 0) {
++ 			if (this.currentScreen == null && this.dontPauseTimer <= 0 && !PointerInputAbstraction.isTouchMode()) {
 + 				if (!Mouse.isMouseGrabbed()) {
 + 					this.setIngameNotInFocus();
 + 					this.displayInGameMenu();
@@ -627,7 +777,17 @@
 + 				--this.dontPauseTimer;
 + 			}
 
-> CHANGE  10 : 11  @  10 : 11
+> INSERT  2 : 9  @  2
+
++ 		String pastedStr;
++ 		while ((pastedStr = Touch.getPastedString()) != null) {
++ 			if (this.currentScreen != null) {
++ 				this.currentScreen.fireInputEvent(EnumInputEvent.CLIPBOARD_PASTE, pastedStr);
++ 			}
++ 		}
++ 
+
+> CHANGE  8 : 9  @  8 : 9
 
 ~ 						return Minecraft.this.currentScreen.getClass().getName();
 
@@ -635,18 +795,114 @@
 
 ~ 							return Minecraft.this.currentScreen.getClass().getName();
 
-> CHANGE  25 : 28  @  25 : 26
+> DELETE  8  @  8 : 9
 
-~ 						if (this.isZoomKey) {
-~ 							this.adjustedZoomValue = MathHelper.clamp_float(adjustedZoomValue - j * 4.0f, 5.0f, 32.0f);
-~ 						} else if (this.thePlayer.isSpectator()) {
+> CHANGE  1 : 39  @  1 : 7
 
-> CHANGE  14 : 16  @  14 : 15
+~ 			boolean touched;
+~ 			boolean moused = false;
+~ 
+~ 			while ((touched = Touch.next()) || (moused = Mouse.next())) {
+~ 				boolean touch = false;
+~ 				if (touched) {
+~ 					PointerInputAbstraction.enterTouchModeHook();
+~ 					boolean mouse = moused;
+~ 					moused = false;
+~ 					int tc = Touch.getEventTouchPointCount();
+~ 					if (tc > 0) {
+~ 						for (int i = 0; i < tc; ++i) {
+~ 							final int uid = Touch.getEventTouchPointUID(i);
+~ 							int x = Touch.getEventTouchX(i);
+~ 							int y = Touch.getEventTouchY(i);
+~ 							switch (Touch.getEventType()) {
+~ 							case TOUCHSTART:
+~ 								if (TouchControls.handleTouchBegin(uid, x, y)) {
+~ 									break;
+~ 								}
+~ 								touch = true;
+~ 								handlePlaceTouchStart();
+~ 								break;
+~ 							case TOUCHEND:
+~ 								if (TouchControls.handleTouchEnd(uid, x, y)) {
+~ 									touch = true;
+~ 									break;
+~ 								}
+~ 								handlePlaceTouchEnd();
+~ 								break;
+~ 							default:
+~ 								break;
+~ 							}
+~ 						}
+~ 						TouchControls.handleInput();
+~ 						if (!touch) {
+~ 							continue;
+~ 						}
 
-~ 						if ((!this.inGameHasFocus || !Mouse.isActuallyGrabbed()) && Mouse.getEventButtonState()) {
+> CHANGE  1 : 4  @  1 : 2
+
+~ 						if (!mouse) {
+~ 							continue;
+~ 						}
+
+> INSERT  3 : 16  @  3
+
++ 				if (!touch) {
++ 					int i = Mouse.getEventButton();
++ 					KeyBinding.setKeyBindState(i - 100, Mouse.getEventButtonState());
++ 					if (Mouse.getEventButtonState()) {
++ 						PointerInputAbstraction.enterMouseModeHook();
++ 						if (this.thePlayer.isSpectator() && i == 2) {
++ 							this.ingameGUI.getSpectatorGui().func_175261_b();
++ 						} else {
++ 							KeyBinding.onTick(i - 100);
++ 						}
++ 					}
++ 				}
++ 
+
+> CHANGE  2 : 17  @  2 : 8
+
+~ 					if (!touch) {
+~ 						int j = Mouse.getEventDWheel();
+~ 						if (j != 0) {
+~ 							if (this.isZoomKey) {
+~ 								this.adjustedZoomValue = MathHelper.clamp_float(adjustedZoomValue - j * 4.0f, 5.0f,
+~ 										32.0f);
+~ 							} else if (this.thePlayer.isSpectator()) {
+~ 								j = j < 0 ? -1 : 1;
+~ 								if (this.ingameGUI.getSpectatorGui().func_175262_a()) {
+~ 									this.ingameGUI.getSpectatorGui().func_175259_b(-j);
+~ 								} else {
+~ 									float f = MathHelper.clamp_float(
+~ 											this.thePlayer.capabilities.getFlySpeed() + (float) j * 0.005F, 0.0F, 0.2F);
+~ 									this.thePlayer.capabilities.setFlySpeed(f);
+~ 								}
+
+> CHANGE  1 : 2  @  1 : 4
+
+~ 								this.thePlayer.inventory.changeCurrentItem(j);
+
+> DELETE  1  @  1 : 3
+
+> CHANGE  4 : 7  @  4 : 5
+
+~ 						if ((!this.inGameHasFocus || !(touch || Mouse.isActuallyGrabbed()))
+~ 								&& (touch || Mouse.getEventButtonState())) {
 ~ 							this.inGameHasFocus = false;
 
-> INSERT  16 : 19  @  16
+> CHANGE  3 : 8  @  3 : 4
+
+~ 						if (touch) {
+~ 							this.currentScreen.handleTouchInput();
+~ 						} else {
+~ 							this.currentScreen.handleMouseInput();
+~ 						}
+
+> CHANGE  8 : 9  @  8 : 9
+
+~ 			processTouchMine();
+
+> INSERT  3 : 6  @  3
 
 + 				if (k == 0x1D && (areKeysLocked() || isFullScreen())) {
 + 					KeyBinding.setKeyBindState(gameSettings.keyBindSprint.getKeyCode(), Keyboard.getEventKeyState());
@@ -681,7 +937,13 @@
 
 + 							GlStateManager.recompileShaders();
 
-> INSERT  71 : 77  @  71
+> CHANGE  28 : 29  @  28 : 40
+
+~ 							togglePerspective();
+
+> DELETE  6  @  6 : 18
+
+> INSERT  13 : 19  @  13
 
 + 			boolean zoomKey = this.gameSettings.keyBindZoomCamera.isKeyDown();
 + 			if (zoomKey != isZoomKey) {
@@ -690,75 +952,251 @@
 + 			}
 + 
 
-> INSERT  92 : 93  @  92
+> INSERT  26 : 28  @  26
+
++ 			boolean miningTouch = isMiningTouch();
++ 			boolean useTouch = thePlayer.getItemShouldUseOnTouchEagler();
+
+> CHANGE  1 : 2  @  1 : 2
+
+~ 				if (!this.gameSettings.keyBindUseItem.isKeyDown() && !miningTouch) {
+
+> INSERT  19 : 28  @  19
+
++ 				if (miningTouch && !wasMiningTouch) {
++ 					if ((objectMouseOver != null && objectMouseOver.typeOfHit == MovingObjectType.ENTITY) || useTouch) {
++ 						this.rightClickMouse();
++ 					} else {
++ 						this.clickMouse();
++ 					}
++ 					wasMiningTouch = true;
++ 				}
++ 
+
+> INSERT  8 : 9  @  8
+
++ 			wasMiningTouch = miningTouch;
+
+> INSERT  6 : 10  @  6
+
++ 			if (miningTouch && useTouch && this.rightClickDelayTimer == 0 && !this.thePlayer.isUsingItem()) {
++ 				this.rightClickMouse();
++ 			}
++ 
+
+> CHANGE  1 : 3  @  1 : 2
+
+~ 					this.currentScreen == null && (this.gameSettings.keyBindAttack.isKeyDown() || miningTouch)
+~ 							&& this.inGameHasFocus && !useTouch);
+
+> DELETE  11  @  11 : 12
+
+> DELETE  4  @  4 : 5
+
+> DELETE  4  @  4 : 5
+
+> INSERT  7 : 8  @  7
 
 + 			this.eagskullCommand.tick();
 
-> INSERT  43 : 87  @  43
+> DELETE  28  @  28 : 29
 
-+ 		if (this.theWorld != null) {
-+ 			++joinWorldTickCounter;
-+ 			if (bungeeOutdatedMsgTimer > 0) {
-+ 				if (--bungeeOutdatedMsgTimer == 0 && this.thePlayer.sendQueue != null) {
-+ 					String pluginBrand = this.thePlayer.sendQueue.getNetworkManager().getPluginBrand();
-+ 					String pluginVersion = this.thePlayer.sendQueue.getNetworkManager().getPluginVersion();
-+ 					if (pluginBrand != null && pluginVersion != null
-+ 							&& EaglerXBungeeVersion.isUpdateToPluginAvailable(pluginBrand, pluginVersion)) {
-+ 						String pfx = EnumChatFormatting.GOLD + "[EagX]" + EnumChatFormatting.AQUA;
-+ 						ingameGUI.getChatGUI().printChatMessage(
-+ 								new ChatComponentText(pfx + " ---------------------------------------"));
-+ 						ingameGUI.getChatGUI().printChatMessage(
-+ 								new ChatComponentText(pfx + " This server appears to be using version "
-+ 										+ EnumChatFormatting.YELLOW + pluginVersion));
-+ 						ingameGUI.getChatGUI().printChatMessage(
-+ 								new ChatComponentText(pfx + " of the EaglerXBungee plugin which is outdated"));
-+ 						ingameGUI.getChatGUI().printChatMessage(new ChatComponentText(pfx));
-+ 						ingameGUI.getChatGUI()
-+ 								.printChatMessage(new ChatComponentText(pfx + " If you are the admin update to "
-+ 										+ EnumChatFormatting.YELLOW + EaglerXBungeeVersion.getPluginVersion()
-+ 										+ EnumChatFormatting.AQUA + " or newer"));
-+ 						ingameGUI.getChatGUI().printChatMessage(new ChatComponentText(pfx));
-+ 						ingameGUI.getChatGUI().printChatMessage((new ChatComponentText(pfx + " Click: "))
-+ 								.appendSibling((new ChatComponentText("" + EnumChatFormatting.GREEN
-+ 										+ EnumChatFormatting.UNDERLINE + EaglerXBungeeVersion.getPluginButton()))
-+ 												.setChatStyle((new ChatStyle()).setChatClickEvent(
-+ 														new ClickEvent(ClickEvent.Action.EAGLER_PLUGIN_DOWNLOAD,
-+ 																"plugin_download.zip")))));
-+ 						ingameGUI.getChatGUI().printChatMessage(
-+ 								new ChatComponentText(pfx + " ---------------------------------------"));
-+ 					}
-+ 				}
-+ 			}
+> DELETE  5  @  5 : 6
+
+> DELETE  4  @  4 : 5
+
+> CHANGE  3 : 46  @  3 : 15
+
+~ 		if (this.theWorld != null) {
+~ 			++joinWorldTickCounter;
+~ 			if (bungeeOutdatedMsgTimer > 0) {
+~ 				if (--bungeeOutdatedMsgTimer == 0 && this.thePlayer.sendQueue != null) {
+~ 					String pluginBrand = this.thePlayer.sendQueue.getNetworkManager().getPluginBrand();
+~ 					String pluginVersion = this.thePlayer.sendQueue.getNetworkManager().getPluginVersion();
+~ 					if (pluginBrand != null && pluginVersion != null
+~ 							&& EaglerXBungeeVersion.isUpdateToPluginAvailable(pluginBrand, pluginVersion)) {
+~ 						String pfx = EnumChatFormatting.GOLD + "[EagX]" + EnumChatFormatting.AQUA;
+~ 						ingameGUI.getChatGUI().printChatMessage(
+~ 								new ChatComponentText(pfx + " ---------------------------------------"));
+~ 						ingameGUI.getChatGUI().printChatMessage(
+~ 								new ChatComponentText(pfx + " This server appears to be using version "
+~ 										+ EnumChatFormatting.YELLOW + pluginVersion));
+~ 						ingameGUI.getChatGUI().printChatMessage(
+~ 								new ChatComponentText(pfx + " of the EaglerXBungee plugin which is outdated"));
+~ 						ingameGUI.getChatGUI().printChatMessage(new ChatComponentText(pfx));
+~ 						ingameGUI.getChatGUI()
+~ 								.printChatMessage(new ChatComponentText(pfx + " If you are the admin update to "
+~ 										+ EnumChatFormatting.YELLOW + EaglerXBungeeVersion.getPluginVersion()
+~ 										+ EnumChatFormatting.AQUA + " or newer"));
+~ 						ingameGUI.getChatGUI().printChatMessage(new ChatComponentText(pfx));
+~ 						ingameGUI.getChatGUI().printChatMessage((new ChatComponentText(pfx + " Click: "))
+~ 								.appendSibling((new ChatComponentText("" + EnumChatFormatting.GREEN
+~ 										+ EnumChatFormatting.UNDERLINE + EaglerXBungeeVersion.getPluginButton()))
+~ 												.setChatStyle((new ChatStyle()).setChatClickEvent(
+~ 														new ClickEvent(ClickEvent.Action.EAGLER_PLUGIN_DOWNLOAD,
+~ 																"plugin_download.zip")))));
+~ 						ingameGUI.getChatGUI().printChatMessage(
+~ 								new ChatComponentText(pfx + " ---------------------------------------"));
+~ 					}
+~ 				}
+~ 			}
+~ 		} else {
+~ 			joinWorldTickCounter = 0;
+~ 			if (currentScreen != null && currentScreen.shouldHangupIntegratedServer()) {
+~ 				if (SingleplayerServerController.hangupEaglercraftServer()) {
+~ 					this.displayGuiScreen(new GuiScreenIntegratedServerBusy(currentScreen,
+~ 							"singleplayer.busy.stoppingIntegratedServer",
+~ 							"singleplayer.failed.stoppingIntegratedServer", SingleplayerServerController::isReady));
+~ 				}
+~ 			}
+~ 			TouchControls.resetSneak();
+
+> CHANGE  2 : 30  @  2 : 4
+
+~ 		if (reconnectURI != null) {
+~ 			String reconURI = reconnectURI;
+~ 			reconnectURI = null;
+~ 			if (EagRuntime.getConfiguration().isAllowServerRedirects()) {
+~ 				boolean enableCookies;
+~ 				boolean msg;
+~ 				if (this.currentServerData != null) {
+~ 					enableCookies = this.currentServerData.enableCookies;
+~ 					msg = false;
+~ 				} else {
+~ 					enableCookies = EagRuntime.getConfiguration().isEnableServerCookies();
+~ 					msg = true;
+~ 				}
+~ 				if (theWorld != null) {
+~ 					theWorld.sendQuittingDisconnectingPacket();
+~ 					loadWorld(null);
+~ 				}
+~ 				logger.info("Recieved SPacketRedirectClientV4EAG, reconnecting to: {}", reconURI);
+~ 				if (msg) {
+~ 					logger.warn("No existing server connection, cookies will default to {}!",
+~ 							enableCookies ? "enabled" : "disabled");
+~ 				}
+~ 				ServerAddress addr = AddressResolver.resolveAddressFromURI(reconURI);
+~ 				this.displayGuiScreen(
+~ 						new GuiConnecting(new GuiMainMenu(), this, addr.getIP(), addr.getPort(), enableCookies));
+~ 			} else {
+~ 				logger.warn("Server redirect blocked: {}", reconURI);
+~ 			}
+
+> CHANGE  2 : 4  @  2 : 13
+
+~ 		this.systemTime = getSystemTime();
+~ 	}
+
+> CHANGE  1 : 4  @  1 : 2
+
+~ 	private long placeTouchStartTime = -1l;
+~ 	private long mineTouchStartTime = -1l;
+~ 	private boolean wasMiningTouch = false;
+
+> CHANGE  1 : 12  @  1 : 5
+
+~ 	private void processTouchMine() {
+~ 		if ((currentScreen == null || currentScreen.allowUserInput)
+~ 				&& PointerInputAbstraction.isTouchingScreenNotButton()) {
+~ 			if (PointerInputAbstraction.isDraggingNotTouching()) {
+~ 				if (mineTouchStartTime != -1l) {
+~ 					long l = EagRuntime.steadyTimeMillis();
+~ 					if ((placeTouchStartTime == -1l || (l - placeTouchStartTime) < 350l)
+~ 							|| (l - mineTouchStartTime) < 350l) {
+~ 						mineTouchStartTime = -1l;
+~ 					}
+~ 				}
+
+> CHANGE  1 : 4  @  1 : 2
+
+~ 				if (mineTouchStartTime == -1l) {
+~ 					mineTouchStartTime = EagRuntime.steadyTimeMillis();
+~ 				}
+
+> INSERT  1 : 5  @  1
+
 + 		} else {
-+ 			joinWorldTickCounter = 0;
-+ 			if (currentScreen != null && currentScreen.shouldHangupIntegratedServer()) {
-+ 				if (SingleplayerServerController.hangupEaglercraftServer()) {
-+ 					this.displayGuiScreen(new GuiScreenIntegratedServerBusy(currentScreen,
-+ 							"singleplayer.busy.stoppingIntegratedServer",
-+ 							"singleplayer.failed.stoppingIntegratedServer", SingleplayerServerController::isReady));
-+ 				}
-+ 			}
++ 			mineTouchStartTime = -1l;
 + 		}
++ 	}
+
+> CHANGE  1 : 23  @  1 : 5
+
+~ 	private boolean isMiningTouch() {
+~ 		if (mineTouchStartTime == -1l)
+~ 			return false;
+~ 		long l = EagRuntime.steadyTimeMillis();
+~ 		return (placeTouchStartTime == -1l || (l - placeTouchStartTime) >= 350l) && (l - mineTouchStartTime) >= 350l;
+~ 	}
+~ 
+~ 	private void handlePlaceTouchStart() {
+~ 		if (placeTouchStartTime == -1l) {
+~ 			placeTouchStartTime = EagRuntime.steadyTimeMillis();
+~ 		}
+~ 	}
+~ 
+~ 	private void handlePlaceTouchEnd() {
+~ 		if (placeTouchStartTime != -1l) {
+~ 			int len = (int) (EagRuntime.steadyTimeMillis() - placeTouchStartTime);
+~ 			if (len < 350l && !PointerInputAbstraction.isDraggingNotTouching()) {
+~ 				if (objectMouseOver != null && objectMouseOver.typeOfHit == MovingObjectType.ENTITY) {
+~ 					clickMouse();
+~ 				} else {
+~ 					rightClickMouse();
+~ 				}
+
+> INSERT  1 : 2  @  1
+
++ 			placeTouchStartTime = -1l;
+
+> INSERT  1 : 2  @  1
+
++ 	}
+
+> CHANGE  1 : 14  @  1 : 8
+
+~ 	public void togglePerspective() {
+~ 		++this.gameSettings.thirdPersonView;
+~ 		if (this.gameSettings.thirdPersonView > 2) {
+~ 			this.gameSettings.thirdPersonView = 0;
+~ 		}
+~ 
+~ 		if (this.gameSettings.thirdPersonView == 0) {
+~ 			this.entityRenderer.loadEntityShader(this.getRenderViewEntity());
+~ 		} else if (this.gameSettings.thirdPersonView == 1) {
+~ 			this.entityRenderer.loadEntityShader((Entity) null);
+~ 		}
+~ 
+~ 		this.renderGlobal.setDisplayListEntitiesDirty();
+
+> INSERT  2 : 20  @  2
+
++ 	public void launchIntegratedServer(String folderName, String worldName, WorldSettings worldSettingsIn) {
++ 		this.loadWorld((WorldClient) null);
++ 		renderManager.setEnableFNAWSkins(this.gameSettings.enableFNAWSkins);
++ 		session.reset();
++ 		EaglerProfile.clearServerSkinOverride();
++ 		PauseMenuCustomizeState.reset();
++ 		SingleplayerServerController.launchEaglercraftServer(folderName, gameSettings.difficulty.getDifficultyId(),
++ 				Math.max(gameSettings.renderDistanceChunks, 2), worldSettingsIn);
++ 		EagRuntime.setMCServerWindowGlobal("singleplayer");
++ 		this.displayGuiScreen(new GuiScreenIntegratedServerBusy(
++ 				new GuiScreenSingleplayerConnecting(new GuiMainMenu(), "Connecting to " + folderName),
++ 				"singleplayer.busy.startingIntegratedServer", "singleplayer.failed.startingIntegratedServer",
++ 				() -> SingleplayerServerController.isWorldReady(), (t, u) -> {
++ 					Minecraft.this.displayGuiScreen(GuiScreenIntegratedServerBusy.createException(new GuiMainMenu(),
++ 							((GuiScreenIntegratedServerBusy) t).failMessage, u));
++ 				}));
++ 	}
 + 
 
-> CHANGE  6 : 18  @  6 : 54
-
-~ 		Minecraft.getMinecraft().getRenderManager().setEnableFNAWSkins(this.gameSettings.enableFNAWSkins);
-~ 		session.reset();
-~ 		SingleplayerServerController.launchEaglercraftServer(folderName, gameSettings.difficulty.getDifficultyId(),
-~ 				Math.max(gameSettings.renderDistanceChunks, 2), worldSettingsIn);
-~ 		EagRuntime.setMCServerWindowGlobal("singleplayer");
-~ 		this.displayGuiScreen(new GuiScreenIntegratedServerBusy(
-~ 				new GuiScreenSingleplayerConnecting(new GuiMainMenu(), "Connecting to " + folderName),
-~ 				"singleplayer.busy.startingIntegratedServer", "singleplayer.failed.startingIntegratedServer",
-~ 				() -> SingleplayerServerController.isWorldReady(), (t, u) -> {
-~ 					Minecraft.this.displayGuiScreen(GuiScreenIntegratedServerBusy.createException(new GuiMainMenu(),
-~ 							((GuiScreenIntegratedServerBusy) t).failMessage, u));
-~ 				}));
-
-> INSERT  12 : 13  @  12
+> INSERT  10 : 15  @  10
 
 + 			session.reset();
++ 			EaglerProfile.clearServerSkinOverride();
++ 			PauseMenuCustomizeState.reset();
++ 			ClientUUIDLoadingCache.flushRequestCache();
++ 			WebViewOverlayController.setPacketSendCallback(null);
 
 > DELETE  1  @  1 : 7
 
@@ -779,7 +1217,11 @@
 ~ 		GameSettings g = theMinecraft.gameSettings;
 ~ 		return g.ambientOcclusion != 0 && !g.shadersAODisable;
 
-> CHANGE  130 : 131  @  130 : 131
+> CHANGE  2 : 3  @  2 : 3
+
+~ 	public void middleClickMouse() {
+
+> CHANGE  127 : 128  @  127 : 128
 
 ~ 				return EagRuntime.getVersion();
 
@@ -801,11 +1243,51 @@
 ~ 				return !Minecraft.this.gameSettings.shaders && Minecraft.this.gameSettings.enableDynamicLights ? "Yes"
 ~ 						: "No";
 
-> INSERT  2 : 7  @  2
+> INSERT  2 : 47  @  2
 
 + 		theCrash.getCategory().addCrashSectionCallable("In Ext. Pipeline", new Callable<String>() {
 + 			public String call() throws Exception {
 + 				return GlStateManager.isExtensionPipeline() ? "Yes" : "No";
++ 			}
++ 		});
++ 		theCrash.getCategory().addCrashSectionCallable("GPU Shader5 Capable", new Callable<String>() {
++ 			public String call() throws Exception {
++ 				return EaglercraftGPU.checkShader5Capable() ? "Yes" : "No";
++ 			}
++ 		});
++ 		theCrash.getCategory().addCrashSectionCallable("GPU TexStorage Capable", new Callable<String>() {
++ 			public String call() throws Exception {
++ 				return EaglercraftGPU.checkTexStorageCapable() ? "Yes" : "No";
++ 			}
++ 		});
++ 		theCrash.getCategory().addCrashSectionCallable("GPU TextureLOD Capable", new Callable<String>() {
++ 			public String call() throws Exception {
++ 				return EaglercraftGPU.checkTextureLODCapable() ? "Yes" : "No";
++ 			}
++ 		});
++ 		theCrash.getCategory().addCrashSectionCallable("GPU Instancing Capable", new Callable<String>() {
++ 			public String call() throws Exception {
++ 				return EaglercraftGPU.checkInstancingCapable() ? "Yes" : "No";
++ 			}
++ 		});
++ 		theCrash.getCategory().addCrashSectionCallable("GPU VAO Capable", new Callable<String>() {
++ 			public String call() throws Exception {
++ 				return EaglercraftGPU.checkVAOCapable() ? "Yes" : "No";
++ 			}
++ 		});
++ 		theCrash.getCategory().addCrashSectionCallable("Is Software VAOs", new Callable<String>() {
++ 			public String call() throws Exception {
++ 				return EaglercraftGPU.areVAOsEmulated() ? "Yes" : "No";
++ 			}
++ 		});
++ 		theCrash.getCategory().addCrashSectionCallable("GPU Render-to-MipMap", new Callable<String>() {
++ 			public String call() throws Exception {
++ 				return EaglercraftGPU.checkFBORenderMipmapCapable() ? "Yes" : "No";
++ 			}
++ 		});
++ 		theCrash.getCategory().addCrashSectionCallable("Touch Mode", new Callable<String>() {
++ 			public String call() throws Exception {
++ 				return PointerInputAbstraction.isTouchMode() ? "Yes" : "No";
 + 			}
 + 		});
 
@@ -813,7 +1295,11 @@
 
 ~ 				return "Definitely Not; You're an eagler";
 
-> DELETE  36  @  36 : 41
+> CHANGE  32 : 33  @  32 : 34
+
+~ 				return "N/A (disabled)";
+
+> DELETE  2  @  2 : 7
 
 > CHANGE  12 : 13  @  12 : 13
 
@@ -854,7 +1340,7 @@
 
 > CHANGE  1 : 2  @  1 : 2
 
-~ 		return System.currentTimeMillis();
+~ 		return EagRuntime.steadyTimeMillis();
 
 > CHANGE  3 : 4  @  3 : 4
 
@@ -901,7 +1387,7 @@
 
 > DELETE  26  @  26 : 34
 
-> INSERT  7 : 35  @  7
+> INSERT  7 : 48  @  7
 
 + 
 + 	public static int getGLMaximumTextureSize() {
@@ -927,9 +1413,22 @@
 + 	public boolean getEnableFNAWSkins() {
 + 		boolean ret = this.gameSettings.enableFNAWSkins;
 + 		if (this.thePlayer != null) {
-+ 			ret &= this.thePlayer.sendQueue.currentFNAWSkinAllowedState;
++ 			if (this.thePlayer.sendQueue.currentFNAWSkinForcedState) {
++ 				ret = true;
++ 			} else {
++ 				ret &= this.thePlayer.sendQueue.currentFNAWSkinAllowedState;
++ 			}
 + 		}
 + 		return ret;
 + 	}
++ 
++ 	public void handleReconnectPacket(String redirectURI) {
++ 		this.reconnectURI = redirectURI;
++ 	}
++ 
++ 	public boolean isEnableProfanityFilter() {
++ 		return EagRuntime.getConfiguration().isForceProfanityFilter() || gameSettings.enableProfanityFilter;
++ 	}
++ 
 
 > EOF

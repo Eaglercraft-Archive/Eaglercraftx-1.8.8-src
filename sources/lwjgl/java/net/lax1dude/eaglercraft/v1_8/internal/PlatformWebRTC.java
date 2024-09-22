@@ -4,20 +4,22 @@ import dev.onvoid.webrtc.*;
 import dev.onvoid.webrtc.internal.NativeLoader;
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.EagUtils;
-import net.lax1dude.eaglercraft.v1_8.EaglerInputStream;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 import net.lax1dude.eaglercraft.v1_8.sp.lan.LANPeerEvent;
-import net.lax1dude.eaglercraft.v1_8.sp.relay.RelayManager;
+import net.lax1dude.eaglercraft.v1_8.sp.relay.RelayLoggerImpl;
 import net.lax1dude.eaglercraft.v1_8.sp.relay.RelayQuery;
+import net.lax1dude.eaglercraft.v1_8.sp.relay.RelayQueryImpl;
+import net.lax1dude.eaglercraft.v1_8.sp.relay.RelayQueryRateLimitDummy;
+import net.lax1dude.eaglercraft.v1_8.sp.relay.RelayServerRateLimitTracker;
 import net.lax1dude.eaglercraft.v1_8.sp.relay.RelayServerSocket;
+import net.lax1dude.eaglercraft.v1_8.sp.relay.RelayServerSocketImpl;
+import net.lax1dude.eaglercraft.v1_8.sp.relay.RelayServerSocketRateLimitDummy;
 import net.lax1dude.eaglercraft.v1_8.sp.relay.RelayWorldsQuery;
-import net.lax1dude.eaglercraft.v1_8.sp.relay.pkt.*;
-import net.lax1dude.eaglercraft.v1_8.update.UpdateService;
+import net.lax1dude.eaglercraft.v1_8.sp.relay.RelayWorldsQueryImpl;
+import net.lax1dude.eaglercraft.v1_8.sp.relay.RelayWorldsQueryRateLimitDummy;
 
 import org.apache.commons.lang3.SystemUtils;
-import org.java_websocket.client.WebSocketClient;
-import org.java_websocket.handshake.ServerHandshake;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONWriter;
@@ -25,10 +27,7 @@ import org.json.JSONWriter;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.ListMultimap;
 
-import java.io.DataInputStream;
-import java.io.IOException;
 import java.lang.reflect.Field;
-import java.net.URI;
 import java.nio.ByteBuffer;
 import java.nio.file.Paths;
 import java.util.*;
@@ -52,10 +51,25 @@ public class PlatformWebRTC {
 
 	private static final Logger logger = LogManager.getLogger("PlatformWebRTC");
 
+	private static final RelayLoggerImpl loggerImpl = new RelayLoggerImpl(LogManager.getLogger("RelayPacket"));
+
 	private static final Object lock1 = new Object();
 	private static final Object lock2 = new Object();
 	private static final Object lock3 = new Object();
-	private static final Object lock4 = new Object();
+
+	private static final List<ScheduledRunnable> scheduledRunnables = new LinkedList<>();
+
+	private static class ScheduledRunnable {
+		
+		private final long runAt;
+		private final Runnable runnable;
+		
+		private ScheduledRunnable(long runAt, Runnable runnable) {
+			this.runAt = runAt;
+			this.runnable = runnable;
+		}
+		
+	}
 
 	public static PeerConnectionFactory pcFactory;
 
@@ -72,7 +86,8 @@ public class PlatformWebRTC {
 				Runtime.getRuntime().addShutdownHook(new Thread(() -> pcFactory.dispose()));
 				supported = true;
 			} catch (Exception e) {
-				EagRuntime.debugPrintStackTrace(e);
+				logger.error("Failed to load WebRTC native library!");
+				logger.error(e);
 				supported = false;
 			}
 		}
@@ -80,6 +95,46 @@ public class PlatformWebRTC {
 	}
 
 	private static final Map<String, RTCDataChannel> fuckTeaVM = new HashMap<>();
+
+	private static final Comparator<ScheduledRunnable> sortTasks = (r1, r2) -> {
+		return (int)(r1.runAt - r2.runAt);
+	};
+
+	public static void runScheduledTasks() {
+		List<ScheduledRunnable> toRun = null;
+		synchronized(scheduledRunnables) {
+			if(scheduledRunnables.isEmpty()) return;
+			long millis = PlatformRuntime.steadyTimeMillis();
+			Iterator<ScheduledRunnable> itr = scheduledRunnables.iterator();
+			while(itr.hasNext()) {
+				ScheduledRunnable r = itr.next();
+				if(r.runAt < millis) {
+					itr.remove();
+					if(toRun == null) {
+						toRun = new ArrayList<>(1);
+					}
+					toRun.add(r);
+				}
+			}
+		}
+		if(toRun != null) {
+			Collections.sort(toRun, sortTasks);
+			for(int i = 0, l = toRun.size(); i < l; ++i) {
+				try {
+					toRun.get(i).runnable.run();
+				}catch(Throwable t) {
+					logger.error("Caught exception running scheduled WebRTC task!");
+					logger.error(t);
+				}
+			}
+		}
+	}
+
+	static void scheduleTask(long runAfter, Runnable runnable) {
+		synchronized(scheduledRunnables) {
+			scheduledRunnables.add(new ScheduledRunnable(PlatformRuntime.steadyTimeMillis() + runAfter, runnable));
+		}
+	}
 
 	public static class LANClient {
 		public static final byte READYSTATE_INIT_FAILED = -2;
@@ -123,15 +178,14 @@ public class PlatformWebRTC {
 							synchronized (lock1) {
 								if (iceCandidate.sdp != null && !iceCandidate.sdp.isEmpty()) {
 									if (iceCandidates.isEmpty()) {
-										new Thread(() -> {
-											EagUtils.sleep(3000);
+										scheduleTask(3000l, () -> {
 											synchronized (lock1) {
 												if (peerConnection != null && peerConnection.getConnectionState() != RTCPeerConnectionState.DISCONNECTED) {
 													clientICECandidate = JSONWriter.valueToString(iceCandidates);
 													iceCandidates.clear();
 												}
 											}
-										}).start();
+										});
 									}
 									Map<String, String> m = new HashMap<>();
 									m.put("sdpMLineIndex", "" + iceCandidate.sdpMLineIndex);
@@ -203,7 +257,7 @@ public class PlatformWebRTC {
 				@Override
 				public void onStateChange() {
 					if (dataChannel != null && dataChannel.getState() == RTCDataChannelState.OPEN) {
-						new Thread(() -> {
+						scheduleTask(-1l, () -> {
 							while (true) {
 								synchronized (lock1) {
 									if (iceCandidates.isEmpty()) {
@@ -216,7 +270,7 @@ public class PlatformWebRTC {
 								clientDataChannelClosed = false;
 								clientDataChannelOpen = true;
 							}
-						}).start();
+						});
 					}
 				}
 
@@ -486,8 +540,7 @@ public class PlatformWebRTC {
 						synchronized (lock3) {
 							if (iceCandidate.sdp != null && !iceCandidate.sdp.isEmpty()) {
 								if (iceCandidates.isEmpty()) {
-									new Thread(() -> {
-										EagUtils.sleep(3000);
+									scheduleTask(3000l, () -> {
 										synchronized (lock3) {
 											if (peerConnection[0] != null && peerConnection[0].getConnectionState() != RTCPeerConnectionState.DISCONNECTED) {
 												LANPeerEvent.LANPeerICECandidateEvent e = new LANPeerEvent.LANPeerICECandidateEvent(peerId, JSONWriter.valueToString(iceCandidates));
@@ -497,7 +550,7 @@ public class PlatformWebRTC {
 												iceCandidates.clear();
 											}
 										}
-									}).start();
+									});
 								}
 								Map<String, String> m = new HashMap<>();
 								m.put("sdpMLineIndex", "" + iceCandidate.sdpMLineIndex);
@@ -509,7 +562,7 @@ public class PlatformWebRTC {
 
 					@Override
 					public void onDataChannel(RTCDataChannel dataChannel) {
-						new Thread(() -> {
+						scheduleTask(-1l, () -> {
 							while (true) {
 								synchronized (lock3) {
 									if (iceCandidates.isEmpty()) {
@@ -547,7 +600,7 @@ public class PlatformWebRTC {
 									}
 								}
 							});
-						}).start();
+						});
 					}
 
 					@Override
@@ -625,795 +678,27 @@ public class PlatformWebRTC {
 			return peerList.size();
 		}
 	}
-
-	private static final Map<String,Long> relayQueryLimited = new HashMap<>();
-	private static final Map<String,Long> relayQueryBlocked = new HashMap<>();
-
-	private static class RelayQueryImpl implements RelayQuery {
-
-		private final WebSocketClient sock;
-		private final String uri;
-
-		private boolean open;
-		private boolean failed;
-
-		private boolean hasRecievedAnyData = false;
-
-		private int vers = -1;
-		private String comment = "<no comment>";
-		private String brand = "<no brand>";
-
-		private long connectionOpenedAt;
-		private long connectionPingStart = -1;
-		private long connectionPingTimer = -1;
-
-		private RateLimit rateLimitStatus = RateLimit.NONE;
-
-		private VersionMismatch versError = VersionMismatch.UNKNOWN;
-
-		private RelayQueryImpl(String uri) {
-			this.uri = uri;
-			WebSocketClient s;
-			try {
-				connectionOpenedAt = System.currentTimeMillis();
-				s = new WebSocketClient(new URI(uri)) {
-					@Override
-					public void onOpen(ServerHandshake serverHandshake) {
-						try {
-							connectionPingStart = System.currentTimeMillis();
-							sock.send(IPacket.writePacket(new IPacket00Handshake(0x03, RelayManager.preferredRelayVersion, "")));
-						} catch (IOException e) {
-							logger.error(e.toString());
-							sock.close();
-							failed = true;
-						}
-					}
-
-					@Override
-					public void onMessage(String s) {
-						//
-					}
-
-					@Override
-					public void onMessage(ByteBuffer bb) {
-						if(bb != null) {
-							hasRecievedAnyData = true;
-							byte[] arr = new byte[bb.remaining()];
-							bb.get(arr);
-							if(arr.length == 2 && arr[0] == (byte)0xFC) {
-								long millis = System.currentTimeMillis();
-								if(arr[1] == (byte)0x00 || arr[1] == (byte)0x01) {
-									rateLimitStatus = RateLimit.BLOCKED;
-									relayQueryLimited.put(RelayQueryImpl.this.uri, millis);
-								}else if(arr[1] == (byte)0x02) {
-									rateLimitStatus = RateLimit.NOW_LOCKED;
-									relayQueryLimited.put(RelayQueryImpl.this.uri, millis);
-									relayQueryBlocked.put(RelayQueryImpl.this.uri, millis);
-								}else {
-									rateLimitStatus = RateLimit.LOCKED;
-									relayQueryBlocked.put(RelayQueryImpl.this.uri, millis);
-								}
-								failed = true;
-								open = false;
-								sock.close();
-							}else {
-								if(open) {
-									try {
-										IPacket pkt = IPacket.readPacket(new DataInputStream(new EaglerInputStream(arr)));
-										if(pkt instanceof IPacket69Pong) {
-											IPacket69Pong ipkt = (IPacket69Pong)pkt;
-											versError = VersionMismatch.COMPATIBLE;
-											if(connectionPingTimer == -1) {
-												connectionPingTimer = System.currentTimeMillis() - connectionPingStart;
-											}
-											vers = ipkt.protcolVersion;
-											comment = ipkt.comment;
-											brand = ipkt.brand;
-											open = false;
-											failed = false;
-											sock.close();
-										}else if(pkt instanceof IPacket70SpecialUpdate) {
-											IPacket70SpecialUpdate ipkt = (IPacket70SpecialUpdate)pkt;
-											if(ipkt.operation == IPacket70SpecialUpdate.OPERATION_UPDATE_CERTIFICATE) {
-												UpdateService.addCertificateToSet(ipkt.updatePacket);
-											}
-										}else if(pkt instanceof IPacketFFErrorCode) {
-											IPacketFFErrorCode ipkt = (IPacketFFErrorCode)pkt;
-											if(ipkt.code == IPacketFFErrorCode.TYPE_PROTOCOL_VERSION) {
-												String s1 = ipkt.desc.toLowerCase();
-												if(s1.contains("outdated client") || s1.contains("client outdated")) {
-													versError = VersionMismatch.CLIENT_OUTDATED;
-												}else if(s1.contains("outdated server") || s1.contains("server outdated") ||
-														s1.contains("outdated relay") || s1.contains("server relay")) {
-													versError = VersionMismatch.RELAY_OUTDATED;
-												}else {
-													versError = VersionMismatch.UNKNOWN;
-												}
-											}
-											logger.error("{}\": Recieved query error code {}: {}", uri, ipkt.code, ipkt.desc);
-											open = false;
-											failed = true;
-											sock.close();
-										}else {
-											throw new IOException("Unexpected packet '" + pkt.getClass().getSimpleName() + "'");
-										}
-									} catch (IOException e) {
-										logger.error("Relay Query Error: {}", e.toString());
-										EagRuntime.debugPrintStackTrace(e);
-										open = false;
-										failed = true;
-										sock.close();
-									}
-								}
-							}
-						}
-					}
-
-					@Override
-					public void onClose(int i, String s, boolean b) {
-						open = false;
-						if(!hasRecievedAnyData) {
-							failed = true;
-							Long l = relayQueryBlocked.get(uri);
-							if(l != null) {
-								if(System.currentTimeMillis() - l.longValue() < 400000l) {
-									rateLimitStatus = RateLimit.LOCKED;
-									return;
-								}
-							}
-							l = relayQueryLimited.get(uri);
-							if(l != null) {
-								if(System.currentTimeMillis() - l.longValue() < 900000l) {
-									rateLimitStatus = RateLimit.BLOCKED;
-									return;
-								}
-							}
-						}
-					}
-
-					@Override
-					public void onError(Exception e) {
-						EagRuntime.debugPrintStackTrace(e);
-					}
-				};
-				s.connect();
-				open = true;
-				failed = false;
-			}catch(Throwable t) {
-				connectionOpenedAt = 0l;
-				sock = null;
-				open = false;
-				failed = true;
-				return;
-			}
-			sock = s;
-		}
-
-		@Override
-		public boolean isQueryOpen() {
-			return open;
-		}
-
-		@Override
-		public boolean isQueryFailed() {
-			return failed;
-		}
-
-		@Override
-		public RateLimit isQueryRateLimit() {
-			return rateLimitStatus;
-		}
-
-		@Override
-		public void close() {
-			if(sock != null && open) {
-				sock.close();
-			}
-			open = false;
-		}
-
-		@Override
-		public int getVersion() {
-			return vers;
-		}
-
-		@Override
-		public String getComment() {
-			return comment;
-		}
-
-		@Override
-		public String getBrand() {
-			return brand;
-		}
-
-		@Override
-		public long getPing() {
-			return connectionPingTimer < 1 ? 1 : connectionPingTimer;
-		}
-
-		@Override
-		public VersionMismatch getCompatible() {
-			return versError;
-		}
-
-	}
-
-	private static class RelayQueryRatelimitDummy implements RelayQuery {
-
-		private final RateLimit type;
-
-		private RelayQueryRatelimitDummy(RateLimit type) {
-			this.type = type;
-		}
-
-		@Override
-		public boolean isQueryOpen() {
-			return false;
-		}
-
-		@Override
-		public boolean isQueryFailed() {
-			return true;
-		}
-
-		@Override
-		public RateLimit isQueryRateLimit() {
-			return type;
-		}
-
-		@Override
-		public void close() {
-		}
-
-		@Override
-		public int getVersion() {
-			return RelayManager.preferredRelayVersion;
-		}
-
-		@Override
-		public String getComment() {
-			return "this query was rate limited";
-		}
-
-		@Override
-		public String getBrand() {
-			return "lax1dude";
-		}
-
-		@Override
-		public long getPing() {
-			return 0l;
-		}
-
-		@Override
-		public VersionMismatch getCompatible() {
-			return VersionMismatch.COMPATIBLE;
-		}
-
-	}
-
 	public static RelayQuery openRelayQuery(String addr) {
-		long millis = System.currentTimeMillis();
-
-		Long l = relayQueryBlocked.get(addr);
-		if(l != null && millis - l.longValue() < 60000l) {
-			return new RelayQueryRatelimitDummy(RelayQuery.RateLimit.LOCKED);
+		RelayQuery.RateLimit limit = RelayServerRateLimitTracker.isLimited(addr);
+		if(limit == RelayQuery.RateLimit.LOCKED || limit == RelayQuery.RateLimit.BLOCKED) {
+			return new RelayQueryRateLimitDummy(limit);
 		}
-
-		l = relayQueryLimited.get(addr);
-		if(l != null && millis - l.longValue() < 10000l) {
-			return new RelayQueryRatelimitDummy(RelayQuery.RateLimit.BLOCKED);
-		}
-
 		return new RelayQueryImpl(addr);
 	}
 
-	private static class RelayWorldsQueryImpl implements RelayWorldsQuery {
-
-		private final WebSocketClient sock;
-		private final String uri;
-
-		private boolean open;
-		private boolean failed;
-
-		private boolean hasRecievedAnyData = false;
-		private RelayQuery.RateLimit rateLimitStatus = RelayQuery.RateLimit.NONE;
-
-		private RelayQuery.VersionMismatch versError = RelayQuery.VersionMismatch.UNKNOWN;
-
-		private List<IPacket07LocalWorlds.LocalWorld> worlds = null;
-
-		private RelayWorldsQueryImpl(String uri) {
-			this.uri = uri;
-			WebSocketClient s;
-			try {
-				s = new WebSocketClient(new URI(uri)) {
-					@Override
-					public void onOpen(ServerHandshake serverHandshake) {
-						try {
-							sock.send(IPacket.writePacket(new IPacket00Handshake(0x04, RelayManager.preferredRelayVersion, "")));
-						} catch (IOException e) {
-							logger.error(e.toString());
-							sock.close();
-							open = false;
-							failed = true;
-						}
-					}
-
-					@Override
-					public void onMessage(String s) {
-						//
-					}
-
-					@Override
-					public void onMessage(ByteBuffer bb) {
-						if(bb != null) {
-							hasRecievedAnyData = true;
-							byte[] arr = new byte[bb.remaining()];
-							bb.get(arr);
-							if(arr.length == 2 && arr[0] == (byte)0xFC) {
-								long millis = System.currentTimeMillis();
-								if(arr[1] == (byte)0x00 || arr[1] == (byte)0x01) {
-									rateLimitStatus = RelayQuery.RateLimit.BLOCKED;
-									relayQueryLimited.put(RelayWorldsQueryImpl.this.uri, millis);
-								}else if(arr[1] == (byte)0x02) {
-									rateLimitStatus = RelayQuery.RateLimit.NOW_LOCKED;
-									relayQueryLimited.put(RelayWorldsQueryImpl.this.uri, millis);
-									relayQueryBlocked.put(RelayWorldsQueryImpl.this.uri, millis);
-								}else {
-									rateLimitStatus = RelayQuery.RateLimit.LOCKED;
-									relayQueryBlocked.put(RelayWorldsQueryImpl.this.uri, millis);
-								}
-								open = false;
-								failed = true;
-								sock.close();
-							}else {
-								if(open) {
-									try {
-										IPacket pkt = IPacket.readPacket(new DataInputStream(new EaglerInputStream(arr)));
-										if(pkt instanceof IPacket07LocalWorlds) {
-											worlds = ((IPacket07LocalWorlds)pkt).worldsList;
-											sock.close();
-											open = false;
-											failed = false;
-										}else if(pkt instanceof IPacket70SpecialUpdate) {
-											IPacket70SpecialUpdate ipkt = (IPacket70SpecialUpdate)pkt;
-											if(ipkt.operation == IPacket70SpecialUpdate.OPERATION_UPDATE_CERTIFICATE) {
-												UpdateService.addCertificateToSet(ipkt.updatePacket);
-											}
-										}else if(pkt instanceof IPacketFFErrorCode) {
-											IPacketFFErrorCode ipkt = (IPacketFFErrorCode)pkt;
-											if(ipkt.code == IPacketFFErrorCode.TYPE_PROTOCOL_VERSION) {
-												String s1 = ipkt.desc.toLowerCase();
-												if(s1.contains("outdated client") || s1.contains("client outdated")) {
-													versError = RelayQuery.VersionMismatch.CLIENT_OUTDATED;
-												}else if(s1.contains("outdated server") || s1.contains("server outdated") ||
-														s1.contains("outdated relay") || s1.contains("server relay")) {
-													versError = RelayQuery.VersionMismatch.RELAY_OUTDATED;
-												}else {
-													versError = RelayQuery.VersionMismatch.UNKNOWN;
-												}
-											}
-											logger.error("{}: Recieved query error code {}: {}", uri, ipkt.code, ipkt.desc);
-											open = false;
-											failed = true;
-											sock.close();
-										}else {
-											throw new IOException("Unexpected packet '" + pkt.getClass().getSimpleName() + "'");
-										}
-									} catch (IOException e) {
-										logger.error("Relay World Query Error: {}", e.toString());
-										EagRuntime.debugPrintStackTrace(e);
-										open = false;
-										failed = true;
-										sock.close();
-									}
-								}
-							}
-						}
-					}
-
-					@Override
-					public void onClose(int i, String s, boolean b) {
-						open = false;
-						if(!hasRecievedAnyData) {
-							failed = true;
-							Long l = relayQueryBlocked.get(uri);
-							if(l != null) {
-								if(System.currentTimeMillis() - l.longValue() < 400000l) {
-									rateLimitStatus = RelayQuery.RateLimit.LOCKED;
-									return;
-								}
-							}
-							l = relayQueryLimited.get(uri);
-							if(l != null) {
-								if(System.currentTimeMillis() - l.longValue() < 900000l) {
-									rateLimitStatus = RelayQuery.RateLimit.BLOCKED;
-									return;
-								}
-							}
-						}
-					}
-
-					@Override
-					public void onError(Exception e) {
-						EagRuntime.debugPrintStackTrace(e);
-					}
-				};
-				s.connect();
-				open = true;
-				failed = false;
-			}catch(Throwable t) {
-				sock = null;
-				open = false;
-				failed = true;
-				return;
-			}
-			sock = s;
-		}
-
-		@Override
-		public boolean isQueryOpen() {
-			return open;
-		}
-
-		@Override
-		public boolean isQueryFailed() {
-			return failed;
-		}
-
-		@Override
-		public RelayQuery.RateLimit isQueryRateLimit() {
-			return rateLimitStatus;
-		}
-
-		@Override
-		public void close() {
-			if(open && sock != null) {
-				sock.close();
-			}
-			open = false;
-		}
-
-		@Override
-		public List<IPacket07LocalWorlds.LocalWorld> getWorlds() {
-			return worlds;
-		}
-
-		@Override
-		public RelayQuery.VersionMismatch getCompatible() {
-			return versError;
-		}
-
-	}
-
-	private static class RelayWorldsQueryRatelimitDummy implements RelayWorldsQuery {
-
-		private final RelayQuery.RateLimit rateLimit;
-
-		private RelayWorldsQueryRatelimitDummy(RelayQuery.RateLimit rateLimit) {
-			this.rateLimit = rateLimit;
-		}
-
-		@Override
-		public boolean isQueryOpen() {
-			return false;
-		}
-
-		@Override
-		public boolean isQueryFailed() {
-			return true;
-		}
-
-		@Override
-		public RelayQuery.RateLimit isQueryRateLimit() {
-			return rateLimit;
-		}
-
-		@Override
-		public void close() {
-		}
-
-		@Override
-		public List<IPacket07LocalWorlds.LocalWorld> getWorlds() {
-			return new ArrayList(0);
-		}
-
-		@Override
-		public RelayQuery.VersionMismatch getCompatible() {
-			return RelayQuery.VersionMismatch.COMPATIBLE;
-		}
-	}
-
 	public static RelayWorldsQuery openRelayWorldsQuery(String addr) {
-		long millis = System.currentTimeMillis();
-
-		Long l = relayQueryBlocked.get(addr);
-		if(l != null && millis - l.longValue() < 60000l) {
-			return new RelayWorldsQueryRatelimitDummy(RelayQuery.RateLimit.LOCKED);
+		RelayQuery.RateLimit limit = RelayServerRateLimitTracker.isLimited(addr);
+		if(limit == RelayQuery.RateLimit.LOCKED || limit == RelayQuery.RateLimit.BLOCKED) {
+			return new RelayWorldsQueryRateLimitDummy(limit);
 		}
-
-		l = relayQueryLimited.get(addr);
-		if(l != null && millis - l.longValue() < 10000l) {
-			return new RelayWorldsQueryRatelimitDummy(RelayQuery.RateLimit.BLOCKED);
-		}
-
 		return new RelayWorldsQueryImpl(addr);
 	}
 
-	private static class RelayServerSocketImpl implements RelayServerSocket {
-
-		private final WebSocketClient sock;
-		private final String uri;
-
-		private boolean open;
-		private boolean closed;
-		private boolean failed;
-
-		private boolean hasRecievedAnyData;
-
-		private final List<Throwable> exceptions = new LinkedList();
-		private final List<IPacket> packets = new LinkedList();
-
-		private RelayServerSocketImpl(String uri, int timeout) {
-			this.uri = uri;
-			WebSocketClient s;
-			try {
-				s = new WebSocketClient(new URI(uri)) {
-					@Override
-					public void onOpen(ServerHandshake serverHandshake) {
-						synchronized (lock4) {
-							open = true;
-						}
-					}
-
-					@Override
-					public void onMessage(String s) {
-						//
-					}
-
-					@Override
-					public void onMessage(ByteBuffer bb) {
-						if(bb != null) {
-							hasRecievedAnyData = true;
-							try {
-								byte[] arr = new byte[bb.remaining()];
-								bb.get(arr);
-								IPacket pkt = IPacket.readPacket(new DataInputStream(new EaglerInputStream(arr)));
-								if(pkt instanceof IPacket70SpecialUpdate) {
-									IPacket70SpecialUpdate ipkt = (IPacket70SpecialUpdate)pkt;
-									if(ipkt.operation == IPacket70SpecialUpdate.OPERATION_UPDATE_CERTIFICATE) {
-										UpdateService.addCertificateToSet(ipkt.updatePacket);
-									}
-								}else {
-									packets.add(pkt);
-								}
-							} catch (IOException e) {
-								exceptions.add(e);
-								logger.error("Relay Socket Error: {}", e.toString());
-								EagRuntime.debugPrintStackTrace(e);
-								synchronized (lock4) {
-									open = false;
-									failed = true;
-								}
-								closed = true;
-								synchronized (lock4) {
-									sock.close();
-								}
-							}
-						}
-					}
-
-					@Override
-					public void onClose(int i, String s, boolean b) {
-						if (!hasRecievedAnyData) {
-							failed = true;
-						}
-						synchronized (lock4) {
-							open = false;
-							closed = true;
-						}
-					}
-
-					@Override
-					public void onError(Exception e) {
-						EagRuntime.debugPrintStackTrace(e);
-					}
-				};
-				s.connect();
-				synchronized (lock4) {
-					open = false;
-					closed = false;
-				}
-				failed = false;
-			}catch(Throwable t) {
-				exceptions.add(t);
-				synchronized (lock4) {
-					sock = null;
-					open = false;
-					closed = true;
-				}
-				failed = true;
-				return;
-			}
-			synchronized (lock4) {
-				sock = s;
-			}
-			new Thread(() -> {
-				EagUtils.sleep(timeout);
-				synchronized (lock4) {
-					if (!open && !closed) {
-						closed = true;
-						sock.close();
-					}
-				}
-			}).start();
-		}
-
-		@Override
-		public boolean isOpen() {
-			return open;
-		}
-
-		@Override
-		public boolean isClosed() {
-			synchronized (lock4) {
-				return closed;
-			}
-		}
-
-		@Override
-		public void close() {
-			if(open && sock != null) {
-				synchronized (lock4) {
-					sock.close();
-				}
-			}
-			synchronized (lock4) {
-				open = false;
-				closed = true;
-			}
-		}
-
-		@Override
-		public boolean isFailed() {
-			return failed;
-		}
-
-		@Override
-		public Throwable getException() {
-			if(!exceptions.isEmpty()) {
-				return exceptions.remove(0);
-			}else {
-				return null;
-			}
-		}
-
-		@Override
-		public void writePacket(IPacket pkt) {
-			try {
-				sock.send(IPacket.writePacket(pkt));
-			} catch (Throwable e) {
-				logger.error("Relay connection error: {}", e.toString());
-				EagRuntime.debugPrintStackTrace(e);
-				exceptions.add(e);
-				failed = true;
-				synchronized (lock4) {
-					open = false;
-					closed = true;
-					sock.close();
-				}
-			}
-		}
-
-		@Override
-		public IPacket readPacket() {
-			if(!packets.isEmpty()) {
-				return packets.remove(0);
-			}else {
-				return null;
-			}
-		}
-
-		@Override
-		public IPacket nextPacket() {
-			if(!packets.isEmpty()) {
-				return packets.get(0);
-			}else {
-				return null;
-			}
-		}
-
-		@Override
-		public RelayQuery.RateLimit getRatelimitHistory() {
-			if(relayQueryBlocked.containsKey(uri)) {
-				return RelayQuery.RateLimit.LOCKED;
-			}
-			if(relayQueryLimited.containsKey(uri)) {
-				return RelayQuery.RateLimit.BLOCKED;
-			}
-			return RelayQuery.RateLimit.NONE;
-		}
-
-		@Override
-		public String getURI() {
-			return uri;
-		}
-
-	}
-
-	private static class RelayServerSocketRatelimitDummy implements RelayServerSocket {
-
-		private final RelayQuery.RateLimit limit;
-
-		private RelayServerSocketRatelimitDummy(RelayQuery.RateLimit limit) {
-			this.limit = limit;
-		}
-
-		@Override
-		public boolean isOpen() {
-			return false;
-		}
-
-		@Override
-		public boolean isClosed() {
-			return true;
-		}
-
-		@Override
-		public void close() {
-		}
-
-		@Override
-		public boolean isFailed() {
-			return true;
-		}
-
-		@Override
-		public Throwable getException() {
-			return null;
-		}
-
-		@Override
-		public void writePacket(IPacket pkt) {
-		}
-
-		@Override
-		public IPacket readPacket() {
-			return null;
-		}
-
-		@Override
-		public IPacket nextPacket() {
-			return null;
-		}
-
-		@Override
-		public RelayQuery.RateLimit getRatelimitHistory() {
-			return limit;
-		}
-
-		@Override
-		public String getURI() {
-			return "<disconnected>";
-		}
-
-	}
-
 	public static RelayServerSocket openRelayConnection(String addr, int timeout) {
-		long millis = System.currentTimeMillis();
-
-		Long l = relayQueryBlocked.get(addr);
-		if(l != null && millis - l.longValue() < 60000l) {
-			return new RelayServerSocketRatelimitDummy(RelayQuery.RateLimit.LOCKED);
+		RelayQuery.RateLimit limit = RelayServerRateLimitTracker.isLimited(addr);
+		if(limit == RelayQuery.RateLimit.LOCKED || limit == RelayQuery.RateLimit.BLOCKED) {
+			return new RelayServerSocketRateLimitDummy(limit);
 		}
-
-		l = relayQueryLimited.get(addr);
-		if(l != null && millis - l.longValue() < 10000l) {
-			return new RelayServerSocketRatelimitDummy(RelayQuery.RateLimit.BLOCKED);
-		}
-
 		return new RelayServerSocketImpl(addr, timeout);
 	}
 
@@ -1453,7 +738,7 @@ public class PlatformWebRTC {
 	public static List<byte[]> clientLANReadAllPacket() {
 		synchronized(clientLANPacketBuffer) {
 			if(!clientLANPacketBuffer.isEmpty()) {
-				List<byte[]> ret = new ArrayList(clientLANPacketBuffer);
+				List<byte[]> ret = new ArrayList<>(clientLANPacketBuffer);
 				clientLANPacketBuffer.clear();
 				return ret;
 			}else {

@@ -1,7 +1,7 @@
 #line 2
 
 /*
- * Copyright (c) 2022-2023 lax1dude. All Rights Reserved.
+ * Copyright (c) 2022-2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -17,11 +17,11 @@
  */
 
 #if defined(COMPILE_ENABLE_TEX_GEN) || defined(COMPILE_ENABLE_FOG)
-in vec4 v_position4f;
+EAGLER_IN(vec4, v_position4f)
 #endif
 
 #ifdef COMPILE_TEXTURE_ATTRIB
-in vec2 v_texture2f;
+EAGLER_IN(vec2, v_texture2f)
 #endif
 
 uniform vec4 u_color4f;
@@ -32,15 +32,15 @@ uniform vec4 u_colorBlendAdd4f;
 #endif
 
 #ifdef COMPILE_COLOR_ATTRIB
-in vec4 v_color4f;
+EAGLER_IN(vec4, v_color4f)
 #endif
 
 #ifdef COMPILE_NORMAL_ATTRIB
-in vec3 v_normal3f;
+EAGLER_IN(vec3, v_normal3f)
 #endif
 
 #ifdef COMPILE_LIGHTMAP_ATTRIB
-in vec2 v_lightmap2f;
+EAGLER_IN(vec2, v_lightmap2f)
 #endif
 
 #ifdef COMPILE_ENABLE_TEXTURE2D
@@ -76,7 +76,7 @@ uniform vec4 u_fogColor4f;
 #endif
 
 #ifdef COMPILE_ENABLE_TEX_GEN
-in vec3 v_objectPosition3f;
+EAGLER_IN(vec3, v_objectPosition3f)
 uniform ivec4 u_texGenPlane4i;
 uniform vec4 u_texGenS4f;
 uniform vec4 u_texGenT4f;
@@ -89,7 +89,7 @@ uniform mat4 u_textureMat4f01;
 uniform vec2 u_textureAnisotropicFix;
 #endif
 
-layout(location = 0) out vec4 output4f;
+EAGLER_FRAG_OUT()
 
 void main() {
 
@@ -98,22 +98,29 @@ void main() {
 #else
 	vec4 color = u_color4f;
 #endif
-	
+
 #ifdef COMPILE_ENABLE_TEX_GEN
+	vec4 tmpVec4 = vec4(v_objectPosition3f, 1.0);
 	vec4 texGenVector;
-	
-	vec4 texGenPosSrc[2];
-	texGenPosSrc[0] = vec4(v_objectPosition3f, 1.0);
-	texGenPosSrc[1] = v_position4f;
-	
-	texGenVector.x = dot(texGenPosSrc[u_texGenPlane4i.x], u_texGenS4f);
-	texGenVector.y = dot(texGenPosSrc[u_texGenPlane4i.y], u_texGenT4f);
-	texGenVector.z = dot(texGenPosSrc[u_texGenPlane4i.z], u_texGenR4f);
-	texGenVector.w = dot(texGenPosSrc[u_texGenPlane4i.w], u_texGenQ4f);
-	
+	texGenVector.x = dot(u_texGenPlane4i.x == 1 ? v_position4f : tmpVec4, u_texGenS4f);
+	texGenVector.y = dot(u_texGenPlane4i.y == 1 ? v_position4f : tmpVec4, u_texGenT4f);
+	texGenVector.z = dot(u_texGenPlane4i.z == 1 ? v_position4f : tmpVec4, u_texGenR4f);
+	texGenVector.w = dot(u_texGenPlane4i.w == 1 ? v_position4f : tmpVec4, u_texGenQ4f);
+#ifdef EAGLER_HAS_GLES_300
+	texGenVector.xyz = mat4x3(
+		u_textureMat4f01[0].xyw,
+		u_textureMat4f01[1].xyw,
+		u_textureMat4f01[2].xyw,
+		u_textureMat4f01[3].xyw
+	) * texGenVector;
+	texGenVector.xy /= texGenVector.z;
+#else
 	texGenVector = u_textureMat4f01 * texGenVector;
-	color *= texture(u_samplerTexture, texGenVector.xy / texGenVector.w);
-	
+	texGenVector.xy /= texGenVector.w;
+#endif
+
+	color *= EAGLER_TEXTURE_2D(u_samplerTexture, texGenVector.xy);
+
 #ifdef COMPILE_ENABLE_ALPHA_TEST
 	if(color.a < u_alphaTestRef1f) discard;
 #endif
@@ -126,20 +133,20 @@ void main() {
 	// d3d11 doesn't support GL_NEAREST upscaling with anisotropic
 	// filtering enabled, so it needs this stupid fix to 'work'
 	vec2 uv = floor(v_texture2f * u_textureAnisotropicFix) + 0.5;
-	color *= texture(u_samplerTexture, uv / u_textureAnisotropicFix);
+	color *= EAGLER_TEXTURE_2D(u_samplerTexture, uv / u_textureAnisotropicFix);
 #else
-	color *= texture(u_samplerTexture, v_texture2f);
+	color *= EAGLER_TEXTURE_2D(u_samplerTexture, v_texture2f);
 #endif
 #else
-	color *= texture(u_samplerTexture, u_textureCoords01);
+	color *= EAGLER_TEXTURE_2D(u_samplerTexture, u_textureCoords01);
 #endif
 #endif
 
 #ifdef COMPILE_ENABLE_LIGHTMAP
 #ifdef COMPILE_LIGHTMAP_ATTRIB
-	color *= texture(u_samplerLightmap, v_lightmap2f);
+	color *= EAGLER_TEXTURE_2D(u_samplerLightmap, v_lightmap2f);
 #else
-	color *= texture(u_samplerLightmap, u_textureCoords02);
+	color *= EAGLER_TEXTURE_2D(u_samplerLightmap, u_textureCoords02);
 #endif
 #endif
 
@@ -161,9 +168,18 @@ void main() {
 #endif
 	float diffuse = 0.0;
 	vec4 light;
+#ifdef EAGLER_HAS_GLES_300
 	for(int i = 0; i < u_lightsEnabled1i; ++i) {
+#else
+	for(int i = 0; i < 4; ++i) {
+#endif
 		light = u_lightsDirections4fv[i];
 		diffuse += max(dot(light.xyz, normal), 0.0) * light.w;
+#ifndef EAGLER_HAS_GLES_300
+		if(i + 1 >= u_lightsEnabled1i) {
+			break;
+		}
+#endif
 	}
 	color.rgb *= min(u_lightsAmbient3f + vec3(diffuse), 1.0);
 #endif
@@ -179,5 +195,5 @@ void main() {
 	color.rgb = mix(color.rgb, u_fogColor4f.rgb, clamp(f, 0.0, 1.0) * u_fogColor4f.a);
 #endif
 
-	output4f = color;
+	EAGLER_FRAG_COLOR = color;
 }

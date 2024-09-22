@@ -130,10 +130,10 @@ public class EaglercraftSoundManager {
 				settings.getSoundLevel(SoundCategory.RECORDS), settings.getSoundLevel(SoundCategory.WEATHER),
 				settings.getSoundLevel(SoundCategory.BLOCKS), settings.getSoundLevel(SoundCategory.MOBS),
 				settings.getSoundLevel(SoundCategory.ANIMALS), settings.getSoundLevel(SoundCategory.PLAYERS),
-				settings.getSoundLevel(SoundCategory.AMBIENT), settings.getSoundLevel(SoundCategory.VOICE)
+				settings.getSoundLevel(SoundCategory.AMBIENT)
 		};
-		activeSounds = new LinkedList();
-		queuedSounds = new LinkedList();
+		activeSounds = new LinkedList<>();
+		queuedSounds = new LinkedList<>();
 	}
 
 	public void unloadSoundSystem() {

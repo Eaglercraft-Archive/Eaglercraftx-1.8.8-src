@@ -12,11 +12,12 @@
 ~ import java.util.List;
 ~ 
 
-> CHANGE  7 : 10  @  7 : 12
+> CHANGE  7 : 11  @  7 : 12
 
 ~ import net.lax1dude.eaglercraft.v1_8.internal.vfs2.VFile2;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
+~ import net.lax1dude.eaglercraft.v1_8.sp.server.WorldsDB;
 
 > CHANGE  3 : 6  @  3 : 6
 
@@ -27,9 +28,9 @@
 > CHANGE  3 : 7  @  3 : 9
 
 ~ 	public SaveHandler(VFile2 savesDirectory, String directoryName) {
-~ 		this.worldDirectory = new VFile2(savesDirectory, directoryName);
-~ 		this.playersDirectory = new VFile2(this.worldDirectory, "player");
-~ 		this.mapDataDir = new VFile2(this.worldDirectory, "data");
+~ 		this.worldDirectory = WorldsDB.newVFile(savesDirectory, directoryName);
+~ 		this.playersDirectory = WorldsDB.newVFile(this.worldDirectory, "player");
+~ 		this.mapDataDir = WorldsDB.newVFile(this.worldDirectory, "data");
 
 > DELETE  1  @  1 : 4
 
@@ -47,7 +48,7 @@
 
 > CHANGE  3 : 4  @  3 : 4
 
-~ 		VFile2 file1 = new VFile2(this.worldDirectory, "level.dat");
+~ 		VFile2 file1 = WorldsDB.newVFile(this.worldDirectory, "level.dat");
 
 > CHANGE  1 : 3  @  1 : 3
 
@@ -61,7 +62,7 @@
 
 > CHANGE  3 : 4  @  3 : 4
 
-~ 		file1 = new VFile2(this.worldDirectory, "level.dat_old");
+~ 		file1 = WorldsDB.newVFile(this.worldDirectory, "level.dat_old");
 
 > CHANGE  1 : 3  @  1 : 3
 
@@ -75,9 +76,9 @@
 
 > CHANGE  12 : 18  @  12 : 16
 
-~ 			VFile2 file1 = new VFile2(this.worldDirectory, "level.dat_new");
-~ 			VFile2 file2 = new VFile2(this.worldDirectory, "level.dat_old");
-~ 			VFile2 file3 = new VFile2(this.worldDirectory, "level.dat");
+~ 			VFile2 file1 = WorldsDB.newVFile(this.worldDirectory, "level.dat_new");
+~ 			VFile2 file2 = WorldsDB.newVFile(this.worldDirectory, "level.dat_old");
+~ 			VFile2 file3 = WorldsDB.newVFile(this.worldDirectory, "level.dat");
 ~ 			try (OutputStream os = file1.getOutputStream()) {
 ~ 				CompressedStreamTools.writeCompressed(nbttagcompound2, os);
 ~ 			}
@@ -89,9 +90,9 @@
 
 > CHANGE  10 : 16  @  10 : 14
 
-~ 			VFile2 file1 = new VFile2(this.worldDirectory, "level.dat_new");
-~ 			VFile2 file2 = new VFile2(this.worldDirectory, "level.dat_old");
-~ 			VFile2 file3 = new VFile2(this.worldDirectory, "level.dat");
+~ 			VFile2 file1 = WorldsDB.newVFile(this.worldDirectory, "level.dat_new");
+~ 			VFile2 file2 = WorldsDB.newVFile(this.worldDirectory, "level.dat_old");
+~ 			VFile2 file3 = WorldsDB.newVFile(this.worldDirectory, "level.dat");
 ~ 			try (OutputStream os = file1.getOutputStream()) {
 ~ 				CompressedStreamTools.writeCompressed(nbttagcompound1, os);
 ~ 			}
@@ -104,8 +105,8 @@
 > CHANGE  8 : 14  @  8 : 11
 
 ~ 			String s = player.getName().toLowerCase();
-~ 			VFile2 file1 = new VFile2(this.playersDirectory, s + ".dat.tmp");
-~ 			VFile2 file2 = new VFile2(this.playersDirectory, s + ".dat");
+~ 			VFile2 file1 = WorldsDB.newVFile(this.playersDirectory, s + ".dat.tmp");
+~ 			VFile2 file2 = WorldsDB.newVFile(this.playersDirectory, s + ".dat");
 ~ 			try (OutputStream os = file1.getOutputStream()) {
 ~ 				CompressedStreamTools.writeCompressed(nbttagcompound, os);
 ~ 			}
@@ -117,7 +118,7 @@
 
 > CHANGE  8 : 13  @  8 : 11
 
-~ 			VFile2 file1 = new VFile2(this.playersDirectory, player.getName().toLowerCase() + ".dat");
+~ 			VFile2 file1 = WorldsDB.newVFile(this.playersDirectory, player.getName().toLowerCase() + ".dat");
 ~ 			if (file1.exists()) {
 ~ 				try (InputStream is = file1.getInputStream()) {
 ~ 					nbttagcompound = CompressedStreamTools.readCompressed(is);
@@ -146,6 +147,6 @@
 > CHANGE  5 : 7  @  5 : 7
 
 ~ 	public VFile2 getMapFileFromName(String mapName) {
-~ 		return new VFile2(this.mapDataDir, mapName + ".dat");
+~ 		return WorldsDB.newVFile(this.mapDataDir, mapName + ".dat");
 
 > EOF

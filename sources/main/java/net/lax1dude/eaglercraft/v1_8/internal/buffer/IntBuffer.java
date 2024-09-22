@@ -17,11 +17,7 @@ package net.lax1dude.eaglercraft.v1_8.internal.buffer;
  */
 public interface IntBuffer extends Buffer {
 
-	IntBuffer slice();
-
 	IntBuffer duplicate();
-
-	IntBuffer asReadOnlyBuffer();
 
 	int get();
 
@@ -45,10 +41,6 @@ public interface IntBuffer extends Buffer {
 
 	IntBuffer put(int[] src);
 
-	int getArrayOffset();
-
-	IntBuffer compact();
-
 	boolean isDirect();
 
 	IntBuffer mark();
@@ -64,6 +56,8 @@ public interface IntBuffer extends Buffer {
 	IntBuffer limit(int newLimit);
 
 	IntBuffer position(int newPosition);
-	
+
+	int[] array();
+
 }
 

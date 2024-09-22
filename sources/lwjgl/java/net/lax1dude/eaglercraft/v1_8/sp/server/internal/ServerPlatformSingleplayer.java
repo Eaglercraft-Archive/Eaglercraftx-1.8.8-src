@@ -2,10 +2,12 @@ package net.lax1dude.eaglercraft.v1_8.sp.server.internal;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
+import net.lax1dude.eaglercraft.v1_8.Filesystem;
 import net.lax1dude.eaglercraft.v1_8.internal.IClientConfigAdapter;
+import net.lax1dude.eaglercraft.v1_8.internal.IEaglerFilesystem;
 import net.lax1dude.eaglercraft.v1_8.internal.IPCPacketData;
-import net.lax1dude.eaglercraft.v1_8.internal.PlatformFilesystem;
 import net.lax1dude.eaglercraft.v1_8.internal.lwjgl.DesktopClientConfigAdapter;
 import net.lax1dude.eaglercraft.v1_8.sp.server.internal.lwjgl.MemoryConnection;
 
@@ -26,8 +28,20 @@ import net.lax1dude.eaglercraft.v1_8.sp.server.internal.lwjgl.MemoryConnection;
  */
 public class ServerPlatformSingleplayer {
 
+	private static IEaglerFilesystem filesystem = null;
+
 	public static void initializeContext() {
-		PlatformFilesystem.initialize();
+		if(filesystem == null) {
+			filesystem = Filesystem.getHandleFor(getClientConfigAdapter().getWorldsDB());
+		}
+	}
+
+	public static void initializeContextSingleThread(Consumer<IPCPacketData> packetSendCallback) {
+		throw new UnsupportedOperationException();
+	}
+
+	public static IEaglerFilesystem getWorldsDatabase() {
+		return filesystem;
 	}
 
 	public static void sendPacket(IPCPacketData packet) {
@@ -50,7 +64,7 @@ public class ServerPlatformSingleplayer {
 			if(MemoryConnection.clientToServerQueue.size() == 0) {
 				return null;
 			}else {
-				List<IPCPacketData> ret = new ArrayList(MemoryConnection.clientToServerQueue);
+				List<IPCPacketData> ret = new ArrayList<>(MemoryConnection.clientToServerQueue);
 				MemoryConnection.clientToServerQueue.clear();
 				return ret;
 			}
@@ -60,4 +74,17 @@ public class ServerPlatformSingleplayer {
 	public static IClientConfigAdapter getClientConfigAdapter() {
 		return DesktopClientConfigAdapter.instance;
 	}
+
+	public static void immediateContinue() {
+		
+	}
+
+	public static void platformShutdown() {
+		filesystem = null;
+	}
+
+	public static boolean isSingleThreadMode() {
+		return false;
+	}
+
 }

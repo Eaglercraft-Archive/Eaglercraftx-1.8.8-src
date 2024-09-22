@@ -5,9 +5,10 @@
 # Version: 1.0
 # Author: lax1dude
 
-> CHANGE  4 : 7  @  4 : 9
+> CHANGE  4 : 8  @  4 : 9
 
 ~ 
+~ import net.lax1dude.eaglercraft.v1_8.minecraft.EnumInputEvent;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.WorldRenderer;
 
@@ -43,5 +44,26 @@
 > CHANGE  6 : 7  @  6 : 7
 
 ~ 		GlStateManager.disableBlend();
+
+> INSERT  104 : 122  @  104
+
++ 
++ 	public void fireInputEvent(EnumInputEvent clipboardPaste, String param) {
++ 		if (!isFocused)
++ 			return;
++ 		switch (clipboardPaste) {
++ 		case CLIPBOARD_COPY:
++ 			GuiScreen.setClipboardString(this.getSelectedText());
++ 			break;
++ 		case CLIPBOARD_PASTE:
++ 			if (this.isEnabled) {
++ 				this.writeText(param != null ? param : GuiScreen.getClipboardString());
++ 			}
++ 			break;
++ 		default:
++ 			break;
++ 		}
++ 	}
++ 
 
 > EOF

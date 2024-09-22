@@ -26,9 +26,14 @@
 
 + import net.minecraft.util.ChatComponentText;
 
-> CHANGE  12 : 17  @  12 : 14
+> CHANGE  12 : 22  @  12 : 14
 
+~ import net.lax1dude.eaglercraft.v1_8.socket.protocol.GamePluginMessageConstants;
+~ import net.lax1dude.eaglercraft.v1_8.socket.protocol.GamePluginMessageProtocol;
+~ import net.lax1dude.eaglercraft.v1_8.socket.protocol.client.GameProtocolMessageController;
+~ import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.server.SPacketUpdateCertEAG;
 ~ import net.lax1dude.eaglercraft.v1_8.sp.server.EaglerMinecraftServer;
+~ import net.lax1dude.eaglercraft.v1_8.sp.server.WorldsDB;
 ~ import net.lax1dude.eaglercraft.v1_8.sp.server.socket.IntegratedServerPlayerNetworkManager;
 ~ import net.lax1dude.eaglercraft.v1_8.sp.server.voice.IntegratedVoiceService;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
@@ -57,16 +62,25 @@
 
 ~ 		this.maxPlayers = 100;
 
-> CHANGE  2 : 4  @  2 : 8
+> CHANGE  2 : 6  @  2 : 8
 
-~ 	public void initializeConnectionToPlayer(IntegratedServerPlayerNetworkManager netManager, EntityPlayerMP playerIn) {
+~ 	public void initializeConnectionToPlayer(IntegratedServerPlayerNetworkManager netManager, EntityPlayerMP playerIn,
+~ 			int protocolVersion, EaglercraftUUID clientBrandUUID) {
+~ 		playerIn.clientBrandUUID = clientBrandUUID;
 ~ 		GameProfile gameprofile1 = playerIn.getGameProfile();
 
 > CHANGE  3 : 4  @  3 : 7
 
 ~ 		String s1 = "channel:" + netManager.playerChannel;
 
-> DELETE  12  @  12 : 14
+> INSERT  8 : 12  @  8
+
++ 		nethandlerplayserver.setEaglerMessageController(new GameProtocolMessageController(
++ 				GamePluginMessageProtocol.getByVersion(protocolVersion), GamePluginMessageConstants.SERVER_TO_CLIENT,
++ 				GameProtocolMessageController.createServerHandler(protocolVersion, nethandlerplayserver),
++ 				(ch, msg) -> nethandlerplayserver.sendPacket(new S3FPacketCustomPayload(ch, msg))));
+
+> DELETE  4  @  4 : 6
 
 > INSERT  1 : 4  @  1
 
@@ -90,17 +104,13 @@
 + 			playerIn.addChatMessage(shaderF4Msg);
 + 		}
 
-> INSERT  23 : 35  @  23
+> INSERT  23 : 31  @  23
 
 + 		if (EagRuntime.getConfiguration().allowUpdateSvc()) {
 + 			for (int i = 0, l = playerEntityList.size(); i < l; ++i) {
 + 				EntityPlayerMP playerItr = playerEntityList.get(i);
 + 				if (playerItr != playerIn && playerItr.updateCertificate != null) {
-+ 					nethandlerplayserver
-+ 							.sendPacket(new S3FPacketCustomPayload("EAG|UpdateCert-1.8",
-+ 									new PacketBuffer(Unpooled
-+ 											.buffer(playerItr.updateCertificate, playerItr.updateCertificate.length)
-+ 											.writerIndex(playerItr.updateCertificate.length))));
++ 					nethandlerplayserver.sendEaglerMessage(new SPacketUpdateCertEAG(playerItr.updateCertificate));
 + 				}
 + 			}
 + 		}
@@ -175,7 +185,20 @@
 ~ 		for (int i = 0, l = arraylist.size(); i < l; ++i) {
 ~ 			arraylist.get(i).playerNetServerHandler.kickPlayerFromServer("You logged in from another location");
 
-> CHANGE  205 : 206  @  205 : 206
+> INSERT  32 : 34  @  32
+
++ 		entityplayermp.updateCertificate = playerIn.updateCertificate;
++ 		entityplayermp.clientBrandUUID = playerIn.clientBrandUUID;
+
+> DELETE  75  @  75 : 76
+
+> DELETE  35  @  35 : 36
+
+> DELETE  1  @  1 : 2
+
+> DELETE  8  @  8 : 10
+
+> CHANGE  49 : 50  @  49 : 50
 
 ~ 			for (int i = 0, l = this.playerEntityList.size(); i < l; ++i) {
 
@@ -237,13 +260,11 @@
 ~ 		String name = playerIn.getName();
 ~ 		StatisticsFile statisticsfile = (StatisticsFile) this.playerStatFiles.get(name);
 
-> CHANGE  1 : 2  @  1 : 2
+> CHANGE  1 : 4  @  1 : 11
 
-~ 			VFile2 file1 = new VFile2(this.mcServer.worldServerForDimension(0).getSaveHandler().getWorldDirectory(),
-
-> CHANGE  1 : 2  @  1 : 9
-
-~ 			VFile2 file2 = new VFile2(file1, name + ".json");
+~ 			VFile2 file1 = WorldsDB
+~ 					.newVFile(this.mcServer.worldServerForDimension(0).getSaveHandler().getWorldDirectory(), "stats");
+~ 			VFile2 file2 = WorldsDB.newVFile(file1, name + ".json");
 
 > CHANGE  2 : 3  @  2 : 3
 

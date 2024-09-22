@@ -5,6 +5,7 @@ import static net.lax1dude.eaglercraft.v1_8.opengl.RealOpenGLEnums.*;
 import java.util.LinkedList;
 import java.util.List;
 
+import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 import net.lax1dude.eaglercraft.v1_8.opengl.EaglercraftGPU;
@@ -35,7 +36,7 @@ public class ChunkUpdateManager {
 	private int chunkUpdatesQueuedLast = 0;
 	private long chunkUpdatesTotalLastUpdate = 0l;
 	
-	private final List<ChunkCompileTaskGenerator> queue = new LinkedList();
+	private final List<ChunkCompileTaskGenerator> queue = new LinkedList<>();
 
 	public ChunkUpdateManager() {
 		worldVertexUploader = new WorldVertexBufferUploader();
@@ -108,8 +109,8 @@ public class ChunkUpdateManager {
 			return false;
 		}else {
 			boolean flag = false;
-			long millis = System.currentTimeMillis();
-			List<ChunkCompileTaskGenerator> droppedUpdates = new LinkedList();
+			long millis = EagRuntime.steadyTimeMillis();
+			List<ChunkCompileTaskGenerator> droppedUpdates = new LinkedList<>();
 			while(!queue.isEmpty()) {
 				ChunkCompileTaskGenerator generator = queue.remove(0);
 				
@@ -125,7 +126,7 @@ public class ChunkUpdateManager {
 				
 				++chunkUpdatesTotal;
 				
-				if(timeout < System.nanoTime()) {
+				if(timeout < EagRuntime.nanoTime()) {
 					break;
 				}
 			}
@@ -176,7 +177,7 @@ public class ChunkUpdateManager {
 		if (chunkcompiletaskgenerator == null) {
 			return true;
 		}
-		chunkcompiletaskgenerator.goddamnFuckingTimeout = System.currentTimeMillis();
+		chunkcompiletaskgenerator.goddamnFuckingTimeout = EagRuntime.steadyTimeMillis();
 		if(queue.size() < 100) {
 			chunkcompiletaskgenerator.addFinishRunnable(new Runnable() {
 				@Override
@@ -219,7 +220,7 @@ public class ChunkUpdateManager {
 	}
 
 	public String getDebugInfo() {
-		long millis = System.currentTimeMillis();
+		long millis = EagRuntime.steadyTimeMillis();
 		
 		if(millis - chunkUpdatesTotalLastUpdate > 500l) {
 			chunkUpdatesTotalLastUpdate = millis;

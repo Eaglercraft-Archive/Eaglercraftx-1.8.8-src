@@ -34,20 +34,22 @@
 ~ 		return EagRuntime
 ~ 				.getResourceStream("/assets/" + location.getResourceDomain() + "/" + location.getResourcePath());
 
-> CHANGE  3 : 4  @  3 : 5
+> CHANGE  2 : 5  @  2 : 5
 
-~ 		return this.getResourceStream(resourcelocation) != null;
+~ 	public boolean resourceExists(ResourceLocation location) {
+~ 		return EagRuntime
+~ 				.getResourceExists("/assets/" + location.getResourceDomain() + "/" + location.getResourcePath());
 
 > CHANGE  9 : 11  @  9 : 11
 
 ~ 			return AbstractResourcePack.readMetadata(parIMetadataSerializer,
-~ 					EagRuntime.getResourceStream("pack.mcmeta"), parString1);
+~ 					EagRuntime.getRequiredResourceStream("pack.mcmeta"), parString1);
 
 > DELETE  2  @  2 : 4
 
 > CHANGE  3 : 5  @  3 : 6
 
 ~ 	public ImageData getPackImage() throws IOException {
-~ 		return TextureUtil.readBufferedImage(EagRuntime.getResourceStream("pack.png"));
+~ 		return TextureUtil.readBufferedImage(EagRuntime.getRequiredResourceStream("pack.png"));
 
 > EOF

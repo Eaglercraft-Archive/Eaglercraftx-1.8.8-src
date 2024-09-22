@@ -1,11 +1,12 @@
 package net.lax1dude.eaglercraft.v1_8.sp.server;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.google.common.collect.Lists;
+
+import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.internal.vfs2.VFile2;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 import net.minecraft.entity.player.EntityPlayer;
@@ -39,7 +40,7 @@ public class EaglerMinecraftServer extends MinecraftServer {
 
 	public static final Logger logger = EaglerIntegratedServerWorker.logger;
 
-	public static final VFile2 savesDir = new VFile2("worlds");
+	public static final VFile2 savesDir = WorldsDB.newVFile("worlds");
 
 	protected EnumDifficulty difficulty;
 	protected GameType gamemode;
@@ -59,13 +60,13 @@ public class EaglerMinecraftServer extends MinecraftServer {
 	public static int counterTileUpdate = 0;
 	public static int counterLightUpdate = 0;
 
-	private final List<Runnable> scheduledTasks = new LinkedList();
+	private final List<Runnable> scheduledTasks = new LinkedList<>();
 
 	public EaglerMinecraftServer(String world, String owner, int viewDistance, WorldSettings currentWorldSettings, boolean demo) {
 		super(world);
 		Bootstrap.register();
 		this.saveHandler = new EaglerSaveHandler(savesDir, world);
-		this.skinService = new IntegratedSkinService(new VFile2(saveHandler.getWorldDirectory(), "eagler/skulls"));
+		this.skinService = new IntegratedSkinService(WorldsDB.newVFile(saveHandler.getWorldDirectory(), "eagler/skulls"));
 		this.capeService = new IntegratedCapeService();
 		this.voiceService = null;
 		this.setServerOwner(owner);
@@ -131,7 +132,7 @@ public class EaglerMinecraftServer extends MinecraftServer {
 		EaglerIntegratedServerWorker.saveFormat.deleteWorldDirectory(getFolderName());
 	}
 
-	public void mainLoop() {
+	public void mainLoop(boolean singleThreadMode) {
 		long k = getCurrentTimeMillis();
 		this.sendTPSToClient(k);
 		if(paused && this.playersOnline.size() <= 1) {
@@ -140,7 +141,7 @@ public class EaglerMinecraftServer extends MinecraftServer {
 		}
 
 		long j = k - this.currentTime;
-		if (j > 2000L && this.currentTime - this.timeOfLastWarning >= 15000L) {
+		if (j > (singleThreadMode ? 500L : 2000L) && this.currentTime - this.timeOfLastWarning >= (singleThreadMode ? 5000L : 15000L)) {
 			logger.warn(
 					"Can\'t keep up! Did the system time change, or is the server overloaded? Running {}ms behind, skipping {} tick(s)",
 					new Object[] { Long.valueOf(j), Long.valueOf(j / 50L) });
@@ -177,13 +178,13 @@ public class EaglerMinecraftServer extends MinecraftServer {
 		if(millis - lastTPSUpdate > 1000l) {
 			lastTPSUpdate = millis;
 			if(serverRunning && this.worldServers != null) {
-				List<String> lst = new ArrayList<>(Arrays.asList(
+				List<String> lst = Lists.newArrayList(
 						"TPS: " + counterTicksPerSecond + "/20",
 						"Chunks: " + countChunksLoaded(this.worldServers) + "/" + countChunksTotal(this.worldServers),
 						"Entities: " + countEntities(this.worldServers) + "+" + countTileEntities(this.worldServers),
 						"R: " + counterChunkRead + ", G: " + counterChunkGenerate + ", W: " + counterChunkWrite,
 						"TU: " + counterTileUpdate + ", LU: " + counterLightUpdate
-				));
+				);
 				int players = countPlayerEntities(this.worldServers);
 				if(players > 1) {
 					lst.add("Players: " + players);
@@ -252,7 +253,7 @@ public class EaglerMinecraftServer extends MinecraftServer {
 	public void setPaused(boolean p) {
 		paused = p;
 		if(!p) {
-			currentTime = System.currentTimeMillis();
+			currentTime = EagRuntime.steadyTimeMillis();
 		}
 	}
 	

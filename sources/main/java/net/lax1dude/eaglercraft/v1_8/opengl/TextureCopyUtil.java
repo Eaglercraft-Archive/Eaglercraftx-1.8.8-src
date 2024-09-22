@@ -3,16 +3,17 @@ package net.lax1dude.eaglercraft.v1_8.opengl;
 import static net.lax1dude.eaglercraft.v1_8.internal.PlatformOpenGL.*;
 import static net.lax1dude.eaglercraft.v1_8.opengl.RealOpenGLEnums.*;
 
+import java.util.List;
+
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.internal.IProgramGL;
 import net.lax1dude.eaglercraft.v1_8.internal.IShaderGL;
 import net.lax1dude.eaglercraft.v1_8.internal.IUniformGL;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
-import net.lax1dude.eaglercraft.v1_8.opengl.FixedFunctionShader.FixedFunctionConstants;
 
 /**
- * Copyright (c) 2023 lax1dude. All Rights Reserved.
+ * Copyright (c) 2023-2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -31,9 +32,13 @@ public class TextureCopyUtil {
 	private static final Logger LOGGER = LogManager.getLogger("TextureCopyUtil");
 
 	public static final String vertexShaderPath = "/assets/eagler/glsl/texture_blit.vsh";
+	public static final String vertexShaderPrecision = "precision lowp int;\nprecision highp float;\nprecision highp sampler2D;\n";
+
 	public static final String fragmentShaderPath = "/assets/eagler/glsl/texture_blit.fsh";
+	public static final String fragmentShaderPrecision = "precision lowp int;\nprecision highp float;\nprecision highp sampler2D;\n";
 
 	private static String vshSource = null;
+	private static List<VSHInputLayoutParser.ShaderInput> vshSourceLayout = null;
 	private static String fshSource = null;
 
 	private static IShaderGL vshShader = null;
@@ -53,6 +58,17 @@ public class TextureCopyUtil {
 			this.u_textureLod1f = _wglGetUniformLocation(shaderProgram, "u_textureLod1f");
 			this.u_pixelAlignmentSizes4f = _wglGetUniformLocation(shaderProgram, "u_pixelAlignmentSizes4f");
 			this.u_pixelAlignmentOffset2f = _wglGetUniformLocation(shaderProgram, "u_pixelAlignmentOffset2f");
+		}
+		private void destroy() {
+			if(shaderProgram != null) {
+				_wglDeleteProgram(shaderProgram);
+				shaderProgram = null;
+			}
+			u_srcCoords4f = null;
+			u_dstCoords4f = null;
+			u_textureLod1f = null;
+			u_pixelAlignmentSizes4f = null;
+			u_pixelAlignmentOffset2f = null;
 		}
 	}
 
@@ -74,19 +90,12 @@ public class TextureCopyUtil {
 	private static float alignOffsetY = 0.0f;
 
 	static void initialize() {
-		vshSource = EagRuntime.getResourceString(vertexShaderPath);
-		if(vshSource == null) {
-			throw new RuntimeException("TextureCopyUtil shader \"" + vertexShaderPath + "\" is missing!");
-		}
-
-		fshSource = EagRuntime.getResourceString(fragmentShaderPath);
-		if(fshSource == null) {
-			throw new RuntimeException("TextureCopyUtil shader \"" + fragmentShaderPath + "\" is missing!");
-		}
+		vshSource = EagRuntime.getRequiredResourceString(vertexShaderPath);
+		fshSource = EagRuntime.getRequiredResourceString(fragmentShaderPath);
 
 		vshShader = _wglCreateShader(GL_VERTEX_SHADER);
 
-		_wglShaderSource(vshShader, FixedFunctionConstants.VERSION + "\n" + vshSource);
+		_wglShaderSource(vshShader, GLSLHeader.getVertexHeaderCompat(vshSource, vertexShaderPrecision));
 		_wglCompileShader(vshShader);
 
 		if(_wglGetShaderi(vshShader, GL_COMPILE_STATUS) != GL_TRUE) {
@@ -100,14 +109,17 @@ public class TextureCopyUtil {
 			}
 			throw new IllegalStateException("Vertex shader \"" + vertexShaderPath + "\" could not be compiled!");
 		}
+		
+		if(EaglercraftGPU.checkOpenGLESVersion() == 200) {
+			vshSourceLayout = VSHInputLayoutParser.getShaderInputs(vshSource);
+		}
 	}
 
 	private static TextureCopyShader compileShader(boolean align, boolean depth) {
 		IShaderGL frag = _wglCreateShader(GL_FRAGMENT_SHADER);
 
-		_wglShaderSource(frag,
-				FixedFunctionConstants.VERSION + "\n" + (align ? "#define COMPILE_PIXEL_ALIGNMENT\n" : "")
-						+ (depth ? "#define COMPILE_BLIT_DEPTH\n" : "") + fshSource);
+		_wglShaderSource(frag, GLSLHeader.getFragmentHeaderCompat(fshSource, fragmentShaderPrecision
+				+ (align ? "#define COMPILE_PIXEL_ALIGNMENT\n" : "") + (depth ? "#define COMPILE_BLIT_DEPTH\n" : "")));
 		_wglCompileShader(frag);
 
 		if(_wglGetShaderi(frag, GL_COMPILE_STATUS) != GL_TRUE) {
@@ -126,6 +138,10 @@ public class TextureCopyUtil {
 
 		_wglAttachShader(shaderProgram, vshShader);
 		_wglAttachShader(shaderProgram, frag);
+
+		if(EaglercraftGPU.checkOpenGLESVersion() == 200) {
+			VSHInputLayoutParser.applyLayout(shaderProgram, vshSourceLayout);
+		}
 
 		_wglLinkProgram(shaderProgram);
 
@@ -226,7 +242,14 @@ public class TextureCopyUtil {
 		_wglUniform4f(shaderObj.u_srcCoords4f, (float)srcX / srcViewW, (float)srcY / srcViewH, (float)srcW / srcViewW, (float)srcH / srcViewH);
 		_wglUniform4f(shaderObj.u_dstCoords4f, (float) dstX / dstViewW - 1.0f, (float) dstY / dstViewH - 1.0f,
 				(float) dstW / dstViewW, (float) dstH / dstViewH);
-		_wglUniform1f(shaderObj.u_textureLod1f, lvl);
+		if(EaglercraftGPU.checkTextureLODCapable()) {
+			_wglUniform1f(shaderObj.u_textureLod1f, lvl);
+		}else {
+			if(lvl != 0.0f) {
+				LOGGER.error("Tried to copy from mipmap level {}, but this GPU does not support textureLod!", lvl);
+			}
+			_wglUniform1f(shaderObj.u_textureLod1f, 0.0f);
+		}
 		if(isAligned) {
 			_wglUniform4f(shaderObj.u_pixelAlignmentSizes4f, alignW, alignH, 1.0f / alignW, 1.0f / alignH);
 			_wglUniform2f(shaderObj.u_pixelAlignmentOffset2f, alignOffsetX, alignOffsetY);
@@ -244,7 +267,14 @@ public class TextureCopyUtil {
 		EaglercraftGPU.bindGLShaderProgram(shaderObj.shaderProgram);
 		_wglUniform4f(shaderObj.u_srcCoords4f, 0.0f, 0.0f, 1.0f, 1.0f);
 		_wglUniform4f(shaderObj.u_dstCoords4f, -1.0f, -1.0f, 2.0f, 2.0f);
-		_wglUniform1f(shaderObj.u_textureLod1f, lvl);
+		if(EaglercraftGPU.checkTextureLODCapable()) {
+			_wglUniform1f(shaderObj.u_textureLod1f, lvl);
+		}else {
+			if(lvl != 0.0f) {
+				LOGGER.error("Tried to copy from mipmap level {}, but this GPU does not support textureLod!", lvl);
+			}
+			_wglUniform1f(shaderObj.u_textureLod1f, 0.0f);
+		}
 		if(isAligned) {
 			_wglUniform4f(shaderObj.u_pixelAlignmentSizes4f, alignW, alignH, 1.0f / alignW, 1.0f / alignH);
 			_wglUniform2f(shaderObj.u_pixelAlignmentOffset2f, alignOffsetX, alignOffsetY);
@@ -271,7 +301,14 @@ public class TextureCopyUtil {
 		GlStateManager.viewport(dstX, dstY, dstW, dstH);
 		_wglUniform4f(shaderObj.u_srcCoords4f, (float)srcX / srcViewW, (float)srcY / srcViewH, (float)srcW / srcViewW, (float)srcH / srcViewH);
 		_wglUniform4f(shaderObj.u_dstCoords4f, -1.0f, -1.0f, 2.0f, 2.0f);
-		_wglUniform1f(shaderObj.u_textureLod1f, lvl);
+		if(EaglercraftGPU.checkTextureLODCapable()) {
+			_wglUniform1f(shaderObj.u_textureLod1f, lvl);
+		}else {
+			if(lvl != 0.0f) {
+				LOGGER.error("Tried to copy from mipmap level {}, but this GPU does not support textureLod!", lvl);
+			}
+			_wglUniform1f(shaderObj.u_textureLod1f, 0.0f);
+		}
 		if(isAligned) {
 			_wglUniform4f(shaderObj.u_pixelAlignmentSizes4f, alignW, alignH, 1.0f / alignW, 1.0f / alignH);
 			_wglUniform2f(shaderObj.u_pixelAlignmentOffset2f, alignOffsetX, alignOffsetY);
@@ -298,7 +335,14 @@ public class TextureCopyUtil {
 		_wglUniform4f(shaderObj.u_srcCoords4f, (float)srcX / srcViewW, (float)srcY / srcViewH, (float)srcW / srcViewW, (float)srcH / srcViewH);
 		_wglUniform4f(shaderObj.u_dstCoords4f, (float) dstX / dstViewW - 1.0f, (float) dstY / dstViewH - 1.0f,
 				(float) dstW / dstViewW, (float) dstH / dstViewH);
-		_wglUniform1f(shaderObj.u_textureLod1f, lvl);
+		if(EaglercraftGPU.checkTextureLODCapable()) {
+			_wglUniform1f(shaderObj.u_textureLod1f, lvl);
+		}else {
+			if(lvl != 0.0f) {
+				LOGGER.error("Tried to copy from mipmap level {}, but this GPU does not support textureLod!", lvl);
+			}
+			_wglUniform1f(shaderObj.u_textureLod1f, 0.0f);
+		}
 		if(isAligned) {
 			_wglUniform4f(shaderObj.u_pixelAlignmentSizes4f, alignW, alignH, 1.0f / alignW, 1.0f / alignH);
 			_wglUniform2f(shaderObj.u_pixelAlignmentOffset2f, alignOffsetX, alignOffsetY);
@@ -316,7 +360,14 @@ public class TextureCopyUtil {
 		EaglercraftGPU.bindGLShaderProgram(shaderObj.shaderProgram);
 		_wglUniform4f(shaderObj.u_srcCoords4f, 0.0f, 0.0f, 1.0f, 1.0f);
 		_wglUniform4f(shaderObj.u_dstCoords4f, -1.0f, -1.0f, 2.0f, 2.0f);
-		_wglUniform1f(shaderObj.u_textureLod1f, lvl);
+		if(EaglercraftGPU.checkTextureLODCapable()) {
+			_wglUniform1f(shaderObj.u_textureLod1f, lvl);
+		}else {
+			if(lvl != 0.0f) {
+				LOGGER.error("Tried to copy from mipmap level {}, but this GPU does not support textureLod!", lvl);
+			}
+			_wglUniform1f(shaderObj.u_textureLod1f, 0.0f);
+		}
 		if(isAligned) {
 			_wglUniform4f(shaderObj.u_pixelAlignmentSizes4f, alignW, alignH, 1.0f / alignW, 1.0f / alignH);
 			_wglUniform2f(shaderObj.u_pixelAlignmentOffset2f, alignOffsetX, alignOffsetY);
@@ -343,12 +394,42 @@ public class TextureCopyUtil {
 		GlStateManager.viewport(dstX, dstY, dstW, dstH);
 		_wglUniform4f(shaderObj.u_srcCoords4f, (float)srcX / srcViewW, (float)srcY / srcViewH, (float)srcW / srcViewW, (float)srcH / srcViewH);
 		_wglUniform4f(shaderObj.u_dstCoords4f, -1.0f, -1.0f, 2.0f, 2.0f);
-		_wglUniform1f(shaderObj.u_textureLod1f, lvl);
+		if(EaglercraftGPU.checkTextureLODCapable()) {
+			_wglUniform1f(shaderObj.u_textureLod1f, lvl);
+		}else {
+			if(lvl != 0.0f) {
+				LOGGER.error("Tried to copy from mipmap level {}, but this GPU does not support textureLod!", lvl);
+			}
+			_wglUniform1f(shaderObj.u_textureLod1f, 0.0f);
+		}
 		if(isAligned) {
 			_wglUniform4f(shaderObj.u_pixelAlignmentSizes4f, alignW, alignH, 1.0f / alignW, 1.0f / alignH);
 			_wglUniform2f(shaderObj.u_pixelAlignmentOffset2f, alignOffsetX, alignOffsetY);
 			isAligned = false;
 		}
 		DrawUtils.drawStandardQuad2D();
+	}
+
+	public static void destroy() {
+		if(vshShader != null) {
+			_wglDeleteShader(vshShader);
+			vshShader = null;
+		}
+		if(textureBlit != null) {
+			textureBlit.destroy();
+			textureBlit = null;
+		}
+		if(textureBlitAligned != null) {
+			textureBlitAligned.destroy();
+			textureBlitAligned = null;
+		}
+		if(textureBlitDepth != null) {
+			textureBlitDepth.destroy();
+			textureBlitDepth = null;
+		}
+		if(textureBlitDepthAligned != null) {
+			textureBlitDepthAligned.destroy();
+			textureBlitDepthAligned = null;
+		}
 	}
 }

@@ -8,7 +8,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.EaglercraftVersion;
 import net.lax1dude.eaglercraft.v1_8.opengl.EaglercraftGPU;
 import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
@@ -35,7 +34,7 @@ public class GuiUpdateVersionSlot extends GuiSlot {
 
 	private static final ResourceLocation eaglerGuiTex = new ResourceLocation("eagler:gui/eagler_gui.png");
 
-	final List<UpdateCertificate> certList = new ArrayList();
+	final List<UpdateCertificate> certList = new ArrayList<>();
 
 	final GuiUpdateVersionList screen;
 
@@ -86,7 +85,7 @@ public class GuiUpdateVersionSlot extends GuiSlot {
 		screen.drawBackground(0);
 	}
 
-	public static final SimpleDateFormat dateFmt = EagRuntime.fixDateFormat(new SimpleDateFormat("M/dd/yyyy"));
+	public static final SimpleDateFormat dateFmt = new SimpleDateFormat("M/dd/yyyy");
 	private static final char[] hexChars = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
 
 	@Override

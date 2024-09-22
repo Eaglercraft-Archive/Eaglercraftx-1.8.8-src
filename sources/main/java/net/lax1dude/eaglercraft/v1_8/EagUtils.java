@@ -1,5 +1,6 @@
 package net.lax1dude.eaglercraft.v1_8;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -83,6 +84,14 @@ public class EagUtils {
 				throw new IllegalArgumentException("invalid ascii");
 			}
 		}
+	}
+
+	public static EaglercraftUUID makeClientBrandUUID(String name) {
+		return EaglercraftUUID.nameUUIDFromBytes(("EaglercraftXClient:" + name).getBytes(StandardCharsets.UTF_8));
+	}
+
+	public static EaglercraftUUID makeClientBrandUUIDLegacy(String name) {
+		return EaglercraftUUID.nameUUIDFromBytes(("EaglercraftXClientOld:" + name).getBytes(StandardCharsets.UTF_8));
 	}
 
 }

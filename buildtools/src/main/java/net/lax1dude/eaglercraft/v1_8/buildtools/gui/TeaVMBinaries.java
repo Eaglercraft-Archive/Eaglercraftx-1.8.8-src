@@ -214,7 +214,7 @@ public class TeaVMBinaries {
 				teavmClasslib.file.getAbsolutePath(), teavmInterop.file.getAbsolutePath(), teavmJSO.file.getAbsolutePath(),
 				teavmJSOApis.file.getAbsolutePath(), teavmJSOImpl.file.getAbsolutePath(),
 				teavmMetaprogrammingAPI.file.getAbsolutePath(), teavmMetaprogrammingImpl.file.getAbsolutePath(),
-				teavmPlatform.file.getAbsolutePath() };
+				teavmPlatform.file.getAbsolutePath(), teavmCore.file.getAbsolutePath() };
 	}
 
 }

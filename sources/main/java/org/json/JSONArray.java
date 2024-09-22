@@ -149,11 +149,40 @@ public class JSONArray implements Iterable<Object> {
      *            A Collection.
      */
     public JSONArray(Collection<?> collection) {
+      this(collection, 0, new JSONParserConfiguration());
+    }
+
+    /**
+     * Construct a JSONArray from a Collection.
+     *
+     * @param collection
+     *            A Collection.
+     * @param jsonParserConfiguration
+     *            Configuration object for the JSON parser
+     */
+    public JSONArray(Collection<?> collection, JSONParserConfiguration jsonParserConfiguration) {
+        this(collection, 0, jsonParserConfiguration);
+    }
+
+    /**
+     * Construct a JSONArray from a collection with recursion depth.
+     *
+     * @param collection
+     *             A Collection.
+     * @param recursionDepth
+     *             Variable for tracking the count of nested object creations.
+     * @param jsonParserConfiguration
+     *             Configuration object for the JSON parser
+     */
+    JSONArray(Collection<?> collection, int recursionDepth, JSONParserConfiguration jsonParserConfiguration) {
+        if (recursionDepth > jsonParserConfiguration.getMaxNestingDepth()) {
+          throw new JSONException("JSONArray has reached recursion depth limit of " + jsonParserConfiguration.getMaxNestingDepth());
+        }
         if (collection == null) {
             this.myArrayList = new ArrayList<Object>();
         } else {
             this.myArrayList = new ArrayList<Object>(collection.size());
-            this.addAll(collection, true);
+            this.addAll(collection, true, recursionDepth, jsonParserConfiguration);
         }
     }
 
@@ -205,7 +234,7 @@ public class JSONArray implements Iterable<Object> {
             throw new JSONException(
                     "JSONArray initial value should be a string or collection or array.");
         }
-        this.addAll(array, true);
+        this.addAll(array, true, 0);
     }
 
     /**
@@ -600,6 +629,38 @@ public class JSONArray implements Iterable<Object> {
     }
 
     /**
+     * Get the optional Boolean object associated with an index. It returns false
+     * if there is no value at that index, or if the value is not Boolean.TRUE
+     * or the String "true".
+     *
+     * @param index
+     *            The index must be between 0 and length() - 1.
+     * @return The truth.
+     */
+    public Boolean optBooleanObject(int index) {
+        return this.optBooleanObject(index, false);
+    }
+
+    /**
+     * Get the optional Boolean object associated with an index. It returns the
+     * defaultValue if there is no value at that index or if it is not a Boolean
+     * or the String "true" or "false" (case insensitive).
+     *
+     * @param index
+     *            The index must be between 0 and length() - 1.
+     * @param defaultValue
+     *            A boolean default.
+     * @return The truth.
+     */
+    public Boolean optBooleanObject(int index, Boolean defaultValue) {
+        try {
+            return this.getBoolean(index);
+        } catch (Exception e) {
+            return defaultValue;
+        }
+    }
+
+    /**
      * Get the optional double value associated with an index. NaN is returned
      * if there is no value for the index, or if the value is not a number and
      * cannot be converted to a number.
@@ -629,6 +690,42 @@ public class JSONArray implements Iterable<Object> {
             return defaultValue;
         }
         final double doubleValue = val.doubleValue();
+        // if (Double.isNaN(doubleValue) || Double.isInfinite(doubleValue)) {
+        // return defaultValue;
+        // }
+        return doubleValue;
+    }
+
+    /**
+     * Get the optional Double object associated with an index. NaN is returned
+     * if there is no value for the index, or if the value is not a number and
+     * cannot be converted to a number.
+     *
+     * @param index
+     *            The index must be between 0 and length() - 1.
+     * @return The object.
+     */
+    public Double optDoubleObject(int index) {
+        return this.optDoubleObject(index, Double.NaN);
+    }
+
+    /**
+     * Get the optional double value associated with an index. The defaultValue
+     * is returned if there is no value for the index, or if the value is not a
+     * number and cannot be converted to a number.
+     *
+     * @param index
+     *            subscript
+     * @param defaultValue
+     *            The default object.
+     * @return The object.
+     */
+    public Double optDoubleObject(int index, Double defaultValue) {
+        final Number val = this.optNumber(index, null);
+        if (val == null) {
+            return defaultValue;
+        }
+        final Double doubleValue = val.doubleValue();
         // if (Double.isNaN(doubleValue) || Double.isInfinite(doubleValue)) {
         // return defaultValue;
         // }
@@ -672,6 +769,42 @@ public class JSONArray implements Iterable<Object> {
     }
 
     /**
+     * Get the optional Float object associated with an index. NaN is returned
+     * if there is no value for the index, or if the value is not a number and
+     * cannot be converted to a number.
+     *
+     * @param index
+     *            The index must be between 0 and length() - 1.
+     * @return The object.
+     */
+    public Float optFloatObject(int index) {
+        return this.optFloatObject(index, Float.NaN);
+    }
+
+    /**
+     * Get the optional Float object associated with an index. The defaultValue
+     * is returned if there is no value for the index, or if the value is not a
+     * number and cannot be converted to a number.
+     *
+     * @param index
+     *            subscript
+     * @param defaultValue
+     *            The default object.
+     * @return The object.
+     */
+    public Float optFloatObject(int index, Float defaultValue) {
+        final Number val = this.optNumber(index, null);
+        if (val == null) {
+            return defaultValue;
+        }
+        final Float floatValue = val.floatValue();
+        // if (Float.isNaN(floatValue) || Float.isInfinite(floatValue)) {
+        // return floatValue;
+        // }
+        return floatValue;
+    }
+
+    /**
      * Get the optional int value associated with an index. Zero is returned if
      * there is no value for the index, or if the value is not a number and
      * cannot be converted to a number.
@@ -696,6 +829,38 @@ public class JSONArray implements Iterable<Object> {
      * @return The value.
      */
     public int optInt(int index, int defaultValue) {
+        final Number val = this.optNumber(index, null);
+        if (val == null) {
+            return defaultValue;
+        }
+        return val.intValue();
+    }
+
+    /**
+     * Get the optional Integer object associated with an index. Zero is returned if
+     * there is no value for the index, or if the value is not a number and
+     * cannot be converted to a number.
+     *
+     * @param index
+     *            The index must be between 0 and length() - 1.
+     * @return The object.
+     */
+    public Integer optIntegerObject(int index) {
+        return this.optIntegerObject(index, 0);
+    }
+
+    /**
+     * Get the optional Integer object associated with an index. The defaultValue is
+     * returned if there is no value for the index, or if the value is not a
+     * number and cannot be converted to a number.
+     *
+     * @param index
+     *            The index must be between 0 and length() - 1.
+     * @param defaultValue
+     *            The default object.
+     * @return The object.
+     */
+    public Integer optIntegerObject(int index, Integer defaultValue) {
         final Number val = this.optNumber(index, null);
         if (val == null) {
             return defaultValue;
@@ -788,30 +953,57 @@ public class JSONArray implements Iterable<Object> {
     }
 
     /**
-     * Get the optional JSONArray associated with an index.
+     * Get the optional JSONArray associated with an index. Null is returned if
+     * there is no value at that index or if the value is not a JSONArray.
      *
      * @param index
-     *            subscript
-     * @return A JSONArray value, or null if the index has no value, or if the
-     *         value is not a JSONArray.
+     *            The index must be between 0 and length() - 1.
+     * @return A JSONArray value.
      */
     public JSONArray optJSONArray(int index) {
-        Object o = this.opt(index);
-        return o instanceof JSONArray ? (JSONArray) o : null;
+        return this.optJSONArray(index, null);
+    }
+
+    /**
+     * Get the optional JSONArray associated with an index. The defaultValue is returned if
+     * there is no value at that index or if the value is not a JSONArray.
+     *
+     * @param index
+     *            The index must be between 0 and length() - 1.
+     * @param defaultValue
+     *            The default.
+     * @return A JSONArray value.
+     */
+    public JSONArray optJSONArray(int index, JSONArray defaultValue) {
+        Object object = this.opt(index);
+        return object instanceof JSONArray ? (JSONArray) object : defaultValue;
     }
 
     /**
      * Get the optional JSONObject associated with an index. Null is returned if
-     * the key is not found, or null if the index has no value, or if the value
-     * is not a JSONObject.
+     * there is no value at that index or if the value is not a JSONObject.
      *
      * @param index
      *            The index must be between 0 and length() - 1.
      * @return A JSONObject value.
      */
     public JSONObject optJSONObject(int index) {
-        Object o = this.opt(index);
-        return o instanceof JSONObject ? (JSONObject) o : null;
+        return this.optJSONObject(index, null);
+    }
+
+    /**
+     * Get the optional JSONObject associated with an index. The defaultValue is returned if
+     * there is no value at that index or if the value is not a JSONObject.
+     *
+     * @param index
+     *            The index must be between 0 and length() - 1.
+     * @param defaultValue
+     *            The default.
+     * @return A JSONObject value.
+     */
+    public JSONObject optJSONObject(int index, JSONObject defaultValue) {
+        Object object = this.opt(index);
+        return object instanceof JSONObject ? (JSONObject) object : defaultValue;
     }
 
     /**
@@ -839,6 +1031,38 @@ public class JSONArray implements Iterable<Object> {
      * @return The value.
      */
     public long optLong(int index, long defaultValue) {
+        final Number val = this.optNumber(index, null);
+        if (val == null) {
+            return defaultValue;
+        }
+        return val.longValue();
+    }
+
+    /**
+     * Get the optional Long object associated with an index. Zero is returned if
+     * there is no value for the index, or if the value is not a number and
+     * cannot be converted to a number.
+     *
+     * @param index
+     *            The index must be between 0 and length() - 1.
+     * @return The object.
+     */
+    public Long optLongObject(int index) {
+        return this.optLongObject(index, 0L);
+    }
+
+    /**
+     * Get the optional Long object associated with an index. The defaultValue is
+     * returned if there is no value for the index, or if the value is not a
+     * number and cannot be converted to a number.
+     *
+     * @param index
+     *            The index must be between 0 and length() - 1.
+     * @param defaultValue
+     *            The default object.
+     * @return The object.
+     */
+    public Long optLongObject(int index, Long defaultValue) {
         final Number val = this.optNumber(index, null);
         if (val == null) {
             return defaultValue;
@@ -1135,7 +1359,8 @@ public class JSONArray implements Iterable<Object> {
      *            The subscript.
      * @param value
      *            The Map value.
-     * @return this.
+     * @return
+     *             reference to self
      * @throws JSONException
      *             If the index is negative or if the value is an invalid
      *             number.
@@ -1143,7 +1368,27 @@ public class JSONArray implements Iterable<Object> {
      *             If a key in the map is <code>null</code>
      */
     public JSONArray put(int index, Map<?, ?> value) throws JSONException {
-        this.put(index, new JSONObject(value));
+        this.put(index, new JSONObject(value, new JSONParserConfiguration()));
+        return this;
+    }
+
+    /**
+     * Put a value in the JSONArray, where the value will be a JSONObject that
+     * is produced from a Map.
+     *
+     * @param index
+     *          The subscript
+     * @param value
+     *          The Map value.
+     * @param jsonParserConfiguration
+     *          Configuration object for the JSON parser
+     * @return reference to self
+     * @throws JSONException
+     *          If the index is negative or if the value is an invalid
+     *          number.
+     */
+    public JSONArray put(int index, Map<?, ?> value, JSONParserConfiguration jsonParserConfiguration) throws JSONException {
+        this.put(index, new JSONObject(value, jsonParserConfiguration));
         return this;
     }
 
@@ -1451,9 +1696,7 @@ public class JSONArray implements Iterable<Object> {
     @SuppressWarnings("resource")
     public String toString(int indentFactor) throws JSONException {
         StringWriter sw = new StringWriter();
-        synchronized (sw.getBuffer()) {
-            return this.write(sw, indentFactor, 0).toString();
-        }
+        return this.write(sw, indentFactor, 0).toString();
     }
 
     /**
@@ -1586,13 +1829,14 @@ public class JSONArray implements Iterable<Object> {
      * @param wrap
      *            {@code true} to call {@link JSONObject#wrap(Object)} for each item,
      *            {@code false} to add the items directly
-     *            
+     * @param recursionDepth
+     *            Variable for tracking the count of nested object creations.
      */
-    private void addAll(Collection<?> collection, boolean wrap) {
+    private void addAll(Collection<?> collection, boolean wrap, int recursionDepth, JSONParserConfiguration jsonParserConfiguration) {
         this.myArrayList.ensureCapacity(this.myArrayList.size() + collection.size());
         if (wrap) {
             for (Object o: collection){
-                this.put(JSONObject.wrap(o));
+                this.put(JSONObject.wrap(o, recursionDepth + 1, jsonParserConfiguration));
             }
         } else {
             for (Object o: collection){
@@ -1621,7 +1865,24 @@ public class JSONArray implements Iterable<Object> {
             }
         }
     }
-    
+
+    /**
+     * Add an array's elements to the JSONArray.
+     *
+     * @param array
+     *          Array. If the parameter passed is null, or not an array,
+     *          JSONArray, Collection, or Iterable, an exception will be
+     *          thrown.
+     * @param wrap
+     *          {@code true} to call {@link JSONObject#wrap(Object)} for each item,
+     *          {@code false} to add the items directly
+     * @throws JSONException
+     *          If not an array or if an array value is non-finite number.
+     */
+    private void addAll(Object array, boolean wrap) throws JSONException {
+      this.addAll(array, wrap, 0);
+    }
+
     /**
      * Add an array's elements to the JSONArray.
      *
@@ -1630,21 +1891,40 @@ public class JSONArray implements Iterable<Object> {
      *            JSONArray, Collection, or Iterable, an exception will be
      *            thrown.
      * @param wrap
+     *          {@code true} to call {@link JSONObject#wrap(Object)} for each item,
+     *          {@code false} to add the items directly
+     * @param recursionDepth
+     *          Variable for tracking the count of nested object creations.
+     */
+    private void addAll(Object array, boolean wrap, int recursionDepth) {
+        addAll(array, wrap, recursionDepth, new JSONParserConfiguration());
+    }
+    /**
+     * Add an array's elements to the JSONArray.
+     *`
+     * @param array
+     *            Array. If the parameter passed is null, or not an array,
+     *            JSONArray, Collection, or Iterable, an exception will be
+     *            thrown.
+     * @param wrap
      *            {@code true} to call {@link JSONObject#wrap(Object)} for each item,
      *            {@code false} to add the items directly
-     *
+     * @param recursionDepth
+     *            Variable for tracking the count of nested object creations.
+     * @param jsonParserConfiguration
+     *            Variable to pass parser custom configuration for json parsing.
      * @throws JSONException
      *            If not an array or if an array value is non-finite number.
      * @throws NullPointerException
      *            Thrown if the array parameter is null.
      */
-    private void addAll(Object array, boolean wrap) throws JSONException {
+    private void addAll(Object array, boolean wrap, int recursionDepth, JSONParserConfiguration jsonParserConfiguration) throws JSONException {
         if (array.getClass().isArray()) {
             int length = Array.getLength(array);
             this.myArrayList.ensureCapacity(this.myArrayList.size() + length);
             if (wrap) {
                 for (int i = 0; i < length; i += 1) {
-                    this.put(JSONObject.wrap(Array.get(array, i)));
+                    this.put(JSONObject.wrap(Array.get(array, i), recursionDepth + 1, jsonParserConfiguration));
                 }
             } else {
                 for (int i = 0; i < length; i += 1) {
@@ -1657,7 +1937,7 @@ public class JSONArray implements Iterable<Object> {
             // JSONArray
             this.myArrayList.addAll(((JSONArray)array).myArrayList);
         } else if (array instanceof Collection) {
-            this.addAll((Collection<?>)array, wrap);
+            this.addAll((Collection<?>)array, wrap, recursionDepth);
         } else if (array instanceof Iterable) {
             this.addAll((Iterable<?>)array, wrap);
         } else {

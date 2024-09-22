@@ -2,6 +2,8 @@ package net.lax1dude.eaglercraft.v1_8.internal;
 
 import org.json.JSONObject;
 
+import net.lax1dude.eaglercraft.v1_8.EagRuntime;
+
 /**
  * Copyright (c) 2022 lax1dude. All Rights Reserved.
  * 
@@ -37,7 +39,7 @@ public class QueryResponse {
 		this.serverBrand = obj.getString("brand");
 		this.serverName = obj.getString("name");
 		this.serverTime = obj.getLong("time");
-		this.clientTime = System.currentTimeMillis();
+		this.clientTime = EagRuntime.steadyTimeMillis();
 		this.serverCracked = obj.optBoolean("cracked", false);
 	}
 	

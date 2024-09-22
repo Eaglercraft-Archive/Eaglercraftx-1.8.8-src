@@ -1,0 +1,192 @@
+{
+	"defaults": {
+		"EAGLERX_SIGNED_V1": {
+			"conf": "conf_template_eaglercraftX_1_8_signed.json",
+			"opts": "opts_template_eaglercraftX_1_8.txt"
+		},
+		"EAGLERX_V1": {
+			"conf": "conf_template_eaglercraftX_1_8.json",
+			"opts": "opts_template_eaglercraftX_1_8.txt"
+		},
+		"EAGLER_BETA_V1": {
+			"conf": "conf_template_eaglercraft_b1_3.json",
+			"opts": null
+		},
+		"EAGLER_1_5_V1": {
+			"conf": "conf_template_eaglercraft_1_5_legacy.json",
+			"opts": "opts_template_eaglercraft_1_5_legacy.txt"
+		},
+		"EAGLER_1_5_V2": {
+			"conf": "conf_template_eaglercraft_1_5.json",
+			"opts": "opts_template_eaglercraft_1_5.txt"
+		},
+		"PEYTON_V1": {
+			"conf": "conf_template_peytonplayz585_indev.json",
+			"opts": null
+		},
+		"PEYTON_V2": {
+			"conf": "conf_template_peytonplayz585_a1_2_6.json",
+			"opts": "opts_template_peytonplayz585_a1_2_6.txt"
+		},
+		"STANDARD_OFFLINE_V1": {
+			"conf": "conf_template_standard_offline.json",
+			"opts": null
+		}
+	},
+	"templates": [
+		{
+			"name": "EaglercraftX 1.8",
+			"conf": "conf_template_eaglercraftX_1_8.json",
+			"opts": "opts_template_eaglercraftX_1_8.txt",
+			"allow": [
+				"EAGLER_STANDARD_OFFLINE"
+			],
+			"parseTypes": [
+				"EAGLERCRAFTX_1_8_OFFLINE"
+			]
+		},
+		{
+			"name": "EaglercraftX 1.8 Demo",
+			"conf": "conf_template_eaglercraftX_1_8.json",
+			"opts": "opts_template_eaglercraftX_1_8_demo.txt",
+			"allow": [
+				"EAGLER_STANDARD_OFFLINE"
+			],
+			"parseTypes": [
+				"EAGLERCRAFTX_1_8_OFFLINE"
+			]
+		},
+		{
+			"name": "EaglercraftX 1.8 HTML5 Cursors",
+			"conf": "conf_template_eaglercraftX_1_8.json",
+			"opts": "opts_template_eaglercraftX_1_8_html5Cursors.txt",
+			"allow": [
+				"EAGLER_STANDARD_OFFLINE"
+			],
+			"parseTypes": [
+				"EAGLERCRAFTX_1_8_OFFLINE"
+			]
+		},
+		{
+			"name": "EaglercraftX 1.8 Signed",
+			"conf": "conf_template_eaglercraftX_1_8_signed.json",
+			"opts": "opts_template_eaglercraftX_1_8.txt",
+			"allow": [
+				"EAGLER_SIGNED_OFFLINE"
+			],
+			"parseTypes": [
+				"EAGLERCRAFTX_1_8_SIGNED"
+			]
+		},
+		{
+			"name": "EaglercraftX 1.8 Signed Demo",
+			"conf": "conf_template_eaglercraftX_1_8_signed.json",
+			"opts": "opts_template_eaglercraftX_1_8_demo.txt",
+			"allow": [
+				"EAGLER_SIGNED_OFFLINE"
+			],
+			"parseTypes": [
+				"EAGLERCRAFTX_1_8_SIGNED"
+			]
+		},
+		{
+			"name": "EaglercraftX 1.8 Signed HTML5 Cursors",
+			"conf": "conf_template_eaglercraftX_1_8_signed.json",
+			"opts": "opts_template_eaglercraftX_1_8_html5Cursors.txt",
+			"allow": [
+				"EAGLER_SIGNED_OFFLINE"
+			],
+			"parseTypes": [
+				"EAGLERCRAFTX_1_8_SIGNED"
+			]
+		},
+		{
+			"name": "Eaglercraft 1.5.2 (post-22w34a)",
+			"conf": "conf_template_eaglercraft_1_5.json",
+			"opts": "opts_template_eaglercraft_1_5.txt",
+			"allow": [
+				"EAGLER_STANDARD_1_5_OFFLINE"
+			],
+			"parseTypes": [
+				"EAGLERCRAFT_1_5_NEW_OFFLINE"
+			]
+		},
+		{
+			"name": "Eaglercraft 1.5.2 Live Music (post-22w34a)",
+			"conf": "conf_template_eaglercraft_1_5.json",
+			"opts": "opts_template_eaglercraft_1_5_livestream.txt",
+			"allow": [
+				"EAGLER_STANDARD_1_5_OFFLINE"
+			],
+			"parseTypes": [
+				"EAGLERCRAFT_1_5_NEW_OFFLINE"
+			]
+		},
+		{
+			"name": "Eaglercraft 1.5.2 (pre-22w34a)",
+			"conf": "conf_template_eaglercraft_1_5_legacy.json",
+			"opts": "opts_template_eaglercraft_1_5_legacy.txt",
+			"allow": [
+				"EAGLER_STANDARD_OFFLINE"
+			],
+			"parseTypes": [
+				"EAGLERCRAFT_1_5_OLD_OFFLINE"
+			]
+		},
+		{
+			"name": "Eaglercraft Beta 1.3",
+			"conf": "conf_template_eaglercraft_b1_3.json",
+			"opts": null,
+			"allow": [
+				"EAGLER_STANDARD_OFFLINE"
+			],
+			"parseTypes": [
+				"EAGLERCRAFT_BETA_B1_3_OFFLINE"
+			]
+		},
+		{
+			"name": "PeytonPlayz585 Beta 1.7.3",
+			"conf": "conf_template_peytonplayz585_b1_7_3.json",
+			"opts": "opts_template_peytonplayz585_b1_7_3.txt",
+			"allow": [
+				"EAGLER_STANDARD_OFFLINE"
+			],
+			"parseTypes": [
+				"PEYTONPLAYZ585_ALPHA_BETA"
+			]
+		},
+		{
+			"name": "PeytonPlayz585 Alpha 1.2.6",
+			"conf": "conf_template_peytonplayz585_a1_2_6.json",
+			"opts": "opts_template_peytonplayz585_a1_2_6.txt",
+			"allow": [
+				"EAGLER_STANDARD_OFFLINE"
+			],
+			"parseTypes": [
+				"PEYTONPLAYZ585_ALPHA_BETA"
+			]
+		},
+		{
+			"name": "PeytonPlayz585 Indev",
+			"conf": "conf_template_peytonplayz585_indev.json",
+			"opts": null,
+			"allow": [
+				"EAGLER_STANDARD_OFFLINE"
+			],
+			"parseTypes": [
+				"PEYTONPLAYZ585_INDEV"
+			]
+		},
+		{
+			"name": "Standard Offline Download",
+			"conf": "conf_template_standard_offline.json",
+			"opts": null,
+			"allow": [
+				"EAGLER_STANDARD_OFFLINE"
+			],
+			"parseTypes": [
+				"EXPORTED_STANDARD_OFFLINE"
+			]
+		}
+	]
+}

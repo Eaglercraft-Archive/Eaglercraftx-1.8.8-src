@@ -18,8 +18,11 @@
 
 + import java.util.Locale;
 
-> INSERT  1 : 14  @  1
+> INSERT  1 : 17  @  1
 
++ 
++ import org.apache.commons.lang3.StringUtils;
++ 
 + import java.util.TimeZone;
 + 
 + import com.google.common.base.Strings;
@@ -52,14 +55,11 @@
 
 + 	public int playerOffset = 0;
 
-> INSERT  7 : 10  @  7
+> CHANGE  7 : 31  @  7 : 14
 
-+ 		playerOffset = 0;
-+ 		int ww = scaledResolutionIn.getScaledWidth();
-+ 		int hh = scaledResolutionIn.getScaledHeight();
-
-> CHANGE  1 : 22  @  1 : 7
-
+~ 		playerOffset = 0;
+~ 		int ww = scaledResolutionIn.getScaledWidth();
+~ 		int hh = scaledResolutionIn.getScaledHeight();
 ~ 		if (this.mc.gameSettings.showDebugInfo) {
 ~ 			GlStateManager.pushMatrix();
 ~ 			this.renderDebugInfoLeft();
@@ -82,34 +82,33 @@
 ~ 			}
 ~ 
 
-> INSERT  2 : 26  @  2
+> CHANGE  2 : 25  @  2 : 3
 
-+ 		if (this.mc.currentScreen == null || !(this.mc.currentScreen instanceof GuiChat)) {
-+ 			if (this.mc.gameSettings.hudStats) {
-+ 				drawStatsHUD(ww - 2, hh - 2);
-+ 			}
-+ 
-+ 			if (this.mc.gameSettings.hudWorld) {
-+ 				drawWorldHUD(2, hh - 2);
-+ 			}
-+ 		}
-+ 
-+ 		if (this.mc.gameSettings.hudCoords && this.mc.joinWorldTickCounter < 80) {
-+ 			if (this.mc.joinWorldTickCounter > 70) {
-+ 				GlStateManager.enableBlend();
-+ 				GlStateManager.blendFunc(770, 771);
-+ 			}
-+ 			int i = this.mc.joinWorldTickCounter - 70;
-+ 			if (i < 0)
-+ 				i = 0;
-+ 			drawHideHUD(ww / 2, hh - 70, (10 - i) * 0xFF / 10);
-+ 			if (this.mc.joinWorldTickCounter > 70) {
-+ 				GlStateManager.disableBlend();
-+ 			}
-+ 		}
-+ 
+~ 		if (this.mc.currentScreen == null || !(this.mc.currentScreen instanceof GuiChat)) {
+~ 			if (this.mc.gameSettings.hudStats) {
+~ 				drawStatsHUD(ww - 2, hh - 2);
+~ 			}
+~ 
+~ 			if (this.mc.gameSettings.hudWorld) {
+~ 				drawWorldHUD(2, hh - 2);
+~ 			}
+~ 		}
+~ 
+~ 		if (this.mc.gameSettings.hudCoords && this.mc.joinWorldTickCounter < 80) {
+~ 			if (this.mc.joinWorldTickCounter > 70) {
+~ 				GlStateManager.enableBlend();
+~ 				GlStateManager.blendFunc(770, 771);
+~ 			}
+~ 			int i = this.mc.joinWorldTickCounter - 70;
+~ 			if (i < 0)
+~ 				i = 0;
+~ 			drawHideHUD(ww / 2, hh - 70, (10 - i) * 0xFF / 10);
+~ 			if (this.mc.joinWorldTickCounter > 70) {
+~ 				GlStateManager.disableBlend();
+~ 			}
+~ 		}
 
-> INSERT  3 : 142  @  3
+> INSERT  2 : 140  @  2
 
 + 	private void drawFPS(int x, int y) {
 + 		this.fontRenderer.drawStringWithShadow(this.mc.renderGlobal.getDebugInfoShort(), x, y, 0xFFFFFF);
@@ -205,7 +204,6 @@
 + 		final double dticks = ticks - minutes * ticksPerMinute;
 + 		final long seconds = (long) Math.floor(dticks / ticksPerSecond);
 + 
-+ 		// TODO: why does desktop JRE not apply "GMT" correctly?
 + 		final Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"), Locale.ENGLISH);
 + 
 + 		cal.setLenient(true);
@@ -215,10 +213,10 @@
 + 		cal.add(Calendar.MINUTE, (int) minutes);
 + 		cal.add(Calendar.SECOND, (int) seconds + 1);
 + 
++ 		SimpleDateFormat fmt = this.mc.gameSettings.hud24h ? SDFTwentyFour : SDFTwelve;
++ 		fmt.setCalendar(cal);
 + 		String timeString = EnumChatFormatting.WHITE + "Day " + ((totalTicks + 30000l) / 24000l) + " ("
-+ 				+ EnumChatFormatting.YELLOW
-+ 				+ (this.mc.gameSettings.hud24h ? SDFTwentyFour : SDFTwelve).format(cal.getTime())
-+ 				+ EnumChatFormatting.WHITE + ")";
++ 				+ EnumChatFormatting.YELLOW + fmt.format(cal.getTime()) + EnumChatFormatting.WHITE + ")";
 + 
 + 		Entity e = mc.getRenderViewEntity();
 + 		BlockPos blockpos = new BlockPos(e.posX, MathHelper.clamp_double(e.getEntityBoundingBox().minY, 0.0D, 254.0D),
@@ -251,7 +249,7 @@
 + 	}
 + 
 
-> INSERT  4 : 37  @  4
+> INSERT  4 : 44  @  4
 
 + 	private int drawSingleplayerStats(ScaledResolution parScaledResolution) {
 + 		if (mc.isDemo()) {
@@ -263,23 +261,30 @@
 + 			if (tpsAge < 20000l) {
 + 				int color = tpsAge > 2000l ? 0x777777 : 0xFFFFFF;
 + 				List<String> strs = SingleplayerServerController.getTPS();
++ 				if (SingleplayerServerController.isRunningSingleThreadMode()) {
++ 					strs = Lists.newArrayList(strs);
++ 					strs.add("");
++ 					strs.add(I18n.format("singleplayer.tpscounter.singleThreadMode"));
++ 				}
 + 				int l;
 + 				boolean first = true;
 + 				for (int j = 0, m = strs.size(); j < m; ++j) {
 + 					String str = strs.get(j);
-+ 					l = (int) (this.fontRenderer.getStringWidth(str) * (!first ? 0.5f : 1.0f));
-+ 					GlStateManager.pushMatrix();
-+ 					GlStateManager.translate(parScaledResolution.getScaledWidth() - 2 - l, i + 2, 0.0f);
-+ 					if (!first) {
-+ 						GlStateManager.scale(0.5f, 0.5f, 0.5f);
++ 					if (!StringUtils.isAllEmpty(str)) {
++ 						l = (int) (this.fontRenderer.getStringWidth(str) * (!first ? 0.5f : 1.0f));
++ 						GlStateManager.pushMatrix();
++ 						GlStateManager.translate(parScaledResolution.getScaledWidth() - 2 - l, i + 2, 0.0f);
++ 						if (!first) {
++ 							GlStateManager.scale(0.5f, 0.5f, 0.5f);
++ 						}
++ 						this.fontRenderer.drawStringWithShadow(str, 0, 0, color);
++ 						GlStateManager.popMatrix();
++ 						if (color == 0xFFFFFF) {
++ 							color = 14737632;
++ 						}
 + 					}
-+ 					this.fontRenderer.drawStringWithShadow(str, 0, 0, color);
-+ 					GlStateManager.popMatrix();
 + 					i += (int) (this.fontRenderer.FONT_HEIGHT * (!first ? 0.5f : 1.0f));
 + 					first = false;
-+ 					if (color == 0xFFFFFF) {
-+ 						color = 14737632;
-+ 					}
 + 				}
 + 			}
 + 		}
@@ -369,5 +374,9 @@
 ~ 		}
 
 > DELETE  8  @  8 : 12
+
+> CHANGE  25 : 26  @  25 : 26
+
+~ 		ScaledResolution scaledresolution = this.mc.scaledResolution;
 
 > EOF

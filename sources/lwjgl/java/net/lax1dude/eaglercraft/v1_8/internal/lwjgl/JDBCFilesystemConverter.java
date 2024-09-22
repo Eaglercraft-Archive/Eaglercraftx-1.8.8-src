@@ -7,7 +7,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.lax1dude.eaglercraft.v1_8.internal.PlatformFilesystem.IFilesystemProvider;
+import net.lax1dude.eaglercraft.v1_8.internal.IEaglerFilesystem;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformRuntime;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.ByteBuffer;
 import net.lax1dude.eaglercraft.v1_8.internal.vfs2.EaglerFileSystemException;
@@ -33,7 +33,7 @@ public class JDBCFilesystemConverter {
 
 	private static final Logger logger = LogManager.getLogger("JDBCFilesystemConverter");
 
-	public static void convertFilesystem(String title, File oldFS, IFilesystemProvider newFS, boolean deleteOld) {
+	public static void convertFilesystem(String title, File oldFS, IEaglerFilesystem newFS, boolean deleteOld) {
 		FilesystemConvertingDialog progressDialog = new FilesystemConvertingDialog(title);
 		try {
 			progressDialog.setProgressIndeterminate(true);
@@ -41,7 +41,7 @@ public class JDBCFilesystemConverter {
 			progressDialog.setVisible(true);
 			
 			String slug = oldFS.getAbsolutePath();
-			List<String> filesToCopy = new ArrayList();
+			List<String> filesToCopy = new ArrayList<>();
 			logger.info("Discovering files to convert...");
 			iterateFolder(slug.length(), oldFS, filesToCopy);
 			logger.info("Found {} files in the old directory", filesToCopy.size());

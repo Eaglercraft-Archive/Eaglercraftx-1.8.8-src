@@ -18,11 +18,7 @@ package net.lax1dude.eaglercraft.v1_8.internal.buffer;
  */
 public interface ByteBuffer extends Buffer {
 
-	ByteBuffer slice();
-
 	ByteBuffer duplicate();
-
-	ByteBuffer asReadOnlyBuffer();
 
 	byte get();
 
@@ -42,10 +38,6 @@ public interface ByteBuffer extends Buffer {
 
 	ByteBuffer put(byte[] src);
 
-	int arrayOffset();
-
-	ByteBuffer compact();
-
 	char getChar();
 
 	ByteBuffer putChar(char value);
@@ -54,7 +46,7 @@ public interface ByteBuffer extends Buffer {
 
 	ByteBuffer putChar(int index, char value);
 
-	public abstract short getShort();
+	short getShort();
 
 	ByteBuffer putShort(short value);
 
@@ -105,5 +97,7 @@ public interface ByteBuffer extends Buffer {
 	ByteBuffer limit(int newLimit);
 
 	ByteBuffer position(int newPosition);
+
+	byte[] array();
 
 }

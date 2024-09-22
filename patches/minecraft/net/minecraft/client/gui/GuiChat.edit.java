@@ -7,7 +7,7 @@
 
 > DELETE  2  @  2 : 3
 
-> CHANGE  2 : 13  @  2 : 4
+> CHANGE  2 : 18  @  2 : 4
 
 ~ 
 ~ import org.apache.commons.lang3.StringUtils;
@@ -16,25 +16,50 @@
 ~ 
 ~ import net.lax1dude.eaglercraft.v1_8.Keyboard;
 ~ import net.lax1dude.eaglercraft.v1_8.Mouse;
+~ import net.lax1dude.eaglercraft.v1_8.PointerInputAbstraction;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
+~ import net.lax1dude.eaglercraft.v1_8.minecraft.EnumInputEvent;
+~ import net.lax1dude.eaglercraft.v1_8.minecraft.GuiScreenVisualViewport;
+~ import net.lax1dude.eaglercraft.v1_8.notifications.GuiButtonNotifBell;
+~ import net.lax1dude.eaglercraft.v1_8.notifications.GuiScreenNotifications;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 ~ import net.minecraft.client.resources.I18n;
 
 > DELETE  6  @  6 : 11
 
-> INSERT  12 : 14  @  12
+> CHANGE  1 : 2  @  1 : 2
+
+~ public class GuiChat extends GuiScreenVisualViewport {
+
+> INSERT  10 : 13  @  10
 
 + 	private GuiButton exitButton;
++ 	private GuiButtonNotifBell notifBellButton;
 + 
 
-> INSERT  9 : 12  @  9
+> INSERT  9 : 17  @  9
 
 + 		if (!(this instanceof GuiSleepMP)) {
 + 			this.buttonList.add(exitButton = new GuiButton(69, this.width - 100, 3, 97, 20, I18n.format("chat.exit")));
++ 			if (!this.mc.isIntegratedServerRunning() && this.mc.thePlayer != null
++ 					&& this.mc.thePlayer.sendQueue.getEaglerMessageProtocol().ver >= 4) {
++ 				this.buttonList.add(notifBellButton = new GuiButtonNotifBell(70, this.width - 122, 3));
++ 				notifBellButton.setUnread(mc.thePlayer.sendQueue.getNotifManager().getUnread());
++ 			}
 + 		}
 
-> CHANGE  18 : 20  @  18 : 27
+> CHANGE  14 : 15  @  14 : 15
+
+~ 	public void updateScreen0() {
+
+> INSERT  1 : 4  @  1
+
++ 		if (notifBellButton != null && mc.thePlayer != null) {
++ 			notifBellButton.setUnread(mc.thePlayer.sendQueue.getNotifManager().getUnread());
++ 		}
+
+> CHANGE  2 : 4  @  2 : 11
 
 ~ 	protected void keyTyped(char parChar1, int parInt1) {
 ~ 		if (parInt1 == 1 && (this.mc.gameSettings.keyBindClose.getKeyCode() == 0 || this.mc.areKeysLocked())) {
@@ -77,13 +102,30 @@
 
 > CHANGE  25 : 26  @  25 : 26
 
-~ 	protected void mouseClicked(int parInt1, int parInt2, int parInt3) {
+~ 	protected void mouseClicked0(int parInt1, int parInt2, int parInt3) {
 
-> INSERT  11 : 17  @  11
+> CHANGE  1 : 3  @  1 : 2
+
+~ 			IChatComponent ichatcomponent = this.mc.ingameGUI.getChatGUI()
+~ 					.getChatComponent(PointerInputAbstraction.getVCursorX(), PointerInputAbstraction.getVCursorY());
+
+> INSERT  3 : 6  @  3
+
++ 			if (mc.notifRenderer.handleClicked(this, parInt1, parInt2)) {
++ 				return;
++ 			}
+
+> CHANGE  3 : 4  @  3 : 4
+
+~ 		super.mouseClicked0(parInt1, parInt2, parInt3);
+
+> INSERT  2 : 10  @  2
 
 + 	protected void actionPerformed(GuiButton par1GuiButton) {
 + 		if (par1GuiButton.id == 69) {
 + 			this.mc.displayGuiScreen(null);
++ 		} else if (par1GuiButton.id == 70) {
++ 			this.mc.displayGuiScreen(new GuiScreenNotifications(this));
 + 		}
 + 	}
 + 
@@ -101,27 +143,43 @@
 
 ~ 				stringbuilder.append(this.foundPlayerNames.get(i));
 
-> INSERT  44 : 45  @  44
+> CHANGE  41 : 42  @  41 : 42
 
-+ 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
+~ 	public void drawScreen0(int i, int j, float f) {
 
-> INSERT  5 : 9  @  5
+> CHANGE  2 : 5  @  2 : 3
 
-+ 		if (exitButton != null) {
-+ 			exitButton.yPosition = 3 + mc.guiAchievement.getHeight();
-+ 		}
-+ 
+~ 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
+~ 		IChatComponent ichatcomponent = this.mc.ingameGUI.getChatGUI()
+~ 				.getChatComponent(PointerInputAbstraction.getVCursorX(), PointerInputAbstraction.getVCursorY());
 
-> CHANGE  8 : 10  @  8 : 9
+> CHANGE  4 : 9  @  4 : 5
+
+~ 		if (exitButton != null) {
+~ 			exitButton.yPosition = 3 + mc.guiAchievement.getHeight();
+~ 		}
+~ 
+~ 		super.drawScreen0(i, j, f);
+
+> CHANGE  7 : 9  @  7 : 8
 
 ~ 			for (int i = 0; i < parArrayOfString.length; ++i) {
 ~ 				String s = parArrayOfString[i];
 
-> INSERT  24 : 28  @  24
+> INSERT  24 : 37  @  24
 
 + 
 + 	public boolean blockPTTKey() {
 + 		return true;
 + 	}
++ 
++ 	public boolean showCopyPasteButtons() {
++ 		return true;
++ 	}
++ 
++ 	public void fireInputEvent(EnumInputEvent event, String str) {
++ 		inputField.fireInputEvent(event, str);
++ 	}
++ 
 
 > EOF

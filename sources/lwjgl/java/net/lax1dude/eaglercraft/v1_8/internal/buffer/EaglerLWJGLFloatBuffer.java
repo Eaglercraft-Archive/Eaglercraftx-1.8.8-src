@@ -1,7 +1,5 @@
 package net.lax1dude.eaglercraft.v1_8.internal.buffer;
 
-import org.lwjgl.system.jemalloc.JEmalloc;
-
 import net.lax1dude.unsafememcpy.UnsafeMemcpy;
 import net.lax1dude.unsafememcpy.UnsafeUtils;
 
@@ -29,9 +27,9 @@ public class EaglerLWJGLFloatBuffer implements FloatBuffer {
 	private int position;
 	private int limit;
 	private int mark;
-	
+
 	private static final int SHIFT = 2;
-	
+
 	EaglerLWJGLFloatBuffer(long address, int capacity, boolean original) {
 		this(address, capacity, 0, capacity, -1, original);
 	}
@@ -71,28 +69,13 @@ public class EaglerLWJGLFloatBuffer implements FloatBuffer {
 	}
 
 	@Override
-	public boolean isReadOnly() {
-		return false;
-	}
-
-	@Override
 	public boolean hasArray() {
 		return false;
 	}
 
 	@Override
-	public Object array() {
+	public float[] array() {
 		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public int arrayOffset() {
-		return position;
-	}
-
-	@Override
-	public FloatBuffer slice() {
-		return new EaglerLWJGLFloatBuffer(address + (position << SHIFT), limit - position, false);
 	}
 
 	@Override
@@ -101,51 +84,46 @@ public class EaglerLWJGLFloatBuffer implements FloatBuffer {
 	}
 
 	@Override
-	public FloatBuffer asReadOnlyBuffer() {
-		return new EaglerLWJGLFloatBuffer(address, capacity, position, limit, mark, false);
-	}
-
-	@Override
 	public float get() {
-		if(position >= limit) throw new ArrayIndexOutOfBoundsException(position);
+		if(position >= limit) throw Buffer.makeIOOBE(position);
 		return UnsafeUtils.getMemFloat(address + ((position++) << SHIFT));
 	}
 
 	@Override
 	public FloatBuffer put(float b) {
-		if(position >= limit) throw new ArrayIndexOutOfBoundsException(position);
+		if(position >= limit) throw Buffer.makeIOOBE(position);
 		UnsafeUtils.setMemFloat(address + ((position++) << SHIFT), b);
 		return this;
 	}
 
 	@Override
 	public float get(int index) {
-		if(index >= limit) throw new ArrayIndexOutOfBoundsException(index);
+		if(index < 0 || index >= limit) throw Buffer.makeIOOBE(index);
 		return UnsafeUtils.getMemFloat(address + (index << SHIFT));
 	}
 
 	@Override
 	public FloatBuffer put(int index, float b) {
-		if(index >= limit) throw new ArrayIndexOutOfBoundsException(index);
+		if(index < 0 || index >= limit) throw Buffer.makeIOOBE(index);
 		UnsafeUtils.setMemFloat(address + (index << SHIFT), b);
 		return this;
 	}
 
 	@Override
 	public float getElement(int index) {
-		if(index >= limit) throw new ArrayIndexOutOfBoundsException(index);
+		if(index < 0 || index >= limit) throw Buffer.makeIOOBE(index);
 		return UnsafeUtils.getMemFloat(address + (index << SHIFT));
 	}
 
 	@Override
 	public void putElement(int index, float value) {
-		if(position >= limit) throw new ArrayIndexOutOfBoundsException(position);
-		UnsafeUtils.setMemFloat(address + ((position++) << SHIFT), value);
+		if(index < 0 || index >= limit) throw Buffer.makeIOOBE(index);
+		UnsafeUtils.setMemFloat(address + (index << SHIFT), value);
 	}
 
 	@Override
 	public FloatBuffer get(float[] dst, int offset, int length) {
-		if(position + length > limit) throw new ArrayIndexOutOfBoundsException(position + length - 1);
+		if(position + length > limit) throw Buffer.makeIOOBE(position + length - 1);
 		UnsafeMemcpy.memcpyAlignDst(dst, offset << SHIFT, address + (position << SHIFT), length);
 		position += length;
 		return this;
@@ -153,7 +131,7 @@ public class EaglerLWJGLFloatBuffer implements FloatBuffer {
 
 	@Override
 	public FloatBuffer get(float[] dst) {
-		if(position + dst.length > limit) throw new ArrayIndexOutOfBoundsException(position + dst.length - 1);
+		if(position + dst.length > limit) throw Buffer.makeIOOBE(position + dst.length - 1);
 		UnsafeMemcpy.memcpyAlignDst(dst, 0, address + (position << SHIFT), dst.length);
 		position += dst.length;
 		return this;
@@ -164,13 +142,13 @@ public class EaglerLWJGLFloatBuffer implements FloatBuffer {
 		if(src instanceof EaglerLWJGLFloatBuffer) {
 			EaglerLWJGLFloatBuffer c = (EaglerLWJGLFloatBuffer)src;
 			int l = c.limit - c.position;
-			if(position + l > limit) throw new ArrayIndexOutOfBoundsException(position + l - 1);
+			if(position + l > limit) throw Buffer.makeIOOBE(position + l - 1);
 			UnsafeMemcpy.memcpy(address + (position << SHIFT), c.address + (c.position << SHIFT), l << SHIFT);
 			position += l;
 			c.position += l;
 		}else {
 			int l = src.remaining();
-			if(position + l > limit) throw new ArrayIndexOutOfBoundsException(position + l - 1);
+			if(position + l > limit) throw Buffer.makeIOOBE(position + l - 1);
 			for(int i = 0; i < l; ++i) {
 				UnsafeUtils.setMemFloat(address + ((position + l) << SHIFT), src.get());
 			}
@@ -181,7 +159,7 @@ public class EaglerLWJGLFloatBuffer implements FloatBuffer {
 
 	@Override
 	public FloatBuffer put(float[] src, int offset, int length) {
-		if(position + length > limit) throw new ArrayIndexOutOfBoundsException(position + length - 1);
+		if(position + length > limit) throw Buffer.makeIOOBE(position + length - 1);
 		UnsafeMemcpy.memcpyAlignSrc(address + (position << SHIFT), src, offset << SHIFT, length);
 		position += length;
 		return this;
@@ -189,34 +167,10 @@ public class EaglerLWJGLFloatBuffer implements FloatBuffer {
 
 	@Override
 	public FloatBuffer put(float[] src) {
-		if(position + src.length > limit) throw new ArrayIndexOutOfBoundsException(position + src.length - 1);
+		if(position + src.length > limit) throw Buffer.makeIOOBE(position + src.length - 1);
 		UnsafeMemcpy.memcpyAlignSrc(address + (position << SHIFT), src, 0, src.length);
 		position += src.length;
 		return this;
-	}
-
-	@Override
-	public int getArrayOffset() {
-		return position;
-	}
-
-	@Override
-	public FloatBuffer compact() {
-		if(limit > capacity) throw new ArrayIndexOutOfBoundsException(limit);
-		if(position > limit) throw new ArrayIndexOutOfBoundsException(position);
-		
-		if(position == limit) {
-			return new EaglerLWJGLFloatBuffer(0l, 0, false);
-		}
-		
-		int newLen = limit - position;
-		long newAlloc = JEmalloc.nje_malloc(newLen);
-		if(newAlloc == 0l) {
-			throw new OutOfMemoryError("Native je_malloc call returned null pointer!");
-		}
-		UnsafeMemcpy.memcpy(newAlloc, address + (position << SHIFT), newLen << SHIFT);
-		
-		return new EaglerLWJGLFloatBuffer(newAlloc, newLen, true);
 	}
 
 	@Override
@@ -233,7 +187,7 @@ public class EaglerLWJGLFloatBuffer implements FloatBuffer {
 	@Override
 	public FloatBuffer reset() {
 		int m = mark;
-		if(m < 0) throw new ArrayIndexOutOfBoundsException("Invalid mark: " + m);
+		if(m < 0) throw new IndexOutOfBoundsException("Invalid mark: " + m);
 		position = m;
 		return this;
 	}
@@ -263,14 +217,14 @@ public class EaglerLWJGLFloatBuffer implements FloatBuffer {
 
 	@Override
 	public FloatBuffer limit(int newLimit) {
-		if(newLimit < 0 || newLimit > capacity) throw new ArrayIndexOutOfBoundsException(newLimit);
+		if(newLimit < 0 || newLimit > capacity) throw Buffer.makeIOOBE(newLimit);
 		limit = newLimit;
 		return this;
 	}
 
 	@Override
 	public FloatBuffer position(int newPosition) {
-		if(newPosition < 0 || newPosition > limit) throw new ArrayIndexOutOfBoundsException(newPosition);
+		if(newPosition < 0 || newPosition > limit) throw Buffer.makeIOOBE(newPosition);
 		position = newPosition;
 		return this;
 	}

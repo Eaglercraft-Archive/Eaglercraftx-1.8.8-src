@@ -44,15 +44,23 @@ public class EaglerSkinTexture implements ITextureObject {
 		if(pixels.length != width * height * 4) {
 			throw new IllegalArgumentException("Wrong data length " + pixels.length + "  for " + width + "x" + height + " texture");
 		}
+		this.pixels = convertToInt(pixels);
+		this.width = width;
+		this.height = height;
+	}
+
+	public static int[] convertToInt(byte[] pixels) {
 		int[] p = new int[pixels.length >> 2];
 		for(int i = 0, j; i < p.length; ++i) {
 			j = i << 2;
 			p[i] = (((int) pixels[j] & 0xFF) << 24) | (((int) pixels[j + 1] & 0xFF) << 16)
 					| (((int) pixels[j + 2] & 0xFF) << 8) | ((int) pixels[j + 3] & 0xFF);
 		}
-		this.pixels = p;
-		this.width = width;
-		this.height = height;
+		return p;
+	}
+
+	public void copyPixelsIn(byte[] pixels) {
+		copyPixelsIn(convertToInt(pixels));
 	}
 
 	public void copyPixelsIn(int[] pixels) {
@@ -91,6 +99,18 @@ public class EaglerSkinTexture implements ITextureObject {
 	public void free() {
 		GlStateManager.deleteTexture(textureId);
 		textureId = -1;
+	}
+
+	public int getWidth() {
+		return width;
+	}
+
+	public int getHeight() {
+		return height;
+	}
+
+	public int[] getData() {
+		return pixels;
 	}
 
 }

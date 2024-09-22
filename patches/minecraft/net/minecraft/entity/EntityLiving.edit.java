@@ -13,14 +13,47 @@
 
 > DELETE  1  @  1 : 8
 
-> CHANGE  316 : 320  @  316 : 318
+> CHANGE  56 : 58  @  56 : 59
+
+~ 		this.tasks = new EntityAITasks();
+~ 		this.targetTasks = new EntityAITasks();
+
+> DELETE  76  @  76 : 77
+
+> DELETE  4  @  4 : 6
+
+> DELETE  171  @  171 : 172
+
+> CHANGE  2 : 6  @  2 : 4
 
 ~ 			List<EntityItem> lst = this.worldObj.getEntitiesWithinAABB(EntityItem.class,
 ~ 					this.getEntityBoundingBox().expand(1.0D, 0.0D, 1.0D));
 ~ 			for (int i = 0, l = lst.size(); i < l; ++i) {
 ~ 				EntityItem entityitem = lst.get(i);
 
-> CHANGE  497 : 499  @  497 : 498
+> DELETE  5  @  5 : 7
+
+> DELETE  98  @  98 : 99
+
+> DELETE  1  @  1 : 3
+
+> DELETE  1  @  1 : 3
+
+> DELETE  1  @  1 : 3
+
+> DELETE  1  @  1 : 3
+
+> DELETE  1  @  1 : 3
+
+> DELETE  1  @  1 : 4
+
+> DELETE  1  @  1 : 2
+
+> DELETE  1  @  1 : 2
+
+> DELETE  1  @  1 : 3
+
+> CHANGE  365 : 367  @  365 : 366
 
 ~ 				EaglercraftUUID uuid = new EaglercraftUUID(this.leashNBTTag.getLong("UUIDMost"),
 ~ 						this.leashNBTTag.getLong("UUIDLeast"));

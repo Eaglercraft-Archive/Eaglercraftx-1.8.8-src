@@ -96,7 +96,79 @@ public abstract class JSEaglercraftXOptsRoot implements JSObject {
 	@JSBody(params = { "def" }, script = "return (typeof this.enableMinceraft === \"boolean\") ? this.enableMinceraft : def;")
 	public native boolean getEnableMinceraft(boolean defaultValue);
 
+	@JSBody(params = { "def" }, script = "return (typeof this.enableServerCookies === \"boolean\") ? this.enableServerCookies : def;")
+	public native boolean getEnableServerCookies(boolean defaultValue);
+
+	@JSBody(params = { "def" }, script = "return (typeof this.allowServerRedirects === \"boolean\") ? this.allowServerRedirects : def;")
+	public native boolean getAllowServerRedirects(boolean defaultValue);
+
 	@JSBody(params = { "def" }, script = "return (typeof this.crashOnUncaughtExceptions === \"boolean\") ? this.crashOnUncaughtExceptions : def;")
 	public native boolean getCrashOnUncaughtExceptions(boolean defaultValue);
+
+	@JSBody(params = { "def" }, script = "return (typeof this.openDebugConsoleOnLaunch === \"boolean\") ? this.openDebugConsoleOnLaunch : def;")
+	public native boolean getOpenDebugConsoleOnLaunch(boolean defaultValue);
+
+	@JSBody(params = { "def" }, script = "return (typeof this.fixDebugConsoleUnloadListener === \"boolean\") ? this.fixDebugConsoleUnloadListener : def;")
+	public native boolean getFixDebugConsoleUnloadListener(boolean defaultValue);
+
+	@JSBody(params = { "def" }, script = "return (typeof this.forceWebViewSupport === \"boolean\") ? this.forceWebViewSupport : def;")
+	public native boolean getForceWebViewSupport(boolean defaultValue);
+
+	@JSBody(params = { "def" }, script = "return (typeof this.enableWebViewCSP === \"boolean\") ? this.enableWebViewCSP : def;")
+	public native boolean getEnableWebViewCSP(boolean defaultValue);
+
+	@JSBody(params = { "def" }, script = "return (typeof this.autoFixLegacyStyleAttr === \"boolean\") ? this.autoFixLegacyStyleAttr : def;")
+	public native boolean getAutoFixLegacyStyleAttr(boolean defaultValue);
+
+	@JSBody(params = { "def" }, script = "return (typeof this.showBootMenuOnLaunch === \"boolean\") ? this.showBootMenuOnLaunch : def;")
+	public native boolean getShowBootMenuOnLaunch(boolean defaultValue);
+
+	@JSBody(params = { "def" }, script = "return (typeof this.bootMenuBlocksUnsignedClients === \"boolean\") ? this.bootMenuBlocksUnsignedClients : def;")
+	public native boolean getBootMenuBlocksUnsignedClients(boolean defaultValue);
+
+	@JSBody(params = { "def" }, script = "return (typeof this.allowBootMenu === \"boolean\") ? this.allowBootMenu : def;")
+	public native boolean getAllowBootMenu(boolean defaultValue);
+
+	@JSBody(params = { "def" }, script = "return (typeof this.forceProfanityFilter === \"boolean\") ? this.forceProfanityFilter : def;")
+	public native boolean getForceProfanityFilter(boolean defaultValue);
+
+	@JSBody(params = { "def" }, script = "return (typeof this.forceWebGL1 === \"boolean\") ? this.forceWebGL1 : def;")
+	public native boolean getForceWebGL1(boolean defaultValue);
+
+	@JSBody(params = { "def" }, script = "return (typeof this.forceWebGL2 === \"boolean\") ? this.forceWebGL2 : def;")
+	public native boolean getForceWebGL2(boolean defaultValue);
+
+	@JSBody(params = { "def" }, script = "return (typeof this.allowExperimentalWebGL1 === \"boolean\") ? this.allowExperimentalWebGL1 : def;")
+	public native boolean getAllowExperimentalWebGL1(boolean defaultValue);
+
+	@JSBody(params = { "def" }, script = "return (typeof this.useWebGLExt === \"boolean\") ? this.useWebGLExt : def;")
+	public native boolean getUseWebGLExt(boolean defaultValue);
+
+	@JSBody(params = { "def" }, script = "return (typeof this.useDelayOnSwap === \"boolean\") ? this.useDelayOnSwap : def;")
+	public native boolean getUseDelayOnSwap(boolean defaultValue);
+
+	@JSBody(params = { "def" }, script = "return (typeof this.useJOrbisAudioDecoder === \"boolean\") ? this.useJOrbisAudioDecoder : def;")
+	public native boolean getUseJOrbisAudioDecoder(boolean defaultValue);
+
+	@JSBody(params = { "def" }, script = "return (typeof this.useXHRFetch === \"boolean\") ? this.useXHRFetch : def;")
+	public native boolean getUseXHRFetch(boolean defaultValue);
+
+	@JSBody(params = { "def" }, script = "return (typeof this.useVisualViewport === \"boolean\") ? this.useVisualViewport : def;")
+	public native boolean getUseVisualViewport(boolean defaultValue);
+
+	@JSBody(params = { "def" }, script = "return (typeof this.deobfStackTraces === \"boolean\") ? this.deobfStackTraces : def;")
+	public native boolean getDeobfStackTraces(boolean deobfStackTraces);
+
+	@JSBody(params = { "def" }, script = "return (typeof this.disableBlobURLs === \"boolean\") ? this.disableBlobURLs : def;")
+	public native boolean getDisableBlobURLs(boolean deobfStackTraces);
+
+	@JSBody(params = { "def" }, script = "return (typeof this.eaglerNoDelay === \"boolean\") ? this.eaglerNoDelay : def;")
+	public native boolean getEaglerNoDelay(boolean deobfStackTraces);
+
+	@JSBody(params = { "def" }, script = "return (typeof this.ramdiskMode === \"boolean\") ? this.ramdiskMode : def;")
+	public native boolean getRamdiskMode(boolean deobfStackTraces);
+
+	@JSBody(params = { "def" }, script = "return (typeof this.singleThreadMode === \"boolean\") ? this.singleThreadMode : def;")
+	public native boolean getSingleThreadMode(boolean deobfStackTraces);
 
 }

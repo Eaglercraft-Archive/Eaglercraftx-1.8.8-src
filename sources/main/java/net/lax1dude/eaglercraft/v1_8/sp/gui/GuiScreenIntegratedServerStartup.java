@@ -1,8 +1,11 @@
 package net.lax1dude.eaglercraft.v1_8.sp.gui;
 
+import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.sp.SingleplayerServerController;
 import net.lax1dude.eaglercraft.v1_8.sp.WorkerStartupFailedException;
 import net.lax1dude.eaglercraft.v1_8.sp.ipc.IPCPacket15Crashed;
+import net.lax1dude.eaglercraft.v1_8.sp.ipc.IPCPacket1CIssueDetected;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiSelectWorld;
@@ -26,31 +29,42 @@ import net.minecraft.client.resources.I18n;
 public class GuiScreenIntegratedServerStartup extends GuiScreen {
 
 	private final GuiScreen backScreen;
+	private final boolean singleThread;
 	private static final String[] dotDotDot = new String[] { "", ".", "..", "..." };
 
 	private int counter = 0;
 
+	private GuiButton cancelButton;
+
 	public GuiScreenIntegratedServerStartup(GuiScreen backScreen) {
 		this.backScreen = backScreen;
+		this.singleThread = false;
 	}
 
-	protected void keyTyped(char parChar1, int parInt1) {
+	public GuiScreenIntegratedServerStartup(GuiScreen backScreen, boolean singleThread) {
+		this.backScreen = backScreen;
+		this.singleThread = singleThread;
 	}
 
 	public void initGui() {
 		this.buttonList.clear();
+		this.buttonList.add(cancelButton = new GuiButton(0, this.width / 2 - 100, this.height / 3 + 50, I18n.format("singleplayer.busy.killTask")));
+		cancelButton.visible = false;
 	}
 
 	public void updateScreen() {
 		++counter;
 		if(counter == 2) {
 			try {
-				SingleplayerServerController.startIntegratedServerWorker();
+				SingleplayerServerController.startIntegratedServerWorker(singleThread);
 			}catch(WorkerStartupFailedException ex) {
 				mc.displayGuiScreen(new GuiScreenIntegratedServerFailed(ex.getMessage(), new GuiMainMenu()));
 				return;
 			}
 		}else if(counter > 2) {
+			if(counter > 100 && SingleplayerServerController.canKillWorker() && !singleThread) {
+				cancelButton.visible = true;
+			}
 			IPCPacket15Crashed[] crashReport = SingleplayerServerController.worldStatusErrors();
 			if(crashReport != null) {
 				mc.displayGuiScreen(GuiScreenIntegratedServerBusy.createException(new GuiMainMenu(), "singleplayer.failed.notStarted", crashReport));
@@ -58,9 +72,20 @@ public class GuiScreenIntegratedServerStartup extends GuiScreen {
 				GuiScreen cont = new GuiSelectWorld(backScreen);
 				if(SingleplayerServerController.isRunningSingleThreadMode()) {
 					cont = new GuiScreenIntegratedServerFailed("singleplayer.failed.singleThreadWarning.1", "singleplayer.failed.singleThreadWarning.2", cont);
+				} else if (!EagRuntime.getConfiguration().isRamdiskMode()
+						&& SingleplayerServerController.isIssueDetected(IPCPacket1CIssueDetected.ISSUE_RAMDISK_MODE)
+						&& SingleplayerServerController.canKillWorker()) {
+					cont = new GuiScreenRAMDiskModeDetected(cont);
 				}
 				mc.displayGuiScreen(cont);
 			}
+		}
+	}
+
+	protected void actionPerformed(GuiButton parGuiButton) {
+		if(parGuiButton.id == 0) {
+			SingleplayerServerController.killWorker();
+			mc.displayGuiScreen(new GuiScreenIntegratedServerStartup(new GuiMainMenu(), true));
 		}
 	}
 
@@ -68,8 +93,12 @@ public class GuiScreenIntegratedServerStartup extends GuiScreen {
 		this.drawBackground(0);
 		String txt = I18n.format("singleplayer.integratedStartup");
 		int w = this.fontRendererObj.getStringWidth(txt);
-		this.drawString(this.fontRendererObj, txt + dotDotDot[(int)((System.currentTimeMillis() / 300L) % 4L)], (this.width - w) / 2, this.height / 2 - 50, 16777215);
+		this.drawString(this.fontRendererObj, txt + dotDotDot[(int)((EagRuntime.steadyTimeMillis() / 300L) % 4L)], (this.width - w) / 2, this.height / 2 - 50, 16777215);
 		super.drawScreen(i, j, f);
+	}
+
+	public boolean canCloseGui() {
+		return false;
 	}
 
 }

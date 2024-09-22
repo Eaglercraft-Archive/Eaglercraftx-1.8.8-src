@@ -24,7 +24,19 @@
 
 ~ public abstract class EntityPlayer extends EntityLivingBase implements ICommandSender {
 
-> CHANGE  458 : 459  @  458 : 459
+> INSERT  77 : 86  @  77
+
++ 	public boolean getItemShouldUseOnTouchEagler() {
++ 		if (itemInUse != null) {
++ 			return itemInUse.getItem().shouldUseOnTouchEagler(itemInUse);
++ 		} else {
++ 			ItemStack st = getHeldItem();
++ 			return st != null && st.getItem().shouldUseOnTouchEagler(st);
++ 		}
++ 	}
++ 
+
+> CHANGE  381 : 382  @  381 : 382
 
 ~ 		Collection<ScoreObjective> collection = this.getWorldScoreboard()
 

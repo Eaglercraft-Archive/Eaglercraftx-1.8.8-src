@@ -5,10 +5,11 @@
 # Version: 1.0
 # Author: lax1dude
 
-> INSERT  7 : 11  @  7
+> INSERT  7 : 12  @  7
 
 + 
 + import net.lax1dude.eaglercraft.v1_8.Keyboard;
++ import net.lax1dude.eaglercraft.v1_8.minecraft.EnumInputEvent;
 + import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 + import net.lax1dude.eaglercraft.v1_8.opengl.WorldRenderer;
 
@@ -18,7 +19,15 @@
 
 > DELETE  9  @  9 : 10
 
-> CHANGE  41 : 42  @  41 : 42
+> INSERT  37 : 42  @  37
+
++ 	public void handleTouchInput() throws IOException {
++ 		super.handleTouchInput();
++ 		this.field_146435_s.handleTouchInput();
++ 	}
++ 
+
+> CHANGE  4 : 5  @  4 : 5
 
 ~ 	protected void mouseClicked(int parInt1, int parInt2, int parInt3) {
 
@@ -34,5 +43,19 @@
 
 ~ 			for (int i = 0, l = parList.size(); i < l; ++i) {
 ~ 				flatgeneratorinfo.getWorldFeatures().put(parList.get(i), Maps.newHashMap());
+
+> INSERT  132 : 143  @  132
+
++ 
++ 	@Override
++ 	public boolean showCopyPasteButtons() {
++ 		return field_146433_u.isFocused();
++ 	}
++ 
++ 	@Override
++ 	public void fireInputEvent(EnumInputEvent event, String param) {
++ 		field_146433_u.fireInputEvent(event, param);
++ 	}
++ 
 
 > EOF

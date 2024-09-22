@@ -97,7 +97,7 @@ public class ShaderSource {
 	public static final ResourceLocation accel_particle_dynamiclights_vsh = new ResourceLocation("eagler:glsl/dynamiclights/accel_particle_dynamiclights.vsh");
 	public static final ResourceLocation accel_particle_dynamiclights_fsh = new ResourceLocation("eagler:glsl/dynamiclights/accel_particle_dynamiclights.fsh");
 
-	private static final Map<ResourceLocation, String> sourceCache = new HashMap();
+	private static final Map<ResourceLocation, String> sourceCache = new HashMap<>();
 
 	private static boolean isHighP = false;
 

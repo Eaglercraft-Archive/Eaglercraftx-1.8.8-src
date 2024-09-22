@@ -29,7 +29,7 @@ public class PipelineShaderLightingSun extends ShaderProgram<PipelineShaderLight
 
 	public static PipelineShaderLightingSun compile(int shadowsSun, boolean coloredShadows) throws ShaderException {
 		IShaderGL sunShader = null;
-		List<String> compileFlags = new ArrayList(1);
+		List<String> compileFlags = new ArrayList<>(1);
 		if(shadowsSun > 0) {
 			compileFlags.add("COMPILE_SUN_SHADOW");
 		}

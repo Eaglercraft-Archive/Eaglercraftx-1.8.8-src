@@ -32,9 +32,7 @@ public class EaglerArrayByteBuffer implements ByteBuffer {
 	int position;
 	int limit;
 	int mark;
-	
-	static final Int8Array ZERO_LENGTH_BUFFER = Int8Array.create(0);
-	
+
 	EaglerArrayByteBuffer(DataView dataView) {
 		this.dataView = dataView;
 		this.typedArray = Int8Array.create(dataView.getBuffer(), dataView.getByteOffset(), dataView.getByteLength());
@@ -43,7 +41,7 @@ public class EaglerArrayByteBuffer implements ByteBuffer {
 		this.limit = this.capacity;
 		this.mark = -1;
 	}
-	
+
 	EaglerArrayByteBuffer(DataView dataView, int position, int limit, int mark) {
 		this.dataView = dataView;
 		this.typedArray = Int8Array.create(dataView.getBuffer(), dataView.getByteOffset(), dataView.getByteLength());
@@ -52,7 +50,7 @@ public class EaglerArrayByteBuffer implements ByteBuffer {
 		this.limit = limit;
 		this.mark = mark;
 	}
-	
+
 	EaglerArrayByteBuffer(Int8Array typedArray) {
 		this.typedArray = typedArray;
 		this.dataView = DataView.create(typedArray.getBuffer(), typedArray.getByteOffset(), typedArray.getByteLength());
@@ -61,7 +59,7 @@ public class EaglerArrayByteBuffer implements ByteBuffer {
 		this.limit = this.capacity;
 		this.mark = -1;
 	}
-	
+
 	EaglerArrayByteBuffer(Int8Array typedArray, int position, int limit, int mark) {
 		this.typedArray = typedArray;
 		this.dataView = DataView.create(typedArray.getBuffer(), typedArray.getByteOffset(), typedArray.getByteLength());
@@ -97,17 +95,12 @@ public class EaglerArrayByteBuffer implements ByteBuffer {
 	}
 
 	@Override
-	public boolean isReadOnly() {
-		return false;
-	}
-
-	@Override
 	public boolean hasArray() {
 		return false;
 	}
 
 	@Override
-	public Object array() {
+	public byte[] array() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -117,54 +110,39 @@ public class EaglerArrayByteBuffer implements ByteBuffer {
 	}
 
 	@Override
-	public ByteBuffer slice() {
-		if(position == limit) {
-			return new EaglerArrayByteBuffer(ZERO_LENGTH_BUFFER);
-		}else {
-			if(position > limit) throw new ArrayIndexOutOfBoundsException(position);
-			return new EaglerArrayByteBuffer(Int8Array.create(typedArray.getBuffer(), typedArray.getByteOffset() + position, limit - position));
-		}
-	}
-
-	@Override
 	public ByteBuffer duplicate() {
 		return new EaglerArrayByteBuffer(dataView, position, limit, mark);
 	}
 
 	@Override
-	public ByteBuffer asReadOnlyBuffer() {
-		return new EaglerArrayByteBuffer(dataView, position, limit, mark);
-	}
-
-	@Override
 	public byte get() {
-		if(position >= limit) throw new ArrayIndexOutOfBoundsException(position);
+		if(position >= limit) throw Buffer.makeIOOBE(position);
 		return typedArray.get(position++);
 	}
 
 	@Override
 	public ByteBuffer put(byte b) {
-		if(position >= limit) throw new ArrayIndexOutOfBoundsException(position);
+		if(position >= limit) throw Buffer.makeIOOBE(position);
 		typedArray.set(position++, b);
 		return this;
 	}
 
 	@Override
 	public byte get(int index) {
-		if(index >= limit) throw new ArrayIndexOutOfBoundsException(index);
+		if(index < 0 || index >= limit) throw Buffer.makeIOOBE(index);
 		return typedArray.get(index);
 	}
 
 	@Override
 	public ByteBuffer put(int index, byte b) {
-		if(index >= limit) throw new ArrayIndexOutOfBoundsException(index);
+		if(index < 0 || index >= limit) throw Buffer.makeIOOBE(index);
 		typedArray.set(index, b);
 		return this;
 	}
 
 	@Override
 	public ByteBuffer get(byte[] dst, int offset, int length) {
-		if(position + length > limit) throw new ArrayIndexOutOfBoundsException(position + length - 1);
+		if(position + length > limit) throw Buffer.makeIOOBE(position + length - 1);
 		TeaVMUtils.unwrapArrayBufferView(dst).set(Int8Array.create(typedArray.getBuffer(), typedArray.getByteOffset() + position, length), offset);
 		position += length;
 		return this;
@@ -172,7 +150,7 @@ public class EaglerArrayByteBuffer implements ByteBuffer {
 
 	@Override
 	public ByteBuffer get(byte[] dst) {
-		if(position + dst.length > limit) throw new ArrayIndexOutOfBoundsException(position + dst.length - 1);
+		if(position + dst.length > limit) throw Buffer.makeIOOBE(position + dst.length - 1);
 		TeaVMUtils.unwrapArrayBufferView(dst).set(Int8Array.create(typedArray.getBuffer(), typedArray.getByteOffset() + position, dst.length));
 		position += dst.length;
 		return this;
@@ -183,13 +161,13 @@ public class EaglerArrayByteBuffer implements ByteBuffer {
 		if(src instanceof EaglerArrayByteBuffer) {
 			EaglerArrayByteBuffer c = (EaglerArrayByteBuffer)src;
 			int l = c.limit - c.position;
-			if(position + l > limit) throw new ArrayIndexOutOfBoundsException(position + l - 1);
+			if(position + l > limit) throw Buffer.makeIOOBE(position + l - 1);
 			typedArray.set(Int8Array.create(c.typedArray.getBuffer(), c.typedArray.getByteOffset() + c.position, l), position);
 			position += l;
 			c.position += l;
 		}else {
 			int l = src.remaining();
-			if(position + l > limit) throw new ArrayIndexOutOfBoundsException(position + l - 1);
+			if(position + l > limit) throw Buffer.makeIOOBE(position + l - 1);
 			for(int i = 0; i < l; ++i) {
 				dataView.setInt8(position + l, src.get());
 			}
@@ -200,7 +178,7 @@ public class EaglerArrayByteBuffer implements ByteBuffer {
 
 	@Override
 	public ByteBuffer put(byte[] src, int offset, int length) {
-		if(position + length > limit) throw new ArrayIndexOutOfBoundsException(position + length - 1);
+		if(position + length > limit) throw Buffer.makeIOOBE(position + length - 1);
 		if(offset == 0 && length == src.length) {
 			typedArray.set(TeaVMUtils.unwrapArrayBufferView(src), position);
 		}else {
@@ -212,35 +190,15 @@ public class EaglerArrayByteBuffer implements ByteBuffer {
 
 	@Override
 	public ByteBuffer put(byte[] src) {
-		if(position + src.length > limit) throw new ArrayIndexOutOfBoundsException(position + src.length - 1);
+		if(position + src.length > limit) throw Buffer.makeIOOBE(position + src.length - 1);
 		typedArray.set(TeaVMUtils.unwrapArrayBufferView(src), position);
 		position += src.length;
 		return this;
 	}
 
 	@Override
-	public int arrayOffset() {
-		return position;
-	}
-
-	@Override
-	public ByteBuffer compact() {
-		if(limit > capacity) throw new ArrayIndexOutOfBoundsException(limit);
-		if(position > limit) throw new ArrayIndexOutOfBoundsException(position);
-		
-		if(position == limit) {
-			return new EaglerArrayByteBuffer(ZERO_LENGTH_BUFFER);
-		}
-		
-		Int8Array dst = Int8Array.create(limit - position);
-		dst.set(Int8Array.create(typedArray.getBuffer(), typedArray.getByteOffset() + position, limit - position));
-		
-		return new EaglerArrayByteBuffer(dst);
-	}
-
-	@Override
 	public char getChar() {
-		if(position + 2 > limit) throw new ArrayIndexOutOfBoundsException(position);
+		if(position + 2 > limit) throw Buffer.makeIOOBE(position);
 		char c = (char)dataView.getUint16(position, true);
 		position += 2;
 		return c;
@@ -248,7 +206,7 @@ public class EaglerArrayByteBuffer implements ByteBuffer {
 
 	@Override
 	public ByteBuffer putChar(char value) {
-		if(position + 2 > limit) throw new ArrayIndexOutOfBoundsException(position);
+		if(position + 2 > limit) throw Buffer.makeIOOBE(position);
 		dataView.setUint16(position, (short)value, true);
 		position += 2;
 		return this;
@@ -256,20 +214,20 @@ public class EaglerArrayByteBuffer implements ByteBuffer {
 
 	@Override
 	public char getChar(int index) {
-		if(index + 2 > limit) throw new ArrayIndexOutOfBoundsException(index);
+		if(index < 0 || index + 2 > limit) throw Buffer.makeIOOBE(index);
 		return (char)dataView.getUint16(index, true);
 	}
 
 	@Override
 	public ByteBuffer putChar(int index, char value) {
-		if(index + 2 > limit) throw new ArrayIndexOutOfBoundsException(index);
+		if(index < 0 || index + 2 > limit) throw Buffer.makeIOOBE(index);
 		dataView.setUint16(index, value, true);
 		return this;
 	}
 
 	@Override
 	public short getShort() {
-		if(position + 2 > limit) throw new ArrayIndexOutOfBoundsException(position);
+		if(position + 2 > limit) throw Buffer.makeIOOBE(position);
 		short s = dataView.getInt16(position, true);
 		position += 2;
 		return s;
@@ -277,7 +235,7 @@ public class EaglerArrayByteBuffer implements ByteBuffer {
 
 	@Override
 	public ByteBuffer putShort(short value) {
-		if(position + 2 > limit) throw new ArrayIndexOutOfBoundsException(position);
+		if(position + 2 > limit) throw Buffer.makeIOOBE(position);
 		dataView.setInt16(position, value, true);
 		position += 2;
 		return this;
@@ -285,13 +243,13 @@ public class EaglerArrayByteBuffer implements ByteBuffer {
 
 	@Override
 	public short getShort(int index) {
-		if(index + 2 > limit) throw new ArrayIndexOutOfBoundsException(index);
+		if(index < 0 || index + 2 > limit) throw Buffer.makeIOOBE(index);
 		return dataView.getInt16(index, true);
 	}
 
 	@Override
 	public ByteBuffer putShort(int index, short value) {
-		if(index + 2 > limit) throw new ArrayIndexOutOfBoundsException(index);
+		if(index < 0 || index + 2 > limit) throw Buffer.makeIOOBE(index);
 		dataView.setInt16(index, value, true);
 		return this;
 	}
@@ -303,7 +261,7 @@ public class EaglerArrayByteBuffer implements ByteBuffer {
 
 	@Override
 	public int getInt() {
-		if(position + 4 > limit) throw new ArrayIndexOutOfBoundsException(position);
+		if(position + 4 > limit) throw Buffer.makeIOOBE(position);
 		int i = dataView.getInt32(position, true);
 		position += 4;
 		return i;
@@ -311,7 +269,7 @@ public class EaglerArrayByteBuffer implements ByteBuffer {
 
 	@Override
 	public ByteBuffer putInt(int value) {
-		if(position + 4 > limit) throw new ArrayIndexOutOfBoundsException(position);
+		if(position + 4 > limit) throw Buffer.makeIOOBE(position);
 		dataView.setInt32(position, value, true);
 		position += 4;
 		return this;
@@ -319,13 +277,13 @@ public class EaglerArrayByteBuffer implements ByteBuffer {
 
 	@Override
 	public int getInt(int index) {
-		if(index + 4 > limit) throw new ArrayIndexOutOfBoundsException(index);
+		if(index < 0 || index + 4 > limit) throw Buffer.makeIOOBE(index);
 		return dataView.getInt32(index, true);
 	}
 
 	@Override
 	public ByteBuffer putInt(int index, int value) {
-		if(index + 4 > limit) throw new ArrayIndexOutOfBoundsException(index);
+		if(index < 0 || index + 4 > limit) throw Buffer.makeIOOBE(index);
 		dataView.setInt32(index, value, true);
 		return this;
 	}
@@ -337,7 +295,7 @@ public class EaglerArrayByteBuffer implements ByteBuffer {
 
 	@Override
 	public long getLong() {
-		if(position + 8 > limit) throw new ArrayIndexOutOfBoundsException(position);
+		if(position + 8 > limit) throw Buffer.makeIOOBE(position);
 		long l = dataView.getUint32(position) | ((long) dataView.getUint8(position + 4) << 32)
 				| ((long) dataView.getUint8(position + 5) << 40) | ((long) dataView.getUint8(position + 6) << 48)
 				| ((long) dataView.getUint8(position + 7) << 56);
@@ -347,7 +305,7 @@ public class EaglerArrayByteBuffer implements ByteBuffer {
 
 	@Override
 	public ByteBuffer putLong(long value) {
-		if(position + 8 > limit) throw new ArrayIndexOutOfBoundsException(position);
+		if(position + 8 > limit) throw Buffer.makeIOOBE(position);
 		dataView.setUint32(position, (int) (value & 0xFFFFFFFFl), true);
 		dataView.setUint8(position + 4, (short) ((value >>> 32l) & 0xFFl));
 		dataView.setUint8(position + 5, (short) ((value >>> 40l) & 0xFFl));
@@ -359,7 +317,7 @@ public class EaglerArrayByteBuffer implements ByteBuffer {
 
 	@Override
 	public long getLong(int index) {
-		if(index + 8 > limit) throw new ArrayIndexOutOfBoundsException(index);
+		if(index < 0 || index + 8 > limit) throw Buffer.makeIOOBE(index);
 		return dataView.getUint32(index, true) | ((long) dataView.getUint8(index + 4) << 32)
 				| ((long) dataView.getUint8(index + 5) << 40) | ((long) dataView.getUint8(index + 6) << 48)
 				| ((long) dataView.getUint8(index + 7) << 56);
@@ -367,7 +325,7 @@ public class EaglerArrayByteBuffer implements ByteBuffer {
 
 	@Override
 	public ByteBuffer putLong(int index, long value) {
-		if(index + 8 > limit) throw new ArrayIndexOutOfBoundsException(index);
+		if(index < 0 || index + 8 > limit) throw Buffer.makeIOOBE(index);
 		dataView.setUint32(index, (int) (value & 0xFFFFFFFFl), true);
 		dataView.setUint8(index + 4, (short) ((value >>> 32l) & 0xFFl));
 		dataView.setUint8(index + 5, (short) ((value >>> 40l) & 0xFFl));
@@ -378,7 +336,7 @@ public class EaglerArrayByteBuffer implements ByteBuffer {
 
 	@Override
 	public float getFloat() {
-		if(position + 4 > limit) throw new ArrayIndexOutOfBoundsException(position);
+		if(position + 4 > limit) throw Buffer.makeIOOBE(position);
 		float f = dataView.getFloat32(position, true);
 		position += 4;
 		return f;
@@ -386,7 +344,7 @@ public class EaglerArrayByteBuffer implements ByteBuffer {
 
 	@Override
 	public ByteBuffer putFloat(float value) {
-		if(position + 4 > limit) throw new ArrayIndexOutOfBoundsException(position);
+		if(position + 4 > limit) throw Buffer.makeIOOBE(position);
 		dataView.setFloat32(position, value, true);
 		position += 4;
 		return this;
@@ -394,13 +352,13 @@ public class EaglerArrayByteBuffer implements ByteBuffer {
 
 	@Override
 	public float getFloat(int index) {
-		if(index + 4 > limit) throw new ArrayIndexOutOfBoundsException(index);
+		if(index < 0 || index + 4 > limit) throw Buffer.makeIOOBE(index);
 		return dataView.getFloat32(index, true);
 	}
 
 	@Override
 	public ByteBuffer putFloat(int index, float value) {
-		if(index + 4 > limit) throw new ArrayIndexOutOfBoundsException(index);
+		if(index < 0 || index + 4 > limit) throw Buffer.makeIOOBE(index);
 		dataView.setFloat32(index, value, true);
 		return this;
 	}
@@ -419,7 +377,7 @@ public class EaglerArrayByteBuffer implements ByteBuffer {
 	@Override
 	public ByteBuffer reset() {
 		int m = mark;
-		if(m < 0) throw new ArrayIndexOutOfBoundsException("Invalid mark: " + m);
+		if(m < 0) throw new IndexOutOfBoundsException("Invalid mark: " + m);
 		position = m;
 		return this;
 	}
@@ -449,14 +407,14 @@ public class EaglerArrayByteBuffer implements ByteBuffer {
 
 	@Override
 	public ByteBuffer limit(int newLimit) {
-		if(newLimit < 0 || newLimit > capacity) throw new ArrayIndexOutOfBoundsException(newLimit);
+		if(newLimit < 0 || newLimit > capacity) throw Buffer.makeIOOBE(newLimit);
 		limit = newLimit;
 		return this;
 	}
 
 	@Override
 	public ByteBuffer position(int newPosition) {
-		if(newPosition < 0 || newPosition > limit) throw new ArrayIndexOutOfBoundsException(newPosition);
+		if(newPosition < 0 || newPosition > limit) throw Buffer.makeIOOBE(newPosition);
 		position = newPosition;
 		return this;
 	}

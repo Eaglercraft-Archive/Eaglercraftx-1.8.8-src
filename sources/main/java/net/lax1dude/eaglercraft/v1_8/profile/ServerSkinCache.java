@@ -1,19 +1,19 @@
 package net.lax1dude.eaglercraft.v1_8.profile;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 import net.lax1dude.eaglercraft.v1_8.mojang.authlib.GameProfile;
 import net.lax1dude.eaglercraft.v1_8.mojang.authlib.TexturesProperty;
-import net.lax1dude.eaglercraft.v1_8.socket.EaglercraftNetworkManager;
+import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.client.CPacketGetOtherSkinEAG;
+import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.client.CPacketGetSkinByURLEAG;
+import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.play.client.C17PacketCustomPayload;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -41,7 +41,7 @@ public class ServerSkinCache {
 		protected final int presetSkinId;
 		protected final CacheCustomSkin customSkin;
 		
-		protected long lastCacheHit = System.currentTimeMillis();
+		protected long lastCacheHit = EagRuntime.steadyTimeMillis();
 		
 		protected SkinCacheEntry(EaglerSkinTexture textureInstance, ResourceLocation resourceLocation, SkinModel model) {
 			this.isPresetSkin = false;
@@ -125,26 +125,32 @@ public class ServerSkinCache {
 
 	private final SkinCacheEntry defaultCacheEntry = new SkinCacheEntry(0);
 	private final SkinCacheEntry defaultSlimCacheEntry = new SkinCacheEntry(1);
-	private final Map<EaglercraftUUID, SkinCacheEntry> skinsCache = new HashMap();
-	private final Map<EaglercraftUUID, WaitingSkin> waitingSkins = new HashMap();
-	private final Map<EaglercraftUUID, Long> evictedSkins = new HashMap();
+	private final Map<EaglercraftUUID, SkinCacheEntry> skinsCache = new HashMap<>();
+	private final Map<EaglercraftUUID, WaitingSkin> waitingSkins = new HashMap<>();
+	private final Map<EaglercraftUUID, Long> evictedSkins = new HashMap<>();
 
-	private final EaglercraftNetworkManager networkManager;
+	private final NetHandlerPlayClient netHandler;
 	protected final TextureManager textureManager;
 	
 	private final EaglercraftUUID clientPlayerId;
-	private final SkinCacheEntry clientPlayerCacheEntry;
+	private SkinCacheEntry clientPlayerCacheEntry;
 
-	private long lastFlush = System.currentTimeMillis();
-	private long lastFlushReq = System.currentTimeMillis();
-	private long lastFlushEvict = System.currentTimeMillis();
+	private long lastFlush = EagRuntime.steadyTimeMillis();
+	private long lastFlushReq = EagRuntime.steadyTimeMillis();
+	private long lastFlushEvict = EagRuntime.steadyTimeMillis();
 
 	private static int texId = 0;
+	public static boolean needReloadClientSkin = false;
 
-	public ServerSkinCache(EaglercraftNetworkManager networkManager, TextureManager textureManager) {
-		this.networkManager = networkManager;
+	public ServerSkinCache(NetHandlerPlayClient netHandler, TextureManager textureManager) {
+		this.netHandler = netHandler;
 		this.textureManager = textureManager;
 		this.clientPlayerId = EaglerProfile.getPlayerUUID();
+		reloadClientPlayerSkin();
+	}
+
+	public void reloadClientPlayerSkin() {
+		needReloadClientSkin = false;
 		this.clientPlayerCacheEntry = new SkinCacheEntry(EaglerProfile.getActiveSkinResourceLocation(), EaglerProfile.getActiveSkinModel());
 	}
 
@@ -184,20 +190,12 @@ public class ServerSkinCache {
 		SkinCacheEntry etr = skinsCache.get(player);
 		if(etr == null) {
 			if(!waitingSkins.containsKey(player) && !evictedSkins.containsKey(player)) {
-				waitingSkins.put(player, new WaitingSkin(System.currentTimeMillis(), null));
-				PacketBuffer buffer;
-				try {
-					buffer = SkinPackets.writeGetOtherSkin(player);
-				}catch(IOException ex) {
-					logger.error("Could not write skin request packet!");
-					logger.error(ex);
-					return defaultCacheEntry;
-				}
-				networkManager.sendPacket(new C17PacketCustomPayload("EAG|Skins-1.8", buffer));
+				waitingSkins.put(player, new WaitingSkin(EagRuntime.steadyTimeMillis(), null));
+				netHandler.sendEaglerMessage(new CPacketGetOtherSkinEAG(player.msb, player.lsb));
 			}
 			return defaultCacheEntry;
 		}else {
-			etr.lastCacheHit = System.currentTimeMillis();
+			etr.lastCacheHit = EagRuntime.steadyTimeMillis();
 			return etr;
 		}
 	}
@@ -209,20 +207,12 @@ public class ServerSkinCache {
 		EaglercraftUUID generatedUUID = SkinPackets.createEaglerURLSkinUUID(url);
 		SkinCacheEntry etr = skinsCache.get(generatedUUID);
 		if(etr != null) {
-			etr.lastCacheHit = System.currentTimeMillis();
+			etr.lastCacheHit = EagRuntime.steadyTimeMillis();
 			return etr;
 		}else {
 			if(!waitingSkins.containsKey(generatedUUID) && !evictedSkins.containsKey(generatedUUID)) {
-				waitingSkins.put(generatedUUID, new WaitingSkin(System.currentTimeMillis(), skinModelResponse));
-				PacketBuffer buffer;
-				try {
-					buffer = SkinPackets.writeGetSkinByURL(generatedUUID, url);
-				}catch(IOException ex) {
-					logger.error("Could not write skin request packet!");
-					logger.error(ex);
-					return skinModelResponse == SkinModel.ALEX ? defaultSlimCacheEntry : defaultCacheEntry;
-				}
-				networkManager.sendPacket(new C17PacketCustomPayload("EAG|Skins-1.8", buffer));
+				waitingSkins.put(generatedUUID, new WaitingSkin(EagRuntime.steadyTimeMillis(), skinModelResponse));
+				netHandler.sendEaglerMessage(new CPacketGetSkinByURLEAG(generatedUUID.msb, generatedUUID.lsb, url));
 			}
 		}
 		return skinModelResponse == SkinModel.ALEX ? defaultSlimCacheEntry : defaultCacheEntry;
@@ -276,13 +266,13 @@ public class ServerSkinCache {
 	}
 	
 	public void flush() {
-		long millis = System.currentTimeMillis();
+		long millis = EagRuntime.steadyTimeMillis();
 		if(millis - lastFlushReq > 5000l) {
 			lastFlushReq = millis;
 			if(!waitingSkins.isEmpty()) {
 				Iterator<WaitingSkin> waitingItr = waitingSkins.values().iterator();
 				while(waitingItr.hasNext()) {
-					if(millis - waitingItr.next().timeout > 30000l) {
+					if(millis - waitingItr.next().timeout > 20000l) {
 						waitingItr.remove();
 					}
 				}
@@ -312,6 +302,9 @@ public class ServerSkinCache {
 				}
 			}
 		}
+		if(needReloadClientSkin) {
+			reloadClientPlayerSkin();
+		}
 	}
 	
 	public void destroy() {
@@ -325,7 +318,14 @@ public class ServerSkinCache {
 	}
 	
 	public void evictSkin(EaglercraftUUID uuid) {
-		evictedSkins.put(uuid, Long.valueOf(System.currentTimeMillis()));
+		evictedSkins.put(uuid, Long.valueOf(EagRuntime.steadyTimeMillis()));
+		SkinCacheEntry etr = skinsCache.remove(uuid);
+		if(etr != null) {
+			etr.free();
+		}
+	}
+
+	public void handleInvalidate(EaglercraftUUID uuid) {
 		SkinCacheEntry etr = skinsCache.remove(uuid);
 		if(etr != null) {
 			etr.free();

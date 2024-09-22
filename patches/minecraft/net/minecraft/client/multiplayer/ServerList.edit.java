@@ -60,7 +60,7 @@
 + 
 + 	public void loadServerList(byte[] localStorage) {
 
-> CHANGE  1 : 8  @  1 : 5
+> CHANGE  1 : 9  @  1 : 5
 
 ~ 			freeServerIcons();
 ~ 
@@ -68,6 +68,7 @@
 ~ 			for (DefaultServer srv : EagRuntime.getConfiguration().getDefaultServerList()) {
 ~ 				ServerData dat = new ServerData(srv.name, srv.addr, true);
 ~ 				dat.isDefault = true;
+~ 				dat.hideAddress = srv.hideAddress;
 ~ 				this.allServers.add(dat);
 
 > CHANGE  2 : 8  @  2 : 3
@@ -135,7 +136,7 @@
 ~ 			data.iconTextureObject = null;
 ~ 		}
 
-> INSERT  36 : 144  @  36
+> INSERT  36 : 145  @  36
 
 + 
 + 	public void freeServerIcons() {
@@ -170,7 +171,7 @@
 + 		for (int i = 0, l = this.servers.size(); i < l; ++i) {
 + 			ServerData dat = this.servers.get(i);
 + 			if (dat.pingSentTime <= 0l) {
-+ 				dat.pingSentTime = System.currentTimeMillis();
++ 				dat.pingSentTime = EagRuntime.steadyTimeMillis();
 + 				if (RateLimitTracker.isLockedOut(dat.serverIP)) {
 + 					logger.error(
 + 							"Server {} locked this client out on a previous connection, will not attempt to reconnect",
@@ -192,6 +193,7 @@
 + 					}
 + 				}
 + 			} else if (dat.currentQuery != null) {
++ 				dat.currentQuery.update();
 + 				if (!dat.hasPing) {
 + 					++total;
 + 					EnumServerRateLimit rateLimit = dat.currentQuery.getRateLimit();
@@ -228,7 +230,7 @@
 + 					dat.setIconPacket(r);
 + 				}
 + 				if (!dat.currentQuery.isOpen() && dat.pingSentTime > 0l
-+ 						&& (System.currentTimeMillis() - dat.pingSentTime) > 2000l && !dat.hasPing) {
++ 						&& (EagRuntime.steadyTimeMillis() - dat.pingSentTime) > 2000l && !dat.hasPing) {
 + 					if (RateLimitTracker.isProbablyLockedOut(dat.serverIP)) {
 + 						logger.error("Server {} ratelimited this client out on a previous connection, assuming lockout",
 + 								dat.serverIP);

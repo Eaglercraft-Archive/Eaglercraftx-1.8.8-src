@@ -28,11 +28,15 @@
 
 ~ 	protected static EaglercraftRandom itemRand = new EaglercraftRandom();
 
-> INSERT  884 : 888  @  884
+> INSERT  884 : 892  @  884
 
 + 
-+ 	public float getHeldItemBrightnessEagler() {
++ 	public float getHeldItemBrightnessEagler(ItemStack itemStack) {
 + 		return 0.0f;
++ 	}
++ 
++ 	public boolean shouldUseOnTouchEagler(ItemStack itemStack) {
++ 		return getItemUseAction(itemStack) != EnumAction.NONE;
 + 	}
 
 > EOF

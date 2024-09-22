@@ -42,6 +42,9 @@ public enum EnumPlatformOS {
 	}
 	
 	public static EnumPlatformOS getFromJVM(String osNameProperty) {
+		if(osNameProperty == null) {
+			return OTHER;
+		}
 		osNameProperty = osNameProperty.toLowerCase();
 		if(osNameProperty.contains("chrome")) {
 			return CHROMEBOOK_LINUX;
@@ -57,6 +60,9 @@ public enum EnumPlatformOS {
 	}
 	
 	public static EnumPlatformOS getFromUA(String ua) {
+		if(ua == null) {
+			return OTHER;
+		}
 		ua = " " + ua.toLowerCase();
 		if(ua.contains(" cros")) {
 			return CHROMEBOOK_LINUX;

@@ -5,56 +5,94 @@
 # Version: 1.0
 # Author: lax1dude
 
-> CHANGE  5 : 6  @  5 : 9
+> CHANGE  5 : 10  @  5 : 9
 
-~ import net.lax1dude.eaglercraft.v1_8.netty.Unpooled;
+~ import net.lax1dude.eaglercraft.v1_8.socket.protocol.GamePluginMessageProtocol;
+~ import net.lax1dude.eaglercraft.v1_8.socket.protocol.client.GameProtocolMessageController;
+~ import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.GameMessagePacket;
+~ import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.server.SPacketUpdateCertEAG;
+~ 
 
 > CHANGE  3 : 4  @  3 : 4
 
 ~ import java.util.List;
 
-> INSERT  2 : 4  @  2
-
-+ 
-+ import net.lax1dude.eaglercraft.v1_8.sp.server.EaglerMinecraftServer;
-
-> DELETE  25  @  25 : 29
-
-> INSERT  33 : 34  @  33
-
-+ import net.minecraft.network.play.server.S3FPacketCustomPayload;
-
-> DELETE  2  @  2 : 3
-
-> INSERT  16 : 19  @  16
-
-+ import net.lax1dude.eaglercraft.v1_8.sp.server.socket.IntegratedServerPlayerNetworkManager;
-+ import net.lax1dude.eaglercraft.v1_8.sp.server.voice.IntegratedVoiceService;
-+ 
-
-> CHANGE  1 : 3  @  1 : 3
-
-~ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
-~ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
-
 > INSERT  2 : 3  @  2
 
 + 
 
-> CHANGE  1 : 2  @  1 : 2
+> DELETE  25  @  25 : 29
+
+> DELETE  35  @  35 : 36
+
+> INSERT  16 : 18  @  16
+
++ import net.lax1dude.eaglercraft.v1_8.sp.server.socket.IntegratedServerPlayerNetworkManager;
++ 
+
+> DELETE  1  @  1 : 3
+
+> INSERT  1 : 5  @  1
+
++ import net.lax1dude.eaglercraft.v1_8.EagRuntime;
++ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
++ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
++ 
+
+> INSERT  1 : 2  @  1
+
++ 
+
+> CHANGE  1 : 3  @  1 : 3
 
 ~ 	public final IntegratedServerPlayerNetworkManager netManager;
+~ 	public final MinecraftServer serverController;
 
-> INSERT  16 : 17  @  16
+> INSERT  15 : 17  @  15
 
 + 	private boolean hasDisconnected = false;
++ 	private GameProtocolMessageController eaglerMessageController = null;
 
 > CHANGE  1 : 3  @  1 : 2
 
 ~ 	public NetHandlerPlayServer(MinecraftServer server, IntegratedServerPlayerNetworkManager networkManagerIn,
 ~ 			EntityPlayerMP playerIn) {
 
-> CHANGE  35 : 36  @  35 : 36
+> INSERT  7 : 28  @  7
+
++ 	public GameProtocolMessageController getEaglerMessageController() {
++ 		return eaglerMessageController;
++ 	}
++ 
++ 	public void setEaglerMessageController(GameProtocolMessageController eaglerMessageController) {
++ 		this.eaglerMessageController = eaglerMessageController;
++ 	}
++ 
++ 	public GamePluginMessageProtocol getEaglerMessageProtocol() {
++ 		return eaglerMessageController != null ? eaglerMessageController.protocol : null;
++ 	}
++ 
++ 	public void sendEaglerMessage(GameMessagePacket packet) {
++ 		try {
++ 			eaglerMessageController.sendPacket(packet);
++ 		} catch (IOException e) {
++ 			logger.error("Failed to send eaglercraft plugin message packet: " + packet);
++ 			logger.error(e);
++ 		}
++ 	}
++ 
+
+> DELETE  3  @  3 : 4
+
+> DELETE  7  @  7 : 8
+
+> INSERT  14 : 17  @  14
+
++ 		if (this.eaglerMessageController != null) {
++ 			this.eaglerMessageController.flush();
++ 		}
+
+> CHANGE  2 : 3  @  2 : 3
 
 ~ 	public IntegratedServerPlayerNetworkManager getNetworkManager() {
 
@@ -140,7 +178,11 @@
 ~ 				}
 ~ 				tileentitysign.signText[i] = new ChatComponentText(s);
 
-> DELETE  21  @  21 : 22
+> CHANGE  17 : 18  @  17 : 18
+
+~ 		return EagRuntime.steadyTimeMillis();
+
+> DELETE  3  @  3 : 4
 
 > CHANGE  5 : 10  @  5 : 11
 
@@ -187,21 +229,8 @@
 + 						s = net.minecraft.util.StringUtils.translateControlCodesAlternate(s);
 + 					}
 
-> INSERT  5 : 33  @  5
+> INSERT  5 : 28  @  5
 
-+ 		} else if ("EAG|Skins-1.8".equals(c17packetcustompayload.getChannelName())) {
-+ 			byte[] r = new byte[c17packetcustompayload.getBufferData().readableBytes()];
-+ 			c17packetcustompayload.getBufferData().readBytes(r);
-+ 			((EaglerMinecraftServer) serverController).getSkinService().processPacket(r, playerEntity);
-+ 		} else if ("EAG|Capes-1.8".equals(c17packetcustompayload.getChannelName())) {
-+ 			byte[] r = new byte[c17packetcustompayload.getBufferData().readableBytes()];
-+ 			c17packetcustompayload.getBufferData().readBytes(r);
-+ 			((EaglerMinecraftServer) serverController).getCapeService().processPacket(r, playerEntity);
-+ 		} else if ("EAG|Voice-1.8".equals(c17packetcustompayload.getChannelName())) {
-+ 			IntegratedVoiceService vcs = ((EaglerMinecraftServer) serverController).getVoiceService();
-+ 			if (vcs != null) {
-+ 				vcs.processPacket(c17packetcustompayload.getBufferData(), playerEntity);
-+ 			}
 + 		} else if ("EAG|MyUpdCert-1.8".equals(c17packetcustompayload.getChannelName())) {
 + 			if (playerEntity.updateCertificate == null) {
 + 				PacketBuffer pb = c17packetcustompayload.getBufferData();
@@ -212,10 +241,18 @@
 + 				for (int i = 0, l = lst.size(); i < l; ++i) {
 + 					EntityPlayerMP player = lst.get(i);
 + 					if (player != playerEntity) {
-+ 						player.playerNetServerHandler.sendPacket(new S3FPacketCustomPayload("EAG|UpdateCert-1.8",
-+ 								new PacketBuffer(Unpooled.buffer(cert, cert.length).writerIndex(cert.length))));
++ 						player.playerNetServerHandler.sendEaglerMessage(new SPacketUpdateCertEAG(cert));
 + 					}
 + 				}
++ 			}
++ 		} else {
++ 			try {
++ 				eaglerMessageController.handlePacket(c17packetcustompayload.getChannelName(),
++ 						c17packetcustompayload.getBufferData());
++ 			} catch (IOException e) {
++ 				logger.error("Couldn't read \"{}\" packet as an eaglercraft plugin message!",
++ 						c17packetcustompayload.getChannelName());
++ 				logger.error(e);
 + 			}
 
 > DELETE  1  @  1 : 2

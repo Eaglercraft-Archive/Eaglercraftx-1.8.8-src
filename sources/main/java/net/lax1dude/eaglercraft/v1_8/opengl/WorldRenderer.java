@@ -8,7 +8,6 @@ import java.util.BitSet;
 import java.util.Comparator;
 
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
-import net.lax1dude.eaglercraft.v1_8.internal.PlatformBufferFunctions;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.vector.Vector3f;
 import net.minecraft.client.renderer.GLAllocation;
@@ -121,7 +120,7 @@ public class WorldRenderer {
 				for (int k1 = ainteger[i1].intValue(); j1 != l1; k1 = ainteger[k1].intValue()) {
 					this.intBuffer.limit(k1 * l + l);
 					this.intBuffer.position(k1 * l);
-					IntBuffer intbuffer = this.intBuffer.slice();
+					IntBuffer intbuffer = this.intBuffer.duplicate();
 					this.intBuffer.limit(j1 * l + l);
 					this.intBuffer.position(j1 * l);
 					this.intBuffer.put(intbuffer);
@@ -178,7 +177,10 @@ public class WorldRenderer {
 	 */
 	public void setVertexState(WorldRenderer.State state) {
 		this.grow(state.getRawBuffer().length);
-		PlatformBufferFunctions.put(this.intBuffer, 0, state.getRawBuffer());
+		int p = intBuffer.position();
+		this.intBuffer.position(0);
+		this.intBuffer.put(state.getRawBuffer());
+		this.intBuffer.position(p);
 		this.vertexCount = state.getVertexCount();
 		this.vertexFormat = state.getVertexFormat();
 	}
@@ -339,7 +341,10 @@ public class WorldRenderer {
 	 */
 	public void addVertexData(int[] vertexData) {
 		this.grow(vertexData.length);
-		PlatformBufferFunctions.put(this.intBuffer, (this.vertexCount * this.vertexFormat.attribStride) >> 2, vertexData);
+		int p = this.intBuffer.position();
+		this.intBuffer.position((this.vertexCount * this.vertexFormat.attribStride) >> 2);
+		this.intBuffer.put(vertexData);
+		this.intBuffer.position(p);
 		this.vertexCount += vertexData.length / (this.vertexFormat.attribStride >> 2); 
 	}
 

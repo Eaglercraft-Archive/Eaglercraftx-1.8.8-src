@@ -1,5 +1,6 @@
 package net.lax1dude.eaglercraft.v1_8.profile;
 
+import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.opengl.EaglerMeshLoader;
 import net.lax1dude.eaglercraft.v1_8.opengl.EaglercraftGPU;
 import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
@@ -98,7 +99,7 @@ public class SkinPreviewRenderer {
 			Minecraft.getMinecraft().getTextureManager().bindTexture(skinTexture);
 		}
 		
-		model.render(null, 0.0f, 0.0f, (float)(System.currentTimeMillis() % 2000000) / 50f, ((x - mx) * 0.06f), ((y - my) * -0.1f), 0.0625f);
+		model.render(null, 0.0f, 0.0f, (float)(EagRuntime.steadyTimeMillis() % 2000000) / 50f, ((x - mx) * 0.06f), ((y - my) * -0.1f), 0.0625f);
 		
 		if(capeTexture != null && model instanceof ModelPlayer) {
 			Minecraft.getMinecraft().getTextureManager().bindTexture(capeTexture);

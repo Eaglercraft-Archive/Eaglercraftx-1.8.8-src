@@ -7,4 +7,11 @@
 
 > DELETE  5  @  5 : 7
 
+> INSERT  22 : 26  @  22
+
++ 
++ 	public boolean shouldUseOnTouchEagler(ItemStack itemStack) {
++ 		return true;
++ 	}
+
 > EOF

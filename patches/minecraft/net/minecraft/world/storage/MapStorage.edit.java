@@ -28,7 +28,7 @@
 + 		WorldSavedData createInstance(String mapFileName);
 + 	}
 + 
-+ 	public static final Map<Class<? extends WorldSavedData>, MapStorageProvider> storageProviders = new HashMap();
++ 	public static final Map<Class<? extends WorldSavedData>, MapStorageProvider> storageProviders = new HashMap<>();
 + 
 + 	static {
 + 		storageProviders.put(MapData.class, MapData::new);

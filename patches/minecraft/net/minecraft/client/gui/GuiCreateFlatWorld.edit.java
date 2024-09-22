@@ -15,8 +15,13 @@
 
 > DELETE  2  @  2 : 3
 
-> CHANGE  61 : 62  @  61 : 62
+> CHANGE  61 : 67  @  61 : 62
 
+~ 	public void handleTouchInput() throws IOException {
+~ 		super.handleTouchInput();
+~ 		this.createFlatWorldListSlotGui.handleTouchInput();
+~ 	}
+~ 
 ~ 	protected void actionPerformed(GuiButton parGuiButton) {
 
 > EOF

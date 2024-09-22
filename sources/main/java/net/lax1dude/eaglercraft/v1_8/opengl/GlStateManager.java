@@ -30,10 +30,12 @@ public class GlStateManager {
 	static final Logger logger = LogManager.getLogger("GlStateManager");
 
 	static boolean stateDepthTest = false;
+	static boolean stateDepthTestStash = false;
 	static int stateDepthFunc = -1;
 	static boolean stateDepthMask = true;
 
 	static boolean stateCull = false;
+	static boolean stateCullStash = false;
 	static int stateCullFace = GL_BACK;
 
 	static boolean statePolygonOffset = false;
@@ -58,6 +60,7 @@ public class GlStateManager {
 	static boolean stateEnableShaderBlendColor = false;
 
 	static boolean stateBlend = false;
+	static boolean stateBlendStash = false;
 	static boolean stateGlobalBlend = true;
 	static int stateBlendEquation = -1;
 	static int stateBlendSRC = -1;
@@ -309,6 +312,30 @@ public class GlStateManager {
 		if(!stateDepthTest) {
 			_wglEnable(GL_DEPTH_TEST);
 			stateDepthTest = true;
+		}
+	}
+
+	public static final void eagPushStateForGLES2BlitHack() {
+		stateDepthTestStash = stateDepthTest;
+		stateCullStash = stateCull;
+		stateBlendStash = stateBlend;
+	}
+
+	public static final void eagPopStateForGLES2BlitHack() {
+		if(stateDepthTestStash) {
+			enableDepth();
+		}else {
+			disableDepth();
+		}
+		if(stateCullStash) {
+			enableCull();
+		}else {
+			disableCull();
+		}
+		if(stateBlendStash) {
+			enableBlend();
+		}else {
+			disableBlend();
 		}
 	}
 
@@ -603,7 +630,9 @@ public class GlStateManager {
 					f2 = f1;
 				}
 				_wglBindTexture(GL_TEXTURE_2D, null);
-				_wglBindTexture(GL_TEXTURE_3D, null);
+				if(EaglercraftGPU.checkOpenGLESVersion() >= 300) {
+					_wglBindTexture(GL_TEXTURE_3D, null);
+				}
 				boundTexture[i] = -1;
 			}
 		}

@@ -28,7 +28,7 @@ public class ClientPlatformSingleplayer {
 
 	private static CrashScreenPopup crashOverlay = null;
 
-	public static void startIntegratedServer() {
+	public static void startIntegratedServer(boolean forceSingleThread) {
 		DesktopIntegratedServer.startIntegratedServer();
 	}
 
@@ -52,7 +52,7 @@ public class ClientPlatformSingleplayer {
 			if(MemoryConnection.serverToClientQueue.size() == 0) {
 				return null;
 			}else {
-				List<IPCPacketData> ret = new ArrayList(MemoryConnection.serverToClientQueue);
+				List<IPCPacketData> ret = new ArrayList<>(MemoryConnection.serverToClientQueue);
 				MemoryConnection.serverToClientQueue.clear();
 				return ret;
 			}
@@ -69,6 +69,14 @@ public class ClientPlatformSingleplayer {
 
 	public static boolean isRunningSingleThreadMode() {
 		return false;
+	}
+
+	public static boolean isSingleThreadModeSupported() {
+		return false;
+	}
+
+	public static void updateSingleThreadMode() {
+		
 	}
 
 	public static void showCrashReportOverlay(String report, int x, int y, int w, int h) {

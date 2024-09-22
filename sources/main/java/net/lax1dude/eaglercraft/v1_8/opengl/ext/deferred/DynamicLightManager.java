@@ -6,6 +6,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import net.lax1dude.eaglercraft.v1_8.EagRuntime;
+
 /**
  * Copyright (c) 2023 lax1dude. All Rights Reserved.
  * 
@@ -23,8 +25,8 @@ import java.util.Map;
  */
 public class DynamicLightManager {
 
-	static final Map<String, DynamicLightInstance> lightRenderers = new HashMap();
-	static final List<DynamicLightInstance> lightRenderList = new LinkedList();
+	static final Map<String, DynamicLightInstance> lightRenderers = new HashMap<>();
+	static final List<DynamicLightInstance> lightRenderList = new LinkedList<>();
 	static long renderTimeout = 5000l;
 	static boolean isRenderLightsPass = false;
 
@@ -51,7 +53,7 @@ public class DynamicLightManager {
 	}
 
 	static void updateTimers() {
-		long millis = System.currentTimeMillis();
+		long millis = EagRuntime.steadyTimeMillis();
 		if(millis - lastTick > 1000l) {
 			lastTick = millis;
 			Iterator<DynamicLightInstance> itr = lightRenderers.values().iterator();

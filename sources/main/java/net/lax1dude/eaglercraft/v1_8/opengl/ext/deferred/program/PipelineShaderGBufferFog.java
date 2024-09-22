@@ -28,7 +28,7 @@ import net.lax1dude.eaglercraft.v1_8.internal.IUniformGL;
 public class PipelineShaderGBufferFog extends ShaderProgram<PipelineShaderGBufferFog.Uniforms> {
 
 	public static PipelineShaderGBufferFog compile(boolean linear, boolean atmosphere, boolean lightShafts) {
-		List<String> macros = new ArrayList(3);
+		List<String> macros = new ArrayList<>(3);
 		if(linear) {
 			macros.add("COMPILE_FOG_LINEAR");
 		}

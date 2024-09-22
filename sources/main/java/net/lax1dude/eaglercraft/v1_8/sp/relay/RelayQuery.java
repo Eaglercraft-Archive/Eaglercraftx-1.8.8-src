@@ -28,6 +28,7 @@ public interface RelayQuery {
 		}
 	}
 
+	void update();
 	boolean isQueryOpen();
 	boolean isQueryFailed();
 	RateLimit isQueryRateLimit();

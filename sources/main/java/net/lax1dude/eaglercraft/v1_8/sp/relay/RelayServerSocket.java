@@ -1,6 +1,6 @@
 package net.lax1dude.eaglercraft.v1_8.sp.relay;
 
-import net.lax1dude.eaglercraft.v1_8.sp.relay.pkt.IPacket;
+import net.lax1dude.eaglercraft.v1_8.sp.relay.pkt.RelayPacket;
 
 /**
  * Copyright (c) 2022-2024 lax1dude, ayunami2000. All Rights Reserved.
@@ -19,6 +19,7 @@ import net.lax1dude.eaglercraft.v1_8.sp.relay.pkt.IPacket;
  */
 public interface RelayServerSocket {
 
+	void update();
 	boolean isOpen();
 	boolean isClosed();
 	void close();
@@ -26,10 +27,10 @@ public interface RelayServerSocket {
 	boolean isFailed();
 	Throwable getException();
 	
-	void writePacket(IPacket pkt);
+	void writePacket(RelayPacket pkt);
 	
-	IPacket readPacket();
-	IPacket nextPacket();
+	RelayPacket readPacket();
+	RelayPacket nextPacket();
 	
 	RelayQuery.RateLimit getRatelimitHistory();
 	

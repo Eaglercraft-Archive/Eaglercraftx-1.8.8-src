@@ -1,7 +1,7 @@
 #line 2
 
 /*
- * Copyright (c) 2022-2023 lax1dude. All Rights Reserved.
+ * Copyright (c) 2022-2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -16,15 +16,13 @@
  * 
  */
 
-precision lowp int;
-precision highp float;
-precision lowp sampler2D;
+EAGLER_VSH_LAYOUT_BEGIN()
+EAGLER_IN(0, vec2, a_position2f)
+EAGLER_VSH_LAYOUT_END()
 
-layout(location = 0) in vec2 a_position2f;
-
-out vec2 v_position2f;
+EAGLER_OUT(vec2, v_position2f)
 
 void main() {
 	v_position2f = a_position2f * 0.5 + 0.5;
-	gl_Position = vec4(a_position2f, 0.0, 1.0);
+	EAGLER_VERT_POSITION = vec4(a_position2f, 0.0, 1.0);
 }

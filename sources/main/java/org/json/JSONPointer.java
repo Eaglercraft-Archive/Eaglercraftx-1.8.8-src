@@ -42,6 +42,12 @@ public class JSONPointer {
      */
     public static class Builder {
 
+        /**
+         * Constructs a new Builder object.
+         */
+        public Builder() {
+        }
+
         // Segments for the eventual JSONPointer string
         private final List<String> refTokens = new ArrayList<String>();
 
@@ -163,6 +169,12 @@ public class JSONPointer {
         //}
     }
 
+    /**
+     * Constructs a new JSONPointer instance with the provided list of reference tokens.
+     *
+     * @param refTokens A list of strings representing the reference tokens for the JSON Pointer.
+     *                  Each token identifies a step in the path to the targeted value.
+     */
     public JSONPointer(List<String> refTokens) {
         this.refTokens = new ArrayList<String>(refTokens);
     }

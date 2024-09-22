@@ -116,6 +116,14 @@ public class Base64 extends BaseNCodec {
 			41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51 // 70-7a p-z
 	};
 
+	public static int lookupCharInt(char c) {
+		return c < 123 ? DECODE_TABLE[c] : -1;
+	}
+
+	public static char lookupIntChar(int i) {
+		return (char)STANDARD_ENCODE_TABLE[i];
+	}
+
 	/**
 	 * Base64 uses 6-bit fields.
 	 */

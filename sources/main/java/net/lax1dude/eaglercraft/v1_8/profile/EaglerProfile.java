@@ -40,12 +40,34 @@ public class EaglerProfile {
 	public static int presetCapeId;
 	public static int customCapeId;
 
-	public static final List<CustomSkin> customSkins = new ArrayList();
-	public static final List<CustomCape> customCapes = new ArrayList();
+	public static boolean isServerSkinOverride = false;
+	public static int overridePresetSkinId = -1;
+	public static final ResourceLocation overrideCustomSkinTexture = new ResourceLocation("eagler:skins/custom/tex_server_override");
+	public static EaglerSkinTexture overrideCustomSkin = null;
+	public static SkinModel overrideCustomSkinModel = SkinModel.STEVE;
+
+	public static boolean isServerCapeOverride = false;
+	public static int overridePresetCapeId = -1;
+	public static final ResourceLocation overrideCustomCapeTexture = new ResourceLocation("eagler:capes/custom/tex_server_override");
+	public static EaglerSkinTexture overrideCustomCape = null;
+
+	public static final List<CustomSkin> customSkins = new ArrayList<>();
+	public static final List<CustomCape> customCapes = new ArrayList<>();
 	
 	public static final EaglercraftRandom rand;
 	
 	public static ResourceLocation getActiveSkinResourceLocation() {
+		if(isServerSkinOverride) {
+			if(overridePresetSkinId == -1) {
+				return overrideCustomSkinTexture;
+			}else {
+				if(overridePresetSkinId >= 0 && overridePresetSkinId < DefaultSkins.defaultSkinsMap.length) {
+					return DefaultSkins.defaultSkinsMap[overridePresetSkinId].location;
+				}else {
+					return DefaultSkins.defaultSkinsMap[0].location;
+				}
+			}
+		}
 		if(presetSkinId == -1) {
 			if(customSkinId >= 0 && customSkinId < customSkins.size()) {
 				return customSkins.get(customSkinId).getResource();
@@ -65,6 +87,17 @@ public class EaglerProfile {
 	}
 	
 	public static SkinModel getActiveSkinModel() {
+		if(isServerSkinOverride) {
+			if(overridePresetSkinId == -1) {
+				return overrideCustomSkinModel;
+			}else {
+				if(overridePresetSkinId >= 0 && overridePresetSkinId < DefaultSkins.defaultSkinsMap.length) {
+					return DefaultSkins.defaultSkinsMap[overridePresetSkinId].model;
+				}else {
+					return DefaultSkins.defaultSkinsMap[0].model;
+				}
+			}
+		}
 		if(presetSkinId == -1) {
 			if(customSkinId >= 0 && customSkinId < customSkins.size()) {
 				return customSkins.get(customSkinId).model;
@@ -84,6 +117,17 @@ public class EaglerProfile {
 	}
 	
 	public static ResourceLocation getActiveCapeResourceLocation() {
+		if(isServerCapeOverride) {
+			if(overridePresetCapeId == -1) {
+				return overrideCustomCapeTexture;
+			}else {
+				if(overridePresetCapeId >= 0 && overridePresetCapeId < DefaultCapes.defaultCapesMap.length) {
+					return DefaultCapes.defaultCapesMap[overridePresetCapeId].location;
+				}else {
+					return DefaultCapes.defaultCapesMap[0].location;
+				}
+			}
+		}
 		if(presetCapeId == -1) {
 			if(customCapeId >= 0 && customCapeId < customCapes.size()) {
 				return customCapes.get(customCapeId).getResource();
@@ -118,10 +162,15 @@ public class EaglerProfile {
 		}
 	}
 
-	public static byte[] getSkinPacket() {
+	public static byte[] getSkinPacket(int vers) {
 		if(presetSkinId == -1) {
 			if(customSkinId >= 0 && customSkinId < customSkins.size()) {
-				return SkinPackets.writeMySkinCustom(customSkins.get(customSkinId));
+				CustomSkin toSend = customSkins.get(customSkinId);
+				if(vers <= 3) {
+					return SkinPackets.writeMySkinCustomV3(toSend);
+				}else {
+					return SkinPackets.writeMySkinCustomV4(toSend);
+				}
 			}else {
 				customSkinId = -1;
 				presetSkinId = 0;
@@ -154,6 +203,59 @@ public class EaglerProfile {
 				return CapePackets.writeMyCapePreset(0);
 			}
 		}
+	}
+
+	public static void handleForceSkinPreset(int preset) {
+		isServerSkinOverride = true;
+		overridePresetSkinId = preset;
+		ServerSkinCache.needReloadClientSkin = true;
+	}
+
+	public static void handleForceSkinCustom(int modelID, byte[] datav3) {
+		if(datav3.length != 16384) {
+			return;
+		}
+		isServerSkinOverride = true;
+		overridePresetSkinId = -1;
+		overrideCustomSkinModel = SkinModel.getModelFromId(modelID);
+		if(overrideCustomSkinModel.highPoly != null) {
+			overrideCustomSkinModel = SkinModel.STEVE;
+		}
+		if(overrideCustomSkin == null) {
+			overrideCustomSkin = new EaglerSkinTexture(datav3, 64, 64);
+			Minecraft.getMinecraft().getTextureManager().loadTexture(overrideCustomSkinTexture, overrideCustomSkin);
+		}else {
+			overrideCustomSkin.copyPixelsIn(datav3);
+		}
+		ServerSkinCache.needReloadClientSkin = true;
+	}
+
+	public static void handleForceCapePreset(int preset) {
+		isServerCapeOverride = true;
+		overridePresetCapeId = preset;
+		ServerCapeCache.needReloadClientCape = true;
+	}
+
+	public static void handleForceCapeCustom(byte[] custom) {
+		if(custom.length != 1173) {
+			return;
+		}
+		byte[] pixels32x32 = new byte[4096];
+		SkinConverter.convertCape23x17RGBto32x32RGBA(custom, pixels32x32);
+		isServerCapeOverride = true;
+		overridePresetCapeId = -1;
+		if(overrideCustomCape == null) {
+			overrideCustomCape = new EaglerSkinTexture(pixels32x32, 32, 32);
+			Minecraft.getMinecraft().getTextureManager().loadTexture(overrideCustomCapeTexture, overrideCustomCape);
+		}else {
+			overrideCustomCape.copyPixelsIn(pixels32x32);
+		}
+		ServerCapeCache.needReloadClientCape = true;
+	}
+
+	public static void clearServerSkinOverride() {
+		isServerSkinOverride = false;
+		isServerCapeOverride = false;
 	}
 
 	private static boolean doesSkinExist(String name) {

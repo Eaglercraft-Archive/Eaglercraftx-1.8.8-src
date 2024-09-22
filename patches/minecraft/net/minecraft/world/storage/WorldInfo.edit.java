@@ -5,7 +5,9 @@
 # Version: 1.0
 # Author: lax1dude
 
-> INSERT  12 : 14  @  12
+> DELETE  5  @  5 : 6
+
+> INSERT  6 : 8  @  6
 
 + import net.lax1dude.eaglercraft.v1_8.HString;
 + 
@@ -20,7 +22,11 @@
 
 + 		this.eaglerVersion = nbt.getInteger("eaglerVersionSerial");
 
-> INSERT  102 : 103  @  102
+> CHANGE  82 : 83  @  82 : 83
+
+~ 		nbt.setLong("LastPlayed", System.currentTimeMillis());
+
+> INSERT  19 : 20  @  19
 
 + 		nbt.setInteger("eaglerVersionSerial", this.eaglerVersion);
 

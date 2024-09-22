@@ -5,6 +5,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import net.lax1dude.eaglercraft.v1_8.EagRuntime;
+import net.lax1dude.eaglercraft.v1_8.opengl.EaglercraftGPU;
 import net.lax1dude.eaglercraft.v1_8.opengl.FixedFunctionPipeline;
 import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 import net.lax1dude.eaglercraft.v1_8.vector.Matrix4f;
@@ -30,10 +32,10 @@ import net.minecraft.util.MathHelper;
 public class DynamicLightsStateManager {
 
 	static final DynamicLightsPipelineCompiler deferredExtPipeline = new DynamicLightsPipelineCompiler();
-	private static List<DynamicLightInstance> lightInstancePool = new ArrayList();
+	private static List<DynamicLightInstance> lightInstancePool = new ArrayList<>();
 	private static int instancePoolIndex = 0;
 	private static int maxListLengthTracker = 0;
-	static final List<DynamicLightInstance> lightRenderList = new LinkedList();
+	static final List<DynamicLightInstance> lightRenderList = new LinkedList<>();
 	static final Matrix4f inverseViewMatrix = new Matrix4f();
 	static int inverseViewMatrixSerial = 0;
 	static DynamicLightBucketLoader bucketLoader = null;
@@ -45,7 +47,7 @@ public class DynamicLightsStateManager {
 		if(bucketLoader == null) {
 			bucketLoader = new DynamicLightBucketLoader();
 			bucketLoader.initialize();
-			bucketLoader.bindUniformBuffer(0);
+			bucketLoader.bindLightSourceBucket(-999, -999, -999, 0);
 			FixedFunctionPipeline.loadExtensionPipeline(deferredExtPipeline);
 		}
 		if(accelParticleRenderer == null) {
@@ -89,7 +91,7 @@ public class DynamicLightsStateManager {
 
 	public static final void reportForwardRenderObjectPosition(int centerX, int centerY, int centerZ) {
 		if(bucketLoader != null) {
-			bucketLoader.loadLightSourceBucket(centerX, centerY, centerZ);
+			bucketLoader.bindLightSourceBucket(centerX, centerY, centerZ, 0);
 		}
 	}
 
@@ -98,7 +100,7 @@ public class DynamicLightsStateManager {
 			float posX = (float)((x + TileEntityRendererDispatcher.staticPlayerX) - (MathHelper.floor_double(TileEntityRendererDispatcher.staticPlayerX / 16.0) << 4));
 			float posY = (float)((y + TileEntityRendererDispatcher.staticPlayerY) - (MathHelper.floor_double(TileEntityRendererDispatcher.staticPlayerY / 16.0) << 4));
 			float posZ = (float)((z + TileEntityRendererDispatcher.staticPlayerZ) - (MathHelper.floor_double(TileEntityRendererDispatcher.staticPlayerZ / 16.0) << 4));
-			bucketLoader.loadLightSourceBucket((int)posX, (int)posY, (int)posZ);
+			bucketLoader.bindLightSourceBucket((int)posX, (int)posY, (int)posZ, 0);
 		}
 	}
 
@@ -152,11 +154,11 @@ public class DynamicLightsStateManager {
 	}
 
 	private static final void updateTimers() {
-		long millis = System.currentTimeMillis();
+		long millis = EagRuntime.steadyTimeMillis();
 		if(millis - lastTick > 5000l) {
 			lastTick = millis;
 			if(maxListLengthTracker < (lightInstancePool.size() >> 1)) {
-				List<DynamicLightInstance> newPool = new ArrayList(Math.max(maxListLengthTracker, 16));
+				List<DynamicLightInstance> newPool = new ArrayList<>(Math.max(maxListLengthTracker, 16));
 				for(int i = 0; i < maxListLengthTracker; ++i) {
 					newPool.add(lightInstancePool.get(i));
 				}
@@ -167,11 +169,15 @@ public class DynamicLightsStateManager {
 	}
 
 	public static final void destroyAll() {
-		lightInstancePool = new ArrayList();
+		lightInstancePool = new ArrayList<>();
 	}
 
 	public static String getF3String() {
 		return "DynamicLightsTotal: " + lastTotal;
+	}
+
+	public static boolean isSupported() {
+		return EaglercraftGPU.checkOpenGLESVersion() >= 300;
 	}
 
 }

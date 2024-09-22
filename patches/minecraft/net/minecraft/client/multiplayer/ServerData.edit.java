@@ -5,13 +5,14 @@
 # Version: 1.0
 # Author: lax1dude
 
-> INSERT  2 : 13  @  2
+> INSERT  2 : 14  @  2
 
 + import java.io.IOException;
 + 
 + import org.json.JSONArray;
 + import org.json.JSONObject;
 + 
++ import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 + import net.lax1dude.eaglercraft.v1_8.internal.IServerQuery;
 + import net.lax1dude.eaglercraft.v1_8.internal.QueryResponse;
 + import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
@@ -33,7 +34,7 @@
 
 ~ 	public boolean hideAddress = false;
 
-> INSERT  1 : 9  @  1
+> INSERT  1 : 10  @  1
 
 + 	public IServerQuery currentQuery = null;
 + 	public final ResourceLocation iconResourceLocation;
@@ -43,6 +44,7 @@
 + 	public boolean hasPing = false;
 + 	public boolean serverIconEnabled = false;
 + 	public boolean isDefault = false;
++ 	public boolean enableCookies;
 
 > INSERT  1 : 5  @  1
 
@@ -51,35 +53,50 @@
 + 	private static int serverTextureId = 0;
 + 
 
-> INSERT  4 : 5  @  4
+> INSERT  4 : 6  @  4
 
 + 		this.iconResourceLocation = new ResourceLocation("eagler:servers/icons/tex_" + serverTextureId++);
++ 		this.enableCookies = EagRuntime.getConfiguration().isEnableServerCookies();
 
 > DELETE  6  @  6 : 9
 
-> INSERT  7 : 9  @  7
+> INSERT  7 : 10  @  7
 
 + 		nbttagcompound.setBoolean("hideAddress", this.hideAddress);
++ 		nbttagcompound.setBoolean("enableCookies", this.enableCookies);
 + 
 
 > DELETE  13  @  13 : 16
 
-> INSERT  11 : 17  @  11
+> CHANGE  11 : 16  @  11 : 13
 
-+ 		if (nbtCompound.hasKey("hideAddress", 1)) {
-+ 			serverdata.hideAddress = nbtCompound.getBoolean("hideAddress");
-+ 		} else {
-+ 			serverdata.hideAddress = false;
-+ 		}
-+ 
+~ 		if (nbtCompound.hasKey("hideAddress", 1)) {
+~ 			serverdata.hideAddress = nbtCompound.getBoolean("hideAddress");
+~ 		} else {
+~ 			serverdata.hideAddress = false;
+~ 		}
 
-> DELETE  3  @  3 : 11
+> CHANGE  1 : 6  @  1 : 4
 
-> CHANGE  8 : 9  @  8 : 9
+~ 		if (nbtCompound.hasKey("enableCookies", 1)) {
+~ 			serverdata.enableCookies = nbtCompound.getBoolean("enableCookies");
+~ 		} else {
+~ 			serverdata.enableCookies = true;
+~ 		}
+
+> CHANGE  1 : 2  @  1 : 3
+
+~ 		return serverdata;
+
+> CHANGE  10 : 11  @  10 : 11
 
 ~ 		this.hideAddress = serverDataIn.hideAddress;
 
-> INSERT  6 : 8  @  6
+> INSERT  1 : 2  @  1
+
++ 		this.enableCookies = serverDataIn.enableCookies;
+
+> INSERT  5 : 7  @  5
 
 + 		public static final ServerResourceMode[] _VALUES = values();
 + 

@@ -23,4 +23,11 @@
 ~ 			for (int i = 0, l = this.siblings.size(); i < l; ++i) {
 ~ 				this.siblings.get(i).getChatStyle().setParentStyle(this.style);
 
+> INSERT  6 : 10  @  6
+
++ 	public ChatStyle getChatStyleIfPresent() {
++ 		return this.style;
++ 	}
++ 
+
 > EOF

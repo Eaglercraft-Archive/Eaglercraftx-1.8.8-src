@@ -18,15 +18,14 @@
 
 ~ import net.minecraft.client.resources.I18n;
 
-> DELETE  10  @  10 : 11
+> DELETE  9  @  9 : 11
 
-> DELETE  4  @  4 : 6
+> DELETE  3  @  3 : 6
 
-> CHANGE  22 : 25  @  22 : 32
+> CHANGE  22 : 24  @  22 : 32
 
-~ 			ScaledResolution scaledresolution = new ScaledResolution(this.mc);
-~ 			GlStateManager.ortho(0.0D, scaledresolution.getScaledWidth_double(),
-~ 					scaledresolution.getScaledHeight_double(), 0.0D, 100.0D, 300.0D);
+~ 			GlStateManager.ortho(0.0D, mc.scaledResolution.getScaledWidth_double(),
+~ 					mc.scaledResolution.getScaledHeight_double(), 0.0D, 100.0D, 300.0D);
 
 > INSERT  19 : 37  @  19
 
@@ -49,7 +48,11 @@
 + 	}
 + 
 
-> CHANGE  13 : 14  @  13 : 20
+> CHANGE  9 : 10  @  9 : 10
+
+~ 				ScaledResolution scaledresolution = mc.scaledResolution;
+
+> CHANGE  3 : 4  @  3 : 10
 
 ~ 				GlStateManager.clear(256);
 
@@ -58,6 +61,13 @@
 ~ 				GlStateManager.clear(16640);
 ~ 				GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 
-> DELETE  44  @  44 : 49
+> CHANGE  41 : 45  @  41 : 47
+
+~ 				if (this.message != null) {
+~ 					this.mc.fontRendererObj.drawStringWithShadow(this.message,
+~ 							(float) ((k - this.mc.fontRendererObj.getStringWidth(this.message)) / 2),
+~ 							(float) (l / 2 - 4 + 8), 16777215);
+
+> DELETE  1  @  1 : 2
 
 > EOF

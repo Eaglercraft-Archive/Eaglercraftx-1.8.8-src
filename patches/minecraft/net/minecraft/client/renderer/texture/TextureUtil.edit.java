@@ -29,7 +29,15 @@
 
 ~ 	public static int uploadTextureImage(int parInt1, ImageData parBufferedImage) {
 
-> CHANGE  120 : 122  @  120 : 121
+> INSERT  112 : 117  @  112
+
++ 		if (!parFlag2 && !EaglercraftGPU.checkNPOTCapable() && ImageData.isNPOTStatic(parInt2, parInt3)) {
++ 			parFlag2 = true;
++ 			logger.warn(
++ 					"An NPOT (non-power-of-two) texture was allocated with GL_REPEAT wrapping in an OpenGL context where that isn't supported, changing to GL_CLAMP_TO_EDGE to avoid errors");
++ 		}
+
+> CHANGE  8 : 10  @  8 : 9
 
 ~ 			EaglercraftGPU.glTexSubImage2D(GL_TEXTURE_2D, parInt1, parInt4, parInt5 + k, parInt2, l, GL_RGBA,
 ~ 					GL_UNSIGNED_BYTE, dataBuffer);
@@ -46,12 +54,14 @@
 
 ~ 		// deleteTexture(parInt1); //TODO: why
 
-> CHANGE  2 : 6  @  2 : 6
+> CHANGE  2 : 8  @  2 : 6
 
-~ 			EaglercraftGPU.glTexParameteri(GL_TEXTURE_2D, '\u813d', parInt2);
-~ 			EaglercraftGPU.glTexParameterf(GL_TEXTURE_2D, '\u813a', 0.0F);
-~ 			EaglercraftGPU.glTexParameterf(GL_TEXTURE_2D, '\u813b', (float) parInt2);
-~ 			// EaglercraftGPU.glTexParameterf(GL_TEXTURE_2D, '\u8501', 0.0F);
+~ 			if (EaglercraftGPU.checkOpenGLESVersion() >= 300) {
+~ 				EaglercraftGPU.glTexParameteri(GL_TEXTURE_2D, '\u813d', parInt2);
+~ 				EaglercraftGPU.glTexParameterf(GL_TEXTURE_2D, '\u813a', 0.0F);
+~ 				EaglercraftGPU.glTexParameterf(GL_TEXTURE_2D, '\u813b', (float) parInt2);
+~ 				// EaglercraftGPU.glTexParameterf(GL_TEXTURE_2D, '\u8501', 0.0F);
+~ 			}
 
 > CHANGE  1 : 2  @  1 : 6
 
@@ -68,7 +78,15 @@
 ~ 		int i = parBufferedImage.width;
 ~ 		int j = parBufferedImage.height;
 
-> CHANGE  11 : 13  @  11 : 12
+> INSERT  3 : 8  @  3
+
++ 		if (!parFlag2 && !EaglercraftGPU.checkNPOTCapable() && parBufferedImage.isNPOT()) {
++ 			parFlag2 = true;
++ 			logger.warn(
++ 					"An NPOT (non-power-of-two) texture was allocated with GL_REPEAT wrapping in an OpenGL context where that isn't supported, changing to GL_CLAMP_TO_EDGE to avoid errors");
++ 		}
+
+> CHANGE  8 : 10  @  8 : 9
 
 ~ 			EaglercraftGPU.glTexSubImage2D(GL_TEXTURE_2D, 0, parInt1, parInt2 + i1, i, j1, GL_RGBA, GL_UNSIGNED_BYTE,
 ~ 					dataBuffer);

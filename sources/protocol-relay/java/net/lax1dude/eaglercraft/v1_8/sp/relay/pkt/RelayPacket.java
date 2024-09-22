@@ -27,8 +27,8 @@ import java.util.Map;
  */
 public class RelayPacket {
 
-	private static final Map<Integer,Class<? extends RelayPacket>> definedPacketClasses = new HashMap();
-	private static final Map<Class<? extends RelayPacket>,Integer> definedPacketIds = new HashMap();
+	private static final Map<Integer,Class<? extends RelayPacket>> definedPacketClasses = new HashMap<>();
+	private static final Map<Class<? extends RelayPacket>,Integer> definedPacketIds = new HashMap<>();
 
 	private static void register(int id, Class<? extends RelayPacket> clazz) {
 		definedPacketClasses.put(id, clazz);

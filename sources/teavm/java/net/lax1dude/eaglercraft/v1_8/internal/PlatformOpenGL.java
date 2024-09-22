@@ -1,19 +1,27 @@
 package net.lax1dude.eaglercraft.v1_8.internal;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.teavm.jso.webgl.WebGLUniformLocation;
 
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.ByteBuffer;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.EaglerArrayBufferAllocator;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.FloatBuffer;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.IntBuffer;
+import net.lax1dude.eaglercraft.v1_8.internal.teavm.TeaVMClientConfigAdapter;
 import net.lax1dude.eaglercraft.v1_8.internal.teavm.WebGL2RenderingContext;
+import net.lax1dude.eaglercraft.v1_8.internal.teavm.WebGLANGLEInstancedArrays;
+import net.lax1dude.eaglercraft.v1_8.internal.teavm.WebGLBackBuffer;
+import net.lax1dude.eaglercraft.v1_8.internal.teavm.WebGLOESVertexArrayObject;
+import net.lax1dude.eaglercraft.v1_8.internal.teavm.WebGLVertexArray;
 import net.lax1dude.eaglercraft.v1_8.log4j.Level;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 import net.lax1dude.eaglercraft.v1_8.opengl.EaglercraftGPU;
 
 /**
- * Copyright (c) 2022-2023 lax1dude, ayunami2000. All Rights Reserved.
+ * Copyright (c) 2022-2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -32,19 +40,129 @@ public class PlatformOpenGL {
 	private static final Logger logger = LogManager.getLogger("PlatformOpenGL");
 	
 	static WebGL2RenderingContext ctx = null;
+	static int glesVers = -1;
 
-	static boolean hasDebugRenderInfoExt = false;
-	static boolean hasFramebufferHDR16FSupport = false;
-	static boolean hasFramebufferHDR32FSupport = false;
+	static boolean hasANGLEInstancedArrays = false;
+	static boolean hasEXTColorBufferFloat = false;
+	static boolean hasEXTColorBufferHalfFloat = false;
+	static boolean hasEXTShaderTextureLOD = false;
+	static boolean hasOESFBORenderMipmap = false;
+	static boolean hasOESVertexArrayObject = false;
+	static boolean hasOESTextureFloat = false;
+	static boolean hasOESTextureFloatLinear = false;
+	static boolean hasOESTextureHalfFloat = false;
+	static boolean hasOESTextureHalfFloatLinear = false;
+	static boolean hasEXTTextureFilterAnisotropic = false;
+	static boolean hasWEBGLDebugRendererInfo = false;
+
+	static WebGLANGLEInstancedArrays ANGLEInstancedArrays = null;
+	static WebGLOESVertexArrayObject OESVertexArrayObject = null;
+
+	static boolean hasFBO16FSupport = false;
+	static boolean hasFBO32FSupport = false;
+	static boolean hasLinearHDR16FSupport = false;
 	static boolean hasLinearHDR32FSupport = false;
-	
-	static void setCurrentContext(WebGL2RenderingContext context) {
+
+	static final int VAO_IMPL_NONE = -1;
+	static final int VAO_IMPL_CORE = 0;
+	static final int VAO_IMPL_OES = 1;
+	static int vertexArrayImpl = VAO_IMPL_NONE;
+
+	static final int INSTANCE_IMPL_NONE = -1;
+	static final int INSTANCE_IMPL_CORE = 0;
+	static final int INSTANCE_IMPL_ANGLE = 1;
+	static int instancingImpl = INSTANCE_IMPL_NONE;
+
+	static void setCurrentContext(int glesVersIn, WebGL2RenderingContext context) {
 		ctx = context;
-		hasDebugRenderInfoExt = ctx.getExtension("WEBGL_debug_renderer_info") != null;
-		hasFramebufferHDR16FSupport = ctx.getExtension("EXT_color_buffer_half_float") != null;
-		hasFramebufferHDR32FSupport = ctx.getExtension("EXT_color_buffer_float") != null;
-		hasLinearHDR32FSupport = ctx.getExtension("OES_texture_float_linear") != null;
-		_wglClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+		if(ctx != null) {
+			glesVers = glesVersIn;
+			boolean allowExts = ((TeaVMClientConfigAdapter)PlatformRuntime.getClientConfigAdapter()).isUseWebGLExtTeaVM();
+			if(allowExts) {
+				ANGLEInstancedArrays = glesVersIn == 200 ? (WebGLANGLEInstancedArrays) ctx.getExtension("ANGLE_instanced_arrays") : null;
+				hasANGLEInstancedArrays = glesVersIn == 200 && ANGLEInstancedArrays != null;
+				hasEXTColorBufferFloat = (glesVersIn == 310 || glesVersIn == 300) && ctx.getExtension("EXT_color_buffer_float") != null;
+				hasEXTColorBufferHalfFloat = !hasEXTColorBufferFloat
+						&& (glesVersIn == 310 || glesVersIn == 300 || glesVersIn == 200) && ctx.getExtension("EXT_color_buffer_half_float") != null;
+				hasEXTShaderTextureLOD = glesVersIn == 200 && ctx.getExtension("EXT_shader_texture_lod") != null;
+				hasOESFBORenderMipmap = glesVersIn == 200 && ctx.getExtension("OES_fbo_render_mipmap") != null;
+				OESVertexArrayObject = glesVersIn == 200 ? (WebGLOESVertexArrayObject) ctx.getExtension("OES_vertex_array_object") : null;
+				hasOESVertexArrayObject = glesVersIn == 200 && OESVertexArrayObject != null;
+				hasOESTextureFloat = glesVersIn == 200 && ctx.getExtension("OES_texture_float") != null;
+				hasOESTextureFloatLinear = glesVersIn >= 300 && ctx.getExtension("OES_texture_float_linear") != null;
+				hasOESTextureHalfFloat = glesVersIn == 200 && ctx.getExtension("OES_texture_half_float") != null;
+				hasOESTextureHalfFloatLinear = glesVersIn == 200 && ctx.getExtension("OES_texture_half_float_linear") != null;
+				hasEXTTextureFilterAnisotropic = ctx.getExtension("EXT_texture_filter_anisotropic") != null;
+			}else {
+				hasANGLEInstancedArrays = false;
+				hasEXTColorBufferFloat = false;
+				hasEXTColorBufferHalfFloat = false;
+				hasEXTShaderTextureLOD = false;
+				hasOESFBORenderMipmap = false;
+				hasOESVertexArrayObject = false;
+				hasOESTextureFloat = false;
+				hasOESTextureFloatLinear = false;
+				hasOESTextureHalfFloat = false;
+				hasOESTextureHalfFloatLinear = false;
+				hasEXTTextureFilterAnisotropic = false;
+			}
+			hasWEBGLDebugRendererInfo = ctx.getExtension("WEBGL_debug_renderer_info") != null;
+			
+			hasFBO16FSupport = glesVersIn >= 320 || ((glesVersIn >= 300 || hasOESTextureFloat) && (hasEXTColorBufferFloat || hasEXTColorBufferHalfFloat));
+			hasFBO32FSupport = glesVersIn >= 320 || ((glesVersIn >= 300 || hasOESTextureHalfFloat) && hasEXTColorBufferFloat);
+			hasLinearHDR16FSupport = glesVersIn >= 300 || hasOESTextureHalfFloatLinear;
+			hasLinearHDR32FSupport = glesVersIn >= 300 && hasOESTextureFloatLinear;
+			
+			if(glesVersIn >= 300) {
+				vertexArrayImpl = VAO_IMPL_CORE;
+				instancingImpl = INSTANCE_IMPL_CORE;
+			}else if(glesVersIn == 200) {
+				vertexArrayImpl = hasOESVertexArrayObject ? VAO_IMPL_OES : VAO_IMPL_NONE;
+				instancingImpl = hasANGLEInstancedArrays ? INSTANCE_IMPL_ANGLE : INSTANCE_IMPL_NONE;
+			}else {
+				vertexArrayImpl = VAO_IMPL_NONE;
+				instancingImpl = INSTANCE_IMPL_NONE;
+			}
+			
+			_wglClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+		}else {
+			glesVers = -1;
+			hasANGLEInstancedArrays = false;
+			hasEXTColorBufferFloat = false;
+			hasEXTColorBufferHalfFloat = false;
+			hasEXTShaderTextureLOD = false;
+			hasOESFBORenderMipmap = false;
+			hasOESVertexArrayObject = false;
+			hasOESTextureFloat = false;
+			hasOESTextureFloatLinear = false;
+			hasOESTextureHalfFloat = false;
+			hasOESTextureHalfFloatLinear = false;
+			hasEXTTextureFilterAnisotropic = false;
+			hasWEBGLDebugRendererInfo = false;
+			ANGLEInstancedArrays = null;
+			OESVertexArrayObject = null;
+			hasFBO16FSupport = false;
+			hasFBO32FSupport = false;
+			hasLinearHDR16FSupport = false;
+			hasLinearHDR32FSupport = false;
+		}
+	}
+
+	public static final List<String> dumpActiveExtensions() {
+		List<String> exts = new ArrayList<>();
+		if(hasANGLEInstancedArrays) exts.add("ANGLE_instanced_arrays");
+		if(hasEXTColorBufferFloat) exts.add("EXT_color_buffer_float");
+		if(hasEXTColorBufferHalfFloat) exts.add("EXT_color_buffer_half_float");
+		if(hasEXTShaderTextureLOD) exts.add("EXT_shader_texture_lod");
+		if(hasOESFBORenderMipmap) exts.add("OES_fbo_render_mipmap");
+		if(hasOESVertexArrayObject) exts.add("OES_vertex_array_object");
+		if(hasOESTextureFloat) exts.add("OES_texture_float");
+		if(hasOESTextureFloatLinear) exts.add("OES_texture_float_linear");
+		if(hasOESTextureHalfFloat) exts.add("OES_texture_half_float");
+		if(hasOESTextureHalfFloatLinear) exts.add("OES_texture_half_float_linear");
+		if(hasEXTTextureFilterAnisotropic) exts.add("EXT_texture_filter_anisotropic");
+		if(hasWEBGLDebugRendererInfo) exts.add("WEBGL_debug_renderer_info");
+		return exts;
 	}
 
 	public static final void _wglEnable(int glEnum) {
@@ -105,15 +223,43 @@ public class PlatformOpenGL {
 	}
 	
 	public static final void _wglDrawBuffers(int buffer) {
-		ctx.drawBuffers(new int[] { buffer });
+		if(glesVers == 200) {
+			if(buffer != 0x8CE0) { // GL_COLOR_ATTACHMENT0
+				throw new UnsupportedOperationException();
+			}
+		}else {
+			ctx.drawBuffers(new int[] { buffer });
+		}
 	}
 	
 	public static final void _wglDrawBuffers(int[] buffers) {
-		ctx.drawBuffers(buffers);
+		if(glesVers == 200) {
+			if(buffers.length != 1 || buffers[0] != 0x8CE0) { // GL_COLOR_ATTACHMENT0
+				throw new UnsupportedOperationException();
+			}
+		}else {
+			ctx.drawBuffers(buffers);
+		}
 	}
 	
 	public static final void _wglReadBuffer(int buffer) {
 		ctx.readBuffer(buffer);
+	}
+	
+	public static final void _wglReadPixels(int x, int y, int width, int height, int format, int type, ByteBuffer data) {
+		ctx.readPixels(x, y, width, height, format, type, EaglerArrayBufferAllocator.getDataView8Unsigned(data));
+	}
+	
+	public static final void _wglReadPixels_u16(int x, int y, int width, int height, int format, int type, ByteBuffer data) {
+		ctx.readPixels(x, y, width, height, format, type, EaglerArrayBufferAllocator.getDataView16Unsigned(data));
+	}
+	
+	public static final void _wglReadPixels(int x, int y, int width, int height, int format, int type, IntBuffer data) {
+		ctx.readPixels(x, y, width, height, format, type, EaglerArrayBufferAllocator.getDataView32(data));
+	}
+	
+	public static final void _wglReadPixels(int x, int y, int width, int height, int format, int type, FloatBuffer data) {
+		ctx.readPixels(x, y, width, height, format, type, EaglerArrayBufferAllocator.getDataView32F(data));
 	}
 	
 	public static final void _wglPolygonOffset(float f1, float f2) {
@@ -133,7 +279,14 @@ public class PlatformOpenGL {
 	}
 	
 	public static final IBufferArrayGL _wglGenVertexArrays() {
-		return new OpenGLObjects.BufferArrayGL(ctx.createVertexArray());
+		switch(vertexArrayImpl) {
+		case VAO_IMPL_CORE:
+			return new OpenGLObjects.BufferArrayGL(ctx.createVertexArray());
+		case VAO_IMPL_OES:
+			return new OpenGLObjects.BufferArrayGL(OESVertexArrayObject.createVertexArrayOES());
+		default:
+			throw new UnsupportedOperationException();
+		}
 	}
 	
 	public static final IProgramGL _wglCreateProgram() {
@@ -157,51 +310,61 @@ public class PlatformOpenGL {
 	}
 	
 	public static final void _wglDeleteBuffers(IBufferGL obj) {
-		ctx.deleteBuffer(obj == null ? null : ((OpenGLObjects.BufferGL)obj).ptr);
+		ctx.deleteBuffer(((OpenGLObjects.BufferGL)obj).ptr);
 	}
 	
 	public static final void _wglDeleteTextures(ITextureGL obj) {
-		ctx.deleteTexture(obj == null ? null : ((OpenGLObjects.TextureGL)obj).ptr);
+		ctx.deleteTexture(((OpenGLObjects.TextureGL)obj).ptr);
 	}
 	
 	public static final void _wglDeleteVertexArrays(IBufferArrayGL obj) {
-		ctx.deleteVertexArray(obj == null ? null : ((OpenGLObjects.BufferArrayGL)obj).ptr);
+		WebGLVertexArray ptr = ((OpenGLObjects.BufferArrayGL)obj).ptr;
+		switch(vertexArrayImpl) {
+		case VAO_IMPL_CORE:
+			ctx.deleteVertexArray(ptr);
+			break;
+		case VAO_IMPL_OES:
+			OESVertexArrayObject.deleteVertexArrayOES(ptr);
+			break;
+		default:
+			throw new UnsupportedOperationException();
+		}
 	}
 	
 	public static final void _wglDeleteProgram(IProgramGL obj) {
-		ctx.deleteProgram(obj == null ? null : ((OpenGLObjects.ProgramGL)obj).ptr);
+		ctx.deleteProgram(((OpenGLObjects.ProgramGL)obj).ptr);
 	}
 	
 	public static final void _wglDeleteShader(IShaderGL obj) {
-		ctx.deleteShader(obj == null ? null : ((OpenGLObjects.ShaderGL)obj).ptr);
+		ctx.deleteShader(((OpenGLObjects.ShaderGL)obj).ptr);
 	}
 	
 	public static final void _wglDeleteFramebuffer(IFramebufferGL obj) {
-		ctx.deleteFramebuffer(obj == null ? null : ((OpenGLObjects.FramebufferGL)obj).ptr);
+		ctx.deleteFramebuffer(((OpenGLObjects.FramebufferGL)obj).ptr);
 	}
 	
 	public static final void _wglDeleteRenderbuffer(IRenderbufferGL obj) {
-		ctx.deleteRenderbuffer(obj == null ? null : ((OpenGLObjects.RenderbufferGL)obj).ptr);
+		ctx.deleteRenderbuffer(((OpenGLObjects.RenderbufferGL)obj).ptr);
 	}
 	
 	public static final void _wglDeleteQueries(IQueryGL obj) {
-		ctx.deleteQuery(obj == null ? null : ((OpenGLObjects.QueryGL)obj).ptr);
+		ctx.deleteQuery(((OpenGLObjects.QueryGL)obj).ptr);
 	}
 	
 	public static final void _wglBindBuffer(int target, IBufferGL obj) {
-		ctx.bindBuffer(target, obj == null ? null : ((OpenGLObjects.BufferGL)obj).ptr);
+		ctx.bindBuffer(target, obj != null ? ((OpenGLObjects.BufferGL)obj).ptr : null);
 	}
 	
 	public static final void _wglBufferData(int target, ByteBuffer data, int usage) {
-		ctx.bufferData(target, data == null ? null : EaglerArrayBufferAllocator.getDataView8(data), usage);
+		ctx.bufferData(target, EaglerArrayBufferAllocator.getDataView8(data), usage);
 	}
 	
 	public static final void _wglBufferData(int target, IntBuffer data, int usage) {
-		ctx.bufferData(target, data == null ? null : EaglerArrayBufferAllocator.getDataView32(data), usage);
+		ctx.bufferData(target, EaglerArrayBufferAllocator.getDataView32(data), usage);
 	}
 	
 	public static final void _wglBufferData(int target, FloatBuffer data, int usage) {
-		ctx.bufferData(target, data == null ? null : EaglerArrayBufferAllocator.getDataView32F(data), usage);
+		ctx.bufferData(target, EaglerArrayBufferAllocator.getDataView32F(data), usage);
 	}
 	
 	public static final void _wglBufferData(int target, int size, int usage) {
@@ -209,19 +372,29 @@ public class PlatformOpenGL {
 	}
 	
 	public static final void _wglBufferSubData(int target, int offset, ByteBuffer data) {
-		ctx.bufferSubData(target, offset, data == null ? null : EaglerArrayBufferAllocator.getDataView8(data));
+		ctx.bufferSubData(target, offset, EaglerArrayBufferAllocator.getDataView8(data));
 	}
 	
 	public static final void _wglBufferSubData(int target, int offset, IntBuffer data) {
-		ctx.bufferSubData(target, offset, data == null ? null : EaglerArrayBufferAllocator.getDataView32(data));
+		ctx.bufferSubData(target, offset, EaglerArrayBufferAllocator.getDataView32(data));
 	}
 	
 	public static final void _wglBufferSubData(int target, int offset, FloatBuffer data) {
-		ctx.bufferSubData(target, offset, data == null ? null : EaglerArrayBufferAllocator.getDataView32F(data));
+		ctx.bufferSubData(target, offset, EaglerArrayBufferAllocator.getDataView32F(data));
 	}
 	
 	public static final void _wglBindVertexArray(IBufferArrayGL obj) {
-		ctx.bindVertexArray(obj == null ? null : ((OpenGLObjects.BufferArrayGL)obj).ptr);
+		WebGLVertexArray ptr = obj != null ? ((OpenGLObjects.BufferArrayGL)obj).ptr : null;
+		switch(vertexArrayImpl) {
+		case VAO_IMPL_CORE:
+			ctx.bindVertexArray(ptr);
+			break;
+		case VAO_IMPL_OES:
+			OESVertexArrayObject.bindVertexArrayOES(ptr);
+			break;
+		default:
+			throw new UnsupportedOperationException();
+		}
 	}
 	
 	public static final void _wglEnableVertexAttribArray(int index) {
@@ -238,7 +411,16 @@ public class PlatformOpenGL {
 	}
 
 	public static final void _wglVertexAttribDivisor(int index, int divisor) {
-		ctx.vertexAttribDivisor(index, divisor);
+		switch(instancingImpl) {
+		case INSTANCE_IMPL_CORE:
+			ctx.vertexAttribDivisor(index, divisor);
+			break;
+		case INSTANCE_IMPL_ANGLE:
+			ANGLEInstancedArrays.vertexAttribDivisorANGLE(index, divisor);
+			break;
+		default:
+			throw new UnsupportedOperationException();
+		}
 	}
 	
 	public static final void _wglActiveTexture(int texture) {
@@ -390,7 +572,16 @@ public class PlatformOpenGL {
 	}
 
 	public static final void _wglDrawArraysInstanced(int mode, int first, int count, int instanced) {
-		ctx.drawArraysInstanced(mode, first, count, instanced);
+		switch(instancingImpl) {
+		case INSTANCE_IMPL_CORE:
+			ctx.drawArraysInstanced(mode, first, count, instanced);
+			break;
+		case INSTANCE_IMPL_ANGLE:
+			ANGLEInstancedArrays.drawArraysInstancedANGLE(mode, first, count, instanced);
+			break;
+		default:
+			throw new UnsupportedOperationException();
+		}
 		//checkErr("_wglDrawArraysInstanced(" + mode + ", " + first + ", " + count + ", " + instanced + ");");
 	}
 	
@@ -400,7 +591,16 @@ public class PlatformOpenGL {
 	}
 	
 	public static final void _wglDrawElementsInstanced(int mode, int count, int type, int offset, int instanced) {
-		ctx.drawElementsInstanced(mode, count, type, offset, instanced);
+		switch(instancingImpl) {
+		case INSTANCE_IMPL_CORE:
+			ctx.drawElementsInstanced(mode, count, type, offset, instanced);
+			break;
+		case INSTANCE_IMPL_ANGLE:
+			ANGLEInstancedArrays.drawElementsInstancedANGLE(mode, count, type, offset, instanced);
+			break;
+		default:
+			throw new UnsupportedOperationException();
+		}
 		//checkErr("_wglDrawElementsInstanced(" + mode + ", " + count + ", " + type + ", " + offset + ", " + instanced + ");");
 	}
 	
@@ -494,7 +694,9 @@ public class PlatformOpenGL {
 	public static final void _wglBindFramebuffer(int target, IFramebufferGL framebuffer) {
 		if(framebuffer == null) {
 			ctx.bindFramebuffer(target, PlatformRuntime.mainFramebuffer);
-			ctx.drawBuffers(new int[] { WebGL2RenderingContext.COLOR_ATTACHMENT0 });
+			if(glesVers != 200) {
+				ctx.drawBuffers(new int[] { WebGL2RenderingContext.COLOR_ATTACHMENT0 });
+			}
 		}else {
 			ctx.bindFramebuffer(target, ((OpenGLObjects.FramebufferGL) framebuffer).ptr);
 		}
@@ -537,7 +739,7 @@ public class PlatformOpenGL {
 	}
 	
 	public static final String _wglGetString(int param) {
-		if(hasDebugRenderInfoExt) {
+		if(hasWEBGLDebugRendererInfo) {
 			String s;
 			switch(param) {
 			case 0x1f00: // VENDOR
@@ -568,19 +770,71 @@ public class PlatformOpenGL {
 		return ctx.getError();
 	}
 	
+	public static final int checkOpenGLESVersion() {
+		return glesVers;
+	}
+	
+	public static final boolean checkEXTGPUShader5Capable() {
+		return false;
+	}
+	
+	public static final boolean checkOESGPUShader5Capable() {
+		return false;
+	}
+	
+	public static final boolean checkFBORenderMipmapCapable() {
+		return glesVers >= 300 || hasOESFBORenderMipmap;
+	}
+	
+	public static final boolean checkVAOCapable() {
+		return vertexArrayImpl != VAO_IMPL_NONE;
+	}
+	
+	public static final boolean checkInstancingCapable() {
+		return instancingImpl != INSTANCE_IMPL_NONE;
+	}
+	
+	public static final boolean checkTexStorageCapable() {
+		return glesVers >= 300;
+	}
+	
+	public static final boolean checkTextureLODCapable() {
+		return glesVers >= 300 || hasEXTShaderTextureLOD;
+	}
+	
 	public static final boolean checkHDRFramebufferSupport(int bits) {
 		switch(bits) {
 		case 16:
-			return hasFramebufferHDR16FSupport;
+			return hasFBO16FSupport;
 		case 32:
-			return hasFramebufferHDR32FSupport;
+			return hasFBO32FSupport;
 		default:
 			return false;
 		}
 	}
 	
+	public static final boolean checkLinearHDRFilteringSupport(int bits) {
+		switch(bits) {
+		case 16:
+			return hasLinearHDR16FSupport;
+		case 32:
+			return hasLinearHDR32FSupport;
+		default:
+			return false;
+		}
+	}
+	
+	// legacy
 	public static final boolean checkLinearHDR32FSupport() {
 		return hasLinearHDR32FSupport;
+	}
+	
+	public static final boolean checkAnisotropicFilteringSupport() {
+		return hasEXTTextureFilterAnisotropic;
+	}
+	
+	public static final boolean checkNPOTCapable() {
+		return glesVers >= 300;
 	}
 	
 	private static final void checkErr(String name) {
@@ -599,4 +853,13 @@ public class PlatformOpenGL {
 			logger.error("##############################");
 		}
 	}
+
+	public static final String[] getAllExtensions() {
+		return ctx.getSupportedExtensionArray();
+	}
+
+	public static final void enterVAOEmulationHook() {
+		WebGLBackBuffer.enterVAOEmulationPhase();
+	}
+
 }

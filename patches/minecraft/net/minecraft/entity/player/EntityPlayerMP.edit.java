@@ -14,8 +14,10 @@
 
 > DELETE  51  @  51 : 52
 
-> CHANGE  22 : 24  @  22 : 24
+> CHANGE  22 : 26  @  22 : 24
 
+~ import net.lax1dude.eaglercraft.v1_8.EagRuntime;
+~ import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 
@@ -23,9 +25,14 @@
 
 + 
 
-> INSERT  24 : 25  @  24
+> CHANGE  18 : 19  @  18 : 19
+
+~ 	private long playerLastActiveTime = EagRuntime.steadyTimeMillis();
+
+> INSERT  5 : 7  @  5
 
 + 	public byte[] updateCertificate = null;
++ 	public EaglercraftUUID clientBrandUUID = null;
 
 > CHANGE  87 : 88  @  87 : 88
 

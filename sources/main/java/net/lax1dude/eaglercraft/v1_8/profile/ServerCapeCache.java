@@ -1,17 +1,16 @@
 package net.lax1dude.eaglercraft.v1_8.profile;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
-import net.lax1dude.eaglercraft.v1_8.socket.EaglercraftNetworkManager;
+import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.client.CPacketGetOtherCapeEAG;
+import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.play.client.C17PacketCustomPayload;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -39,7 +38,7 @@ public class ServerCapeCache {
 		protected final int presetCapeId;
 		protected final CacheCustomCape customCape;
 		
-		protected long lastCacheHit = System.currentTimeMillis();
+		protected long lastCacheHit = EagRuntime.steadyTimeMillis();
 		
 		protected CapeCacheEntry(EaglerSkinTexture textureInstance, ResourceLocation resourceLocation) {
 			this.isPresetCape = false;
@@ -96,26 +95,32 @@ public class ServerCapeCache {
 	}
 
 	private final CapeCacheEntry defaultCacheEntry = new CapeCacheEntry(0);
-	private final Map<EaglercraftUUID, CapeCacheEntry> capesCache = new HashMap();
-	private final Map<EaglercraftUUID, Long> waitingCapes = new HashMap();
-	private final Map<EaglercraftUUID, Long> evictedCapes = new HashMap();
+	private final Map<EaglercraftUUID, CapeCacheEntry> capesCache = new HashMap<>();
+	private final Map<EaglercraftUUID, Long> waitingCapes = new HashMap<>();
+	private final Map<EaglercraftUUID, Long> evictedCapes = new HashMap<>();
 
-	private final EaglercraftNetworkManager networkManager;
+	private final NetHandlerPlayClient netHandler;
 	protected final TextureManager textureManager;
 	
 	private final EaglercraftUUID clientPlayerId;
-	private final CapeCacheEntry clientPlayerCacheEntry;
+	private CapeCacheEntry clientPlayerCacheEntry;
 
-	private long lastFlush = System.currentTimeMillis();
-	private long lastFlushReq = System.currentTimeMillis();
-	private long lastFlushEvict = System.currentTimeMillis();
+	private long lastFlush = EagRuntime.steadyTimeMillis();
+	private long lastFlushReq = EagRuntime.steadyTimeMillis();
+	private long lastFlushEvict = EagRuntime.steadyTimeMillis();
 
 	private static int texId = 0;
+	public static boolean needReloadClientCape = false;
 
-	public ServerCapeCache(EaglercraftNetworkManager networkManager, TextureManager textureManager) {
-		this.networkManager = networkManager;
+	public ServerCapeCache(NetHandlerPlayClient netHandler, TextureManager textureManager) {
+		this.netHandler = netHandler;
 		this.textureManager = textureManager;
 		this.clientPlayerId = EaglerProfile.getPlayerUUID();
+		reloadClientPlayerCape();
+	}
+	
+	public void reloadClientPlayerCape() {
+		needReloadClientCape = false;
 		this.clientPlayerCacheEntry = new CapeCacheEntry(EaglerProfile.getActiveCapeResourceLocation());
 	}
 
@@ -130,20 +135,12 @@ public class ServerCapeCache {
 		CapeCacheEntry etr = capesCache.get(player);
 		if(etr == null) {
 			if(!waitingCapes.containsKey(player) && !evictedCapes.containsKey(player)) {
-				waitingCapes.put(player, System.currentTimeMillis());
-				PacketBuffer buffer;
-				try {
-					buffer = CapePackets.writeGetOtherCape(player);
-				}catch(IOException ex) {
-					logger.error("Could not write cape request packet!");
-					logger.error(ex);
-					return defaultCacheEntry;
-				}
-				networkManager.sendPacket(new C17PacketCustomPayload("EAG|Capes-1.8", buffer));
+				waitingCapes.put(player, EagRuntime.steadyTimeMillis());
+				netHandler.sendEaglerMessage(new CPacketGetOtherCapeEAG(player.msb, player.lsb));
 			}
 			return defaultCacheEntry;
 		}else {
-			etr.lastCacheHit = System.currentTimeMillis();
+			etr.lastCacheHit = EagRuntime.steadyTimeMillis();
 			return etr;
 		}
 	}
@@ -183,7 +180,7 @@ public class ServerCapeCache {
 	}
 
 	public void flush() {
-		long millis = System.currentTimeMillis();
+		long millis = EagRuntime.steadyTimeMillis();
 		if(millis - lastFlushReq > 5000l) {
 			lastFlushReq = millis;
 			if(!waitingCapes.isEmpty()) {
@@ -219,6 +216,9 @@ public class ServerCapeCache {
 				}
 			}
 		}
+		if(needReloadClientCape) {
+			reloadClientPlayerCape();
+		}
 	}
 
 	public void destroy() {
@@ -232,7 +232,14 @@ public class ServerCapeCache {
 	}
 
 	public void evictCape(EaglercraftUUID uuid) {
-		evictedCapes.put(uuid, Long.valueOf(System.currentTimeMillis()));
+		evictedCapes.put(uuid, Long.valueOf(EagRuntime.steadyTimeMillis()));
+		CapeCacheEntry etr = capesCache.remove(uuid);
+		if(etr != null) {
+			etr.free();
+		}
+	}
+
+	public void handleInvalidate(EaglercraftUUID uuid) {
 		CapeCacheEntry etr = capesCache.remove(uuid);
 		if(etr != null) {
 			etr.free();

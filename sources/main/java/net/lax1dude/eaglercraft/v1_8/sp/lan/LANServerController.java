@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
+import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.EagUtils;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformWebRTC;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
@@ -34,7 +35,7 @@ public class LANServerController {
 
 	public static final Logger logger = LogManager.getLogger("LANServerController");
 
-	public static final List<String> currentICEServers = new ArrayList();
+	public static final List<String> currentICEServers = new ArrayList<>();
 
 	static RelayServerSocket lanRelaySocket = null;
 
@@ -49,25 +50,26 @@ public class LANServerController {
 			return null;
 		}else {
 			progressCallback.accept("Opening: " + sock.getURI());
-			IPacket00Handshake hs = (IPacket00Handshake)sock.readPacket();
+			RelayPacket00Handshake hs = (RelayPacket00Handshake)sock.readPacket();
 			lanRelaySocket = sock;
 			String code = hs.connectionCode;
 			logger.info("Relay [{}] connected as 'server', code: {}", sock.getURI(), code);
 			progressCallback.accept("Opened '" + code + "' on " + sock.getURI());
-			long millis = System.currentTimeMillis();
+			long millis = EagRuntime.steadyTimeMillis();
 			do {
+				sock.update();
 				if(sock.isClosed()) {
 					logger.info("Relay [{}] connection lost", sock.getURI());
 					lanRelaySocket = null;
 					return null;
 				}
-				IPacket pkt = sock.readPacket();
+				RelayPacket pkt = sock.readPacket();
 				if(pkt != null) {
-					if(pkt instanceof IPacket01ICEServers) {
-						IPacket01ICEServers ipkt = (IPacket01ICEServers)pkt;
+					if(pkt instanceof RelayPacket01ICEServers) {
+						RelayPacket01ICEServers ipkt = (RelayPacket01ICEServers)pkt;
 						logger.info("Relay [{}] provided ICE servers:", sock.getURI());
 						currentICEServers.clear();
-						for(net.lax1dude.eaglercraft.v1_8.sp.relay.pkt.ICEServerSet.RelayServer srv : ipkt.servers) {
+						for(net.lax1dude.eaglercraft.v1_8.sp.relay.pkt.RelayPacket01ICEServers.RelayServer srv : ipkt.servers) {
 							logger.info("Relay [{}]     {}: {}", sock.getURI(), srv.type.name(), srv.address);
 							currentICEServers.add(srv.getICEString());
 						}
@@ -80,7 +82,7 @@ public class LANServerController {
 					}
 				}
 				EagUtils.sleep(50l);
-			}while(System.currentTimeMillis() - millis < 1000l);
+			}while(EagRuntime.steadyTimeMillis() - millis < 1000l);
 			logger.info("Relay [{}] relay provide ICE servers timeout", sock.getURI());
 			closeLAN();
 			return null;
@@ -131,54 +133,55 @@ public class LANServerController {
 		return lanRelaySocket != null;
 	}
 
-	private static final Map<String, LANClientPeer> clients = new HashMap();
+	private static final Map<String, LANClientPeer> clients = new HashMap<>();
 
 	public static void updateLANServer() {
 		if(lanRelaySocket != null) {
-			IPacket pkt;
+			lanRelaySocket.update();
+			RelayPacket pkt;
 			while((pkt = lanRelaySocket.readPacket()) != null) {
-				if(pkt instanceof IPacket02NewClient) {
-					IPacket02NewClient ipkt = (IPacket02NewClient) pkt;
+				if(pkt instanceof RelayPacket02NewClient) {
+					RelayPacket02NewClient ipkt = (RelayPacket02NewClient) pkt;
 					if(clients.containsKey(ipkt.clientId)) {
 						logger.error("Relay [{}] relay provided duplicate client '{}'", lanRelaySocket.getURI(), ipkt.clientId);
 					}else {
 						clients.put(ipkt.clientId, new LANClientPeer(ipkt.clientId));
 					}
-				}else if(pkt instanceof IPacket03ICECandidate) {
-					IPacket03ICECandidate ipkt = (IPacket03ICECandidate) pkt;
+				}else if(pkt instanceof RelayPacket03ICECandidate) {
+					RelayPacket03ICECandidate ipkt = (RelayPacket03ICECandidate) pkt;
 					LANClientPeer c = clients.get(ipkt.peerId);
 					if(c != null) {
-						c.handleICECandidates(ipkt.candidate);
+						c.handleICECandidates(ipkt.getCandidateString());
 					}else {
 						logger.error("Relay [{}] relay sent IPacket03ICECandidate for unknown client '{}'", lanRelaySocket.getURI(), ipkt.peerId);
 					}
-				}else if(pkt instanceof IPacket04Description) {
-					IPacket04Description ipkt = (IPacket04Description) pkt;
+				}else if(pkt instanceof RelayPacket04Description) {
+					RelayPacket04Description ipkt = (RelayPacket04Description) pkt;
 					LANClientPeer c = clients.get(ipkt.peerId);
 					if(c != null) {
-						c.handleDescription(ipkt.description);
+						c.handleDescription(ipkt.getDescriptionString());
 					}else {
 						logger.error("Relay [{}] relay sent IPacket04Description for unknown client '{}'", lanRelaySocket.getURI(), ipkt.peerId);
 					}
-				}else if(pkt instanceof IPacket05ClientSuccess) {
-					IPacket05ClientSuccess ipkt = (IPacket05ClientSuccess) pkt;
+				}else if(pkt instanceof RelayPacket05ClientSuccess) {
+					RelayPacket05ClientSuccess ipkt = (RelayPacket05ClientSuccess) pkt;
 					LANClientPeer c = clients.get(ipkt.clientId);
 					if(c != null) {
 						c.handleSuccess();
 					}else {
 						logger.error("Relay [{}] relay sent IPacket05ClientSuccess for unknown client '{}'", lanRelaySocket.getURI(), ipkt.clientId);
 					}
-				}else if(pkt instanceof IPacket06ClientFailure) {
-					IPacket06ClientFailure ipkt = (IPacket06ClientFailure) pkt;
+				}else if(pkt instanceof RelayPacket06ClientFailure) {
+					RelayPacket06ClientFailure ipkt = (RelayPacket06ClientFailure) pkt;
 					LANClientPeer c = clients.get(ipkt.clientId);
 					if(c != null) {
 						c.handleFailure();
 					}else {
 						logger.error("Relay [{}] relay sent IPacket06ClientFailure for unknown client '{}'", lanRelaySocket.getURI(), ipkt.clientId);
 					}
-				}else if(pkt instanceof IPacketFFErrorCode) {
-					IPacketFFErrorCode ipkt = (IPacketFFErrorCode) pkt;
-					logger.error("Relay [{}] error code thrown: {}({}): {}", lanRelaySocket.getURI(), IPacketFFErrorCode.code2string(ipkt.code), ipkt.code, ipkt.desc);
+				}else if(pkt instanceof RelayPacketFFErrorCode) {
+					RelayPacketFFErrorCode ipkt = (RelayPacketFFErrorCode) pkt;
+					logger.error("Relay [{}] error code thrown: {}({}): {}", lanRelaySocket.getURI(), RelayPacketFFErrorCode.code2string(ipkt.code), ipkt.code, ipkt.desc);
 					Throwable t;
 					while((t = lanRelaySocket.getException()) != null) {
 						logger.error(t);
@@ -186,6 +189,7 @@ public class LANServerController {
 				}else {
 					logger.error("Relay [{}] unexpected packet: {}", lanRelaySocket.getURI(), pkt.getClass().getSimpleName());
 				}
+				lanRelaySocket.update();
 			}
 			if(lanRelaySocket.isClosed()) {
 				lanRelaySocket = null;

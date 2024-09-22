@@ -25,7 +25,7 @@ public class EaglerLoadingCache<K, V> {
 
 	public EaglerLoadingCache(EaglerCacheProvider<K, V> provider) {
 		this.provider = provider;
-		this.cacheMap = new HashMap();
+		this.cacheMap = new HashMap<>();
 	}
 
 	public V get(K key) {

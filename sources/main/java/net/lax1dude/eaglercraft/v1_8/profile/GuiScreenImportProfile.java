@@ -77,8 +77,8 @@ public class GuiScreenImportProfile extends GuiScreen {
 			}else {
 				mc.loadingScreen.eaglerShow(I18n.format("settingsBackup.importing.1"), I18n.format("settingsBackup.importing.2"));
 				try {
-					List<String> list1 = new ArrayList(mc.gameSettings.resourcePacks); 
-					List<String> list2 = new ArrayList(mc.gameSettings.field_183018_l);
+					List<String> list1 = new ArrayList<>(mc.gameSettings.resourcePacks); 
+					List<String> list2 = new ArrayList<>(mc.gameSettings.field_183018_l);
 					importer.importProfileAndSettings(doImportProfile, doImportSettings, doImportServers, doImportResourcePacks);
 					boolean resourcePacksChanged = !mc.gameSettings.resourcePacks.equals(list1) || !mc.gameSettings.field_183018_l.equals(list2);
 					if(resourcePacksChanged || (doImportResourcePacks && (list1.size() > 0 || list2.size() > 0))) {

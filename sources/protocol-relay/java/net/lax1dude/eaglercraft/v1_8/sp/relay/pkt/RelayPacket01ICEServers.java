@@ -55,7 +55,7 @@ public class RelayPacket01ICEServers extends RelayPacket {
 	}
 
 	public RelayPacket01ICEServers() {
-		this.servers = new ArrayList();
+		this.servers = new ArrayList<>();
 	}
 
 	public RelayPacket01ICEServers(Collection<RelayServer> servers) {

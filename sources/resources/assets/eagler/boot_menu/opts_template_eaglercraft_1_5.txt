@@ -1,0 +1,52 @@
+{
+	"joinServer": null,
+	"servers": [
+		{
+			"serverName": "Local Test Server",
+			"serverAddress": "localhost:25565",
+			"hideAddress": false
+		}
+	],
+	"relays": [
+		{
+			"addr": "wss://relay.deev.is/",
+			"name": "lax1dude relay #1",
+			"primary": "$random_relay_primary_0"
+		},
+		{
+			"addr": "wss://relay.lax1dude.net/",
+			"name": "lax1dude relay #2",
+			"primary": "$random_relay_primary_1"
+		},
+		{
+			"addr": "wss://relay.shhnowisnottheti.me/",
+			"name": "ayunami relay #1",
+			"primary": "$random_relay_primary_2"
+		}
+	],
+	"mainMenu": {
+		"splashes": [
+			"Darviglet!",
+			"eaglerenophile!",
+			"You Eagler!",
+			"Yeeeeeee!",
+			"yeee",
+			"EEEEEEEEE!",
+			"You Darvig!",
+			"You Vigg!",
+			":>",
+			"|>",
+			"You Yumpster!"
+		],
+		"eaglerLogo": false,
+		"itemLink": null,
+		"itemLine0": null,
+		"itemLine1": null,
+		"itemLine2": null
+	},
+	"worldsFolder": "MAIN",
+	"profanity": false,
+	"hideDownServers": false,
+	"serverListTitle": null,
+	"serverListLink": null
+}

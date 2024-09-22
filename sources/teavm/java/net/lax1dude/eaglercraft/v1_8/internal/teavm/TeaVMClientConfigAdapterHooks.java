@@ -36,6 +36,7 @@ public class TeaVMClientConfigAdapterHooks implements IClientConfigAdapterHooks 
 	private LocalStorageSaveHook saveHook = null;
 	private LocalStorageLoadHook loadHook = null;
 	private CrashReportHook crashHook = null;
+	private ScreenChangeHook screenChangedHook = null;
 
 	@JSFunctor
 	private static interface LocalStorageSaveHook extends JSObject {
@@ -64,6 +65,22 @@ public class TeaVMClientConfigAdapterHooks implements IClientConfigAdapterHooks 
 			});
 		}else {
 			return null;
+		}
+	}
+
+	@JSFunctor
+	private static interface ScreenChangeHook extends JSObject {
+		String call(String screenName, int scaledWidth, int scaledHeight, int realWidth, int realHeight,
+				int scaleFactor);
+	}
+
+	@Override
+	public void callScreenChangedHook(String screenName, int scaledWidth, int scaledHeight, int realWidth,
+			int realHeight, int scaleFactor) {
+		if(screenChangedHook != null) {
+			callHookSafe("screenChanged", () -> {
+				screenChangedHook.call(screenName, scaledWidth, scaledHeight, realWidth, realHeight, scaleFactor);
+			});
 		}
 	}
 
@@ -134,5 +151,7 @@ public class TeaVMClientConfigAdapterHooks implements IClientConfigAdapterHooks 
 		saveHook = (LocalStorageSaveHook)hooks.getLocalStorageSavedHook();
 		loadHook = (LocalStorageLoadHook)hooks.getLocalStorageLoadedHook();
 		crashHook = (CrashReportHook)hooks.getCrashReportHook();
+		screenChangedHook = (ScreenChangeHook)hooks.getScreenChangedHook();
 	}
+
 }

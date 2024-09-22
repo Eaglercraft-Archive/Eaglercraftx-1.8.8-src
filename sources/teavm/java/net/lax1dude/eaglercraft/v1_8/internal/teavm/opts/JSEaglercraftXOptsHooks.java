@@ -29,4 +29,7 @@ public abstract class JSEaglercraftXOptsHooks implements JSObject {
 	@JSBody(script = "return (typeof this.crashReportShow === \"function\") ? this.crashReportShow : null;")
 	public native JSObject getCrashReportHook();
 
+	@JSBody(script = "return (typeof this.screenChanged === \"function\") ? this.screenChanged : null;")
+	public native JSObject getScreenChangedHook();
+
 }

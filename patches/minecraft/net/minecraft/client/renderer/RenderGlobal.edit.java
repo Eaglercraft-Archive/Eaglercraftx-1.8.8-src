@@ -7,8 +7,10 @@
 
 > DELETE  2  @  2 : 7
 
-> CHANGE  6 : 10  @  6 : 7
+> CHANGE  6 : 12  @  6 : 7
 
+~ 
+~ import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ import net.lax1dude.eaglercraft.v1_8.HString;
 ~ import net.lax1dude.eaglercraft.v1_8.Keyboard;
@@ -220,7 +222,11 @@
 
 + 			boolean light = DynamicLightManager.isRenderingLights();
 
-> CHANGE  27 : 36  @  27 : 54
+> DELETE  6  @  6 : 7
+
+> DELETE  16  @  16 : 17
+
+> CHANGE  3 : 12  @  3 : 30
 
 ~ 			if (!DeferredStateManager.isDeferredRenderer()) {
 ~ 				for (int i = 0; i < this.theWorld.weatherEffects.size(); ++i) {
@@ -234,7 +240,7 @@
 
 > DELETE  2  @  2 : 16
 
-> CHANGE  4 : 7  @  4 : 5
+> CHANGE  2 : 5  @  2 : 5
 
 ~ 			label738: for (int ii = 0, ll = this.renderInfos.size(); ii < ll; ++ii) {
 ~ 				RenderGlobal.ContainerLocalRenderInformation renderglobal$containerlocalrenderinformation = this.renderInfos
@@ -246,7 +252,9 @@
 + 								entity2.renderDynamicLightsEagler(partialTicks, flag2);
 + 							}
 
-> CHANGE  27 : 30  @  27 : 28
+> DELETE  24  @  24 : 25
+
+> CHANGE  2 : 5  @  2 : 3
 
 ~ 			for (int ii = 0, ll = this.renderInfos.size(); ii < ll; ++ii) {
 ~ 				RenderGlobal.ContainerLocalRenderInformation renderglobal$containerlocalrenderinformation1 = this.renderInfos
@@ -258,7 +266,9 @@
 ~ 						TileEntityRendererDispatcher.instance.renderTileEntity((TileEntity) list1.get(m), partialTicks,
 ~ 								-1);
 
-> INSERT  40 : 199  @  40
+> DELETE  36  @  36 : 37
+
+> INSERT  3 : 154  @  3
 
 + 	public static interface EntityChunkCullAdapter {
 + 		boolean shouldCull(RenderChunk renderChunk);
@@ -271,8 +281,6 @@
 + 	public void renderShadowLODEntities(Entity renderViewEntity, float partialTicks,
 + 			EntityChunkCullAdapter entityChunkCull, EntityObjectCullAdapter entityObjectCull) { // TODO
 + 		if (renderEntitiesStartupCounter <= 0) {
-+ 			theWorld.theProfiler.startSection("shadow_entity_prepare");
-+ 
 + 			TileEntityRendererDispatcher.instance.cacheActiveRenderInfo(theWorld, mc.getTextureManager(),
 + 					mc.fontRendererObj, renderViewEntity, partialTicks);
 + 			renderManager.cacheActiveRenderInfo(theWorld, mc.fontRendererObj, renderViewEntity, mc.pointedEntity,
@@ -289,7 +297,6 @@
 + 			TileEntityRendererDispatcher.staticPlayerZ = d5;
 + 			renderManager.setRenderPosition(d3, d4, d5);
 + 
-+ 			this.theWorld.theProfiler.endStartSection("shadow_entities");
 + 			for (RenderGlobal.ContainerLocalRenderInformation containerlocalrenderinformation : this.renderInfos) {
 + 				RenderChunk currentRenderChunk = containerlocalrenderinformation.renderChunk;
 + 
@@ -343,14 +350,11 @@
 + 					GlStateManager.depthMask(true);
 + 				}
 + 			}
-+ 			theWorld.theProfiler.endSection();
 + 		}
 + 	}
 + 
 + 	public void renderParaboloidTileEntities(Entity renderViewEntity, float partialTicks, int up) {
 + 		if (renderEntitiesStartupCounter <= 0) {
-+ 			theWorld.theProfiler.startSection("paraboloid_entity_prepare");
-+ 
 + 			TileEntityRendererDispatcher.instance.cacheActiveRenderInfo(theWorld, mc.getTextureManager(),
 + 					mc.fontRendererObj, renderViewEntity, partialTicks);
 + 			renderManager.cacheActiveRenderInfo(theWorld, mc.fontRendererObj, renderViewEntity, mc.pointedEntity,
@@ -391,7 +395,6 @@
 + 			maxY = MathHelper.floor_double(maxY / 16.0) * 16;
 + 			maxZ = MathHelper.floor_double(maxZ / 16.0) * 16;
 + 
-+ 			this.theWorld.theProfiler.endStartSection("paraboloid_entities");
 + 			for (int cx = minX; cx <= maxX; cx += 16) {
 + 				for (int cz = minZ; cz <= maxZ; cz += 16) {
 + 					for (int cy = minY; cy <= maxY; cy += 16) {
@@ -414,7 +417,6 @@
 + 					}
 + 				}
 + 			}
-+ 			theWorld.theProfiler.endSection();
 + 			mc.entityRenderer.disableLightmap();
 + 		}
 + 	}
@@ -430,7 +432,15 @@
 
 ~ 		return HString.format("C: %d/%d %sD: %d, %s",
 
-> CHANGE  53 : 55  @  53 : 54
+> DELETE  15  @  15 : 16
+
+> DELETE  15  @  15 : 16
+
+> DELETE  4  @  4 : 5
+
+> DELETE  7  @  7 : 8
+
+> CHANGE  8 : 10  @  8 : 9
 
 ~ 				|| (double) viewEntity.rotationYaw != this.lastViewEntityYaw
 ~ 				|| this.mc.entityRenderer.currentProjMatrixFOV != this.lastViewProjMatrixFOV;
@@ -457,12 +467,16 @@
 ~ 			RenderGlobal.ContainerLocalRenderInformation renderglobal$containerlocalrenderinformation2 = this.renderInfos
 ~ 					.get(ii);
 
-> CHANGE  3 : 5  @  3 : 4
+> CHANGE  3 : 5  @  3 : 5
 
 ~ 				if (this.mc.gameSettings.chunkFix ? this.isPositionInRenderChunkHack(blockpos1, renderchunk4)
 ~ 						: this.isPositionInRenderChunk(blockpos, renderchunk4)) {
 
-> INSERT  21 : 31  @  21
+> DELETE  2  @  2 : 3
+
+> DELETE  7  @  7 : 8
+
+> INSERT  9 : 19  @  9
 
 + 	/**
 + 	 * WARNING: use only in the above "build near" logic
@@ -479,13 +493,23 @@
 
 + 		((ClippingHelperImpl) this.debugFixedClippingHelper).destroy();
 
-> CHANGE  58 : 61  @  58 : 59
+> DELETE  48  @  48 : 49
+
+> CHANGE  9 : 12  @  9 : 10
 
 ~ 				for (int ii = 0, ll = this.renderInfos.size(); ii < ll; ++ii) {
 ~ 					RenderGlobal.ContainerLocalRenderInformation renderglobal$containerlocalrenderinformation = this.renderInfos
 ~ 							.get(ii);
 
-> INSERT  33 : 70  @  33
+> DELETE  7  @  7 : 9
+
+> DELETE  2  @  2 : 3
+
+> DELETE  15  @  15 : 16
+
+> DELETE  1  @  1 : 2
+
+> INSERT  3 : 39  @  3
 
 + 	public static interface ChunkCullAdapter {
 + 		boolean shouldCull(RenderChunk chunk);
@@ -518,7 +542,6 @@
 + 			}
 + 		}
 + 		if (i > 0) {
-+ 			this.mc.mcProfiler.endStartSection("render_shadow_" + blockLayerIn);
 + 			this.renderContainer.renderChunkLayer(blockLayerIn);
 + 		}
 + 		return i;
@@ -579,10 +602,9 @@
 ~ 						++i;
 ~ 					}
 
-> CHANGE  3 : 10  @  3 : 5
+> CHANGE  3 : 9  @  3 : 5
 
 ~ 		if (i > 0) {
-~ 			this.mc.mcProfiler.endStartSection("render_paraboloid_" + up + "_" + blockLayerIn);
 ~ 			this.mc.entityRenderer.enableLightmap();
 ~ 			this.renderContainer.renderChunkLayer(blockLayerIn);
 ~ 			this.mc.entityRenderer.disableLightmap();
@@ -609,7 +631,11 @@
 
 ~ 		this.displayListEntitiesDirty |= this.renderDispatcher.updateChunks(finishTimeNano);
 
-> DELETE  17  @  17 : 18
+> CHANGE  11 : 12  @  11 : 12
+
+~ 				long i = finishTimeNano - EagRuntime.nanoTime();
+
+> DELETE  5  @  5 : 6
 
 > CHANGE  155 : 159  @  155 : 156
 

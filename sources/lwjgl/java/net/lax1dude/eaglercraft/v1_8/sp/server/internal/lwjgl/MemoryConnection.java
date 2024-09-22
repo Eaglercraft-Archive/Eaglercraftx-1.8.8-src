@@ -22,7 +22,7 @@ import net.lax1dude.eaglercraft.v1_8.internal.IPCPacketData;
  */
 public class MemoryConnection {
 
-	public static final List<IPCPacketData> clientToServerQueue = new LinkedList();
-	public static final List<IPCPacketData> serverToClientQueue = new LinkedList();
+	public static final List<IPCPacketData> clientToServerQueue = new LinkedList<>();
+	public static final List<IPCPacketData> serverToClientQueue = new LinkedList<>();
 
 }

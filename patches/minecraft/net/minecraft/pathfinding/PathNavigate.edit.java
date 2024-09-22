@@ -7,7 +7,15 @@
 
 > DELETE  7  @  7 : 9
 
-> CHANGE  134 : 135  @  134 : 135
+> DELETE  45  @  45 : 46
+
+> DELETE  4  @  4 : 5
+
+> DELETE  19  @  19 : 20
+
+> DELETE  5  @  5 : 6
+
+> CHANGE  57 : 58  @  57 : 58
 
 ~ 					List<AxisAlignedBB> list = this.worldObj.getCollidingBoundingBoxes(this.theEntity,
 

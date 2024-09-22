@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+
+<!--
+
+This file is from ${date}, it was generated using EaglercraftX 1.8 boot manager
+
+-->
+
+<html style="width:100%;height:100%;">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>${client_name}</title>
+
+<style type="eaglercraftOfflineParseHint">{"type":"EAGLERCRAFT_1_5_OLD_OFFLINE","launchConf":${launch_conf_json}}</style>
+
+<script type="text/javascript">
+window.addEventListener("load", function() {
+	countdown();
+	setTimeout(function(){
+		document.getElementById("locally").remove();
+		window.minecraftOpts = [ "game_frame", getAssetsURI(), "${launch_opts}" ];
+		main();
+	}, 6000);
+});
+</script>
+
+<script type="text/javascript">
+function getAssetsURI() {
+	return "data:application/octet-stream;base64,${assets_epk}";
+}
+</script>
+
+<link type="image/x-icon" rel="shortcut icon" href="data:image/x-icon;base64,AAABAAEAICAQAAEABADoAgAAFgAAACgAAAAgAAAAQAAAAAEABAAAAAAAgAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAACAAAAAgIAAgAAAAIAAgACAgAAAgICAAMDAwAAAAP8AAP8AAAD//wD/AAAA/wD/AP//AAD///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAd3d3d3d3d3d3d3d3d3d3cHiIiIiIiIiIiIiIiIiIiHB4f/////////////////hweH/////////////////4cHh/////cAAHiI//////+HB4f///8REREAiIj/////hweH///3GNmREHAAAIiI/4cHh///8Y2ZmREHeqoIiI+HB4f///GNmZmRB3qqIIiIhweH///xjZmZkQd6qiIIiIcHh///8Y2ZmZEHqqoiD/+HB4f///cY2ZmRd6qqIg//hweH////EY2ZEXqqqiIP/4cHh/////cREXL6qqoiD/+HB4f////////y////Ig//hweH/////////yIiIoIP/4cHh//////////yIiIoD/+HB4f//////////yIiIn//hweH/////////////////4cHh/////////////////+HB4d3d3d3d3d3d3d3d3d3hweIiIiIiIiIiIiIiIiIiIcHhMwiRERERERERAAAAAAHB4TsokRERERERESICICIBweEETNEREREREREiAiAiAcHhJGzRERERERERERERERHB4iIiIiIiIiIiIiIiIiIhwd3d3d3d3d3d3d3d3d3d3cAAAAAAAAAAAAAAAAAAAAAD//////////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/////w==" />
+
+<script type="text/javascript">
+"use strict";
+${classes_js}
+</script>
+
+<script type="text/javascript">
+function countdown() {
+	const c = document.getElementById("countdown");
+	setTimeout(function(){ c.innerText = "(Game will launch in 4)"; }, 1000);
+	setTimeout(function(){ c.innerText = "(Game will launch in 3)"; }, 2000);
+	setTimeout(function(){ c.innerText = "(Game will launch in 2)"; }, 3000);
+	setTimeout(function(){ c.innerText = "(Game will launch in 1)"; }, 4000);
+	setTimeout(function(){ c.innerText = "(Game will launch in 0)"; }, 5000);
+}
+</script>
+</head>
+<body style="margin:0px;width:100%;height:100%;font-family:sans-serif;overflow:hidden;" id="game_frame">
+<div id="locally" style="text-align:center;">
+<div style="height:5vh;"></div>
+<h2>${client_name}</h2>
+<p id="countdown" style="text-align:center;">(Game will launch in 5)</p>
+</div>
+</body>
+</html>

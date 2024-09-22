@@ -9,7 +9,7 @@
 
 + 
 
-> INSERT  21 : 27  @  21
+> INSERT  21 : 28  @  21
 
 + 		this.addGameRule("loadSpawnChunks", "false", GameRules.ValueType.BOOLEAN_VALUE);
 + 		this.addGameRule("bedSpawnPoint", "true", GameRules.ValueType.BOOLEAN_VALUE);
@@ -17,5 +17,6 @@
 + 		this.addGameRule("clickToSit", "true", GameRules.ValueType.BOOLEAN_VALUE);
 + 		this.addGameRule("colorCodes", "true", GameRules.ValueType.BOOLEAN_VALUE);
 + 		this.addGameRule("doSignEditing", "true", GameRules.ValueType.BOOLEAN_VALUE);
++ 		this.addGameRule("doWeatherCycle", "true", GameRules.ValueType.BOOLEAN_VALUE);
 
 > EOF

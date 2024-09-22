@@ -1,7 +1,7 @@
 #line 2
 
 /*
- * Copyright (c) 2022-2023 lax1dude. All Rights Reserved.
+ * Copyright (c) 2022-2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -16,18 +16,15 @@
  * 
  */
 
-precision lowp int;
-precision highp float;
-precision mediump sampler2D;
+EAGLER_VSH_LAYOUT_BEGIN()
+EAGLER_IN(0, vec3, a_position3f)
+EAGLER_IN(1, vec2, c_position2i)
+EAGLER_IN(2, vec2, c_coords2i)
+EAGLER_IN(3, vec4, c_color4f)
+EAGLER_VSH_LAYOUT_END()
 
-layout(location = 0) in vec3 a_position3f;
-
-layout(location = 1) in vec2 c_position2i;
-layout(location = 2) in vec2 c_coords2i;
-layout(location = 3) in vec4 c_color4f;
-
-out vec2 v_texCoord2f;
-out vec4 v_color4f;
+EAGLER_OUT(vec2, v_texCoord2f)
+EAGLER_OUT(vec4, v_color4f)
 
 uniform mat4 u_matrixTransform;
 uniform vec2 u_charSize2f;
@@ -49,5 +46,5 @@ void main() {
 	pos2d.x -= (a_position3f.y - 0.5) * italicBit;
 	v_color4f.a *= 2.0;
 	v_color4f *= u_color4f;
-	gl_Position = u_matrixTransform * vec4(pos2d, 0.0, 1.0);
+	EAGLER_VERT_POSITION = u_matrixTransform * vec4(pos2d, 0.0, 1.0);
 }

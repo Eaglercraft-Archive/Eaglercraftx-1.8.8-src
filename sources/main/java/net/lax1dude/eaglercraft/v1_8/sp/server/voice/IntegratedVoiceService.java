@@ -1,6 +1,7 @@
 package net.lax1dude.eaglercraft.v1_8.sp.server.voice;
 
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -10,11 +11,10 @@ import java.util.Set;
 import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
-import net.lax1dude.eaglercraft.v1_8.netty.Unpooled;
+import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.GameMessagePacket;
+import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.server.*;
 import net.lax1dude.eaglercraft.v1_8.voice.ExpiringSet;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.play.server.S3FPacketCustomPayload;
 
 /**
  * Copyright (c) 2024 lax1dude. All Rights Reserved.
@@ -35,20 +35,18 @@ public class IntegratedVoiceService {
 
 	public static final Logger logger = LogManager.getLogger("IntegratedVoiceService");
 
-	public static final String CHANNEL = "EAG|Voice-1.8";
-
-	private byte[] iceServersPacket;
+	private GameMessagePacket iceServersPacket;
 
 	private final Map<EaglercraftUUID, EntityPlayerMP> voicePlayers = new HashMap<>();
 	private final Map<EaglercraftUUID, ExpiringSet<EaglercraftUUID>> voiceRequests = new HashMap<>();
 	private final Set<VoicePair> voicePairs = new HashSet<>();
 
 	public IntegratedVoiceService(String[] iceServers) {
-		iceServersPacket = IntegratedVoiceSignalPackets.makeVoiceSignalPacketAllowed(true, iceServers);
+		iceServersPacket = new SPacketVoiceSignalAllowedEAG(true, iceServers);
 	}
 
 	public void changeICEServers(String[] iceServers) {
-		iceServersPacket = IntegratedVoiceSignalPackets.makeVoiceSignalPacketAllowed(true, iceServers);
+		iceServersPacket = new SPacketVoiceSignalAllowedEAG(true, iceServers);
 	}
 
 	private static class VoicePair {
@@ -85,25 +83,14 @@ public class IntegratedVoiceService {
 	}
 
 	public void handlePlayerLoggedIn(EntityPlayerMP player) {
-		player.playerNetServerHandler.sendPacket(new S3FPacketCustomPayload(CHANNEL, new PacketBuffer(
-				Unpooled.buffer(iceServersPacket, iceServersPacket.length).writerIndex(iceServersPacket.length))));
+		player.playerNetServerHandler.sendEaglerMessage(iceServersPacket);
 	}
 
 	public void handlePlayerLoggedOut(EntityPlayerMP player) {
 		removeUser(player.getUniqueID());
 	}
 
-	public void processPacket(PacketBuffer packetData, EntityPlayerMP sender) {
-		try {
-			IntegratedVoiceSignalPackets.processPacket(packetData, sender, this);
-		} catch (IOException e) {
-			logger.error("Invalid voice signal packet recieved from player {}!", sender.getName());
-			logger.error(e);
-			sender.playerNetServerHandler.kickPlayerFromServer("Invalid voice signal packet recieved!");
-		}
-	}
-
-	void handleVoiceSignalPacketTypeRequest(EaglercraftUUID player, EntityPlayerMP sender) {
+	public void handleVoiceSignalPacketTypeRequest(EaglercraftUUID player, EntityPlayerMP sender) {
 		EaglercraftUUID senderUUID = sender.getUniqueID();
 		if (senderUUID.equals(player))
 			return; // prevent duplicates
@@ -134,14 +121,24 @@ public class IntegratedVoiceService {
 				voiceRequests.remove(senderUUID);
 			// send each other add data
 			voicePairs.add(newPair);
-			targetPlayerCon.playerNetServerHandler.sendPacket(new S3FPacketCustomPayload(CHANNEL,
-					IntegratedVoiceSignalPackets.makeVoiceSignalPacketConnect(senderUUID, false)));
-			sender.playerNetServerHandler.sendPacket(new S3FPacketCustomPayload(CHANNEL,
-					IntegratedVoiceSignalPackets.makeVoiceSignalPacketConnect(player, true)));
+			if(targetPlayerCon.playerNetServerHandler.getEaglerMessageProtocol().ver <= 3) {
+				targetPlayerCon.playerNetServerHandler
+						.sendEaglerMessage(new SPacketVoiceSignalConnectV3EAG(senderUUID.msb, senderUUID.lsb, false, false));
+			}else {
+				targetPlayerCon.playerNetServerHandler
+						.sendEaglerMessage(new SPacketVoiceSignalConnectV4EAG(senderUUID.msb, senderUUID.lsb, false));
+			}
+			if(sender.playerNetServerHandler.getEaglerMessageProtocol().ver <= 3) {
+				sender.playerNetServerHandler
+						.sendEaglerMessage(new SPacketVoiceSignalConnectV3EAG(player.msb, player.lsb, false, true));
+			}else {
+				sender.playerNetServerHandler
+						.sendEaglerMessage(new SPacketVoiceSignalConnectV4EAG(player.msb, player.lsb, true));
+			}
 		}
 	}
 
-	void handleVoiceSignalPacketTypeConnect(EntityPlayerMP sender) {
+	public void handleVoiceSignalPacketTypeConnect(EntityPlayerMP sender) {
 		if (voicePlayers.containsKey(sender.getUniqueID())) {
 			return;
 		}
@@ -150,63 +147,60 @@ public class IntegratedVoiceService {
 		if (hasNoOtherPlayers) {
 			return;
 		}
-		byte[] packetToBroadcast = IntegratedVoiceSignalPackets.makeVoiceSignalPacketGlobal(voicePlayers.values());
+		Collection<SPacketVoiceSignalGlobalEAG.UserData> userDatas = new ArrayList<>(voicePlayers.size());
+		for(EntityPlayerMP player : voicePlayers.values()) {
+			EaglercraftUUID uuid = player.getUniqueID();
+			userDatas.add(new SPacketVoiceSignalGlobalEAG.UserData(uuid.msb, uuid.lsb, player.getName()));
+		}
+		SPacketVoiceSignalGlobalEAG packetToBroadcast = new SPacketVoiceSignalGlobalEAG(userDatas);
 		for (EntityPlayerMP userCon : voicePlayers.values()) {
-			userCon.playerNetServerHandler.sendPacket(new S3FPacketCustomPayload(CHANNEL, new PacketBuffer(Unpooled
-					.buffer(packetToBroadcast, packetToBroadcast.length).writerIndex(packetToBroadcast.length))));
+			userCon.playerNetServerHandler.sendEaglerMessage(packetToBroadcast);
 		}
 	}
 
-	void handleVoiceSignalPacketTypeICE(EaglercraftUUID player, String str, EntityPlayerMP sender) {
-		VoicePair pair = new VoicePair(player, sender.getUniqueID());
+	public void handleVoiceSignalPacketTypeICE(EaglercraftUUID player, byte[] str, EntityPlayerMP sender) {
+		EaglercraftUUID uuid = sender.getUniqueID();
+		VoicePair pair = new VoicePair(player, uuid);
 		EntityPlayerMP pass = voicePairs.contains(pair) ? voicePlayers.get(player) : null;
 		if (pass != null) {
-			pass.playerNetServerHandler.sendPacket(new S3FPacketCustomPayload(CHANNEL,
-					IntegratedVoiceSignalPackets.makeVoiceSignalPacketICE(sender.getUniqueID(), str)));
+			pass.playerNetServerHandler.sendEaglerMessage(new SPacketVoiceSignalICEEAG(uuid.msb, uuid.lsb, str));
 		}
 	}
 
-	void handleVoiceSignalPacketTypeDesc(EaglercraftUUID player, String str, EntityPlayerMP sender) {
-		VoicePair pair = new VoicePair(player, sender.getUniqueID());
+	public void handleVoiceSignalPacketTypeDesc(EaglercraftUUID player, byte[] str, EntityPlayerMP sender) {
+		EaglercraftUUID uuid = sender.getUniqueID();
+		VoicePair pair = new VoicePair(player, uuid);
 		EntityPlayerMP pass = voicePairs.contains(pair) ? voicePlayers.get(player) : null;
 		if (pass != null) {
-			pass.playerNetServerHandler.sendPacket(new S3FPacketCustomPayload(CHANNEL,
-					IntegratedVoiceSignalPackets.makeVoiceSignalPacketDesc(sender.getUniqueID(), str)));
+			pass.playerNetServerHandler.sendEaglerMessage(new SPacketVoiceSignalDescEAG(uuid.msb, uuid.lsb, str));
 		}
 	}
 
-	void handleVoiceSignalPacketTypeDisconnect(EaglercraftUUID player, EntityPlayerMP sender) {
-		if (player != null) {
-			if (!voicePlayers.containsKey(player)) {
-				return;
+	public void handleVoiceSignalPacketTypeDisconnect(EntityPlayerMP sender) {
+		removeUser(sender.getUniqueID());
+	}
+
+	public void handleVoiceSignalPacketTypeDisconnectPeer(EaglercraftUUID player, EntityPlayerMP sender) {
+		if (!voicePlayers.containsKey(player)) {
+			return;
+		}
+		Iterator<VoicePair> pairsItr = voicePairs.iterator();
+		while (pairsItr.hasNext()) {
+			VoicePair voicePair = pairsItr.next();
+			EaglercraftUUID target = null;
+			if (voicePair.uuid1.equals(player)) {
+				target = voicePair.uuid2;
+			} else if (voicePair.uuid2.equals(player)) {
+				target = voicePair.uuid1;
 			}
-			byte[] userDisconnectPacket = null;
-			Iterator<VoicePair> pairsItr = voicePairs.iterator();
-			while (pairsItr.hasNext()) {
-				VoicePair voicePair = pairsItr.next();
-				EaglercraftUUID target = null;
-				if (voicePair.uuid1.equals(player)) {
-					target = voicePair.uuid2;
-				} else if (voicePair.uuid2.equals(player)) {
-					target = voicePair.uuid1;
+			if (target != null) {
+				pairsItr.remove();
+				EntityPlayerMP conn = voicePlayers.get(target);
+				if (conn != null) {
+					conn.playerNetServerHandler.sendEaglerMessage(new SPacketVoiceSignalDisconnectPeerEAG(player.msb, player.lsb));
 				}
-				if (target != null) {
-					pairsItr.remove();
-					EntityPlayerMP conn = voicePlayers.get(target);
-					if (conn != null) {
-						if (userDisconnectPacket == null) {
-							userDisconnectPacket = IntegratedVoiceSignalPackets.makeVoiceSignalPacketDisconnect(player);
-						}
-						conn.playerNetServerHandler.sendPacket(new S3FPacketCustomPayload(CHANNEL,
-								new PacketBuffer(Unpooled.buffer(userDisconnectPacket, userDisconnectPacket.length)
-										.writerIndex(userDisconnectPacket.length))));
-					}
-					sender.playerNetServerHandler.sendPacket(new S3FPacketCustomPayload(CHANNEL,
-							IntegratedVoiceSignalPackets.makeVoiceSignalPacketDisconnectPB(target)));
-				}
+				sender.playerNetServerHandler.sendEaglerMessage(new SPacketVoiceSignalDisconnectPeerEAG(target.msb, target.lsb));
 			}
-		} else {
-			removeUser(sender.getUniqueID());
 		}
 	}
 
@@ -216,16 +210,16 @@ public class IntegratedVoiceService {
 		}
 		voiceRequests.remove(user);
 		if (voicePlayers.size() > 0) {
-			byte[] voicePlayersPkt = IntegratedVoiceSignalPackets.makeVoiceSignalPacketGlobal(voicePlayers.values());
+			Collection<SPacketVoiceSignalGlobalEAG.UserData> userDatas = new ArrayList<>(voicePlayers.size());
+			for(EntityPlayerMP player : voicePlayers.values()) {
+				EaglercraftUUID uuid = player.getUniqueID();
+				userDatas.add(new SPacketVoiceSignalGlobalEAG.UserData(uuid.msb, uuid.lsb, player.getName()));
+			}
+			SPacketVoiceSignalGlobalEAG packetToBroadcast = new SPacketVoiceSignalGlobalEAG(userDatas);
 			for (EntityPlayerMP userCon : voicePlayers.values()) {
-				if (!user.equals(userCon.getUniqueID())) {
-					userCon.playerNetServerHandler.sendPacket(new S3FPacketCustomPayload(CHANNEL,
-							new PacketBuffer(Unpooled.buffer(voicePlayersPkt, voicePlayersPkt.length)
-									.writerIndex(voicePlayersPkt.length))));
-				}
+				userCon.playerNetServerHandler.sendEaglerMessage(packetToBroadcast);
 			}
 		}
-		byte[] userDisconnectPacket = null;
 		Iterator<VoicePair> pairsItr = voicePairs.iterator();
 		while (pairsItr.hasNext()) {
 			VoicePair voicePair = pairsItr.next();
@@ -240,12 +234,7 @@ public class IntegratedVoiceService {
 				if (voicePlayers.size() > 0) {
 					EntityPlayerMP conn = voicePlayers.get(target);
 					if (conn != null) {
-						if (userDisconnectPacket == null) {
-							userDisconnectPacket = IntegratedVoiceSignalPackets.makeVoiceSignalPacketDisconnect(user);
-						}
-						conn.playerNetServerHandler.sendPacket(new S3FPacketCustomPayload(CHANNEL,
-								new PacketBuffer(Unpooled.buffer(userDisconnectPacket, userDisconnectPacket.length)
-										.writerIndex(userDisconnectPacket.length))));
+						conn.playerNetServerHandler.sendEaglerMessage(new SPacketVoiceSignalDisconnectPeerEAG(user.msb, user.lsb));
 					}
 				}
 			}

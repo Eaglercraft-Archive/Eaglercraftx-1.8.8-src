@@ -41,14 +41,14 @@ public interface Buffer {
 
 	boolean hasRemaining();
 
-	boolean isReadOnly();
-
 	boolean hasArray();
 
 	Object array();
 
-	int arrayOffset();
-
 	boolean isDirect();
+
+	static IndexOutOfBoundsException makeIOOBE(int idx) {
+		return new IndexOutOfBoundsException("Index out of range: " + idx);
+	}
 
 }

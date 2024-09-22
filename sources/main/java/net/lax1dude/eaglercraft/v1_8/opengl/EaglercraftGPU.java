@@ -5,6 +5,7 @@ import net.lax1dude.eaglercraft.v1_8.internal.buffer.FloatBuffer;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.IntBuffer;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
+import net.minecraft.util.MathHelper;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,7 +17,6 @@ import net.lax1dude.eaglercraft.v1_8.internal.IBufferGL;
 import net.lax1dude.eaglercraft.v1_8.internal.IProgramGL;
 import net.lax1dude.eaglercraft.v1_8.internal.IQueryGL;
 import net.lax1dude.eaglercraft.v1_8.internal.ITextureGL;
-import net.lax1dude.eaglercraft.v1_8.internal.PlatformBufferFunctions;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformOpenGL;
 
 import static net.lax1dude.eaglercraft.v1_8.opengl.RealOpenGLEnums.*;
@@ -39,11 +39,14 @@ import static net.lax1dude.eaglercraft.v1_8.internal.PlatformOpenGL.*;
  */
 public class EaglercraftGPU {
 
-	static final GLObjectMap<ITextureGL> mapTexturesGL = new GLObjectMap(32767);
-	static final GLObjectMap<IQueryGL> mapQueriesGL = new GLObjectMap(32767);
-	static final GLObjectMap<DisplayList> mapDisplayListsGL = new GLObjectMap(32767);
+	static final GLObjectMap<ITextureGL> mapTexturesGL = new GLObjectMap<>(8192);
+	static final GLObjectMap<IQueryGL> mapQueriesGL = new GLObjectMap<>(8192);
+	static final GLObjectMap<DisplayList> mapDisplayListsGL = new GLObjectMap<>(8192);
 
 	static final Logger logger = LogManager.getLogger("EaglercraftGPU");
+
+	static boolean emulatedVAOs = false;
+	static SoftGLBufferState emulatedVAOState = new SoftGLBufferState();
 
 	public static final String gluErrorString(int i) {
 		switch(i) {
@@ -87,16 +90,16 @@ public class EaglercraftGPU {
 			EaglercraftGPU.bindGLBufferArray(dp.vertexArray);
 			int c = 0;
 			if((dp.attribs & ATTRIB_TEXTURE) == ATTRIB_TEXTURE) {
-				_wglDisableVertexAttribArray(++c);
+				EaglercraftGPU.disableVertexAttribArray(++c);
 			}
 			if((dp.attribs & ATTRIB_COLOR) == ATTRIB_COLOR) {
-				_wglDisableVertexAttribArray(++c);
+				EaglercraftGPU.disableVertexAttribArray(++c);
 			}
 			if((dp.attribs & ATTRIB_NORMAL) == ATTRIB_NORMAL) {
-				_wglDisableVertexAttribArray(++c);
+				EaglercraftGPU.disableVertexAttribArray(++c);
 			}
 			if((dp.attribs & ATTRIB_LIGHTMAP) == ATTRIB_LIGHTMAP) {
-				_wglDisableVertexAttribArray(++c);
+				EaglercraftGPU.disableVertexAttribArray(++c);
 			}
 		}
 		dp.attribs = -1;
@@ -109,7 +112,7 @@ public class EaglercraftGPU {
 		if(displayListBuffer.capacity() < wantSize) {
 			int newSize = (wantSize & 0xFFFE0000) + 0x40000;
 			ByteBuffer newBuffer = EagRuntime.allocateByteBuffer(newSize);
-			PlatformBufferFunctions.put(newBuffer, (ByteBuffer)displayListBuffer.flip());
+			newBuffer.put((ByteBuffer)displayListBuffer.flip());
 			EagRuntime.freeByteBuffer(displayListBuffer);
 			displayListBuffer = newBuffer;
 		}
@@ -123,7 +126,7 @@ public class EaglercraftGPU {
 		
 		if(dp.attribs == -1) {
 			if(dp.vertexArray != null) {
-				_wglDeleteVertexArrays(dp.vertexArray);
+				EaglercraftGPU.destroyGLBufferArray(dp.vertexArray);
 				dp.vertexArray = null;
 			}
 			if(dp.vertexBuffer != null) {
@@ -135,7 +138,7 @@ public class EaglercraftGPU {
 		}
 		
 		if(dp.vertexArray == null) {
-			dp.vertexArray = _wglGenVertexArrays();
+			dp.vertexArray = createGLBufferArray();
 			dp.bindQuad16 = false;
 			dp.bindQuad32 = false;
 		}
@@ -143,7 +146,7 @@ public class EaglercraftGPU {
 			dp.vertexBuffer = _wglGenBuffers();
 		}
 		
-		bindGLArrayBuffer(dp.vertexBuffer);
+		bindVAOGLArrayBufferNow(dp.vertexBuffer);
 		displayListBuffer.flip();
 		_wglBufferData(GL_ARRAY_BUFFER, displayListBuffer, GL_STATIC_DRAW);
 		displayListBuffer.clear();
@@ -194,7 +197,7 @@ public class EaglercraftGPU {
 		}
 		dp.attribs = -1;
 		if(dp.vertexArray != null) {
-			_wglDeleteVertexArrays(dp.vertexArray);
+			EaglercraftGPU.destroyGLBufferArray(dp.vertexArray);
 			dp.vertexArray = null;
 		}
 		if(dp.vertexBuffer != null) {
@@ -210,7 +213,7 @@ public class EaglercraftGPU {
 		++GlStateManager.stateNormalSerial;
 	}
 	
-	private static final Map<Integer,String> stringCache = new HashMap();
+	private static final Map<Integer,String> stringCache = new HashMap<>();
 
 	public static final String glGetString(int param) {
 		String str = stringCache.get(param);
@@ -239,8 +242,23 @@ public class EaglercraftGPU {
 	}
 
 	public static final void glTexImage2D(int target, int level, int internalFormat, int w, int h, int unused,
+			int format, int type, ByteBuffer pixels) {
+		if(glesVers >= 300) {
+			_wglTexImage2D(target, level, internalFormat, w, h, unused, format, type, pixels);
+		}else {
+			int tv = TextureFormatHelper.trivializeInternalFormatToGLES20(internalFormat);
+			_wglTexImage2D(target, level, tv, w, h, unused, tv, type, pixels);
+		}
+	}
+
+	public static final void glTexImage2D(int target, int level, int internalFormat, int w, int h, int unused,
 			int format, int type, IntBuffer pixels) {
-		_wglTexImage2D(target, level, internalFormat, w, h, unused, format, type, pixels);
+		if(glesVers >= 300) {
+			_wglTexImage2D(target, level, internalFormat, w, h, unused, format, type, pixels);
+		}else {
+			int tv = TextureFormatHelper.trivializeInternalFormatToGLES20(internalFormat);
+			_wglTexImage2D(target, level, tv, w, h, unused, tv, type, pixels);
+		}
 	}
 
 	public static final void glTexSubImage2D(int target, int level, int x, int y, int w, int h, int format,
@@ -249,9 +267,32 @@ public class EaglercraftGPU {
 	}
 
 	public static final void glTexStorage2D(int target, int levels, int internalFormat, int w, int h) {
-		_wglTexStorage2D(target, levels, internalFormat, w, h);
+		if(texStorageCapable && (glesVers >= 300 || levels == 1 || (MathHelper.calculateLogBaseTwo(Math.max(w, h)) + 1) == levels)) {
+			_wglTexStorage2D(target, levels, internalFormat, w, h);
+		}else {
+			int tv = TextureFormatHelper.trivializeInternalFormatToGLES20(internalFormat);
+			int type = TextureFormatHelper.getTypeFromInternal(internalFormat);
+			for(int i = 0; i < levels; ++i) {
+				_wglTexImage2D(target, i, tv, Math.max(w >> i, 1), Math.max(h >> i, 1), 0, tv, type, (ByteBuffer)null);
+			}
+		}
 	}
-	
+
+	public static final void glReadPixels(int x, int y, int width, int height, int format, int type, ByteBuffer buffer) {
+		switch(type) {
+		case GL_FLOAT:
+			_wglReadPixels(x, y, width, height, format, GL_FLOAT, buffer.asFloatBuffer());
+			break;
+		case 0x140B: // GL_HALF_FLOAT
+			_wglReadPixels_u16(x, y, width, height, format, glesVers == 200 ? 0x8D61 : 0x140B, buffer);
+			break;
+		case GL_UNSIGNED_BYTE:
+		default:
+			_wglReadPixels(x, y, width, height, format, type, buffer);
+			break;
+		}
+	}
+
 	public static final void glLineWidth(float f) {
 		_wglLineWidth(f);
 	}
@@ -284,7 +325,7 @@ public class EaglercraftGPU {
 		DisplayList d = mapDisplayListsGL.free(id);
 		if(d != null) {
 			if(d.vertexArray != null) {
-				_wglDeleteVertexArrays(d.vertexArray);
+				EaglercraftGPU.destroyGLBufferArray(d.vertexArray);
 			}
 			if(d.vertexBuffer != null) {
 				_wglDeleteBuffers(d.vertexBuffer);
@@ -302,18 +343,197 @@ public class EaglercraftGPU {
 			GlStateManager.stateBlendEquation = equation;
 		}
 	}
-	
-	private static IBufferArrayGL currentBufferArray = null;
-	
-	public static final void bindGLBufferArray(IBufferArrayGL buffer) {
-		if(currentBufferArray != buffer) {
-			_wglBindVertexArray(buffer);
-			currentBufferArray = buffer;
+
+	public static final boolean areVAOsEmulated() {
+		return emulatedVAOs;
+	}
+
+	public static final IBufferArrayGL createGLBufferArray() {
+		if(emulatedVAOs) {
+			return new SoftGLBufferArray();
+		}else {
+			return _wglGenVertexArrays();
 		}
 	}
+
+	public static final void destroyGLBufferArray(IBufferArrayGL buffer) {
+		if(!emulatedVAOs) {
+			_wglDeleteVertexArrays(buffer);
+		}
+	}
+
+	public static final void enableVertexAttribArray(int index) {
+		if(emulatedVAOs) {
+			if(currentBufferArray == null) {
+				logger.warn("Skipping enable attrib with emulated VAO because no known VAO is bound!");
+				return;
+			}
+			((SoftGLBufferArray)currentBufferArray).enableAttrib(index, true);
+		}else {
+			_wglEnableVertexAttribArray(index);
+		}
+	}
+
+	public static final void disableVertexAttribArray(int index) {
+		if(emulatedVAOs) {
+			if(currentBufferArray == null) {
+				logger.warn("Skipping disable attrib with emulated VAO because no known VAO is bound!");
+				return;
+			}
+			((SoftGLBufferArray)currentBufferArray).enableAttrib(index, false);
+		}else {
+			_wglDisableVertexAttribArray(index);
+		}
+	}
+
+	public static final void vertexAttribPointer(int index, int size, int format, boolean normalized, int stride, int offset) {
+		if(emulatedVAOs) {
+			if(currentBufferArray == null) {
+				logger.warn("Skipping vertexAttribPointer with emulated VAO because no known VAO is bound!");
+				return;
+			}
+			if(currentVAOArrayBuffer == null) {
+				logger.warn("Skipping vertexAttribPointer with emulated VAO because no VAO array buffer is bound!");
+				return;
+			}
+			((SoftGLBufferArray)currentBufferArray).setAttrib(currentVAOArrayBuffer, index, size, format, normalized, stride, offset);
+		}else {
+			_wglVertexAttribPointer(index, size, format, normalized, stride, offset);
+		}
+	}
+
+	public static final void vertexAttribDivisor(int index, int divisor) {
+		if(emulatedVAOs) {
+			if(currentBufferArray == null) {
+				logger.warn("Skipping vertexAttribPointer with emulated VAO because no known VAO is bound!");
+				return;
+			}
+			((SoftGLBufferArray)currentBufferArray).setAttribDivisor(index, divisor);
+		}else {
+			_wglVertexAttribDivisor(index, divisor);
+		}
+	}
+
+	public static final void doDrawArrays(int mode, int first, int count) {
+		if(emulatedVAOs) {
+			if(currentBufferArray == null) {
+				logger.warn("Skipping draw call with emulated VAO because no known VAO is bound!");
+				return;
+			}
+			((SoftGLBufferArray)currentBufferArray).transitionToState(emulatedVAOState, false);
+		}
+		_wglDrawArrays(mode, first, count);
+	}
+
+	public static final void doDrawElements(int mode, int count, int type, int offset) {
+		if(emulatedVAOs) {
+			if(currentBufferArray == null) {
+				logger.warn("Skipping draw call with emulated VAO because no known VAO is bound!");
+				return;
+			}
+			((SoftGLBufferArray)currentBufferArray).transitionToState(emulatedVAOState, true);
+		}
+		_wglDrawElements(mode, count, type, offset);
+	}
+
+	public static final void doDrawArraysInstanced(int mode, int first, int count, int instances) {
+		if(emulatedVAOs) {
+			if(currentBufferArray == null) {
+				logger.warn("Skipping instanced draw call with emulated VAO because no known VAO is bound!");
+				return;
+			}
+			((SoftGLBufferArray)currentBufferArray).transitionToState(emulatedVAOState, false);
+		}
+		_wglDrawArraysInstanced(mode, first, count, instances);
+	}
+
+	public static final void doDrawElementsInstanced(int mode, int count, int type, int offset, int instances) {
+		if(emulatedVAOs) {
+			if(currentBufferArray == null) {
+				logger.warn("Skipping instanced draw call with emulated VAO because no known VAO is bound!");
+				return;
+			}
+			((SoftGLBufferArray)currentBufferArray).transitionToState(emulatedVAOState, true);
+		}
+		_wglDrawElementsInstanced(mode, count, type, offset, instances);
+	}
+
+	static IBufferArrayGL currentBufferArray = null;
 	
-	private static IBufferGL currentArrayBuffer = null;
-	
+	public static final void bindGLBufferArray(IBufferArrayGL buffer) {
+		if(emulatedVAOs) {
+			currentBufferArray = buffer;
+		}else {
+			if(currentBufferArray != buffer) {
+				_wglBindVertexArray(buffer);
+				currentBufferArray = buffer;
+			}
+		}
+	}
+
+	static IBufferGL currentArrayBuffer = null;
+
+	// only used when VAOs are emulated
+	static IBufferGL currentVAOArrayBuffer = null;
+
+	public static final void bindVAOGLArrayBuffer(IBufferGL buffer) {
+		if(emulatedVAOs) {
+			currentVAOArrayBuffer = buffer;
+		}else {
+			if(currentArrayBuffer != buffer) {
+				_wglBindBuffer(GL_ARRAY_BUFFER, buffer);
+				currentArrayBuffer = buffer;
+			}
+		}
+	}
+
+	public static final void bindVAOGLArrayBufferNow(IBufferGL buffer) {
+		if(emulatedVAOs) {
+			currentVAOArrayBuffer = buffer;
+		}
+		if(currentArrayBuffer != buffer) {
+			_wglBindBuffer(GL_ARRAY_BUFFER, buffer);
+			currentArrayBuffer = buffer;
+		}
+	}
+
+	public static final void bindVAOGLElementArrayBuffer(IBufferGL buffer) {
+		if(emulatedVAOs) {
+			if(currentBufferArray == null) {
+				logger.warn("Skipping set element array buffer with emulated VAO because no known VAO is bound!");
+				return;
+			}
+			((SoftGLBufferArray)currentBufferArray).setIndexBuffer(buffer);
+		}else {
+			_wglBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer);
+		}
+	}
+
+	static final void bindVAOGLElementArrayBufferNow(IBufferGL buffer) {
+		if(emulatedVAOs) {
+			if(currentBufferArray == null) {
+				logger.warn("Skipping set element array buffer with emulated VAO because no known VAO is bound!");
+				return;
+			}
+			((SoftGLBufferArray)currentBufferArray).setIndexBuffer(buffer);
+			if(currentEmulatedVAOIndexBuffer != buffer) {
+				_wglBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer);
+				currentEmulatedVAOIndexBuffer = buffer;
+			}
+		}else {
+			_wglBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer);
+		}
+	}
+
+	static IBufferGL currentEmulatedVAOIndexBuffer = null;
+
+	static final void bindEmulatedVAOIndexBuffer(IBufferGL buffer) {
+		if(currentEmulatedVAOIndexBuffer != buffer) {
+			_wglBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer);
+			currentEmulatedVAOIndexBuffer = buffer;
+		}
+	}
+
 	public static final void bindGLArrayBuffer(IBufferGL buffer) {
 		if(currentArrayBuffer != buffer) {
 			_wglBindBuffer(GL_ARRAY_BUFFER, buffer);
@@ -321,7 +541,7 @@ public class EaglercraftGPU {
 		}
 	}
 	
-	private static IBufferGL currentUniformBuffer = null;
+	static IBufferGL currentUniformBuffer = null;
 	
 	public static final void bindGLUniformBuffer(IBufferGL buffer) {
 		if(currentUniformBuffer != buffer) {
@@ -330,7 +550,7 @@ public class EaglercraftGPU {
 		}
 	}
 	
-	private static IProgramGL currentShaderProgram = null;
+	static IProgramGL currentShaderProgram = null;
 	
 	public static final void bindGLShaderProgram(IProgramGL prog) {
 		if(currentShaderProgram != prog) {
@@ -350,6 +570,38 @@ public class EaglercraftGPU {
 			currentUniformBlockBindings[index] = buffer;
 			currentUniformBlockBindingOffset[index] = offset;
 			currentUniformBlockBindingSize[index] = size;
+		}
+	}
+
+	public static final int CLEAR_BINDING_TEXTURE = 1;
+	public static final int CLEAR_BINDING_TEXTURE0 = 2;
+	public static final int CLEAR_BINDING_ACTIVE_TEXTURE = 4;
+	public static final int CLEAR_BINDING_BUFFER_ARRAY = 8;
+	public static final int CLEAR_BINDING_ARRAY_BUFFER = 16;
+	public static final int CLEAR_BINDING_SHADER_PROGRAM = 32;
+	
+	public static final void clearCurrentBinding(int mask) {
+		if((mask & CLEAR_BINDING_TEXTURE) != 0) {
+			int[] i = GlStateManager.boundTexture;
+			for(int j = 0; j < i.length; ++j) {
+				i[j] = -1;
+			}
+		}
+		if((mask & CLEAR_BINDING_TEXTURE0) != 0) {
+			GlStateManager.boundTexture[0] = -1;
+		}
+		if((mask & CLEAR_BINDING_ACTIVE_TEXTURE) != 0) {
+			GlStateManager.activeTexture = 0;
+			_wglActiveTexture(GL_TEXTURE0);
+		}
+		if((mask & CLEAR_BINDING_BUFFER_ARRAY) != 0) {
+			currentBufferArray = null;
+		}
+		if((mask & CLEAR_BINDING_ARRAY_BUFFER) != 0) {
+			currentArrayBuffer = currentVAOArrayBuffer = null;
+		}
+		if((mask & CLEAR_BINDING_SHADER_PROGRAM) != 0) {
+			currentShaderProgram = null;
 		}
 	}
 	
@@ -414,7 +666,7 @@ public class EaglercraftGPU {
 			if(newSize > 0xFFFF) {
 				newSize = 0xFFFF;
 			}
-			_wglBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buf);
+			EaglercraftGPU.bindVAOGLElementArrayBufferNow(buf);
 			resizeQuad16EmulationBuffer(newSize >> 2);
 		}else {
 			int cnt = quad16EmulationBufferSize;
@@ -423,10 +675,10 @@ public class EaglercraftGPU {
 				if(newSize > 0xFFFF) {
 					newSize = 0xFFFF;
 				}
-				_wglBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buf);
+				EaglercraftGPU.bindVAOGLElementArrayBufferNow(buf);
 				resizeQuad16EmulationBuffer(newSize >> 2);
 			}else if(bind) {
-				_wglBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buf);
+				EaglercraftGPU.bindVAOGLElementArrayBuffer(buf);
 			}
 		}
 	}
@@ -436,16 +688,16 @@ public class EaglercraftGPU {
 		if(buf == null) {
 			quad32EmulationBuffer = buf = _wglGenBuffers();
 			int newSize = quad32EmulationBufferSize = (vertexCount & 0xFFFFC000) + 0x8000;
-			_wglBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buf);
+			EaglercraftGPU.bindVAOGLElementArrayBufferNow(buf);
 			resizeQuad32EmulationBuffer(newSize >> 2);
 		}else {
 			int cnt = quad32EmulationBufferSize;
 			if(cnt < vertexCount) {
 				int newSize = quad32EmulationBufferSize = (vertexCount & 0xFFFFC000) + 0x8000;
-				_wglBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buf);
+				EaglercraftGPU.bindVAOGLElementArrayBufferNow(buf);
 				resizeQuad32EmulationBuffer(newSize >> 2);
 			}else if(bind) {
-				_wglBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buf);
+				EaglercraftGPU.bindVAOGLElementArrayBuffer(buf);
 			}
 		}
 	}
@@ -508,9 +760,19 @@ public class EaglercraftGPU {
 		p.drawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_SHORT, 0);
 	}
 
+	static int glesVers = -1;
 	static boolean hasFramebufferHDR16FSupport = false;
 	static boolean hasFramebufferHDR32FSupport = false;
+	static boolean hasLinearHDR16FSupport = false;
 	static boolean hasLinearHDR32FSupport = false;
+	static boolean fboRenderMipmapCapable = false;
+	static boolean vertexArrayCapable = false;
+	static boolean instancingCapable = false;
+	static boolean texStorageCapable = false;
+	static boolean textureLODCapable = false;
+	static boolean shader5Capable = false;
+	static boolean npotCapable = false;
+	static int uniformBufferOffsetAlignment = -1;
 
 	public static final void createFramebufferHDR16FTexture(int target, int level, int w, int h, int format, boolean allow32bitFallback) {
 		createFramebufferHDR16FTexture(target, level, w, h, format, allow32bitFallback, null);
@@ -525,19 +787,24 @@ public class EaglercraftGPU {
 			int internalFormat;
 			switch(format) {
 			case GL_RED:
-				internalFormat = 0x822D; // GL_R16F
+				if(glesVers == 200) {
+					format = GL_LUMINANCE;
+					internalFormat = GL_LUMINANCE;
+				}else {
+					internalFormat = glesVers == 200 ? GL_LUMINANCE : 0x822D; // GL_R16F
+				}
 				break;
 			case 0x8227: // GL_RG
-				internalFormat = 0x822F; // GL_RG16F
+				internalFormat = glesVers == 200 ? 0x8227 : 0x822F; // GL_RG16F
 			case GL_RGB:
 				throw new UnsupportedOperationException("GL_RGB16F isn't supported specifically in WebGL 2.0 for some goddamn reason");
 			case GL_RGBA:
-				internalFormat = 0x881A; // GL_RGBA16F
+				internalFormat = glesVers == 200 ? GL_RGBA : 0x881A; // GL_RGBA16F
 				break;
 			default:
 				throw new UnsupportedOperationException("Unknown format: " + format);
 			}
-			_wglTexImage2Du16(target, level, internalFormat, w, h, 0, format, 0x140B, pixelData);
+			_wglTexImage2Du16(target, level, internalFormat, w, h, 0, format, glesVers == 200 ? 0x8D61 : 0x140B, pixelData);
 		}else {
 			if(allow32bitFallback) {
 				if(hasFramebufferHDR32FSupport) {
@@ -567,7 +834,7 @@ public class EaglercraftGPU {
 				internalFormat = 0x822E; // GL_R32F
 				break;
 			case 0x8227: // GL_RG
-				internalFormat = 0x822F; // GL_RG32F
+				internalFormat = 0x8230; // GL_RG32F
 			case GL_RGB:
 				throw new UnsupportedOperationException("GL_RGB32F isn't supported specifically in WebGL 2.0 for some goddamn reason");
 			case GL_RGBA:
@@ -594,11 +861,30 @@ public class EaglercraftGPU {
 		EaglercraftGPU.glGetString(7936);
 		EaglercraftGPU.glGetString(7937);
 		EaglercraftGPU.glGetString(7938);
+		glesVers = PlatformOpenGL.checkOpenGLESVersion();
+		vertexArrayCapable = PlatformOpenGL.checkVAOCapable();
+		emulatedVAOs = !vertexArrayCapable;
+		fboRenderMipmapCapable = PlatformOpenGL.checkFBORenderMipmapCapable();
+		instancingCapable = PlatformOpenGL.checkInstancingCapable();
+		texStorageCapable = PlatformOpenGL.checkTexStorageCapable();
+		textureLODCapable = PlatformOpenGL.checkTextureLODCapable();
+		shader5Capable = PlatformOpenGL.checkOESGPUShader5Capable() || PlatformOpenGL.checkEXTGPUShader5Capable();
+		npotCapable = PlatformOpenGL.checkNPOTCapable();
+		uniformBufferOffsetAlignment = glesVers >= 300 ? _wglGetInteger(0x8A34) : -1;
+		if(!npotCapable) {
+			logger.warn("NPOT texture support detected as false, texture wrapping must be set to GL_CLAMP_TO_EDGE if the texture's width or height is not a power of 2");
+		}
 		hasFramebufferHDR16FSupport = PlatformOpenGL.checkHDRFramebufferSupport(16);
 		if(hasFramebufferHDR16FSupport) {
 			logger.info("16-bit HDR render target support: true");
 		}else {
 			logger.error("16-bit HDR render target support: false");
+		}
+		hasLinearHDR16FSupport = PlatformOpenGL.checkLinearHDRFilteringSupport(16);
+		if(hasLinearHDR16FSupport) {
+			logger.info("16-bit HDR linear filter support: true");
+		}else {
+			logger.error("16-bit HDR linear filter support: false");
 		}
 		hasFramebufferHDR32FSupport = PlatformOpenGL.checkHDRFramebufferSupport(32);
 		if(hasFramebufferHDR32FSupport) {
@@ -606,7 +892,7 @@ public class EaglercraftGPU {
 		}else {
 			logger.error("32-bit HDR render target support: false");
 		}
-		hasLinearHDR32FSupport = PlatformOpenGL.checkLinearHDR32FSupport();
+		hasLinearHDR32FSupport = PlatformOpenGL.checkLinearHDRFilteringSupport(32);
 		if(hasLinearHDR32FSupport) {
 			logger.info("32-bit HDR linear filter support: true");
 		}else {
@@ -615,14 +901,84 @@ public class EaglercraftGPU {
 		if(!checkHasHDRFramebufferSupportWithFilter()) {
 			logger.error("No HDR render target support was detected! Shaders will be disabled.");
 		}
+		if(emulatedVAOs) {
+			logger.info("Note: Could not unlock VAOs via OpenGL extensions, emulating them instead");
+		}
+		if(!instancingCapable) {
+			logger.info("Note: Could not unlock instancing via OpenGL extensions, using slow vanilla font and particle rendering");
+		}
+		emulatedVAOState = emulatedVAOs ? new SoftGLBufferState() : null;
+		PlatformOpenGL.enterVAOEmulationHook();
+		GLSLHeader.init();
 		DrawUtils.init();
 		SpriteLevelMixer.initialize();
-		InstancedFontRenderer.initialize();
-		InstancedParticleRenderer.initialize();
+		if(instancingCapable) {
+			InstancedFontRenderer.initialize();
+			InstancedParticleRenderer.initialize();
+		}
 		EffectPipelineFXAA.initialize();
 		TextureCopyUtil.initialize();
 		DrawUtils.vshLocal.free();
 		DrawUtils.vshLocal = null;
+	}
+
+	public static final void destroyCache() {
+		stringCache.clear();
+		mapTexturesGL.clear();
+		mapQueriesGL.clear();
+		mapDisplayListsGL.clear();
+		emulatedVAOs = false;
+		emulatedVAOState = null;
+		glesVers = -1;
+		fboRenderMipmapCapable = false;
+		vertexArrayCapable = false;
+		instancingCapable = false;
+		hasFramebufferHDR16FSupport = false;
+		hasFramebufferHDR32FSupport = false;
+		hasLinearHDR32FSupport = false;
+		GLSLHeader.destroy();
+		DrawUtils.destroy();
+		SpriteLevelMixer.destroy();
+		InstancedFontRenderer.destroy();
+		InstancedParticleRenderer.destroy();
+		EffectPipelineFXAA.destroy();
+		TextureCopyUtil.destroy();
+	}
+
+	public static final int checkOpenGLESVersion() {
+		return glesVers;
+	}
+
+	public static final boolean checkFBORenderMipmapCapable() {
+		return fboRenderMipmapCapable;
+	}
+
+	public static final boolean checkVAOCapable() {
+		return vertexArrayCapable;
+	}
+
+	public static final boolean checkInstancingCapable() {
+		return instancingCapable;
+	}
+
+	public static final boolean checkTexStorageCapable() {
+		return texStorageCapable;
+	}
+
+	public static final boolean checkTextureLODCapable() {
+		return textureLODCapable;
+	}
+
+	public static final boolean checkShader5Capable() {
+		return shader5Capable;
+	}
+
+	public static final boolean checkNPOTCapable() {
+		return npotCapable;
+	}
+
+	public static final int getUniformBufferOffsetAlignment() {
+		return uniformBufferOffsetAlignment;
 	}
 
 	public static final boolean checkHDRFramebufferSupport(int bits) {
@@ -636,15 +992,28 @@ public class EaglercraftGPU {
 		}
 	}
 
+	public static final boolean checkLinearHDRFilteringSupport(int bits) {
+		switch(bits) {
+		case 16:
+			return hasLinearHDR16FSupport;
+		case 32:
+			return hasLinearHDR32FSupport;
+		default:
+			return false;
+		}
+	}
+
 	public static final boolean checkHasHDRFramebufferSupport() {
 		return hasFramebufferHDR16FSupport || hasFramebufferHDR32FSupport;
 	}
 
 	public static final boolean checkHasHDRFramebufferSupportWithFilter() {
-		return hasFramebufferHDR16FSupport || (hasFramebufferHDR32FSupport && hasLinearHDR32FSupport);
+		return (hasFramebufferHDR16FSupport && hasLinearHDR16FSupport) || (hasFramebufferHDR32FSupport && hasLinearHDR32FSupport);
 	}
 
+	//legacy
 	public static final boolean checkLinearHDR32FSupport() {
 		return hasLinearHDR32FSupport;
 	}
+
 }

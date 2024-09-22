@@ -5,7 +5,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.teavm.jso.JSBody;
 import org.teavm.jso.JSFunctor;
@@ -21,7 +23,10 @@ import org.teavm.jso.webgl.WebGLRenderingContext;
 
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.EaglercraftVersion;
+import net.lax1dude.eaglercraft.v1_8.boot_menu.teavm.BootMenuEntryPoint;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformApplication;
+import net.lax1dude.eaglercraft.v1_8.internal.PlatformInput;
+import net.lax1dude.eaglercraft.v1_8.internal.PlatformOpenGL;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformRuntime;
 import net.lax1dude.eaglercraft.v1_8.internal.teavm.opts.JSEaglercraftXOptsAssetsURI;
 import net.lax1dude.eaglercraft.v1_8.internal.teavm.opts.JSEaglercraftXOptsRoot;
@@ -55,12 +60,26 @@ public class ClientMain {
 		return crashImage.substring(0);
 	}
 
-	@JSBody(params = {}, script = "if((typeof window.__isEaglerX188Running === \"string\") && window.__isEaglerX188Running === \"yes\") return true; window.__isEaglerX188Running = \"yes\"; return false;")
+	@JSBody(params = {}, script = "if((typeof __isEaglerX188Running === \"string\") && __isEaglerX188Running === \"yes\") return true; __isEaglerX188Running = \"yes\"; return false;")
 	private static native boolean getRunningFlag();
 
+	@JSBody(params = { "str" }, script = "return (typeof location !== \"undefined\") && (typeof location.hostname === \"string\") && location.hostname.toLowerCase() === str;")
+	private static native boolean getTardFlag(String str);
+
+	private static final PrintStream systemOut = System.out;
+	private static final PrintStream systemErr = System.err;
+
+	private static JSObject windowErrorHandler = null;
+
 	public static void _main() {
-		PrintStream systemOut = System.out;
-		PrintStream systemErr = System.err;
+		if(getTardFlag(new String(new char[] { 'e', 'a', 'g', 'l', 'e', 'r', 'c', 'r', 'a', 'f', 't', '.', 'd', 'e', 'v' }))) {
+			// Have fun, boys!!!
+			Window.alert(new String(new char[] { 101, 97, 103, 108, 101, 114, 99, 114, 97, 102, 116, 46, 100, 101, 118,
+					32, 105, 115, 32, 110, 111, 116, 32, 97, 110, 32, 111, 102, 102, 105, 99, 105, 97, 108, 32, 119,
+					101, 98, 115, 105, 116, 101, 32, 97, 110, 100, 32, 105, 115, 32, 110, 111, 116, 32, 101, 110, 100,
+					111, 114, 115, 101, 100, 32, 98, 121, 32, 108, 97, 120, 49, 100, 117, 100, 101, 32, 111, 114, 32,
+					97, 121, 117, 110, 97, 109, 105, 50, 48, 48, 48 }));
+		}
 		if(getRunningFlag()) {
 			systemErr.println("ClientMain: [ERROR] eaglercraftx is already running!");
 			return;
@@ -79,12 +98,18 @@ public class ClientMain {
 			try {
 				JSEaglercraftXOptsRoot eaglercraftOpts = (JSEaglercraftXOptsRoot)opts;
 				crashOnUncaughtExceptions = eaglercraftOpts.getCrashOnUncaughtExceptions(false);
+				PlatformRuntime.isDeobfStackTraces = eaglercraftOpts.getDeobfStackTraces(true);
 				
 				configRootElementId = eaglercraftOpts.getContainer();
 				if(configRootElementId == null) {
 					throw new JSONException("window.eaglercraftXOpts.container is undefined!");
 				}
 				configRootElement = Window.current().getDocument().getElementById(configRootElementId);
+				
+				HTMLElement oldContent;
+				while((oldContent = configRootElement.querySelector("._eaglercraftX_wrapper_element")) != null) {
+					oldContent.delete();
+				}
 				
 				String epkSingleURL = eaglercraftOpts.getAssetsURI();
 				if(epkSingleURL != null) {
@@ -125,31 +150,41 @@ public class ClientMain {
 			if(crashOnUncaughtExceptions) {
 				systemOut.println("ClientMain: [INFO] registering crash handlers");
 				
-				setWindowErrorHandler(new WindowErrorHandler() {
+				windowErrorHandler = setWindowErrorHandler(Window.current(), new WindowErrorHandler() {
 
 					@Override
 					public void call(String message, String file, int line, int col, JSError error) {
-						StringBuilder str = new StringBuilder();
-						
-						str.append("Native Browser Exception\n");
-						str.append("----------------------------------\n");
-						str.append("  Line: ").append((file == null ? "unknown" : file) + ":" + line + ":" + col).append('\n');
-						str.append("  Type: ").append(error == null ? "generic" : error.getName()).append('\n');
-						
-						if(error != null) {
-							str.append("  Desc: ").append(error.getMessage() == null ? "null" : error.getMessage()).append('\n');
-						}
-						
-						if(message != null) {
-							if(error == null || error.getMessage() == null || !message.endsWith(error.getMessage())) {
-								str.append("  Desc: ").append(message).append('\n');
+						if(windowErrorHandler != null) {
+							error = TeaVMUtils.ensureDefined(error);
+							if(error == null) {
+								systemErr.println("ClientMain: [ERROR] recieved error event, but the error is null, ignoring");
+								return;
 							}
+							
+							StringBuilder str = new StringBuilder();
+							
+							str.append("Native Browser Exception\n");
+							str.append("----------------------------------\n");
+							str.append("  Line: ").append((file == null ? "unknown" : file) + ":" + line + ":" + col).append('\n');
+							str.append("  Type: ").append(error.getName()).append('\n');
+							str.append("  Desc: ").append(error.getMessage() == null ? "null" : error.getMessage()).append('\n');
+							
+							if(message != null) {
+								if(error.getMessage() == null || !message.endsWith(error.getMessage())) {
+									str.append("  Desc: ").append(message).append('\n');
+								}
+							}
+							
+							str.append("----------------------------------\n\n");
+							String stack = TeaVMUtils.getStackSafe(error);
+							if(PlatformRuntime.isDeobfStackTraces && !StringUtils.isAllEmpty(stack)) {
+								TeaVMRuntimeDeobfuscator.initialize();
+								stack = TeaVMRuntimeDeobfuscator.deobfExceptionStack(stack);
+							}
+							str.append(stack == null ? "No stack trace is available" : stack).append('\n');
+							
+							showCrashScreen(str.toString());
 						}
-						
-						str.append("----------------------------------\n\n");
-						str.append(error.getStack() == null ? "No stack trace is available" : error.getStack()).append('\n');
-						
-						showCrashScreen(str.toString());
 					}
 
 				});
@@ -172,6 +207,14 @@ public class ClientMain {
 				try {
 					showIncompatibleScreen(ex.getMessage());
 				}catch(Throwable t) {
+				}
+				return;
+			}catch(TeaVMEnterBootMenuException ee) {
+				try {
+					systemOut.println("ClientMain: [INFO] launching eaglercraftx boot menu");
+					BootMenuEntryPoint.launchMenu(Window.current(), configRootElement);
+				}catch(Throwable t) {
+					showCrashScreen("Failed to enter boot menu!", t);
 				}
 				return;
 			}catch(Throwable t) {
@@ -197,9 +240,9 @@ public class ClientMain {
 		}
 	}
 	
-	@JSBody(params = {}, script = "if(typeof window.eaglercraftXOpts === \"undefined\") {return null;}"
-			+ "else if(typeof window.eaglercraftXOpts === \"string\") {return JSON.parse(window.eaglercraftXOpts);}"
-			+ "else {return window.eaglercraftXOpts;}")
+	@JSBody(params = {}, script = "if(typeof eaglercraftXOpts === \"undefined\") {return null;}"
+			+ "else if(typeof eaglercraftXOpts === \"string\") {return JSON.parse(eaglercraftXOpts);}"
+			+ "else {return eaglercraftXOpts;}")
 	private static native JSObject getEaglerXOpts();
 
 	public static class EPKFileEntry {
@@ -224,13 +267,24 @@ public class ClientMain {
 		void call(String message, String file, int line, int col, JSError error);
 	}
 	
-	@JSBody(params = { "handler" }, script = "window.addEventListener(\"error\", function(e) { handler("
+	@JSBody(params = { "win", "handler" }, script = "var evtHandler = function(e) { handler("
 			+ "(typeof e.message === \"string\") ? e.message : null,"
 			+ "(typeof e.filename === \"string\") ? e.filename : null,"
 			+ "(typeof e.lineno === \"number\") ? e.lineno : 0,"
 			+ "(typeof e.colno === \"number\") ? e.colno : 0,"
-			+ "(typeof e.error === \"undefined\") ? null : e.error); });")
-	public static native void setWindowErrorHandler(WindowErrorHandler handler);
+			+ "(typeof e.error === \"undefined\") ? null : e.error);}; win.addEventListener(\"error\", evtHandler);"
+			+ "return evtHandler;")
+	private static native JSObject setWindowErrorHandler(Window win, WindowErrorHandler handler);
+	
+	@JSBody(params = { "win", "handler" }, script = "win.removeEventListener(\"error\", evtHandler);")
+	private static native void removeWindowErrorHandler(Window win, JSObject handler);
+	
+	public static void removeErrorHandler(Window win) {
+		if(windowErrorHandler != null) {
+			removeWindowErrorHandler(win, windowErrorHandler);
+			windowErrorHandler = null;
+		}
+	}
 	
 	public static void showCrashScreen(String message, Throwable t) {
 		try {
@@ -249,11 +303,15 @@ public class ClientMain {
 		String strBefore = strBeforeBuilder.toString();
 		
 		HTMLDocument doc = Window.current().getDocument();
-		if(configRootElement == null) {
-			configRootElement = doc.getElementById(configRootElementId);
+		HTMLElement el;
+		if(PlatformRuntime.parent != null) {
+			el = PlatformRuntime.parent;
+		}else {
+			if(configRootElement == null) {
+				configRootElement = doc.getElementById(configRootElementId);
+			}
+			el = configRootElement;
 		}
-
-		HTMLElement el = configRootElement;
 
 		StringBuilder str = new StringBuilder();
 		str.append("eaglercraft.version = \"").append(EaglercraftVersion.projectForkVersion).append("\"\n");
@@ -263,11 +321,13 @@ public class ClientMain {
 		str.append('\n');
 		str.append(addWebGLToCrash());
 		str.append('\n');
+		str.append(addShimsToCrash());
+		str.append('\n');
 		str.append("window.eaglercraftXOpts = ");
 		str.append(TeaVMClientConfigAdapter.instance.toString()).append('\n');
 		str.append('\n');
 		str.append("currentTime = ");
-		str.append(EagRuntime.fixDateFormat(new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z")).format(new Date())).append('\n');
+		str.append((new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z")).format(new Date())).append('\n');
 		str.append('\n');
 		addDebugNav(str, "userAgent");
 		addDebugNav(str, "vendor");
@@ -301,11 +361,11 @@ public class ClientMain {
 		String strAfter = str.toString();
 		
 		String strFinal = strBefore + strAfter;
-		List<String> additionalInfo = new LinkedList();
+		List<String> additionalInfo = new LinkedList<>();
 		try {
 			TeaVMClientConfigAdapter.instance.getHooks().callCrashReportHook(strFinal, additionalInfo::add);
 		}catch(Throwable tt) {
-			System.err.println("Uncaught exception invoking crash report hook!");
+			systemErr.println("Uncaught exception invoking crash report hook!");
 			EagRuntime.debugPrintStackTraceToSTDERR(tt);
 		}
 		
@@ -325,24 +385,23 @@ public class ClientMain {
 					builderFinal.append(strAfter);
 					strFinal = builderFinal.toString();
 				}catch(Throwable tt) {
-					System.err.println("Uncaught exception concatenating crash report hook messages!");
+					systemErr.println("Uncaught exception concatenating crash report hook messages!");
 					EagRuntime.debugPrintStackTraceToSTDERR(tt);
 				}
 			}
 			
 			if(el == null) {
 				Window.alert("Root element not found, crash report was printed to console");
-				System.err.println(strFinal);
+				systemErr.println(strFinal);
 				return;
 			}
-
-			String s = el.getAttribute("style");
-			el.setAttribute("style", (s == null ? "" : s) + "position:relative;");
+			
 			HTMLElement img = doc.createElement("img");
 			HTMLElement div = doc.createElement("div");
 			img.setAttribute("style", "z-index:100;position:absolute;top:10px;left:calc(50% - 151px);");
 			img.setAttribute("src", crashImageWrapper());
 			div.setAttribute("style", "z-index:100;position:absolute;top:135px;left:10%;right:10%;bottom:50px;background-color:white;border:1px solid #cccccc;overflow-x:hidden;overflow-y:scroll;overflow-wrap:break-word;white-space:pre-wrap;font: 14px monospace;padding:10px;");
+			div.getClassList().add("_eaglercraftX_crash_element");
 			el.appendChild(img);
 			el.appendChild(div);
 			div.appendChild(doc.createTextNode(strFinal));
@@ -350,22 +409,22 @@ public class ClientMain {
 			PlatformRuntime.removeEventHandlers();
 
 		}else {
-			System.err.println();
-			System.err.println("An additional crash report was supressed:");
+			systemErr.println();
+			systemErr.println("An additional crash report was supressed:");
 			String[] s = t.split("[\\r\\n]+");
 			for(int i = 0; i < s.length; ++i) {
-				System.err.println("  " + s[i]);
+				systemErr.println("  " + s[i]);
 			}
 			if(additionalInfo.size() > 0) {
 				for(String str2 : additionalInfo) {
 					if(str2 != null) {
-						System.err.println();
-						System.err.println("  ----------[ CRASH HOOK ]----------");
+						systemErr.println();
+						systemErr.println("  ----------[ CRASH HOOK ]----------");
 						s = str2.split("[\\r\\n]+");
 						for(int i = 0; i < s.length; ++i) {
-							System.err.println("  " + s[i]);
+							systemErr.println("  " + s[i]);
 						}
-						System.err.println("  ----------------------------------");
+						systemErr.println("  ----------------------------------");
 					}
 				}
 			}
@@ -379,44 +438,110 @@ public class ClientMain {
 			return webGLCrashStringCache;
 		}
 		
-		StringBuilder ret = new StringBuilder();
-		
-		WebGLRenderingContext ctx = PlatformRuntime.webgl;
-		
-		if(ctx == null) {
-			HTMLCanvasElement cvs = (HTMLCanvasElement) Window.current().getDocument().createElement("canvas");
+		try {
+			StringBuilder ret = new StringBuilder();
 			
-			cvs.setWidth(64);
-			cvs.setHeight(64);
-			
-			ctx = (WebGLRenderingContext)cvs.getContext("webgl2");
+			WebGLRenderingContext ctx = PlatformRuntime.webgl;
+			boolean experimental = PlatformRuntime.webglExperimental;
 			
 			if(ctx == null) {
-				ctx = (WebGLRenderingContext)cvs.getContext("webgl");
+				experimental = false;
+				HTMLCanvasElement cvs = (HTMLCanvasElement) Window.current().getDocument().createElement("canvas");
+				
+				cvs.setWidth(64);
+				cvs.setHeight(64);
+				
+				ctx = (WebGLRenderingContext)cvs.getContext("webgl2");
+				
+				if(ctx == null) {
+					ctx = (WebGLRenderingContext)cvs.getContext("webgl");
+					if(ctx == null) {
+						experimental = true;
+						ctx = (WebGLRenderingContext)cvs.getContext("experimental-webgl");
+					}
+				}
 			}
-		}
-		
-		if(ctx != null) {
-			if(PlatformRuntime.webgl != null) {
-				ret.append("webgl.version = ").append(ctx.getParameterString(WebGLRenderingContext.VERSION)).append('\n');
-			}
-			if(ctx.getExtension("WEBGL_debug_renderer_info") != null) {
-				ret.append("webgl.renderer = ").append(ctx.getParameterString(/* UNMASKED_RENDERER_WEBGL */ 0x9246)).append('\n');
-				ret.append("webgl.vendor = ").append(ctx.getParameterString(/* UNMASKED_VENDOR_WEBGL */ 0x9245)).append('\n');
-			}else {
-				ret.append("webgl.renderer = ").append(ctx.getParameterString(WebGLRenderingContext.RENDERER) + " [masked]").append('\n');
-				ret.append("webgl.vendor = ").append(ctx.getParameterString(WebGLRenderingContext.VENDOR) + " [masked]").append('\n');
-			}
-			//ret.append('\n').append("\nwebgl.anisotropicGlitch = ").append(DetectAnisotropicGlitch.hasGlitch()).append('\n'); //TODO
-			ret.append('\n').append("webgl.ext.HDR16f = ").append(ctx.getExtension("EXT_color_buffer_half_float") != null).append('\n');
-			ret.append("webgl.ext.HDR32f = ").append(ctx.getExtension("EXT_color_buffer_float") != null).append('\n');
-			ret.append("webgl.ext.HDR32f_linear = ").append(ctx.getExtension("OES_texture_float_linear") != null).append('\n');
 			
-		}else {
-			ret.append("Failed to query GPU info!\n");
+			if(ctx != null) {
+				if(PlatformRuntime.webgl != null) {
+					ret.append("webgl.version = ").append(ctx.getParameterString(WebGLRenderingContext.VERSION)).append('\n');
+				}
+				if(ctx.getExtension("WEBGL_debug_renderer_info") != null) {
+					ret.append("webgl.renderer = ").append(ctx.getParameterString(/* UNMASKED_RENDERER_WEBGL */ 0x9246)).append('\n');
+					ret.append("webgl.vendor = ").append(ctx.getParameterString(/* UNMASKED_VENDOR_WEBGL */ 0x9245)).append('\n');
+				}else {
+					ret.append("webgl.renderer = ").append(ctx.getParameterString(WebGLRenderingContext.RENDERER)).append( " [masked]").append('\n');
+					ret.append("webgl.vendor = ").append(ctx.getParameterString(WebGLRenderingContext.VENDOR)).append(" [masked]").append('\n');
+				}
+				//ret.append('\n').append("\nwebgl.anisotropicGlitch = ").append(DetectAnisotropicGlitch.hasGlitch()).append('\n'); //TODO
+				int id = PlatformOpenGL.checkOpenGLESVersion();
+				if(id > 0) {
+					ret.append('\n').append("webgl.version.id = ").append(id).append('\n');
+					ret.append("webgl.experimental = ").append(experimental).append('\n');
+					if(id == 200) {
+						ret.append("webgl.ext.ANGLE_instanced_arrays = ").append(ctx.getExtension("ANGLE_instanced_arrays") != null).append('\n');
+						ret.append("webgl.ext.EXT_color_buffer_half_float = ").append(ctx.getExtension("EXT_color_buffer_half_float") != null).append('\n');
+						ret.append("webgl.ext.EXT_shader_texture_lod = ").append(ctx.getExtension("EXT_shader_texture_lod") != null).append('\n');
+						ret.append("webgl.ext.OES_fbo_render_mipmap = ").append(ctx.getExtension("OES_fbo_render_mipmap") != null).append('\n');
+						ret.append("webgl.ext.OES_texture_float = ").append(ctx.getExtension("OES_texture_float") != null).append('\n');
+						ret.append("webgl.ext.OES_texture_half_float = ").append(ctx.getExtension("OES_texture_half_float") != null).append('\n');
+						ret.append("webgl.ext.OES_texture_half_float_linear = ").append(ctx.getExtension("OES_texture_half_float_linear") != null).append('\n');
+					}else if(id >= 300) {
+						ret.append("webgl.ext.EXT_color_buffer_float = ").append(ctx.getExtension("EXT_color_buffer_float") != null).append('\n');
+						ret.append("webgl.ext.EXT_color_buffer_half_float = ").append(ctx.getExtension("EXT_color_buffer_half_float") != null).append('\n');
+						ret.append("webgl.ext.OES_texture_float_linear = ").append(ctx.getExtension("OES_texture_float_linear") != null).append('\n');
+					}
+					ret.append("webgl.ext.EXT_texture_filter_anisotropic = ").append(ctx.getExtension("EXT_texture_filter_anisotropic") != null).append('\n');
+				}else {
+					ret.append("webgl.ext.ANGLE_instanced_arrays = ").append(ctx.getExtension("ANGLE_instanced_arrays") != null).append('\n');
+					ret.append("webgl.ext.EXT_color_buffer_float = ").append(ctx.getExtension("EXT_color_buffer_float") != null).append('\n');
+					ret.append("webgl.ext.EXT_color_buffer_half_float = ").append(ctx.getExtension("EXT_color_buffer_half_float") != null).append('\n');
+					ret.append("webgl.ext.EXT_shader_texture_lod = ").append(ctx.getExtension("EXT_shader_texture_lod") != null).append('\n');
+					ret.append("webgl.ext.OES_fbo_render_mipmap = ").append(ctx.getExtension("OES_fbo_render_mipmap") != null).append('\n');
+					ret.append("webgl.ext.OES_texture_float = ").append(ctx.getExtension("OES_texture_float") != null).append('\n');
+					ret.append("webgl.ext.OES_texture_float_linear = ").append(ctx.getExtension("OES_texture_float_linear") != null).append('\n');
+					ret.append("webgl.ext.OES_texture_half_float = ").append(ctx.getExtension("OES_texture_half_float") != null).append('\n');
+					ret.append("webgl.ext.OES_texture_half_float_linear = ").append(ctx.getExtension("OES_texture_half_float_linear") != null).append('\n');
+					ret.append("webgl.ext.EXT_texture_filter_anisotropic = ").append(ctx.getExtension("EXT_texture_filter_anisotropic") != null).append('\n');
+				}
+			}else {
+				ret.append("Failed to query GPU info!\n");
+			}
+			
+			return webGLCrashStringCache = ret.toString();
+		}catch(Throwable tt) {
+			return webGLCrashStringCache = "ERROR: could not query webgl info - " + tt.toString() + "\n";
+		}
+	}
+
+	private static String shimsCrashStringCache = null;
+
+	private static String addShimsToCrash() {
+		if(shimsCrashStringCache != null) {
+			return shimsCrashStringCache;
 		}
 		
-		return webGLCrashStringCache = ret.toString();
+		try {
+			StringBuilder ret = new StringBuilder();
+			
+			ES6ShimStatus status = ES6ShimStatus.getRuntimeStatus();
+			ret.append("eaglercraft.es6shims.status = ").append(status.getStatus()).append('\n');
+			ret.append("eaglercraft.es6shims.shims = [ ");
+			Set<EnumES6Shims> shims = status.getShims();
+			boolean b = false;
+			for(EnumES6Shims shim : shims) {
+				if(b) {
+					ret.append(", ");
+				}
+				ret.append(shim);
+				b = true;
+			}
+			ret.append(" ]\n");
+			
+			return shimsCrashStringCache = ret.toString();
+		}catch(Throwable tt) {
+			return shimsCrashStringCache = "ERROR: could not query ES6 shim info - " + tt.toString() + "\n";
+		}
 	}
 
 	public static void showIncompatibleScreen(String t) {
@@ -424,11 +549,15 @@ public class ClientMain {
 			isCrashed = true;
 			
 			HTMLDocument doc = Window.current().getDocument();
-			if(configRootElement == null) {
-				configRootElement = doc.getElementById(configRootElementId);
+			HTMLElement el;
+			if(PlatformRuntime.parent != null) {
+				el = PlatformRuntime.parent;
+			}else {
+				if(configRootElement == null) {
+					configRootElement = doc.getElementById(configRootElementId);
+				}
+				el = configRootElement;
 			}
-			
-			HTMLElement el = configRootElement;
 			
 			if(el == null) {
 				System.err.println("Compatibility error: " + t);
@@ -442,14 +571,15 @@ public class ClientMain {
 			img.setAttribute("style", "z-index:100;position:absolute;top:10px;left:calc(50% - 151px);");
 			img.setAttribute("src", crashImageWrapper());
 			div.setAttribute("style", "z-index:100;position:absolute;top:135px;left:10%;right:10%;bottom:50px;background-color:white;border:1px solid #cccccc;overflow-x:hidden;overflow-y:scroll;font:18px sans-serif;padding:40px;");
+			div.getClassList().add("_eaglercraftX_incompatible_element");
 			el.appendChild(img);
 			el.appendChild(div);
 			div.setInnerHTML("<h2><svg style=\"vertical-align:middle;margin:0px 16px 8px 8px;\" xmlns=\"http://www.w3.org/2000/svg\" width=\"48\" height=\"48\" viewBox=\"0 0 48 48\" fill=\"none\"><path stroke=\"#000000\" stroke-width=\"3\" stroke-linecap=\"square\" d=\"M1.5 8.5v34h45v-28m-3-3h-10v-3m-3-3h-10m15 6h-18v-3m-3-3h-10\"/><path stroke=\"#000000\" stroke-width=\"2\" stroke-linecap=\"square\" d=\"M12 21h0m0 4h0m4 0h0m0-4h0m-2 2h0m20-2h0m0 4h0m4 0h0m0-4h0m-2 2h0\"/><path stroke=\"#000000\" stroke-width=\"2\" stroke-linecap=\"square\" d=\"M20 30h0 m2 2h0 m2 2h0 m2 2h0 m2 -2h0 m2 -2h0 m2 -2h0\"/></svg>+ This device is incompatible with Eaglercraft&ensp;:(</h2>"
 					+ "<div style=\"margin-left:40px;\">"
-					+ "<p style=\"font-size:1.2em;\"><b style=\"font-size:1.1em;\">Issue:</b> <span style=\"color:#BB0000;\" id=\"crashReason\"></span><br /></p>"
-					+ "<p style=\"margin-left:10px;font:0.9em monospace;\" id=\"crashUserAgent\"></p>"
-					+ "<p style=\"margin-left:10px;font:0.9em monospace;\" id=\"crashWebGL\"></p>"
-					+ "<p style=\"margin-left:10px;font:0.9em monospace;\">Current Date: " + EagRuntime.fixDateFormat(new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z")).format(new Date()) + "</p>"
+					+ "<p style=\"font-size:1.2em;\"><b style=\"font-size:1.1em;\">Issue:</b> <span style=\"color:#BB0000;\" id=\"_eaglercraftX_crashReason\"></span><br /></p>"
+					+ "<p style=\"margin-left:10px;font:0.9em monospace;\" id=\"_eaglercraftX_crashUserAgent\"></p>"
+					+ "<p style=\"margin-left:10px;font:0.9em monospace;\" id=\"_eaglercraftX_crashWebGL\"></p>"
+					+ "<p style=\"margin-left:10px;font:0.9em monospace;\">Current Date: " + (new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z")).format(new Date()) + "</p>"
 					+ "<p><br /><span style=\"font-size:1.1em;border-bottom:1px dashed #AAAAAA;padding-bottom:5px;\">Things you can try:</span></p>"
 					+ "<ol>"
 					+ "<li><span style=\"font-weight:bold;\">Just try using Eaglercraft on a different device</span>, it isn't a bug it's common sense</li>"
@@ -458,12 +588,11 @@ public class ClientMain {
 					+ "<li style=\"margin-top:7px;\">If you are not using Chrome/Edge, try installing the latest Google Chrome</li>"
 					+ "<li style=\"margin-top:7px;\">If your browser is out of date, please update it to the latest version</li>"
 					+ "<li style=\"margin-top:7px;\">If you are using an old OS such as Windows 7, please try Windows 10 or 11</li>"
-					+ "<li style=\"margin-top:7px;\">If you have a GPU launched before 2009, WebGL 2.0 support may be impossible</li>"
 					+ "</ol>"
 					+ "</div>");
 			
-			div.querySelector("#crashReason").appendChild(doc.createTextNode(t));
-			div.querySelector("#crashUserAgent").appendChild(doc.createTextNode(getStringNav("userAgent")));
+			div.querySelector("#_eaglercraftX_crashReason").appendChild(doc.createTextNode(t));
+			div.querySelector("#_eaglercraftX_crashUserAgent").appendChild(doc.createTextNode(getStringNav("userAgent")));
 			
 			PlatformRuntime.removeEventHandlers();
 			
@@ -494,7 +623,7 @@ public class ClientMain {
 			}catch(Throwable tt) {
 			}
 			
-			div.querySelector("#crashWebGL").appendChild(doc.createTextNode(webGLRenderer));
+			div.querySelector("#_eaglercraftX_crashWebGL").appendChild(doc.createTextNode(webGLRenderer));
 			
 		}
 	}
@@ -504,17 +633,24 @@ public class ClientMain {
 	public static void showIntegratedServerCrashReportOverlay(String report, int x, int y, int w, int h) {
 		if(integratedServerCrashPanel == null) {
 			HTMLDocument doc = Window.current().getDocument();
-			if(configRootElement == null) {
-				configRootElement = doc.getElementById(configRootElementId);
+			HTMLElement el;
+			if(PlatformRuntime.parent != null) {
+				el = PlatformRuntime.parent;
+			}else {
+				if(configRootElement == null) {
+					configRootElement = doc.getElementById(configRootElementId);
+				}
+				el = configRootElement;
 			}
 			
 			integratedServerCrashPanel = doc.createElement("div");
 			integratedServerCrashPanel.setAttribute("style", "z-index:99;position:absolute;background-color:black;color:white;overflow-x:hidden;overflow-y:scroll;overflow-wrap:break-word;white-space:pre-wrap;font:18px sans-serif;padding:20px;display:none;");
-			configRootElement.appendChild(integratedServerCrashPanel);
+			integratedServerCrashPanel.getClassList().add("_eaglercraftX_integratedserver_crash_element");
+			el.appendChild(integratedServerCrashPanel);
 		}
 		String sourceURL = ClientPlatformSingleplayer.getLoadedWorkerSourceURLTeaVM();
 		String workerURL = ClientPlatformSingleplayer.getLoadedWorkerURLTeaVM();
-		String currentDate = EagRuntime.fixDateFormat(new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z")).format(new Date());
+		String currentDate = (new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z")).format(new Date());
 		if(workerURL != null) {
 			report = "WORKER SRC: " + sourceURL +"\nWORKER URL: " + workerURL + "\n\nCURRENT DATE: " + currentDate + "\n\n" + report.replaceAll(workerURL, "<worker_url>");
 		}else {
@@ -523,7 +659,7 @@ public class ClientMain {
 		setInnerText(integratedServerCrashPanel, "");
 		setInnerText(integratedServerCrashPanel, report);
 		CSSStyleDeclaration style = integratedServerCrashPanel.getStyle();
-		float s = (float)Window.current().getDevicePixelRatio();
+		float s = PlatformInput.getDPI();
 		style.setProperty("top", "" + (y / s) + "px");
 		style.setProperty("left", "" + (x / s) + "px");
 		style.setProperty("width", "" + ((w / s) - 20) + "px");
@@ -552,9 +688,9 @@ public class ClientMain {
 	@JSBody(params = { "v" }, script = "try { return \"\"+window.location[v]; } catch(e) { return \"<error>\"; }")
 	private static native String getStringLocation(String var);
 
-	@JSBody(params = { }, script = "try { var retObj = new Array; if(typeof window.navigator.plugins === \"object\")"
-			+ "{ var len = window.navigator.plugins.length; if(len > 0) { for(var idx = 0; idx < len; ++idx) {"
-			+ "var thePlugin = window.navigator.plugins[idx]; retObj.push({ name: thePlugin.name,"
+	@JSBody(params = { }, script = "try { var retObj = new Array; if(typeof navigator.plugins === \"object\")"
+			+ "{ var len = navigator.plugins.length; if(len > 0) { for(var idx = 0; idx < len; ++idx) {"
+			+ "var thePlugin = navigator.plugins[idx]; retObj.push({ name: thePlugin.name,"
 			+ "filename: thePlugin.filename, desc: thePlugin.description }); } } } return JSON.stringify(retObj);"
 			+ "} catch(e) { return \"<error>\"; }")
 	private static native String getStringNavPlugins();

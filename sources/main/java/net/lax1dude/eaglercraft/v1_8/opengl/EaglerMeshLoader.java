@@ -39,7 +39,7 @@ public class EaglerMeshLoader implements IResourceManagerReloadListener {
 
 	private static final Logger logger = LogManager.getLogger("EaglerMeshLoader");
 
-	private static final Map<ResourceLocation, HighPolyMesh> meshCache = new HashMap();
+	private static final Map<ResourceLocation, HighPolyMesh> meshCache = new HashMap<>();
 
 	public static HighPolyMesh getEaglerMesh(ResourceLocation meshLoc) {
 		if(meshLoc.cachedPointerType == ResourceLocation.CACHED_POINTER_EAGLER_MESH) {
@@ -104,7 +104,7 @@ public class EaglerMeshLoader implements IResourceManagerReloadListener {
 			}
 
 			if(meshStruct.vertexArray == null) {
-				meshStruct.vertexArray = _wglGenVertexArrays();
+				meshStruct.vertexArray = EaglercraftGPU.createGLBufferArray();
 			}
 			if(meshStruct.vertexBuffer == null) {
 				meshStruct.vertexBuffer = _wglGenBuffers();
@@ -115,29 +115,29 @@ public class EaglerMeshLoader implements IResourceManagerReloadListener {
 			
 			up1.position(0).limit(intsOfVertex);
 			
-			EaglercraftGPU.bindGLArrayBuffer(meshStruct.vertexBuffer);
+			EaglercraftGPU.bindVAOGLArrayBufferNow(meshStruct.vertexBuffer);
 			_wglBufferData(GL_ARRAY_BUFFER, up1, GL_STATIC_DRAW);
 			
 			EaglercraftGPU.bindGLBufferArray(meshStruct.vertexArray);
 			
 			up1.position(intsOfVertex).limit(intsTotal);
 			
-			_wglBindBuffer(GL_ELEMENT_ARRAY_BUFFER, meshStruct.indexBuffer);
+			EaglercraftGPU.bindVAOGLElementArrayBufferNow(meshStruct.indexBuffer);
 			_wglBufferData(GL_ELEMENT_ARRAY_BUFFER, up1, GL_STATIC_DRAW);
 			
-			_wglEnableVertexAttribArray(0);
-			_wglVertexAttribPointer(0, 3, GL_FLOAT, false, stride, 0);
+			EaglercraftGPU.enableVertexAttribArray(0);
+			EaglercraftGPU.vertexAttribPointer(0, 3, GL_FLOAT, false, stride, 0);
 			
 			if(meshStruct.hasTexture) {
-				_wglEnableVertexAttribArray(1);
-				_wglVertexAttribPointer(1, 2, GL_FLOAT, false, stride, 16);
+				EaglercraftGPU.enableVertexAttribArray(1);
+				EaglercraftGPU.vertexAttribPointer(1, 2, GL_FLOAT, false, stride, 16);
 			}
 			
-			_wglEnableVertexAttribArray(meshStruct.hasTexture ? 2 : 1);
-			_wglVertexAttribPointer(meshStruct.hasTexture ? 2 : 1, 4, GL_BYTE, true, stride, 12);
+			EaglercraftGPU.enableVertexAttribArray(meshStruct.hasTexture ? 2 : 1);
+			EaglercraftGPU.vertexAttribPointer(meshStruct.hasTexture ? 2 : 1, 4, GL_BYTE, true, stride, 12);
 		}catch(Throwable ex) {
 			if(meshStruct.vertexArray != null) {
-				_wglDeleteVertexArrays(meshStruct.vertexArray);
+				EaglercraftGPU.destroyGLBufferArray(meshStruct.vertexArray);
 				meshStruct.vertexArray = null;
 			}
 			if(meshStruct.vertexBuffer != null) {

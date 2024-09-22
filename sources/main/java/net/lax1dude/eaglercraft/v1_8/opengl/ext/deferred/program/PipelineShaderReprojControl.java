@@ -28,7 +28,7 @@ import net.lax1dude.eaglercraft.v1_8.internal.IUniformGL;
 public class PipelineShaderReprojControl extends ShaderProgram<PipelineShaderReprojControl.Uniforms> {
 
 	public static PipelineShaderReprojControl compile(boolean ssao, boolean ssr) throws ShaderException {
-		List<String> compileFlags = new ArrayList(2);
+		List<String> compileFlags = new ArrayList<>(2);
 		if(ssao) {
 			compileFlags.add("COMPILE_REPROJECT_SSAO");
 		}

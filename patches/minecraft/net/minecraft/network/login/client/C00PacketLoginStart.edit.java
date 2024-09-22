@@ -13,32 +13,41 @@
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
 
-> INSERT  6 : 8  @  6
+> INSERT  6 : 10  @  6
 
 + 	private byte[] skin;
 + 	private byte[] cape;
++ 	private byte[] protocols;
++ 	private EaglercraftUUID brandUUID;
 
-> CHANGE  4 : 5  @  4 : 5
+> CHANGE  4 : 6  @  4 : 5
 
-~ 	public C00PacketLoginStart(GameProfile profileIn, byte[] skin, byte[] cape) {
+~ 	public C00PacketLoginStart(GameProfile profileIn, byte[] skin, byte[] cape, byte[] protocols,
+~ 			EaglercraftUUID brandUUID) {
 
-> INSERT  1 : 3  @  1
+> INSERT  1 : 5  @  1
 
 + 		this.skin = skin;
 + 		this.cape = cape;
++ 		this.protocols = protocols;
++ 		this.brandUUID = brandUUID;
 
-> CHANGE  3 : 6  @  3 : 4
+> CHANGE  3 : 8  @  3 : 4
 
 ~ 		this.profile = new GameProfile((EaglercraftUUID) null, parPacketBuffer.readStringFromBuffer(16));
 ~ 		this.skin = parPacketBuffer.readByteArray();
 ~ 		this.cape = parPacketBuffer.readableBytes() > 0 ? parPacketBuffer.readByteArray() : null;
+~ 		this.protocols = parPacketBuffer.readableBytes() > 0 ? parPacketBuffer.readByteArray() : null;
+~ 		this.brandUUID = parPacketBuffer.readableBytes() > 0 ? parPacketBuffer.readUuid() : null;
 
-> INSERT  4 : 6  @  4
+> INSERT  4 : 8  @  4
 
 + 		parPacketBuffer.writeByteArray(this.skin);
 + 		parPacketBuffer.writeByteArray(this.cape);
++ 		parPacketBuffer.writeByteArray(this.protocols);
++ 		parPacketBuffer.writeUuid(brandUUID);
 
-> INSERT  9 : 17  @  9
+> INSERT  9 : 25  @  9
 
 + 
 + 	public byte[] getSkin() {
@@ -47,6 +56,14 @@
 + 
 + 	public byte[] getCape() {
 + 		return this.cape;
++ 	}
++ 
++ 	public byte[] getProtocols() {
++ 		return this.protocols;
++ 	}
++ 
++ 	public EaglercraftUUID getBrandUUID() {
++ 		return this.brandUUID;
 + 	}
 
 > EOF

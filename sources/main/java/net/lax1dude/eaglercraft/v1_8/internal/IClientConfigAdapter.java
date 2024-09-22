@@ -26,10 +26,12 @@ public interface IClientConfigAdapter {
 
 		public final String name;
 		public final String addr;
+		public final boolean hideAddress;
 
-		public DefaultServer(String name, String addr) {
+		public DefaultServer(String name, String addr, boolean hideAddress) {
 			this.name = name;
 			this.addr = addr;
+			this.hideAddress = hideAddress;
 		}
 
 	}
@@ -75,6 +77,24 @@ public interface IClientConfigAdapter {
 	String getLocalStorageNamespace();
 
 	boolean isEnableMinceraft();
+
+	boolean isEnableServerCookies();
+
+	boolean isAllowServerRedirects();
+
+	boolean isOpenDebugConsoleOnLaunch();
+
+	boolean isForceWebViewSupport();
+
+	boolean isEnableWebViewCSP();
+
+	boolean isAllowBootMenu();
+
+	boolean isForceProfanityFilter();
+
+	boolean isEaglerNoDelay();
+
+	boolean isRamdiskMode();
 
 	IClientConfigAdapterHooks getHooks();
 

@@ -4,12 +4,14 @@ import org.teavm.jso.JSBody;
 import org.teavm.jso.typedarrays.ArrayBuffer;
 
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
+import net.lax1dude.eaglercraft.v1_8.boot_menu.teavm.BootMenuEntryPoint;
 import net.lax1dude.eaglercraft.v1_8.internal.teavm.TeaVMUpdateThread;
 import net.lax1dude.eaglercraft.v1_8.internal.teavm.TeaVMUtils;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 import net.lax1dude.eaglercraft.v1_8.update.UpdateCertificate;
 import net.lax1dude.eaglercraft.v1_8.update.UpdateProgressStruct;
+import net.lax1dude.eaglercraft.v1_8.update.UpdateResultObj;
 
 /**
  * Copyright (c) 2024 lax1dude. All Rights Reserved.
@@ -32,24 +34,30 @@ public class PlatformUpdateSvc {
 
 	private static byte[] eaglercraftXClientSignature = null;
 	private static byte[] eaglercraftXClientBundle = null;
+	private static UpdateResultObj updateResult = null;
 
 	private static final UpdateProgressStruct progressStruct = new UpdateProgressStruct();
 
-	@JSBody(params = { }, script = "if(typeof window.eaglercraftXClientSignature !== \"string\") return null; var ret = window.eaglercraftXClientSignature; window.eaglercraftXClientSignature = null; return ret;")
+	@JSBody(params = { }, script = "if(typeof eaglercraftXClientSignature !== \"string\") return null; var ret = eaglercraftXClientSignature; eaglercraftXClientSignature = null; return ret;")
 	private static native String grabEaglercraftXClientSignature();
 
-	@JSBody(params = { }, script = "if(typeof window.eaglercraftXClientBundle !== \"string\") return null; var ret = window.eaglercraftXClientBundle; window.eaglercraftXClientBundle = null; return ret;")
+	@JSBody(params = { }, script = "if(typeof eaglercraftXClientBundle !== \"string\") return null; var ret = eaglercraftXClientBundle; eaglercraftXClientBundle = null; return ret;")
 	private static native String grabEaglercraftXClientBundle();
 
 	public static Thread updateThread = null;
+
+	private static boolean hasInitialized = false;
 
 	public static boolean supported() {
 		return true;
 	}
 
 	public static void initialize() {
-		eaglercraftXClientSignature = loadClientData(grabEaglercraftXClientSignature());
-		eaglercraftXClientBundle = loadClientData(grabEaglercraftXClientBundle());
+		if(!hasInitialized) {
+			hasInitialized = true;
+			eaglercraftXClientSignature = loadClientData(grabEaglercraftXClientSignature());
+			eaglercraftXClientBundle = loadClientData(grabEaglercraftXClientBundle());
+		}
 	}
 
 	private static byte[] loadClientData(String url) {
@@ -65,10 +73,16 @@ public class PlatformUpdateSvc {
 	}
 
 	public static byte[] getClientSignatureData() {
+		if(!hasInitialized) {
+			initialize();
+		}
 		return eaglercraftXClientSignature;
 	}
 
 	public static byte[] getClientBundleData() {
+		if(!hasInitialized) {
+			initialize();
+		}
 		return eaglercraftXClientBundle;
 	}
 
@@ -84,6 +98,27 @@ public class PlatformUpdateSvc {
 
 	public static UpdateProgressStruct getUpdatingStatus() {
 		return progressStruct;
+	}
+
+	public static UpdateResultObj getUpdateResult() {
+		UpdateResultObj ret = updateResult;
+		if(ret != null) {
+			updateResult = null;
+			return ret;
+		}else {
+			return null;
+		}
+	}
+
+	public static void setUpdateResultTeaVM(UpdateResultObj obj) {
+		updateResult = obj;
+	}
+
+	public static void installSignedClient(UpdateCertificate clientCert, byte[] clientPayload, boolean setDefault,
+			boolean setTimeout) {
+		BootMenuEntryPoint.installSignedClientAtRuntime(
+				clientCert.bundleDisplayName + " " + clientCert.bundleDisplayVersion, PlatformRuntime.win,
+				clientCert.rawCertData, clientPayload, setDefault, setTimeout);
 	}
 
 	public static void quine(String filename, byte[] cert, byte[] data, String date) {

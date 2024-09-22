@@ -1,11 +1,13 @@
 #line 2
 
 // Remove this line below if you plan to modify this file
+#ifndef EAGLER_IS_GLES_200
 #define USE_OPTIMIZED
+#endif
 
 
 /*
- * Copyright (c) 2022-2023 lax1dude. All Rights Reserved.
+ * Copyright (c) 2022-2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -52,14 +54,9 @@
  * 
  */
 
-precision lowp int;
-precision mediump float;
-precision mediump sampler2D;
+EAGLER_IN(vec2, v_position2f)
 
-
-in vec2 v_position2f;
-
-layout(location = 0) out vec4 output4f;
+EAGLER_FRAG_OUT()
 
 uniform sampler2D u_screenTexture;
 uniform vec2 u_screenSize2f;
@@ -110,7 +107,7 @@ uniform vec2 u_screenSize2f;
     #define FxaaTex sampler2D
 /*--------------------------------------------------------------------------*/
 
-    #define FxaaTexTop(t, p) textureLod(t, p, 0.0)
+    #define FxaaTexTop(t, p) EAGLER_TEXTURE_2D_LOD(t, p, 0.0)
 
 /*============================================================================
                    GREEN AS LUMA OPTION SUPPORT FUNCTION
@@ -298,7 +295,7 @@ void main(){
 	rcpFrameOpt.xy = -screenSize05;
 	rcpFrameOpt.zw = screenSize05;
 
-	output4f = vec4(FxaaPixelShader(v_position2f + screenSize05, posPos, u_screenTexture, rcpFrameOpt, rcpFrameOpt * 4.0, edgeSharpness, edgeThreshold, edgeThresholdMin).rgb, 1.0);
+	EAGLER_FRAG_COLOR = vec4(FxaaPixelShader(v_position2f + screenSize05, posPos, u_screenTexture, rcpFrameOpt, rcpFrameOpt * 4.0, edgeSharpness, edgeThreshold, edgeThresholdMin).rgb, 1.0);
 }
 #else
 
@@ -306,7 +303,6 @@ void main(){
 // Is it faster? Idfk, probably compiles faster at least, what matters it I tried
 
 float _616;
-vec4 _617;
 
 void main()
 {
@@ -317,14 +313,14 @@ void main()
     mediump vec4 _608;
     for(;;)
     {
-        mediump vec3 _532 = textureLod(u_screenTexture, _611.xy, 0.0).xyz;
+        mediump vec3 _532 = EAGLER_TEXTURE_2D_LOD(u_screenTexture, _611.xy, 0.0).xyz;
         mediump float _536 = dot(_532 * _532, vec3(0.2989999949932098388671875, 0.58700001239776611328125, 0.114000000059604644775390625));
-        mediump vec3 _540 = textureLod(u_screenTexture, _611.xw, 0.0).xyz;
+        mediump vec3 _540 = EAGLER_TEXTURE_2D_LOD(u_screenTexture, _611.xw, 0.0).xyz;
         mediump float _544 = dot(_540 * _540, vec3(0.2989999949932098388671875, 0.58700001239776611328125, 0.114000000059604644775390625));
-        mediump vec3 _548 = textureLod(u_screenTexture, _611.zy, 0.0).xyz;
-        mediump vec3 _556 = textureLod(u_screenTexture, _611.zw, 0.0).xyz;
+        mediump vec3 _548 = EAGLER_TEXTURE_2D_LOD(u_screenTexture, _611.zy, 0.0).xyz;
+        mediump vec3 _556 = EAGLER_TEXTURE_2D_LOD(u_screenTexture, _611.zw, 0.0).xyz;
         mediump float _560 = dot(_556 * _556, vec3(0.2989999949932098388671875, 0.58700001239776611328125, 0.114000000059604644775390625));
-        mediump vec4 _390 = textureLod(u_screenTexture, _290, 0.0);
+        mediump vec4 _390 = EAGLER_TEXTURE_2D_LOD(u_screenTexture, _290, 0.0);
         mediump vec3 _564 = _390.xyz;
         mediump float _568 = dot(_564 * _564, vec3(0.2989999949932098388671875, 0.58700001239776611328125, 0.114000000059604644775390625));
         mediump float _397 = dot(_548 * _548, vec3(0.2989999949932098388671875, 0.58700001239776611328125, 0.114000000059604644775390625)) + 0.00260416674427688121795654296875;
@@ -347,8 +343,8 @@ void main()
         mediump vec2 _484 = (_612 * 4.0).zw;
         vec2 _615 = -hp_copy_481;
         mediump vec2 mp_copy_615 = _615;
-        mediump vec4 _498 = textureLod(u_screenTexture, mp_copy_614 * _454 + _290, 0.0) + textureLod(u_screenTexture, _449 * _454 + _290, 0.0);
-        mediump vec4 _505 = ((textureLod(u_screenTexture, mp_copy_615 * _484 + _290, 0.0) + textureLod(u_screenTexture, _481 * _484 + _290, 0.0)) * 0.25) + (_498 * 0.25);
+        mediump vec4 _498 = EAGLER_TEXTURE_2D_LOD(u_screenTexture, mp_copy_614 * _454 + _290, 0.0) + EAGLER_TEXTURE_2D_LOD(u_screenTexture, _449 * _454 + _290, 0.0);
+        mediump vec4 _505 = ((EAGLER_TEXTURE_2D_LOD(u_screenTexture, mp_copy_615 * _484 + _290, 0.0) + EAGLER_TEXTURE_2D_LOD(u_screenTexture, _481 * _484 + _290, 0.0)) * 0.25) + (_498 * 0.25);
         mediump float _576 = dot(_505.xyz * _505.xyz, vec3(0.2989999949932098388671875, 0.58700001239776611328125, 0.114000000059604644775390625));
         mediump vec4 _607;
         if ((_576 < _412) || (_576 > _409))
@@ -367,7 +363,7 @@ void main()
         _608 = _607;
         break;
     }
-    output4f = vec4(_608.xyz, 1.0);
+    EAGLER_FRAG_COLOR = vec4(_608.xyz, 1.0);
 }
 
 #endif

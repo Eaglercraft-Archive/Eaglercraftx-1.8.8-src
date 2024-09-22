@@ -10,7 +10,7 @@
 > INSERT  120 : 124  @  120
 
 + 
-+ 	public float getHeldItemBrightnessEagler() {
++ 	public float getHeldItemBrightnessEagler(ItemStack itemStack) {
 + 		return this.block.getLightValue() * 0.06667f;
 + 	}
 

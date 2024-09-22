@@ -58,7 +58,7 @@ public class EaglerIntegratedServerWorker {
 
 	public static final EaglerSaveFormat saveFormat = new EaglerSaveFormat(EaglerSaveFormat.worldsFolder);
 
-	private static final Map<String, IntegratedServerPlayerNetworkManager> openChannels = new HashMap();
+	private static final Map<String, IntegratedServerPlayerNetworkManager> openChannels = new HashMap<>();
 
 	private static final IPCPacketManager packetManagerInstance = new IPCPacketManager();
 
@@ -197,7 +197,7 @@ public class EaglerIntegratedServerWorker {
 				}
 				String[] worldsTxt = EaglerSaveFormat.worldsList.getAllLines();
 				if(worldsTxt != null) {
-					List<String> newWorlds = new ArrayList();
+					List<String> newWorlds = new ArrayList<>();
 					for(int i = 0; i < worldsTxt.length; ++i) {
 						String str = worldsTxt[i];
 						if(!str.equalsIgnoreCase(pkt.worldName)) {
@@ -301,18 +301,18 @@ public class EaglerIntegratedServerWorker {
 				}else {
 					String[] worlds = EaglerSaveFormat.worldsList.getAllLines();
 					if(worlds == null) {
-						sendIPCPacket(new IPCPacket16NBTList(IPCPacket16NBTList.WORLD_LIST, new LinkedList<NBTTagCompound>()));
+						sendIPCPacket(new IPCPacket16NBTList(IPCPacket16NBTList.WORLD_LIST, new LinkedList<>()));
 						break;
 					}
-					LinkedHashSet<String> updatedList = new LinkedHashSet();
-					LinkedList<NBTTagCompound> sendListNBT = new LinkedList();
+					LinkedHashSet<String> updatedList = new LinkedHashSet<>();
+					LinkedList<NBTTagCompound> sendListNBT = new LinkedList<>();
 					boolean rewrite = false;
 					for(int i = 0; i < worlds.length; ++i) {
 						String w = worlds[i].trim();
 						if(w.length() > 0) {
-							VFile2 vf = new VFile2(EaglerSaveFormat.worldsFolder, w, "level.dat");
+							VFile2 vf = WorldsDB.newVFile(EaglerSaveFormat.worldsFolder, w, "level.dat");
 							if(!vf.exists()) {
-								vf = new VFile2(EaglerSaveFormat.worldsFolder, w, "level.dat_old");
+								vf = WorldsDB.newVFile(EaglerSaveFormat.worldsFolder, w, "level.dat_old");
 							}
 							if(vf.exists()) {
 								try(InputStream dat = vf.getInputStream()) {
@@ -391,8 +391,8 @@ public class EaglerIntegratedServerWorker {
 				}
 				break;
 			}
-			case IPCPacket21EnableLogging.ID: {
-				enableLoggingRedirector(((IPCPacket21EnableLogging)ipc).enable);
+			case IPCPacket1BEnableLogging.ID: {
+				enableLoggingRedirector(((IPCPacket1BEnableLogging)ipc).enable);
 				break;
 			}
 			default: 
@@ -418,7 +418,7 @@ public class EaglerIntegratedServerWorker {
 	}
 
 	public static void sendLogMessagePacket(String txt, boolean err) {
-		sendIPCPacket(new IPCPacket20LoggerMessage(txt, err));
+		sendIPCPacket(new IPCPacket1ALoggerMessage(txt, err));
 	}
 
 	public static void sendIPCPacket(IPCPacketBase ipc) {
@@ -454,12 +454,12 @@ public class EaglerIntegratedServerWorker {
 		currentProcess = null;
 	}
 
-	private static void mainLoop() {
+	private static void mainLoop(boolean singleThreadMode) {
 		processAsyncMessageQueue();
 		
 		if(currentProcess != null) {
 			if(currentProcess.isServerRunning()) {
-				currentProcess.mainLoop();
+				currentProcess.mainLoop(singleThreadMode);
 			}
 			if(!currentProcess.isServerRunning()) {
 				currentProcess.stopServer();
@@ -467,7 +467,9 @@ public class EaglerIntegratedServerWorker {
 				sendIPCPacket(new IPCPacketFFProcessKeepAlive(IPCPacket01StopServer.ID));
 			}
 		}else {
-			EagUtils.sleep(50l);
+			if(!singleThreadMode) {
+				EagUtils.sleep(50l);
+			}
 		}
 	}
 
@@ -476,12 +478,16 @@ public class EaglerIntegratedServerWorker {
 			currentProcess = null;
 			logger.info("Starting EaglercraftX integrated server worker...");
 			
+			if(ServerPlatformSingleplayer.getWorldsDatabase().isRamdisk()) {
+				sendIPCPacket(new IPCPacket1CIssueDetected(IPCPacket1CIssueDetected.ISSUE_RAMDISK_MODE));
+			}
+			
 			// signal thread startup successful
 			sendIPCPacket(new IPCPacketFFProcessKeepAlive(0xFF));
 			
 			while(true) {
-				mainLoop();
-				EagUtils.sleep(0l);
+				mainLoop(false);
+				ServerPlatformSingleplayer.immediateContinue();
 			}
 		}catch(Throwable tt) {
 			if(tt instanceof ReportedException) {
@@ -506,4 +512,17 @@ public class EaglerIntegratedServerWorker {
 			sendIPCPacket(new IPCPacketFFProcessKeepAlive(IPCPacketFFProcessKeepAlive.EXITED));
 		}
 	}
+
+	public static void singleThreadMain() {
+		logger.info("Starting EaglercraftX integrated server worker...");
+		if(ServerPlatformSingleplayer.getWorldsDatabase().isRamdisk()) {
+			sendIPCPacket(new IPCPacket1CIssueDetected(IPCPacket1CIssueDetected.ISSUE_RAMDISK_MODE));
+		}
+		sendIPCPacket(new IPCPacketFFProcessKeepAlive(0xFF));
+	}
+
+	public static void singleThreadUpdate() {
+		mainLoop(true);
+	}
+
 }

@@ -14,9 +14,9 @@ import net.lax1dude.eaglercraft.v1_8.EaglerOutputStream;
 import net.lax1dude.eaglercraft.v1_8.ThreadLocalRandom;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
-import net.lax1dude.eaglercraft.v1_8.sp.relay.pkt.IPacket;
-import net.lax1dude.eaglercraft.v1_8.sp.relay.pkt.IPacket00Handshake;
-import net.lax1dude.eaglercraft.v1_8.sp.relay.pkt.IPacketFFErrorCode;
+import net.lax1dude.eaglercraft.v1_8.sp.relay.pkt.RelayPacket;
+import net.lax1dude.eaglercraft.v1_8.sp.relay.pkt.RelayPacket00Handshake;
+import net.lax1dude.eaglercraft.v1_8.sp.relay.pkt.RelayPacketFFErrorCode;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -43,7 +43,7 @@ public class RelayManager {
 	public static final RelayManager relayManager = new RelayManager();
 	public static final int preferredRelayVersion = 1;
 	
-	private final List<RelayServer> relays = new ArrayList();
+	private final List<RelayServer> relays = new ArrayList<>();
 	private long lastPingThrough = 0l;
 
 	public void load(byte[] relayConfig) {
@@ -180,7 +180,7 @@ public class RelayManager {
 	}
 	
 	public void ping() {
-		lastPingThrough = System.currentTimeMillis();
+		lastPingThrough = EagRuntime.steadyTimeMillis();
 		for(int i = 0, l = relays.size(); i < l; ++i) {
 			relays.get(i).ping();
 		}
@@ -274,16 +274,18 @@ public class RelayManager {
 	public RelayServerSocket connectHandshake(RelayServer relay, int type, String code) {
 		RelayServerSocket sock = relay.openSocket();
 		while(!sock.isClosed()) {
+			sock.update();
 			if(sock.isOpen()) {
-				sock.writePacket(new IPacket00Handshake(type, preferredRelayVersion, code));
+				sock.writePacket(new RelayPacket00Handshake(type, preferredRelayVersion, code));
 				while(!sock.isClosed()) {
-					IPacket pkt = sock.nextPacket();
+					sock.update();
+					RelayPacket pkt = sock.nextPacket();
 					if(pkt != null) {
-						if(pkt instanceof IPacket00Handshake) {
+						if(pkt instanceof RelayPacket00Handshake) {
 							return sock;
-						}else if(pkt instanceof IPacketFFErrorCode) {
-							IPacketFFErrorCode ipkt = (IPacketFFErrorCode) pkt;
-							logger.error("Relay [{}] failed: {}({}): {}", relay.address, IPacketFFErrorCode.code2string(ipkt.code), ipkt.code, ipkt.desc);
+						}else if(pkt instanceof RelayPacketFFErrorCode) {
+							RelayPacketFFErrorCode ipkt = (RelayPacketFFErrorCode) pkt;
+							logger.error("Relay [{}] failed: {}({}): {}", relay.address, RelayPacketFFErrorCode.code2string(ipkt.code), ipkt.code, ipkt.desc);
 							Throwable t;
 							while((t = sock.getException()) != null) {
 								logger.error(t);
@@ -309,12 +311,12 @@ public class RelayManager {
 		return null;
 	}
 	
-	private final List<RelayServer> brokenServers = new LinkedList();
+	private final List<RelayServer> brokenServers = new LinkedList<>();
 
 	public RelayServerSocket getWorkingRelay(Consumer<String> progressCallback, int type, String code) {
 		brokenServers.clear();
 		if(!relays.isEmpty()) {
-			long millis = System.currentTimeMillis();
+			long millis = EagRuntime.steadyTimeMillis();
 			if(millis - lastPingThrough < 10000l) {
 				RelayServer relay = getPrimary();
 				if(relay.getPing() > 0l && relay.getPingCompatible().isCompatible()) {

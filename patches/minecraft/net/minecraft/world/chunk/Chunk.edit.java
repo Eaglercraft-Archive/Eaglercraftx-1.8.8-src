@@ -45,7 +45,9 @@
 + 			++EaglerMinecraftServer.counterLightUpdate;
 + 		}
 
-> CHANGE  20 : 23  @  20 : 21
+> DELETE  9  @  9 : 10
+
+> CHANGE  10 : 13  @  10 : 11
 
 ~ 						EnumFacing[] facings = EnumFacing.Plane.HORIZONTAL.facingsArray;
 ~ 						for (int m = 0; m < facings.length; ++m) {
@@ -56,7 +58,11 @@
 ~ 						for (int m = 0; m < facings.length; ++m) {
 ~ 							EnumFacing enumfacing1 = facings[m];
 
-> CHANGE  110 : 113  @  110 : 111
+> DELETE  5  @  5 : 6
+
+> DELETE  8  @  8 : 10
+
+> CHANGE  94 : 97  @  94 : 95
 
 ~ 				EnumFacing[] facings = EnumFacing.Plane.HORIZONTAL.facingsArray;
 ~ 				for (int m = 0; m < facings.length; ++m) {

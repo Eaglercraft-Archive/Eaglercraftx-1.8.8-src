@@ -54,8 +54,8 @@ public class TextureAnimationCache {
 			for(int i = 0; i < cacheTextures.length; ++i) {
 				cacheTextures[i] = GlStateManager.generateTexture();
 				GlStateManager.bindTexture(cacheTextures[i]);
-				EaglercraftGPU.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-				EaglercraftGPU.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+				EaglercraftGPU.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+				EaglercraftGPU.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 				EaglercraftGPU.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 				EaglercraftGPU.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 			}
@@ -123,6 +123,8 @@ public class TextureAnimationCache {
 		if(cacheTextures == null) {
 			throw new IllegalStateException("Cannot copy from uninitialized TextureAnimationCache");
 		}
+		GlStateManager.disableBlend();
+		GlStateManager.disableAlpha();
 		GlStateManager.bindTexture(cacheTextures[level]);
 		TextureCopyUtil.srcSize(width >> level, (height >> level) * frameCount);
 		TextureCopyUtil.blitTextureUsingViewports(0, h * animationFrame, dx, dy, w, h);

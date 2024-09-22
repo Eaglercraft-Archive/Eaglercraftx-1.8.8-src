@@ -71,7 +71,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Copyright (c) 2023 lax1dude. All Rights Reserved.
+ * Copyright (c) 2023-2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -112,6 +112,7 @@ public class EaglerDeferredPipeline {
 	public double currentRenderX = 0.0;
 	public double currentRenderY = 0.0;
 	public double currentRenderZ = 0.0;
+	public int currentRenderPosSerial = 0;
 
 	public IFramebufferGL gBufferFramebuffer = null;
 
@@ -307,6 +308,7 @@ public class EaglerDeferredPipeline {
 	private ByteBuffer worldLightingDataCopyBuffer;
 
 	public IBufferGL buffer_chunkLightingData;
+	public IBufferGL buffer_chunkLightingDataZero;
 	private ByteBuffer chunkLightingDataCopyBuffer;
 	private boolean isChunkLightingEnabled = false;
 	public ListSerial<DynamicLightInstance> currentBoundLightSourceBucket;
@@ -336,9 +338,20 @@ public class EaglerDeferredPipeline {
 	public static final Vector3f tmpVector4 = new Vector3f();
 
 	public final ListSerial<DynamicLightInstance>[] lightSourceBuckets;
+	private final int[] lightSourceBucketSerials;
+	private final int[] lightSourceRenderPosSerials;
 	public ListSerial<DynamicLightInstance> currentLightSourceBucket;
+	private int currentLightSourceBucketId = -1;
+	private int lightingBufferSliceLength = -1;
 
 	public static final int MAX_LIGHTS_PER_CHUNK = 12;
+	public static final int LIGHTING_BUFFER_LENGTH = 32 * MAX_LIGHTS_PER_CHUNK + 16;
+
+	private int uniformBufferOffsetAlignment = -1;
+
+	private int uboAlign(int offset) {
+		return MathHelper.ceiling_float_int((float)offset / (float)uniformBufferOffsetAlignment) * uniformBufferOffsetAlignment;
+	}
 
 	private final int lightSourceBucketsWidth;
 	private final int lightSourceBucketsHeight;
@@ -372,13 +385,18 @@ public class EaglerDeferredPipeline {
 		this.lightSourceBucketsHeight = 3;
 		int cnt = 5 * 3 * 5;
 		this.lightSourceBuckets = new ListSerial[cnt];
+		this.lightSourceBucketSerials = new int[cnt];
+		this.lightSourceRenderPosSerials = new int[cnt];
 		for(int i = 0; i < cnt; ++i) {
-			this.lightSourceBuckets[i] = new ArrayListSerial(16);
+			this.lightSourceBuckets[i] = new ArrayListSerial<>(16);
+			this.lightSourceBucketSerials[i] = -1;
+			this.lightSourceRenderPosSerials[i] = -1;
 		}
 	}
 
 	public void rebuild(EaglerDeferredConfig config) {
 		destroy();
+		uniformBufferOffsetAlignment = EaglercraftGPU.getUniformBufferOffsetAlignment();
 		DeferredStateManager.doCheckErrors = EagRuntime.getConfiguration().isCheckShaderGLErrors();
 		DeferredStateManager.checkGLError("Pre: rebuild pipeline");
 		this.config = config;
@@ -544,7 +562,7 @@ public class EaglerDeferredPipeline {
 			GlStateManager.bindTexture(ssaoNoiseTexture);
 			setNearest();
 			int noiseTexSize = 64, noiseTexLen = 16384;
-			byte[] noiseTexDat = EagRuntime.getResourceBytes("assets/eagler/glsl/deferred/ssao_noise.bmp");
+			byte[] noiseTexDat = EagRuntime.getRequiredResourceBytes("assets/eagler/glsl/deferred/ssao_noise.bmp");
 			if(noiseTexDat == null || noiseTexDat.length != noiseTexLen) {
 				noiseTexDat = new byte[noiseTexLen];
 				for(int i = 0; i < 4096; ++i) {
@@ -592,7 +610,7 @@ public class EaglerDeferredPipeline {
 		GlStateManager.bindTexture(brdfTexture);
 		setLinear();
 		int brdfLutW = 64, brdfLutH = 64, brdfLutLen = 8192;
-		byte[] brdfLutDat = EagRuntime.getResourceBytes("assets/eagler/glsl/deferred/brdf_lut.bmp");
+		byte[] brdfLutDat = EagRuntime.getRequiredResourceBytes("assets/eagler/glsl/deferred/brdf_lut.bmp");
 		if(brdfLutDat == null || brdfLutDat.length != brdfLutLen) {
 			brdfLutDat = new byte[brdfLutLen];
 			for(int i = 0; i < 4096; ++i) {
@@ -748,7 +766,9 @@ public class EaglerDeferredPipeline {
 		_wglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		ByteBuffer copyBuffer = EagRuntime.allocateByteBuffer(262144);
 		int mip = 0;
-		try(DataInputStream dis = new DataInputStream(EagRuntime.getResourceStream("/assets/eagler/glsl/deferred/eagler_moon.bmp"))) {
+		
+		try (DataInputStream dis = new DataInputStream(mc.getResourceManager()
+				.getResource(new ResourceLocation("eagler:glsl/deferred/eagler_moon.bmp")).getInputStream())) {
 			while(dis.read() == 'E') {
 				int w = dis.readShort();
 				int h = dis.readShort();
@@ -873,7 +893,7 @@ public class EaglerDeferredPipeline {
 			_wglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			_wglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 			String realistic_water_noise_filename = "assets/eagler/glsl/deferred/realistic_water_noise.bmp";
-			byte[] bitmapBytes = EagRuntime.getResourceBytes(realistic_water_noise_filename);
+			byte[] bitmapBytes = EagRuntime.getRequiredResourceBytes(realistic_water_noise_filename);
 			try {
 				if(bitmapBytes.length != 32768) {
 					throw new IOException("File is length " + bitmapBytes.length + ", expected " + 32768);
@@ -1008,15 +1028,22 @@ public class EaglerDeferredPipeline {
 			shader_lighting_point = PipelineShaderLightingPoint.compile(false);
 			shader_lighting_point.loadUniforms();
 
-			buffer_chunkLightingData = _wglGenBuffers();
-			EaglercraftGPU.bindGLUniformBuffer(buffer_chunkLightingData);
-			int lightingDataLength = 8 * MAX_LIGHTS_PER_CHUNK + 4;
-			chunkLightingDataCopyBuffer = EagRuntime.allocateByteBuffer(lightingDataLength << 2);
-			for(int i = 0; i < lightingDataLength; ++i) {
+			lightingBufferSliceLength = uboAlign(LIGHTING_BUFFER_LENGTH);
+
+			chunkLightingDataCopyBuffer = EagRuntime.allocateByteBuffer(LIGHTING_BUFFER_LENGTH);
+			for(int i = 0; i < LIGHTING_BUFFER_LENGTH; i += 4) {
 				chunkLightingDataCopyBuffer.putInt(0);
 			}
 			chunkLightingDataCopyBuffer.flip();
-			_wglBufferData(_GL_UNIFORM_BUFFER, chunkLightingDataCopyBuffer, GL_DYNAMIC_DRAW);
+			
+			buffer_chunkLightingData = _wglGenBuffers();
+			EaglercraftGPU.bindGLUniformBuffer(buffer_chunkLightingData);
+			int cnt = lightSourceBucketsWidth * lightSourceBucketsHeight * lightSourceBucketsWidth;
+			_wglBufferData(_GL_UNIFORM_BUFFER, cnt * lightingBufferSliceLength, GL_DYNAMIC_DRAW);
+			
+			buffer_chunkLightingDataZero = _wglGenBuffers();
+			EaglercraftGPU.bindGLUniformBuffer(buffer_chunkLightingDataZero);
+			_wglBufferData(_GL_UNIFORM_BUFFER, chunkLightingDataCopyBuffer, GL_STATIC_DRAW);
 
 			DeferredStateManager.checkGLError("Post: rebuild pipeline: dynamic lights");
 		}
@@ -1040,6 +1067,16 @@ public class EaglerDeferredPipeline {
 
 		_wglBindFramebuffer(_GL_FRAMEBUFFER, null);
 		DeferredStateManager.checkGLError("Post: rebuild pipeline");
+	}
+
+	public void setRenderPosGlobal(double renderPosX, double renderPosY, double renderPosZ) {
+		if (renderPosX != currentRenderX || renderPosY != currentRenderY || renderPosZ != currentRenderZ
+				|| currentRenderPosSerial == 0) {
+			currentRenderX = renderPosX;
+			currentRenderY = renderPosY;
+			currentRenderZ = renderPosZ;
+			++currentRenderPosSerial;
+		}
 	}
 
 	public void updateReprojectionCoordinates(double worldX, double worldY, double worldZ) {
@@ -1467,7 +1504,7 @@ public class EaglerDeferredPipeline {
 		float sunKelvin = 1500.0f + (2500.0f * Math.max(-currentSunAngle.y, 0.0f));
 		float fff = mc.theWorld.getRainStrength(partialTicks);
 		float ff2 = mc.theWorld.getThunderStrength(partialTicks);
-		long millis = System.currentTimeMillis();
+		long millis = EagRuntime.steadyTimeMillis();
 		int dim = Minecraft.getMinecraft().theWorld.provider.getDimensionId();
 
 		// ==================== UPDATE CLOUD RENDERER ===================== //
@@ -2172,7 +2209,7 @@ public class EaglerDeferredPipeline {
 		GlStateManager.disableBlend();
 	}
 
-	public void loadLightSourceBucket(int relativeBlockX, int relativeBlockY, int relativeBlockZ) {
+	public void bindLightSourceBucket(int relativeBlockX, int relativeBlockY, int relativeBlockZ, int uboIndex) {
 		int hw = lightSourceBucketsWidth / 2;
 		int hh = lightSourceBucketsHeight / 2;
 		int bucketX = (relativeBlockX >> 4) + hw;
@@ -2180,12 +2217,51 @@ public class EaglerDeferredPipeline {
 		int bucketZ = (relativeBlockZ >> 4) + hw;
 		if(bucketX >= 0 && bucketY >= 0 && bucketZ >= 0 && bucketX < lightSourceBucketsWidth
 				&& bucketY < lightSourceBucketsHeight && bucketZ < lightSourceBucketsWidth) {
-			currentLightSourceBucket = lightSourceBuckets[bucketY * lightSourceBucketsWidth * lightSourceBucketsWidth
-					+ bucketZ * lightSourceBucketsWidth + bucketX];
+			currentLightSourceBucketId = bucketY * lightSourceBucketsWidth * lightSourceBucketsWidth
+					+ bucketZ * lightSourceBucketsWidth + bucketX;
+			currentLightSourceBucket = lightSourceBuckets[currentLightSourceBucketId];
+			int ser = currentLightSourceBucket.getEaglerSerial();
+			int max = currentLightSourceBucket.size();
+			if(max > 0) {
+				EaglercraftGPU.bindGLUniformBuffer(buffer_chunkLightingData);
+				int offset = currentLightSourceBucketId * lightingBufferSliceLength;
+				if (lightSourceBucketSerials[currentLightSourceBucketId] != ser
+						|| lightSourceRenderPosSerials[currentLightSourceBucketId] != currentRenderPosSerial) {
+					lightSourceBucketSerials[currentLightSourceBucketId] = ser;
+					lightSourceRenderPosSerials[currentLightSourceBucketId] = currentRenderPosSerial;
+					if(max > MAX_LIGHTS_PER_CHUNK) {
+						max = MAX_LIGHTS_PER_CHUNK;
+					}
+					chunkLightingDataCopyBuffer.clear();
+					chunkLightingDataCopyBuffer.putInt(max);
+					chunkLightingDataCopyBuffer.putInt(0); //padding
+					chunkLightingDataCopyBuffer.putInt(0); //padding
+					chunkLightingDataCopyBuffer.putInt(0); //padding
+					for(int i = 0; i < max; ++i) {
+						DynamicLightInstance dl = currentLightSourceBucket.get(i);
+						chunkLightingDataCopyBuffer.putFloat((float)(dl.posX - currentRenderX));
+						chunkLightingDataCopyBuffer.putFloat((float)(dl.posY - currentRenderY));
+						chunkLightingDataCopyBuffer.putFloat((float)(dl.posZ - currentRenderZ));
+						chunkLightingDataCopyBuffer.putInt(0); //padding
+						chunkLightingDataCopyBuffer.putFloat(dl.red);
+						chunkLightingDataCopyBuffer.putFloat(dl.green);
+						chunkLightingDataCopyBuffer.putFloat(dl.blue);
+						chunkLightingDataCopyBuffer.putInt(0); //padding
+					}
+					chunkLightingDataCopyBuffer.flip();
+					_wglBufferSubData(_GL_UNIFORM_BUFFER, offset, chunkLightingDataCopyBuffer);
+				}
+				EaglercraftGPU.bindUniformBufferRange(uboIndex, buffer_chunkLightingData, offset, LIGHTING_BUFFER_LENGTH);
+			}else {
+				EaglercraftGPU.bindGLUniformBuffer(buffer_chunkLightingDataZero);
+				EaglercraftGPU.bindUniformBufferRange(uboIndex, buffer_chunkLightingDataZero, 0, LIGHTING_BUFFER_LENGTH);
+			}
 		}else {
+			currentLightSourceBucketId = -1;
 			currentLightSourceBucket = null;
+			EaglercraftGPU.bindGLUniformBuffer(buffer_chunkLightingDataZero);
+			EaglercraftGPU.bindUniformBufferRange(uboIndex, buffer_chunkLightingDataZero, 0, LIGHTING_BUFFER_LENGTH);
 		}
-		updateLightSourceUBO();
 	}
 
 	public ListSerial<DynamicLightInstance> getLightSourceBucketRelativeChunkCoords(int cx, int cy, int cz) {
@@ -2319,64 +2395,9 @@ public class EaglerDeferredPipeline {
 		}
 	}
 
-	public void updateLightSourceUBO() {
-		if(currentLightSourceBucket == null) {
-			currentBoundLightSourceBucket = null;
-			if(isChunkLightingEnabled) {
-				isChunkLightingEnabled = false;
-				EaglercraftGPU.bindGLUniformBuffer(buffer_chunkLightingData);
-				chunkLightingDataCopyBuffer.clear();
-				chunkLightingDataCopyBuffer.putInt(0);
-				chunkLightingDataCopyBuffer.flip();
-				_wglBufferSubData(_GL_UNIFORM_BUFFER, 0, chunkLightingDataCopyBuffer);
-			}
-		}else {
-			boolean isNew;
-			if(!isChunkLightingEnabled) {
-				isChunkLightingEnabled = true;
-				isNew = true;
-			}else {
-				isNew = currentLightSourceBucket != currentBoundLightSourceBucket;
-			}
-			currentBoundLightSourceBucket = currentLightSourceBucket;
-			if(isNew || currentBoundLightSourceBucket.eaglerCheck()) {
-				populateLightSourceUBOFromBucket(currentBoundLightSourceBucket);
-				currentBoundLightSourceBucket.eaglerResetCheck();
-			}
-		}
-	}
-
 	private static final Comparator<DynamicLightInstance> comparatorLightRadius = (l1, l2) -> {
 		return l1.radius < l2.radius ? 1 : -1;
 	};
-
-	private void populateLightSourceUBOFromBucket(List<DynamicLightInstance> lights) {
-		int max = lights.size();
-		if(max > MAX_LIGHTS_PER_CHUNK) {
-			max = MAX_LIGHTS_PER_CHUNK;
-		}
-		chunkLightingDataCopyBuffer.clear();
-		chunkLightingDataCopyBuffer.putInt(max);
-		if(max > 0) {
-			chunkLightingDataCopyBuffer.putInt(0); //padding
-			chunkLightingDataCopyBuffer.putInt(0); //padding
-			chunkLightingDataCopyBuffer.putInt(0); //padding
-			for(int i = 0; i < max; ++i) {
-				DynamicLightInstance dl = lights.get(i);
-				chunkLightingDataCopyBuffer.putFloat((float)(dl.posX - currentRenderX));
-				chunkLightingDataCopyBuffer.putFloat((float)(dl.posY - currentRenderY));
-				chunkLightingDataCopyBuffer.putFloat((float)(dl.posZ - currentRenderZ));
-				chunkLightingDataCopyBuffer.putInt(0); //padding
-				chunkLightingDataCopyBuffer.putFloat(dl.red);
-				chunkLightingDataCopyBuffer.putFloat(dl.green);
-				chunkLightingDataCopyBuffer.putFloat(dl.blue);
-				chunkLightingDataCopyBuffer.putInt(0); //padding
-			}
-		}
-		chunkLightingDataCopyBuffer.flip();
-		EaglercraftGPU.bindGLUniformBuffer(buffer_chunkLightingData);
-		_wglBufferSubData(_GL_UNIFORM_BUFFER, 0, chunkLightingDataCopyBuffer);
-	}
 
 	public void beginDrawEnvMap() {
 		DeferredStateManager.checkGLError("Pre: beginDrawEnvMap()");
@@ -2797,7 +2818,7 @@ public class EaglerDeferredPipeline {
 		GlStateManager.bindTexture(realisticWaterNoiseMap);
 
 		shader_realistic_water_noise.useProgram();
-		float waveTimer = (float)((System.currentTimeMillis() % 600000l) * 0.001);
+		float waveTimer = (float)((EagRuntime.steadyTimeMillis() % 600000l) * 0.001);
 		_wglUniform4f(shader_realistic_water_noise.uniforms.u_waveTimer4f, waveTimer, 0.0f, 0.0f, 0.0f);
 
 		DrawUtils.drawStandardQuad2D();
@@ -3147,7 +3168,7 @@ public class EaglerDeferredPipeline {
 
 		// ================ DOWNSCALE AND AVERAGE LUMA =============== //
 
-		long millis = System.currentTimeMillis();
+		long millis = EagRuntime.steadyTimeMillis();
 		if(millis - lastExposureUpdate > 33l) {
 			if(lumaAvgDownscaleFramebuffers.length == 0) {
 				_wglBindFramebuffer(_GL_FRAMEBUFFER, exposureBlendFramebuffer);
@@ -3925,6 +3946,10 @@ public class EaglerDeferredPipeline {
 			_wglDeleteBuffers(buffer_chunkLightingData);
 			buffer_chunkLightingData = null;
 		}
+		if(buffer_chunkLightingDataZero != null) {
+			_wglDeleteBuffers(buffer_chunkLightingDataZero);
+			buffer_chunkLightingDataZero = null;
+		}
 		if(buffer_worldLightingData != null) {
 			_wglDeleteBuffers(buffer_worldLightingData);
 			buffer_worldLightingData = null;
@@ -3939,8 +3964,11 @@ public class EaglerDeferredPipeline {
 		}
 		for(int i = 0; i < lightSourceBuckets.length; ++i) {
 			lightSourceBuckets[i].clear();
+			lightSourceBucketSerials[i] = -1;
+			lightSourceRenderPosSerials[i] = -1;
 		}
 		currentLightSourceBucket = null;
+		currentLightSourceBucketId = -1;
 		currentBoundLightSourceBucket = null;
 		isChunkLightingEnabled = false;
 		for(int i = 0; i < shader_gbuffer_debug_view.length; ++i) {
@@ -3993,11 +4021,13 @@ public class EaglerDeferredPipeline {
 	}
 
 	public static final boolean isSupported() {
-		return EaglercraftGPU.checkHasHDRFramebufferSupportWithFilter();
+		return EaglercraftGPU.checkOpenGLESVersion() >= 300 && EaglercraftGPU.checkHasHDRFramebufferSupportWithFilter();
 	}
 
 	public static final String getReasonUnsupported() {
-		if(!EaglercraftGPU.checkHasHDRFramebufferSupportWithFilter()) {
+		if(EaglercraftGPU.checkOpenGLESVersion() < 300) {
+			return I18n.format("shaders.gui.unsupported.reason.oldOpenGLVersion");
+		}else if(!EaglercraftGPU.checkHasHDRFramebufferSupportWithFilter()) {
 			return I18n.format("shaders.gui.unsupported.reason.hdrFramebuffer");
 		}else {
 			return null;
@@ -4015,7 +4045,7 @@ public class EaglerDeferredPipeline {
 		GlStateManager.pushMatrix();
 		GlStateManager.matrixMode(GL_MODELVIEW);
 		GlStateManager.pushMatrix();
-		ScaledResolution scaledresolution = new ScaledResolution(mc);
+		ScaledResolution scaledresolution = mc.scaledResolution;
 		int w = scaledresolution.getScaledWidth();
 		mc.entityRenderer.setupOverlayRendering();
 		GlStateManager.enableAlpha();

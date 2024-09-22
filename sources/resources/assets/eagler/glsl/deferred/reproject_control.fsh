@@ -99,13 +99,13 @@ void main() {
 	reprojectionReflectionOutput4f = vec4(0.0, 0.0, 0.0, 0.0);
 	reprojectionHitVectorOutput4f = vec4(0.0, 0.0, 0.0, 0.0);
 #endif
-	float fragDepth = textureLod(u_gbufferDepthTexture, v_position2f, 0.0).r;
+	float fragDepth = textureLod(u_gbufferDepthTexture, v_position2f2, 0.0).r;
 
 	if(fragDepth < 0.000001) {
 		return;
 	}
 
-	vec4 fragClipSpacePos4f = vec4(v_position2f, fragDepth, 1.0) * 2.0 - 1.0;
+	vec4 fragClipSpacePos4f = vec4(v_position2f2, fragDepth, 1.0) * 2.0 - 1.0;
 	vec4 fragPos4f = u_inverseViewProjMatrix4f * fragClipSpacePos4f;
 	fragPos4f.xyz /= fragPos4f.w;
 	fragPos4f.w = 1.0;

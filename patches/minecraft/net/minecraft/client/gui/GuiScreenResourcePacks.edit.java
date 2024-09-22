@@ -40,7 +40,16 @@
 ~ 				this.selectedResourcePacks
 ~ 						.add(new ResourcePackListEntryFound(this, (ResourcePackRepository.Entry) arraylist.get(i)));
 
-> CHANGE  38 : 39  @  38 : 39
+> INSERT  21 : 27  @  21
+
++ 	public void handleTouchInput() throws IOException {
++ 		super.handleTouchInput();
++ 		this.selectedResourcePacksList.handleTouchInput();
++ 		this.availableResourcePacksList.handleTouchInput();
++ 	}
++ 
+
+> CHANGE  17 : 18  @  17 : 18
 
 ~ 	protected void actionPerformed(GuiButton parGuiButton) {
 

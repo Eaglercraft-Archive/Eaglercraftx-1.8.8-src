@@ -13,7 +13,9 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 import java.util.function.Consumer;
 import java.util.zip.DeflaterOutputStream;
@@ -31,6 +33,7 @@ import org.lwjgl.opengles.GLDebugMessageKHRCallback;
 import org.lwjgl.opengles.GLDebugMessageKHRCallbackI;
 import org.lwjgl.opengles.GLES;
 import org.lwjgl.opengles.GLES30;
+import org.lwjgl.opengles.GLESCapabilities;
 import org.lwjgl.opengles.KHRDebug;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
@@ -38,16 +41,19 @@ import org.lwjgl.system.jemalloc.JEmalloc;
 
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.EaglerLWJGLAllocator;
 import net.lax1dude.eaglercraft.v1_8.EaglerOutputStream;
+import net.lax1dude.eaglercraft.v1_8.Filesystem;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.ByteBuffer;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.FloatBuffer;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.IntBuffer;
 import net.lax1dude.eaglercraft.v1_8.internal.lwjgl.DesktopClientConfigAdapter;
+import net.lax1dude.eaglercraft.v1_8.internal.vfs2.VFile2;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 import net.lax1dude.eaglercraft.v1_8.minecraft.EaglerFolderResourcePack;
+import net.lax1dude.eaglercraft.v1_8.sp.server.internal.ServerPlatformSingleplayer;
 
 /**
- * Copyright (c) 2022-2023 lax1dude, ayunami2000. All Rights Reserved.
+ * Copyright (c) 2022-2024 lax1dude, ayunami2000. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -74,7 +80,22 @@ public class PlatformRuntime {
 
 	public static void create() {
 		logger.info("Starting Desktop Runtime...");
-		PlatformFilesystem.initialize();
+		
+		ByteBuffer endiannessTestBytes = allocateByteBuffer(4);
+		try {
+			endiannessTestBytes.asIntBuffer().put(0x6969420);
+			if (((endiannessTestBytes.get(0) & 0xFF) | ((endiannessTestBytes.get(1) & 0xFF) << 8)
+					| ((endiannessTestBytes.get(2) & 0xFF) << 16) | ((endiannessTestBytes.get(3) & 0xFF) << 24)) != 0x6969420) {
+				throw new UnsupportedOperationException("Big endian CPU detected! (somehow)");
+			}else {
+				logger.info("Endianness: this CPU is little endian");
+			}
+		}finally {
+			freeByteBuffer(endiannessTestBytes);
+		}
+		
+		IEaglerFilesystem resourcePackFilesystem = Filesystem.getHandleFor(getClientConfigAdapter().getResourcePacksDB());
+		VFile2.setPrimaryFilesystem(resourcePackFilesystem);
 		EaglerFolderResourcePack.setSupported(true);
 		
 		if(requestedANGLEPlatform != EnumPlatformANGLE.DEFAULT) {
@@ -91,23 +112,54 @@ public class PlatformRuntime {
 
 		glfwWindowHint(GLFW_CONTEXT_CREATION_API, GLFW_EGL_CONTEXT_API);
 		glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 
 		glfwWindowHint(GLFW_CENTER_CURSOR, GLFW_TRUE);
 		glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
-		
 
 		PointerBuffer buf = glfwGetMonitors();
 		GLFWVidMode mon = glfwGetVideoMode(buf.get(0));
 
 		int windowWidth = mon.width() - 200;
 		int windowHeight = mon.height() - 250;
+		String title = "Eaglercraft Desktop Runtime";
 
 		int winX = (mon.width() - windowWidth) / 2;
 		int winY = (mon.height() - windowHeight - 20) / 2;
 		
-		windowHandle = glfwCreateWindow(windowWidth, windowHeight, "Eaglercraft Desktop Runtime", 0l, 0l);
+		int myGLVersion = -1;
+		if(requestedGLVersion >= 310 && windowHandle == 0) {
+			glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+			glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+			windowHandle = glfwCreateWindow(windowWidth, windowHeight, title, 0l, 0l);
+			if(windowHandle == 0l) {
+				logger.error("Failed to create OpenGL ES 3.1 context!");
+			}else {
+				myGLVersion = 310;
+			}
+		}
+		if(requestedGLVersion >= 300 && windowHandle == 0) {
+			glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+			glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+			windowHandle = glfwCreateWindow(windowWidth, windowHeight, title, 0l, 0l);
+			if(windowHandle == 0l) {
+				logger.error("Failed to create OpenGL ES 3.0 context!");
+			}else {
+				myGLVersion = 300;
+			}
+		}
+		if(requestedGLVersion >= 200 && windowHandle == 0) {
+			glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
+			glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+			windowHandle = glfwCreateWindow(windowWidth, windowHeight, title, 0l, 0l);
+			if(windowHandle == 0l) {
+				logger.error("Failed to create OpenGL ES 2.0 context!");
+			}else {
+				myGLVersion = 200;
+			}
+		}
+		if(myGLVersion == -1) {
+			throw new RuntimeException("Could not create a supported OpenGL ES context!");
+		}
 		
 		glfwSetWindowPos(windowHandle, winX, winY);
 		
@@ -171,12 +223,27 @@ public class PlatformRuntime {
 		
 		EGL.createDisplayCapabilities(glfw_eglHandle, major[0], minor[0]);
 		glfwMakeContextCurrent(windowHandle);
-		PlatformOpenGL.setCurrentContext(GLES.createCapabilities());
+		GLESCapabilities caps = GLES.createCapabilities();
+		PlatformOpenGL.setCurrentContext(myGLVersion, caps);
 		
 		logger.info("OpenGL Version: {}", (glVersion = GLES30.glGetString(GLES30.GL_VERSION)));
 		logger.info("OpenGL Renderer: {}", (glRenderer = GLES30.glGetString(GLES30.GL_RENDERER)));
-		
 		rendererANGLEPlatform = EnumPlatformANGLE.fromGLRendererString(glRenderer);
+		
+		int realGLVersion = (glVersion != null && probablyGLES2(glVersion)) ? 200
+				: (GLES30.glGetInteger(GLES30.GL_MAJOR_VERSION) * 100
+						+ GLES30.glGetInteger(GLES30.GL_MINOR_VERSION) * 10);
+		if(realGLVersion != myGLVersion) {
+			logger.warn("Unexpected GLES verison resolved for requested {} context: {}", myGLVersion, realGLVersion);
+			if(myGLVersion == 200) {
+				logger.warn("Note: try adding the \"d3d9\" option if you are on windows trying to get GLES 2.0");
+			}
+			if(realGLVersion != 320 && realGLVersion != 310 && realGLVersion != 300 && realGLVersion != 200) {
+				throw new RuntimeException("Unsupported OpenGL ES version detected: " + realGLVersion);
+			}
+			myGLVersion = realGLVersion;
+			PlatformOpenGL.setCurrentContext(myGLVersion, caps);
+		}
 		
 		if(requestedANGLEPlatform != EnumPlatformANGLE.DEFAULT
 				&& rendererANGLEPlatform != requestedANGLEPlatform) {
@@ -186,6 +253,18 @@ public class PlatformRuntime {
 		if(requestedANGLEPlatform == EnumPlatformANGLE.DEFAULT) {
 			logger.info("ANGLE Platform: {}", rendererANGLEPlatform.name);
 		}
+		
+		List<String> exts = PlatformOpenGL.dumpActiveExtensions();
+		if(exts.isEmpty()) {
+			logger.info("Unlocked the following OpenGL ES extensions: (NONE)");
+		}else {
+			Collections.sort(exts);
+			logger.info("Unlocked the following OpenGL ES extensions:");
+			for(int i = 0, l = exts.size(); i < l; ++i) {
+				logger.info(" - " + exts.get(i));
+			}
+		}
+		
 		
 		glfwSwapInterval(0);
 		
@@ -245,11 +324,18 @@ public class PlatformRuntime {
 	
 	public static void destroy() {
 		PlatformAudio.platformShutdown();
-		PlatformFilesystem.platformShutdown();
+		Filesystem.closeAllHandles();
+		ServerPlatformSingleplayer.platformShutdown();
 		GLES.destroy();
 		EGL.destroy();
 		glfwDestroyWindow(windowHandle);
 		glfwTerminate();
+	}
+
+	private static boolean probablyGLES2(String glVersion) {
+		if(glVersion == null) return false;
+		glVersion = glVersion.toLowerCase();
+		return glVersion.contains("opengl es 2.0") || glVersion.contains("ES 2.0");
 	}
 
 	public static EnumPlatformType getPlatformType() {
@@ -274,9 +360,14 @@ public class PlatformRuntime {
 	}
 	
 	private static EnumPlatformANGLE requestedANGLEPlatform = EnumPlatformANGLE.DEFAULT;
+	private static int requestedGLVersion = 300;
 	
 	public static void requestANGLE(EnumPlatformANGLE plaf) {
 		requestedANGLEPlatform = plaf;
+	}
+
+	public static void requestGL(int i) {
+		requestedGLVersion = i;
 	}
 
 	public static EnumPlatformANGLE getPlatformANGLE() {
@@ -499,18 +590,6 @@ public class PlatformRuntime {
 		return DesktopClientConfigAdapter.instance;
 	}
 
-	public static String getRecText() {
-		return "recording.unsupported";
-	}
-
-	public static boolean recSupported() {
-		return false;
-	}
-
-	public static void toggleRec() {
-		//
-	}
-
 	private static final Random seedProvider = new Random();
 
 	public static long randomSeed() {
@@ -530,4 +609,25 @@ public class PlatformRuntime {
 	public static long getWindowHandle() {
 		return windowHandle;
 	}
+
+	public static long steadyTimeMillis() {
+		return System.nanoTime() / 1000000l;
+	}
+
+	public static long nanoTime() {
+		return System.nanoTime();
+	}
+
+	public static void postCreate() {
+		
+	}
+
+	public static void setDisplayBootMenuNextRefresh(boolean en) {
+		
+	}
+
+	public static void immediateContinue() {
+		// nope
+	}
+
 }

@@ -13,9 +13,10 @@
 
 > DELETE  2  @  2 : 3
 
-> INSERT  2 : 3  @  2
+> INSERT  2 : 4  @  2
 
 + import net.lax1dude.eaglercraft.v1_8.sp.server.EaglerIntegratedServerWorker;
++ import net.lax1dude.eaglercraft.v1_8.sp.server.WorldsDB;
 
 > CHANGE  1 : 4  @  1 : 8
 
@@ -41,11 +42,11 @@
 
 > CHANGE  10 : 11  @  10 : 11
 
-~ 		VFile2 file1 = new VFile2(this.savesDirectory, saveName);
+~ 		VFile2 file1 = WorldsDB.newVFile(this.savesDirectory, saveName);
 
 > CHANGE  3 : 4  @  3 : 4
 
-~ 			VFile2 file2 = new VFile2(file1, "level.dat");
+~ 			VFile2 file2 = WorldsDB.newVFile(file1, "level.dat");
 
 > CHANGE  2 : 6  @  2 : 3
 
@@ -56,7 +57,7 @@
 
 > CHANGE  7 : 8  @  7 : 8
 
-~ 			file2 = new VFile2(file1, "level.dat_old");
+~ 			file2 = WorldsDB.newVFile(file1, "level.dat_old");
 
 > CHANGE  2 : 6  @  2 : 3
 
@@ -68,8 +69,8 @@
 > CHANGE  11 : 15  @  11 : 15
 
 ~ 	public boolean renameWorld(String dirName, String newName) {
-~ 		VFile2 file1 = new VFile2(this.savesDirectory, dirName);
-~ 		VFile2 file2 = new VFile2(file1, "level.dat");
+~ 		VFile2 file1 = WorldsDB.newVFile(this.savesDirectory, dirName);
+~ 		VFile2 file2 = WorldsDB.newVFile(file1, "level.dat");
 ~ 		{
 
 > CHANGE  2 : 6  @  2 : 3
@@ -99,7 +100,7 @@
 
 > CHANGE  3 : 5  @  3 : 8
 
-~ 		VFile2 file1 = new VFile2(this.savesDirectory, parString1);
+~ 		VFile2 file1 = WorldsDB.newVFile(this.savesDirectory, parString1);
 ~ 		logger.info("Deleting level " + parString1);
 
 > CHANGE  1 : 6  @  1 : 6
@@ -148,7 +149,7 @@
 
 > CHANGE  15 : 17  @  15 : 17
 
-~ 		return (new VFile2(this.savesDirectory, parString1, "level.dat")).exists()
-~ 				|| (new VFile2(this.savesDirectory, parString1, "level.dat_old")).exists();
+~ 		return (WorldsDB.newVFile(this.savesDirectory, parString1, "level.dat")).exists()
+~ 				|| (WorldsDB.newVFile(this.savesDirectory, parString1, "level.dat_old")).exists();
 
 > EOF

@@ -1,7 +1,6 @@
 package net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.texture;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -121,7 +120,7 @@ public class EaglerTextureAtlasSpritePBR extends EaglerTextureAtlasSprite {
 
 				this.animationMetadata = meta;
 			} else {
-				ArrayList arraylist = Lists.newArrayList();
+				List<AnimationFrame> arraylist = Lists.newArrayList();
 
 				for (int l1 = 0; l1 < j1; ++l1) {
 					this.frameTextureDataPBR[0].add(getFrameTextureData(aint[0], k1, l, l1));

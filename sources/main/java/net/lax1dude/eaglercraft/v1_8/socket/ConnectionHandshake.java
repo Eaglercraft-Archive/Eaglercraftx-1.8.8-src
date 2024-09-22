@@ -4,14 +4,22 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import net.lax1dude.eaglercraft.v1_8.ArrayUtils;
+import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.EaglerInputStream;
 import net.lax1dude.eaglercraft.v1_8.EaglerOutputStream;
 import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
 import net.lax1dude.eaglercraft.v1_8.EaglercraftVersion;
+import net.lax1dude.eaglercraft.v1_8.PauseMenuCustomizeState;
 import net.lax1dude.eaglercraft.v1_8.crypto.SHA256Digest;
-import net.lax1dude.eaglercraft.v1_8.internal.PlatformNetworking;
+import net.lax1dude.eaglercraft.v1_8.internal.IWebSocketClient;
+import net.lax1dude.eaglercraft.v1_8.internal.IWebSocketFrame;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 import net.lax1dude.eaglercraft.v1_8.profile.EaglerProfile;
@@ -42,20 +50,40 @@ import net.minecraft.util.IChatComponent;
  */
 public class ConnectionHandshake {
 
-	private static final long baseTimeout = 15000l;
+	private static final long baseTimeout = 10000l;
 
 	private static final int protocolV2 = 2;
 	private static final int protocolV3 = 3;
+	private static final int protocolV4 = 4;
 	
 	private static final Logger logger = LogManager.getLogger();
 
 	public static String pluginVersion = null;
 	public static String pluginBrand = null;
+	public static int protocolVersion = -1;
 	
-	public static boolean attemptHandshake(Minecraft mc, GuiConnecting connecting, GuiScreen ret, String password, boolean allowPlaintext) {
+	public static byte[] getSPHandshakeProtocolData() {
 		try {
+			EaglerOutputStream bao = new EaglerOutputStream();
+			DataOutputStream d = new DataOutputStream(bao);
+			d.writeShort(3); // supported eagler protocols count
+			d.writeShort(protocolV2); // client supports v2
+			d.writeShort(protocolV3); // client supports v3
+			d.writeShort(protocolV4); // client supports v4
+			return bao.toByteArray();
+		}catch(IOException ex) {
+			throw new RuntimeException(ex);
+		}
+	}
+	
+	public static boolean attemptHandshake(Minecraft mc, IWebSocketClient client, GuiConnecting connecting,
+			GuiScreen ret, String password, boolean allowPlaintext, boolean enableCookies, byte[] cookieData) {
+		try {
+			EaglerProfile.clearServerSkinOverride();
+			PauseMenuCustomizeState.reset();
 			pluginVersion = null;
 			pluginBrand = null;
+			protocolVersion = -1;
 			EaglerOutputStream bao = new EaglerOutputStream();
 			DataOutputStream d = new DataOutputStream(bao);
 			
@@ -63,9 +91,7 @@ public class ConnectionHandshake {
 			
 			d.writeByte(2); // legacy protocol version
 			
-			d.writeShort(2); // supported eagler protocols count
-			d.writeShort(protocolV2); // client supports v2
-			d.writeShort(protocolV3); // client supports v3
+			d.write(getSPHandshakeProtocolData()); // write supported eagler protocol versions
 
 			d.writeShort(1); // supported game protocols count
 			d.writeShort(47); // client supports 1.8 protocol
@@ -84,9 +110,9 @@ public class ConnectionHandshake {
 			d.writeByte(username.length());
 			d.writeBytes(username);
 			
-			PlatformNetworking.writePlayPacket(bao.toByteArray());
+			client.send(bao.toByteArray());
 			
-			byte[] read = awaitNextPacket(baseTimeout);
+			byte[] read = awaitNextPacket(client, baseTimeout);
 			if(read == null) {
 				logger.error("Read timed out while waiting for server protocol response!");
 				return false;
@@ -115,7 +141,7 @@ public class ConnectionHandshake {
 					games.append("mc").append(di.readShort());
 				}
 				
-				logger.info("Incompatible client: v2 & mc47");
+				logger.info("Incompatible client: v2/v3/v4 & mc47");
 				logger.info("Server supports: {}", protocols);
 				logger.info("Server supports: {}", games);
 				
@@ -128,11 +154,11 @@ public class ConnectionHandshake {
 				
 				return false;
 			}else if(type == HandshakePacketTypes.PROTOCOL_SERVER_VERSION) {
-				int serverVers = di.readShort();
+				protocolVersion = di.readShort();
 				
-				if(serverVers != protocolV2 && serverVers != protocolV3) {
-					logger.info("Incompatible server version: {}", serverVers);
-					mc.displayGuiScreen(new GuiDisconnected(ret, "connect.failed", new ChatComponentText(serverVers < protocolV2 ? "Outdated Server" : "Outdated Client")));
+				if(protocolVersion != protocolV2 && protocolVersion != protocolV3 && protocolVersion != protocolV4) {
+					logger.info("Incompatible server version: {}", protocolVersion);
+					mc.displayGuiScreen(new GuiDisconnected(ret, "connect.failed", new ChatComponentText(protocolVersion < protocolV2 ? "Outdated Server" : "Outdated Client")));
 					return false;
 				}
 				
@@ -143,7 +169,7 @@ public class ConnectionHandshake {
 					return false;
 				}
 				
-				logger.info("Server protocol: {}", serverVers);
+				logger.info("Server protocol: {}", protocolVersion);
 				
 				int msgLen = di.read();
 				byte[] dat = new byte[msgLen];
@@ -260,10 +286,19 @@ public class ConnectionHandshake {
 				}else {
 					d.writeByte(0);
 				}
+				if(protocolVersion >= protocolV4) {
+					d.writeBoolean(enableCookies);
+					if(enableCookies && cookieData != null) {
+						d.writeByte(cookieData.length);
+						d.write(cookieData);
+					}else {
+						d.writeByte(0);
+					}
+				}
 				
-				PlatformNetworking.writePlayPacket(bao.toByteArray());
+				client.send(bao.toByteArray());
 				
-				read = awaitNextPacket(baseTimeout);
+				read = awaitNextPacket(client, baseTimeout);
 				if(read == null) {
 					logger.error("Read timed out while waiting for login negotiation response!");
 					return false;
@@ -280,52 +315,79 @@ public class ConnectionHandshake {
 					
 					Minecraft.getMinecraft().getSession().update(serverUsername, new EaglercraftUUID(di.readLong(), di.readLong()));
 					
-					bao.reset();
-					d.writeByte(HandshakePacketTypes.PROTOCOL_CLIENT_PROFILE_DATA);
-					String profileDataType = "skin_v1";
-					d.writeByte(profileDataType.length());
-					d.writeBytes(profileDataType);
-					byte[] packetSkin = EaglerProfile.getSkinPacket();
+					Map<String,byte[]> profileDataToSend = new HashMap<>();
+					
+					if(protocolVersion >= 4) {
+						bao.reset();
+						d.writeLong(EaglercraftVersion.clientBrandUUID.msb);
+						d.writeLong(EaglercraftVersion.clientBrandUUID.lsb);
+						profileDataToSend.put("brand_uuid_v1", bao.toByteArray());
+					}
+					
+					byte[] packetSkin = EaglerProfile.getSkinPacket(protocolVersion);
 					if(packetSkin.length > 0xFFFF) {
 						throw new IOException("Skin packet is too long: " + packetSkin.length);
 					}
-					d.writeShort(packetSkin.length);
-					d.write(packetSkin);
-					PlatformNetworking.writePlayPacket(bao.toByteArray());
+					profileDataToSend.put(protocolVersion >= 4 ? "skin_v2" : "skin_v1", packetSkin);
 					
-					bao.reset();
-					d.writeByte(HandshakePacketTypes.PROTOCOL_CLIENT_PROFILE_DATA);
-					profileDataType = "cape_v1";
-					d.writeByte(profileDataType.length());
-					d.writeBytes(profileDataType);
 					byte[] packetCape = EaglerProfile.getCapePacket();
 					if(packetCape.length > 0xFFFF) {
 						throw new IOException("Cape packet is too long: " + packetCape.length);
 					}
-					d.writeShort(packetCape.length);
-					d.write(packetCape);
-					PlatformNetworking.writePlayPacket(bao.toByteArray());
+					profileDataToSend.put("cape_v1", packetCape);
 					
 					byte[] packetSignatureData = UpdateService.getClientSignatureData();
 					if(packetSignatureData != null) {
-						bao.reset();
-						d.writeByte(HandshakePacketTypes.PROTOCOL_CLIENT_PROFILE_DATA);
-						profileDataType = "update_cert_v1";
-						d.writeByte(profileDataType.length());
-						d.writeBytes(profileDataType);
-						if(packetSignatureData.length > 0xFFFF) {
-							throw new IOException("Update certificate login packet is too long: " + packetSignatureData.length);
+						profileDataToSend.put("update_cert_v1", packetSignatureData);
+					}
+					
+					if(protocolVersion >= 4) {
+						List<Entry<String,byte[]>> toSend = new ArrayList<>(profileDataToSend.entrySet());
+						while(!toSend.isEmpty()) {
+							int sendLen = 2;
+							bao.reset();
+							d.writeByte(HandshakePacketTypes.PROTOCOL_CLIENT_PROFILE_DATA);
+							d.writeByte(0); // will be replaced
+							int packetCount = 0;
+							while(!toSend.isEmpty() && packetCount < 255) {
+								Entry<String,byte[]> etr = toSend.get(toSend.size() - 1);
+								int i = 3 + etr.getKey().length() + etr.getValue().length;
+								if(sendLen + i < 0xFF00) {
+									String profileDataType = etr.getKey();
+									d.writeByte(profileDataType.length());
+									d.writeBytes(profileDataType);
+									byte[] data = etr.getValue();
+									d.writeShort(data.length);
+									d.write(data);
+									toSend.remove(toSend.size() - 1);
+									++packetCount;
+								}else {
+									break;
+								}
+							}
+							byte[] send = bao.toByteArray();
+							send[1] = (byte)packetCount;
+							client.send(send);
 						}
-						d.writeShort(packetSignatureData.length);
-						d.write(packetSignatureData);
-						PlatformNetworking.writePlayPacket(bao.toByteArray());
+					}else {
+						for(Entry<String,byte[]> etr : profileDataToSend.entrySet()) {
+							bao.reset();
+							d.writeByte(HandshakePacketTypes.PROTOCOL_CLIENT_PROFILE_DATA);
+							String profileDataType = etr.getKey();
+							d.writeByte(profileDataType.length());
+							d.writeBytes(profileDataType);
+							byte[] data = etr.getValue();
+							d.writeShort(data.length);
+							d.write(data);
+							client.send(bao.toByteArray());
+						}
 					}
 					
 					bao.reset();
 					d.writeByte(HandshakePacketTypes.PROTOCOL_CLIENT_FINISH_LOGIN);
-					PlatformNetworking.writePlayPacket(bao.toByteArray());
+					client.send(bao.toByteArray());
 					
-					read = awaitNextPacket(baseTimeout);
+					read = awaitNextPacket(client, baseTimeout);
 					if(read == null) {
 						logger.error("Read timed out while waiting for login confirmation response!");
 						return false;
@@ -336,13 +398,13 @@ public class ConnectionHandshake {
 					if(type == HandshakePacketTypes.PROTOCOL_SERVER_FINISH_LOGIN) {
 						return true;
 					}else if(type == HandshakePacketTypes.PROTOCOL_SERVER_ERROR) {
-						showError(mc, connecting, ret, di, serverVers == protocolV2);
+						showError(mc, client, connecting, ret, di, protocolVersion == protocolV2);
 						return false;
 					}else {
 						return false;
 					}
 				}else if(type == HandshakePacketTypes.PROTOCOL_SERVER_DENY_LOGIN) {
-					if(serverVers == protocolV2) {
+					if(protocolVersion == protocolV2) {
 						msgLen = di.read();
 					}else {
 						msgLen = di.readUnsignedShort();
@@ -353,13 +415,13 @@ public class ConnectionHandshake {
 					mc.displayGuiScreen(new GuiDisconnected(ret, "connect.failed", IChatComponent.Serializer.jsonToComponent(errStr)));
 					return false;
 				}else if(type == HandshakePacketTypes.PROTOCOL_SERVER_ERROR) {
-					showError(mc, connecting, ret, di, serverVers == protocolV2);
+					showError(mc, client, connecting, ret, di, protocolVersion == protocolV2);
 					return false;
 				}else {
 					return false;
 				}
 			}else if(type == HandshakePacketTypes.PROTOCOL_SERVER_ERROR) {
-				showError(mc, connecting, ret, di, true);
+				showError(mc, client, connecting, ret, di, true);
 				return false;
 			}else {
 				return false;
@@ -372,37 +434,51 @@ public class ConnectionHandshake {
 		
 	}
 	
-	private static byte[] awaitNextPacket(long timeout) {
-		long millis = System.currentTimeMillis();
-		byte[] b;
-		while((b = PlatformNetworking.readPlayPacket()) == null) {
-			if(PlatformNetworking.playConnectionState().isClosed()) {
+	private static byte[] awaitNextPacket(IWebSocketClient client, long timeout) {
+		long millis = EagRuntime.steadyTimeMillis();
+		IWebSocketFrame b;
+		while((b = client.getNextBinaryFrame()) == null) {
+			if(client.getState().isClosed()) {
 				return null;
 			}
 			try {
 				Thread.sleep(50l);
 			} catch (InterruptedException e) {
 			}
-			if(System.currentTimeMillis() - millis > timeout) {
-				PlatformNetworking.playDisconnect();
+			if(EagRuntime.steadyTimeMillis() - millis > timeout) {
+				client.close();
 				return null;
 			}
 		}
-		return b;
+		return b.getByteArray();
 	}
 	
-	private static void showError(Minecraft mc, GuiConnecting connecting, GuiScreen scr, DataInputStream err, boolean v2) throws IOException {
+	private static void showError(Minecraft mc, IWebSocketClient client, GuiConnecting connecting, GuiScreen scr, DataInputStream err, boolean v2) throws IOException {
 		int errorCode = err.read();
 		int msgLen = v2 ? err.read() : err.readUnsignedShort();
+		
+		// workaround for bug in EaglerXBungee 1.2.7 and below
+		if(msgLen == 0) {
+			if(v2) {
+				if(err.available() == 256) {
+					msgLen = 256;
+				}
+			}else {
+				if(err.available() == 65536) {
+					msgLen = 65536;
+				}
+			}
+		}
+		
 		byte[] dat = new byte[msgLen];
 		err.read(dat);
 		String errStr = new String(dat, StandardCharsets.UTF_8);
 		logger.info("Server Error Code {}: {}", errorCode, errStr);
 		if(errorCode == HandshakePacketTypes.SERVER_ERROR_RATELIMIT_BLOCKED) {
-			RateLimitTracker.registerBlock(PlatformNetworking.getCurrentURI());
+			RateLimitTracker.registerBlock(client.getCurrentURI());
 			mc.displayGuiScreen(GuiDisconnected.createRateLimitKick(scr));
 		}else if(errorCode == HandshakePacketTypes.SERVER_ERROR_RATELIMIT_LOCKED) {
-			RateLimitTracker.registerLockOut(PlatformNetworking.getCurrentURI());
+			RateLimitTracker.registerLockOut(client.getCurrentURI());
 			mc.displayGuiScreen(GuiDisconnected.createRateLimitKick(scr));
 		}else if(errorCode == HandshakePacketTypes.SERVER_ERROR_CUSTOM_MESSAGE) {
 			mc.displayGuiScreen(new GuiDisconnected(scr, "connect.failed", IChatComponent.Serializer.jsonToComponent(errStr)));

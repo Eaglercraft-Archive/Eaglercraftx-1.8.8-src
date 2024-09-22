@@ -15,4 +15,11 @@
 
 > DELETE  1  @  1 : 2
 
+> INSERT  11 : 15  @  11
+
++ 	/**
++ 	 * This function is like the FontRenderer wrap function, except for chat
++ 	 * components
++ 	 */
+
 > EOF

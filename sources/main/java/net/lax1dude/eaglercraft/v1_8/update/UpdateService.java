@@ -37,9 +37,9 @@ public class UpdateService {
 	private static boolean isBundleDataValid = false;
 
 	private static UpdateCertificate latestUpdateFound = null;
-	private static final Set<UpdateCertificate> availableUpdates = new HashSet();
-	private static final Set<RawKnownCertHolder> fastUpdateKnownCheckSet = new HashSet();
-	private static final Set<UpdateCertificate> dismissedUpdates = new HashSet();
+	private static final Set<UpdateCertificate> availableUpdates = new HashSet<>();
+	private static final Set<RawKnownCertHolder> fastUpdateKnownCheckSet = new HashSet<>();
+	private static final Set<UpdateCertificate> dismissedUpdates = new HashSet<>();
 
 	private static class RawKnownCertHolder {
 
@@ -50,7 +50,7 @@ public class UpdateService {
 		public RawKnownCertHolder(byte[] data) {
 			this.data = data;
 			this.hashcode = Arrays.hashCode(data);
-			this.age = System.currentTimeMillis();
+			this.age = EagRuntime.steadyTimeMillis();
 		}
 
 		public int hashCode() {
@@ -176,7 +176,7 @@ public class UpdateService {
 
 	private static void freeMemory() {
 		if(fastUpdateKnownCheckSet.size() > 127) {
-			List<RawKnownCertHolder> lst = new ArrayList(fastUpdateKnownCheckSet);
+			List<RawKnownCertHolder> lst = new ArrayList<>(fastUpdateKnownCheckSet);
 			fastUpdateKnownCheckSet.clear();
 			lst.sort((c1, c2) -> { return (int)(c2.age - c1.age); });
 			for(int i = 0; i < 64; ++i) {
@@ -191,6 +191,15 @@ public class UpdateService {
 
 	public static UpdateProgressStruct getUpdatingStatus() {
 		return PlatformUpdateSvc.getUpdatingStatus();
+	}
+
+	public static UpdateResultObj getUpdateResult() {
+		return PlatformUpdateSvc.getUpdateResult();
+	}
+
+	public static void installSignedClient(UpdateCertificate clientCert, byte[] clientPayload, boolean setDefault,
+			boolean setTimeout) {
+		PlatformUpdateSvc.installSignedClient(clientCert, clientPayload, setDefault, setTimeout);
 	}
 
 	public static UpdateCertificate getLatestUpdateFound() {
@@ -219,6 +228,10 @@ public class UpdateService {
 				PlatformUpdateSvc.startClientUpdateFrom(myUpdateCert);
 			}
 		}
+	}
+
+	public static void quine(UpdateCertificate cert, byte[] payload) {
+		PlatformUpdateSvc.quine(cert, payload);
 	}
 
 	public static boolean shouldDisableDownloadButton() {

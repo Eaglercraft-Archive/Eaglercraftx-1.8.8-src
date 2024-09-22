@@ -25,6 +25,7 @@ import org.json.JSONObject;
 import net.lax1dude.eaglercraft.v1_8.buildtools.EaglerBuildTools;
 import net.lax1dude.eaglercraft.v1_8.buildtools.LicensePrompt;
 import net.lax1dude.eaglercraft.v1_8.buildtools.gui.EPKCompiler;
+import net.lax1dude.eaglercraft.v1_8.buildtools.gui.ES6Compat;
 import net.lax1dude.eaglercraft.v1_8.buildtools.gui.JavaC;
 import net.lax1dude.eaglercraft.v1_8.buildtools.gui.MakeOfflineDownload;
 import net.lax1dude.eaglercraft.v1_8.buildtools.gui.TeaVMBinaries;
@@ -60,7 +61,7 @@ public class CompileLatestClientHeadless {
 		
 		System.out.println();
 		System.out.println("Launching client compiler...");
-		System.out.println("Copyright (c) 2022-2023 lax1dude");
+		System.out.println("Copyright (c) 2022-2024 lax1dude");
 		System.out.println();
 		
 		boolean yes = false;
@@ -321,7 +322,11 @@ public class CompileLatestClientHeadless {
 				try {
 					compileResultCode = JavaC.runJavaC(new File(minecraftSrcTmp, "minecraft_src_javadoc.jar"),
 							compiledResultClasses, temporaryDirectory, TeaVMBinaries.getTeaVMRuntimeClasspath(),
-						new File(repositoryFolder, "sources/main/java"), new File(repositoryFolder, "sources/teavm/java"));
+							new File(repositoryFolder, "sources/main/java"),
+							new File(repositoryFolder, "sources/protocol-game/java"),
+							new File(repositoryFolder, "sources/protocol-relay/java"),
+							new File(repositoryFolder, "sources/teavm/java"),
+							new File(repositoryFolder, "sources/teavm-boot-menu/java"));
 				}catch(IOException ex) {
 					throw new CompileFailureException("failed to run javac compiler! " + ex.toString(), ex);
 				}
@@ -362,10 +367,12 @@ public class CompileLatestClientHeadless {
 			teavmClassPath.addAll(Arrays.asList(TeaVMBinaries.getTeaVMRuntimeClasspath()));
 			teavmArgs.put("classPathEntries", teavmClassPath);
 
+			teavmArgs.put("compileClassPathEntries", Arrays.asList((new File(repositoryFolder, "sources/teavmc-classpath/resources")).getAbsolutePath()));
+
 			teavmArgs.put("entryPointName", "main");
 			teavmArgs.put("mainClass", "net.lax1dude.eaglercraft.v1_8.internal.teavm.MainClass");
 			teavmArgs.put("minifying", minifying);
-			teavmArgs.put("optimizationLevel", "ADVANCED");
+			teavmArgs.put("optimizationLevel", "FULL");
 			teavmArgs.put("targetDirectory", outputDirectory.getAbsolutePath());
 			teavmArgs.put("generateSourceMaps", writeSourceMap);
 			teavmArgs.put("targetFileName", "classes.js");
@@ -386,6 +393,15 @@ public class CompileLatestClientHeadless {
 				System.out.println();
 				System.exit(-1);
 				return;
+			}
+			
+			System.out.println();
+			System.out.println("Patching classes.js with ES6 shim...");
+			
+			File classesJS = new File(outputDirectory, "classes.js");
+			
+			if(!ES6Compat.patchClassesJS(classesJS, new File(repositoryFolder, "sources/setup/workspace_template/javascript/ES6ShimScript.txt"))) {
+				System.err.println("Error: could not inject shim, continuing anyway because it is not required");
 			}
 			
 			File epkCompiler = new File(repositoryFolder, "sources/setup/workspace_template/desktopRuntime/CompileEPK.jar");
@@ -569,8 +585,7 @@ public class CompileLatestClientHeadless {
 				File offlineDownloadGenerator = new File(repositoryFolder, "sources/setup/workspace_template/desktopRuntime/MakeOfflineDownload.jar");
 				MakeOfflineDownload.compilerMain(offlineDownloadGenerator, new String[] {
 						offlineTemplateArg.getAbsolutePath(),
-						(new File(outputDirectory, "classes.js")).getAbsolutePath(),
-						(new File(outputDirectory, "assets.epk")).getAbsolutePath(),
+						classesJS.getAbsolutePath(), (new File(outputDirectory, "assets.epk")).getAbsolutePath(),
 						(new File(outputDirectory, "EaglercraftX_1.8_Offline_en_US.html")).getAbsolutePath(),
 						(new File(outputDirectory, "EaglercraftX_1.8_Offline_International.html")).getAbsolutePath(), 
 						(new File(temporaryDirectory, "languages.epk")).getAbsolutePath()

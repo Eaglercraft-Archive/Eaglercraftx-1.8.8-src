@@ -1,7 +1,7 @@
 #line 2
 
 /*
- * Copyright (c) 2023 lax1dude. All Rights Reserved.
+ * Copyright (c) 2023-2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -16,14 +16,10 @@
  * 
  */
 
-precision lowp int;
-precision highp float;
-precision highp sampler2D;
-
-in vec2 v_texCoords2f;
+EAGLER_IN(vec2, v_texCoords2f)
 
 #ifndef COMPILE_BLIT_DEPTH
-layout(location = 0) out vec4 output4f;
+EAGLER_FRAG_OUT()
 #endif
 
 uniform sampler2D u_inputTexture;
@@ -40,8 +36,8 @@ void main() {
 	uv2f = (floor(uv2f * u_pixelAlignmentSizes4f.xy) + u_pixelAlignmentOffset2f) * u_pixelAlignmentSizes4f.zw;
 #endif
 #ifndef COMPILE_BLIT_DEPTH
-	output4f = textureLod(u_inputTexture, uv2f, u_textureLod1f);
+	EAGLER_FRAG_COLOR = EAGLER_TEXTURE_2D_LOD(u_inputTexture, uv2f, u_textureLod1f);
 #else
-	gl_FragDepth = textureLod(u_inputTexture, uv2f, u_textureLod1f).r;
+	EAGLER_FRAG_DEPTH = EAGLER_TEXTURE_2D_LOD(u_inputTexture, uv2f, u_textureLod1f).r;
 #endif
 }

@@ -22,7 +22,7 @@ import java.util.List;
  */
 public class ForwardRenderCallbackHandler {
 
-	public final List<ShadersRenderPassFuture> renderPassList = new ArrayList(1024);
+	public final List<ShadersRenderPassFuture> renderPassList = new ArrayList<>(1024);
 
 	public void push(ShadersRenderPassFuture f) {
 		renderPassList.add(f);

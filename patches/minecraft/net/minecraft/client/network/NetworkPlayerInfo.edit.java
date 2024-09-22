@@ -5,16 +5,29 @@
 # Version: 1.0
 # Author: lax1dude
 
-> CHANGE  2 : 4  @  2 : 6
+> CHANGE  2 : 5  @  2 : 6
 
 ~ import net.lax1dude.eaglercraft.v1_8.mojang.authlib.GameProfile;
+~ import net.lax1dude.eaglercraft.v1_8.profanity_filter.ProfanityFilter;
 ~ import net.lax1dude.eaglercraft.v1_8.profile.SkinModel;
 
 > DELETE  1  @  1 : 3
 
-> DELETE  10  @  10 : 13
+> INSERT  8 : 9  @  8
 
-> CHANGE  40 : 41  @  40 : 41
++ 	private String gameProfileProfanityFilter;
+
+> DELETE  2  @  2 : 5
+
+> INSERT  2 : 3  @  2
+
++ 	private IChatComponent displayNameProfanityFilter;
+
+> INSERT  15 : 16  @  15
+
++ 		this.displayNameProfanityFilter = null;
+
+> CHANGE  23 : 24  @  23 : 24
 
 ~ 		return true;
 
@@ -40,5 +53,40 @@
 ~ 				.getResourceLocation();
 
 > DELETE  6  @  6 : 33
+
+> INSERT  2 : 3  @  2
+
++ 		this.displayNameProfanityFilter = null;
+
+> INSERT  6 : 34  @  6
+
++ 	public IChatComponent getDisplayNameProfanityFilter() {
++ 		if (Minecraft.getMinecraft().isEnableProfanityFilter()) {
++ 			if (this.displayName != null) {
++ 				if (this.displayNameProfanityFilter == null) {
++ 					this.displayNameProfanityFilter = ProfanityFilter.getInstance()
++ 							.profanityFilterChatComponent(this.displayName);
++ 				}
++ 				return this.displayNameProfanityFilter;
++ 			} else {
++ 				return null;
++ 			}
++ 		} else {
++ 			return this.displayName;
++ 		}
++ 	}
++ 
++ 	public String getGameProfileNameProfanityFilter() {
++ 		if (Minecraft.getMinecraft().isEnableProfanityFilter()) {
++ 			if (this.gameProfileProfanityFilter == null) {
++ 				this.gameProfileProfanityFilter = ProfanityFilter.getInstance()
++ 						.profanityFilterString(this.gameProfile.getName());
++ 			}
++ 			return this.gameProfileProfanityFilter;
++ 		} else {
++ 			return this.gameProfile.getName();
++ 		}
++ 	}
++ 
 
 > EOF

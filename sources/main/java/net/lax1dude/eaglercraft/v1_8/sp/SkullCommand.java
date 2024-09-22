@@ -3,9 +3,8 @@ package net.lax1dude.eaglercraft.v1_8.sp;
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.internal.FileChooserResult;
 import net.lax1dude.eaglercraft.v1_8.opengl.ImageData;
-import net.lax1dude.eaglercraft.v1_8.profile.SkinPackets;
+import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.client.CPacketInstallSkinSPEAG;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.play.client.C17PacketCustomPayload;
 import net.minecraft.util.ChatComponentTranslation;
 
 /**
@@ -44,9 +43,9 @@ public class SkullCommand {
 			if(fr == null || mc.thePlayer == null || mc.thePlayer.sendQueue == null) {
 				return;
 			}
-			ImageData loaded = ImageData.loadImageFile(fr.fileData);
+			ImageData loaded = ImageData.loadImageFile(fr.fileData, ImageData.getMimeFromType(fr.fileName));
 			if(loaded == null) {
-				mc.ingameGUI.getChatGUI().printChatMessage(new ChatComponentTranslation("command.skull.error.invalid.png"));
+				mc.ingameGUI.getChatGUI().printChatMessage(new ChatComponentTranslation("command.skull.error.invalid.format"));
 				return;
 			}
 			if(loaded.width != 64 || loaded.height > 64) {
@@ -62,7 +61,7 @@ public class SkullCommand {
 				rawSkin[j + 2] = (byte)(k >>> 8);
 				rawSkin[j + 3] = (byte)(k & 0xFF);
 			}
-			mc.thePlayer.sendQueue.addToSendQueue(new C17PacketCustomPayload("EAG|Skins-1.8", SkinPackets.writeCreateCustomSkull(rawSkin)));
+			mc.thePlayer.sendQueue.sendEaglerMessage(new CPacketInstallSkinSPEAG(rawSkin));
 		}
 	}
 

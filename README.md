@@ -37,11 +37,13 @@
 5. Type `./CompileLatestClient.sh` and hit enter, a GUI resembling a classic windows installer should open
 6. Follow the steps shown to you in the new window to finish compiling
 
+## Browser Compatibility
+
+EaglercraftX 1.8 is currently known to work on browsers as old as Chrome 38 on Windows XP, the game supports both WebGL 1.0 and WebGL 2.0 however features such as dynamic lighting and PBR shaders require WebGL 2.0. The game also supports mobile browsers that don't have a keyboard or mouse, the game will enter touch screen mode automatically when touch input is detected. The game also includes an embedded OGG codec (JOrbis) for loading audio files on iOS where the browsers don't support loading OGG files in an AudioContext.
+
 ## Singleplayer
 
-As of January 2024, singleplayer and shared worlds have been added to EaglercraftX 1.8.
-
-Worlds are saved to your browser's local storage and are available even if your device does not have an internet connection. You can also import and export worlds in EaglercraftX as EPK files to copy them between devices and send them to your friends.
+EaglercraftX 1.8 fully supports singleplayer mode through an integrated server. Worlds are saved to your browser's local storage and are available even if your device does not have an internet connection. You can also import and export worlds in EaglercraftX as EPK files to copy them between devices and send them to your friends.
 
 You can also import and export your existing vanilla Minecraft 1.8 worlds into EaglercraftX using ZIP files if you want to try playing all your old 1.8 maps in a modern browser. The glitch that caused some chunks to become corrupt when exporting worlds as vanilla in Eaglercraft 1.5.2 no longer happens in EaglercraftX 1.8, its perfect now. Beware that the inventories of LAN world players are not saved when the world is converted to vanilla, and pets (dogs, cats, horses, etc) might sometimes forget their owners due to the UUID changes.
 
@@ -57,7 +59,7 @@ If you would like to host your own relay, the JAR file and instructions can be d
 
 ## PBR Shaders
 
-EaglercraftX 1.8 includes a deferred physically-based renderer modeled after the GTA V rendering engine with many new improvements and a novel raytracing technique for fast realistic reflections. It can be enabled in the "Shaders" menu in the game's options screen. Shader packs in EaglercraftX are just a component of resource packs, so any custom shaders you install will be in the form of a resource pack. EaglercraftX also comes with a very well optimized built-in PBR shader pack and also a built-in PBR material texture pack to give all blocks and items in the game realistic lighting and materials that looks better than most vanilla Minecraft shader packs. The default shader and texture packs were created from scratch by lax1dude, shaders packs made for vanilla Minecraft will not work in EaglercraftX and no shaders in EaglercraftX were taken from vanilla Minecraft shader packs.
+EaglercraftX 1.8 includes a deferred physically-based renderer modeled after the GTA V rendering engine with many new improvements and a novel raytracing technique for fast realistic reflections. It can be enabled in the "Shaders" menu in the game's options screen. Shader packs in EaglercraftX are just a component of resource packs, so any custom shaders you install will be in the form of a resource pack. EaglercraftX also comes with a very well optimized built-in PBR shader pack and also a built-in PBR material texture pack to give all blocks and items in the game realistic lighting and materials that looks better than most vanilla Minecraft shader packs. The default shader and texture packs were created from scratch by lax1dude, shaders packs made for vanilla Minecraft will not work in EaglercraftX and no shaders in EaglercraftX were taken from vanilla Minecraft shader packs. The shaders are not available in WebGL 1.0 mode or if floating point HDR render targets are not fully supported.
 
 ## Voice Chat
 
@@ -74,6 +76,12 @@ If you are creating a resource pack and want to disable the blur filter on the m
 To make a server for EaglercraftX 1.8 the recommended software to use is EaglercraftXBungee ("EaglerXBungee") which is included in this repository in the `gateway/EaglercraftXBungee` folder. This is a plugin designed to be used with BungeeCord to allow Eaglercraft players to join your BungeeCord server. It is assumed that the reader already knows what BungeeCord is and has a working server set up that is joinable via java edition. If you don't know what BungeeCord is, please research the topic yourself first before continuing. Waterfall and FlameCord have also been tested, but EaglerXBungee was natively compiled against BungeeCord.
 
 There is an experimental velocity plugin available in `gateway/EaglercraftXVelocity` but it is still in development and not recommended for public servers, so be sure to check for updates regularly if you use it. Configuration files are basically identical to EaglercraftXBungee so its safe to just directy copy in your old EaglercraftXBungee config files to the `plugins/eaglerxvelocity` folder and they should work with a minimal number of edits if you are migrating your network from BungeeCord to Velocity.
+
+### Detailed READMEs
+
+- [**EaglerXBungee README**](README_EAGLERXBUNGEE.md)
+- [**EaglerXVelocity README**](README_EAGLERXVELOCITY.md)
+- [**EaglerXBukkitAPI README**](README_EAGLERXBUKKITAPI.md)
 
 ### Installation
 
@@ -164,10 +172,35 @@ The default eaglercraftXOpts values is this:
 - `localStorageNamespace:` can be used to change the prefix of the local storage keys (Default: `"_eaglercraftX"`)
 - `enableMinceraft:` can be used to disable the "Minceraft" title screen
 - `crashOnUncaughtExceptions:` display crash reports when `window.onerror` is fired
+- `openDebugConsoleOnLaunch:` open debug console automatically at launch
+- `fixDebugConsoleUnloadListener:` close debug console beforeunload instead of unload
+- `forceWebViewSupport:` if the server info webview should be allowed even on browsers without the required safety features
+- `enableWebViewCSP:` if the `csp` attibute should be set on the server info webview for extra security
+- `enableServerCookies:` can be used to disable server cookies
+- `allowServerRedirects:` if servers should be allowed to make the client reconnect to a different address
+- `autoFixLegacyStyleAttr:` if the viewport meta tag and style attributes on old offline downloads and websites should be automatically patched
+- `showBootMenuOnLaunch:` if the client should always show the boot menu on every launch
+- `bootMenuBlocksUnsignedClients:` if the boot menu should only be allowed to launch signed clients
+- `allowBootMenu:` can be used to disable the boot menu entirely
+- `forceProfanityFilter:` if the profanity filter should be forced enabled
+- `forceWebGL1:` if the game should force the browser to only use WebGL 1.0 for the canvas
+- `forceWebGL2:` if the game should force the browser to only use WebGL 2.0 for the canvas
+- `allowExperimentalWebGL1:` if the game should be allowed to create an `experimental-webgl` context
+- `useWebGLExt:` can be used to disable all OpenGL ES extensions to test the game on a pure WebGL 1.0/2.0 context
+- `useDelayOnSwap:` if the game should `setTimeout(..., 0)` every frame instead of using MessageChannel hacks
+- `useJOrbisAudioDecoder:` if OGG vorbis files should be decoded using the JOrbis Java OGG decoder instead of using the browser
+- `useXHRFetch:` if the game should use XMLHttpRequest for downloading resources instead of the fetch API
+- `useVisualViewport:` if the game should resize some GUIs relative to `window.visualViewport` (needed on mobile browsers when the keyboard is open)
+- `deobfStackTraces:` can be used to disable the runtime stack-trace deobfuscation, reduces micro stutters if the game is logging errors
+- `disableBlobURLs:` if the game should use `data:` URLs instead of `blob:` URLs for loading certain resources
+- `eaglerNoDelay:` can be used to disable "Vigg's Algorithm", an algorithm that delays and combines multiple EaglercraftX packets together if they are sent in the same tick (does not affect regular Minecraft 1.8 packets)
+- `ramdiskMode:` if worlds and resource packs should be stored in RAM instead of IndexedDB
+- `singleThreadMode:` if the game should run the client and integrated server in the same context instead of creating a worker object
 - `hooks:` can be used to define JavaScript callbacks for certain events
-    * `localStorageSaved:` JavaScript callback to save local storage keys
-    * `localStorageLoaded:` JavaScript callback to load local storage keys
-    * `crashReportShow:` JavaScript callback when a crash report is shown
+    * `localStorageSaved:` JavaScript callback to save local storage keys (key, data)
+    * `localStorageLoaded:` JavaScript callback to load local storage keys (key) returns data
+    * `crashReportShow:` JavaScript callback when a crash report is shown (report, customMessageCB)
+    * `screenChanged:` JavaScript callback when the screen changes/resizes (screenName, scaledWidth, scaledHeight, realWidth, realHeight, scaleFactor)
 
 ### Using Hooks
 

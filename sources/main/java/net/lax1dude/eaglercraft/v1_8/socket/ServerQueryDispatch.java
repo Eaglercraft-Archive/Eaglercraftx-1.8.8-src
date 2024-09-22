@@ -1,6 +1,7 @@
 package net.lax1dude.eaglercraft.v1_8.socket;
 
 import net.lax1dude.eaglercraft.v1_8.internal.IServerQuery;
+import net.lax1dude.eaglercraft.v1_8.internal.IWebSocketClient;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformNetworking;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
@@ -26,7 +27,8 @@ public class ServerQueryDispatch {
 
 	public static IServerQuery sendServerQuery(String uri, String accept) {
 		logger.info("Sending {} query to: \"{}\"", accept, uri);
-		return PlatformNetworking.sendServerQuery(uri, accept);
+		IWebSocketClient sockClient = PlatformNetworking.openWebSocket(uri);
+		return sockClient != null ? new ServerQueryImpl(sockClient, accept) : null;
 	}
 
 }

@@ -30,7 +30,7 @@ public class SoundMapDeserializer implements JSONTypeDeserializer<JSONObject, So
 
 	@Override
 	public SoundMap deserialize(JSONObject json) throws JSONException {
-		Map<String, SoundList> soundsMap = new HashMap();
+		Map<String, SoundList> soundsMap = new HashMap<>();
 		for(String str : json.keySet()) {
 			soundsMap.put(str, JSONTypeProvider.deserialize(json.getJSONObject(str), SoundList.class));
 		}
