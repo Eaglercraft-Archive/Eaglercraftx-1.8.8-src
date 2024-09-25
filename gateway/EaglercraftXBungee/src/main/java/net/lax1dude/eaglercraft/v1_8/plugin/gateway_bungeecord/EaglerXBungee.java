@@ -151,6 +151,8 @@ public class EaglerXBungee extends Plugin {
 		}
 		getProxy().registerChannel(EaglerBackendRPCProtocol.CHANNEL_NAME);
 		getProxy().registerChannel(EaglerBackendRPCProtocol.CHANNEL_NAME_READY);
+		getProxy().registerChannel(EaglerBackendRPCProtocol.CHANNEL_NAME_MODERN);
+		getProxy().registerChannel(EaglerBackendRPCProtocol.CHANNEL_NAME_READY_MODERN);
 		getProxy().registerChannel(EaglerPacketEventListener.GET_DOMAIN_CHANNEL);
 		startListeners();
 		if(closeInactiveConnections != null) {
@@ -242,6 +244,7 @@ public class EaglerXBungee extends Plugin {
 
 	@Override
 	public void onDisable() {
+		stopListeners();
 		PluginManager mgr = getProxy().getPluginManager();
 		mgr.unregisterListeners(this);
 		mgr.unregisterCommands(this);
@@ -250,8 +253,9 @@ public class EaglerXBungee extends Plugin {
 		}
 		getProxy().unregisterChannel(EaglerBackendRPCProtocol.CHANNEL_NAME);
 		getProxy().unregisterChannel(EaglerBackendRPCProtocol.CHANNEL_NAME_READY);
+		getProxy().unregisterChannel(EaglerBackendRPCProtocol.CHANNEL_NAME_MODERN);
+		getProxy().unregisterChannel(EaglerBackendRPCProtocol.CHANNEL_NAME_READY_MODERN);
 		getProxy().unregisterChannel(EaglerPacketEventListener.GET_DOMAIN_CHANNEL);
-		stopListeners();
 		if(closeInactiveConnections != null) {
 			closeInactiveConnections.cancel();
 			closeInactiveConnections = null;
@@ -264,10 +268,14 @@ public class EaglerXBungee extends Plugin {
 			updateServiceTasks.cancel();
 			updateServiceTasks = null;
 		}
-		skinService.shutdown();
-		skinService = null;
-		capeService.shutdown();
-		capeService = null;
+		if(skinService != null) {
+			skinService.shutdown();
+			skinService = null;
+		}
+		if(capeService != null) {
+			capeService.shutdown();
+			capeService = null;
+		}
 		if(defaultAuthSystem != null) {
 			defaultAuthSystem.destroy();
 			defaultAuthSystem = null;

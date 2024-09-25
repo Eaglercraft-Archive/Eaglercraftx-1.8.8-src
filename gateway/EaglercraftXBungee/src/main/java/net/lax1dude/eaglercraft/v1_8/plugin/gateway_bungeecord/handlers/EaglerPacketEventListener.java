@@ -81,12 +81,12 @@ public class EaglerPacketEventListener implements Listener {
 					}
 				}
 			}
-			if(tag.equals(EaglerBackendRPCProtocol.CHANNEL_NAME)) {
+			if(tag.equals(EaglerBackendRPCProtocol.CHANNEL_NAME) || tag.equals(EaglerBackendRPCProtocol.CHANNEL_NAME_MODERN)) {
 				event.getSender().disconnect(new TextComponent("Nope!"));
 				event.setCancelled(true);
 				return;
 			}
-			if(tag.equals(EaglerBackendRPCProtocol.CHANNEL_NAME_READY)) {
+			if(tag.equals(EaglerBackendRPCProtocol.CHANNEL_NAME_READY) || tag.equals(EaglerBackendRPCProtocol.CHANNEL_NAME_READY_MODERN)) {
 				event.setCancelled(true);
 				return;
 			}
@@ -95,7 +95,7 @@ public class EaglerPacketEventListener implements Listener {
 			String tag = event.getTag();
 			if(player.getPendingConnection() instanceof EaglerInitialHandler) {
 				EaglerInitialHandler initialHandler = (EaglerInitialHandler)player.getPendingConnection();
-				if(EaglerBackendRPCProtocol.CHANNEL_NAME.equals(tag)) {
+				if(EaglerBackendRPCProtocol.CHANNEL_NAME.equals(tag) || tag.equals(EaglerBackendRPCProtocol.CHANNEL_NAME_MODERN)) {
 					event.setCancelled(true);
 					try {
 						initialHandler.handleBackendRPCPacket((Server)event.getSender(), event.getData());
@@ -113,7 +113,7 @@ public class EaglerPacketEventListener implements Listener {
 					}
 				} 
 			}else {
-				if(EaglerBackendRPCProtocol.CHANNEL_NAME.equals(tag)) {
+				if(EaglerBackendRPCProtocol.CHANNEL_NAME.equals(tag) || tag.equals(EaglerBackendRPCProtocol.CHANNEL_NAME_MODERN)) {
 					event.setCancelled(true);
 					try {
 						BackendRPCSessionHandler.handlePacketOnVanilla((Server) event.getSender(),

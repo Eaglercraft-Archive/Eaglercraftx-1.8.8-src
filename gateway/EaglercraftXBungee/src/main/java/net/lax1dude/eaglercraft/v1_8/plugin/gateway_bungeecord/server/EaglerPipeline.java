@@ -37,6 +37,7 @@ import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.api.EaglerXBungee
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.config.EaglerBungeeConfig;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.config.EaglerListenerConfig;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.server.EaglerInitialHandler.ClientCertificateHolder;
+import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.server.backend_rpc_protocol.BackendRPCSessionHandler;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.server.web.HttpWebServer;
 import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.GameMessagePacket;
 import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.server.SPacketEnableFNAWSkinsEAG;
@@ -295,7 +296,7 @@ public class EaglerPipeline {
 	private static void handleServerConnectionReady(UserConnection userConnection) {
 		try {
 			ServerConnection server = userConnection.getServer();
-			server.sendData(EaglerBackendRPCProtocol.CHANNEL_NAME_READY, ArrayUtils.EMPTY_BYTE_ARRAY);
+			server.sendData(BackendRPCSessionHandler.getReadyChNameFor(server), ArrayUtils.EMPTY_BYTE_ARRAY);
 			if(userConnection.getPendingConnection() instanceof EaglerInitialHandler) {
 				EaglerInitialHandler handler = (EaglerInitialHandler) userConnection.getPendingConnection();
 				ServerInfo sv = server.getInfo();

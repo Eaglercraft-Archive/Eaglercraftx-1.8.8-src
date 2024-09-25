@@ -44,6 +44,7 @@ The settings.yml file is primarily used for configuring the built-in skin and ca
 - **`disable_fnaw_skins_everywhere:`** Boolean, default value is `false`, can be used to globally disable FNAW skins if your players bitch about them a lot and are too lazy to just disable the FNAW skins locally on their clients.
 - **`disable_fnaw_skins_on_servers:`** List of strings, default value is nothing (`[]`), contains a list of names of registered servers on your BungeeCord proxy that the FNAW skins should be disabled on. Good for explicitly disabling them for PVP but allowing them everywhere else.
 - **`enable_backend_rpc_api:`** Boolean, default value is `false`, if support for servers running the EaglerXBukkitAPI plugin should be enabled or not.
+- **use_modernized_channel_names:`** Boolean, default value is `false`, if "modernized" plugin channel names compatible with Minecraft 1.13+ should be used for EaglerXBukkitAPI plugin message packets
 
 ### `listeners.yml`
 

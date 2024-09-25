@@ -27,6 +27,7 @@ import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.server.EaglerInit
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.voice.VoiceService;
 import net.lax1dude.eaglercraft.v1_8.socket.protocol.util.ReusableByteArrayInputStream;
 import net.lax1dude.eaglercraft.v1_8.socket.protocol.util.ReusableByteArrayOutputStream;
+import net.md_5.bungee.ServerConnection;
 import net.md_5.bungee.UserConnection;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.Server;
@@ -54,6 +55,7 @@ public class BackendRPCSessionHandler {
 
 	protected final EaglerInitialHandler eaglerHandler;
 	private Server currentServer = null;
+	private String channelName = null;
 	private EaglerBackendRPCProtocol currentProtocol = null;
 	private EaglerBackendRPCHandler currentHandler = null;
 	private int subscribedEvents = 0;
@@ -150,7 +152,7 @@ public class BackendRPCSessionHandler {
 							+ packet.getClass().getSimpleName() + " was the wrong length for user \""
 							+ eaglerHandler.getName() + "\" after serialization: " + ret.length + " != " + len);
 		}
-		server.sendData(EaglerBackendRPCProtocol.CHANNEL_NAME, ret);
+		server.sendData(channelName, ret);
 	}
 
 	public void handleConnectionLost(ServerInfo server) {
@@ -161,6 +163,7 @@ public class BackendRPCSessionHandler {
 
 	private void handleDestroyContext() {
 		currentServer = null;
+		channelName = null;
 		currentProtocol = null;
 		currentHandler = null;
 		subscribedEvents = 0;
@@ -178,6 +181,7 @@ public class BackendRPCSessionHandler {
 		if(!(packet instanceof CPacketRPCEnabled)) {
 			throw new WrongRPCPacketException();
 		}
+		channelName = getChNameFor((ServerConnection)server);
 		if(!ArrayUtils.contains(((CPacketRPCEnabled)packet).supportedProtocols, EaglerBackendRPCProtocol.V1.vers)) {
 			EaglerXBungee.logger().severe("[" + eaglerHandler.getSocketAddress()
 					+ "]: Unsupported backend RPC protocol version for user \"" + eaglerHandler.getName() + "\"");
@@ -217,7 +221,7 @@ public class BackendRPCSessionHandler {
 				EaglerXBungee.logger().severe("(Note: this player is not using Eaglercraft!)");
 				return;
 			}
-			server.sendData(EaglerBackendRPCProtocol.CHANNEL_NAME, bao.toByteArray());
+			server.sendData(getChNameFor((ServerConnection)server), bao.toByteArray());
 			return;
 		}
 		EaglerXBungee.logger().warning("[" + player.getSocketAddress()
@@ -232,7 +236,7 @@ public class BackendRPCSessionHandler {
 					+ "]: Failed to write backend RPC protocol version for user \"" + player.getName() + "\"", ex);
 			return;
 		}
-		server.sendData(EaglerBackendRPCProtocol.CHANNEL_NAME, bao.toByteArray());
+		server.sendData(getChNameFor((ServerConnection)server), bao.toByteArray());
 	}
 
 	public void setSubscribedEvents(int eventsToEnable) {
@@ -290,6 +294,26 @@ public class BackendRPCSessionHandler {
 				sendRPCPacket(new SPacketRPCEventToggledVoice(oldState, voiceState));
 			}
 		}
+	}
+
+	private static int getVerSafe(ServerConnection server) {
+		try {
+			return server.getCh().getEncodeVersion();
+		}catch(Throwable t) {
+			return -1;
+		}
+	}
+
+	public static String getChNameFor(ServerConnection server) {
+		return (EaglerXBungee.getEagler().getConfig().getUseModernizedChannelNames() || getVerSafe(server) >= 393)
+				? EaglerBackendRPCProtocol.CHANNEL_NAME_MODERN
+				: EaglerBackendRPCProtocol.CHANNEL_NAME;
+	}
+
+	public static String getReadyChNameFor(ServerConnection server) {
+		return (EaglerXBungee.getEagler().getConfig().getUseModernizedChannelNames() || getVerSafe(server) >= 393)
+				? EaglerBackendRPCProtocol.CHANNEL_NAME_READY_MODERN
+				: EaglerBackendRPCProtocol.CHANNEL_NAME_READY;
 	}
 
 }
