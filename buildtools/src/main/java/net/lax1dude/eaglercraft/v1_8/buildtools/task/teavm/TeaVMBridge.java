@@ -45,6 +45,7 @@ public class TeaVMBridge {
 	 * <tr><td><b>generateSourceMaps</b></td><td>-&gt; BuildStrategy.setSourceMapsFileGenerated(boolean)</td></tr>
 	 * <tr><td><b>targetDirectory</b></td><td>-&gt; BuildStrategy.setTargetDirectory(String)</td></tr>
 	 * <tr><td><b>targetFileName</b></td><td>-&gt; BuildStrategy.setTargetFileName(String)</td></tr>
+	 * <tr><td><b>propertiesMap</b></td><td>-&gt; BuildStrategy.setProperties(Properties)</td></tr>
 	 * </table>
 	 * <br>
 	 */

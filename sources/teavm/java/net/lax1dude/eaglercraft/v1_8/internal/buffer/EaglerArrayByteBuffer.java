@@ -296,9 +296,7 @@ public class EaglerArrayByteBuffer implements ByteBuffer {
 	@Override
 	public long getLong() {
 		if(position + 8 > limit) throw Buffer.makeIOOBE(position);
-		long l = dataView.getUint32(position) | ((long) dataView.getUint8(position + 4) << 32)
-				| ((long) dataView.getUint8(position + 5) << 40) | ((long) dataView.getUint8(position + 6) << 48)
-				| ((long) dataView.getUint8(position + 7) << 56);
+		long l = (long)dataView.getUint32(position, true) | ((long) dataView.getUint32(position + 4) << 32l);
 		position += 8;
 		return l;
 	}
@@ -307,10 +305,7 @@ public class EaglerArrayByteBuffer implements ByteBuffer {
 	public ByteBuffer putLong(long value) {
 		if(position + 8 > limit) throw Buffer.makeIOOBE(position);
 		dataView.setUint32(position, (int) (value & 0xFFFFFFFFl), true);
-		dataView.setUint8(position + 4, (short) ((value >>> 32l) & 0xFFl));
-		dataView.setUint8(position + 5, (short) ((value >>> 40l) & 0xFFl));
-		dataView.setUint8(position + 6, (short) ((value >>> 48l) & 0xFFl));
-		dataView.setUint8(position + 7, (short) ((value >>> 56l) & 0xFFl));
+		dataView.setUint32(position + 4, (int) (value >>> 32l), true);
 		position += 8;
 		return this;
 	}
@@ -318,19 +313,14 @@ public class EaglerArrayByteBuffer implements ByteBuffer {
 	@Override
 	public long getLong(int index) {
 		if(index < 0 || index + 8 > limit) throw Buffer.makeIOOBE(index);
-		return dataView.getUint32(index, true) | ((long) dataView.getUint8(index + 4) << 32)
-				| ((long) dataView.getUint8(index + 5) << 40) | ((long) dataView.getUint8(index + 6) << 48)
-				| ((long) dataView.getUint8(index + 7) << 56);
+		return (long)dataView.getUint32(index, true) | ((long) dataView.getUint32(index + 4) << 32l);
 	}
 
 	@Override
 	public ByteBuffer putLong(int index, long value) {
 		if(index < 0 || index + 8 > limit) throw Buffer.makeIOOBE(index);
 		dataView.setUint32(index, (int) (value & 0xFFFFFFFFl), true);
-		dataView.setUint8(index + 4, (short) ((value >>> 32l) & 0xFFl));
-		dataView.setUint8(index + 5, (short) ((value >>> 40l) & 0xFFl));
-		dataView.setUint8(index + 6, (short) ((value >>> 48l) & 0xFFl));
-		dataView.setUint8(index + 7, (short) ((value >>> 56l) & 0xFFl));
+		dataView.setUint32(index + 4, (int) (value >>> 32l), true);
 		return this;
 	}
 

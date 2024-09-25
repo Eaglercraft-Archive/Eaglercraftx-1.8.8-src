@@ -517,26 +517,6 @@ public class PlatformRuntime {
 
 	@JSBody(params = { }, script = "return {antialias: false, depth: false, powerPreference: \"high-performance\", desynchronized: true, preserveDrawingBuffer: false, premultipliedAlpha: false, alpha: false};")
 	public static native JSObject youEagler();
-	
-	public static class RuntimeInitializationFailureException extends IllegalStateException {
-
-		public RuntimeInitializationFailureException(String message, Throwable cause) {
-			super(message, cause);
-		}
-
-		public RuntimeInitializationFailureException(String s) {
-			super(s);
-		}
-		
-	}
-	
-	public static class PlatformIncompatibleException extends IllegalStateException {
-
-		public PlatformIncompatibleException(String s) {
-			super(s);
-		}
-		
-	}
 
 	public static void destroy() {
 		logger.fatal("Game tried to destroy the context! Browser runtime can't do that");

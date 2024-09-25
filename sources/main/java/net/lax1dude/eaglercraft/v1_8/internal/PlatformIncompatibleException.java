@@ -1,7 +1,7 @@
 package net.lax1dude.eaglercraft.v1_8.internal;
 
 /**
- * Copyright (c) 2022 lax1dude. All Rights Reserved.
+ * Copyright (c) 2022-2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -15,21 +15,10 @@ package net.lax1dude.eaglercraft.v1_8.internal;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-public enum EnumPlatformType {
-	DESKTOP("Desktop"), JAVASCRIPT("JavaScript"), ASM("ASM");
-	
-	private final String name;
-	
-	private EnumPlatformType(String name) {
-		this.name = name;
+public class PlatformIncompatibleException extends RuntimeException {
+
+	public PlatformIncompatibleException(String s) {
+		super(s);
 	}
-	
-	public String getName() {
-		return name;
-	}
-	
-	public String toString() {
-		return name;
-	}
-	
+
 }

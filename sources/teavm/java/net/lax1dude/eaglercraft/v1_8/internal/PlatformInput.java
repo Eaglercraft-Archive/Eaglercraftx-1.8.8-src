@@ -330,8 +330,8 @@ public class PlatformInput {
 				int b = evt.getButton();
 				b = b == 1 ? 2 : (b == 2 ? 1 : b);
 				buttonStates[b] = true;
-				int eventX = (int)(getOffsetX(evt) * windowDPI);
-				int eventY = windowHeight - (int)(getOffsetY(evt) * windowDPI) - 1;
+				int eventX = (int)(getOffsetX(evt, touchOffsetXTeaVM) * windowDPI);
+				int eventY = windowHeight - (int)(getOffsetY(evt, touchOffsetYTeaVM) * windowDPI) - 1;
 				synchronized(mouseEvents) {
 					mouseEvents.add(new VMouseEvent(eventX, eventY, b, 0.0f, EVENT_MOUSE_DOWN));
 					if(mouseEvents.size() > 64) {
@@ -348,8 +348,8 @@ public class PlatformInput {
 				int b = evt.getButton();
 				b = b == 1 ? 2 : (b == 2 ? 1 : b);
 				buttonStates[b] = false;
-				int eventX = (int)(getOffsetX(evt) * windowDPI);
-				int eventY = windowHeight - (int)(getOffsetY(evt) * windowDPI) - 1;
+				int eventX = (int)(getOffsetX(evt, touchOffsetXTeaVM) * windowDPI);
+				int eventY = windowHeight - (int)(getOffsetY(evt, touchOffsetYTeaVM) * windowDPI) - 1;
 				synchronized(mouseEvents) {
 					mouseEvents.add(new VMouseEvent(eventX, eventY, b, 0.0f, EVENT_MOUSE_UP));
 					if(mouseEvents.size() > 64) {
@@ -363,13 +363,13 @@ public class PlatformInput {
 			public void handleEvent(MouseEvent evt) {
 				evt.preventDefault();
 				evt.stopPropagation();
-				mouseX = (int)(getOffsetX(evt) * windowDPI);
-				mouseY = windowHeight - (int)(getOffsetY(evt) * windowDPI) - 1;
+				mouseX = (int)(getOffsetX(evt, touchOffsetXTeaVM) * windowDPI);
+				mouseY = windowHeight - (int)(getOffsetY(evt, touchOffsetYTeaVM) * windowDPI) - 1;
 				mouseDX += evt.getMovementX();
 				mouseDY += -evt.getMovementY();
 				if(hasShownPressAnyKey) {
-					int eventX = (int)(getOffsetX(evt) * windowDPI);
-					int eventY = windowHeight - (int)(getOffsetY(evt) * windowDPI) - 1;
+					int eventX = (int)(getOffsetX(evt, touchOffsetXTeaVM) * windowDPI);
+					int eventY = windowHeight - (int)(getOffsetY(evt, touchOffsetYTeaVM) * windowDPI) - 1;
 					synchronized(mouseEvents) {
 						mouseEvents.add(new VMouseEvent(eventX, eventY, -1, 0.0f, EVENT_MOUSE_MOVE));
 						if(mouseEvents.size() > 64) {
@@ -600,8 +600,8 @@ public class PlatformInput {
 				double delta = evt.getDeltaY();
 				mouseDWheel += delta;
 				if(hasShownPressAnyKey) {
-					int eventX = (int)(getOffsetX(evt) * windowDPI);
-					int eventY = windowHeight - (int)(getOffsetY(evt) * windowDPI) - 1;
+					int eventX = (int)(getOffsetX(evt, touchOffsetXTeaVM) * windowDPI);
+					int eventY = windowHeight - (int)(getOffsetY(evt, touchOffsetYTeaVM) * windowDPI) - 1;
 					synchronized(mouseEvents) {
 						mouseEvents.add(new VMouseEvent(eventX, eventY, -1, (float)delta, EVENT_MOUSE_WHEEL));
 						if(mouseEvents.size() > 64) {
@@ -825,11 +825,11 @@ public class PlatformInput {
 	@JSBody(params = { "fallback" }, script = "if(window.navigator.userActivation){return window.navigator.userActivation.hasBeenActive;}else{return fallback;}")
 	public static native boolean hasBeenActiveTeaVM(boolean fallback);
 	
-	@JSBody(params = { "m" }, script = "return m.offsetX;")
-	private static native int getOffsetX(MouseEvent m);
+	@JSBody(params = { "m", "off" }, script = "return (typeof m.offsetX === \"number\") ? m.offsetX : (m.pageX - off);")
+	private static native int getOffsetX(MouseEvent m, int offX);
 	
-	@JSBody(params = { "m" }, script = "return m.offsetY;")
-	private static native int getOffsetY(MouseEvent m);
+	@JSBody(params = { "m", "off" }, script = "return (typeof m.offsetY === \"number\") ? m.offsetY : (m.pageY - off);")
+	private static native int getOffsetY(MouseEvent m, int offY);
 	
 	@JSBody(params = { "e" }, script = "return (typeof e.which === \"number\") ? e.which : ((typeof e.keyCode === \"number\") ? e.keyCode : 0);")
 	private static native int getWhich(KeyboardEvent e);

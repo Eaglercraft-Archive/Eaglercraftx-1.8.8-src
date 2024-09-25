@@ -169,7 +169,7 @@ public class EffectPipelineFXAA {
 		}
 		if(framebufferColor != -1) {
 			GlStateManager.deleteTexture(framebufferColor);
-			framebufferColor = -2;
+			framebufferColor = -1;
 		}
 		if(framebufferDepth != null) {
 			_wglDeleteRenderbuffer(framebufferDepth);

@@ -86,7 +86,7 @@ public class PlatformRuntime {
 			endiannessTestBytes.asIntBuffer().put(0x6969420);
 			if (((endiannessTestBytes.get(0) & 0xFF) | ((endiannessTestBytes.get(1) & 0xFF) << 8)
 					| ((endiannessTestBytes.get(2) & 0xFF) << 16) | ((endiannessTestBytes.get(3) & 0xFF) << 24)) != 0x6969420) {
-				throw new UnsupportedOperationException("Big endian CPU detected! (somehow)");
+				throw new PlatformIncompatibleException("Big endian CPU detected! (somehow)");
 			}else {
 				logger.info("Endianness: this CPU is little endian");
 			}
@@ -158,7 +158,7 @@ public class PlatformRuntime {
 			}
 		}
 		if(myGLVersion == -1) {
-			throw new RuntimeException("Could not create a supported OpenGL ES context!");
+			throw new PlatformIncompatibleException("Could not create a supported OpenGL ES context!");
 		}
 		
 		glfwSetWindowPos(windowHandle, winX, winY);
@@ -218,7 +218,7 @@ public class PlatformRuntime {
 		int[] major = new int[] { 1 };
 		int[] minor = new int[] { 4 };
 		if(!eglInitialize(glfw_eglHandle, major, minor)) {
-			throw new RuntimeException("Could not initialize EGL");
+			throw new RuntimeInitializationFailureException("Could not initialize EGL");
 		}
 		
 		EGL.createDisplayCapabilities(glfw_eglHandle, major[0], minor[0]);
@@ -239,7 +239,7 @@ public class PlatformRuntime {
 				logger.warn("Note: try adding the \"d3d9\" option if you are on windows trying to get GLES 2.0");
 			}
 			if(realGLVersion != 320 && realGLVersion != 310 && realGLVersion != 300 && realGLVersion != 200) {
-				throw new RuntimeException("Unsupported OpenGL ES version detected: " + realGLVersion);
+				throw new PlatformIncompatibleException("Unsupported OpenGL ES version detected: " + realGLVersion);
 			}
 			myGLVersion = realGLVersion;
 			PlatformOpenGL.setCurrentContext(myGLVersion, caps);

@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -305,6 +306,9 @@ public class CompileLatestClientGUI {
 		teavmArgs.put("targetDirectory", outputDirectory.getAbsolutePath());
 		teavmArgs.put("generateSourceMaps", true);
 		teavmArgs.put("targetFileName", "classes.js");
+		Properties props = new Properties();
+		props.put("java.util.TimeZone.autodetect", "true");
+		teavmArgs.put("propertiesMap", props);
 		
 		System.out.println();
 		

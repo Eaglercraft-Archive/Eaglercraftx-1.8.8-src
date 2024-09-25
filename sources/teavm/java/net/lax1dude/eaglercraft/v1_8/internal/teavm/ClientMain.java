@@ -25,6 +25,7 @@ import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.EaglercraftVersion;
 import net.lax1dude.eaglercraft.v1_8.boot_menu.teavm.BootMenuEntryPoint;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformApplication;
+import net.lax1dude.eaglercraft.v1_8.internal.PlatformIncompatibleException;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformInput;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformOpenGL;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformRuntime;
@@ -63,23 +64,12 @@ public class ClientMain {
 	@JSBody(params = {}, script = "if((typeof __isEaglerX188Running === \"string\") && __isEaglerX188Running === \"yes\") return true; __isEaglerX188Running = \"yes\"; return false;")
 	private static native boolean getRunningFlag();
 
-	@JSBody(params = { "str" }, script = "return (typeof location !== \"undefined\") && (typeof location.hostname === \"string\") && location.hostname.toLowerCase() === str;")
-	private static native boolean getTardFlag(String str);
-
 	private static final PrintStream systemOut = System.out;
 	private static final PrintStream systemErr = System.err;
 
 	private static JSObject windowErrorHandler = null;
 
 	public static void _main() {
-		if(getTardFlag(new String(new char[] { 'e', 'a', 'g', 'l', 'e', 'r', 'c', 'r', 'a', 'f', 't', '.', 'd', 'e', 'v' }))) {
-			// Have fun, boys!!!
-			Window.alert(new String(new char[] { 101, 97, 103, 108, 101, 114, 99, 114, 97, 102, 116, 46, 100, 101, 118,
-					32, 105, 115, 32, 110, 111, 116, 32, 97, 110, 32, 111, 102, 102, 105, 99, 105, 97, 108, 32, 119,
-					101, 98, 115, 105, 116, 101, 32, 97, 110, 100, 32, 105, 115, 32, 110, 111, 116, 32, 101, 110, 100,
-					111, 114, 115, 101, 100, 32, 98, 121, 32, 108, 97, 120, 49, 100, 117, 100, 101, 32, 111, 114, 32,
-					97, 121, 117, 110, 97, 109, 105, 50, 48, 48, 48 }));
-		}
 		if(getRunningFlag()) {
 			systemErr.println("ClientMain: [ERROR] eaglercraftx is already running!");
 			return;
@@ -201,7 +191,7 @@ public class ClientMain {
 			
 			try {
 				EagRuntime.create();
-			}catch(PlatformRuntime.PlatformIncompatibleException ex) {
+			}catch(PlatformIncompatibleException ex) {
 				systemErr.println("ClientMain: [ERROR] this browser is incompatible with eaglercraftx!");
 				systemErr.println("ClientMain: [ERROR] Reason: " + ex.getMessage());
 				try {

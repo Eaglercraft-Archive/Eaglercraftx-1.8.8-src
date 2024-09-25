@@ -923,10 +923,13 @@ public class EaglercraftGPU {
 	}
 
 	public static final void destroyCache() {
-		stringCache.clear();
-		mapTexturesGL.clear();
-		mapQueriesGL.clear();
-		mapDisplayListsGL.clear();
+		GLSLHeader.destroy();
+		DrawUtils.destroy();
+		SpriteLevelMixer.destroy();
+		InstancedFontRenderer.destroy();
+		InstancedParticleRenderer.destroy();
+		EffectPipelineFXAA.destroy();
+		TextureCopyUtil.destroy();
 		emulatedVAOs = false;
 		emulatedVAOState = null;
 		glesVers = -1;
@@ -936,13 +939,10 @@ public class EaglercraftGPU {
 		hasFramebufferHDR16FSupport = false;
 		hasFramebufferHDR32FSupport = false;
 		hasLinearHDR32FSupport = false;
-		GLSLHeader.destroy();
-		DrawUtils.destroy();
-		SpriteLevelMixer.destroy();
-		InstancedFontRenderer.destroy();
-		InstancedParticleRenderer.destroy();
-		EffectPipelineFXAA.destroy();
-		TextureCopyUtil.destroy();
+		stringCache.clear();
+		mapTexturesGL.clear();
+		mapQueriesGL.clear();
+		mapDisplayListsGL.clear();
 	}
 
 	public static final int checkOpenGLESVersion() {

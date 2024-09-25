@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Properties;
 
 import org.teavm.diagnostics.Problem;
 import org.teavm.diagnostics.ProblemProvider;
@@ -49,6 +50,7 @@ public class TeaVMBridgeImpl {
 	 * <tr><td><b>generateSourceMaps</b></td><td>-&gt; BuildStrategy.setSourceMapsFileGenerated(boolean)</td></tr>
 	 * <tr><td><b>targetDirectory</b></td><td>-&gt; BuildStrategy.setTargetDirectory(String)</td></tr>
 	 * <tr><td><b>targetFileName</b></td><td>-&gt; BuildStrategy.setTargetFileName(String)</td></tr>
+	 * <tr><td><b>propertiesMap</b></td><td>-&gt; BuildStrategy.setProperties(Properties)</td></tr>
 	 * </table>
 	 * <br>
 	 */
@@ -72,7 +74,7 @@ public class TeaVMBridgeImpl {
 		buildStrategy.setDebugInformationGenerated(false);
 		buildStrategy.setEntryPointName((String)options.get("entryPointName"));
 		buildStrategy.setMainClass((String)options.get("mainClass"));
-		buildStrategy.setMaxTopLevelNames(16000); // TODO: what does this do? sounds important
+		buildStrategy.setMaxTopLevelNames(1000000);
 		buildStrategy.setObfuscated(((Boolean)options.get("minifying")).booleanValue());
 		buildStrategy.setOptimizationLevel(TeaVMOptimizationLevel.valueOf((String)options.get("optimizationLevel")));
 		buildStrategy.setSourceFilesCopied(false);
@@ -80,6 +82,7 @@ public class TeaVMBridgeImpl {
 		buildStrategy.setTargetDirectory((String)options.get("targetDirectory"));
 		buildStrategy.setTargetFileName((String)options.get("targetFileName"));
 		buildStrategy.setTargetType(TeaVMTargetType.JAVASCRIPT);
+		buildStrategy.setProperties((Properties)options.get("propertiesMap"));
 		
 		buildStrategy.setProgressListener(new TeaVMProgressListener() {
 			

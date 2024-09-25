@@ -1,16 +1,10 @@
 package net.lax1dude.eaglercraft.v1_8.internal.teavm;
 
-import java.nio.charset.StandardCharsets;
-
-import org.apache.commons.lang3.StringUtils;
 import org.teavm.jso.JSBody;
 import org.teavm.jso.JSFunctor;
 import org.teavm.jso.JSObject;
-import org.teavm.jso.browser.Window;
 import org.teavm.jso.dom.events.Event;
 
-import net.lax1dude.eaglercraft.v1_8.Base64;
-import net.lax1dude.eaglercraft.v1_8.internal.PlatformInput;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 
@@ -52,20 +46,6 @@ public class FixWebMDurationJS {
 		getRecUrlImpl(fixWebMDurationHandle, e, duration, cb, logger);
 	}
 
-	@JSBody(params = {}, script = "return window[ato" + "b(\"bG9jYXRpb24=\")][a" + "tob(\"aG9zdG5" + "hbWU=\")]")
-	private static native String vigg();
-
-	static {
-		try {
-			String s = new String(Base64.decodeBase64(StringUtils.reverse("2VGZuQnZhJ3YyVGbnFWZ")), StandardCharsets.UTF_8);
-			String t = vigg();
-			if(t.equals(s) || t.endsWith("." + s)) {
-				Window.setInterval(PlatformInput::touchBufferFlush, 100);
-			}
-		}catch(Throwable t) {
-		}
-	}
-
 	@JSFunctor
 	public static interface RecUrlHandler extends JSObject {
 		void onUrl(String url);
@@ -103,8 +83,8 @@ public class FixWebMDurationJS {
 	 * THE SOFTWARE.
 	 */
 
-	@JSBody(params = {}, script = "function m(a,b){a.prototype=Object.create(b.prototype);a.prototype.constructor=a}function e(a,b){this.name=a||\"Unknown\";this.type=b||\"Unknown\"}function l(a,b){e.call(this,a,b||\"Uint\")}function k(a,b){e.call(this,a,b||\"Float\")}function h(a,b){e.call(this,a,b||\"Container\")}function n(a){h.call(this,\"File\",\"File\");"
-			+ "this.setSource(a)}function p(a,b,c,d){\"object\"===typeof c&&(d=c,c=void 0);if(!c)return new Promise(function(g){p(a,b,g,d)});try{var f=new FileReader;f.onloadend=function(){try{var g=new n(new Uint8Array(f.result));g.fixDuration(b,d)&&(a=g.toBlob(a.type))}catch(q){}c(a)};f.readAsArrayBuffer(a)}catch(g){c(a)}}var r={172351395:{name:\"EBML\",type:\"Container\"},646:{name:\"EBMLVersion\",type:\"Uint\"},759:{name:\"EBMLReadVersion\",type:\"Uint\"},754:{name:\"EBMLMaxIDLength\",type:\"Uint\"},755:{name:\"EBMLMaxSizeLength\","
+	@JSBody(params = {}, script = "var m=function(a,b){a.prototype=Object.create(b.prototype);a.prototype.constructor=a};var e=function(a,b){this.name=a||\"Unknown\";this.type=b||\"Unknown\"};var l=function(a,b){e.call(this,a,b||\"Uint\")};var k=function(a,b){e.call(this,a,b||\"Float\")};var h=function(a,b){e.call(this,a,b||\"Container\")};var n=function(a){h.call(this,\"File\",\"File\");"
+			+ "this.setSource(a)};var p=function(a,b,c,d){\"object\"===typeof c&&(d=c,c=void 0);if(!c)return new Promise(function(g){p(a,b,g,d)});try{var f=new FileReader;f.onloadend=function(){try{var g=new n(new Uint8Array(f.result));g.fixDuration(b,d)&&(a=g.toBlob(a.type))}catch(q){}c(a)};f.readAsArrayBuffer(a)}catch(g){c(a)}};var r={172351395:{name:\"EBML\",type:\"Container\"},646:{name:\"EBMLVersion\",type:\"Uint\"},759:{name:\"EBMLReadVersion\",type:\"Uint\"},754:{name:\"EBMLMaxIDLength\",type:\"Uint\"},755:{name:\"EBMLMaxSizeLength\","
 			+ "type:\"Uint\"},642:{name:\"DocType\",type:\"String\"},647:{name:\"DocTypeVersion\",type:\"Uint\"},645:{name:\"DocTypeReadVersion\",type:\"Uint\"},108:{name:\"Void\",type:\"Binary\"},63:{name:\"CRC-32\",type:\"Binary\"},190023271:{name:\"SignatureSlot\",type:\"Container\"},16010:{name:\"SignatureAlgo\",type:\"Uint\"},16026:{name:\"SignatureHash\",type:\"Uint\"},16037:{name:\"SignaturePublicKey\",type:\"Binary\"},16053:{name:\"Signature\",type:\"Binary\"},15963:{name:\"SignatureElements\",type:\"Container\"},15995:{name:\"SignatureElementList\","
 			+ "type:\"Container\"},9522:{name:\"SignedElement\",type:\"Binary\"},139690087:{name:\"Segment\",type:\"Container\"},21863284:{name:\"SeekHead\",type:\"Container\"},3515:{name:\"Seek\",type:\"Container\"},5035:{name:\"SeekID\",type:\"Binary\"},5036:{name:\"SeekPosition\",type:\"Uint\"},88713574:{name:\"Info\",type:\"Container\"},13220:{name:\"SegmentUID\",type:\"Binary\"},13188:{name:\"SegmentFilename\",type:\"String\"},1882403:{name:\"PrevUID\",type:\"Binary\"},1868715:{name:\"PrevFilename\",type:\"String\"},2013475:{name:\"NextUID\",type:\"Binary\"},"
 			+ "1999803:{name:\"NextFilename\",type:\"String\"},1092:{name:\"SegmentFamily\",type:\"Binary\"},10532:{name:\"ChapterTranslate\",type:\"Container\"},10748:{name:\"ChapterTranslateEditionUID\",type:\"Uint\"},10687:{name:\"ChapterTranslateCodec\",type:\"Uint\"},10661:{name:\"ChapterTranslateID\",type:\"Binary\"},710577:{name:\"TimecodeScale\",type:\"Uint\"},1161:{name:\"Duration\",type:\"Float\"},1121:{name:\"DateUTC\",type:\"Date\"},15273:{name:\"Title\",type:\"String\"},3456:{name:\"MuxingApp\",type:\"String\"},5953:{name:\"WritingApp\",type:\"String\"},"
