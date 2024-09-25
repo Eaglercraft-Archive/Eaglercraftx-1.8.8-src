@@ -190,6 +190,7 @@ public class EaglerVelocityConfig {
 		boolean disableFNAWSkinsEverywhere = configYml.getBoolean("disable_fnaw_skins_everywhere", false);
 		Set<String> disableFNAWSkinsOnServers = new HashSet<>((Collection<String>)configYml.getList("disable_fnaw_skins_on_servers"));
 		boolean enableBackendRPCAPI = configYml.getBoolean("enable_backend_rpc_api", false);
+		boolean useModernizedChannelNames = configYml.getBoolean("use_modernized_channel_names", false);
 		
 		final EaglerVelocityConfig ret = new EaglerVelocityConfig(serverName, serverUUID, websocketKeepAliveTimeout,
 				websocketHandshakeTimeout, builtinHttpServerTimeout, websocketCompressionLevel, serverListeners,
@@ -197,7 +198,8 @@ public class EaglerVelocityConfig {
 				skinRateLimitPlayer, skinRateLimitGlobal, skinCacheURI, keepObjectsDays, keepProfilesDays, maxObjects,
 				maxProfiles, antagonistsRateLimit, sqliteDriverClass, sqliteDriverPath, eaglerPlayersVanillaSkin,
 				enableIsEaglerPlayerProperty, authConfig, updatesConfig, iceServers, voiceChat, disableVoiceOnServers,
-				disableFNAWSkinsEverywhere, disableFNAWSkinsOnServers, enableBackendRPCAPI, pauseMenuConfig);
+				disableFNAWSkinsEverywhere, disableFNAWSkinsOnServers, enableBackendRPCAPI, useModernizedChannelNames,
+				pauseMenuConfig);
 		
 		if(eaglerPlayersVanillaSkin != null) {
 			VanillaDefaultSkinProfileLoader.lookupVanillaSkinUser(ret);
@@ -334,6 +336,7 @@ public class EaglerVelocityConfig {
 	private final Set<String> disableFNAWSkinsOnServers;
 	private boolean isCrackedFlag;
 	private final boolean enableBackendRPCAPI;
+	private final boolean useModernizedChannelNames;
 	private final EaglerPauseMenuConfig pauseMenuConf;
 	Property[] eaglerPlayersVanillaSkinCached = new Property[] { isEaglerProperty };
 
@@ -504,6 +507,10 @@ public class EaglerVelocityConfig {
 		return enableBackendRPCAPI;
 	}
 
+	public boolean getUseModernizedChannelNames() {
+		return useModernizedChannelNames;
+	}
+
 	public EaglerPauseMenuConfig getPauseMenuConf() {
 		return pauseMenuConf;
 	}
@@ -518,7 +525,7 @@ public class EaglerVelocityConfig {
 			boolean enableIsEaglerPlayerProperty, EaglerAuthConfig authConfig, EaglerUpdateConfig updateConfig,
 			Collection<String> iceServers, boolean enableVoiceChat, Set<String> disableVoiceOnServers,
 			boolean disableFNAWSkinsEverywhere, Set<String> disableFNAWSkinsOnServers, boolean enableBackendRPCAPI,
-			EaglerPauseMenuConfig pauseMenuConf) {
+			boolean useModernizedChannelNames, EaglerPauseMenuConfig pauseMenuConf) {
 		this.serverName = serverName;
 		this.serverUUID = serverUUID;
 		this.serverListeners = serverListeners;
@@ -551,6 +558,7 @@ public class EaglerVelocityConfig {
 		this.disableFNAWSkinsEverywhere = disableFNAWSkinsEverywhere;
 		this.disableFNAWSkinsOnServers = disableFNAWSkinsOnServers;
 		this.enableBackendRPCAPI = enableBackendRPCAPI;
+		this.useModernizedChannelNames = useModernizedChannelNames;
 		this.pauseMenuConf = pauseMenuConf;
 	}
 

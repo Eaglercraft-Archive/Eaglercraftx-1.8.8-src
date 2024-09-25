@@ -21,6 +21,7 @@ import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.messages.LegacyChannelIdentifier;
+import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
 import com.velocitypowered.proxy.VelocityServer;
 import com.velocitypowered.proxy.network.ConnectionManager;
 import com.velocitypowered.proxy.network.TransportType;
@@ -197,6 +198,8 @@ public class EaglerXVelocity {
 		}
 		proxy.getChannelRegistrar().register(new LegacyChannelIdentifier(EaglerBackendRPCProtocol.CHANNEL_NAME));
 		proxy.getChannelRegistrar().register(new LegacyChannelIdentifier(EaglerBackendRPCProtocol.CHANNEL_NAME_READY));
+		proxy.getChannelRegistrar().register(MinecraftChannelIdentifier.from(EaglerBackendRPCProtocol.CHANNEL_NAME_MODERN));
+		proxy.getChannelRegistrar().register(MinecraftChannelIdentifier.from(EaglerBackendRPCProtocol.CHANNEL_NAME_READY_MODERN));
 		proxy.getChannelRegistrar().register(EaglerPacketEventListener.GET_DOMAIN_CHANNEL);
 
 		if(closeInactiveConnections != null) {
@@ -308,10 +311,14 @@ public class EaglerXVelocity {
 			updateServiceTasks.cancel();
 			updateServiceTasks = null;
 		}
-		skinService.shutdown();
-		skinService = null;
-		capeService.shutdown();
-		capeService = null;
+		if(skinService != null) {
+			skinService.shutdown();
+			skinService = null;
+		}
+		if(capeService != null) {
+			capeService.shutdown();
+			capeService = null;
+		}
 		if(defaultAuthSystem != null) {
 			defaultAuthSystem.destroy();
 			defaultAuthSystem = null;

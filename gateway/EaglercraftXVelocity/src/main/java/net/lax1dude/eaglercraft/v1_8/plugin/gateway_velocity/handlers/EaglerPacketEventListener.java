@@ -22,6 +22,7 @@ import com.velocitypowered.api.proxy.messages.LegacyChannelIdentifier;
 import com.velocitypowered.api.proxy.server.ServerInfo;
 import com.velocitypowered.api.util.GameProfile;
 import com.velocitypowered.api.util.GameProfile.Property;
+import com.velocitypowered.proxy.connection.backend.VelocityServerConnection;
 import com.velocitypowered.proxy.connection.client.ConnectedPlayer;
 
 import net.kyori.adventure.text.Component;
@@ -68,9 +69,6 @@ public class EaglerPacketEventListener {
 	@Subscribe(order = PostOrder.FIRST)
 	public void onPluginMessage(final PluginMessageEvent event) {
 		ChannelIdentifier tagObj = event.getIdentifier();
-		if(!(tagObj instanceof LegacyChannelIdentifier)) {
-			return;
-		}
 		String tag = tagObj.getId();
 		if(event.getSource() instanceof ConnectedPlayer) {
 			final ConnectedPlayer player = (ConnectedPlayer)event.getSource();
@@ -89,12 +87,12 @@ public class EaglerPacketEventListener {
 						return;
 					}
 				}
-				if(EaglerBackendRPCProtocol.CHANNEL_NAME.equals(tag)) {
+				if(EaglerBackendRPCProtocol.CHANNEL_NAME.equals(tag) || EaglerBackendRPCProtocol.CHANNEL_NAME_MODERN.equals(tag)) {
 					player.disconnect(Component.text("Nope!"));
 					event.setResult(ForwardResult.handled());
 					return;
 				}
-				if(EaglerBackendRPCProtocol.CHANNEL_NAME_READY.equals(tag)) {
+				if(EaglerBackendRPCProtocol.CHANNEL_NAME_READY.equals(tag) || EaglerBackendRPCProtocol.CHANNEL_NAME_READY_MODERN.equals(tag)) {
 					event.setResult(ForwardResult.handled());
 					return;
 				}
@@ -103,7 +101,7 @@ public class EaglerPacketEventListener {
 			ConnectedPlayer player = (ConnectedPlayer)event.getTarget();
 			EaglerPlayerData eagPlayerData = EaglerPipeline.getEaglerHandle(player);
 			if(eagPlayerData != null) {
-				if(EaglerBackendRPCProtocol.CHANNEL_NAME.equals(tag)) {
+				if(EaglerBackendRPCProtocol.CHANNEL_NAME.equals(tag) || EaglerBackendRPCProtocol.CHANNEL_NAME_MODERN.equals(tag)) {
 					event.setResult(ForwardResult.handled());
 					try {
 						eagPlayerData.handleBackendRPCPacket((ServerConnection)event.getSource(), event.getData());
@@ -120,7 +118,7 @@ public class EaglerPacketEventListener {
 					}
 				}
 			}else {
-				if(EaglerBackendRPCProtocol.CHANNEL_NAME.equals(tag)) {
+				if(EaglerBackendRPCProtocol.CHANNEL_NAME.equals(tag) || EaglerBackendRPCProtocol.CHANNEL_NAME_MODERN.equals(tag)) {
 					event.setResult(ForwardResult.handled());
 					try {
 						BackendRPCSessionHandler.handlePacketOnVanilla((ServerConnection)event.getSource(), player, event.getData());
@@ -190,7 +188,8 @@ public class EaglerPacketEventListener {
 		try {
 			ConnectedPlayer player = (ConnectedPlayer) event.getPlayer();
 			ServerConnection server = player.getConnectedServer();
-			BackendRPCSessionHandler.sendPluginMessage(server, EaglerBackendRPCProtocol.CHANNEL_NAME_READY, EMPTY_BYTE_ARRAY);
+			BackendRPCSessionHandler.sendPluginMessage(server,
+					BackendRPCSessionHandler.getReadyChNameFor((VelocityServerConnection) server), EMPTY_BYTE_ARRAY);
 			EaglerPlayerData playerObj = EaglerPipeline.getEaglerHandle(player);
 			if(playerObj != null) {
 				ServerInfo sv = server.getServerInfo();
