@@ -5,8 +5,10 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Logger;
 
+import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.messaging.Messenger;
 
 import net.lax1dude.eaglercraft.v1_8.plugin.backend_rpc_protocol.EaglerBackendRPCProtocol;
 import net.lax1dude.eaglercraft.v1_8.plugin.bukkit_rpc_helper.impl.PlayerDataObj;
@@ -44,10 +46,30 @@ public class EaglerXBukkitAPIPlugin extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		EaglerXBukkitAPIListener ls = new EaglerXBukkitAPIListener();
-		getServer().getPluginManager().registerEvents(ls, this);
-		getServer().getMessenger().registerOutgoingPluginChannel(this, EaglerBackendRPCProtocol.CHANNEL_NAME);
-		getServer().getMessenger().registerIncomingPluginChannel(this, EaglerBackendRPCProtocol.CHANNEL_NAME, ls);
-		getServer().getMessenger().registerIncomingPluginChannel(this, EaglerBackendRPCProtocol.CHANNEL_NAME_READY, ls);
+		Server svr = getServer();
+		svr.getPluginManager().registerEvents(ls, this);
+		Messenger msgr = svr.getMessenger();
+		boolean registerLegacy = !isPost_v1_13();
+		if(registerLegacy) {
+			try {
+				msgr.registerOutgoingPluginChannel(this, EaglerBackendRPCProtocol.CHANNEL_NAME);
+			}catch(Throwable t) {
+				registerLegacy = false;
+			}
+		}
+		if(!registerLegacy) {
+			getLogger().warning("Note: Only the modernized plugin channel names can be used for this server!");
+			getLogger().warning("Make sure to set \"use_modernized_channel_names: true\" in bungee/velocity plugin settings.yml");
+		}
+		msgr.registerOutgoingPluginChannel(this, EaglerBackendRPCProtocol.CHANNEL_NAME_MODERN);
+		if(registerLegacy) {
+			msgr.registerIncomingPluginChannel(this, EaglerBackendRPCProtocol.CHANNEL_NAME, ls);
+		}
+		msgr.registerIncomingPluginChannel(this, EaglerBackendRPCProtocol.CHANNEL_NAME_MODERN, ls);
+		if(registerLegacy) {
+			msgr.registerIncomingPluginChannel(this, EaglerBackendRPCProtocol.CHANNEL_NAME_READY, ls);
+		}
+		msgr.registerIncomingPluginChannel(this, EaglerBackendRPCProtocol.CHANNEL_NAME_READY_MODERN, ls);
 		if(timeoutHandler == null) {
 			timeoutHandler = new Timer("EaglerXBukkitAPI: Timeout cleanup thread");
 			timeoutHandler.scheduleAtFixedRate(new TimerTask() {
@@ -81,6 +103,17 @@ public class EaglerXBukkitAPIPlugin extends JavaPlugin {
 
 	public static Logger logger() {
 		return instance.getLogger();
+	}
+
+	private boolean isPost_v1_13() {
+		String[] ver = getServer().getVersion().split("[\\.\\-]");
+		if(ver.length >= 2) {
+			try {
+				return Integer.parseInt(ver[0]) >= 1 || Integer.parseInt(ver[1]) >= 13;
+			}catch(NumberFormatException ex) {
+			}
+		}
+		return false;
 	}
 
 }

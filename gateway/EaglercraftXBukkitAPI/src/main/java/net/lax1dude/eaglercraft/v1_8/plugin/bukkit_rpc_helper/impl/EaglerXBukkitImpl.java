@@ -79,13 +79,13 @@ public class EaglerXBukkitImpl implements IEaglerXBukkitAPI {
 			sendHello = data.hasRecievedReady;
 		}
 		if(sendHello) {
-			sendHelloPacket(player);
+			sendHelloPacket(data.pluginChName, player);
 		}
 		return data.openFuture;
 	}
 
-	protected static void sendHelloPacket(Player player) {
-		player.sendPluginMessage(EaglerXBukkitAPIPlugin.getEagler(), EaglerBackendRPCProtocol.CHANNEL_NAME, HelloPacketFactory.BASE_HELLO_PACKET);
+	protected static void sendHelloPacket(String channel, Player player) {
+		player.sendPluginMessage(EaglerXBukkitAPIPlugin.getEagler(), channel, HelloPacketFactory.BASE_HELLO_PACKET);
 	}
 
 	protected static EaglerXBukkitImpl createFromHandshakeInternal(PlayerDataObj playerDataObj, SPacketRPCEnabledSuccess pkt) {
@@ -362,7 +362,7 @@ public class EaglerXBukkitImpl implements IEaglerXBukkitAPI {
 					.warning("[" + playerObj.getName() + "] Packet type " + packet.getClass().getSimpleName()
 							+ " was the wrong length after serialization: " + ret.length + " != " + len);
 		}
-		playerObj.sendPluginMessage(EaglerXBukkitAPIPlugin.getEagler(), EaglerBackendRPCProtocol.CHANNEL_NAME, ret);
+		playerObj.sendPluginMessage(EaglerXBukkitAPIPlugin.getEagler(), playerDataObj.pluginChName, ret);
 	}
 
 	protected EaglerBackendRPCPacket decodePacket(byte[] data) throws IOException {

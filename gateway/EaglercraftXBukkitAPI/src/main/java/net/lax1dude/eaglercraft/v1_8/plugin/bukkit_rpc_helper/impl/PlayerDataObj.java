@@ -41,6 +41,8 @@ public class PlayerDataObj {
 
 	public final Player player;
 
+	public String pluginChName = null;
+
 	public volatile boolean hasRecievedReady = false;
 	public volatile boolean isSupported = true;
 	public volatile EaglerXBukkitImpl currentAPI = null;
@@ -60,12 +62,13 @@ public class PlayerDataObj {
 		this.player = player;
 	}
 
-	public void firePluginReadyMsgRecieved() {
+	public void firePluginReadyMsgRecieved(boolean modern) {
 		synchronized(this) {
 			if(!hasRecievedReady) {
 				hasRecievedReady = true;
+				pluginChName = modern ? EaglerBackendRPCProtocol.CHANNEL_NAME_MODERN : EaglerBackendRPCProtocol.CHANNEL_NAME;
 				if(openFuture != null) {
-					EaglerXBukkitImpl.sendHelloPacket(player);
+					EaglerXBukkitImpl.sendHelloPacket(pluginChName, player);
 				}
 			}
 		}
@@ -121,7 +124,7 @@ public class PlayerDataObj {
 			if(pkt.selectedRPCProtocol != EaglerBackendRPCProtocol.V1.vers) {
 				try {
 					// send raw CPacketRPCDisabled
-					player.sendPluginMessage(EaglerXBukkitAPIPlugin.getEagler(), EaglerBackendRPCProtocol.CHANNEL_NAME, new byte[] { 0x03 });
+					player.sendPluginMessage(EaglerXBukkitAPIPlugin.getEagler(), pluginChName, new byte[] { 0x03 });
 				}finally {
 					apiFuture.fireExceptionInternal(new EaglerRPCException("Server tried to select an unsupported protocol: " + pkt.selectedRPCProtocol));
 				}

@@ -63,6 +63,9 @@ public enum EaglerBackendRPCProtocol {
 	public static final String CHANNEL_NAME = "EAG|1.8-RPC";
 	public static final String CHANNEL_NAME_READY = "EAG|1.8-Ready";
 
+	public static final String CHANNEL_NAME_MODERN = "eagler:1-8-rpc";
+	public static final String CHANNEL_NAME_READY_MODERN = "eagler:1-8-ready";
+
 	public static final int CLIENT_TO_SERVER = 0;
 	public static final int SERVER_TO_CLIENT = 1;
 

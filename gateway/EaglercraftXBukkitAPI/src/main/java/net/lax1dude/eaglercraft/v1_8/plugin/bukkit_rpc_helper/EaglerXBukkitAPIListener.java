@@ -34,16 +34,28 @@ public class EaglerXBukkitAPIListener implements Listener, PluginMessageListener
 
 	@Override
 	public void onPluginMessageReceived(String channel, Player player, byte[] data) {
-		if(EaglerBackendRPCProtocol.CHANNEL_NAME.equals(channel)) {
-			PlayerDataObj dataObj = PlayerDataObj.getForPlayer(player);
+		PlayerDataObj dataObj;
+		switch(channel) {
+		case EaglerBackendRPCProtocol.CHANNEL_NAME:
+		case EaglerBackendRPCProtocol.CHANNEL_NAME_MODERN:
+			dataObj = PlayerDataObj.getForPlayer(player);
 			if(dataObj != null) {
 				dataObj.firePluginMsgRecievedInternal(data);
 			}
-		}else if(EaglerBackendRPCProtocol.CHANNEL_NAME_READY.equals(channel)) {
-			PlayerDataObj dataObj = PlayerDataObj.getForPlayer(player);
+			break;
+		case EaglerBackendRPCProtocol.CHANNEL_NAME_READY:
+			dataObj = PlayerDataObj.getForPlayer(player);
 			if(dataObj != null) {
-				dataObj.firePluginReadyMsgRecieved();
+				dataObj.firePluginReadyMsgRecieved(false);
 			}
+			break;
+		case EaglerBackendRPCProtocol.CHANNEL_NAME_READY_MODERN:
+			dataObj = PlayerDataObj.getForPlayer(player);
+			if(dataObj != null) {
+				dataObj.firePluginReadyMsgRecieved(true);
+			}
+		default:
+			break;
 		}
 	}
 

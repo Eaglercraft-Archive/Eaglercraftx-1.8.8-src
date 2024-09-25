@@ -1,12 +1,8 @@
-package net.lax1dude.eaglercraft.v1_8.plugin.bukkit_rpc_helper.api;
+package net.lax1dude.eaglercraft.v1_8.plugin.bukkit_rpc_helper.impl;
 
 import java.util.concurrent.Executor;
 
-import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.Futures;
-import com.google.common.util.concurrent.ListenableFuture;
-
-import net.lax1dude.eaglercraft.v1_8.plugin.bukkit_rpc_helper.impl.SameThreadExecutor;
+import com.google.common.util.concurrent.MoreExecutors;
 
 /**
  * Copyright (c) 2024 lax1dude. All Rights Reserved.
@@ -23,25 +19,22 @@ import net.lax1dude.eaglercraft.v1_8.plugin.bukkit_rpc_helper.impl.SameThreadExe
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-public interface IEaglerRPCFuture<V> extends ListenableFuture<V> {
+public class SameThreadExecutor {
 
-	/**
-	 * Warning: Futures.addCallback is recommended!
-	 */
-	default void addListener(Runnable runnable) {
-		addListener(runnable, SameThreadExecutor.SAME_THREAD_EXECUTOR);
+	public static final Executor SAME_THREAD_EXECUTOR;
+	
+	static {
+		Executor fuck;
+		try {
+			fuck = (Executor) MoreExecutors.class.getDeclaredMethod("newDirectExecutorService").invoke(null);
+		}catch(Throwable t) {
+			try {
+				fuck = (Executor) MoreExecutors.class.getDeclaredMethod("sameThreadExecutor").invoke(null);
+			}catch(Throwable t2) {
+				throw new RuntimeException("Google fucked up!", t2);
+			}
+		}
+		SAME_THREAD_EXECUTOR = fuck;
 	}
-
-	default void addCallback(FutureCallback<V> runnable, Executor executor) {
-		Futures.addCallback(this, runnable, executor);
-	}
-
-	default void addCallback(FutureCallback<V> runnable) {
-		Futures.addCallback(this, runnable, SameThreadExecutor.SAME_THREAD_EXECUTOR);
-	}
-
-	void setExpiresMSFromNow(int millis);
-
-	boolean hasExpired();
 
 }
