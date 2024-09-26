@@ -334,7 +334,6 @@ public class NotificationBadgeBuilder {
 				break;
 			}
 			String bodyComp = bodyComponent != null ? JSONLegacySerializer.instance.serialize(bodyComponent) : "";
-			System.out.println(bodyComp);
 			if(bodyComp.length() > 32767) {
 				throw new IllegalStateException("Body component is longer than 32767 chars serialized!");
 			}
