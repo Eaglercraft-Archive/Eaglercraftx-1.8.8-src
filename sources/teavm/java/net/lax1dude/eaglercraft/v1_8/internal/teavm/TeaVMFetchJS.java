@@ -30,7 +30,7 @@ public class TeaVMFetchJS {
 	@JSBody(params = { }, script = "return (typeof fetch === \"function\");")
 	public static native boolean checkFetchSupport();
 
-	@JSBody(params = { "uri", "forceCache", "callback" }, script = "fetch(uri, { cache: forceCache, mode: \"no-cors\" })"
+	@JSBody(params = { "uri", "forceCache", "callback" }, script = "fetch(uri, { cache: forceCache, mode: \"cors\" })"
 			+ ".then(function(res) { return res.arrayBuffer(); }).then(function(arr) { callback(arr); })"
 			+ ".catch(function(err) { console.error(err); callback(null); });")
 	public static native void doFetchDownload(String uri, String forceCache, FetchHandler callback);

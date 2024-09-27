@@ -95,7 +95,7 @@
 
 ~ 	public int guiScale = 3;
 
-> INSERT  3 : 22  @  3
+> INSERT  3 : 23  @  3
 
 + 	public boolean hudFps = true;
 + 	public boolean hudCoords = true;
@@ -116,6 +116,7 @@
 + 	public boolean enableProfanityFilter = false;
 + 	public boolean hasShownProfanityFilter = false;
 + 	public float touchControlOpacity = 1.0f;
++ 	public boolean hideDefaultUsernameWarning = false;
 
 > CHANGE  1 : 15  @  1 : 2
 
@@ -535,7 +536,7 @@
 
 ~ 					for (EnumPlayerModelParts enumplayermodelparts : EnumPlayerModelParts._VALUES) {
 
-> INSERT  4 : 66  @  4
+> INSERT  4 : 70  @  4
 
 + 
 + 					if (astring[0].equals("enableFNAWSkins")) {
@@ -596,6 +597,10 @@
 + 
 + 					if (astring[0].equals("touchControlOpacity")) {
 + 						touchControlOpacity = parseFloat(astring[1]);
++ 					}
++ 
++ 					if (astring[0].equals("hideDefaultUsernameWarning")) {
++ 						this.hideDefaultUsernameWarning = astring[1].equals("true");
 + 					}
 + 
 + 					deferredShaderConf.readOption(astring[0], astring[1]);
@@ -661,7 +666,7 @@
 
 > DELETE  9  @  9 : 20
 
-> INSERT  5 : 35  @  5
+> INSERT  5 : 36  @  5
 
 + 			printwriter.println("hudFps:" + this.hudFps);
 + 			printwriter.println("hudWorld:" + this.hudWorld);
@@ -693,6 +698,7 @@
 + 			printwriter.println("screenRecordGameVolume:" + this.screenRecordGameVolume);
 + 			printwriter.println("screenRecordMicVolume:" + this.screenRecordMicVolume);
 + 			printwriter.println("touchControlOpacity:" + this.touchControlOpacity);
++ 			printwriter.println("hideDefaultUsernameWarning:" + this.hideDefaultUsernameWarning);
 
 > CHANGE  5 : 8  @  5 : 6
 

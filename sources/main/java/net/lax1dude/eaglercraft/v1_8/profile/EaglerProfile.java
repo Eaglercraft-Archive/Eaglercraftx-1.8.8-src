@@ -9,6 +9,7 @@ import net.lax1dude.eaglercraft.v1_8.EaglerInputStream;
 import net.lax1dude.eaglercraft.v1_8.EaglerOutputStream;
 import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
+import net.lax1dude.eaglercraft.v1_8.HString;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
@@ -464,7 +465,7 @@ public class EaglerProfile {
 		rand = new EaglercraftRandom();
 		
 		do {
-			username = defaultNames[rand.nextInt(defaultNames.length)] + defaultNames[rand.nextInt(defaultNames.length)] + (100 + rand.nextInt(900));
+			username = HString.format("%s%s%04d", defaultNames[rand.nextInt(defaultNames.length)], defaultNames[rand.nextInt(defaultNames.length)], rand.nextInt(10000));
 		}while(username.length() > 16);
 		
 		setName(username);
@@ -477,6 +478,10 @@ public class EaglerProfile {
 		presetCapeId = 0;
 		customCapeId = -1;
 		
+	}
+
+	public static boolean isDefaultUsername(String str) {
+		return str.toLowerCase().matches("^(yeeish|yee|yeer|yeeler|eagler|eagl|darver|darvler|vool|vigg|deev|yigg|yeeg){2}\\d{2,4}$");
 	}
 
 }

@@ -196,6 +196,7 @@ The default eaglercraftXOpts values is this:
 - `eaglerNoDelay:` can be used to disable "Vigg's Algorithm", an algorithm that delays and combines multiple EaglercraftX packets together if they are sent in the same tick (does not affect regular Minecraft 1.8 packets)
 - `ramdiskMode:` if worlds and resource packs should be stored in RAM instead of IndexedDB
 - `singleThreadMode:` if the game should run the client and integrated server in the same context instead of creating a worker object
+- `enableEPKVersionCheck:` if the game should attempt to bypass the browser's cache and retry downloading assets.epk when its outdated
 - `hooks:` can be used to define JavaScript callbacks for certain events
     * `localStorageSaved:` JavaScript callback to save local storage keys (key, data)
     * `localStorageLoaded:` JavaScript callback to load local storage keys (key) returns data

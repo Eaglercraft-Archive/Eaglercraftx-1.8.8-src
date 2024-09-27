@@ -866,7 +866,7 @@
 ~ 						int j = Mouse.getEventDWheel();
 ~ 						if (j != 0) {
 ~ 							if (this.isZoomKey) {
-~ 								this.adjustedZoomValue = MathHelper.clamp_float(adjustedZoomValue - j * 4.0f, 5.0f,
+~ 								this.adjustedZoomValue = MathHelper.clamp_float(adjustedZoomValue - j * 4.0f, 4.0f,
 ~ 										32.0f);
 ~ 							} else if (this.thePlayer.isSpectator()) {
 ~ 								j = j < 0 ? -1 : 1;

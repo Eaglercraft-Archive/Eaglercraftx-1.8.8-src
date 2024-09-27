@@ -315,7 +315,11 @@ public class GuiScreenEditProfile extends GuiScreen {
 			if(par1GuiButton.id == 0) {
 				safeProfile();
 				EaglerProfile.save();
-				this.mc.displayGuiScreen((GuiScreen) parent);
+				if(!this.mc.gameSettings.hideDefaultUsernameWarning && EaglerProfile.isDefaultUsername(EaglerProfile.getName())) {
+					this.mc.displayGuiScreen(new GuiScreenDefaultUsernameNote(this, parent));
+				}else {
+					this.mc.displayGuiScreen(parent);
+				}
 			}else if(par1GuiButton.id == 1) {
 				EagRuntime.displayFileChooser("image/png", "png");
 			}else if(par1GuiButton.id == 2) {

@@ -87,6 +87,7 @@ public class TeaVMClientConfigAdapter implements IClientConfigAdapter, IBootMenu
 	private boolean eaglerNoDelay = false;
 	private boolean ramdiskMode = false;
 	private boolean singleThreadMode = false;
+	private boolean enableEPKVersionCheck = true;
 
 	public void loadNative(JSObject jsObject) {
 		integratedServerOpts = new JSONObject();
@@ -134,6 +135,7 @@ public class TeaVMClientConfigAdapter implements IClientConfigAdapter, IBootMenu
 		eaglerNoDelay = eaglercraftXOpts.getEaglerNoDelay(false);
 		ramdiskMode = eaglercraftXOpts.getRamdiskMode(false);
 		singleThreadMode = eaglercraftXOpts.getSingleThreadMode(false);
+		enableEPKVersionCheck = eaglercraftXOpts.getEnableEPKVersionCheck(true);
 		JSEaglercraftXOptsHooks hooksObj = eaglercraftXOpts.getHooks();
 		if(hooksObj != null) {
 			hooks.loadHooks(hooksObj);
@@ -263,6 +265,7 @@ public class TeaVMClientConfigAdapter implements IClientConfigAdapter, IBootMenu
 		eaglerNoDelay = eaglercraftOpts.optBoolean("eaglerNoDelay", false);
 		ramdiskMode = eaglercraftOpts.optBoolean("ramdiskMode", false);
 		singleThreadMode = eaglercraftOpts.optBoolean("singleThreadMode", false);
+		enableEPKVersionCheck = eaglercraftOpts.optBoolean("enableEPKVersionCheck", true);
 		defaultServers.clear();
 		JSONArray serversArray = eaglercraftOpts.optJSONArray("servers");
 		if(serversArray != null) {
@@ -505,6 +508,10 @@ public class TeaVMClientConfigAdapter implements IClientConfigAdapter, IBootMenu
 		return singleThreadMode;
 	}
 
+	public boolean isEnableEPKVersionCheckTeaVM() {
+		return enableEPKVersionCheck;
+	}
+
 	@Override
 	public boolean isShowBootMenuOnLaunch() {
 		return showBootMenuOnLaunch;
@@ -585,6 +592,7 @@ public class TeaVMClientConfigAdapter implements IClientConfigAdapter, IBootMenu
 		jsonObject.put("eaglerNoDelay", eaglerNoDelay);
 		jsonObject.put("ramdiskMode", ramdiskMode);
 		jsonObject.put("singleThreadMode", singleThreadMode);
+		jsonObject.put("enableEPKVersionCheck", enableEPKVersionCheck);
 		JSONArray serversArr = new JSONArray();
 		for(int i = 0, l = defaultServers.size(); i < l; ++i) {
 			DefaultServer srv = defaultServers.get(i);

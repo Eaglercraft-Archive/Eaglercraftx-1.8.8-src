@@ -171,4 +171,7 @@ public abstract class JSEaglercraftXOptsRoot implements JSObject {
 	@JSBody(params = { "def" }, script = "return (typeof this.singleThreadMode === \"boolean\") ? this.singleThreadMode : def;")
 	public native boolean getSingleThreadMode(boolean deobfStackTraces);
 
+	@JSBody(params = { "def" }, script = "return (typeof this.enableEPKVersionCheck === \"boolean\") ? this.enableEPKVersionCheck : def;")
+	public native boolean getEnableEPKVersionCheck(boolean deobfStackTraces);
+
 }

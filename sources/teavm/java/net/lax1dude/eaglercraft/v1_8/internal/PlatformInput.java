@@ -597,7 +597,7 @@ public class PlatformInput {
 			public void handleEvent(WheelEvent evt) {
 				evt.preventDefault();
 				evt.stopPropagation();
-				double delta = evt.getDeltaY();
+				double delta = -evt.getDeltaY();
 				mouseDWheel += delta;
 				if(hasShownPressAnyKey) {
 					int eventX = (int)(getOffsetX(evt, touchOffsetXTeaVM) * windowDPI);
@@ -1246,7 +1246,11 @@ public class PlatformInput {
 	}
 
 	public static int mouseGetEventDWheel() {
-		return (currentEvent.type == EVENT_MOUSE_WHEEL) ? (currentEvent.wheel == 0.0f ? 0 : (currentEvent.wheel > 0.0f ? -1 : 1)) : 0;
+		return (currentEvent.type == EVENT_MOUSE_WHEEL) ? fixWheel(currentEvent.wheel) : 0;
+	}
+
+	private static int fixWheel(float val) {
+		return (val > 0.0f ? 1 : (val < 0.0f ? -1 : 0));
 	}
 
 	public static int mouseGetX() {

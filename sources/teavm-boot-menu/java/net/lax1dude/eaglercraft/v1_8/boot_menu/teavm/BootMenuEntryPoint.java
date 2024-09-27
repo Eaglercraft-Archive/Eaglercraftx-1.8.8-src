@@ -60,12 +60,14 @@ public class BootMenuEntryPoint {
 		return ((flag & 1) != 0 || IBootMenuConfigAdapter.instance.isShowBootMenuOnLaunch()) && !getHasAlreadyBooted();
 	}
 
+	private static boolean hasInit = false;
 	private static byte[] signatureData = null;
 	private static byte[] bundleData = null;
 
 	public static void launchMenu(Window parentWindow, HTMLElement parentElement) {
 		signatureData = PlatformUpdateSvc.getClientSignatureData();
 		bundleData = PlatformUpdateSvc.getClientBundleData();
+		hasInit = true;
 		BootMenuMain.launchMenu(parentWindow, parentElement);
 	}
 
@@ -83,6 +85,11 @@ public class BootMenuEntryPoint {
 	}
 
 	public static boolean isSignedClient() {
+		if(!hasInit) {
+			signatureData = PlatformUpdateSvc.getClientSignatureData();
+			bundleData = PlatformUpdateSvc.getClientBundleData();
+			hasInit = true;
+		}
 		return signatureData != null && bundleData != null;
 	}
 

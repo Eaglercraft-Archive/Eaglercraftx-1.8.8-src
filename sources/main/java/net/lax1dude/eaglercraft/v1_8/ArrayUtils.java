@@ -61,7 +61,7 @@ public class ArrayUtils {
 	public static String hexString(byte[] bytesIn) {
 		char[] ret = new char[bytesIn.length << 1];
 		for(int i = 0; i < bytesIn.length; ++i) {
-			ret[i << 1] = hex.charAt((bytesIn[i] >> 4) & 15);
+			ret[i << 1] = hex.charAt((bytesIn[i] >>> 4) & 15);
 			ret[(i << 1) + 1] = hex.charAt(bytesIn[i] & 15);
 		}
 		return new String(ret);

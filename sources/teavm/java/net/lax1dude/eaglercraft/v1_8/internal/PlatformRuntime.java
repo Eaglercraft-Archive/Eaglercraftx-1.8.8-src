@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -13,6 +14,7 @@ import java.util.function.Consumer;
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.EagUtils;
 import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
+import net.lax1dude.eaglercraft.v1_8.EaglercraftVersion;
 import net.lax1dude.eaglercraft.v1_8.Filesystem;
 import net.lax1dude.eaglercraft.v1_8.boot_menu.teavm.BootMenuEntryPoint;
 import org.teavm.interop.Async;
@@ -48,7 +50,6 @@ import net.lax1dude.eaglercraft.v1_8.internal.buffer.ByteBuffer;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.EaglerArrayBufferAllocator;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.FloatBuffer;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.IntBuffer;
-import net.lax1dude.eaglercraft.v1_8.internal.teavm.EPKLoader;
 import net.lax1dude.eaglercraft.v1_8.internal.teavm.ES6ShimStatus;
 import net.lax1dude.eaglercraft.v1_8.internal.teavm.EarlyLoadScreen;
 import net.lax1dude.eaglercraft.v1_8.internal.teavm.EnumES6ShimStatus;
@@ -58,8 +59,8 @@ import net.lax1dude.eaglercraft.v1_8.internal.teavm.ImmediateContinue;
 import net.lax1dude.eaglercraft.v1_8.internal.teavm.MessageChannel;
 import net.lax1dude.eaglercraft.v1_8.internal.teavm.TeaVMBlobURLManager;
 import net.lax1dude.eaglercraft.v1_8.internal.teavm.ClientMain;
-import net.lax1dude.eaglercraft.v1_8.internal.teavm.ClientMain.EPKFileEntry;
 import net.lax1dude.eaglercraft.v1_8.internal.teavm.DebugConsoleWindow;
+import net.lax1dude.eaglercraft.v1_8.internal.teavm.EPKDownloadHelper;
 import net.lax1dude.eaglercraft.v1_8.internal.teavm.TeaVMClientConfigAdapter;
 import net.lax1dude.eaglercraft.v1_8.internal.teavm.TeaVMDataURLManager;
 import net.lax1dude.eaglercraft.v1_8.internal.teavm.TeaVMEnterBootMenuException;
@@ -426,28 +427,13 @@ public class PlatformRuntime {
 		
 		EarlyLoadScreen.paintScreen(glesVer, PlatformOpenGL.checkVAOCapable(), allowBootMenu);
 		
-		EPKFileEntry[] epkFiles = ClientMain.configEPKFiles;
-		
-		for(int i = 0; i < epkFiles.length; ++i) {
-			String url = epkFiles[i].url;
-			String logURL = url.startsWith("data:") ? "<data: " + url.length() + " chars>" : url;
-			
-			logger.info("Downloading: {}", logURL);
-			
-			ArrayBuffer epkFileData = downloadRemoteURI(url);
-			
-			if(epkFileData == null) {
-				throw new RuntimeInitializationFailureException("Could not download EPK file \"" + url + "\"");
-			}
-			
-			logger.info("Decompressing: {}", logURL);
-			
-			try {
-				EPKLoader.loadEPK(epkFileData, epkFiles[i].path, PlatformAssets.assets);
-			}catch(Throwable t) {
-				throw new RuntimeInitializationFailureException("Could not extract EPK file \"" + url + "\"", t);
-			}
+		if(PlatformAssets.assets == null || !PlatformAssets.assets.isEmpty()) {
+			PlatformAssets.assets = new HashMap<>();
 		}
+
+		EPKDownloadHelper.downloadEPKFilesOfVersion(ClientMain.configEPKFiles,
+				teavmCfg.isEnableEPKVersionCheckTeaVM() ? EaglercraftVersion.EPKVersionIdentifier : null,
+				PlatformAssets.assets);
 
 		logger.info("Loaded {} resources from EPKs", PlatformAssets.assets.size());
 
@@ -604,6 +590,10 @@ public class PlatformRuntime {
 	
 	public static void freeFloatBuffer(FloatBuffer floatBuffer) {
 		
+	}
+
+	public static boolean hasFetchSupportTeaVM() {
+		return hasFetchSupport;
 	}
 
 	public static void downloadRemoteURIByteArray(String assetPackageURI, final Consumer<byte[]> cb) {

@@ -479,7 +479,11 @@ public class PlatformInput {
 	}
 
 	public static int mouseGetEventDWheel() {
-		return (int)currentMouseEvent.wheel;
+		return fixWheel(currentMouseEvent.wheel);
+	}
+
+	private static int fixWheel(float val) {
+		return (val > 0.0f ? 1 : (val < 0.0f ? -1 : 0));
 	}
 
 	public static int mouseGetX() {

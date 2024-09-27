@@ -271,6 +271,7 @@ public class EaglerFolderResourcePack extends AbstractResourcePack {
 
 	public static void loadRemoteResourcePack(String url, String hash, Consumer<EaglerFolderResourcePack> cb, Consumer<Runnable> ast, Runnable loading) {
 		if (!isSupported || !hash.matches("^[a-f0-9]{40}$")) {
+			logger.error("Invalid character in resource pack hash! (is it lowercase?)");
 			cb.accept(null);
 			return;
 		}
@@ -292,8 +293,9 @@ public class EaglerFolderResourcePack extends AbstractResourcePack {
 				digest.update(arr, 0, arr.length);
 				byte[] hashOut = new byte[20];
 				digest.doFinal(hashOut, 0);
-				if(!hash.equals(ArrayUtils.hexString(hashOut))) {
-					logger.error("Downloaded resource pack hash does not equal expected resource pack hash!");
+				String hashOutStr = ArrayUtils.hexString(hashOut);
+				if(!hash.equals(hashOutStr)) {
+					logger.error("Downloaded resource pack hash does not equal expected resource pack hash! ({} != {})", hashOutStr, hash);
 					cb.accept(null);
 					return;
 				}

@@ -62,5 +62,6 @@
 	"disableBlobURLs": false,
 	"eaglerNoDelay": false,
 	"ramdiskMode": false,
-	"singleThreadMode": false
+	"singleThreadMode": false,
+	"enableEPKVersionCheck": true
 }
