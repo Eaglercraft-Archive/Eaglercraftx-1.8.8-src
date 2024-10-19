@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Supplier;
 
 /**
  * Copyright (c) 2024 lax1dude. All Rights Reserved.
@@ -32,71 +33,71 @@ import java.util.Set;
  */
 public enum GamePluginMessageProtocol {
 	V3(3,
-			define(V3_SKIN_CHANNEL, 0x03, CLIENT_TO_SERVER, CPacketGetOtherSkinEAG.class),
-			define(V3_SKIN_CHANNEL, 0x04, SERVER_TO_CLIENT, SPacketOtherSkinPresetEAG.class),
-			define(V3_SKIN_CHANNEL, 0x05, SERVER_TO_CLIENT, SPacketOtherSkinCustomV3EAG.class),
-			define(V3_SKIN_CHANNEL, 0x06, CLIENT_TO_SERVER, CPacketGetSkinByURLEAG.class),
-			define(V3_SKIN_CHANNEL, 0x07, CLIENT_TO_SERVER, CPacketInstallSkinSPEAG.class),
-			define(V3_CAPE_CHANNEL, 0x03, CLIENT_TO_SERVER, CPacketGetOtherCapeEAG.class),
-			define(V3_CAPE_CHANNEL, 0x04, SERVER_TO_CLIENT, SPacketOtherCapePresetEAG.class),
-			define(V3_CAPE_CHANNEL, 0x05, SERVER_TO_CLIENT, SPacketOtherCapeCustomEAG.class),
-			define(V3_VOICE_CHANNEL, 0x00, SERVER_TO_CLIENT, SPacketVoiceSignalAllowedEAG.class),
-			define(V3_VOICE_CHANNEL, 0x00, CLIENT_TO_SERVER, CPacketVoiceSignalRequestEAG.class),
-			define(V3_VOICE_CHANNEL, 0x01, CLIENT_TO_SERVER, CPacketVoiceSignalConnectEAG.class),
-			define(V3_VOICE_CHANNEL, 0x01, SERVER_TO_CLIENT, SPacketVoiceSignalConnectV3EAG.class),
-			define(V3_VOICE_CHANNEL, 0x02, CLIENT_TO_SERVER, CPacketVoiceSignalDisconnectV3EAG.class),
-			define(V3_VOICE_CHANNEL, 0x02, SERVER_TO_CLIENT, SPacketVoiceSignalDisconnectPeerEAG.class),
-			define(V3_VOICE_CHANNEL, 0x03, CLIENT_TO_SERVER, CPacketVoiceSignalICEEAG.class),
-			define(V3_VOICE_CHANNEL, 0x03, SERVER_TO_CLIENT, SPacketVoiceSignalICEEAG.class),
-			define(V3_VOICE_CHANNEL, 0x04, CLIENT_TO_SERVER, CPacketVoiceSignalDescEAG.class),
-			define(V3_VOICE_CHANNEL, 0x04, SERVER_TO_CLIENT, SPacketVoiceSignalDescEAG.class),
-			define(V3_VOICE_CHANNEL, 0x05, SERVER_TO_CLIENT, SPacketVoiceSignalGlobalEAG.class),
-			define(V3_UPDATE_CHANNEL, -1, SERVER_TO_CLIENT, SPacketUpdateCertEAG.class),
-			define(V3_FNAW_EN_CHANNEL, -1, SERVER_TO_CLIENT, SPacketEnableFNAWSkinsEAG.class)
+			define(V3_SKIN_CHANNEL, 0x03, CLIENT_TO_SERVER, CPacketGetOtherSkinEAG.class, CPacketGetOtherSkinEAG::new),
+			define(V3_SKIN_CHANNEL, 0x04, SERVER_TO_CLIENT, SPacketOtherSkinPresetEAG.class, SPacketOtherSkinPresetEAG::new),
+			define(V3_SKIN_CHANNEL, 0x05, SERVER_TO_CLIENT, SPacketOtherSkinCustomV3EAG.class, SPacketOtherSkinCustomV3EAG::new),
+			define(V3_SKIN_CHANNEL, 0x06, CLIENT_TO_SERVER, CPacketGetSkinByURLEAG.class, CPacketGetSkinByURLEAG::new),
+			define(V3_SKIN_CHANNEL, 0x07, CLIENT_TO_SERVER, CPacketInstallSkinSPEAG.class, CPacketInstallSkinSPEAG::new),
+			define(V3_CAPE_CHANNEL, 0x03, CLIENT_TO_SERVER, CPacketGetOtherCapeEAG.class, CPacketGetOtherCapeEAG::new),
+			define(V3_CAPE_CHANNEL, 0x04, SERVER_TO_CLIENT, SPacketOtherCapePresetEAG.class, SPacketOtherCapePresetEAG::new),
+			define(V3_CAPE_CHANNEL, 0x05, SERVER_TO_CLIENT, SPacketOtherCapeCustomEAG.class, SPacketOtherCapeCustomEAG::new),
+			define(V3_VOICE_CHANNEL, 0x00, SERVER_TO_CLIENT, SPacketVoiceSignalAllowedEAG.class, SPacketVoiceSignalAllowedEAG::new),
+			define(V3_VOICE_CHANNEL, 0x00, CLIENT_TO_SERVER, CPacketVoiceSignalRequestEAG.class, CPacketVoiceSignalRequestEAG::new),
+			define(V3_VOICE_CHANNEL, 0x01, CLIENT_TO_SERVER, CPacketVoiceSignalConnectEAG.class, CPacketVoiceSignalConnectEAG::new),
+			define(V3_VOICE_CHANNEL, 0x01, SERVER_TO_CLIENT, SPacketVoiceSignalConnectV3EAG.class, SPacketVoiceSignalConnectV3EAG::new),
+			define(V3_VOICE_CHANNEL, 0x02, CLIENT_TO_SERVER, CPacketVoiceSignalDisconnectV3EAG.class, CPacketVoiceSignalDisconnectV3EAG::new),
+			define(V3_VOICE_CHANNEL, 0x02, SERVER_TO_CLIENT, SPacketVoiceSignalDisconnectPeerEAG.class, SPacketVoiceSignalDisconnectPeerEAG::new),
+			define(V3_VOICE_CHANNEL, 0x03, CLIENT_TO_SERVER, CPacketVoiceSignalICEEAG.class, CPacketVoiceSignalICEEAG::new),
+			define(V3_VOICE_CHANNEL, 0x03, SERVER_TO_CLIENT, SPacketVoiceSignalICEEAG.class, SPacketVoiceSignalICEEAG::new),
+			define(V3_VOICE_CHANNEL, 0x04, CLIENT_TO_SERVER, CPacketVoiceSignalDescEAG.class, CPacketVoiceSignalDescEAG::new),
+			define(V3_VOICE_CHANNEL, 0x04, SERVER_TO_CLIENT, SPacketVoiceSignalDescEAG.class, SPacketVoiceSignalDescEAG::new),
+			define(V3_VOICE_CHANNEL, 0x05, SERVER_TO_CLIENT, SPacketVoiceSignalGlobalEAG.class, SPacketVoiceSignalGlobalEAG::new),
+			define(V3_UPDATE_CHANNEL, -1, SERVER_TO_CLIENT, SPacketUpdateCertEAG.class, SPacketUpdateCertEAG::new),
+			define(V3_FNAW_EN_CHANNEL, -1, SERVER_TO_CLIENT, SPacketEnableFNAWSkinsEAG.class, SPacketEnableFNAWSkinsEAG::new)
 	), V4(4,
-			define(V4_CHANNEL, 0x01, CLIENT_TO_SERVER, CPacketGetOtherSkinEAG.class),
-			define(V4_CHANNEL, 0x02, SERVER_TO_CLIENT, SPacketOtherSkinPresetEAG.class),
-			define(V4_CHANNEL, 0x03, SERVER_TO_CLIENT, SPacketOtherSkinCustomV4EAG.class),
-			define(V4_CHANNEL, 0x04, CLIENT_TO_SERVER, CPacketGetSkinByURLEAG.class),
-			define(V4_CHANNEL, 0x05, CLIENT_TO_SERVER, CPacketInstallSkinSPEAG.class),
-			define(V4_CHANNEL, 0x06, CLIENT_TO_SERVER, CPacketGetOtherCapeEAG.class),
-			define(V4_CHANNEL, 0x07, SERVER_TO_CLIENT, SPacketOtherCapePresetEAG.class),
-			define(V4_CHANNEL, 0x08, SERVER_TO_CLIENT, SPacketOtherCapeCustomEAG.class),
-			define(V4_CHANNEL, 0x09, SERVER_TO_CLIENT, SPacketVoiceSignalAllowedEAG.class),
-			define(V4_CHANNEL, 0x0A, CLIENT_TO_SERVER, CPacketVoiceSignalRequestEAG.class),
-			define(V4_CHANNEL, 0x0B, CLIENT_TO_SERVER, CPacketVoiceSignalConnectEAG.class),
-			define(V4_CHANNEL, 0x0C, SERVER_TO_CLIENT, SPacketVoiceSignalConnectV4EAG.class),
-			define(V4_CHANNEL, 0x0D, SERVER_TO_CLIENT, SPacketVoiceSignalConnectAnnounceV4EAG.class),
-			define(V4_CHANNEL, 0x0E, CLIENT_TO_SERVER, CPacketVoiceSignalDisconnectV4EAG.class),
-			define(V4_CHANNEL, 0x0F, CLIENT_TO_SERVER, CPacketVoiceSignalDisconnectPeerV4EAG.class),
-			define(V4_CHANNEL, 0x10, SERVER_TO_CLIENT, SPacketVoiceSignalDisconnectPeerEAG.class),
-			define(V4_CHANNEL, 0x11, CLIENT_TO_SERVER, CPacketVoiceSignalICEEAG.class),
-			define(V4_CHANNEL, 0x12, SERVER_TO_CLIENT, SPacketVoiceSignalICEEAG.class),
-			define(V4_CHANNEL, 0x13, CLIENT_TO_SERVER, CPacketVoiceSignalDescEAG.class),
-			define(V4_CHANNEL, 0x14, SERVER_TO_CLIENT, SPacketVoiceSignalDescEAG.class),
-			define(V4_CHANNEL, 0x15, SERVER_TO_CLIENT, SPacketVoiceSignalGlobalEAG.class),
-			define(V4_CHANNEL, 0x16, SERVER_TO_CLIENT, SPacketUpdateCertEAG.class),
-			define(V4_CHANNEL, 0x17, SERVER_TO_CLIENT, SPacketEnableFNAWSkinsEAG.class),
-			define(V4_CHANNEL, 0x18, SERVER_TO_CLIENT, SPacketForceClientSkinPresetV4EAG.class),
-			define(V4_CHANNEL, 0x19, SERVER_TO_CLIENT, SPacketForceClientSkinCustomV4EAG.class),
-			define(V4_CHANNEL, 0x1A, SERVER_TO_CLIENT, SPacketSetServerCookieV4EAG.class),
-			define(V4_CHANNEL, 0x1B, SERVER_TO_CLIENT, SPacketRedirectClientV4EAG.class),
-			define(V4_CHANNEL, 0x1C, CLIENT_TO_SERVER, CPacketGetOtherClientUUIDV4EAG.class),
-			define(V4_CHANNEL, 0x1D, SERVER_TO_CLIENT, SPacketOtherPlayerClientUUIDV4EAG.class),
-			define(V4_CHANNEL, 0x1E, SERVER_TO_CLIENT, SPacketForceClientCapePresetV4EAG.class),
-			define(V4_CHANNEL, 0x1F, SERVER_TO_CLIENT, SPacketForceClientCapeCustomV4EAG.class),
-			define(V4_CHANNEL, 0x20, SERVER_TO_CLIENT, SPacketInvalidatePlayerCacheV4EAG.class),
-			define(V4_CHANNEL, 0x21, SERVER_TO_CLIENT, SPacketUnforceClientV4EAG.class),
-			define(V4_CHANNEL, 0x22, SERVER_TO_CLIENT, SPacketCustomizePauseMenuV4EAG.class),
-			define(V4_CHANNEL, 0x23, CLIENT_TO_SERVER, CPacketRequestServerInfoV4EAG.class),
-			define(V4_CHANNEL, 0x24, SERVER_TO_CLIENT, SPacketServerInfoDataChunkV4EAG.class),
-			define(V4_CHANNEL, 0x25, CLIENT_TO_SERVER, CPacketWebViewMessageEnV4EAG.class),
-			define(V4_CHANNEL, 0x26, CLIENT_TO_SERVER, CPacketWebViewMessageV4EAG.class),
-			define(V4_CHANNEL, 0x27, SERVER_TO_CLIENT, SPacketWebViewMessageV4EAG.class),
-			define(V4_CHANNEL, 0x28, SERVER_TO_CLIENT, SPacketNotifIconsRegisterV4EAG.class),
-			define(V4_CHANNEL, 0x29, SERVER_TO_CLIENT, SPacketNotifIconsReleaseV4EAG.class),
-			define(V4_CHANNEL, 0x2A, SERVER_TO_CLIENT, SPacketNotifBadgeShowV4EAG.class),
-			define(V4_CHANNEL, 0x2B, SERVER_TO_CLIENT, SPacketNotifBadgeHideV4EAG.class)
+			define(V4_CHANNEL, 0x01, CLIENT_TO_SERVER, CPacketGetOtherSkinEAG.class, CPacketGetOtherSkinEAG::new),
+			define(V4_CHANNEL, 0x02, SERVER_TO_CLIENT, SPacketOtherSkinPresetEAG.class, SPacketOtherSkinPresetEAG::new),
+			define(V4_CHANNEL, 0x03, SERVER_TO_CLIENT, SPacketOtherSkinCustomV4EAG.class, SPacketOtherSkinCustomV4EAG::new),
+			define(V4_CHANNEL, 0x04, CLIENT_TO_SERVER, CPacketGetSkinByURLEAG.class, CPacketGetSkinByURLEAG::new),
+			define(V4_CHANNEL, 0x05, CLIENT_TO_SERVER, CPacketInstallSkinSPEAG.class, CPacketInstallSkinSPEAG::new),
+			define(V4_CHANNEL, 0x06, CLIENT_TO_SERVER, CPacketGetOtherCapeEAG.class, CPacketGetOtherCapeEAG::new),
+			define(V4_CHANNEL, 0x07, SERVER_TO_CLIENT, SPacketOtherCapePresetEAG.class, SPacketOtherCapePresetEAG::new),
+			define(V4_CHANNEL, 0x08, SERVER_TO_CLIENT, SPacketOtherCapeCustomEAG.class, SPacketOtherCapeCustomEAG::new),
+			define(V4_CHANNEL, 0x09, SERVER_TO_CLIENT, SPacketVoiceSignalAllowedEAG.class, SPacketVoiceSignalAllowedEAG::new),
+			define(V4_CHANNEL, 0x0A, CLIENT_TO_SERVER, CPacketVoiceSignalRequestEAG.class, CPacketVoiceSignalRequestEAG::new),
+			define(V4_CHANNEL, 0x0B, CLIENT_TO_SERVER, CPacketVoiceSignalConnectEAG.class, CPacketVoiceSignalConnectEAG::new),
+			define(V4_CHANNEL, 0x0C, SERVER_TO_CLIENT, SPacketVoiceSignalConnectV4EAG.class, SPacketVoiceSignalConnectV4EAG::new),
+			define(V4_CHANNEL, 0x0D, SERVER_TO_CLIENT, SPacketVoiceSignalConnectAnnounceV4EAG.class, SPacketVoiceSignalConnectAnnounceV4EAG::new),
+			define(V4_CHANNEL, 0x0E, CLIENT_TO_SERVER, CPacketVoiceSignalDisconnectV4EAG.class, CPacketVoiceSignalDisconnectV4EAG::new),
+			define(V4_CHANNEL, 0x0F, CLIENT_TO_SERVER, CPacketVoiceSignalDisconnectPeerV4EAG.class, CPacketVoiceSignalDisconnectPeerV4EAG::new),
+			define(V4_CHANNEL, 0x10, SERVER_TO_CLIENT, SPacketVoiceSignalDisconnectPeerEAG.class, SPacketVoiceSignalDisconnectPeerEAG::new),
+			define(V4_CHANNEL, 0x11, CLIENT_TO_SERVER, CPacketVoiceSignalICEEAG.class, CPacketVoiceSignalICEEAG::new),
+			define(V4_CHANNEL, 0x12, SERVER_TO_CLIENT, SPacketVoiceSignalICEEAG.class, SPacketVoiceSignalICEEAG::new),
+			define(V4_CHANNEL, 0x13, CLIENT_TO_SERVER, CPacketVoiceSignalDescEAG.class, CPacketVoiceSignalDescEAG::new),
+			define(V4_CHANNEL, 0x14, SERVER_TO_CLIENT, SPacketVoiceSignalDescEAG.class, SPacketVoiceSignalDescEAG::new),
+			define(V4_CHANNEL, 0x15, SERVER_TO_CLIENT, SPacketVoiceSignalGlobalEAG.class, SPacketVoiceSignalGlobalEAG::new),
+			define(V4_CHANNEL, 0x16, SERVER_TO_CLIENT, SPacketUpdateCertEAG.class, SPacketUpdateCertEAG::new),
+			define(V4_CHANNEL, 0x17, SERVER_TO_CLIENT, SPacketEnableFNAWSkinsEAG.class, SPacketEnableFNAWSkinsEAG::new),
+			define(V4_CHANNEL, 0x18, SERVER_TO_CLIENT, SPacketForceClientSkinPresetV4EAG.class, SPacketForceClientSkinPresetV4EAG::new),
+			define(V4_CHANNEL, 0x19, SERVER_TO_CLIENT, SPacketForceClientSkinCustomV4EAG.class, SPacketForceClientSkinCustomV4EAG::new),
+			define(V4_CHANNEL, 0x1A, SERVER_TO_CLIENT, SPacketSetServerCookieV4EAG.class, SPacketSetServerCookieV4EAG::new),
+			define(V4_CHANNEL, 0x1B, SERVER_TO_CLIENT, SPacketRedirectClientV4EAG.class, SPacketRedirectClientV4EAG::new),
+			define(V4_CHANNEL, 0x1C, CLIENT_TO_SERVER, CPacketGetOtherClientUUIDV4EAG.class, CPacketGetOtherClientUUIDV4EAG::new),
+			define(V4_CHANNEL, 0x1D, SERVER_TO_CLIENT, SPacketOtherPlayerClientUUIDV4EAG.class, SPacketOtherPlayerClientUUIDV4EAG::new),
+			define(V4_CHANNEL, 0x1E, SERVER_TO_CLIENT, SPacketForceClientCapePresetV4EAG.class, SPacketForceClientCapePresetV4EAG::new),
+			define(V4_CHANNEL, 0x1F, SERVER_TO_CLIENT, SPacketForceClientCapeCustomV4EAG.class, SPacketForceClientCapeCustomV4EAG::new),
+			define(V4_CHANNEL, 0x20, SERVER_TO_CLIENT, SPacketInvalidatePlayerCacheV4EAG.class, SPacketInvalidatePlayerCacheV4EAG::new),
+			define(V4_CHANNEL, 0x21, SERVER_TO_CLIENT, SPacketUnforceClientV4EAG.class, SPacketUnforceClientV4EAG::new),
+			define(V4_CHANNEL, 0x22, SERVER_TO_CLIENT, SPacketCustomizePauseMenuV4EAG.class, SPacketCustomizePauseMenuV4EAG::new),
+			define(V4_CHANNEL, 0x23, CLIENT_TO_SERVER, CPacketRequestServerInfoV4EAG.class, CPacketRequestServerInfoV4EAG::new),
+			define(V4_CHANNEL, 0x24, SERVER_TO_CLIENT, SPacketServerInfoDataChunkV4EAG.class, SPacketServerInfoDataChunkV4EAG::new),
+			define(V4_CHANNEL, 0x25, CLIENT_TO_SERVER, CPacketWebViewMessageEnV4EAG.class, CPacketWebViewMessageEnV4EAG::new),
+			define(V4_CHANNEL, 0x26, CLIENT_TO_SERVER, CPacketWebViewMessageV4EAG.class, CPacketWebViewMessageV4EAG::new),
+			define(V4_CHANNEL, 0x27, SERVER_TO_CLIENT, SPacketWebViewMessageV4EAG.class, SPacketWebViewMessageV4EAG::new),
+			define(V4_CHANNEL, 0x28, SERVER_TO_CLIENT, SPacketNotifIconsRegisterV4EAG.class, SPacketNotifIconsRegisterV4EAG::new),
+			define(V4_CHANNEL, 0x29, SERVER_TO_CLIENT, SPacketNotifIconsReleaseV4EAG.class, SPacketNotifIconsReleaseV4EAG::new),
+			define(V4_CHANNEL, 0x2A, SERVER_TO_CLIENT, SPacketNotifBadgeShowV4EAG.class, SPacketNotifBadgeShowV4EAG::new),
+			define(V4_CHANNEL, 0x2B, SERVER_TO_CLIENT, SPacketNotifBadgeHideV4EAG.class, SPacketNotifBadgeHideV4EAG::new)
 	);
 
 	public final int ver;
@@ -132,8 +133,8 @@ public enum GamePluginMessageProtocol {
 		}
 	}
 
-	private static PacketDef define(String channel, int id, int dir, Class<? extends GameMessagePacket> clazz) {
-		return new PacketDef(channel, id, dir, clazz);
+	private static PacketDef define(String channel, int id, int dir, Class<? extends GameMessagePacket> clazz, Supplier<? extends GameMessagePacket> ctor) {
+		return new PacketDef(channel, id, dir, clazz, ctor);
 	}
 
 	private static class PacketDef {
@@ -142,12 +143,14 @@ public enum GamePluginMessageProtocol {
 		private final int id;
 		private final int dir;
 		private final Class<? extends GameMessagePacket> clazz;
+		private final Supplier<? extends GameMessagePacket> ctor;
 		
-		private PacketDef(String channel, int id, int dir, Class<? extends GameMessagePacket> clazz) {
+		private PacketDef(String channel, int id, int dir, Class<? extends GameMessagePacket> clazz, Supplier<? extends GameMessagePacket> ctor) {
 			this.channel = channel;
 			this.id = id;
 			this.dir = dir;
 			this.clazz = clazz;
+			this.ctor = ctor;
 		}
 		
 	}
@@ -167,12 +170,7 @@ public enum GamePluginMessageProtocol {
 				throw new IOException("[" + channel + "] Unknown packet ID: " + pktId);
 			}
 		}
-		GameMessagePacket ret;
-		try {
-			ret = toRead.clazz.newInstance();
-		}catch(Throwable t) {
-			throw new RuntimeException("Reflection failed to call packet constructor! (Is it defined?)", t);
-		}
+		GameMessagePacket ret = toRead.ctor.get();
 		ret.readPacket(buffer);
 		return ret;
 	}
