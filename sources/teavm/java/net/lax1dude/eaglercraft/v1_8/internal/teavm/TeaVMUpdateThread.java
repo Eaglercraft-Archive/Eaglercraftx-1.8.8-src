@@ -139,7 +139,7 @@ public class TeaVMUpdateThread implements Runnable {
 				if(b == null) {
 					updateProg.progressBar = 1.0f;
 					updateProg.statusString3 = "FAILED!";
-					EagUtils.sleep(300l);
+					EagUtils.sleep(300);
 					updateProg.progressBar = -1.0f;
 					updateProg.statusString3 = null;
 					continue;
@@ -155,7 +155,7 @@ public class TeaVMUpdateThread implements Runnable {
 				}
 				updateProg.statusString2 = "Signature Invalid!";
 				logger.error("File signature is invalid: {}", url);
-				EagUtils.sleep(1000l);
+				EagUtils.sleep(1000);
 			}
 			
 			updateProg.progressBar = -1.0f;

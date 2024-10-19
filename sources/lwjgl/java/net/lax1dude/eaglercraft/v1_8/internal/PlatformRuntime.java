@@ -618,6 +618,13 @@ public class PlatformRuntime {
 		return System.nanoTime();
 	}
 
+	public static void sleep(int millis) {
+		try {
+			Thread.sleep(millis);
+		} catch (InterruptedException e) {
+		}
+	}
+
 	public static void postCreate() {
 		
 	}

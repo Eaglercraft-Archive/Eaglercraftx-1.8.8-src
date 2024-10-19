@@ -43,6 +43,7 @@ public class PlatformAudio {
 		
 		protected final String sourceName;
 		protected long stall;
+		protected boolean paused = false;
 		
 		protected PaulscodeAudioHandle(String sourceName) {
 			this.sourceName = sourceName;
@@ -55,10 +56,12 @@ public class PlatformAudio {
 				if(sndSystem.playing(sourceName)) {
 					sndSystem.pause(sourceName);
 				}
+				paused = true;
 			}else {
 				if(!sndSystem.playing(sourceName)) {
 					sndSystem.play(sourceName);
 				}
+				paused = false;
 			}
 		}
 
@@ -67,6 +70,7 @@ public class PlatformAudio {
 			this.stall = PlatformRuntime.steadyTimeMillis();
 			sndSystem.rewind(sourceName);
 			sndSystem.play(sourceName);
+			paused = false;
 		}
 
 		@Override
@@ -87,13 +91,14 @@ public class PlatformAudio {
 		@Override
 		public void end() {
 			sndSystem.stop(sourceName);
+			paused = false;
 		}
 
 		@Override
 		public boolean shouldFree() {
-			return !sndSystem.playing(sourceName) && PlatformRuntime.steadyTimeMillis() - this.stall > 250l; //TODO: I hate this hack
+			return !paused && !sndSystem.playing(sourceName) && PlatformRuntime.steadyTimeMillis() - this.stall > 250l; //TODO: I hate this hack
 		}
-		
+
 	}
 	
 	public static IAudioResource loadAudioData(String filename, boolean holdInCache) {
@@ -111,10 +116,6 @@ public class PlatformAudio {
 
 	public static void flushAudioCache() {
 		
-	}
-
-	public static interface IAudioCacheLoader {
-		byte[] loadFile(String filename);
 	}
 
 	public static IAudioResource loadAudioDataNew(String filename, boolean holdInCache, IAudioCacheLoader loader) {

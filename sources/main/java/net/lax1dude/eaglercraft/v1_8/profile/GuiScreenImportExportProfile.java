@@ -55,7 +55,7 @@ public class GuiScreenImportExportProfile extends GuiScreen {
 			waitingForFile = false;
 			FileChooserResult result = EagRuntime.getFileChooserResult();
 			if(result != null) {
-				mc.loadingScreen.eaglerShow(I18n.format("settingsBackup.importing.1"), "settingsBackup.importing.2");
+				mc.loadingScreen.eaglerShow(I18n.format("settingsBackup.importing.1"), I18n.format("settingsBackup.importing.2"));
 				ProfileImporter importer = new ProfileImporter(result.fileData);
 				try {
 					importer.readHeader();

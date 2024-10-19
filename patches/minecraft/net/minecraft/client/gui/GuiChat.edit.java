@@ -62,7 +62,7 @@
 > CHANGE  2 : 4  @  2 : 11
 
 ~ 	protected void keyTyped(char parChar1, int parInt1) {
-~ 		if (parInt1 == 1 && (this.mc.gameSettings.keyBindClose.getKeyCode() == 0 || this.mc.areKeysLocked())) {
+~ 		if (parInt1 == 1 && (this.mc.gameSettings.keyBindClose.getKeyCode() == 0 || Keyboard.areKeysLocked())) {
 
 > CHANGE  1 : 5  @  1 : 10
 

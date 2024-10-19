@@ -65,4 +65,8 @@ public class Keyboard {
 		PlatformInput.keyboardFireEvent(eventType, eagKey, keyChar);
 	}
 
+	public static boolean areKeysLocked() {
+		return PlatformInput.keyboardAreKeysLocked();
+	}
+
 }

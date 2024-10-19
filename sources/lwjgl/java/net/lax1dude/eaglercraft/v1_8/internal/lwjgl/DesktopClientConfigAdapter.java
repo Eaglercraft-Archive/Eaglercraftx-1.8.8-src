@@ -79,8 +79,13 @@ public class DesktopClientConfigAdapter implements IClientConfigAdapter {
 	}
 
 	@Override
+	public boolean isCheckGLErrors() {
+		return false;
+	}
+
+	@Override
 	public boolean isCheckShaderGLErrors() {
-		return true;
+		return false;
 	}
 
 	@Override

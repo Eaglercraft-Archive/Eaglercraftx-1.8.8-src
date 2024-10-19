@@ -87,7 +87,7 @@ public class MenuPopupStateLoading extends MenuState implements IProgressMsgCall
 	public void updateMessage(String msg) {
 		this.msg = msg;
 		BootMenuMain.bootMenuDOM.popup_confirm_title.setInnerText(!StringUtils.isAllEmpty(msg) ? (text + "\n\n" + msg) : text);
-		EagUtils.sleep(50l);
+		EagUtils.sleep(50);
 	}
 
 	@Override

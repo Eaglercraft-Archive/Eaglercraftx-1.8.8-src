@@ -13,7 +13,7 @@
 
 > CHANGE  3 : 5  @  3 : 100
 
-~ 	public static void appMain(String[] astring) {
+~ 	public static void appMain() {
 ~ 		System.setProperty("java.net.preferIPv6Addresses", "true");
 
 > CHANGE  1 : 5  @  1 : 12

@@ -171,7 +171,7 @@ public class BootMenuMain {
 					}
 				}
 			}
-			EagUtils.sleep(50l);
+			EagUtils.sleep(50);
 		}
 	}
 

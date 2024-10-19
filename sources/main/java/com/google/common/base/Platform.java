@@ -20,6 +20,8 @@ import java.lang.ref.WeakReference;
 
 import com.google.common.annotations.GwtCompatible;
 
+import net.lax1dude.eaglercraft.v1_8.EagRuntime;
+
 /**
  * Methods factored out so that they can be emulated differently in GWT.
  *
@@ -32,7 +34,7 @@ final class Platform {
 
 	/** Calls {@link System#nanoTime()}. */
 	static long systemNanoTime() {
-		return System.nanoTime();
+		return EagRuntime.nanoTime();
 	}
 
 	static CharMatcher precomputeCharMatcher(CharMatcher matcher) {

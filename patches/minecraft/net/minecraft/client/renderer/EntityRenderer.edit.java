@@ -244,15 +244,17 @@
 
 > DELETE  2  @  2 : 3
 
-> DELETE  5  @  5 : 18
+> CHANGE  2 : 3  @  2 : 3
 
-> CHANGE  1 : 3  @  1 : 3
+~ 				long j = EagRuntime.nanoTime() - parLong1;
 
+> CHANGE  1 : 18  @  1 : 10
+
+~ 				this.renderWorld(parFloat1, EagRuntime.nanoTime() + k);
+~ 				this.renderEndNanoTime = EagRuntime.nanoTime();
 ~ 				final boolean b = !this.mc.gameSettings.hideGUI || this.mc.currentScreen != null;
 ~ 				if (b) {
-
-> CHANGE  1 : 14  @  1 : 2
-
+~ 					GlStateManager.alphaFunc(516, 0.1F);
 ~ 					long framebufferAge = this.overlayFramebuffer.getAge();
 ~ 					if (framebufferAge == -1l || framebufferAge > (Minecraft.getDebugFPS() < 25 ? 125l : 75l)) {
 ~ 						this.overlayFramebuffer.beginRender(mc.displayWidth, mc.displayHeight);
@@ -265,9 +267,10 @@
 ~ 						}
 ~ 						GlStateManager.disableOverlayFramebufferBlending();
 ~ 						this.overlayFramebuffer.endRender();
-~ 					}
 
-> CHANGE  1 : 32  @  1 : 3
+> DELETE  1  @  1 : 3
+
+> CHANGE  1 : 31  @  1 : 7
 
 ~ 				if (b) {
 ~ 					this.setupOverlayRendering();
@@ -299,9 +302,14 @@
 ~ 						this.mc.ingameGUI.drawEaglerPlayerOverlay(l - 3,
 ~ 								3 + this.mc.ingameGUI.overlayDebug.playerOffset, parFloat1);
 ~ 					}
-~ 				}
 
-> INSERT  10 : 12  @  10
+> DELETE  1  @  1 : 3
+
+> CHANGE  7 : 8  @  7 : 8
+
+~ 				this.renderEndNanoTime = EagRuntime.nanoTime();
+
+> INSERT  2 : 4  @  2
 
 + 			this.mc.notifRenderer.renderOverlay(j1, k1);
 + 

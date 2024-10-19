@@ -67,11 +67,12 @@
 ~ 						if (value != null && (value instanceof Integer)) {
 ~ 							tupleintjsonserializable.setIntegerValue(jsonobject1.getInt("value"));
 
-> CHANGE  4 : 5  @  4 : 5
+> CHANGE  4 : 6  @  4 : 7
 
-~ 								Constructor constructor = statbase.func_150954_l().getConstructor();
+~ 								IJsonSerializable ijsonserializable = (IJsonSerializable) statbase.func_150954_l_ctor()
+~ 										.get();
 
-> CHANGE  22 : 23  @  22 : 23
+> CHANGE  20 : 21  @  20 : 21
 
 ~ 		JSONObject jsonobject = new JSONObject();
 

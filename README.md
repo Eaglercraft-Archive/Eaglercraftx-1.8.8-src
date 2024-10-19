@@ -158,6 +158,7 @@ The default eaglercraftXOpts values is this:
 - `demoMode:` whether to launch the game in java edition demo mode
 - `servers:` a list of default servers to display on the Multiplayer screen
 - `relays:` the default list of shared world relays to use for invites
+- `checkGLErrors:` if the game should check for opengl errors
 - `checkShaderGLErrors:` enables more verbose opengl error logging for the shaders
 - `enableDownloadOfflineButton:` whether to show a "Download Offline" button on the title screen
 - `downloadOfflineButtonLink:` overrides the download link for the "Download Offline" button

@@ -50,6 +50,8 @@ public interface IClientConfigAdapter {
 
 	List<RelayEntry> getRelays();
 
+	boolean isCheckGLErrors();
+
 	boolean isCheckShaderGLErrors();
 
 	boolean isDemo();

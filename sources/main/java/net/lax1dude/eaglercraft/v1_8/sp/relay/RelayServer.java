@@ -81,7 +81,7 @@ public class RelayServer {
 	public void pingBlocking() {
 		ping();
 		while(getPing() < 0l) {
-			EagUtils.sleep(250l);
+			EagUtils.sleep(250);
 			update();
 		}
 	}

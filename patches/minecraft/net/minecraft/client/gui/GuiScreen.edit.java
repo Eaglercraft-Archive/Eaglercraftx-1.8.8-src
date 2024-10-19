@@ -128,8 +128,8 @@
 ~ 		if (!canCloseGui())
 ~ 			return;
 ~ 		if (((this.mc.theWorld == null || this.mc.thePlayer.getHealth() <= 0.0F) && parInt1 == 1)
-~ 				|| parInt1 == this.mc.gameSettings.keyBindClose.getKeyCode()
-~ 				|| (parInt1 == 1 && (this.mc.gameSettings.keyBindClose.getKeyCode() == 0 || this.mc.areKeysLocked()))) {
+~ 				|| parInt1 == this.mc.gameSettings.keyBindClose.getKeyCode() || (parInt1 == 1
+~ 						&& (this.mc.gameSettings.keyBindClose.getKeyCode() == 0 || Keyboard.areKeysLocked()))) {
 
 > INSERT  4 : 6  @  4
 

@@ -119,6 +119,7 @@ public class PlatformAudio {
 		public void restart() {
 			if(isEnded) {
 				isEnded = false;
+				isPaused = false;
 				AudioBufferSourceNode src = audioctx.createBufferSource();
 				resource.cacheHit = PlatformRuntime.steadyTimeMillis();
 				src.setBuffer(resource.buffer);
@@ -302,13 +303,11 @@ public class PlatformAudio {
 			}
 			gameRecGain = audioctx.createGain();
 			gameRecGain.getGain().setValue(gameVol);
-			synchronized(activeSounds) {
-				for(BrowserAudioHandle handle : activeSounds) {
-					if(handle.panner != null) {
-						handle.panner.connect(gameRecGain);
-					}else {
-						handle.gain.connect(gameRecGain);
-					}
+			for(BrowserAudioHandle handle : activeSounds) {
+				if(handle.panner != null) {
+					handle.panner.connect(gameRecGain);
+				}else {
+					handle.gain.connect(gameRecGain);
 				}
 			}
 			PlatformVoiceClient.addRecordingDest(gameRecGain);
@@ -341,16 +340,14 @@ public class PlatformAudio {
 				gameRecGain.disconnect();
 			}catch(Throwable t) {
 			}
-			synchronized(activeSounds) {
-				for(BrowserAudioHandle handle : activeSounds) {
-					try {
-						if(handle.panner != null) {
-							handle.panner.disconnect(gameRecGain);
-						}else {
-							handle.gain.disconnect(gameRecGain);
-						}
-					}catch(Throwable t) {
+			for(BrowserAudioHandle handle : activeSounds) {
+				try {
+					if(handle.panner != null) {
+						handle.panner.disconnect(gameRecGain);
+					}else {
+						handle.gain.disconnect(gameRecGain);
 					}
+				}catch(Throwable t) {
 				}
 			}
 			PlatformVoiceClient.removeRecordingDest(gameRecGain);
@@ -361,18 +358,13 @@ public class PlatformAudio {
 	}
 
 	public static IAudioResource loadAudioData(String filename, boolean holdInCache) {
-		BrowserAudioResource buffer;
-		synchronized(soundCache) {
-			buffer = soundCache.get(filename);
-		}
+		BrowserAudioResource buffer = soundCache.get(filename);
 		if(buffer == null) {
 			byte[] file = PlatformAssets.getResourceBytes(filename);
 			if(file == null) return null;
 			buffer = new BrowserAudioResource(decodeAudioData(file, filename));
 			if(holdInCache) {
-				synchronized(soundCache) {
-					soundCache.put(filename, buffer);
-				}
+				soundCache.put(filename, buffer);
 			}
 		}
 		if(buffer.buffer != null) {
@@ -383,23 +375,14 @@ public class PlatformAudio {
 		}
 	}
 
-	public static interface IAudioCacheLoader {
-		byte[] loadFile(String filename);
-	}
-
 	public static IAudioResource loadAudioDataNew(String filename, boolean holdInCache, IAudioCacheLoader loader) {
-		BrowserAudioResource buffer;
-		synchronized(soundCache) {
-			buffer = soundCache.get(filename);
-		}
+		BrowserAudioResource buffer = soundCache.get(filename);
 		if(buffer == null) {
 			byte[] file = loader.loadFile(filename);
 			if(file == null) return null;
 			buffer = new BrowserAudioResource(decodeAudioData(file, filename));
 			if(holdInCache) {
-				synchronized(soundCache) {
-					soundCache.put(filename, buffer);
-				}
+				soundCache.put(filename, buffer);
 			}
 		}
 		if(buffer.buffer != null) {
@@ -457,35 +440,27 @@ public class PlatformAudio {
 		long millis = PlatformRuntime.steadyTimeMillis();
 		if(millis - cacheFreeTimer > 30000l) {
 			cacheFreeTimer = millis;
-			synchronized(soundCache) {
-				Iterator<BrowserAudioResource> itr = soundCache.values().iterator();
-				while(itr.hasNext()) {
-					if(millis - itr.next().cacheHit > 600000l) { // 10 minutes
-						itr.remove();
-					}
+			Iterator<BrowserAudioResource> itr = soundCache.values().iterator();
+			while(itr.hasNext()) {
+				if(millis - itr.next().cacheHit > 600000l) { // 10 minutes
+					itr.remove();
 				}
 			}
 		}
 		if(millis - activeFreeTimer > 700l) {
 			activeFreeTimer = millis;
-			synchronized(activeSounds) {
-				Iterator<BrowserAudioHandle> itr = activeSounds.iterator();
-				while(itr.hasNext()) {
-					if(itr.next().shouldFree()) {
-						itr.remove();
-					}
+			Iterator<BrowserAudioHandle> itr = activeSounds.iterator();
+			while(itr.hasNext()) {
+				if(itr.next().shouldFree()) {
+					itr.remove();
 				}
 			}
 		}
 	}
 
 	public static void flushAudioCache() {
-		synchronized(soundCache) {
-			soundCache.clear();
-		}
-		synchronized(activeSounds) {
-			activeSounds.clear();
-		}
+		soundCache.clear();
+		activeSounds.clear();
 	}
 	
 	public static boolean available() {
@@ -529,9 +504,7 @@ public class PlatformAudio {
 		src.start();
 		
 		BrowserAudioHandle ret = new BrowserAudioHandle(internalTrack, src, panner, gain, pitch);
-		synchronized(activeSounds) {
-			activeSounds.add(ret);
-		}
+		activeSounds.add(ret);
 		return ret;
 	}
 
@@ -557,9 +530,7 @@ public class PlatformAudio {
 		src.start();
 		
 		BrowserAudioHandle ret = new BrowserAudioHandle(internalTrack, src, null, gain, pitch);
-		synchronized(activeSounds) {
-			activeSounds.add(ret);
-		}
+		activeSounds.add(ret);
 		return ret;
 	}
 
@@ -574,7 +545,7 @@ public class PlatformAudio {
 	}
 
 	static void destroy() {
-		soundCache.clear();
+		flushAudioCache();
 		if(audioctx != null) {
 			audioctx.close();
 			audioctx = null;

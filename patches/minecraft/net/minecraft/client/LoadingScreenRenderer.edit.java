@@ -70,4 +70,6 @@
 
 > DELETE  1  @  1 : 2
 
+> DELETE  1  @  1 : 8
+
 > EOF

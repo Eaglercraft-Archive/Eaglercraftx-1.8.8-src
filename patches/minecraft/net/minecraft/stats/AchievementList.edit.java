@@ -53,7 +53,7 @@
 ~ 	public static Achievement exploreAllBiomes;
 ~ 	public static Achievement overpowered;
 
-> INSERT  2 : 65  @  2
+> INSERT  2 : 66  @  2
 
 + 		achievementList = Lists.newArrayList();
 + 		openInventory = (new Achievement("achievement.openInventory", "openInventory", 0, 0, Items.book,
@@ -115,7 +115,8 @@
 + 		fullBeacon = (new Achievement("achievement.fullBeacon", "fullBeacon", 7, 8, Blocks.beacon, killWither))
 + 				.setSpecial().registerStat();
 + 		exploreAllBiomes = (new Achievement("achievement.exploreAllBiomes", "exploreAllBiomes", 4, 8,
-+ 				Items.diamond_boots, theEnd)).func_150953_b(JsonSerializableSet.class).setSpecial().registerStat();
++ 				Items.diamond_boots, theEnd)).func_150953_b(JsonSerializableSet.class, JsonSerializableSet::new)
++ 						.setSpecial().registerStat();
 + 		overpowered = (new Achievement("achievement.overpowered", "overpowered", 6, 4,
 + 				new ItemStack(Items.golden_apple, 1, 1), buildBetterPickaxe)).setSpecial().registerStat();
 

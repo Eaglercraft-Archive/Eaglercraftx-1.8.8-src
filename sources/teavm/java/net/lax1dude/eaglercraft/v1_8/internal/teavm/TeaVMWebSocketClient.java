@@ -1,10 +1,8 @@
 package net.lax1dude.eaglercraft.v1_8.internal.teavm;
 
-import org.teavm.jso.JSBody;
 import org.teavm.jso.dom.events.Event;
 import org.teavm.jso.dom.events.EventListener;
 import org.teavm.jso.dom.events.MessageEvent;
-import org.teavm.jso.typedarrays.ArrayBuffer;
 import org.teavm.jso.websocket.WebSocket;
 
 import net.lax1dude.eaglercraft.v1_8.EagUtils;
@@ -73,7 +71,7 @@ public class TeaVMWebSocketClient extends AbstractWebSocketClient {
 	public boolean connectBlocking(int timeoutMS) {
 		long startTime = PlatformRuntime.steadyTimeMillis();
 		while(!sockIsConnected && !sockIsFailed) {
-			EagUtils.sleep(50l);
+			EagUtils.sleep(50);
 			if(PlatformRuntime.steadyTimeMillis() - startTime > timeoutMS * 1000) {
 				break;
 			}
@@ -112,13 +110,10 @@ public class TeaVMWebSocketClient extends AbstractWebSocketClient {
 		}
 	}
 
-	@JSBody(params = { "sock", "buffer" }, script = "sock.send(buffer);")
-	protected static native void nativeBinarySend(WebSocket sock, ArrayBuffer buffer);
-
 	@Override
 	public void send(byte[] bytes) {
 		if(sockIsConnected) {
-			nativeBinarySend(sock, TeaVMUtils.unwrapArrayBuffer(bytes));
+			sock.send(TeaVMUtils.unwrapArrayBuffer(bytes));
 		}
 	}
 

@@ -2,6 +2,7 @@ package net.lax1dude.eaglercraft.v1_8.internal;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -49,7 +50,7 @@ public class PlatformScreenRecord {
 	static Window win;
 	static HTMLCanvasElement canvas;
 	static boolean support;
-	static final Set<EnumScreenRecordingCodec> supportedCodecs = new HashSet<>();
+	static final Set<EnumScreenRecordingCodec> supportedCodecs = EnumSet.noneOf(EnumScreenRecordingCodec.class);
 	static float currentGameVolume = 1.0f;
 	static float currentMicVolume = 0.0f;
 	static MediaStream recStream = null;

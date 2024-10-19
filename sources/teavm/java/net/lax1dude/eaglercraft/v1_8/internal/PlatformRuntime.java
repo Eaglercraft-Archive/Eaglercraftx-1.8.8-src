@@ -12,7 +12,6 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
-import net.lax1dude.eaglercraft.v1_8.EagUtils;
 import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
 import net.lax1dude.eaglercraft.v1_8.EaglercraftVersion;
 import net.lax1dude.eaglercraft.v1_8.Filesystem;
@@ -37,6 +36,8 @@ import org.teavm.jso.dom.xml.Node;
 import org.teavm.jso.dom.xml.NodeList;
 import org.teavm.jso.typedarrays.ArrayBuffer;
 import org.teavm.jso.webgl.WebGLFramebuffer;
+import org.teavm.platform.Platform;
+import org.teavm.platform.PlatformRunnable;
 
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Iterators;
@@ -172,10 +173,11 @@ public class PlatformRuntime {
 		logger.info("Creating main game canvas");
 		
 		root = doc.getElementById(ClientMain.configRootElementId);
-		root.getClassList().add("_eaglercraftX_root_element");
 		if(root == null) {
 			throw new RuntimeInitializationFailureException("Root element \"" + ClientMain.configRootElementId + "\" was not found in this document!");
 		}
+		
+		root.getClassList().add("_eaglercraftX_root_element");
 		
 		Node nodeler;
 		while((nodeler = root.getLastChild()) != null && TeaVMUtils.isTruthy(nodeler)) {
@@ -748,7 +750,7 @@ public class PlatformRuntime {
 		if(!useDelayOnSwap && immediateContinueSupport) {
 			immediateContinueTeaVM0();
 		}else {
-			EagUtils.sleep(0l);
+			sleep(0);
 		}
 	}
 
@@ -756,7 +758,7 @@ public class PlatformRuntime {
 		if(immediateContinueSupport) {
 			immediateContinueTeaVM0();
 		}else {
-			EagUtils.sleep(0l);
+			sleep(0);
 		}
 	}
 
@@ -890,7 +892,7 @@ public class PlatformRuntime {
 				immediateContinueChannel = null;
 				return IMMEDIATE_CONT_FAILED_NOT_ASYNC;
 			}
-			EagUtils.sleep(10l);
+			sleep(10);
 			currentMsgChannelContinueHack = null;
 			if(!checkMe[0]) {
 				if(immediateContinueChannel != null) {
@@ -945,7 +947,7 @@ public class PlatformRuntime {
 				currentLegacyContinueHack = null;
 				return IMMEDIATE_CONT_FAILED_NOT_ASYNC;
 			}
-			EagUtils.sleep(10l);
+			sleep(10);
 			currentLegacyContinueHack = null;
 			if(!checkMe[0]) {
 				return IMMEDIATE_CONT_FAILED_NOT_CONT;
@@ -1101,6 +1103,24 @@ public class PlatformRuntime {
 
 	public static long nanoTime() {
 		return (long)(steadyTimeMillis0(steadyTimeFunc) * 1000000.0);
+	}
+
+	@Async
+	public static native void sleep(int millis);
+
+	private static void sleep(int millis, final AsyncCallback<Void> callback) {
+		Platform.schedule(new DumbSleepHandler(callback), millis);
+	}
+
+	private static class DumbSleepHandler implements PlatformRunnable {
+		private final AsyncCallback<Void> callback;
+		private DumbSleepHandler(AsyncCallback<Void> callback) {
+			this.callback = callback;
+		}
+		@Override
+		public void run() {
+			callback.complete(null);
+		}
 	}
 
 	static void checkBootMenu() {

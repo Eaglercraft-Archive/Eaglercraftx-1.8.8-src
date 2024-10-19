@@ -18,7 +18,7 @@
 
 > DELETE  1  @  1 : 4
 
-> CHANGE  1 : 74  @  1 : 4
+> CHANGE  1 : 73  @  1 : 4
 
 ~ 
 ~ import net.lax1dude.eaglercraft.v1_8.ClientUUIDLoadingCache;
@@ -34,7 +34,6 @@
 ~ import net.lax1dude.eaglercraft.v1_8.PointerInputAbstraction;
 ~ import net.lax1dude.eaglercraft.v1_8.Touch;
 ~ import net.lax1dude.eaglercraft.v1_8.cookie.ServerCookieDataStore;
-~ import net.lax1dude.eaglercraft.v1_8.internal.PlatformInput;
 ~ 
 ~ import org.apache.commons.lang3.Validate;
 ~ 
@@ -158,7 +157,11 @@
 
 ~ 	public static final boolean isRunningOnMac = false;
 
-> INSERT  10 : 11  @  10
+> CHANGE  5 : 6  @  5 : 6
+
+~ 	private boolean enableGLErrorChecking = false;
+
+> INSERT  4 : 5  @  4
 
 + 	public float displayDPI;
 
@@ -174,7 +177,11 @@
 
 > DELETE  1  @  1 : 3
 
-> CHANGE  10 : 11  @  10 : 12
+> CHANGE  8 : 9  @  8 : 9
+
+~ 	long field_181543_z = EagRuntime.nanoTime();
+
+> CHANGE  1 : 2  @  1 : 3
 
 ~ 	private EaglercraftNetworkManager myNetworkManager;
 
@@ -225,8 +232,9 @@
 
 + 		this.displayDPI = 1.0f;
 
-> CHANGE  4 : 9  @  4 : 8
+> CHANGE  4 : 10  @  4 : 8
 
+~ 		this.enableGLErrorChecking = EagRuntime.getConfiguration().isCheckGLErrors();
 ~ 		String serverToJoin = EagRuntime.getConfiguration().getServerToJoin();
 ~ 		if (serverToJoin != null) {
 ~ 			ServerAddress addr = AddressResolver.resolveAddressFromURI(serverToJoin);
@@ -500,14 +508,14 @@
 + 			if (SingleplayerServerController.isWorldRunning()) {
 + 				SingleplayerServerController.shutdownEaglercraftServer();
 + 				while (SingleplayerServerController.getStatusState() == IntegratedServerState.WORLD_UNLOADING) {
-+ 					EagUtils.sleep(50l);
++ 					EagUtils.sleep(50);
 + 					SingleplayerServerController.runTick();
 + 				}
 + 			}
 + 			if (SingleplayerServerController.isIntegratedServerWorkerAlive()
 + 					&& SingleplayerServerController.canKillWorker()) {
 + 				SingleplayerServerController.killWorker();
-+ 				EagUtils.sleep(50l);
++ 				EagUtils.sleep(50);
 + 			}
 
 > CHANGE  1 : 2  @  1 : 2
@@ -520,8 +528,9 @@
 
 > DELETE  3  @  3 : 5
 
-> CHANGE  4 : 5  @  4 : 6
+> CHANGE  3 : 5  @  3 : 6
 
+~ 		long i = EagRuntime.nanoTime();
 ~ 		if (Display.isCloseRequested()) {
 
 > INSERT  3 : 6  @  3
@@ -536,30 +545,21 @@
 
 ~ 				Util.func_181617_a((FutureTask) this.scheduledTasks.remove(0), logger);
 
-> DELETE  3  @  3 : 4
+> CHANGE  3 : 4  @  3 : 6
+
+~ 		long l = EagRuntime.nanoTime();
+
+> INSERT  3 : 6  @  3
+
++ 			if (j < this.timer.elapsedTicks - 1) {
++ 				PointerInputAbstraction.runGameLoop();
++ 			}
+
+> CHANGE  2 : 3  @  2 : 4
+
+~ 		long i1 = EagRuntime.nanoTime() - l;
 
 > DELETE  1  @  1 : 2
-
-> CHANGE  1 : 15  @  1 : 2
-
-~ 		if (this.timer.elapsedTicks > 1) {
-~ 			long watchdog = EagRuntime.steadyTimeMillis();
-~ 			for (int j = 0; j < this.timer.elapsedTicks; ++j) {
-~ 				this.runTick();
-~ 				if (j < this.timer.elapsedTicks - 1) {
-~ 					PointerInputAbstraction.runGameLoop();
-~ 				}
-~ 				long millis = EagRuntime.steadyTimeMillis();
-~ 				if (millis - watchdog > 50l) {
-~ 					watchdog = millis;
-~ 					EagRuntime.immediateContinue();
-~ 				}
-~ 			}
-~ 		} else if (this.timer.elapsedTicks == 1) {
-
-> DELETE  3  @  3 : 4
-
-> DELETE  2  @  2 : 3
 
 > DELETE  1  @  1 : 11
 
@@ -596,9 +596,11 @@
 
 + 
 
-> DELETE  1  @  1 : 3
+> CHANGE  1 : 2  @  1 : 4
 
-> CHANGE  6 : 7  @  6 : 7
+~ 		long k = EagRuntime.nanoTime();
+
+> CHANGE  5 : 6  @  5 : 6
 
 ~ 			this.debug = HString.format("%d fps (%d chunk update%s) T: %s%s%s%s",
 
@@ -609,23 +611,28 @@
 
 > DELETE  3  @  3 : 7
 
-> DELETE  3  @  3 : 4
+> CHANGE  2 : 5  @  2 : 7
 
-> DELETE  1  @  1 : 2
+~ //		if (this.isFramerateLimitBelowMax()) {
+~ //			Display.sync(this.getLimitFramerate());
+~ //		}
 
-> CHANGE  2 : 3  @  2 : 3
+> CHANGE  1 : 2  @  1 : 2
 
 ~ 		Mouse.tickCursorShape();
 
-> CHANGE  3 : 8  @  3 : 4
+> CHANGE  3 : 13  @  3 : 6
 
 ~ 		if (Display.isVSyncSupported()) {
 ~ 			Display.setVSync(this.gameSettings.enableVsync);
 ~ 		} else {
 ~ 			this.gameSettings.enableVsync = false;
 ~ 		}
-
-> DELETE  1  @  1 : 2
+~ 		if (!this.gameSettings.enableVsync && this.isFramerateLimitBelowMax()) {
+~ 			Display.update(this.getLimitFramerate());
+~ 		} else {
+~ 			Display.update(0);
+~ 		}
 
 > CHANGE  4 : 7  @  4 : 5
 
@@ -904,7 +911,7 @@
 
 > INSERT  3 : 6  @  3
 
-+ 				if (k == 0x1D && (areKeysLocked() || isFullScreen())) {
++ 				if (k == 0x1D && (Keyboard.areKeysLocked() || isFullScreen())) {
 + 					KeyBinding.setKeyBindState(gameSettings.keyBindSprint.getKeyCode(), Keyboard.getEventKeyState());
 + 				}
 
@@ -1387,15 +1394,11 @@
 
 > DELETE  26  @  26 : 34
 
-> INSERT  7 : 48  @  7
+> INSERT  7 : 44  @  7
 
 + 
 + 	public static int getGLMaximumTextureSize() {
 + 		return EaglercraftGPU.glGetInteger(GL_MAX_TEXTURE_SIZE);
-+ 	}
-+ 
-+ 	public boolean areKeysLocked() {
-+ 		return PlatformInput.lockKeys;
 + 	}
 + 
 + 	public ModelManager getModelManager() {

@@ -22,6 +22,8 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.StringUtils;
 
+import net.lax1dude.eaglercraft.v1_8.EagRuntime;
+
 /**
  * <p>
  * {@code StopWatch} provides a convenient API for timings.
@@ -314,7 +316,7 @@ public class StopWatch {
 		} else if (this.runningState == State.UNSTARTED) {
 			return 0;
 		} else if (this.runningState == State.RUNNING) {
-			return System.nanoTime() - this.startTimeNanos;
+			return EagRuntime.nanoTime() - this.startTimeNanos;
 		}
 		throw new IllegalStateException("Illegal running state has occurred.");
 	}
@@ -497,7 +499,7 @@ public class StopWatch {
 		if (this.runningState != State.SUSPENDED) {
 			throw new IllegalStateException("Stopwatch must be suspended to resume. ");
 		}
-		this.startTimeNanos += System.nanoTime() - this.stopTimeNanos;
+		this.startTimeNanos += EagRuntime.nanoTime() - this.stopTimeNanos;
 		this.runningState = State.RUNNING;
 	}
 
@@ -518,7 +520,7 @@ public class StopWatch {
 		if (this.runningState != State.RUNNING) {
 			throw new IllegalStateException("Stopwatch is not running. ");
 		}
-		this.stopTimeNanos = System.nanoTime();
+		this.stopTimeNanos = EagRuntime.nanoTime();
 		this.splitState = SplitState.SPLIT;
 	}
 
@@ -540,7 +542,7 @@ public class StopWatch {
 		if (this.runningState != State.UNSTARTED) {
 			throw new IllegalStateException("Stopwatch already started. ");
 		}
-		this.startTimeNanos = System.nanoTime();
+		this.startTimeNanos = EagRuntime.nanoTime();
 		this.startTimeMillis = System.currentTimeMillis();
 		this.runningState = State.RUNNING;
 	}
@@ -561,7 +563,7 @@ public class StopWatch {
 			throw new IllegalStateException("Stopwatch is not running. ");
 		}
 		if (this.runningState == State.RUNNING) {
-			this.stopTimeNanos = System.nanoTime();
+			this.stopTimeNanos = EagRuntime.nanoTime();
 			this.stopTimeMillis = System.currentTimeMillis();
 		}
 		this.runningState = State.STOPPED;
@@ -583,7 +585,7 @@ public class StopWatch {
 		if (this.runningState != State.RUNNING) {
 			throw new IllegalStateException("Stopwatch must be running to suspend. ");
 		}
-		this.stopTimeNanos = System.nanoTime();
+		this.stopTimeNanos = EagRuntime.nanoTime();
 		this.stopTimeMillis = System.currentTimeMillis();
 		this.runningState = State.SUSPENDED;
 	}

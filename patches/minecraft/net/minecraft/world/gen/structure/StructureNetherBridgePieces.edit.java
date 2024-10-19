@@ -11,7 +11,40 @@
 
 > DELETE  10  @  10 : 13
 
-> CHANGE  37 : 39  @  37 : 39
+> CHANGE  19 : 49  @  19 : 34
+
+~ 		MapGenStructureIO.registerStructureComponent(StructureNetherBridgePieces.Crossing3.class,
+~ 				StructureNetherBridgePieces.Crossing3::new, "NeBCr");
+~ 		MapGenStructureIO.registerStructureComponent(StructureNetherBridgePieces.End.class,
+~ 				StructureNetherBridgePieces.End::new, "NeBEF");
+~ 		MapGenStructureIO.registerStructureComponent(StructureNetherBridgePieces.Straight.class,
+~ 				StructureNetherBridgePieces.Straight::new, "NeBS");
+~ 		MapGenStructureIO.registerStructureComponent(StructureNetherBridgePieces.Corridor3.class,
+~ 				StructureNetherBridgePieces.Corridor3::new, "NeCCS");
+~ 		MapGenStructureIO.registerStructureComponent(StructureNetherBridgePieces.Corridor4.class,
+~ 				StructureNetherBridgePieces.Corridor4::new, "NeCTB");
+~ 		MapGenStructureIO.registerStructureComponent(StructureNetherBridgePieces.Entrance.class,
+~ 				StructureNetherBridgePieces.Entrance::new, "NeCE");
+~ 		MapGenStructureIO.registerStructureComponent(StructureNetherBridgePieces.Crossing2.class,
+~ 				StructureNetherBridgePieces.Crossing2::new, "NeSCSC");
+~ 		MapGenStructureIO.registerStructureComponent(StructureNetherBridgePieces.Corridor.class,
+~ 				StructureNetherBridgePieces.Corridor::new, "NeSCLT");
+~ 		MapGenStructureIO.registerStructureComponent(StructureNetherBridgePieces.Corridor5.class,
+~ 				StructureNetherBridgePieces.Corridor5::new, "NeSC");
+~ 		MapGenStructureIO.registerStructureComponent(StructureNetherBridgePieces.Corridor2.class,
+~ 				StructureNetherBridgePieces.Corridor2::new, "NeSCRT");
+~ 		MapGenStructureIO.registerStructureComponent(StructureNetherBridgePieces.NetherStalkRoom.class,
+~ 				StructureNetherBridgePieces.NetherStalkRoom::new, "NeCSR");
+~ 		MapGenStructureIO.registerStructureComponent(StructureNetherBridgePieces.Throne.class,
+~ 				StructureNetherBridgePieces.Throne::new, "NeMT");
+~ 		MapGenStructureIO.registerStructureComponent(StructureNetherBridgePieces.Crossing.class,
+~ 				StructureNetherBridgePieces.Crossing::new, "NeRC");
+~ 		MapGenStructureIO.registerStructureComponent(StructureNetherBridgePieces.Stairs.class,
+~ 				StructureNetherBridgePieces.Stairs::new, "NeSR");
+~ 		MapGenStructureIO.registerStructureComponent(StructureNetherBridgePieces.Start.class,
+~ 				StructureNetherBridgePieces.Start::new, "NeStart");
+
+> CHANGE  3 : 5  @  3 : 5
 
 ~ 			StructureNetherBridgePieces.PieceWeight parPieceWeight, List<StructureComponent> parList,
 ~ 			EaglercraftRandom parRandom, int parInt1, int parInt2, int parInt3, EnumFacing parEnumFacing, int parInt4) {

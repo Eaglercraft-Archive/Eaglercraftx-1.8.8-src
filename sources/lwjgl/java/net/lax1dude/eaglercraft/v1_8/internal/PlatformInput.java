@@ -14,6 +14,8 @@ import org.lwjgl.glfw.GLFWGamepadState;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.system.MemoryStack;
 
+import net.lax1dude.eaglercraft.v1_8.Display;
+
 /**
  * Copyright (c) 2022-2024 lax1dude, ayunami2000. All Rights Reserved.
  * 
@@ -60,7 +62,6 @@ public class PlatformInput {
 	private static boolean enableRepeatEvents = false;
 	private static int functionKeyModifier = GLFW_KEY_F;
 
-	public static boolean lockKeys = false;
 
 	private static final List<Character> keyboardCharList = new LinkedList<>();
 
@@ -298,12 +299,23 @@ public class PlatformInput {
 	}
 
 	public static void update() {
+		update(0);
+	}
+
+	private static final long[] syncTimer = new long[1];
+
+	public static void update(int limitFps) {
 		glfwPollEvents();
 		if(vsync != glfwVSyncState) {
 			glfwSwapInterval(vsync ? 1 : 0);
 			glfwVSyncState = vsync;
 		}
 		glfwSwapBuffers(win);
+		if(limitFps > 0 && !vsync) {
+			Display.sync(limitFps, syncTimer);
+		}else {
+			syncTimer[0] = 0l;
+		}
 	}
 
 	public static boolean isVSyncSupported() {
@@ -413,6 +425,10 @@ public class PlatformInput {
 
 	public static void keyboardEnableRepeatEvents(boolean b) {
 		enableRepeatEvents = b;
+	}
+
+	public static boolean keyboardAreKeysLocked() {
+		return false;
 	}
 
 	public static boolean mouseNext() {

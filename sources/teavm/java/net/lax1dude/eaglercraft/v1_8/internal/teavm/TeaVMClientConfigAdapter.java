@@ -47,6 +47,7 @@ public class TeaVMClientConfigAdapter implements IClientConfigAdapter, IBootMenu
 	private String worldsDB = "worlds";
 	private String resourcePacksDB = "resourcePacks";
 	private JSONObject integratedServerOpts;
+	private boolean checkGLErrors = false;
 	private boolean checkShaderGLErrors = false;
 	private boolean demoMode = EaglercraftVersion.forceDemoMode;
 	private boolean isAllowUpdateSvc = EaglercraftVersion.enableUpdateService;
@@ -97,6 +98,7 @@ public class TeaVMClientConfigAdapter implements IClientConfigAdapter, IBootMenu
 		serverToJoin = eaglercraftXOpts.getJoinServer(null);
 		worldsDB = eaglercraftXOpts.getWorldsDB("worlds");
 		resourcePacksDB = eaglercraftXOpts.getResourcePacksDB("resourcePacks");
+		checkGLErrors = eaglercraftXOpts.getCheckGLErrors(false);
 		checkShaderGLErrors = eaglercraftXOpts.getCheckShaderGLErrors(false);
 		demoMode = EaglercraftVersion.forceDemoMode || eaglercraftXOpts.getDemoMode(false);
 		isAllowUpdateSvc = EaglercraftVersion.enableUpdateService && !demoMode && eaglercraftXOpts.getAllowUpdateSvc(true);
@@ -224,6 +226,7 @@ public class TeaVMClientConfigAdapter implements IClientConfigAdapter, IBootMenu
 		serverToJoin = eaglercraftOpts.optString("joinServer", null);
 		worldsDB = eaglercraftOpts.optString("worldsDB", "worlds");
 		resourcePacksDB = eaglercraftOpts.optString("resourcePacksDB", "resourcePacks");
+		checkGLErrors = eaglercraftOpts.optBoolean("checkGLErrors", false);
 		checkShaderGLErrors = eaglercraftOpts.optBoolean("checkShaderGLErrors", false);
 		if(EaglercraftVersion.forceDemoMode) {
 			eaglercraftOpts.put("demoMode", true);
@@ -359,6 +362,11 @@ public class TeaVMClientConfigAdapter implements IClientConfigAdapter, IBootMenu
 	@Override
 	public List<RelayEntry> getRelays() {
 		return relays;
+	}
+
+	@Override
+	public boolean isCheckGLErrors() {
+		return checkGLErrors;
 	}
 
 	@Override
@@ -553,6 +561,7 @@ public class TeaVMClientConfigAdapter implements IClientConfigAdapter, IBootMenu
 		jsonObject.put("joinServer", serverToJoin);
 		jsonObject.put("worldsDB", worldsDB);
 		jsonObject.put("resourcePacksDB", resourcePacksDB);
+		jsonObject.put("checkGLErrors", checkGLErrors);
 		jsonObject.put("checkShaderGLErrors", checkShaderGLErrors);
 		jsonObject.put("demoMode", demoMode);
 		jsonObject.put("allowUpdateSvc", isAllowUpdateSvc);

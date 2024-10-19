@@ -432,7 +432,7 @@ public class PlatformOpenGL {
 				data == null ? 0l : EaglerLWJGLAllocator.getAddress(data));
 	}
 
-	public static final void _wglTexImage2D(int target, int level, int internalFormat, int width, int height,
+	public static final void _wglTexImage2Df32(int target, int level, int internalFormat, int width, int height,
 			int border, int format, int type, FloatBuffer data) {
 		nglTexImage2D(target, level, internalFormat, width, height, border, format, type,
 				data == null ? 0l : EaglerLWJGLAllocator.getAddress(data));
@@ -462,7 +462,7 @@ public class PlatformOpenGL {
 				data == null ? 0l : EaglerLWJGLAllocator.getAddress(data));
 	}
 
-	public static final void _wglTexSubImage2D(int target, int level, int xoffset, int yoffset, int width, int height,
+	public static final void _wglTexSubImage2Df32(int target, int level, int xoffset, int yoffset, int width, int height,
 			int format, int type, FloatBuffer data) {
 		nglTexSubImage2D(target, level, xoffset, yoffset, width, height, format, type,
 				data == null ? 0l : EaglerLWJGLAllocator.getAddress(data));

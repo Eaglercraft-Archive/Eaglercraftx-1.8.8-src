@@ -469,10 +469,10 @@ public class PlatformOpenGL {
 				data == null ? null : EaglerArrayBufferAllocator.getDataView8Unsigned(data));
 	}
 	
-	public static final void _wglTexImage2D(int target, int level, int internalFormat, int width,
+	public static final void _wglTexImage2Df32(int target, int level, int internalFormat, int width,
 			int height, int border, int format, int type, FloatBuffer data) {
 		ctx.texImage2D(target, level, internalFormat, width, height, border, format, type,
-				data == null ? null : EaglerArrayBufferAllocator.getDataView8Unsigned(data));
+				data == null ? null : EaglerArrayBufferAllocator.getDataView32F(data));
 	}
 	
 	public static final void _wglTexSubImage2D(int target, int level, int xoffset, int yoffset,
@@ -493,10 +493,10 @@ public class PlatformOpenGL {
 				data == null ? null : EaglerArrayBufferAllocator.getDataView8Unsigned(data));
 	}
 	
-	public static final void _wglTexSubImage2D(int target, int level, int xoffset, int yoffset,
+	public static final void _wglTexSubImage2Df32(int target, int level, int xoffset, int yoffset,
 			int width, int height, int format, int type, FloatBuffer data) {
 		ctx.texSubImage2D(target, level, xoffset, yoffset, width, height, format, type,
-				data == null ? null : EaglerArrayBufferAllocator.getDataView8Unsigned(data));
+				data == null ? null : EaglerArrayBufferAllocator.getDataView32F(data));
 	}
 	
 	public static final void _wglCopyTexSubImage2D(int target, int level, int xoffset, int yoffset,
@@ -517,19 +517,19 @@ public class PlatformOpenGL {
 	}
 	
 	public static final void _wglShaderSource(IShaderGL obj, String source) {
-		ctx.shaderSource(obj == null ? null : ((OpenGLObjects.ShaderGL)obj).ptr, source);
+		ctx.shaderSource(((OpenGLObjects.ShaderGL)obj).ptr, source);
 	}
 	
 	public static final void _wglCompileShader(IShaderGL obj) {
-		ctx.compileShader(obj == null ? null : ((OpenGLObjects.ShaderGL)obj).ptr);
+		ctx.compileShader(((OpenGLObjects.ShaderGL)obj).ptr);
 	}
 	
 	public static final int _wglGetShaderi(IShaderGL obj, int param) {
-		return ctx.getShaderParameteri(obj == null ? null : ((OpenGLObjects.ShaderGL)obj).ptr, param);
+		return ctx.getShaderParameteri(((OpenGLObjects.ShaderGL)obj).ptr, param);
 	}
 	
 	public static final String _wglGetShaderInfoLog(IShaderGL obj) {
-		return ctx.getShaderInfoLog(obj == null ? null : ((OpenGLObjects.ShaderGL)obj).ptr);
+		return ctx.getShaderInfoLog(((OpenGLObjects.ShaderGL)obj).ptr);
 	}
 	
 	public static final void _wglUseProgram(IProgramGL obj) {
@@ -537,33 +537,31 @@ public class PlatformOpenGL {
 	}
 	
 	public static final void _wglAttachShader(IProgramGL obj, IShaderGL shader) {
-		ctx.attachShader(obj == null ? null : ((OpenGLObjects.ProgramGL)obj).ptr,
-				shader == null ? null : ((OpenGLObjects.ShaderGL)shader).ptr);
+		ctx.attachShader(((OpenGLObjects.ProgramGL)obj).ptr, ((OpenGLObjects.ShaderGL)shader).ptr);
 	}
 	
 	public static final void _wglDetachShader(IProgramGL obj, IShaderGL shader) {
-		ctx.detachShader(obj == null ? null : ((OpenGLObjects.ProgramGL)obj).ptr,
-				shader == null ? null : ((OpenGLObjects.ShaderGL)shader).ptr);
+		ctx.detachShader(((OpenGLObjects.ProgramGL)obj).ptr, ((OpenGLObjects.ShaderGL)shader).ptr);
 	}
 	
 	public static final void _wglLinkProgram(IProgramGL obj) {
-		ctx.linkProgram(obj == null ? null : ((OpenGLObjects.ProgramGL)obj).ptr);
+		ctx.linkProgram(((OpenGLObjects.ProgramGL)obj).ptr);
 	}
 	
 	public static final int _wglGetProgrami(IProgramGL obj, int param) {
-		return ctx.getProgramParameteri(obj == null ? null : ((OpenGLObjects.ProgramGL)obj).ptr, param);
+		return ctx.getProgramParameteri(((OpenGLObjects.ProgramGL)obj).ptr, param);
 	}
 	
 	public static final String _wglGetProgramInfoLog(IProgramGL obj) {
-		return ctx.getProgramInfoLog(obj == null ? null : ((OpenGLObjects.ProgramGL)obj).ptr);
+		return ctx.getProgramInfoLog(((OpenGLObjects.ProgramGL)obj).ptr);
 	}
 	
 	public static final void _wglBindAttribLocation(IProgramGL obj, int index, String name) {
-		ctx.bindAttribLocation(obj == null ? null : ((OpenGLObjects.ProgramGL)obj).ptr, index, name);
+		ctx.bindAttribLocation(((OpenGLObjects.ProgramGL)obj).ptr, index, name);
 	}
 	
 	public static final int _wglGetAttribLocation(IProgramGL obj, String name) {
-		return ctx.getAttribLocation(obj == null ? null : ((OpenGLObjects.ProgramGL)obj).ptr, name);
+		return ctx.getAttribLocation(((OpenGLObjects.ProgramGL)obj).ptr, name);
 	}
 	
 	public static final void _wglDrawArrays(int mode, int first, int count) {
@@ -571,13 +569,13 @@ public class PlatformOpenGL {
 		//checkErr("_wglDrawArrays(" + mode + ", " + first + ", " + count + ");");
 	}
 
-	public static final void _wglDrawArraysInstanced(int mode, int first, int count, int instanced) {
+	public static final void _wglDrawArraysInstanced(int mode, int first, int count, int instances) {
 		switch(instancingImpl) {
 		case INSTANCE_IMPL_CORE:
-			ctx.drawArraysInstanced(mode, first, count, instanced);
+			ctx.drawArraysInstanced(mode, first, count, instances);
 			break;
 		case INSTANCE_IMPL_ANGLE:
-			ANGLEInstancedArrays.drawArraysInstancedANGLE(mode, first, count, instanced);
+			ANGLEInstancedArrays.drawArraysInstancedANGLE(mode, first, count, instances);
 			break;
 		default:
 			throw new UnsupportedOperationException();
@@ -590,13 +588,13 @@ public class PlatformOpenGL {
 		//checkErr("_wglDrawElements(" + mode + ", " + count + ", " + type + ", " + offset + ");");
 	}
 	
-	public static final void _wglDrawElementsInstanced(int mode, int count, int type, int offset, int instanced) {
+	public static final void _wglDrawElementsInstanced(int mode, int count, int type, int offset, int instances) {
 		switch(instancingImpl) {
 		case INSTANCE_IMPL_CORE:
-			ctx.drawElementsInstanced(mode, count, type, offset, instanced);
+			ctx.drawElementsInstanced(mode, count, type, offset, instances);
 			break;
 		case INSTANCE_IMPL_ANGLE:
-			ANGLEInstancedArrays.drawElementsInstancedANGLE(mode, count, type, offset, instanced);
+			ANGLEInstancedArrays.drawElementsInstancedANGLE(mode, count, type, offset, instances);
 			break;
 		default:
 			throw new UnsupportedOperationException();
@@ -708,13 +706,11 @@ public class PlatformOpenGL {
 	
 	public static final void _wglFramebufferTexture2D(int target, int attachment, int texTarget,
 			ITextureGL texture, int level) {
-		ctx.framebufferTexture2D(target, attachment, texTarget,
-				texture == null ? null : ((OpenGLObjects.TextureGL)texture).ptr, level);
+		ctx.framebufferTexture2D(target, attachment, texTarget, ((OpenGLObjects.TextureGL)texture).ptr, level);
 	}
 	
 	public static final void _wglFramebufferTextureLayer(int target, int attachment, ITextureGL texture, int level, int layer) {
-		ctx.framebufferTextureLayer(target, attachment,
-				texture == null ? null : ((OpenGLObjects.TextureGL) texture).ptr, level, layer);
+		ctx.framebufferTextureLayer(target, attachment, ((OpenGLObjects.TextureGL) texture).ptr, level, layer);
 	}
 	
 	public static final void _wglBlitFramebuffer(int srcX0, int srcY0, int srcX1, int srcY1,

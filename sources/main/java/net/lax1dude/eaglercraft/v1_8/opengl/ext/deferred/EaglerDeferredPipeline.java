@@ -4065,6 +4065,6 @@ public class EaglerDeferredPipeline {
 		GlStateManager.popMatrix();
 		GlStateManager.matrixMode(GL_MODELVIEW);
 		GlStateManager.popMatrix();
-		EagUtils.sleep(10l);
+		EagUtils.sleep(10);
 	}
 }

@@ -11,7 +11,16 @@
 
 > DELETE  18  @  18 : 21
 
-> CHANGE  25 : 26  @  25 : 26
+> CHANGE  3 : 9  @  3 : 6
+
+~ 		MapGenStructureIO.registerStructureComponent(ComponentScatteredFeaturePieces.DesertPyramid.class,
+~ 				ComponentScatteredFeaturePieces.DesertPyramid::new, "TeDP");
+~ 		MapGenStructureIO.registerStructureComponent(ComponentScatteredFeaturePieces.JunglePyramid.class,
+~ 				ComponentScatteredFeaturePieces.JunglePyramid::new, "TeJP");
+~ 		MapGenStructureIO.registerStructureComponent(ComponentScatteredFeaturePieces.SwampHut.class,
+~ 				ComponentScatteredFeaturePieces.SwampHut::new, "TeSH");
+
+> CHANGE  19 : 20  @  19 : 20
 
 ~ 		public DesertPyramid(EaglercraftRandom parRandom, int parInt1, int parInt2) {
 

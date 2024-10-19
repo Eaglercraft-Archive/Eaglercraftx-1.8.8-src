@@ -3,6 +3,7 @@ package net.lax1dude.eaglercraft.v1_8.internal;
 import org.json.JSONObject;
 
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
+import net.lax1dude.eaglercraft.v1_8.EagUtils;
 
 /**
  * Copyright (c) 2022 lax1dude. All Rights Reserved.
@@ -79,10 +80,7 @@ public interface IServerQuery {
 	default boolean awaitResponseAvailable(long timeout) {
 		long start = EagRuntime.steadyTimeMillis();
 		while(isOpen() && responsesAvailable() <= 0 && (timeout <= 0l || EagRuntime.steadyTimeMillis() - start < timeout)) {
-			try {
-				Thread.sleep(0l, 250000);
-			} catch (InterruptedException e) {
-			}
+			EagUtils.sleep(5);
 		}
 		return responsesAvailable() > 0;
 	}
@@ -94,10 +92,7 @@ public interface IServerQuery {
 	default boolean awaitResponseBinaryAvailable(long timeout) {
 		long start = EagRuntime.steadyTimeMillis();
 		while(isOpen() && binaryResponsesAvailable() <= 0 && (timeout <= 0l || EagRuntime.steadyTimeMillis() - start < timeout)) {
-			try {
-				Thread.sleep(0l, 250000);
-			} catch (InterruptedException e) {
-			}
+			EagUtils.sleep(5);
 		}
 		return binaryResponsesAvailable() > 0;
 	}

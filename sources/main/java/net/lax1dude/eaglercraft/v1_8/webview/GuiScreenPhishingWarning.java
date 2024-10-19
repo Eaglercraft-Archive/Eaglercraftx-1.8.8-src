@@ -23,7 +23,7 @@ import net.minecraft.util.ResourceLocation;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-public class GuiScreenPhishingWaring extends GuiScreen {
+public class GuiScreenPhishingWarning extends GuiScreen {
 
 	public static boolean hasShownMessage = false;
 
@@ -33,7 +33,7 @@ public class GuiScreenPhishingWaring extends GuiScreen {
 	private boolean mouseOverCheck;
 	private boolean hasCheckedBox;
 
-	public GuiScreenPhishingWaring(GuiScreen cont) {
+	public GuiScreenPhishingWarning(GuiScreen cont) {
 		this.cont = cont;
 	}
 

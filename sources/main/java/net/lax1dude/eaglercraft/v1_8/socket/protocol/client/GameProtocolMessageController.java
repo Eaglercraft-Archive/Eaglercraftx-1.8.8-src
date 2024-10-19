@@ -144,9 +144,11 @@ public class GameProtocolMessageController {
 				pkt = sendQueueV4.remove(0);
 				sendFunction.sendPluginMessage(GamePluginMessageConstants.V4_CHANNEL, pkt);
 			}else {
-				int i, j, sendCount = 0, totalLen = 0;
+				int i, j, sendCount, totalLen;
 				PacketBuffer sendBuffer;
 				while(sendQueueV4.size() > 0) {
+					sendCount = 0;
+					totalLen = 0;
 					do {
 						i = sendQueueV4.get(sendCount++).readableBytes();
 						totalLen += GamePacketOutputBuffer.getVarIntSize(i) + i;

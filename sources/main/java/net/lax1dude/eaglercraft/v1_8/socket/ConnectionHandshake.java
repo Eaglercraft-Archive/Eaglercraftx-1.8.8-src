@@ -12,6 +12,7 @@ import java.util.Map.Entry;
 
 import net.lax1dude.eaglercraft.v1_8.ArrayUtils;
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
+import net.lax1dude.eaglercraft.v1_8.EagUtils;
 import net.lax1dude.eaglercraft.v1_8.EaglerInputStream;
 import net.lax1dude.eaglercraft.v1_8.EaglerOutputStream;
 import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
@@ -441,10 +442,7 @@ public class ConnectionHandshake {
 			if(client.getState().isClosed()) {
 				return null;
 			}
-			try {
-				Thread.sleep(50l);
-			} catch (InterruptedException e) {
-			}
+			EagUtils.sleep(50);
 			if(EagRuntime.steadyTimeMillis() - millis > timeout) {
 				client.close();
 				return null;

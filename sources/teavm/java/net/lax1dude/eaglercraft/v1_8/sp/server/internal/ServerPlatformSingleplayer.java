@@ -216,7 +216,7 @@ public class ServerPlatformSingleplayer {
 				logger.error("Fast immediate continue will be disabled for server context due to actually continuing immediately");
 				return;
 			}
-			EagUtils.sleep(10l);
+			EagUtils.sleep(10);
 			currentContinueHack = null;
 			if(!checkMe[0]) {
 				if(immediateContinueChannel != null) {
@@ -255,7 +255,7 @@ public class ServerPlatformSingleplayer {
 			if(immediateContinueSupport) {
 				immediateContinueTeaVM();
 			}else {
-				EagUtils.sleep(0l);
+				EagUtils.sleep(0);
 			}
 		}
 	}

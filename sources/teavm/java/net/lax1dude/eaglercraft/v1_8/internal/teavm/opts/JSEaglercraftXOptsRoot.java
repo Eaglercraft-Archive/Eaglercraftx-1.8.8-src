@@ -54,6 +54,9 @@ public abstract class JSEaglercraftXOptsRoot implements JSObject {
 	@JSBody(script = "return (typeof this.relays === \"object\") ? this.relays : null;")
 	public native JSArrayReader<JSEaglercraftXOptsRelay> getRelays();
 
+	@JSBody(params = { "def" }, script = "return (typeof this.checkGLErrors === \"boolean\") ? this.checkGLErrors : def;")
+	public native boolean getCheckGLErrors(boolean defaultValue);
+
 	@JSBody(params = { "def" }, script = "return (typeof this.checkShaderGLErrors === \"boolean\") ? this.checkShaderGLErrors : def;")
 	public native boolean getCheckShaderGLErrors(boolean defaultValue);
 

@@ -298,10 +298,10 @@ public class RelayManager {
 							return null;
 						}
 					}
-					EagUtils.sleep(20l);
+					EagUtils.sleep(20);
 				}
 			}
-			EagUtils.sleep(20l);
+			EagUtils.sleep(20);
 		}
 		logger.error("Relay [{}] connection failed!", relay.address);
 		Throwable t;

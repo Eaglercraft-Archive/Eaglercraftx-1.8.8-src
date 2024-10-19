@@ -242,7 +242,7 @@ public class ClientBootFactory {
 				BootMenuMain.runLater(() -> {
 					while(!isMainReady("main")) {
 						logger.error("main function is not available yet! waiting 250ms...");
-						EagUtils.sleep(250l);
+						EagUtils.sleep(250);
 					}
 					BootMenuMain.stopEventLoop();
 					callMain("eaglercraftXOpts", launchOptsStr, "main", blockUnsigned);
@@ -409,7 +409,7 @@ public class ClientBootFactory {
 				BootMenuMain.runLater(() -> {
 					while(!isMainReady("main")) {
 						logger.error("main function is not available yet! waiting 250ms...");
-						EagUtils.sleep(250l);
+						EagUtils.sleep(250);
 					}
 					BootMenuMain.stopEventLoop();
 					callMain("eaglercraftOpts", launchOptsStr, "main", blockUnsigned);
@@ -464,7 +464,7 @@ public class ClientBootFactory {
 				BootMenuMain.runLater(() -> {
 					while(!isMainReady("main")) {
 						logger.error("main function is not available yet! waiting 250ms...");
-						EagUtils.sleep(250l);
+						EagUtils.sleep(250);
 					}
 					BootMenuMain.stopEventLoop();
 					callMainOld15("minecraftOpts", container, assetsEPKURL.toExternalForm(), b64Opts, launchConf.joinServer, "main", blockUnsigned);
@@ -538,7 +538,7 @@ public class ClientBootFactory {
 				BootMenuMain.runLater(() -> {
 					while(!isMainReady("main")) {
 						logger.error("main function is not available yet! waiting 250ms...");
-						EagUtils.sleep(250l);
+						EagUtils.sleep(250);
 					}
 					BootMenuMain.stopEventLoop();
 					callMainOldB13("minecraftOpts", container, assetsEPKURL.toExternalForm(), launchConf.joinServer, "main", blockUnsigned);
@@ -595,7 +595,7 @@ public class ClientBootFactory {
 				BootMenuMain.runLater(() -> {
 					while(!isMainReady("main")) {
 						logger.error("main function is not available yet! waiting 250ms...");
-						EagUtils.sleep(250l);
+						EagUtils.sleep(250);
 					}
 					BootMenuMain.stopEventLoop();
 					callMain("config", launchOptsStr, "main", blockUnsigned);
@@ -649,7 +649,7 @@ public class ClientBootFactory {
 				BootMenuMain.runLater(() -> {
 					while(!isMainReady("main")) {
 						logger.error("main function is not available yet! waiting 250ms...");
-						EagUtils.sleep(250l);
+						EagUtils.sleep(250);
 					}
 					BootMenuMain.stopEventLoop();
 					callMainOldB13("classicConfig", container, assetsEPKURL.toExternalForm(), "", "main", blockUnsigned);
@@ -710,7 +710,7 @@ public class ClientBootFactory {
 				BootMenuMain.runLater(() -> {
 					while(!isMainReady("main")) {
 						logger.error("main function is not available yet! waiting 250ms...");
-						EagUtils.sleep(250l);
+						EagUtils.sleep(250);
 					}
 					BootMenuMain.stopEventLoop();
 					callMain(launchConf.launchOptsVar, launchOptsStr, launchConf.mainFunction, blockUnsigned);

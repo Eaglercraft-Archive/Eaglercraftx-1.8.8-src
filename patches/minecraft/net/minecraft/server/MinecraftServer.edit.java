@@ -20,10 +20,11 @@
 
 > DELETE  2  @  2 : 4
 
-> CHANGE  1 : 7  @  1 : 4
+> CHANGE  1 : 8  @  1 : 4
 
 ~ 
 ~ import net.lax1dude.eaglercraft.v1_8.EagRuntime;
+~ import net.lax1dude.eaglercraft.v1_8.EagUtils;
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
 ~ import net.lax1dude.eaglercraft.v1_8.futures.FutureTask;
@@ -215,7 +216,11 @@
 
 > DELETE  17  @  17 : 21
 
-> DELETE  45  @  45 : 53
+> CHANGE  29 : 30  @  29 : 30
+
+~ 					EagUtils.sleep(Math.max(1L, 50L - i));
+
+> DELETE  15  @  15 : 23
 
 > DELETE  15  @  15 : 40
 

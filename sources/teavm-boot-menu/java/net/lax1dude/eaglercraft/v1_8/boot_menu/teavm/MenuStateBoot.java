@@ -279,7 +279,7 @@ public class MenuStateBoot extends MenuState {
 														if(res != null) {
 															MenuPopupStateLoading loadingScreen = new MenuPopupStateLoading("Importing client...");
 															MenuStateBoot.this.changePopupState(loadingScreen);
-															EagUtils.sleep(50l);
+															EagUtils.sleep(50);
 															String offlineData = new String(res.fileData, StandardCharsets.UTF_8).replace("\r\n", "\n");
 															EnumOfflineParseType parseType2 = parseTypeF;
 															if(parseType2 == null) {

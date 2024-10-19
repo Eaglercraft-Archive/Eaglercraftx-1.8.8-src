@@ -18,8 +18,9 @@
 + import net.lax1dude.eaglercraft.v1_8.sp.server.EaglerIntegratedServerWorker;
 + import net.lax1dude.eaglercraft.v1_8.sp.server.WorldsDB;
 
-> CHANGE  1 : 4  @  1 : 8
+> CHANGE  1 : 5  @  1 : 8
 
+~ import net.lax1dude.eaglercraft.v1_8.EagUtils;
 ~ import net.lax1dude.eaglercraft.v1_8.internal.vfs2.VFile2;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
@@ -103,24 +104,19 @@
 ~ 		VFile2 file1 = WorldsDB.newVFile(this.savesDirectory, parString1);
 ~ 		logger.info("Deleting level " + parString1);
 
-> CHANGE  1 : 6  @  1 : 6
+> CHANGE  1 : 5  @  1 : 15
 
 ~ 		for (int i = 1; i <= 5; ++i) {
 ~ 			logger.info("Attempt " + i + "...");
 ~ 			if (deleteFiles(file1.listFiles(true), "singleplayer.busy.deleting")) {
 ~ 				return true;
-~ 			}
 
-> CHANGE  1 : 7  @  1 : 8
+> CHANGE  2 : 6  @  2 : 3
 
 ~ 			logger.warn("Unsuccessful in deleting contents.");
 ~ 			if (i < 5) {
-~ 				try {
-~ 					Thread.sleep(500L);
-~ 				} catch (InterruptedException var5) {
-~ 					;
-
-> DELETE  2  @  2 : 4
+~ 				EagUtils.sleep(500);
+~ 			}
 
 > INSERT  1 : 3  @  1
 

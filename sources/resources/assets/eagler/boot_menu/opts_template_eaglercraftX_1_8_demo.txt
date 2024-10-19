@@ -48,6 +48,7 @@
 	"autoFixLegacyStyleAttr": true,
 	"allowUpdateDL": true,
 	"logInvalidCerts": false,
+	"checkGLErrors": false,
 	"checkShaderGLErrors": false,
 	"crashOnUncaughtExceptions": false,
 	"forceWebGL1": false,

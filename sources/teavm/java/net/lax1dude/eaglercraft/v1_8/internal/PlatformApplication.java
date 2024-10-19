@@ -117,7 +117,7 @@ public class PlatformApplication {
 	@JSBody(params = { "cb" }, script = "if(!navigator.clipboard) { cb(prompt(\"Please enter the text to paste:\") || \"\"); } else if (!navigator.clipboard.readText) cb(\"\"); else navigator.clipboard.readText().then(function(s) { cb(s); }, function(s) { cb(\"\"); });")
 	private static native void getClipboard1(StupidFunctionResolveString cb);
 	
-	@JSBody(params = { "str" }, script = "if(navigator.clipboard) clipboard.writeText(str);")
+	@JSBody(params = { "str" }, script = "if(navigator.clipboard) navigator.clipboard.writeText(str);")
 	private static native void setClipboard0(String str);
 	
 	public static void setLocalStorage(String name, byte[] data) {

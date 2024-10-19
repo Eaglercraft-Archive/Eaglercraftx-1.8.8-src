@@ -199,7 +199,7 @@ public class EarlyLoadScreen {
 		_wglDisableVertexAttribArray(0);
 		
 		PlatformInput.update();
-		EagUtils.sleep(50l); // allow webgl to flush
+		EagUtils.sleep(50); // allow webgl to flush
 
 		_wglUseProgram(null);
 		_wglBindBuffer(GL_ARRAY_BUFFER, null);
@@ -266,7 +266,7 @@ public class EarlyLoadScreen {
 		_wglDisableVertexAttribArray(0);
 		
 		PlatformInput.update();
-		EagUtils.sleep(50l); // allow webgl to flush
+		EagUtils.sleep(50); // allow webgl to flush
 
 		_wglUseProgram(null);
 		_wglBindBuffer(GL_ARRAY_BUFFER, null);
@@ -351,7 +351,7 @@ public class EarlyLoadScreen {
 		}
 		
 		PlatformInput.update();
-		EagUtils.sleep(50l); // allow webgl to flush
+		EagUtils.sleep(50); // allow webgl to flush
 
 		_wglUseProgram(null);
 		if(!(vaos && softVAOs)) {

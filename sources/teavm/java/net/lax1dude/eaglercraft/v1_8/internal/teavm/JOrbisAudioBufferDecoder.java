@@ -90,8 +90,8 @@ public class JOrbisAudioBufferDecoder {
 				logger.warn("[{}]: Number of channels in header does not match the stream", errorString);
 			}
 			if(ch == -1 || len == 0) {
-				logger.warn("[{}]: Empty file", errorString);
-				return ctx.createBuffer(ch, 0, dec.jorbisInfo.rate);
+				logger.error("[{}]: Empty file", errorString);
+				return null;
 			}
 			switch(loadVia) {
 			case LOAD_VIA_AUDIOBUFFER: {

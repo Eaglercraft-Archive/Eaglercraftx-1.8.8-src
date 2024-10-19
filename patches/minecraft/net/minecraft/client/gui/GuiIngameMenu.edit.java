@@ -21,7 +21,7 @@
 ~ import net.lax1dude.eaglercraft.v1_8.sp.lan.LANServerController;
 ~ import net.lax1dude.eaglercraft.v1_8.update.GuiUpdateCheckerOverlay;
 ~ import net.lax1dude.eaglercraft.v1_8.voice.GuiVoiceMenu;
-~ import net.lax1dude.eaglercraft.v1_8.webview.GuiScreenPhishingWaring;
+~ import net.lax1dude.eaglercraft.v1_8.webview.GuiScreenPhishingWarning;
 ~ import net.lax1dude.eaglercraft.v1_8.webview.GuiScreenRecieveServerInfo;
 ~ import net.lax1dude.eaglercraft.v1_8.webview.GuiScreenServerInfo;
 ~ import net.minecraft.client.Minecraft;
@@ -163,8 +163,8 @@
 ~ 				if (PauseMenuCustomizeState.serverInfoURL != null) {
 ~ 					GuiScreen screen = GuiScreenServerInfo.createForCurrentState(this,
 ~ 							PauseMenuCustomizeState.serverInfoURL);
-~ 					if (!this.mc.gameSettings.hasHiddenPhishWarning && !GuiScreenPhishingWaring.hasShownMessage) {
-~ 						screen = new GuiScreenPhishingWaring(screen);
+~ 					if (!this.mc.gameSettings.hasHiddenPhishWarning && !GuiScreenPhishingWarning.hasShownMessage) {
+~ 						screen = new GuiScreenPhishingWarning(screen);
 ~ 					}
 ~ 					this.mc.displayGuiScreen(screen);
 ~ 				}
@@ -172,8 +172,8 @@
 ~ 			case PauseMenuCustomizeState.SERVER_INFO_MODE_SHOW_EMBED_OVER_WS:
 ~ 				if (PauseMenuCustomizeState.serverInfoHash != null) {
 ~ 					GuiScreen screen = new GuiScreenRecieveServerInfo(this, PauseMenuCustomizeState.serverInfoHash);
-~ 					if (!this.mc.gameSettings.hasHiddenPhishWarning && !GuiScreenPhishingWaring.hasShownMessage) {
-~ 						screen = new GuiScreenPhishingWaring(screen);
+~ 					if (!this.mc.gameSettings.hasHiddenPhishWarning && !GuiScreenPhishingWarning.hasShownMessage) {
+~ 						screen = new GuiScreenPhishingWarning(screen);
 ~ 					}
 ~ 					this.mc.displayGuiScreen(screen);
 ~ 				}

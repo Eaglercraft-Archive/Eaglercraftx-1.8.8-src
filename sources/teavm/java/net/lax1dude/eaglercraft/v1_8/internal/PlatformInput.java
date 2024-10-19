@@ -37,6 +37,7 @@ import org.teavm.jso.gamepad.Gamepad;
 import org.teavm.jso.gamepad.GamepadButton;
 import org.teavm.jso.gamepad.GamepadEvent;
 
+import net.lax1dude.eaglercraft.v1_8.Display;
 import net.lax1dude.eaglercraft.v1_8.EagUtils;
 import net.lax1dude.eaglercraft.v1_8.internal.teavm.ClientMain;
 import net.lax1dude.eaglercraft.v1_8.internal.teavm.EarlyLoadScreen;
@@ -883,6 +884,12 @@ public class PlatformInput {
 	static native double getDevicePixelRatio(Window win);
 
 	public static void update() {
+		update(0);
+	}
+
+	private static final long[] syncTimer = new long[1];
+
+	public static void update(int fpsLimit) {
 		double r = getDevicePixelRatio(win);
 		if(r < 0.01) r = 1.0;
 		windowDPI = (float)r;
@@ -934,12 +941,21 @@ public class PlatformInput {
 		PlatformScreenRecord.captureFrameHook();
 		if(getVisibilityState(win.getDocument())) {
 			if(vsyncSupport && vsync) {
+				syncTimer[0] = 0l;
 				asyncRequestAnimationFrame();
 			}else {
-				PlatformRuntime.swapDelayTeaVM();
+				if(fpsLimit <= 0) {
+					syncTimer[0] = 0l;
+					PlatformRuntime.swapDelayTeaVM();
+				}else {
+					if(!Display.sync(fpsLimit, syncTimer)) {
+						PlatformRuntime.swapDelayTeaVM();
+					}
+				}
 			}
 		}else {
-			EagUtils.sleep(50l);
+			syncTimer[0] = 0l;
+			EagUtils.sleep(50);
 		}
 	}
 
@@ -1177,6 +1193,10 @@ public class PlatformInput {
 		enableRepeatEvents = b;
 	}
 
+	public static boolean keyboardAreKeysLocked() {
+		return lockKeys;
+	}
+
 	public static boolean mouseNext() {
 		currentEvent = null;
 		synchronized(mouseEvents) {
@@ -1262,7 +1282,7 @@ public class PlatformInput {
 	}
 
 	public static boolean mouseIsButtonDown(int i) {
-		return buttonStates[i];
+		return (i < 0 || i >= buttonStates.length) ? false : buttonStates[i];
 	}
 
 	public static int mouseGetDWheel() {
@@ -1553,7 +1573,7 @@ public class PlatformInput {
 				EarlyLoadScreen.paintEnable(PlatformOpenGL.checkVAOCapable(), allowBootMenu);
 				
 				while(mouseEvents.isEmpty() && keyEvents.isEmpty() && touchEvents.isEmpty()) {
-					EagUtils.sleep(100l);
+					EagUtils.sleep(100);
 				}
 			}
 		}
@@ -1720,13 +1740,13 @@ public class PlatformInput {
 	}
 
 	@JSBody(params = { "doc" }, script = "doc.exitFullscreen();")
-	private	 static native void exitFullscreen(HTMLDocument doc);
+	private	static native void exitFullscreen(HTMLDocument doc);
 
 	@JSBody(params = { "doc" }, script = "doc.webkitExitFullscreen();")
-	private	 static native void webkitExitFullscreen(HTMLDocument doc);
+	private	static native void webkitExitFullscreen(HTMLDocument doc);
 
 	@JSBody(params = { "doc" }, script = "doc.mozCancelFullscreen();")
-	private	 static native void mozCancelFullscreen(HTMLDocument doc);
+	private	static native void mozCancelFullscreen(HTMLDocument doc);
 
 	public static void showCursor(EnumCursorType cursor) {
 		switch(cursor) {
@@ -1843,20 +1863,13 @@ public class PlatformInput {
 		return ret != null ? ret.intValue() : -1;
 	};
 
-	public static void touchBufferFlush() {
-		pointerLockSupported = 0;
-		pointerLockFlag = true;
-		currentTouchState = null;
-		touchEvents.clear();
-	}
-
 	// Note: this can't be called from the main loop, don't try
 	private static void touchOpenDeviceKeyboard() {
 		if(!touchIsDeviceKeyboardOpenMAYBE()) {
 			if(touchKeyboardField != null) {
 				touchKeyboardField.blur();
 				touchKeyboardField.setValue("");
-				EagUtils.sleep(10l);
+				EagUtils.sleep(10);
 				if(touchKeyboardForm != null) {
 					touchKeyboardForm.removeChild(touchKeyboardField);
 				}else {
@@ -2127,7 +2140,7 @@ public class PlatformInput {
 			touchKeyboardField.blur();
 			touchKeyboardField.setValue("");
 			if(sync) {
-				EagUtils.sleep(10l);
+				EagUtils.sleep(10);
 				if(touchKeyboardForm != null) {
 					touchKeyboardForm.removeChild(touchKeyboardField);
 				}else {

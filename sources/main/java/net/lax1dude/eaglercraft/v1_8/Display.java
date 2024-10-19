@@ -75,18 +75,43 @@ public class Display {
 		PlatformInput.update();
 	}
 
+	public static void update(int limitFramerate) {
+		PlatformInput.update(limitFramerate);
+	}
+
+	private static final long[] defaultSyncPtr = new long[1];
+
 	public static void sync(int limitFramerate) {
+		sync(limitFramerate, defaultSyncPtr);
+	}
+
+	public static boolean sync(int limitFramerate, long[] timerPtr) {
 		boolean limitFPS = limitFramerate > 0 && limitFramerate < 1000;
+		boolean blocked = false;
 		
 		if(limitFPS) {
-			long millis = EagRuntime.steadyTimeMillis();
-			long frameMillis = (1000l / limitFramerate) - (millis - lastSwap);
-			if(frameMillis > 0l) {
-				EagUtils.sleep(frameMillis);
+			if(timerPtr[0] == 0l) {
+				timerPtr[0] = EagRuntime.steadyTimeMillis();
+			}else {
+				long millis = EagRuntime.steadyTimeMillis();
+				long frameMillis = (1000l / limitFramerate);
+				long frameTime = millis - timerPtr[0];
+				if(frameTime > 2000l || frameTime < 0l) {
+					frameTime = frameMillis;
+					timerPtr[0] = millis;
+				}else {
+					timerPtr[0] += frameMillis;
+				}
+				if(frameTime >= 0l && frameTime < frameMillis) {
+					EagUtils.sleep(frameMillis - frameTime);
+					blocked = true;
+				}
 			}
+		}else {
+			timerPtr[0] = 0l;
 		}
 		
-		lastSwap = EagRuntime.steadyTimeMillis();
+		return blocked;
 	}
 
 	public static boolean contextLost() {

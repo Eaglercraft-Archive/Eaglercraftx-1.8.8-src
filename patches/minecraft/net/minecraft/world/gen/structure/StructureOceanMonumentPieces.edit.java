@@ -15,7 +15,32 @@
 
 > DELETE  10  @  10 : 13
 
-> CHANGE  21 : 22  @  21 : 22
+> CHANGE  3 : 25  @  3 : 14
+
+~ 		MapGenStructureIO.registerStructureComponent(StructureOceanMonumentPieces.MonumentBuilding.class,
+~ 				StructureOceanMonumentPieces.MonumentBuilding::new, "OMB");
+~ 		MapGenStructureIO.registerStructureComponent(StructureOceanMonumentPieces.MonumentCoreRoom.class,
+~ 				StructureOceanMonumentPieces.MonumentCoreRoom::new, "OMCR");
+~ 		MapGenStructureIO.registerStructureComponent(StructureOceanMonumentPieces.DoubleXRoom.class,
+~ 				StructureOceanMonumentPieces.DoubleXRoom::new, "OMDXR");
+~ 		MapGenStructureIO.registerStructureComponent(StructureOceanMonumentPieces.DoubleXYRoom.class,
+~ 				StructureOceanMonumentPieces.DoubleXYRoom::new, "OMDXYR");
+~ 		MapGenStructureIO.registerStructureComponent(StructureOceanMonumentPieces.DoubleYRoom.class,
+~ 				StructureOceanMonumentPieces.DoubleYRoom::new, "OMDYR");
+~ 		MapGenStructureIO.registerStructureComponent(StructureOceanMonumentPieces.DoubleYZRoom.class,
+~ 				StructureOceanMonumentPieces.DoubleYZRoom::new, "OMDYZR");
+~ 		MapGenStructureIO.registerStructureComponent(StructureOceanMonumentPieces.DoubleZRoom.class,
+~ 				StructureOceanMonumentPieces.DoubleZRoom::new, "OMDZR");
+~ 		MapGenStructureIO.registerStructureComponent(StructureOceanMonumentPieces.EntryRoom.class,
+~ 				StructureOceanMonumentPieces.EntryRoom::new, "OMEntry");
+~ 		MapGenStructureIO.registerStructureComponent(StructureOceanMonumentPieces.Penthouse.class,
+~ 				StructureOceanMonumentPieces.Penthouse::new, "OMPenthouse");
+~ 		MapGenStructureIO.registerStructureComponent(StructureOceanMonumentPieces.SimpleRoom.class,
+~ 				StructureOceanMonumentPieces.SimpleRoom::new, "OMSimple");
+~ 		MapGenStructureIO.registerStructureComponent(StructureOceanMonumentPieces.SimpleTopRoom.class,
+~ 				StructureOceanMonumentPieces.SimpleTopRoom::new, "OMSimpleT");
+
+> CHANGE  7 : 8  @  7 : 8
 
 ~ 				EaglercraftRandom parRandom) {
 

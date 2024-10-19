@@ -11,7 +11,18 @@
 
 > DELETE  15  @  15 : 18
 
-> CHANGE  24 : 26  @  24 : 26
+> CHANGE  18 : 26  @  18 : 22
+
+~ 		MapGenStructureIO.registerStructureComponent(StructureMineshaftPieces.Corridor.class,
+~ 				StructureMineshaftPieces.Corridor::new, "MSCorridor");
+~ 		MapGenStructureIO.registerStructureComponent(StructureMineshaftPieces.Cross.class,
+~ 				StructureMineshaftPieces.Cross::new, "MSCrossing");
+~ 		MapGenStructureIO.registerStructureComponent(StructureMineshaftPieces.Room.class,
+~ 				StructureMineshaftPieces.Room::new, "MSRoom");
+~ 		MapGenStructureIO.registerStructureComponent(StructureMineshaftPieces.Stairs.class,
+~ 				StructureMineshaftPieces.Stairs::new, "MSStairs");
+
+> CHANGE  2 : 4  @  2 : 4
 
 ~ 	private static StructureComponent func_175892_a(List<StructureComponent> listIn, EaglercraftRandom rand, int x,
 ~ 			int y, int z, EnumFacing facing, int type) {
