@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 /**
  * Copyright (c) 2022-2024 lax1dude. All Rights Reserved.
@@ -28,47 +29,43 @@ import java.util.Map;
 public class RelayPacket {
 
 	private static final Map<Integer,Class<? extends RelayPacket>> definedPacketClasses = new HashMap<>();
+	private static final Map<Integer,Supplier<? extends RelayPacket>> definedPacketCtors = new HashMap<>();
 	private static final Map<Class<? extends RelayPacket>,Integer> definedPacketIds = new HashMap<>();
 
-	private static void register(int id, Class<? extends RelayPacket> clazz) {
+	private static void register(int id, Class<? extends RelayPacket> clazz, Supplier<? extends RelayPacket> ctor) {
 		definedPacketClasses.put(id, clazz);
+		definedPacketCtors.put(id, ctor);
 		definedPacketIds.put(clazz, id);
 	}
 
 	static {
-		register(0x00, RelayPacket00Handshake.class);
-		register(0x01, RelayPacket01ICEServers.class);
-		register(0x02, RelayPacket02NewClient.class);
-		register(0x03, RelayPacket03ICECandidate.class);
-		register(0x04, RelayPacket04Description.class);
-		register(0x05, RelayPacket05ClientSuccess.class);
-		register(0x06, RelayPacket06ClientFailure.class);
-		register(0x07, RelayPacket07LocalWorlds.class);
-		register(0x69, RelayPacket69Pong.class);
-		register(0x70, RelayPacket70SpecialUpdate.class);
-		register(0xFE, RelayPacketFEDisconnectClient.class);
-		register(0xFF, RelayPacketFFErrorCode.class);
+		register(0x00, RelayPacket00Handshake.class, RelayPacket00Handshake::new);
+		register(0x01, RelayPacket01ICEServers.class, RelayPacket01ICEServers::new);
+		register(0x02, RelayPacket02NewClient.class, RelayPacket02NewClient::new);
+		register(0x03, RelayPacket03ICECandidate.class, RelayPacket03ICECandidate::new);
+		register(0x04, RelayPacket04Description.class, RelayPacket04Description::new);
+		register(0x05, RelayPacket05ClientSuccess.class, RelayPacket05ClientSuccess::new);
+		register(0x06, RelayPacket06ClientFailure.class, RelayPacket06ClientFailure::new);
+		register(0x07, RelayPacket07LocalWorlds.class, RelayPacket07LocalWorlds::new);
+		register(0x69, RelayPacket69Pong.class, RelayPacket69Pong::new);
+		register(0x70, RelayPacket70SpecialUpdate.class, RelayPacket70SpecialUpdate::new);
+		register(0xFE, RelayPacketFEDisconnectClient.class, RelayPacketFEDisconnectClient::new);
+		register(0xFF, RelayPacketFFErrorCode.class, RelayPacketFFErrorCode::new);
 	}
 
 	public static RelayPacket readPacket(DataInputStream input, IRelayLogger logger) throws IOException {
 		int i = input.read();
-		try {
-			Class<? extends RelayPacket> clazz = definedPacketClasses.get(i);
-			if(clazz == null) {
-				throw new IOException("Unknown packet type: " + i);
-			}
-			RelayPacket pkt = clazz.newInstance();
-			pkt.read(input);
-			int j = input.available();
-			if(j > 0) {
-				throw new IOException("Packet type " + i + " had " + j + " remaining bytes");
-			}
-			return pkt;
-		} catch (InstantiationException | IllegalAccessException e) {
-			logger.error("Could not instanciate packet {}", i);
-			logger.error(e);
+		Supplier<? extends RelayPacket> ctor = definedPacketCtors.get(i);
+		if(ctor == null) {
 			throw new IOException("Unknown packet type: " + i);
 		}
+		RelayPacket pkt = ctor.get();
+		pkt.read(input);
+		int j = input.available();
+		if(j > 0) {
+			throw new IOException("Packet type " + i + " had " + j + " remaining bytes");
+		}
+		return pkt;
 	}
 
 	public static byte[] writePacket(RelayPacket packet, IRelayLogger logger) throws IOException {
