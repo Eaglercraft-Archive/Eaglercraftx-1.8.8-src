@@ -117,6 +117,7 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 	private static final Constructor<LoginInboundConnection> stupid2Constructor;
 	private static final Method loginEventFiredMethod;
 	private static final Constructor<ConnectedPlayer> stupid3Constructor;
+	private static final Constructor<ConnectedPlayer> stupid3Constructor_new;
 	private static final Method setPermissionFunctionMethod;
 	private static final Field defaultPermissionsField;
 	private static final Constructor<InitialConnectSessionHandler> stupid4Constructor;
@@ -134,8 +135,18 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 			stupid2Constructor.setAccessible(true);
 			loginEventFiredMethod = LoginInboundConnection.class.getDeclaredMethod("loginEventFired", Runnable.class);
 			loginEventFiredMethod.setAccessible(true);
-			stupid3Constructor = ConnectedPlayer.class.getDeclaredConstructor(VelocityServer.class, GameProfile.class, MinecraftConnection.class, InetSocketAddress.class, boolean.class, IdentifiedKey.class);
-			stupid3Constructor.setAccessible(true);
+			Constructor<ConnectedPlayer> c3 = null;
+			Constructor<ConnectedPlayer> c3_new = null;
+			try {
+				c3_new = ConnectedPlayer.class.getDeclaredConstructor(VelocityServer.class, GameProfile.class, MinecraftConnection.class, InetSocketAddress.class, String.class, boolean.class, IdentifiedKey.class);
+				c3_new.setAccessible(true);
+			} catch (NoSuchMethodException e) {
+				c3 = ConnectedPlayer.class.getDeclaredConstructor(VelocityServer.class, GameProfile.class, MinecraftConnection.class, InetSocketAddress.class, boolean.class, IdentifiedKey.class);
+				c3.setAccessible(true);
+				c3_new = null;
+			}
+			stupid3Constructor = c3;
+			stupid3Constructor_new = c3_new;
 			setPermissionFunctionMethod = ConnectedPlayer.class.getDeclaredMethod("setPermissionFunction", PermissionFunction.class);
 			setPermissionFunctionMethod.setAccessible(true);
 			defaultPermissionsField = ConnectedPlayer.class.getDeclaredField("DEFAULT_PERMISSIONS");
@@ -1069,10 +1080,18 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 								}
 
 								ConnectedPlayer player;
-								try {
-									player = stupid3Constructor.newInstance(bungee, gp, con, lic.getVirtualHost().orElse(null), false, lic.getIdentifiedKey());
-								} catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-									throw new RuntimeException(e);
+								if(stupid3Constructor_new != null) {
+									try {
+										player = stupid3Constructor_new.newInstance(bungee, gp, con, lic.getVirtualHost().orElse(null), lic.getRawVirtualHost().orElse(null), false, lic.getIdentifiedKey());
+									} catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+										throw new RuntimeException(e);
+									}
+								}else {
+									try {
+										player = stupid3Constructor.newInstance(bungee, gp, con, lic.getVirtualHost().orElse(null), false, lic.getIdentifiedKey());
+									} catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+										throw new RuntimeException(e);
+									}
 								}
 
 								con.setAssociation(player);
