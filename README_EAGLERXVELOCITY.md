@@ -4,9 +4,11 @@
 
 ### "EaglerXVelocity" is a plugin that allows the EaglercraftX 1.8 client to join Velocity servers, with an optional authentication system if online-mode is enabled. This is not a setup guide, this document is intended to be used as reference for EaglerXVelocity's configuration files and provide some surface-level information meant for plugin developers.
 
+**Warning:** Both EaglerXBungee and EaglerXVelocity perform a lot of reflection that will inevitably break after a while when BungeeCord or Velocity is updated upstream. Both plugins will display the precise build number of BungeeCord and Velocity that has been tested by the developers and known to be compatible with EaglerXBungee and EaglerXVelocity when the proxy first starts up. If you are experiencing issues, try checking the BungeeCord or Velocity website for old versions and find the closest version number to whatever the current compatible version number is that is printed by EaglerXBungee/EaglerXVelocity, it will probably fix whatever missing functions the error messages are complaining about.
+
 ## Compiling EaglerXVelocity
 
-Minimum JDK version is 8, as of 1.1.0 we are finally using Gradle to compile EaglerXVelocity instead of compiling it all manually, however you still need to manually download the latest version of Velocity and name it "Velocity.jar" and place it in the `deps` folder first before you continue. We just don't care enough to actually use Gradle correctly to download all the dependencies automatically when they are all subject to change at any time as Velocity recieves updates upstream. Use the "jar" task to automatically compile the EaglerXVelocity JAR file.
+Minimum JDK version is 17, as of 1.1.0 we are finally using Gradle to compile EaglerXVelocity instead of compiling it all manually, however you still need to manually download the latest version of Velocity and name it "Velocity.jar" and place it in the `deps` folder first before you continue. We just don't care enough to actually use Gradle correctly to download all the dependencies automatically when they are all subject to change at any time as Velocity recieves updates upstream. Use the "jar" task to automatically compile the EaglerXVelocity JAR file.
 
 ## Configuration Files
 
