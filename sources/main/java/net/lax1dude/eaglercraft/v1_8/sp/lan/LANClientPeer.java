@@ -50,6 +50,7 @@ class LANClientPeer {
 			PlatformWebRTC.serverLANPeerICECandidates(clientId, candidates);
 			long millis = EagRuntime.steadyTimeMillis();
 			do {
+				PlatformWebRTC.runScheduledTasks();
 				LANPeerEvent evt;
 				if((evt = PlatformWebRTC.serverLANGetEvent(clientId)) != null) {
 					if(evt instanceof LANPeerEvent.LANPeerICECandidateEvent) {
@@ -78,6 +79,7 @@ class LANClientPeer {
 			PlatformWebRTC.serverLANPeerDescription(clientId, description);
 			long millis = EagRuntime.steadyTimeMillis();
 			do {
+				PlatformWebRTC.runScheduledTasks();
 				LANPeerEvent evt;
 				if((evt = PlatformWebRTC.serverLANGetEvent(clientId)) != null) {
 					if(evt instanceof LANPeerEvent.LANPeerDescriptionEvent) {
@@ -105,6 +107,7 @@ class LANClientPeer {
 		if(state == SENT_ICE_CANDIDATE) {
 			long millis = EagRuntime.steadyTimeMillis();
 			do {
+				PlatformWebRTC.runScheduledTasks();
 				LANPeerEvent evt;
 				while((evt = PlatformWebRTC.serverLANGetEvent(clientId)) != null && evt instanceof LANPeerEvent.LANPeerICECandidateEvent) {
 					// skip ice candidates

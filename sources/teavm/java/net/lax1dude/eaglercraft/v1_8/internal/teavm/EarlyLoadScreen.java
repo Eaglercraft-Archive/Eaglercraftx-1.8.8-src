@@ -279,6 +279,10 @@ public class EarlyLoadScreen {
 	}
 
 	public static void loadFinal(byte[] image) {
+		ImageData img = PlatformAssets.loadImageFile(image);
+		if(img == null) {
+			return;
+		}
 		finalTexture = _wglGenTextures();
 		_wglActiveTexture(GL_TEXTURE0);
 		_wglBindTexture(GL_TEXTURE_2D, finalTexture);
@@ -286,11 +290,10 @@ public class EarlyLoadScreen {
 		_wglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		_wglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		_wglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		ImageData img = PlatformAssets.loadImageFile(image);
-		IntBuffer upload = PlatformRuntime.allocateIntBuffer(256*256);
+		IntBuffer upload = PlatformRuntime.allocateIntBuffer(img.width * img.height);
 		upload.put(img.pixels);
 		upload.flip();
-		_wglTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 256, 256, 0, GL_RGBA, GL_UNSIGNED_BYTE, upload);
+		_wglTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, img.width, img.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, upload);
 		PlatformRuntime.freeIntBuffer(upload);
 	}
 

@@ -257,7 +257,7 @@
 + eaglercraft.command.clientStub=This command is client side!
 + 
 
-> INSERT  163 : 545  @  163
+> INSERT  163 : 561  @  163
 
 + eaglercraft.singleplayer.busy.killTask=Cancel Task
 + eaglercraft.singleplayer.busy.cancelWarning=Are you sure?
@@ -640,6 +640,22 @@
 + eaglercraft.options.recordingNote.text1=try opening the file in your browser
 + 
 + eaglercraft.touch.interact.entity=Interact
++ 
++ eaglercraft.options.badVideoSettingsDetected.title=Issues Detected
++ eaglercraft.options.badVideoSettingsDetected.0=Some of your video settings may be causing
++ eaglercraft.options.badVideoSettingsDetected.1=the game to lag excessively
++ eaglercraft.options.badVideoSettingsDetected.vsync.0=VSync is disabled, some browsers require
++ eaglercraft.options.badVideoSettingsDetected.vsync.1=VSync to be enabled to hint when the
++ eaglercraft.options.badVideoSettingsDetected.vsync.2=framebuffer has updated. If the game feels
++ eaglercraft.options.badVideoSettingsDetected.vsync.3=significantly slower than is indicated by
++ eaglercraft.options.badVideoSettingsDetected.vsync.4=the FPS counter, you should enable VSync.
++ eaglercraft.options.badVideoSettingsDetected.renderDistance.0=Render distance is %d chunks, most devices
++ eaglercraft.options.badVideoSettingsDetected.renderDistance.1=lag when the render distance is greater
++ eaglercraft.options.badVideoSettingsDetected.renderDistance.2=than 4 chunks
++ eaglercraft.options.badVideoSettingsDetected.frameLimit.0=Framerate limit is set to %d
++ eaglercraft.options.badVideoSettingsDetected.fixSettings=Fix Settings
++ eaglercraft.options.badVideoSettingsDetected.continueAnyway=Continue Anyway
++ eaglercraft.options.badVideoSettingsDetected.doNotShowAgain=Do Not Show Again
 + 
 
 > INSERT  18 : 19  @  18

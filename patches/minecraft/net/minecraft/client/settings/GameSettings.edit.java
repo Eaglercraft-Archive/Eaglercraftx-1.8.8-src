@@ -14,7 +14,7 @@
 
 > DELETE  1  @  1 : 3
 
-> INSERT  3 : 31  @  3
+> INSERT  3 : 32  @  3
 
 + 
 + import net.lax1dude.eaglercraft.v1_8.sp.relay.RelayManager;
@@ -39,6 +39,7 @@
 + import net.lax1dude.eaglercraft.v1_8.internal.KeyboardConstants;
 + import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 + import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
++ import net.lax1dude.eaglercraft.v1_8.minecraft.GuiScreenVideoSettingsWarning;
 + import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.EaglerDeferredConfig;
 + import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.EaglerDeferredPipeline;
 + import net.lax1dude.eaglercraft.v1_8.opengl.ext.dynamiclights.DynamicLightsStateManager;
@@ -95,7 +96,7 @@
 
 ~ 	public int guiScale = 3;
 
-> INSERT  3 : 23  @  3
+> INSERT  3 : 24  @  3
 
 + 	public boolean hudFps = true;
 + 	public boolean hudCoords = true;
@@ -117,6 +118,7 @@
 + 	public boolean hasShownProfanityFilter = false;
 + 	public float touchControlOpacity = 1.0f;
 + 	public boolean hideDefaultUsernameWarning = false;
++ 	public boolean hideVideoSettingsWarning = false;
 
 > CHANGE  1 : 15  @  1 : 2
 
@@ -536,7 +538,7 @@
 
 ~ 					for (EnumPlayerModelParts enumplayermodelparts : EnumPlayerModelParts._VALUES) {
 
-> INSERT  4 : 70  @  4
+> INSERT  4 : 74  @  4
 
 + 
 + 					if (astring[0].equals("enableFNAWSkins")) {
@@ -603,6 +605,10 @@
 + 						this.hideDefaultUsernameWarning = astring[1].equals("true");
 + 					}
 + 
++ 					if (astring[0].equals("hideVideoSettingsWarning")) {
++ 						hideVideoSettingsWarning = astring[1].equals("true");
++ 					}
++ 
 + 					deferredShaderConf.readOption(astring[0], astring[1]);
 
 > CHANGE  6 : 23  @  6 : 7
@@ -666,7 +672,7 @@
 
 > DELETE  9  @  9 : 20
 
-> INSERT  5 : 36  @  5
+> INSERT  5 : 37  @  5
 
 + 			printwriter.println("hudFps:" + this.hudFps);
 + 			printwriter.println("hudWorld:" + this.hudWorld);
@@ -699,6 +705,7 @@
 + 			printwriter.println("screenRecordMicVolume:" + this.screenRecordMicVolume);
 + 			printwriter.println("touchControlOpacity:" + this.touchControlOpacity);
 + 			printwriter.println("hideDefaultUsernameWarning:" + this.hideDefaultUsernameWarning);
++ 			printwriter.println("hideVideoSettingsWarning:" + this.hideVideoSettingsWarning);
 
 > CHANGE  5 : 8  @  5 : 6
 
@@ -731,7 +738,7 @@
 
 ~ 					Math.max(this.renderDistanceChunks, 2), this.chatVisibility, this.chatColours, i));
 
-> INSERT  36 : 44  @  36
+> INSERT  36 : 60  @  36
 
 + 	private String toJSONArray(List<String> e) {
 + 		JSONArray arr = new JSONArray();
@@ -739,6 +746,22 @@
 + 			arr.put(s);
 + 		}
 + 		return arr.toString();
++ 	}
++ 
++ 	public int checkBadVideoSettings() {
++ 		return hideVideoSettingsWarning ? 0
++ 				: ((renderDistanceChunks > 6 ? GuiScreenVideoSettingsWarning.WARNING_RENDER_DISTANCE : 0)
++ 						| (!enableVsync ? GuiScreenVideoSettingsWarning.WARNING_VSYNC : 0)
++ 						| (limitFramerate < 30 ? GuiScreenVideoSettingsWarning.WARNING_FRAME_LIMIT : 0));
++ 	}
++ 
++ 	public void fixBadVideoSettings() {
++ 		if (renderDistanceChunks > 6)
++ 			renderDistanceChunks = 4;
++ 		if (!enableVsync)
++ 			enableVsync = true;
++ 		if (limitFramerate < 30)
++ 			limitFramerate = 260;
 + 	}
 + 
 

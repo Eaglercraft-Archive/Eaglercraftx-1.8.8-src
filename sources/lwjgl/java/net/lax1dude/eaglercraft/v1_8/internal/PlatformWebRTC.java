@@ -3,7 +3,6 @@ package net.lax1dude.eaglercraft.v1_8.internal;
 import dev.onvoid.webrtc.*;
 import dev.onvoid.webrtc.internal.NativeLoader;
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
-import net.lax1dude.eaglercraft.v1_8.EagUtils;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 import net.lax1dude.eaglercraft.v1_8.sp.lan.LANPeerEvent;
@@ -257,14 +256,19 @@ public class PlatformWebRTC {
 				@Override
 				public void onStateChange() {
 					if (dataChannel != null && dataChannel.getState() == RTCDataChannelState.OPEN) {
-						scheduleTask(-1l, () -> {
-							while (true) {
+						final Runnable[] retry = new Runnable[1];
+						final int[] loopCount = new int[1];
+						scheduleTask(-1l, retry[0] = () -> {
+							f: {
 								synchronized (lock1) {
 									if (iceCandidates.isEmpty()) {
-										break;
+										break f;
 									}
 								}
-								EagUtils.sleep(1);
+								if(++loopCount[0] < 5) {
+									scheduleTask(1000l, retry[0]);
+								}
+								return;
 							}
 							synchronized (lock2) {
 								clientDataChannelClosed = false;
@@ -562,14 +566,20 @@ public class PlatformWebRTC {
 
 					@Override
 					public void onDataChannel(RTCDataChannel dataChannel) {
-						scheduleTask(-1l, () -> {
-							while (true) {
+						final Runnable[] retry = new Runnable[1];
+						final int[] loopCount = new int[1];
+						scheduleTask(-1l, retry[0] = () -> {
+							int i = 0;
+							f: {
 								synchronized (lock3) {
 									if (iceCandidates.isEmpty()) {
-										break;
+										break f;
 									}
 								}
-								EagUtils.sleep(1);
+								if(++loopCount[0] < 5) {
+									scheduleTask(1000l, retry[0]);
+								}
+								return;
 							}
 							if (dataChannel == null) return;
 							synchronized (fuckTeaVM) {

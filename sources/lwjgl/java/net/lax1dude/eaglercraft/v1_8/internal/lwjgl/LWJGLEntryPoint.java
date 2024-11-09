@@ -87,6 +87,8 @@ public class LWJGLEntryPoint {
 				PlatformRuntime.requestGL(300);
 			}else if(args[i].equalsIgnoreCase("gles=310")) {
 				PlatformRuntime.requestGL(310);
+			}else if(args[i].equalsIgnoreCase("disableKHRDebug")) {
+				PlatformRuntime.requestDisableKHRDebug(true);
 			}else {
 				EnumPlatformANGLE angle = EnumPlatformANGLE.fromId(args[i]);
 				if(angle != EnumPlatformANGLE.DEFAULT) {

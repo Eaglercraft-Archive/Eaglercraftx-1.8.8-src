@@ -18,7 +18,7 @@
 
 > DELETE  1  @  1 : 4
 
-> CHANGE  1 : 73  @  1 : 4
+> CHANGE  1 : 74  @  1 : 4
 
 ~ 
 ~ import net.lax1dude.eaglercraft.v1_8.ClientUUIDLoadingCache;
@@ -52,6 +52,7 @@
 ~ import net.lax1dude.eaglercraft.v1_8.minecraft.EaglerFontRenderer;
 ~ import net.lax1dude.eaglercraft.v1_8.minecraft.EnumInputEvent;
 ~ import net.lax1dude.eaglercraft.v1_8.minecraft.GuiScreenGenericErrorMessage;
+~ import net.lax1dude.eaglercraft.v1_8.minecraft.GuiScreenVideoSettingsWarning;
 ~ import net.lax1dude.eaglercraft.v1_8.notifications.ServerNotificationRenderer;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.EaglerMeshLoader;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.EaglercraftGPU;
@@ -358,21 +359,27 @@
 
 ~ 			mainMenu = new GuiConnecting(mainMenu, this, this.serverName, this.serverPort);
 
-> INSERT  2 : 10  @  2
+> CHANGE  2 : 5  @  2 : 7
 
-+ 		mainMenu = new GuiScreenEditProfile(mainMenu);
-+ 
-+ 		if (!EagRuntime.getConfiguration().isForceProfanityFilter() && !gameSettings.hasShownProfanityFilter) {
-+ 			mainMenu = new GuiScreenContentWarning(mainMenu);
-+ 		}
-+ 
-+ 		this.displayGuiScreen(mainMenu);
-+ 
+~ 		int vidIssues = gameSettings.checkBadVideoSettings();
+~ 		if (vidIssues != 0) {
+~ 			mainMenu = new GuiScreenVideoSettingsWarning(mainMenu, vidIssues);
 
-> DELETE  3  @  3 : 6
+> CHANGE  2 : 6  @  2 : 7
 
-> CHANGE  1 : 7  @  1 : 9
+~ 		mainMenu = new GuiScreenEditProfile(mainMenu);
+~ 
+~ 		if (!EagRuntime.getConfiguration().isForceProfanityFilter() && !gameSettings.hasShownProfanityFilter) {
+~ 			mainMenu = new GuiScreenContentWarning(mainMenu);
 
+> CHANGE  2 : 14  @  2 : 3
+
+~ 		this.displayGuiScreen(mainMenu);
+~ 
+~ 		this.renderEngine.deleteTexture(this.mojangLogo);
+~ 		this.mojangLogo = null;
+~ 		this.loadingScreen = new LoadingScreenRenderer(this);
+~ 
 ~ 		while (Mouse.next())
 ~ 			;
 ~ 		while (Keyboard.next())
@@ -959,10 +966,11 @@
 + 			}
 + 
 
-> INSERT  26 : 28  @  26
+> INSERT  26 : 29  @  26
 
-+ 			boolean miningTouch = isMiningTouch();
-+ 			boolean useTouch = thePlayer.getItemShouldUseOnTouchEagler();
++ 			boolean touchMode = PointerInputAbstraction.isTouchMode();
++ 			boolean miningTouch = touchMode && isMiningTouch();
++ 			boolean useTouch = touchMode && thePlayer.getItemShouldUseOnTouchEagler();
 
 > CHANGE  1 : 2  @  1 : 2
 

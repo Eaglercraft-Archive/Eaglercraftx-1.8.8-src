@@ -5,10 +5,11 @@
 # Version: 1.0
 # Author: lax1dude
 
-> CHANGE  3 : 8  @  3 : 9
+> CHANGE  3 : 9  @  3 : 9
 
 ~ 
 ~ import net.lax1dude.eaglercraft.v1_8.Display;
+~ import net.lax1dude.eaglercraft.v1_8.minecraft.GuiScreenVideoSettingsWarning;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.EaglercraftGPU;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.ext.dynamiclights.DynamicLightsStateManager;
 ~ import net.lax1dude.eaglercraft.v1_8.recording.ScreenRecordingController;
@@ -71,7 +72,18 @@
 ~ 
 ~ 	protected void actionPerformed(GuiButton parGuiButton) {
 
-> CHANGE  9 : 10  @  9 : 10
+> CHANGE  3 : 9  @  3 : 4
+
+~ 				GuiScreen contScreen = parentGuiScreen;
+~ 				int vidIssues = mc.gameSettings.checkBadVideoSettings();
+~ 				if (vidIssues != 0) {
+~ 					contScreen = new GuiScreenVideoSettingsWarning(contScreen, vidIssues);
+~ 				}
+~ 				this.mc.displayGuiScreen(contScreen);
+
+> DELETE  1  @  1 : 2
+
+> CHANGE  3 : 4  @  3 : 4
 
 ~ 	protected void mouseClicked(int parInt1, int parInt2, int parInt3) {
 

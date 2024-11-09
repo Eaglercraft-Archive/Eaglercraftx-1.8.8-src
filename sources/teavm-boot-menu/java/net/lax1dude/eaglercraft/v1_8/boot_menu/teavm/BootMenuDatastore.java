@@ -314,7 +314,7 @@ public class BootMenuDatastore {
 				@Override
 				public void handleEvent() {
 					IDBCursor c = r.getResult();
-					if(c == null || c.getKey() == null || c.getValue() == null) {
+					if(c == null || c.getKey() == null) {
 						cb.complete(res[0]);
 						return;
 					}

@@ -68,29 +68,34 @@ public class PlatformApplication {
 	}
 
 	public static void setClipboard(String text) {
+		boolean b = false;
 		try {
-			setClipboard0(text);
+			b = setClipboard0(text);
 		}catch(Throwable t) {
 			PlatformRuntime.logger.error("Exception setting clipboard data");
+		}
+		if(!b) {
 			try {
 				Window.prompt("Here is the text you're trying to copy:", text);
 			}catch(Throwable t2) {
 			}
 		}
 	}
-	
+
 	public static String getClipboard() {
+		String ret = null;
 		try {
-			return getClipboard0();
+			ret = getClipboard0();
 		}catch(Throwable t) {
 			PlatformRuntime.logger.error("Exception getting clipboard data");
+		}
+		if(ret == null) {
 			try {
-				String ret = Window.prompt("Please enter the text to paste:");
-				return ret != null ? ret : "";
+				ret = Window.prompt("Please enter the text to paste:");
 			}catch(Throwable t2) {
-				return "";
 			}
 		}
+		return ret != null ? ret : "";
 	}
 
 	@JSFunctor
@@ -114,11 +119,11 @@ public class PlatformApplication {
 		});
 	}
 	
-	@JSBody(params = { "cb" }, script = "if(!navigator.clipboard) { cb(prompt(\"Please enter the text to paste:\") || \"\"); } else if (!navigator.clipboard.readText) cb(\"\"); else navigator.clipboard.readText().then(function(s) { cb(s); }, function(s) { cb(\"\"); });")
+	@JSBody(params = { "cb" }, script = "if(!navigator.clipboard) { cb(null); } else if (!navigator.clipboard.readText) cb(null); else navigator.clipboard.readText().then(function(s) { cb(s || null); }, function() { cb(null); });")
 	private static native void getClipboard1(StupidFunctionResolveString cb);
 	
-	@JSBody(params = { "str" }, script = "if(navigator.clipboard) navigator.clipboard.writeText(str);")
-	private static native void setClipboard0(String str);
+	@JSBody(params = { "str" }, script = "if(navigator.clipboard) { navigator.clipboard.writeText(str); return true; } else { return false; }")
+	private static native boolean setClipboard0(String str);
 	
 	public static void setLocalStorage(String name, byte[] data) {
 		setLocalStorage(name, data, true);
