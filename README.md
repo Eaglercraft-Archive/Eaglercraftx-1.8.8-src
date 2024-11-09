@@ -55,7 +55,7 @@ If you would like to invite other players to join your singleplayer world and pl
 
 Once you press "Start Shared World", EaglercraftX 1.8 will give you a "join code" (usually 5 letters) to share with your friends. On a different device, go the "Multiplayer" screen and press "Direct Connect" and press "Join Shared World", enter the join code given to you when you started the shared world and press "Join World". Given a few seconds, the client should successfully be able to join your shared world from any other device on the internet that also has unrestricted internet access. If it does not work, check the "Network Settings" screen and make sure you and your friends all have the same set of shared world relay URLs configured or your clients will not be able to find each other.
 
-If you would like to host your own relay, the JAR file and instructions can be downloaded from the "Network Settings" screen in the client. EaglercraftX 1.8 uses the same "LAN world" relay server that is used by Eaglercraft 1.5.2, if you would like the relay source code find a random copy of the Eaglercraft 1.5.2 source code and it should be located in the "sp-relay" folder. The relay has not been updated since then, it has only been renamed from "LAN world relay" to "Shared world relay".
+If you would like to host your own relay, the JAR file and instructions can be downloaded from the "Network Settings" screen in the client. EaglercraftX 1.8 uses the same "LAN world" relay server that is used by Eaglercraft 1.5.2, however there have been several bug fixes. The current version is available in the `sp-relay/SharedWorldRelay` folder.
 
 ## PBR Shaders
 

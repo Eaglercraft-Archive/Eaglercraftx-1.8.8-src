@@ -52,21 +52,21 @@ public class EaglerSPServer {
 	}
 	
 	public void send(RelayPacket packet) {
-		if(this.socket.isOpen()) {
+		if(socket.isOpen()) {
 			try {
-				this.socket.send(RelayPacket.writePacket(packet, EaglerSPRelay.logger));
+				socket.send(RelayPacket.writePacket(packet, EaglerSPRelay.logger));
 			}catch(IOException ex) {
-				EaglerSPRelay.logger.debug("Error sending data to {}", this.serverAddress);
+				EaglerSPRelay.logger.debug("Error sending data to {}", serverAddress);
 				EaglerSPRelay.logger.debug(ex);
 				try {
-					this.socket.send(RelayPacket.writePacket(new RelayPacketFFErrorCode(RelayPacketFFErrorCode.TYPE_INTERNAL_ERROR,
+					socket.send(RelayPacket.writePacket(new RelayPacketFFErrorCode(RelayPacketFFErrorCode.TYPE_INTERNAL_ERROR,
 							"Internal Server Error"), EaglerSPRelay.logger));
 				}catch(IOException ex2) {
 				}
-				this.socket.close();
+				socket.close();
 			}
 		}else {
-			EaglerSPRelay.logger.debug("WARNING: Tried to send data to {} after the connection closed.", this.serverAddress);
+			EaglerSPRelay.logger.debug("WARNING: Tried to send data to {} after the connection closed.", serverAddress);
 		}
 	}
 	
@@ -78,10 +78,10 @@ public class EaglerSPServer {
 				if(LoginState.assertEquals(cl, LoginState.SENT_ICE_CANDIDATE)) {
 					cl.state = LoginState.RECIEVED_ICE_CANIDATE;
 					cl.handleServerICECandidate(packet);
-					EaglerSPRelay.logger.debug("[{}][Server -> Relay -> Client] PKT 0x03: ICECandidate", (String) cl.socket.getAttachment());
+					EaglerSPRelay.logger.debug("[{}][Server -> Relay -> Client] PKT 0x03: ICECandidate", cl.socket.getAttachment());
 				}
 			}else {
-				this.socket.send(RelayPacket.writePacket(new RelayPacketFFErrorCode(RelayPacketFFErrorCode.TYPE_UNKNOWN_CLIENT,
+				socket.send(RelayPacket.writePacket(new RelayPacketFFErrorCode(RelayPacketFFErrorCode.TYPE_UNKNOWN_CLIENT,
 						"Unknown Client ID: " + packet.peerId), EaglerSPRelay.logger));
 			}
 			return true;
@@ -92,10 +92,10 @@ public class EaglerSPServer {
 				if(LoginState.assertEquals(cl, LoginState.SENT_DESCRIPTION)) {
 					cl.state = LoginState.RECIEVED_DESCRIPTION;
 					cl.handleServerDescription(packet);
-					EaglerSPRelay.logger.debug("[{}][Server -> Relay -> Client] PKT 0x04: Description", (String) cl.socket.getAttachment());
+					EaglerSPRelay.logger.debug("[{}][Server -> Relay -> Client] PKT 0x04: Description", cl.socket.getAttachment());
 				}
 			}else {
-				this.socket.send(RelayPacket.writePacket(new RelayPacketFFErrorCode(RelayPacketFFErrorCode.TYPE_UNKNOWN_CLIENT,
+				socket.send(RelayPacket.writePacket(new RelayPacketFFErrorCode(RelayPacketFFErrorCode.TYPE_UNKNOWN_CLIENT,
 						"Unknown Client ID: " + packet.peerId), EaglerSPRelay.logger));
 			}
 			return true;
@@ -104,10 +104,10 @@ public class EaglerSPServer {
 			EaglerSPClient cl = clients.get(packet.clientId);
 			if(cl != null) {
 				cl.handleServerDisconnectClient(packet);
-				EaglerSPRelay.logger.debug("[{}][Server -> Relay -> Client] PKT 0xFE: Disconnect: {}: {}", (String) cl.socket.getAttachment(),
+				EaglerSPRelay.logger.debug("[{}][Server -> Relay -> Client] PKT 0xFE: Disconnect: {}: {}", cl.socket.getAttachment(),
 						packet.code, packet.reason);
 			}else {
-				this.socket.send(RelayPacket.writePacket(new RelayPacketFFErrorCode(RelayPacketFFErrorCode.TYPE_UNKNOWN_CLIENT,
+				socket.send(RelayPacket.writePacket(new RelayPacketFFErrorCode(RelayPacketFFErrorCode.TYPE_UNKNOWN_CLIENT,
 						"Unknown Client ID: " + packet.clientId), EaglerSPRelay.logger));
 			}
 			return true;
