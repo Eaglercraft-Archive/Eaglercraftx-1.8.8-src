@@ -336,8 +336,7 @@ public class PlatformRuntime {
 
 	private static boolean probablyGLES2(String glVersion) {
 		if(glVersion == null) return false;
-		glVersion = glVersion.toLowerCase();
-		return glVersion.contains("opengl es 2.0") || glVersion.contains("ES 2.0");
+		return glVersion.toLowerCase().contains("opengl es 2.0") || glVersion.contains("ES 2.0");
 	}
 
 	public static EnumPlatformType getPlatformType() {
