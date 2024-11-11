@@ -3407,11 +3407,15 @@ public class EaglerDeferredPipeline {
 			GlStateManager.enableDepth();
 			GlStateManager.depthFunc(GL_ALWAYS);
 			GlStateManager.depthMask(true);
+			GlStateManager.colorMask(false, false, false, false);
+			_wglDrawBuffers(GL_NONE);
 			GlStateManager.bindTexture(lightingHDRFramebufferDepthTexture);
 			TextureCopyUtil.blitTextureDepth();
 			GlStateManager.disableDepth();
 			GlStateManager.depthFunc(GL_LEQUAL);
 			GlStateManager.depthMask(false);
+			GlStateManager.colorMask(true, true, true, true);
+			_wglDrawBuffers(GL_BACK);
 		}else {
 			_wglBindFramebuffer(_GL_READ_FRAMEBUFFER, lightingHDRFramebuffer);
 			_wglBindFramebuffer(_GL_DRAW_FRAMEBUFFER, null);
