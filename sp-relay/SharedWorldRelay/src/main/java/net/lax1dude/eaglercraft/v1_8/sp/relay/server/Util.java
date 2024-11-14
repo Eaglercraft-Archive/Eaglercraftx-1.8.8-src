@@ -30,4 +30,7 @@ public class Util {
 		return sock.getAddress().getHostAddress() + ":" + sock.getPort();
 	}
 	
+	public static long millis() {
+		return System.nanoTime() / 1000000l;
+	}
 }

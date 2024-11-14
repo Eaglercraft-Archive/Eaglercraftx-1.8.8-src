@@ -28,10 +28,10 @@ import net.lax1dude.eaglercraft.v1_8.sp.relay.pkt.RelayPacket01ICEServers;
  */
 public class EaglerSPRelayConfigRelayList {
 
-	public static final Collection<RelayPacket01ICEServers.RelayServer> relayServers = new ArrayList();
+	public static final Collection<RelayPacket01ICEServers.RelayServer> relayServers = new ArrayList<>();
 	
 	public static void loadRelays(File list) throws IOException {
-		ArrayList<RelayPacket01ICEServers.RelayServer> loading = new ArrayList();
+		ArrayList<RelayPacket01ICEServers.RelayServer> loading = new ArrayList<>();
 		
 		if(!list.isFile()) {
 			EaglerSPRelay.logger.info("Creating new {}...", list.getName());

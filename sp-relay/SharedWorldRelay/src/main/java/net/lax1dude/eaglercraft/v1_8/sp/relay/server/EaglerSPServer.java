@@ -35,7 +35,7 @@ public class EaglerSPServer {
 	EaglerSPServer(WebSocket sock, String code, String serverName, String serverAddress) {
 		this.socket = sock;
 		this.code = code;
-		this.clients = new HashMap();
+		this.clients = new HashMap<>();
 		
 		if(serverName.endsWith(";1")) {
 			this.serverHidden = true;
@@ -78,7 +78,7 @@ public class EaglerSPServer {
 				if(LoginState.assertEquals(cl, LoginState.SENT_ICE_CANDIDATE)) {
 					cl.state = LoginState.RECIEVED_ICE_CANIDATE;
 					cl.handleServerICECandidate(packet);
-					EaglerSPRelay.logger.debug("[{}][Server -> Relay -> Client] PKT 0x03: ICECandidate", cl.socket.getAttachment());
+					EaglerSPRelay.logger.debug("[{}][Server -> Relay -> Client] PKT 0x03: ICECandidate", (Object) cl.socket.getAttachment());
 				}
 			}else {
 				socket.send(RelayPacket.writePacket(new RelayPacketFFErrorCode(RelayPacketFFErrorCode.TYPE_UNKNOWN_CLIENT,
@@ -92,7 +92,7 @@ public class EaglerSPServer {
 				if(LoginState.assertEquals(cl, LoginState.SENT_DESCRIPTION)) {
 					cl.state = LoginState.RECIEVED_DESCRIPTION;
 					cl.handleServerDescription(packet);
-					EaglerSPRelay.logger.debug("[{}][Server -> Relay -> Client] PKT 0x04: Description", cl.socket.getAttachment());
+					EaglerSPRelay.logger.debug("[{}][Server -> Relay -> Client] PKT 0x04: Description", (Object) cl.socket.getAttachment());
 				}
 			}else {
 				socket.send(RelayPacket.writePacket(new RelayPacketFFErrorCode(RelayPacketFFErrorCode.TYPE_UNKNOWN_CLIENT,
@@ -104,7 +104,7 @@ public class EaglerSPServer {
 			EaglerSPClient cl = clients.get(packet.clientId);
 			if(cl != null) {
 				cl.handleServerDisconnectClient(packet);
-				EaglerSPRelay.logger.debug("[{}][Server -> Relay -> Client] PKT 0xFE: Disconnect: {}: {}", cl.socket.getAttachment(),
+				EaglerSPRelay.logger.debug("[{}][Server -> Relay -> Client] PKT 0xFE: Disconnect: {}: {}", (Object) cl.socket.getAttachment(),
 						packet.code, packet.reason);
 			}else {
 				socket.send(RelayPacket.writePacket(new RelayPacketFFErrorCode(RelayPacketFFErrorCode.TYPE_UNKNOWN_CLIENT,
@@ -119,9 +119,9 @@ public class EaglerSPServer {
 	public void handleNewClient(EaglerSPClient client) {
 		synchronized(clients) {
 			clients.put(client.id, client);
-			send(new RelayPacket02NewClient(client.id));
-			EaglerSPRelay.logger.debug("[{}][Relay -> Server] PKT 0x02: Notify server of the client, id: {}", serverAddress, client.id);
 		}
+		send(new RelayPacket02NewClient(client.id));
+		EaglerSPRelay.logger.debug("[{}][Relay -> Server] PKT 0x02: Notify server of the client, id: {}", serverAddress, client.id);
 	}
 	
 	public void handleClientDisconnect(EaglerSPClient client) {

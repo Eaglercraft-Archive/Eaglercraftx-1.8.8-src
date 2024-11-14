@@ -34,14 +34,14 @@ public class RateLimiter {
 		protected boolean locked;
 		
 		protected RateLimitEntry() {
-			timer = System.currentTimeMillis();
+			timer = Util.millis();
 			count = 0;
 			lockedTimer = 0l;
 			locked = false;
 		}
 		
 		protected void update() {
-			long millis = System.currentTimeMillis();
+			long millis = Util.millis();
 			if(locked) {
 				if(millis - lockedTimer > RateLimiter.this.lockoutDuration) {
 					timer = millis;
@@ -70,7 +70,7 @@ public class RateLimiter {
 		NONE, LIMIT, LIMIT_NOW_LOCKOUT, LOCKOUT;
 	}
 	
-	private final Map<String, RateLimitEntry> limiters = new HashMap();
+	private final Map<String, RateLimitEntry> limiters = new HashMap<>();
 	
 	public RateLimiter(int period, int limit, int lockoutLimit, int lockoutDuration) {
 		this.period = period;
@@ -79,50 +79,44 @@ public class RateLimiter {
 		this.lockoutDuration = lockoutDuration;
 	}
 	
-	public RateLimit limit(String addr) {
-		synchronized(this) {
-			RateLimitEntry etr = limiters.get(addr);
-			
-			if(etr == null) {
-				etr = new RateLimitEntry();
-				limiters.put(addr, etr);
-			}else {
-				etr.update();
-			}
-			
-			if(etr.locked) {
-				return RateLimit.LOCKOUT;
-			}
-			
-			++etr.count;
-			if(etr.count >= lockoutLimit) {
-				etr.count = 0;
-				etr.locked = true;
-				etr.lockedTimer = System.currentTimeMillis();
-				return RateLimit.LIMIT_NOW_LOCKOUT;
-			}else if(etr.count > limit) {
-				return RateLimit.LIMIT;
-			}else {
-				return RateLimit.NONE;
+	public synchronized RateLimit limit(String addr) {
+		RateLimitEntry etr = limiters.get(addr);
+		
+		if(etr == null) {
+			etr = new RateLimitEntry();
+			limiters.put(addr, etr);
+		}else {
+			etr.update();
+		}
+		
+		if(etr.locked) {
+			return RateLimit.LOCKOUT;
+		}
+		
+		++etr.count;
+		if(etr.count >= lockoutLimit) {
+			etr.count = 0;
+			etr.locked = true;
+			etr.lockedTimer = Util.millis();
+			return RateLimit.LIMIT_NOW_LOCKOUT;
+		}else if(etr.count > limit) {
+			return RateLimit.LIMIT;
+		}else {
+			return RateLimit.NONE;
+		}
+	}
+	
+	public synchronized void update() {
+		Iterator<RateLimitEntry> itr = limiters.values().iterator();
+		while(itr.hasNext()) {
+			if(itr.next().count == 0) {
+				itr.remove();
 			}
 		}
 	}
 	
-	public void update() {
-		synchronized(this) {
-			Iterator<RateLimitEntry> itr = limiters.values().iterator();
-			while(itr.hasNext()) {
-				if(itr.next().count == 0) {
-					itr.remove();
-				}
-			}
-		}
-	}
-	
-	public void reset() {
-		synchronized(this) {
-			limiters.clear();
-		}
+	public synchronized void reset() {
+		limiters.clear();
 	}
 
 }

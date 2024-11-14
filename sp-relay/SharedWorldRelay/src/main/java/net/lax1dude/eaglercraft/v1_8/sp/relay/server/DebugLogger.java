@@ -43,7 +43,7 @@ public class DebugLogger implements IRelayLogger {
 		return debugLoggingLevel != Level.NONE;
 	}
 	
-	private static final Map<String,DebugLogger> loggers = new HashMap();
+	private static final Map<String,DebugLogger> loggers = new HashMap<>();
 	
 	public static DebugLogger getLogger(String name) {
 		synchronized(loggers) {
@@ -155,7 +155,6 @@ public class DebugLogger implements IRelayLogger {
 	}
 	
 	private static final SimpleDateFormat fmt = new SimpleDateFormat("hh:mm:ss+SSS");
-	private final Date dateInstance = new Date();
 	
 	public static String formatParams(String msg, Object... params) {
 		if(params.length > 0) {
@@ -182,10 +181,12 @@ public class DebugLogger implements IRelayLogger {
 	
 	public void log(Level lvl, String msg, Object... params) {
 		if(debugLoggingLevel.level >= lvl.level) {
+			Date d = new Date();
+			d.setTime(System.currentTimeMillis());
+			String str = "[" + fmt.format(d) + "][" + Thread.currentThread().getName() + "/" + lvl.label + "][" + name + "]: " + 
+					(params.length == 0 ? msg : formatParams(msg, params));
 			synchronized(this) {
-				dateInstance.setTime(System.currentTimeMillis());
-				System.out.println("[" + fmt.format(dateInstance) + "][" + Thread.currentThread().getName() + "/" + lvl.label + "][" + name + "]: " + 
-						(params.length == 0 ? msg : formatParams(msg, params)));
+				System.out.println(str);
 			}
 		}
 	}

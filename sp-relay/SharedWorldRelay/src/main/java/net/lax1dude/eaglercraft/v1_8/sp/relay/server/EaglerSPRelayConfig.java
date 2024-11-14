@@ -295,7 +295,7 @@ public class EaglerSPRelayConfig {
 				save(conf);
 			}
 			String[] splitted = originWhitelist.split(";");
-			List<String> splittedList = new ArrayList();
+			List<String> splittedList = new ArrayList<>();
 			for(int i = 0; i < splitted.length; ++i) {
 				splitted[i] = splitted[i].trim().toLowerCase();
 				if(splitted[i].length() > 0) {
