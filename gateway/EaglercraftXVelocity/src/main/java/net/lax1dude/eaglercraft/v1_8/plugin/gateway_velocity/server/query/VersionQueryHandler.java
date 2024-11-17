@@ -5,9 +5,10 @@ import com.google.gson.JsonObject;
 
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.EaglerXVelocity;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.api.query.EaglerQuerySimpleHandler;
+import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.config.EaglerListenerConfig;
 
 /**
- * Copyright (c) 2022-2023 lax1dude. All Rights Reserved.
+ * Copyright (c) 2022-2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -27,20 +28,19 @@ public class VersionQueryHandler extends EaglerQuerySimpleHandler {
 	protected void begin(String queryType) {
 		JsonObject responseObj = new JsonObject();
 		JsonArray handshakeVersions = new JsonArray();
-		if(this.getListener().isAllowV3()) {
+		EaglerListenerConfig cfg = this.getListener();
+		if(cfg.isAllowV3()) {
 			handshakeVersions.add(2);
 			handshakeVersions.add(3);
 		}
-		if(this.getListener().isAllowV4()) {
+		if(cfg.isAllowV4()) {
 			handshakeVersions.add(4);
 		}
 		responseObj.add("handshakeVersions", handshakeVersions);
-		JsonArray protocolVersions = new JsonArray();
-		protocolVersions.add(47);
+		JsonObject protocolVersions = new JsonObject();
+		protocolVersions.addProperty("min", cfg.getMinMCProtocol());
+		protocolVersions.addProperty("max", cfg.getMaxMCProtocol());
 		responseObj.add("protocolVersions", protocolVersions);
-		JsonArray gameVersions = new JsonArray();
-		gameVersions.add("1.8");
-		responseObj.add("gameVersions", gameVersions);
 		JsonObject proxyInfo = new JsonObject();
 		proxyInfo.addProperty("brand", EaglerXVelocity.proxy().getVersion().getName());
 		proxyInfo.addProperty("vers", EaglerXVelocity.proxy().getVersion().getVersion());

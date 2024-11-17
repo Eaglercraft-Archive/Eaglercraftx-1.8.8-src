@@ -16,11 +16,15 @@ import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.proxy.connection.client.ConnectedPlayer;
 import com.velocitypowered.proxy.scheduler.VelocityScheduler;
 
+import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelException;
 import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOption;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.WriteBufferWaterMark;
 import io.netty.handler.codec.compression.ZlibCodecFactory;
+import io.netty.handler.codec.haproxy.HAProxyMessageDecoder;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.codec.http.websocketx.PingWebSocketFrame;
@@ -211,7 +215,16 @@ public class EaglerPipeline {
 
 		@Override
 		protected void initChannel(Channel channel) throws Exception {
+			channel.config().setAllocator(PooledByteBufAllocator.DEFAULT).setWriteBufferWaterMark(SERVER_WRITE_MARK);
+			try {
+				channel.config().setOption(ChannelOption.IP_TOS, 24);
+			} catch (ChannelException var3) {
+			}
+			EaglerListenerConfig listener = channel.attr(LISTENER).get();
 			ChannelPipeline pipeline = channel.pipeline();
+			if(listener.isHAProxyProtocol()) {
+				pipeline.addLast("HAProxyMessageDecoder", new HAProxyMessageDecoder());
+			}
 			pipeline.addLast("HttpServerCodec", new HttpServerCodec());
 			pipeline.addLast("HttpObjectAggregator", new HttpObjectAggregator(65535));
 			int compressionLevel = EaglerXVelocity.getEagler().getConfig().getHttpWebsocketCompressionLevel();
@@ -227,7 +240,7 @@ public class EaglerPipeline {
 				pipeline.addLast("HttpCompressionHandler", new WebSocketServerExtensionHandler(deflateExtensionHandshaker,
 						perMessageDeflateExtensionHandshaker));
 			}
-			pipeline.addLast("HttpHandshakeHandler", new HttpHandshakeHandler(channel.attr(LISTENER).get()));
+			pipeline.addLast("HttpHandshakeHandler", new HttpHandshakeHandler(listener));
 			channel.attr(CONNECTION_INSTANCE).set(new EaglerConnectionInstance(channel));
 			synchronized(openChannels) {
 				openChannels.add(channel);

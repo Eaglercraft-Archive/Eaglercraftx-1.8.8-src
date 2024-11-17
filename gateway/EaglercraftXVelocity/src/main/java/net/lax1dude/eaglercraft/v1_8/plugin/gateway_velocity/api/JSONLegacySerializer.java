@@ -1,8 +1,8 @@
 package net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.api;
 
-import com.velocitypowered.proxy.protocol.util.VelocityLegacyHoverEventSerializer;
-
 import net.kyori.adventure.text.serializer.json.JSONComponentSerializer;
+import net.kyori.adventure.text.serializer.json.LegacyHoverEventSerializer;
+import net.kyori.adventure.text.serializer.json.legacyimpl.NBTLegacyHoverEventSerializer;
 
 /**
  * Copyright (c) 2024 lax1dude. All Rights Reserved.
@@ -21,7 +21,21 @@ import net.kyori.adventure.text.serializer.json.JSONComponentSerializer;
  */
 public class JSONLegacySerializer {
 
-	public static final JSONComponentSerializer instance = JSONComponentSerializer.builder()
-			.legacyHoverEventSerializer(VelocityLegacyHoverEventSerializer.INSTANCE).build();
+	static {
+		JSONComponentSerializer.Builder builder = JSONComponentSerializer.builder();
+		try {
+			builder.legacyHoverEventSerializer(NBTLegacyHoverEventSerializer.get());
+		}catch(Throwable t) {
+			try {
+				Class c = Class.forName("com.velocitypowered.proxy.protocol.util.VelocityLegacyHoverEventSerializer");
+				builder.legacyHoverEventSerializer((LegacyHoverEventSerializer)c.getDeclaredField("INSTANCE").get(null));
+			}catch(Throwable tt) {
+				throw new RuntimeException("Legacy hover event serializer is unavailable! (downgrade velocity)");
+			}
+		}
+		instance = builder.build();
+	}
+
+	public static final JSONComponentSerializer instance;
 
 }

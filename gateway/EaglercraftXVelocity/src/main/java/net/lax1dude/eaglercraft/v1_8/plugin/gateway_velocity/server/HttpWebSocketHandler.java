@@ -36,7 +36,6 @@ import com.velocitypowered.api.util.GameProfile;
 import com.velocitypowered.api.util.GameProfile.Property;
 import com.velocitypowered.proxy.VelocityServer;
 import com.velocitypowered.proxy.config.PlayerInfoForwarding;
-import com.velocitypowered.proxy.connection.ConnectionType;
 import com.velocitypowered.proxy.connection.ConnectionTypes;
 import com.velocitypowered.proxy.connection.MinecraftConnection;
 import com.velocitypowered.proxy.connection.client.*;
@@ -53,6 +52,7 @@ import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.ChannelPipeline;
+import io.netty.handler.codec.haproxy.HAProxyMessage;
 import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.CloseWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.PingWebSocketFrame;
@@ -203,7 +203,9 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 				} else if (msg instanceof CloseWebSocketFrame) {
 					ctx.close();
 				}
-			} else {
+			}else if(msg instanceof HAProxyMessage) {
+				EaglerXVelocity.logger().warn("[{}]: Ignoring HAProxyMessage because the WebSocket connection has already been established", ctx.channel().remoteAddress());
+			}else {
 				EaglerXVelocity.logger().error("Unexpected Packet: {}", msg.getClass().getSimpleName());
 			}
 		} finally {
@@ -312,8 +314,6 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 					EaglerXVelocity eaglerXBungee = EaglerXVelocity.getEagler();
 					EaglerAuthConfig authConfig = eaglerXBungee.getConfig().getAuthConfig();
 					
-					final int minecraftProtocolVersion = 47;
-					
 					int eaglerLegacyProtocolVersion = buffer.readUnsignedByte();
 					
 					if(eaglerLegacyProtocolVersion == 1) {
@@ -321,7 +321,8 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 							sendErrorCode(ctx, HandshakePacketTypes.SERVER_ERROR_CUSTOM_MESSAGE, "Please update your client to register on this server!")
 										.addListener(ChannelFutureListener.CLOSE);
 							return;
-						}else if(buffer.readUnsignedByte() != minecraftProtocolVersion || !conf.isAllowV3()) {
+						} else if (buffer.readUnsignedByte() != 47 || 47 < conf.getMinMCProtocol()
+								|| 47 > conf.getMaxMCProtocol() || !conf.isAllowV3()) {
 							clientLoginState = HandshakePacketTypes.STATE_CLIENT_COMPLETE;
 							connectionClosed = true;
 							ByteBuf buf = ctx.alloc().buffer();
@@ -341,8 +342,7 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 						int maxServerSupported = conf.isAllowV4() ? 4 : 3;
 						int minAvailableProtVers = Integer.MAX_VALUE;
 						int maxAvailableProtVers = Integer.MIN_VALUE;
-						int minSupportedProtVers = Integer.MAX_VALUE;
-						int maxSupportedProtVers = Integer.MIN_VALUE;
+						int protVers = -1;
 						
 						int cnt = buffer.readUnsignedShort();
 						for(int i = 0; i < cnt; ++i) {
@@ -353,53 +353,52 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 							if(j < minAvailableProtVers) {
 								minAvailableProtVers = j;
 							}
-							if(j >= minServerSupported && j <= maxServerSupported) {
-								if(j > maxSupportedProtVers) {
-									maxSupportedProtVers = j;
-								}
-								if(j < minSupportedProtVers) {
-									minSupportedProtVers = j;
-								}
+							if(j >= minServerSupported && j <= maxServerSupported && j > protVers) {
+								protVers = j;
 							}
 						}
 						
-						int minGameVers = Integer.MAX_VALUE;
-						int maxGameVers = -1;
-						boolean has47InList = false;
+						int minGameVers = conf.getMinMCProtocol();
+						int maxGameVers = conf.getMaxMCProtocol();
+						int minAvailableGameVers = Integer.MAX_VALUE;
+						int maxAvailableGameVers = Integer.MIN_VALUE;
+						int gameVers = -1;
 						
 						cnt = buffer.readUnsignedShort();
 						for(int i = 0; i < cnt; ++i) {
 							int j = buffer.readUnsignedShort();
-							if(j == minecraftProtocolVersion) {
-								has47InList = true;
+							if(j > maxAvailableGameVers) {
+								maxAvailableGameVers = j;
 							}
-							if(j > maxGameVers) {
-								maxGameVers = j;
+							if(j < minAvailableGameVers) {
+								minAvailableGameVers = j;
 							}
-							if(j < minGameVers) {
-								minGameVers = j;
+							if(j >= minGameVers && j <= maxGameVers && j > gameVers) {
+								gameVers = j;
 							}
 						}
 						
-						if(maxAvailableProtVers == Integer.MIN_VALUE || maxGameVers == Integer.MIN_VALUE) {
+						if(maxAvailableProtVers == Integer.MIN_VALUE || maxAvailableGameVers == Integer.MIN_VALUE) {
 							throw new IOException();
 						}
 						
 						boolean versMisMatch = false;
 						boolean isServerProbablyOutdated = false;
 						boolean isClientProbablyOutdated = false;
-						if(maxSupportedProtVers == Integer.MIN_VALUE) {
+						if(protVers == -1) {
 							clientProtocolVersion = maxAvailableProtVers < 3 ? 2 : 3;
 							versMisMatch = true;
 							isServerProbablyOutdated = minAvailableProtVers > maxServerSupported && maxAvailableProtVers > maxServerSupported;
 							isClientProbablyOutdated = minAvailableProtVers < minServerSupported && maxAvailableProtVers < minServerSupported;
-						}else if(!has47InList) {
-							clientProtocolVersion = 3;
-							versMisMatch = true;
-							isServerProbablyOutdated = minGameVers > minecraftProtocolVersion && maxGameVers > minecraftProtocolVersion;
-							isClientProbablyOutdated = minGameVers < minecraftProtocolVersion && maxGameVers < minecraftProtocolVersion;
 						}else {
-							clientProtocolVersion = maxSupportedProtVers;
+							clientProtocolVersion = protVers;
+							if(gameVers == -1) {
+								versMisMatch = true;
+								isServerProbablyOutdated = minAvailableGameVers > maxGameVers && maxAvailableGameVers > maxGameVers;
+								isClientProbablyOutdated = minAvailableGameVers < minGameVers && maxAvailableGameVers < minGameVers;
+							}else {
+								gameProtocolVersion = gameVers;
+							}
 						}
 						
 						if(versMisMatch) {
@@ -417,8 +416,9 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 								buf.writeShort(4);
 							}
 							
-							buf.writeShort(1);
-							buf.writeShort(minecraftProtocolVersion); // want game version 47
+							buf.writeShort(2);
+							buf.writeShort(minGameVers);
+							buf.writeShort(maxGameVers);
 							
 							String str = isClientProbablyOutdated ? "Outdated Client" : (isServerProbablyOutdated ? "Outdated Server" : "Unsupported Client Version");
 							buf.writeByte(str.length());
@@ -450,6 +450,7 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 					boolean useSnapshotFallbackProtocol = false;
 					if(eaglerLegacyProtocolVersion == 1 && !authConfig.isEnableAuthentication()) {
 						clientProtocolVersion = 2;
+						gameProtocolVersion = 47;
 						useSnapshotFallbackProtocol = true;
 						clientAuth = false;
 						clientAuthUsername = null;
@@ -481,7 +482,6 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 					final boolean final_useSnapshotFallbackProtocol = useSnapshotFallbackProtocol;
 					Runnable continueThread = () -> {
 						clientLoginState = HandshakePacketTypes.STATE_CLIENT_VERSION;
-						gameProtocolVersion = 47;
 						clientBrandString = eaglerBrand;
 						clientVersionString = eaglerVersionString;
 						
@@ -492,7 +492,7 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 							buf.writeByte(1);
 						}else {
 							buf.writeShort(clientProtocolVersion);
-							buf.writeShort(minecraftProtocolVersion);
+							buf.writeShort(gameProtocolVersion);
 						}
 						
 						String brandStr = EaglerXVelocityVersion.NAME;

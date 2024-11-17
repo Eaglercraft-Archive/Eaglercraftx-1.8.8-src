@@ -10,6 +10,7 @@ import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.handler.codec.haproxy.HAProxyMessage;
 import io.netty.handler.codec.http.DefaultFullHttpResponse;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpHeaders;
@@ -48,6 +49,9 @@ public class HttpHandshakeHandler extends ChannelInboundHandlerAdapter {
 	private static final byte[] error429Bytes = "<h3>429 Too Many Requests<br /><small>(Try again later)</small></h3>".getBytes(StandardCharsets.UTF_8);
 	
 	private final EaglerListenerConfig conf;
+	private boolean logExceptions;
+	private boolean healthCheck;
+	private InetSocketAddress haproxyRemoteAddr;
 	
 	public HttpHandshakeHandler(EaglerListenerConfig conf) {
 		this.conf = conf;
@@ -56,18 +60,31 @@ public class HttpHandshakeHandler extends ChannelInboundHandlerAdapter {
 	public void channelRead(final ChannelHandlerContext ctx, Object msg) throws Exception {
 		try {
 			if (msg instanceof HttpRequest) {
+				logExceptions = true;
 				EaglerConnectionInstance pingTracker = ctx.channel().attr(EaglerPipeline.CONNECTION_INSTANCE).get();
 				HttpRequest req = (HttpRequest) msg;
 				HttpHeaders headers = req.headers();
 
 				String rateLimitHost = null;
 
+				SocketAddress addr;
 				if (conf.isForwardIp()) {
 					String str = headers.get(conf.getForwardIpHeader());
 					if (str != null) {
 						rateLimitHost = str.split(",", 2)[0];
 						try {
-							ctx.channel().attr(EaglerPipeline.REAL_ADDRESS).set(InetAddress.getByName(rateLimitHost));
+							InetAddress inetAddr = InetAddress.getByName(rateLimitHost);
+							if(haproxyRemoteAddr != null) {
+								addr = new InetSocketAddress(inetAddr, haproxyRemoteAddr.getPort());
+							}else {
+								addr = ctx.channel().remoteAddress();
+								if(addr instanceof InetSocketAddress) {
+									addr = new InetSocketAddress(inetAddr, ((InetSocketAddress)addr).getPort());
+								}else {
+									addr = new InetSocketAddress(inetAddr, 0);
+								}
+							}
+							ctx.channel().attr(EaglerPipeline.REAL_ADDRESS).set(inetAddr);
 						} catch (UnknownHostException ex) {
 							EaglerXVelocity.logger().warn("[{}]: Connected with an invalid '{}' header, disconnecting...", ctx.channel().remoteAddress(), conf.getForwardIpHeader());
 							ctx.close();
@@ -78,8 +95,11 @@ public class HttpHandshakeHandler extends ChannelInboundHandlerAdapter {
 						ctx.close();
 						return;
 					}
+				} else if(haproxyRemoteAddr != null) {
+					addr = haproxyRemoteAddr;
+					ctx.channel().attr(EaglerPipeline.REAL_ADDRESS).set(haproxyRemoteAddr.getAddress());
 				} else {
-					SocketAddress addr = ctx.channel().remoteAddress();
+					addr = ctx.channel().remoteAddress();
 					if (addr instanceof InetSocketAddress) {
 						rateLimitHost = ((InetSocketAddress) addr).getAddress().getHostAddress();
 					}
@@ -176,6 +196,19 @@ public class HttpHandshakeHandler extends ChannelInboundHandlerAdapter {
 								.addListener(ChannelFutureListener.CLOSE);
 					}
 				}
+			} else if (msg instanceof HAProxyMessage) {
+				logExceptions = true;
+				HAProxyMessage proxy = (HAProxyMessage) msg;
+				if(proxy.sourceAddress() != null) {
+					if(!conf.isForwardIp()) {
+						try {
+							haproxyRemoteAddr = new InetSocketAddress(proxy.sourceAddress(), proxy.sourcePort());
+						}catch(IllegalArgumentException t) {
+						}
+					}
+				}else {
+					healthCheck = true;
+				}
 			} else {
 				ctx.close();
 			}
@@ -186,13 +219,11 @@ public class HttpHandshakeHandler extends ChannelInboundHandlerAdapter {
 	
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
 		if (ctx.channel().isActive()) {
-			EaglerXVelocity.logger().warn("[Pre][{}]: Exception Caught: {}", ctx.channel().remoteAddress(), cause.toString(), cause);
+			if(logExceptions && !healthCheck) {
+				EaglerXVelocity.logger().warn("[Pre][{}]: Exception Caught: {}", ctx.channel().remoteAddress(), cause.toString(), cause);
+			}
 			ctx.close();
 		}
-	}
-	
-	private static String formatAddressFor404(String str) {
-		return "<span style=\"font-family:monospace;font-weight:bold;background-color:#EEEEEE;padding:3px 4px;\">" + str.replace("<", "&lt;").replace(">", "&gt;") + "</span>";
 	}
 	
 	public void channelInactive(ChannelHandlerContext ctx) {

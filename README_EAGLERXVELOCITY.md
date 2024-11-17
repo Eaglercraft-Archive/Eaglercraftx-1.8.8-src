@@ -46,7 +46,7 @@ The settings.yml file is primarily used for configuring the built-in skin and ca
 - **`disable_fnaw_skins_everywhere:`** Boolean, default value is `false`, can be used to globally disable FNAW skins if your players bitch about them a lot and are too lazy to just disable the FNAW skins locally on their clients.
 - **`disable_fnaw_skins_on_servers:`** List of strings, default value is nothing (`[]`), contains a list of names of registered servers on your Velocity proxy that the FNAW skins should be disabled on. Good for explicitly disabling them for PVP but allowing them everywhere else.
 - **`enable_backend_rpc_api:`** Boolean, default value is `false`, if support for servers running the EaglerXBukkitAPI plugin should be enabled or not.
-- **use_modernized_channel_names:`** Boolean, default value is `false`, if "modernized" plugin channel names compatible with Minecraft 1.13+ should be used for EaglerXBukkitAPI plugin message packets
+- **`use_modernized_channel_names:`** Boolean, default value is `false`, if "modernized" plugin channel names compatible with Minecraft 1.13+ should be used for EaglerXBukkitAPI plugin message packets
 
 ### `listeners.yml`
 
@@ -62,9 +62,12 @@ Defines one or more "listeners" (open ports) for EaglercraftX players to use to 
 - **`server_motd:`** List of up to 2 strings, default value is `'&6An EaglercraftX server'`, sets the contents of the listener's MOTD, which is the text displayed along with the `server_icon` when players add this server's listener address to their client's Multiplayer menu server list.
 - **`allow_motd:`** Boolean, default value is `true`, if this listener should respond to MOTD queries or not.
 - **`allow_query:`** Boolean, default value is `true`, if this listener should respond to all other types of queries or not.
+- **`min_minecraft_protocol:`** Integer, default value is `47`, sets the minimum Minecraft [protocol version](https://wiki.vg/Protocol_version_numbers) that EaglercraftX-based clients are allowed to connect with (`47` = 1.8)
+- **`max_minecraft_protocol:`** Integer, default value is `340`, sets the maximum Minecraft protocol version that EaglercraftX-based clients are allowed to connect with (`340` = 1.12.2)
 - **`allow_protocol_v3:`** Boolean, default value is `true`, if this listener should allow clients using the v1/v2/v3 protocols to join (pre-u37 clients).
 - **`allow_protocol_v4:`** Boolean, default value is `true`, if this listener should allow clients using the v4 protocol to join (post-u37 clients).
 - **`protocol_v4_defrag_send_delay:`** Integer, default value is `10`, the number of milliseconds to wait before flushing all pending EaglercraftX plugin message packets, saves bandwidth by combining multiple messages into a single plugin message packet. Setting this to `0` has the same effect on clientbound packets as setting `eaglerNoDelay` to `true` does on a post-u37 client for all serverbound packets.
+- **`use_haproxy_protocol:`** Boolean, default value is `false`, can be used to enable support for the HAProxy proxy protocol. Make sure to also add the `check`, `check-send-proxy`, and `send-proxy-v2` parameters to your `server` directives in the HAProxy config file.
 - **`allow_cookie_revoke_query:`** Boolean, default value is `true`, If this listener should accept queries from post-u37 clients to revoke session tokens, you need to create your own Velocity plugin to go with EaglerXVelocity that handles the `EaglercraftRevokeSessionQueryEvent` event it fires in order for this feature to work correctly.
 - **`request_motd_cache:`** Section that defines caching hints for server lists that cache the MOTD via the `MOTD.cache` query. As far as we know, not even the official Eaglercraft Server List on eaglercraft.com currently pays attention to these hints or attempts to cache MOTDs, so they can be ignored for now.
     - **`cache_ttl:`** Integer, default value is `7200`, sets how many seconds for the server list to store the MOTD in cache.
