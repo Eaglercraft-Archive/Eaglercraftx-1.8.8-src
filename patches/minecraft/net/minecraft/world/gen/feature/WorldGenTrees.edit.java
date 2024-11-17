@@ -15,7 +15,15 @@
 
 ~ 	public boolean generate(World world, EaglercraftRandom random, BlockPos blockpos) {
 
-> CHANGE  126 : 129  @  126 : 127
+> CHANGE  13 : 14  @  13 : 14
+
+~ 				BlockPos blockpos$mutableblockpos = new BlockPos();
+
+> CHANGE  75 : 76  @  75 : 76
+
+~ 							BlockPos blockpos$mutableblockpos1 = new BlockPos();
+
+> CHANGE  36 : 39  @  36 : 37
 
 ~ 								EnumFacing[] facings = EnumFacing.Plane.HORIZONTAL.facingsArray;
 ~ 								for (int m = 0; m < facings.length; ++m) {

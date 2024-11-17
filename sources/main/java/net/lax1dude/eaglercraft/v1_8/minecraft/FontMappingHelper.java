@@ -517,6 +517,8 @@ public class FontMappingHelper {
 			return 253;
 		case 9632:
 			return 254;
+		case 160:
+			return 32; //nbsp
 		default:
 			return -1;
 		}

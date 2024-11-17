@@ -7,4 +7,13 @@
 
 > DELETE  15  @  15 : 16
 
+> CHANGE  22 : 24  @  22 : 24
+
+~ 			BlockPos blockpos$mutableblockpos = new BlockPos(MathHelper.floor_double(entity.posX), i,
+~ 					MathHelper.floor_double(entity.posZ));
+
+> CHANGE  113 : 114  @  113 : 114
+
+~ 		BlockPos blockpos$mutableblockpos = new BlockPos();
+
 > EOF

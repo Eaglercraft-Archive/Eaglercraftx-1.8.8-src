@@ -4,23 +4,15 @@ import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.internal.teavm.TeaVMUtils;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
+import net.lax1dude.eaglercraft.v1_8.sp.internal.ClientPlatformSingleplayer;
 import net.lax1dude.eaglercraft.v1_8.sp.lan.LANPeerEvent;
-import net.lax1dude.eaglercraft.v1_8.sp.relay.RelayQuery;
-import net.lax1dude.eaglercraft.v1_8.sp.relay.RelayQueryImpl;
-import net.lax1dude.eaglercraft.v1_8.sp.relay.RelayQueryRateLimitDummy;
-import net.lax1dude.eaglercraft.v1_8.sp.relay.RelayServerRateLimitTracker;
-import net.lax1dude.eaglercraft.v1_8.sp.relay.RelayServerSocket;
-import net.lax1dude.eaglercraft.v1_8.sp.relay.RelayServerSocketImpl;
-import net.lax1dude.eaglercraft.v1_8.sp.relay.RelayServerSocketRateLimitDummy;
-import net.lax1dude.eaglercraft.v1_8.sp.relay.RelayWorldsQuery;
-import net.lax1dude.eaglercraft.v1_8.sp.relay.RelayWorldsQueryImpl;
-import net.lax1dude.eaglercraft.v1_8.sp.relay.RelayWorldsQueryRateLimitDummy;
 
 import org.json.JSONObject;
 import org.json.JSONWriter;
 import org.teavm.jso.JSBody;
 import org.teavm.jso.JSFunctor;
 import org.teavm.jso.JSObject;
+import org.teavm.jso.browser.TimerHandler;
 import org.teavm.jso.browser.Window;
 import org.teavm.jso.core.JSError;
 import org.teavm.jso.dom.events.Event;
@@ -326,8 +318,6 @@ public class PlatformWebRTC {
 	@JSBody(params = { "sock", "buffer" }, script = "sock.send(buffer);")
 	static native void nativeBinarySend(WebSocket sock, ArrayBuffer buffer);
 
-	private static final Map<String, JSObject> fuckTeaVM = new HashMap<>();
-
 	public static void runScheduledTasks() {
 		
 	}
@@ -403,12 +393,20 @@ public class PlatformWebRTC {
 			TeaVMUtils.addEventListener(peerConnection, "icecandidate", (EventListener<Event>) evt -> {
 				if (hasCandidate(evt)) {
 					if (iceCandidates.isEmpty()) {
-						Window.setTimeout(() -> {
+						final int[] candidateState = new int[2];
+						final TimerHandler[] runnable = new TimerHandler[1];
+						Window.setTimeout(runnable[0] = () -> {
 							if (peerConnection != null && !"disconnected".equals(getConnectionState(peerConnection))) {
+								int trial = ++candidateState[1];
+								if(candidateState[0] != iceCandidates.size() && trial < 3) {
+									candidateState[0] = iceCandidates.size();
+									Window.setTimeout(runnable[0], 2000);
+									return;
+								}
 								clientICECandidate = JSONWriter.valueToString(iceCandidates);
 								iceCandidates.clear();
 							}
-						}, 3000);
+						}, 2000);
 					}
 					Map<String, String> m = new HashMap<>();
 					m.put("sdpMLineIndex", "" + getSdpMLineIndex(evt));
@@ -506,6 +504,8 @@ public class PlatformWebRTC {
 		public LANServer client;
 		public String peerId;
 		public JSObject peerConnection;
+		public JSObject dataChannel;
+		public String ipcChannel;
 
 		public LANPeer(LANServer client, String peerId, JSObject peerConnection) {
 			this.client = client;
@@ -517,15 +517,23 @@ public class PlatformWebRTC {
 			TeaVMUtils.addEventListener(peerConnection, "icecandidate", (EventListener<Event>) evt -> {
 				if (hasCandidate(evt)) {
 					if (iceCandidates.isEmpty()) {
-						Window.setTimeout(() -> {
+						final int[] candidateState = new int[2];
+						final TimerHandler[] runnable = new TimerHandler[1];
+						Window.setTimeout(runnable[0] = () -> {
 							if (peerConnection != null && !"disconnected".equals(getConnectionState(peerConnection))) {
+								int trial = ++candidateState[1];
+								if(candidateState[0] != iceCandidates.size() && trial < 3) {
+									candidateState[0] = iceCandidates.size();
+									Window.setTimeout(runnable[0], 2000);
+									return;
+								}
 								LANPeerEvent.LANPeerICECandidateEvent e = new LANPeerEvent.LANPeerICECandidateEvent(peerId, JSONWriter.valueToString(iceCandidates));
 								synchronized(serverLANEventBuffer) {
 									serverLANEventBuffer.put(peerId, e);
 								}
 								iceCandidates.clear();
 							}
-						}, 3000);
+						}, 2000);
 					}
 					Map<String, String> m = new HashMap<>();
 					m.put("sdpMLineIndex", "" + getSdpMLineIndex(evt));
@@ -542,16 +550,23 @@ public class PlatformWebRTC {
 				}
 				if (getChannel(evt) == null) return;
 				JSObject dataChannel = getChannel(evt);
-				synchronized(fuckTeaVM) {
-					fuckTeaVM.put(peerId, dataChannel);
+				if(this.dataChannel != null) {
+					closeIt(dataChannel);
+					return;
 				}
+				this.dataChannel = dataChannel;
 				synchronized(serverLANEventBuffer) {
 					serverLANEventBuffer.put(peerId, new LANPeerEvent.LANPeerDataChannelEvent(peerId));
 				}
 				TeaVMUtils.addEventListener(dataChannel, "message", (EventListener<Event>) evt2 -> {
-					LANPeerEvent.LANPeerPacketEvent e = new LANPeerEvent.LANPeerPacketEvent(peerId, TeaVMUtils.wrapByteArrayBuffer(getData(evt2)));
-					synchronized(serverLANEventBuffer) {
-						serverLANEventBuffer.put(peerId, e);
+					ArrayBuffer data = getData(evt2);
+					if(ipcChannel != null) {
+						ClientPlatformSingleplayer.sendPacketTeaVM(ipcChannel, data);
+					}else {
+						LANPeerEvent.LANPeerPacketEvent e = new LANPeerEvent.LANPeerPacketEvent(peerId, TeaVMUtils.wrapByteArrayBuffer(data));
+						synchronized(serverLANEventBuffer) {
+							serverLANEventBuffer.put(peerId, e);
+						}
 					}
 				});
 			};
@@ -572,11 +587,8 @@ public class PlatformWebRTC {
 		}
 
 		public void disconnect() {
-			synchronized(fuckTeaVM) {
-				if (fuckTeaVM.get(peerId) != null) {
-					closeIt(fuckTeaVM.get(peerId));
-					fuckTeaVM.remove(peerId);
-				}
+			if(dataChannel != null) {
+				closeIt(dataChannel);
 			}
 			closeIt(peerConnection);
 		}
@@ -627,11 +639,26 @@ public class PlatformWebRTC {
 				client.signalRemoteDisconnect(peerId);
 			}
 		}
+
+		public void mapIPC(String ipcChannel) {
+			if(this.ipcChannel == null) {
+				if(ipcChannel != null) {
+					this.ipcChannel = ipcChannel;
+					this.client.ipcMapList.put(ipcChannel, this);
+				}
+			}else {
+				if(ipcChannel == null) {
+					this.client.ipcMapList.remove(this.ipcChannel);
+					this.ipcChannel = null;
+				}
+			}
+		}
 	}
 
 	public static class LANServer {
 		public Set<Map<String, String>> iceServers = new HashSet<>();
 		public Map<String, LANPeer> peerList = new HashMap<>();
+		public Map<String, LANPeer> ipcMapList = new HashMap<>();
 		public byte peerState = PEERSTATE_LOADING;
 		public byte peerStateConnect = PEERSTATE_LOADING;
 		public byte peerStateInitial = PEERSTATE_LOADING;
@@ -659,21 +686,23 @@ public class PlatformWebRTC {
 		public void sendPacketToRemoteClient(String peerId, ArrayBuffer buffer) {
 			LANPeer thePeer = this.peerList.get(peerId);
 			if (thePeer != null) {
-				boolean b = false;
-				synchronized(fuckTeaVM) {
-					if (fuckTeaVM.get(thePeer.peerId) != null && "open".equals(getReadyState(fuckTeaVM.get(thePeer.peerId)))) {
-						try {
-							sendIt(fuckTeaVM.get(thePeer.peerId), buffer);
-						} catch (Throwable e) {
-							b = true;
-						}
-					} else {
-						b = true;
-					}
+				sendPacketToRemoteClient(thePeer, buffer);
+			}
+		}
+
+		public void sendPacketToRemoteClient(LANPeer thePeer, ArrayBuffer buffer) {
+			boolean b = false;
+			if (thePeer.dataChannel != null && "open".equals(getReadyState(thePeer.dataChannel))) {
+				try {
+					sendIt(thePeer.dataChannel, buffer);
+				} catch (Throwable e) {
+					b = true;
 				}
-				if(b) {
-					signalRemoteDisconnect(peerId);
-				}
+			} else {
+				b = true;
+			}
+			if(b) {
+				signalRemoteDisconnect(thePeer.peerId);
 			}
 		}
 
@@ -719,23 +748,26 @@ public class PlatformWebRTC {
 					}
 				}
 				peerList.clear();
-				synchronized(fuckTeaVM) {
-					fuckTeaVM.clear();
-				}
 				return;
 			}
-			LANPeer thePeer = peerList.get(peerId);
+			LANPeer thePeer = peerList.remove(peerId);
 			if(thePeer != null) {
-				peerList.remove(peerId);
+				if(thePeer.ipcChannel != null) {
+					ipcMapList.remove(thePeer.ipcChannel);
+				}
 				try {
 					thePeer.disconnect();
 				} catch (Throwable ignored) {}
-				synchronized(fuckTeaVM) {
-					fuckTeaVM.remove(peerId);
-				}
 				synchronized(serverLANEventBuffer) {
 					serverLANEventBuffer.put(thePeer.peerId, new LANPeerEvent.LANPeerDisconnectEvent(peerId));
 				}
+			}
+		}
+
+		public void serverPeerMapIPC(String peer, String ipcChannel) {
+			LANPeer peerr = peerList.get(peer);
+			if(peerr != null) {
+				peerr.mapIPC(ipcChannel);
 			}
 		}
 
@@ -757,30 +789,6 @@ public class PlatformWebRTC {
 	@JSFunctor
 	public interface ErrorHandler extends JSObject {
 		void call(JSError err);
-	}
-
-	public static RelayQuery openRelayQuery(String addr) {
-		RelayQuery.RateLimit limit = RelayServerRateLimitTracker.isLimited(addr);
-		if(limit == RelayQuery.RateLimit.LOCKED || limit == RelayQuery.RateLimit.BLOCKED) {
-			return new RelayQueryRateLimitDummy(limit);
-		}
-		return new RelayQueryImpl(addr);
-	}
-
-	public static RelayWorldsQuery openRelayWorldsQuery(String addr) {
-		RelayQuery.RateLimit limit = RelayServerRateLimitTracker.isLimited(addr);
-		if(limit == RelayQuery.RateLimit.LOCKED || limit == RelayQuery.RateLimit.BLOCKED) {
-			return new RelayWorldsQueryRateLimitDummy(limit);
-		}
-		return new RelayWorldsQueryImpl(addr);
-	}
-
-	public static RelayServerSocket openRelayConnection(String addr, int timeout) {
-		RelayQuery.RateLimit limit = RelayServerRateLimitTracker.isLimited(addr);
-		if(limit == RelayQuery.RateLimit.LOCKED || limit == RelayQuery.RateLimit.BLOCKED) {
-			return new RelayServerSocketRateLimitDummy(limit);
-		}
-		return new RelayServerSocketImpl(addr, timeout);
 	}
 
 	private static LANClient rtcLANClient = null;
@@ -806,7 +814,6 @@ public class PlatformWebRTC {
 		rtcLANClient.signalRemoteDisconnect(false);
 	}
 
-	// todo: ArrayBuffer version
 	public static void clientLANSendPacket(byte[] pkt) {
 		rtcLANClient.sendPacketToServer(TeaVMUtils.unwrapArrayBuffer(pkt));
 	}
@@ -947,6 +954,24 @@ public class PlatformWebRTC {
 
 	public static void serverLANPeerDescription(String peer, String description) {
 		rtcLANServer.signalRemoteDescription(peer, description);
+	}
+
+	public static void serverLANPeerMapIPC(String peer, String ipcChannel) {
+		rtcLANServer.serverPeerMapIPC(peer, ipcChannel);
+	}
+
+	public static boolean serverLANPeerPassIPC(String channelName, ArrayBuffer data) {
+		if(rtcLANServer != null) {
+			LANPeer peer = rtcLANServer.ipcMapList.get(channelName);
+			if(peer != null) {
+				rtcLANServer.sendPacketToRemoteClient(peer, data);
+				return true;
+			}else {
+				return false;
+			}
+		}else {
+			return false;
+		}
 	}
 
 	public static void serverLANDisconnectPeer(String peer) {

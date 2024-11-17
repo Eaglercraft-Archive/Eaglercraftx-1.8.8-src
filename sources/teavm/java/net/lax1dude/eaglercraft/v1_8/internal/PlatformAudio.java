@@ -87,16 +87,19 @@ public class PlatformAudio {
 		protected final PannerNode panner;
 		protected final GainNode gain;
 		protected float pitch;
+		protected boolean repeat;
 		protected boolean isPaused = false;
 		protected boolean isEnded = false;
+		protected boolean isDisposed = false;
 		
 		public BrowserAudioHandle(BrowserAudioResource resource, AudioBufferSourceNode source, PannerNode panner,
-				GainNode gain, float pitch) {
+				GainNode gain, float pitch, boolean repeat) {
 			this.resource = resource;
 			this.source = source;
 			this.panner = panner;
 			this.gain = gain;
 			this.pitch = pitch;
+			this.repeat = repeat;
 			source.setOnEnded(this);
 		}
 
@@ -116,6 +119,14 @@ public class PlatformAudio {
 		}
 
 		@Override
+		public void repeat(boolean en) {
+			repeat = en;
+			if(!isEnded) {
+				source.setLoop(en);
+			}
+		}
+
+		@Override
 		public void restart() {
 			if(isEnded) {
 				isEnded = false;
@@ -124,11 +135,21 @@ public class PlatformAudio {
 				resource.cacheHit = PlatformRuntime.steadyTimeMillis();
 				src.setBuffer(resource.buffer);
 				src.getPlaybackRate().setValue(pitch);
+				src.setLoop(repeat);
 				source.disconnect();
 				src.connect(panner == null ? gain : panner);
+				if(isDisposed) {
+					isDisposed = false;
+					activeSounds.add(this);
+					gain.connect(audioctx.getDestination());
+					if(gameRecGain != null) {
+						gain.connect(gameRecGain);
+					}
+				}
 				source = src;
 				source.start();
 			}else {
+				isPaused = false;
 				source.getPlaybackRate().setValue(pitch);
 				source.start(0.0);
 			}
@@ -179,6 +200,12 @@ public class PlatformAudio {
 			isEnded = true;
 		}
 		
+		private void dispose() {
+			if(!isDisposed) {
+				isDisposed = true;
+				gain.disconnect();
+			}
+		}
 	}
 	
 	static void initialize() {
@@ -304,10 +331,9 @@ public class PlatformAudio {
 			gameRecGain = audioctx.createGain();
 			gameRecGain.getGain().setValue(gameVol);
 			for(BrowserAudioHandle handle : activeSounds) {
-				if(handle.panner != null) {
-					handle.panner.connect(gameRecGain);
-				}else {
+				try {
 					handle.gain.connect(gameRecGain);
+				}catch(Throwable t) {
 				}
 			}
 			PlatformVoiceClient.addRecordingDest(gameRecGain);
@@ -342,11 +368,7 @@ public class PlatformAudio {
 			}
 			for(BrowserAudioHandle handle : activeSounds) {
 				try {
-					if(handle.panner != null) {
-						handle.panner.disconnect(gameRecGain);
-					}else {
-						handle.gain.disconnect(gameRecGain);
-					}
+					handle.gain.disconnect(gameRecGain);
 				}catch(Throwable t) {
 				}
 			}
@@ -451,8 +473,10 @@ public class PlatformAudio {
 			activeFreeTimer = millis;
 			Iterator<BrowserAudioHandle> itr = activeSounds.iterator();
 			while(itr.hasNext()) {
-				if(itr.next().shouldFree()) {
+				BrowserAudioHandle h = itr.next();
+				if(h.shouldFree()) {
 					itr.remove();
+					h.dispose();
 				}
 			}
 		}
@@ -460,6 +484,10 @@ public class PlatformAudio {
 
 	public static void flushAudioCache() {
 		soundCache.clear();
+		Iterator<BrowserAudioHandle> itr = activeSounds.iterator();
+		while(itr.hasNext()) {
+			itr.next().dispose();
+		}
 		activeSounds.clear();
 	}
 	
@@ -468,13 +496,14 @@ public class PlatformAudio {
 	}
 	
 	public static IAudioHandle beginPlayback(IAudioResource track, float x, float y, float z,
-			float volume, float pitch) {
+			float volume, float pitch, boolean repeat) {
 		BrowserAudioResource internalTrack = (BrowserAudioResource) track;
 		internalTrack.cacheHit = PlatformRuntime.steadyTimeMillis();
 		
 		AudioBufferSourceNode src = audioctx.createBufferSource();
 		src.setBuffer(internalTrack.buffer);
 		src.getPlaybackRate().setValue(pitch);
+		src.setLoop(repeat);
 		
 		PannerNode panner = audioctx.createPanner();
 		panner.setPosition(x, y, z);
@@ -503,18 +532,19 @@ public class PlatformAudio {
 
 		src.start();
 		
-		BrowserAudioHandle ret = new BrowserAudioHandle(internalTrack, src, panner, gain, pitch);
+		BrowserAudioHandle ret = new BrowserAudioHandle(internalTrack, src, panner, gain, pitch, repeat);
 		activeSounds.add(ret);
 		return ret;
 	}
 
-	public static IAudioHandle beginPlaybackStatic(IAudioResource track, float volume, float pitch) {
+	public static IAudioHandle beginPlaybackStatic(IAudioResource track, float volume, float pitch, boolean repeat) {
 		BrowserAudioResource internalTrack = (BrowserAudioResource) track;
 		internalTrack.cacheHit = PlatformRuntime.steadyTimeMillis();
 		
 		AudioBufferSourceNode src = audioctx.createBufferSource();
 		src.setBuffer(internalTrack.buffer);
 		src.getPlaybackRate().setValue(pitch);
+		src.setLoop(repeat);
 		
 		GainNode gain = audioctx.createGain();
 		float v2 = volume;
@@ -529,7 +559,7 @@ public class PlatformAudio {
 		
 		src.start();
 		
-		BrowserAudioHandle ret = new BrowserAudioHandle(internalTrack, src, null, gain, pitch);
+		BrowserAudioHandle ret = new BrowserAudioHandle(internalTrack, src, null, gain, pitch, repeat);
 		activeSounds.add(ret);
 		return ret;
 	}

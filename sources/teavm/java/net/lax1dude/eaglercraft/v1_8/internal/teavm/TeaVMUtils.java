@@ -130,7 +130,7 @@ public class TeaVMUtils {
 	@GeneratedBy(TeaVMUtilsUnwrapGenerator.WrapArrayBuffer.class)
 	public static native short[] wrapShortArrayBuffer(ArrayBuffer buf);
 
-	@InjectedBy(TeaVMUtilsUnwrapGenerator.UnwrapArrayBuffer.class)
+	@GeneratedBy(TeaVMUtilsUnwrapGenerator.WrapArrayBufferView.class)
 	public static native short[] wrapShortArrayBuffer(ArrayBufferView buf);
 
 	@Async
@@ -140,12 +140,8 @@ public class TeaVMUtils {
 		Window.setTimeout(() -> cb.complete(null), millis);
 	}
 
-	public static final Comparator<Touch> touchSortingComparator = (t1, t2) -> {
-		return t1.getIdentifier() - t2.getIdentifier();
-	};
-
 	public static final Comparator<OffsetTouch> touchSortingComparator2 = (t1, t2) -> {
-		return t1.touch.getIdentifier() - t2.touch.getIdentifier();
+		return t1.eventUID - t2.eventUID;
 	};
 
 	public static List<OffsetTouch> toSortedTouchList(TouchList touchList, SortedTouchEvent.ITouchUIDMapper mapper,

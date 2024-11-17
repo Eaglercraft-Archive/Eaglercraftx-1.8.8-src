@@ -150,7 +150,7 @@ public class EaglerLWJGLFloatBuffer implements FloatBuffer {
 			int l = src.remaining();
 			if(position + l > limit) throw Buffer.makeIOOBE(position + l - 1);
 			for(int i = 0; i < l; ++i) {
-				UnsafeUtils.setMemFloat(address + ((position + l) << SHIFT), src.get());
+				UnsafeUtils.setMemFloat(address + ((position + i) << SHIFT), src.get());
 			}
 			position += l;
 		}

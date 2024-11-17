@@ -283,7 +283,7 @@ public class EaglerFolderResourcePack extends AbstractResourcePack {
 				return;
 			}
 		}
-		PlatformRuntime.downloadRemoteURIByteArray(url, arr -> {
+		PlatformRuntime.downloadRemoteURIByteArray(url, true, arr -> {
 			ast.accept(() -> {
 				if (arr == null) {
 					cb.accept(null);

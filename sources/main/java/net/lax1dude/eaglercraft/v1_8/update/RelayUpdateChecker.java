@@ -10,8 +10,8 @@ import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.EaglerInputStream;
 import net.lax1dude.eaglercraft.v1_8.EaglerOutputStream;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformApplication;
-import net.lax1dude.eaglercraft.v1_8.internal.PlatformWebRTC;
 import net.lax1dude.eaglercraft.v1_8.sp.relay.RelayManager;
+import net.lax1dude.eaglercraft.v1_8.sp.relay.RelayQueryDispatch;
 import net.lax1dude.eaglercraft.v1_8.sp.relay.RelayServerSocket;
 import net.lax1dude.eaglercraft.v1_8.sp.relay.pkt.RelayPacket00Handshake;
 import net.minecraft.client.Minecraft;
@@ -111,7 +111,7 @@ public class RelayUpdateChecker {
 	private static void connect(RelayEntry socket) {
 		try {
 			socket.handshake = false;
-			socket.currentSocket = PlatformWebRTC.openRelayConnection(socket.uri, 10000);
+			socket.currentSocket = RelayQueryDispatch.openRelayConnection(socket.uri, 10000);
 			if(socket.currentSocket.isClosed()) {
 				socket.currentSocket = null;
 			}

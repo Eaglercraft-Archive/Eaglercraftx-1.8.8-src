@@ -195,4 +195,8 @@
 ~ 					for (int i = 0; i < facings.length; ++i) {
 ~ 						EnumFacing enumfacing = facings[i];
 
+> CHANGE  49 : 50  @  49 : 51
+
+~ 		BlockPos blockpos$mutableblockpos = new BlockPos((this.xPosition << 4) + x, 0, (this.zPosition << 4) + z);
+
 > EOF

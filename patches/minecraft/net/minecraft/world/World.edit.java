@@ -69,11 +69,29 @@
 
 ~ 							return HString.format("ID #%d (%s // %s)",
 
-> CHANGE  128 : 129  @  128 : 129
+> CHANGE  60 : 66  @  60 : 65
+
+~ 				BlockPos tmp = new BlockPos(0, 0, 0);
+~ 				int i1 = this.getLight(pos.up(tmp), false);
+~ 				int i = this.getLight(pos.east(tmp), false);
+~ 				int j = this.getLight(pos.west(tmp), false);
+~ 				int k = this.getLight(pos.south(tmp), false);
+~ 				int l = this.getLight(pos.north(tmp), false);
+
+> CHANGE  63 : 64  @  63 : 64
 
 ~ 			return Chunk.getNoSkyLightValue();
 
-> CHANGE  74 : 80  @  74 : 75
+> CHANGE  10 : 16  @  10 : 15
+
+~ 				BlockPos tmp = new BlockPos();
+~ 				int i1 = this.getLightFor(type, pos.up(tmp));
+~ 				int i = this.getLightFor(type, pos.east(tmp));
+~ 				int j = this.getLightFor(type, pos.west(tmp));
+~ 				int k = this.getLightFor(type, pos.south(tmp));
+~ 				int l = this.getLightFor(type, pos.north(tmp));
+
+> CHANGE  59 : 65  @  59 : 60
 
 ~ 		if (lightValue < 0) {
 ~ 			j += -lightValue;
@@ -82,7 +100,15 @@
 ~ 			}
 ~ 		} else if (j < lightValue) {
 
-> DELETE  579  @  579 : 582
+> CHANGE  320 : 321  @  320 : 321
+
+~ 		BlockPos blockpos$mutableblockpos = new BlockPos();
+
+> CHANGE  72 : 73  @  72 : 73
+
+~ 		BlockPos blockpos$mutableblockpos = new BlockPos();
+
+> DELETE  185  @  185 : 188
 
 > DELETE  23  @  23 : 24
 
@@ -104,7 +130,31 @@
 
 > DELETE  38  @  38 : 39
 
-> CHANGE  400 : 401  @  400 : 401
+> CHANGE  37 : 38  @  37 : 38
+
+~ 		BlockPos blockpos$mutableblockpos = new BlockPos();
+
+> CHANGE  22 : 23  @  22 : 23
+
+~ 		BlockPos blockpos$mutableblockpos = new BlockPos();
+
+> CHANGE  23 : 24  @  23 : 24
+
+~ 			BlockPos blockpos$mutableblockpos = new BlockPos();
+
+> CHANGE  28 : 29  @  28 : 29
+
+~ 			BlockPos blockpos$mutableblockpos = new BlockPos();
+
+> CHANGE  38 : 39  @  38 : 39
+
+~ 		BlockPos blockpos$mutableblockpos = new BlockPos();
+
+> CHANGE  22 : 23  @  22 : 23
+
+~ 		BlockPos blockpos$mutableblockpos = new BlockPos();
+
+> CHANGE  224 : 225  @  224 : 225
 
 ~ 		if (!this.provider.getHasNoSky() && this.getGameRules().getBoolean("doWeatherCycle")) {
 
@@ -140,7 +190,13 @@
 
 ~ 	public void forceBlockUpdateTick(Block blockType, BlockPos pos, EaglercraftRandom random) {
 
-> CHANGE  93 : 96  @  93 : 94
+> CHANGE  28 : 31  @  28 : 30
+
+~ 					BlockPos tmp = new BlockPos();
+~ 					boolean flag = this.isWater(pos.west(tmp)) && this.isWater(pos.east(tmp))
+~ 							&& this.isWater(pos.north(tmp)) && this.isWater(pos.south(tmp));
+
+> CHANGE  63 : 66  @  63 : 64
 
 ~ 				EnumFacing[] facings = EnumFacing._VALUES;
 ~ 				for (int m = 0; m < facings.length; ++m) {
@@ -148,7 +204,11 @@
 
 > DELETE  22  @  22 : 23
 
-> CHANGE  27 : 30  @  27 : 28
+> CHANGE  25 : 26  @  25 : 26
+
+~ 								BlockPos blockpos$mutableblockpos = new BlockPos();
+
+> CHANGE  1 : 4  @  1 : 2
 
 ~ 								EnumFacing[] facings = EnumFacing._VALUES;
 ~ 								for (int m = 0; m < facings.length; ++m) {
@@ -156,7 +216,35 @@
 
 > DELETE  20  @  20 : 23
 
-> DELETE  50  @  50 : 51
+> INSERT  6 : 7  @  6
+
++ 				BlockPos tmp = new BlockPos(0, 0, 0);
+
+> CHANGE  10 : 11  @  10 : 11
+
+~ 							if (this.getLightFor(lightType, blockpos1.west(tmp)) < j6) {
+
+> CHANGE  4 : 5  @  4 : 5
+
+~ 							if (this.getLightFor(lightType, blockpos1.east(tmp)) < j6) {
+
+> CHANGE  4 : 5  @  4 : 5
+
+~ 							if (this.getLightFor(lightType, blockpos1.down(tmp)) < j6) {
+
+> CHANGE  4 : 5  @  4 : 5
+
+~ 							if (this.getLightFor(lightType, blockpos1.up(tmp)) < j6) {
+
+> CHANGE  4 : 5  @  4 : 5
+
+~ 							if (this.getLightFor(lightType, blockpos1.north(tmp)) < j6) {
+
+> CHANGE  4 : 5  @  4 : 5
+
+~ 							if (this.getLightFor(lightType, blockpos1.south(tmp)) < j6) {
+
+> DELETE  8  @  8 : 9
 
 > CHANGE  43 : 46  @  43 : 45
 
@@ -175,7 +263,42 @@
 ~ 		for (int j = 0, l = this.loadedEntityList.size(); j < l; ++j) {
 ~ 			Entity entity = this.loadedEntityList.get(j);
 
-> CHANGE  102 : 107  @  102 : 104
+> CHANGE  51 : 53  @  51 : 52
+
+~ 		BlockPos tmp = new BlockPos();
+~ 		i = Math.max(i, this.getStrongPower(pos.down(tmp), EnumFacing.DOWN));
+
+> CHANGE  3 : 4  @  3 : 4
+
+~ 			i = Math.max(i, this.getStrongPower(pos.up(tmp), EnumFacing.UP));
+
+> CHANGE  3 : 4  @  3 : 4
+
+~ 				i = Math.max(i, this.getStrongPower(pos.north(tmp), EnumFacing.NORTH));
+
+> CHANGE  3 : 4  @  3 : 4
+
+~ 					i = Math.max(i, this.getStrongPower(pos.south(tmp), EnumFacing.SOUTH));
+
+> CHANGE  3 : 4  @  3 : 4
+
+~ 						i = Math.max(i, this.getStrongPower(pos.west(tmp), EnumFacing.WEST));
+
+> CHANGE  3 : 4  @  3 : 4
+
+~ 							i = Math.max(i, this.getStrongPower(pos.east(tmp), EnumFacing.EAST));
+
+> CHANGE  19 : 26  @  19 : 25
+
+~ 		BlockPos tmp = new BlockPos(0, 0, 0);
+~ 		return this.getRedstonePower(pos.down(tmp), EnumFacing.DOWN) > 0 ? true
+~ 				: (this.getRedstonePower(pos.up(tmp), EnumFacing.UP) > 0 ? true
+~ 						: (this.getRedstonePower(pos.north(tmp), EnumFacing.NORTH) > 0 ? true
+~ 								: (this.getRedstonePower(pos.south(tmp), EnumFacing.SOUTH) > 0 ? true
+~ 										: (this.getRedstonePower(pos.west(tmp), EnumFacing.WEST) > 0 ? true
+~ 												: this.getRedstonePower(pos.east(tmp), EnumFacing.EAST) > 0))));
+
+> CHANGE  5 : 10  @  5 : 7
 
 ~ 		EnumFacing[] facings = EnumFacing._VALUES;
 ~ 		BlockPos tmp = new BlockPos(0, 0, 0);

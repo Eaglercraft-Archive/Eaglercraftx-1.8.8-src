@@ -489,7 +489,11 @@
 + 	}
 + 
 
-> INSERT  29 : 30  @  29
+> CHANGE  5 : 6  @  5 : 7
+
+~ 		for (BlockPos blockpos$mutableblockpos : BlockPos.getAllInBoxMutable(blockpos, blockpos.add(15, 15, 15))) {
+
+> INSERT  22 : 23  @  22
 
 + 		((ClippingHelperImpl) this.debugFixedClippingHelper).destroy();
 

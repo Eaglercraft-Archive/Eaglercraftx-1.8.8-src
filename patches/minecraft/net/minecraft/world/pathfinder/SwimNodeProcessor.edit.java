@@ -13,4 +13,8 @@
 ~ 		for (int j = 0; j < facings.length; ++j) {
 ~ 			EnumFacing enumfacing = facings[j];
 
+> CHANGE  16 : 17  @  16 : 17
+
+~ 		BlockPos blockpos$mutableblockpos = new BlockPos();
+
 > EOF

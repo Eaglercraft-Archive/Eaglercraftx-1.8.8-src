@@ -15,4 +15,12 @@
 
 ~ 	public boolean generate(World world, EaglercraftRandom random, BlockPos blockpos) {
 
+> CHANGE  18 : 19  @  18 : 19
+
+~ 				BlockPos blockpos$mutableblockpos = new BlockPos();
+
+> CHANGE  57 : 58  @  57 : 58
+
+~ 						BlockPos blockpos$mutableblockpos1 = new BlockPos();
+
 > EOF

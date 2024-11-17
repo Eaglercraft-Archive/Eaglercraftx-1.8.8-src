@@ -153,7 +153,7 @@ public class EaglerArrayFloatBuffer implements FloatBuffer {
 			int l = src.remaining();
 			if(position + l > limit) throw Buffer.makeIOOBE(position + l - 1);
 			for(int i = 0; i < l; ++i) {
-				typedArray.set(position + l, src.get());
+				typedArray.set(position + i, src.get());
 			}
 			position += l;
 		}

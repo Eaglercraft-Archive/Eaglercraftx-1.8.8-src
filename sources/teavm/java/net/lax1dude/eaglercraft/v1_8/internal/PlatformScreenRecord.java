@@ -3,7 +3,6 @@ package net.lax1dude.eaglercraft.v1_8.internal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.EnumSet;
-import java.util.HashSet;
 import java.util.Set;
 
 import org.teavm.interop.Async;
@@ -16,7 +15,6 @@ import org.teavm.jso.browser.Window;
 import org.teavm.jso.canvas.CanvasRenderingContext2D;
 import org.teavm.jso.dom.events.Event;
 import org.teavm.jso.dom.events.EventListener;
-import org.teavm.jso.dom.html.HTMLAnchorElement;
 import org.teavm.jso.dom.html.HTMLCanvasElement;
 import org.teavm.jso.webaudio.MediaStream;
 
@@ -193,19 +191,11 @@ public class PlatformScreenRecord {
 				final String fileName = EaglercraftVersion.mainMenuStringB + " - " + EaglerProfile.getName() + " - " + fmt.format(new Date()) + "." + params.codec.fileExt;
 				if("video/webm".equals(params.codec.container)) {
 					FixWebMDurationJS.getRecUrl(evt, (int) (PlatformRuntime.steadyTimeMillis() - startTime), url -> {
-						HTMLAnchorElement a = (HTMLAnchorElement) win.getDocument().createElement("a");
-						a.setDownload(fileName);
-						a.setHref(url);
-						a.click();
-						TeaVMUtils.freeDataURL(url);
+						PlatformApplication.downloadURLWithNameTeaVM(fileName, url, () -> TeaVMUtils.freeDataURL(url));
 					}, logger::info);
 				}else {
 					String url = TeaVMUtils.getDataURL(evt.getData());
-					HTMLAnchorElement a = (HTMLAnchorElement) win.getDocument().createElement("a");
-					a.setDownload(fileName);
-					a.setHref(url);
-					a.click();
-					TeaVMUtils.freeDataURL(url);
+					PlatformApplication.downloadURLWithNameTeaVM(fileName, url, () -> TeaVMUtils.freeDataURL(url));
 				}
 			}
 		});

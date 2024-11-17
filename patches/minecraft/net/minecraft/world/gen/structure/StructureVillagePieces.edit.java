@@ -216,7 +216,11 @@
 
 ~ 				List<StructureComponent> rand, EaglercraftRandom parRandom, int parInt1, int parInt2) {
 
-> CHANGE  138 : 139  @  138 : 139
+> CHANGE  27 : 28  @  27 : 28
+
+~ 			BlockPos blockpos$mutableblockpos = new BlockPos();
+
+> CHANGE  110 : 111  @  110 : 111
 
 ~ 		public Well(StructureVillagePieces.Start start, int parInt1, EaglercraftRandom rand, int parInt2, int parInt3) {
 

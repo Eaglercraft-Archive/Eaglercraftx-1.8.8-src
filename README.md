@@ -247,4 +247,4 @@ The `crashReportShow` hook can be used to capture crash reports and append addit
 
 There is currently no system in place to make forks of 1.8 and merge commits made to the patch files in this repository with the patch files or workspace of the fork, you're on your own if you try to keep a fork of this repo for reasons other than to contribute to it
 
-A javascript-based modding API resembling Minecraft Forge may be implemented someday though for adding custom content to the game.
+**Note:** If you are trying to use the desktop runtime on Linux, make sure you add the "desktopRuntime" folder to the `LD_LIBRARY_PATH` environment variable of the Java process. This should be done automatically by the Eclipse project's default run configuration, but it might not work properly on every system, or when the Eclipse project is imported into IntelliJ.

@@ -53,16 +53,21 @@ public class PlatformAudio {
 		@Override
 		public void pause(boolean setPaused) {
 			if(setPaused) {
-				if(sndSystem.playing(sourceName)) {
+				if(!paused) {
 					sndSystem.pause(sourceName);
+					paused = true;
 				}
-				paused = true;
 			}else {
-				if(!sndSystem.playing(sourceName)) {
+				if(paused) {
 					sndSystem.play(sourceName);
+					paused = false;
 				}
-				paused = false;
 			}
+		}
+
+		@Override
+		public void repeat(boolean en) {
+			sndSystem.setLooping(sourceName, en);
 		}
 
 		@Override
@@ -172,7 +177,7 @@ public class PlatformAudio {
 	private static int sourceCounter = 0;
 	
 	public static IAudioHandle beginPlayback(IAudioResource track, float x, float y, float z,
-			float volume, float pitch) {
+			float volume, float pitch, boolean repeat) {
 		if(sndSystem == null) {
 			return null;
 		}
@@ -188,12 +193,13 @@ public class PlatformAudio {
 		sndSystem.setTemporary(srcName, true);
 		sndSystem.setPitch(srcName, pitch);
 		sndSystem.setVolume(srcName, volume);
+		sndSystem.setLooping(srcName, repeat);
 		sndSystem.play(srcName);
 		
 		return new PaulscodeAudioHandle(srcName);
 	}
 	
-	public static IAudioHandle beginPlaybackStatic(IAudioResource track, float volume, float pitch) {
+	public static IAudioHandle beginPlaybackStatic(IAudioResource track, float volume, float pitch, boolean repeat) {
 		if(sndSystem == null) {
 			return null;
 		}
@@ -204,6 +210,7 @@ public class PlatformAudio {
 		sndSystem.setTemporary(srcName, true);
 		sndSystem.setPitch(srcName, pitch);
 		sndSystem.setVolume(srcName, volume);
+		sndSystem.setLooping(srcName, repeat);
 		sndSystem.play(srcName);
 		
 		return new PaulscodeAudioHandle(srcName);

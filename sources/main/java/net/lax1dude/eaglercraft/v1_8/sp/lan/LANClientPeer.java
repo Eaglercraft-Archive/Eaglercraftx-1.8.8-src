@@ -1,10 +1,8 @@
 package net.lax1dude.eaglercraft.v1_8.sp.lan;
 
-import java.util.Iterator;
 import java.util.List;
 
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
-import net.lax1dude.eaglercraft.v1_8.EagUtils;
 import net.lax1dude.eaglercraft.v1_8.internal.IPCPacketData;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformWebRTC;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
@@ -33,42 +31,26 @@ class LANClientPeer {
 
 	private static final Logger logger = LogManager.getLogger("LANClientPeer");
 
-	private static final int PRE = 0, SENT_ICE_CANDIDATE = 2, SENT_DESCRIPTION = 3, CONNECTED = 4, CLOSED = 5;
+	private static final int PRE = 0, RECEIVED_ICE_CANDIDATE = 1, SENT_ICE_CANDIDATE = 2, RECEIVED_DESCRIPTION = 3,
+			SENT_DESCRIPTION = 4, RECEIVED_SUCCESS = 5, CONNECTED = 6, CLOSED = 7;
 
 	protected final String clientId;
 
 	protected int state = PRE;
 	protected boolean dead = false;
 
+	protected long startTime;
+
 	protected LANClientPeer(String clientId) {
 		this.clientId = clientId;
+		this.startTime = EagRuntime.steadyTimeMillis();
 		PlatformWebRTC.serverLANCreatePeer(clientId);
 	}
 
 	protected void handleICECandidates(String candidates) {
 		if(state == SENT_DESCRIPTION) {
 			PlatformWebRTC.serverLANPeerICECandidates(clientId, candidates);
-			long millis = EagRuntime.steadyTimeMillis();
-			do {
-				PlatformWebRTC.runScheduledTasks();
-				LANPeerEvent evt;
-				if((evt = PlatformWebRTC.serverLANGetEvent(clientId)) != null) {
-					if(evt instanceof LANPeerEvent.LANPeerICECandidateEvent) {
-						LANServerController.lanRelaySocket.writePacket(new RelayPacket03ICECandidate(clientId, ((LANPeerEvent.LANPeerICECandidateEvent)evt).candidates));
-						state = SENT_ICE_CANDIDATE;
-						return;
-					}else if(evt instanceof LANPeerEvent.LANPeerDisconnectEvent) {
-						logger.error("LAN client '{}' disconnected while waiting for server ICE candidates", clientId);
-					}else {
-						logger.error("LAN client '{}' had an accident: {}", clientId, evt.getClass().getSimpleName());
-					}
-					disconnect();
-					return;
-				}
-				EagUtils.sleep(20);
-			}while(EagRuntime.steadyTimeMillis() - millis < 5000l);
-			logger.error("Getting server ICE candidates for '{}' timed out!", clientId);
-			disconnect();
+			state = RECEIVED_ICE_CANDIDATE;
 		}else {
 			logger.error("Relay [{}] unexpected IPacket03ICECandidate for '{}'", LANServerController.lanRelaySocket.getURI(), clientId);
 		}
@@ -77,27 +59,7 @@ class LANClientPeer {
 	protected void handleDescription(String description) {
 		if(state == PRE) {
 			PlatformWebRTC.serverLANPeerDescription(clientId, description);
-			long millis = EagRuntime.steadyTimeMillis();
-			do {
-				PlatformWebRTC.runScheduledTasks();
-				LANPeerEvent evt;
-				if((evt = PlatformWebRTC.serverLANGetEvent(clientId)) != null) {
-					if(evt instanceof LANPeerEvent.LANPeerDescriptionEvent) {
-						LANServerController.lanRelaySocket.writePacket(new RelayPacket04Description(clientId, ((LANPeerEvent.LANPeerDescriptionEvent)evt).description));
-						state = SENT_DESCRIPTION;
-						return;
-					}else if(evt instanceof LANPeerEvent.LANPeerDisconnectEvent) {
-						logger.error("LAN client '{}' disconnected while waiting for server description", clientId);
-					}else {
-						logger.error("LAN client '{}' had an accident: {}", clientId, evt.getClass().getSimpleName());
-					}
-					disconnect();
-					return;
-				}
-				EagUtils.sleep(20);
-			}while(EagRuntime.steadyTimeMillis() - millis < 5000l);
-			logger.error("Getting server description for '{}' timed out!", clientId);
-			disconnect();
+			state = RECEIVED_DESCRIPTION;
 		}else {
 			logger.error("Relay [{}] unexpected IPacket04Description for '{}'", LANServerController.lanRelaySocket.getURI(), clientId);
 		}
@@ -105,31 +67,8 @@ class LANClientPeer {
 
 	protected void handleSuccess() {
 		if(state == SENT_ICE_CANDIDATE) {
-			long millis = EagRuntime.steadyTimeMillis();
-			do {
-				PlatformWebRTC.runScheduledTasks();
-				LANPeerEvent evt;
-				while((evt = PlatformWebRTC.serverLANGetEvent(clientId)) != null && evt instanceof LANPeerEvent.LANPeerICECandidateEvent) {
-					// skip ice candidates
-				}
-				if(evt != null) {
-					if(evt instanceof LANPeerEvent.LANPeerDataChannelEvent) {
-						SingleplayerServerController.openPlayerChannel(clientId);
-						state = CONNECTED;
-						return;
-					}else if(evt instanceof LANPeerEvent.LANPeerDisconnectEvent) {
-						logger.error("LAN client '{}' disconnected while waiting for connection", clientId);
-					}else {
-						logger.error("LAN client '{}' had an accident: {}", clientId, evt.getClass().getSimpleName());
-					}
-					disconnect();
-					return;
-				}
-				EagUtils.sleep(20);
-			}while(EagRuntime.steadyTimeMillis() - millis < 5000l);
-			logger.error("Getting server description for '{}' timed out!", clientId);
-			disconnect();
-		}else {
+			state = RECEIVED_SUCCESS;
+		}else if(state != CONNECTED) {
 			logger.error("Relay [{}] unexpected IPacket05ClientSuccess for '{}'", LANServerController.lanRelaySocket.getURI(), clientId);
 		}
 	}
@@ -144,24 +83,67 @@ class LANClientPeer {
 	}
 
 	protected void update() {
-		if(state == CONNECTED) {
+		if(state != CLOSED) {
+			if(state != CONNECTED && EagRuntime.steadyTimeMillis() - startTime > 10000l) {
+				logger.info("LAN client '{}' handshake timed out", clientId);
+				disconnect();
+				return;
+			}
 			List<LANPeerEvent> l = PlatformWebRTC.serverLANGetAllEvent(clientId);
 			if(l == null) {
 				return;
 			}
-			Iterator<LANPeerEvent> itr = l.iterator();
-			while(state == CONNECTED && itr.hasNext()) {
-				LANPeerEvent evt = itr.next();
-				if(evt instanceof LANPeerEvent.LANPeerPacketEvent) {
-					ClientPlatformSingleplayer.sendPacket(new IPCPacketData(clientId, ((LANPeerEvent.LANPeerPacketEvent)evt).payload));
-				}else if(evt instanceof LANPeerEvent.LANPeerDisconnectEvent) {
+			read_loop: for(int i = 0, s = l.size(); i < s; ++i) {
+				LANPeerEvent evt = l.get(i);
+				if(evt instanceof LANPeerEvent.LANPeerDisconnectEvent) {
 					logger.info("LAN client '{}' disconnected", clientId);
 					disconnect();
 				}else {
-					logger.error("LAN client '{}' had an accident: {}", clientId, evt.getClass().getSimpleName());
+					switch(state) {
+						case RECEIVED_ICE_CANDIDATE: {
+							if(evt instanceof LANPeerEvent.LANPeerICECandidateEvent) {
+								LANServerController.lanRelaySocket.writePacket(new RelayPacket03ICECandidate(clientId, ((LANPeerEvent.LANPeerICECandidateEvent)evt).candidates));
+								state = SENT_ICE_CANDIDATE;
+								continue read_loop;
+							}
+						}
+						case RECEIVED_DESCRIPTION: {
+							if(evt instanceof LANPeerEvent.LANPeerDescriptionEvent) {
+								LANServerController.lanRelaySocket.writePacket(new RelayPacket04Description(clientId, ((LANPeerEvent.LANPeerDescriptionEvent)evt).description));
+								state = SENT_DESCRIPTION;
+								continue read_loop;
+							}
+						}
+						case SENT_ICE_CANDIDATE:
+						case RECEIVED_SUCCESS: {
+							if(evt instanceof LANPeerEvent.LANPeerDataChannelEvent) {
+								SingleplayerServerController.openPlayerChannel(clientId);
+								PlatformWebRTC.serverLANPeerMapIPC(clientId, clientId);
+								state = CONNECTED;
+								continue read_loop;
+							}
+						}
+						case CONNECTED: {
+							if(evt instanceof LANPeerEvent.LANPeerPacketEvent) {
+								//logger.warn("Forwarding packet for '{}' to IPC channel manually, even though the channel should be mapped", clientId);
+								// just to be safe
+								ClientPlatformSingleplayer.sendPacket(new IPCPacketData(clientId, ((LANPeerEvent.LANPeerPacketEvent)evt).payload));
+								continue read_loop;
+							}
+						}
+						default: {
+							break;
+						}
+					}
+					if(state != CLOSED) {
+						logger.error("LAN client '{}' had an accident: {}", clientId, evt.getClass().getSimpleName());
+					}
 					disconnect();
+					return;
 				}
 			}
+		}else {
+			disconnect();
 		}
 	}
 

@@ -1,7 +1,6 @@
 package net.lax1dude.eaglercraft.v1_8.internal;
 
 import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
-import net.lax1dude.eaglercraft.v1_8.voice.EnumVoiceChannelPeerState;
 import net.lax1dude.eaglercraft.v1_8.voice.EnumVoiceChannelReadyState;
 
 /**
@@ -89,28 +88,8 @@ public class PlatformVoiceClient {
 		
 	}
 
-	public static EnumVoiceChannelPeerState getPeerState() {
-		return EnumVoiceChannelPeerState.LOADING;
-	}
-
 	public static EnumVoiceChannelReadyState getReadyState() {
 		return EnumVoiceChannelReadyState.NONE;
-	}
-
-	public static EnumVoiceChannelPeerState getPeerStateConnect() {
-		return EnumVoiceChannelPeerState.LOADING;
-	}
-
-	public static EnumVoiceChannelPeerState getPeerStateInitial() {
-		return EnumVoiceChannelPeerState.LOADING;
-	}
-
-	public static EnumVoiceChannelPeerState getPeerStateDesc() {
-		return EnumVoiceChannelPeerState.LOADING;
-	}
-
-	public static EnumVoiceChannelPeerState getPeerStateIce() {
-		return EnumVoiceChannelPeerState.LOADING;
 	}
 
 }

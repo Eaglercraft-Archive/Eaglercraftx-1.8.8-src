@@ -599,7 +599,11 @@ public class PlatformRuntime {
 	}
 
 	public static void downloadRemoteURIByteArray(String assetPackageURI, final Consumer<byte[]> cb) {
-		downloadRemoteURI(assetPackageURI, arr -> cb.accept(TeaVMUtils.wrapByteArrayBuffer(arr)));
+		downloadRemoteURIByteArray(assetPackageURI, false, cb);
+	}
+
+	public static void downloadRemoteURIByteArray(String assetPackageURI, boolean useCache, final Consumer<byte[]> cb) {
+		downloadRemoteURI(assetPackageURI, useCache, arr -> cb.accept(TeaVMUtils.wrapByteArrayBuffer(arr)));
 	}
 
 	public static void downloadRemoteURI(String assetPackageURI, final Consumer<ArrayBuffer> cb) {

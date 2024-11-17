@@ -189,8 +189,11 @@
 + 		 * So sorry for this implementation
 + 		 */
 
-> CHANGE  1 : 8  @  1 : 2
+> CHANGE  1 : 11  @  1 : 2
 
+~ 			if (component == null) {
+~ 				return "null";
+~ 			}
 ~ 			if ((component instanceof ChatComponentText) && component.getChatStyle().isEmpty()
 ~ 					&& component.getSiblings().isEmpty()) {
 ~ 				String escaped = new JSONObject().put("E", component.getUnformattedTextForChat()).toString();

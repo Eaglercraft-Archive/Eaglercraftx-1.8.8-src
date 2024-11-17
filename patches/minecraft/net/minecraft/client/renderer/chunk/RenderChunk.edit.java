@@ -88,7 +88,7 @@
 
 > CHANGE  2 : 4  @  2 : 4
 
-~ 			for (BlockPos blockpos$mutableblockpos : BlockPos.getAllInBox(blockpos, blockpos1)) {
+~ 			for (BlockPos blockpos$mutableblockpos : BlockPos.getAllInBoxMutable(blockpos, blockpos1)) {
 ~ 				IBlockState iblockstate = regionrendercache.getBlockStateFaster(blockpos$mutableblockpos);
 
 > CHANGE  6 : 7  @  6 : 7

@@ -567,7 +567,11 @@ public class PlatformRuntime {
 	public static InputStream newGZIPInputStream(InputStream is) throws IOException {
 		return new GZIPInputStream(is);
 	}
-	
+
+	public static void downloadRemoteURIByteArray(String assetPackageURI, boolean forceCache, final Consumer<byte[]> cb) {
+		downloadRemoteURIByteArray(assetPackageURI, cb);
+	}
+
 	public static void downloadRemoteURIByteArray(String assetPackageURI, final Consumer<byte[]> cb) {
 		logger.info("Downloading: {}");
 		try(InputStream is = (new URL(assetPackageURI)).openStream()) {

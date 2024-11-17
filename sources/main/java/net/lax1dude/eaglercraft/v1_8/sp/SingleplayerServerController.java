@@ -162,7 +162,6 @@ public class SingleplayerServerController implements ISaveFormat {
 		}else {
 			openLANChannels.add(ch);
 			sendIPCPacket(new IPCPacket0CPlayerChannel(ch, true));
-			PlatformWebRTC.serverLANCreatePeer(ch);
 		}
 	}
 	
@@ -288,6 +287,8 @@ public class SingleplayerServerController implements ISaveFormat {
 						logger.warn("Recieved {} byte packet on closed local player connection", packetData.contents.length);
 					}
 				}else {
+					//logger.warn("Recieved packet on IPC channel '{}', forwarding to PlatformWebRTC even though the channel should be mapped", packetData.channel);
+					// just to be safe
 					PlatformWebRTC.serverLANWritePacket(packetData.channel, packetData.contents);
 				}
 			}

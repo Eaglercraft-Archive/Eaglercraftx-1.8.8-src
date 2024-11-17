@@ -4,7 +4,6 @@ import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
 import net.lax1dude.eaglercraft.v1_8.internal.teavm.TeaVMUtils;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
-import net.lax1dude.eaglercraft.v1_8.voice.EnumVoiceChannelPeerState;
 import net.lax1dude.eaglercraft.v1_8.voice.EnumVoiceChannelReadyState;
 import net.lax1dude.eaglercraft.v1_8.voice.EnumVoiceChannelType;
 import net.lax1dude.eaglercraft.v1_8.voice.VoiceClientController;
@@ -179,32 +178,17 @@ public class PlatformVoiceClient {
 						VoiceClientController.sendPacketDesc(peerId, JSON.stringify(desc));
 					}, err -> {
 						logger.error("Failed to set local description for \"{}\"! {}", peerId, err);
-						if (peerStateInitial == EnumVoiceChannelPeerState.LOADING) {
-							peerStateInitial = EnumVoiceChannelPeerState.FAILED;
-						}
 						signalDisconnect(VoicePeer.this, false);
 					});
 				}, err -> {
 					logger.error("Failed to set create offer for \"{}\"! {}", peerId, err);
-					if (peerStateInitial == EnumVoiceChannelPeerState.LOADING) {
-						peerStateInitial = EnumVoiceChannelPeerState.FAILED;
-					}
 					signalDisconnect(VoicePeer.this, false);
 				});
 			}
 
 			TeaVMUtils.addEventListener(peerConnection, "connectionstatechange", (EventListener<Event>) evt -> {
 				String cs = PlatformWebRTC.getConnectionState(peerConnection);
-				if ("disconnected".equals(cs)) {
-					signalDisconnect(VoicePeer.this, false);
-				} else if ("connected".equals(cs)) {
-					if (peerState != EnumVoiceChannelPeerState.SUCCESS) {
-						peerState = EnumVoiceChannelPeerState.SUCCESS;
-					}
-				} else if ("failed".equals(cs)) {
-					if (peerState == EnumVoiceChannelPeerState.LOADING) {
-						peerState = EnumVoiceChannelPeerState.FAILED;
-					}
+				if ("disconnected".equals(cs) || "failed".equals(cs)) {
 					signalDisconnect(VoicePeer.this, false);
 				}
 			});
@@ -226,26 +210,21 @@ public class PlatformVoiceClient {
 						PlatformWebRTC.createAnswer(peerConnection, desc -> {
 							PlatformWebRTC.setLocalDescription(peerConnection, desc, () -> {
 								VoiceClientController.sendPacketDesc(peerId, JSON.stringify(desc));
-								if (peerStateDesc != EnumVoiceChannelPeerState.SUCCESS) peerStateDesc = EnumVoiceChannelPeerState.SUCCESS;
 							}, err -> {
 								logger.error("Failed to set local description for \"{}\"! {}", peerId, err.getMessage());
-								if (peerStateDesc == EnumVoiceChannelPeerState.LOADING) peerStateDesc = EnumVoiceChannelPeerState.FAILED;
 								signalDisconnect(VoicePeer.this, false);
 							});
 						}, err -> {
 							logger.error("Failed to create answer for \"{}\"! {}", peerId, err.getMessage());
-							if (peerStateDesc == EnumVoiceChannelPeerState.LOADING) peerStateDesc = EnumVoiceChannelPeerState.FAILED;
 							signalDisconnect(VoicePeer.this, false);
 						});
 					}
 				}, err -> {
 					logger.error("Failed to set remote description for \"{}\"! {}", peerId, err.getMessage());
-					if (peerStateDesc == EnumVoiceChannelPeerState.LOADING) peerStateDesc = EnumVoiceChannelPeerState.FAILED;
 					signalDisconnect(VoicePeer.this, false);
 				});
 			} catch (Throwable err) {
 				logger.error("Failed to parse remote description for \"{}\"! {}", peerId, err.getMessage());
-				if (peerStateDesc == EnumVoiceChannelPeerState.LOADING) peerStateDesc = EnumVoiceChannelPeerState.FAILED;
 				signalDisconnect(VoicePeer.this, false);
 			}
 		}
@@ -253,10 +232,8 @@ public class PlatformVoiceClient {
 		public void addICECandidate(String candidate) {
 			try {
 				addIceCandidate(peerConnection, candidate);
-				if (peerStateIce != EnumVoiceChannelPeerState.SUCCESS) peerStateIce = EnumVoiceChannelPeerState.SUCCESS;
 			} catch (Throwable err) {
 				logger.error("Failed to parse ice candidate for \"{}\"! {}", peerId, err.getMessage());
-				if (peerStateIce == EnumVoiceChannelPeerState.LOADING) peerStateIce = EnumVoiceChannelPeerState.FAILED;
 				signalDisconnect(VoicePeer.this, false);
 			}
 		}
@@ -269,11 +246,6 @@ public class PlatformVoiceClient {
 	public static GainNode localMediaStreamGain;
 	public static MediaStream localRawMediaStream;
 	public static EnumVoiceChannelReadyState readyState = EnumVoiceChannelReadyState.NONE;
-	public static EnumVoiceChannelPeerState peerState = EnumVoiceChannelPeerState.LOADING;
-	public static EnumVoiceChannelPeerState peerStateConnect = EnumVoiceChannelPeerState.LOADING;
-	public static EnumVoiceChannelPeerState peerStateInitial = EnumVoiceChannelPeerState.LOADING;
-	public static EnumVoiceChannelPeerState peerStateDesc = EnumVoiceChannelPeerState.LOADING;
-	public static EnumVoiceChannelPeerState peerStateIce = EnumVoiceChannelPeerState.LOADING;
 	public static AudioContext microphoneVolumeAudioContext = null;
 
 	public static void setICEServers(String[] urls) {
@@ -348,43 +320,16 @@ public class PlatformVoiceClient {
 		}
 	}
 
-	public static void resetPeerStates() {
-		peerState = peerStateConnect = peerStateInitial = peerStateDesc = peerStateIce = EnumVoiceChannelPeerState.LOADING;
-	}
-
-	public static EnumVoiceChannelPeerState getPeerState() {
-		return peerState;
-	}
-
-	public static EnumVoiceChannelPeerState getPeerStateConnect() {
-		return peerStateConnect;
-	}
-
-	public static EnumVoiceChannelPeerState getPeerStateInitial() {
-		return peerStateInitial;
-	}
-
-	public static EnumVoiceChannelPeerState getPeerStateDesc() {
-		return peerStateDesc;
-	}
-
-	public static EnumVoiceChannelPeerState getPeerStateIce() {
-		return peerStateIce;
-	}
-
 	public static EnumVoiceChannelReadyState getReadyState() {
 		return readyState;
 	}
 
 	public static void signalConnect(EaglercraftUUID peerId, boolean offer) {
-		if (!hasInit) initializeDevices();
 		try {
 			JSObject peerConnection = PlatformWebRTC.createRTCPeerConnection(JSONWriter.valueToString(iceServers));
 			VoicePeer peerInstance = new VoicePeer(peerId, peerConnection, offer);
 			peerList.put(peerId, peerInstance);
-			if (peerStateConnect != EnumVoiceChannelPeerState.SUCCESS) peerStateConnect = EnumVoiceChannelPeerState.SUCCESS;
 		} catch (Throwable e) {
-			if (peerStateConnect == EnumVoiceChannelPeerState.LOADING) peerStateConnect = EnumVoiceChannelPeerState.FAILED;
 		}
 	}
 

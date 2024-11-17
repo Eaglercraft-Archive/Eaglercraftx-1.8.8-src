@@ -169,7 +169,7 @@ public class EaglerArrayByteBuffer implements ByteBuffer {
 			int l = src.remaining();
 			if(position + l > limit) throw Buffer.makeIOOBE(position + l - 1);
 			for(int i = 0; i < l; ++i) {
-				dataView.setInt8(position + l, src.get());
+				dataView.setInt8(position + i, src.get());
 			}
 			position += l;
 		}

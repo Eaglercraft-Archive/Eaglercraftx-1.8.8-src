@@ -7,4 +7,8 @@
 
 > DELETE  8  @  8 : 11
 
+> CHANGE  168 : 169  @  168 : 169
+
+~ 		for (BlockPos blockpos : BlockPos.getAllInBoxMutable(new BlockPos(parInt1, parInt2, parInt3),
+
 > EOF

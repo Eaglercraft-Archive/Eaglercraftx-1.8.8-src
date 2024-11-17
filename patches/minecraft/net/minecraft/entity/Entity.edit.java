@@ -147,7 +147,11 @@
 ~ 		for (int i = 0; i < numbers.length; ++i) {
 ~ 			nbttaglist.appendTag(new NBTTagFloat(numbers[i]));
 
-> CHANGE  172 : 173  @  172 : 173
+> CHANGE  33 : 34  @  33 : 35
+
+~ 			BlockPos blockpos$mutableblockpos = new BlockPos(Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MIN_VALUE);
+
+> CHANGE  137 : 138  @  137 : 138
 
 ~ 			for (AxisAlignedBB axisalignedbb : (List<AxisAlignedBB>) list) {
 

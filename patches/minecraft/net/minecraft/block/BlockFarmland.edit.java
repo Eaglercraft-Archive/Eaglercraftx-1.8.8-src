@@ -14,7 +14,11 @@
 
 ~ 	public void updateTick(World world, BlockPos blockpos, IBlockState iblockstate, EaglercraftRandom var4) {
 
-> CHANGE  66 : 67  @  66 : 67
+> CHANGE  33 : 34  @  33 : 35
+
+~ 		for (BlockPos blockpos$mutableblockpos : BlockPos.getAllInBoxMutable(pos.add(-4, 0, -4), pos.add(4, 1, 4))) {
+
+> CHANGE  31 : 32  @  31 : 32
 
 ~ 	public Item getItemDropped(IBlockState var1, EaglercraftRandom random, int i) {
 

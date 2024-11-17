@@ -23,4 +23,8 @@
 
 ~ 		EaglercraftRandom random = new EaglercraftRandom(parLong1, this.rand.isScramble());
 
+> CHANGE  106 : 107  @  106 : 107
+
+~ 						BlockPos blockpos$mutableblockpos = new BlockPos();
+
 > EOF

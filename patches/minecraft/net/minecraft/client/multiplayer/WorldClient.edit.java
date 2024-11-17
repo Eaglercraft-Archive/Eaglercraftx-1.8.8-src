@@ -43,7 +43,11 @@
 
 ~ 		EaglercraftRandom random = new EaglercraftRandom();
 
-> CHANGE  83 : 84  @  83 : 85
+> CHANGE  3 : 4  @  3 : 4
+
+~ 		BlockPos blockpos$mutableblockpos = new BlockPos();
+
+> CHANGE  79 : 80  @  79 : 81
 
 ~ 				return "Non-integrated multiplayer server";
 

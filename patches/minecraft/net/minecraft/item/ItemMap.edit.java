@@ -16,4 +16,8 @@
 
 > DELETE  9  @  9 : 11
 
+> CHANGE  91 : 92  @  91 : 92
+
+~ 									BlockPos blockpos$mutableblockpos = new BlockPos();
+
 > EOF

@@ -5,9 +5,9 @@
 # Version: 1.0
 # Author: lax1dude
 
-> DELETE  4  @  4 : 10
+> DELETE  4  @  4 : 11
 
-> DELETE  10  @  10 : 15
+> DELETE  9  @  9 : 14
 
 > CHANGE  3 : 5  @  3 : 6
 

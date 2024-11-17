@@ -141,7 +141,7 @@ public class EaglerLWJGLByteBuffer implements ByteBuffer {
 			int l = src.remaining();
 			if(position + l > limit) throw Buffer.makeIOOBE(position + l - 1);
 			for(int i = 0; i < l; ++i) {
-				UnsafeUtils.setMemByte(address + position + l, src.get());
+				UnsafeUtils.setMemByte(address + position + i, src.get());
 			}
 			position += l;
 		}

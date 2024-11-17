@@ -21,6 +21,8 @@ public interface IAudioHandle {
 	
 	void restart();
 
+	void repeat(boolean en);
+
 	void move(float x, float y, float z);
 	
 	void pitch(float f);

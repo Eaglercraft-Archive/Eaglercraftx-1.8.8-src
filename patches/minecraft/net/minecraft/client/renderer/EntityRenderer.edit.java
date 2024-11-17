@@ -616,7 +616,11 @@
 ~ 				b0 = 8;
 ~ 			} else if (this.mc.gameSettings.fancyGraphics) {
 
-> CHANGE  38 : 39  @  38 : 39
+> CHANGE  7 : 8  @  7 : 8
+
+~ 			BlockPos blockpos$mutableblockpos = new BlockPos();
+
+> CHANGE  30 : 31  @  30 : 31
 
 ~ 							if (f2 >= 0.15F) {
 

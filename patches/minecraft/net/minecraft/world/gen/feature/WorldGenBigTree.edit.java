@@ -23,19 +23,41 @@
 > CHANGE  111 : 113  @  111 : 113
 
 ~ 		for (int i = 0, l = this.field_175948_j.size(); i < l; ++i) {
-~ 			this.generateLeafNode(this.field_175948_j.get(i));
+~ 			this.generateLeafNode(this.field_175948_j.get(i).blockPos);
 
 > CHANGE  22 : 24  @  22 : 23
 
 ~ 		for (int j = 0, l = this.field_175948_j.size(); j < l; ++j) {
 ~ 			WorldGenBigTree.FoliageCoordinates worldgenbigtree$foliagecoordinates = this.field_175948_j.get(j);
 
-> CHANGE  35 : 36  @  35 : 36
+> CHANGE  2 : 3  @  2 : 3
+
+~ 			if (!blockpos.equals(worldgenbigtree$foliagecoordinates.blockPos)
+
+> CHANGE  1 : 2  @  1 : 2
+
+~ 				this.func_175937_a(blockpos, worldgenbigtree$foliagecoordinates.blockPos, Blocks.log);
+
+> CHANGE  30 : 31  @  30 : 31
 
 ~ 	public boolean generate(World worldIn, EaglercraftRandom rand, BlockPos position) {
 
 > CHANGE  2 : 3  @  2 : 3
 
 ~ 		this.rand = new EaglercraftRandom(rand.nextLong(), !worldIn.getWorldInfo().isOldEaglercraftRandom());
+
+> CHANGE  32 : 33  @  32 : 33
+
+~ 	static class FoliageCoordinates {
+
+> INSERT  1 : 2  @  1
+
++ 		private final BlockPos blockPos;
+
+> DELETE  2  @  2 : 3
+
+> INSERT  1 : 2  @  1
+
++ 			this.blockPos = parBlockPos;
 
 > EOF

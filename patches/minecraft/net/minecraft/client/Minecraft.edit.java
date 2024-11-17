@@ -713,7 +713,7 @@
 + 				currentScreen != null ? currentScreen.getClass().getName() : null, scaledResolution.getScaledWidth(),
 + 				scaledResolution.getScaledHeight(), displayWidth, displayHeight, scaledResolution.getScaleFactor());
 
-> CHANGE  11 : 50  @  11 : 12
+> CHANGE  11 : 55  @  11 : 12
 
 ~ 		RateLimitTracker.tick();
 ~ 
@@ -728,6 +728,11 @@
 ~ 
 ~ 		if (wasPaused != isGamePaused) {
 ~ 			SingleplayerServerController.setPaused(this.isGamePaused);
+~ 			if (isGamePaused) {
+~ 				mcSoundHandler.pauseSounds();
+~ 			} else {
+~ 				mcSoundHandler.resumeSounds();
+~ 			}
 ~ 			wasPaused = isGamePaused;
 ~ 		}
 ~ 

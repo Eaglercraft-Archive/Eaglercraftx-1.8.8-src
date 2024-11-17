@@ -6,9 +6,7 @@ import net.lax1dude.eaglercraft.v1_8.sp.WorkerStartupFailedException;
 import net.lax1dude.eaglercraft.v1_8.sp.ipc.IPCPacket15Crashed;
 import net.lax1dude.eaglercraft.v1_8.sp.ipc.IPCPacket1CIssueDetected;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiSelectWorld;
 import net.minecraft.client.resources.I18n;
 
 /**

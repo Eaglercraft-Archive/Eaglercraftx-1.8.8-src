@@ -150,7 +150,7 @@ public class EaglerLWJGLIntBuffer implements IntBuffer {
 			int l = src.remaining();
 			if(position + l > limit) throw Buffer.makeIOOBE(position + l - 1);
 			for(int i = 0; i < l; ++i) {
-				UnsafeUtils.setMemInt(address + ((position + l) << SHIFT), src.get());
+				UnsafeUtils.setMemInt(address + ((position + i) << SHIFT), src.get());
 			}
 			position += l;
 		}

@@ -330,7 +330,7 @@ public class PlatformInput {
 				if(tryGrabCursorHook()) return;
 				int b = evt.getButton();
 				b = b == 1 ? 2 : (b == 2 ? 1 : b);
-				buttonStates[b] = true;
+				if(b >= 0 && b < buttonStates.length) buttonStates[b] = true;
 				int eventX = (int)(getOffsetX(evt, touchOffsetXTeaVM) * windowDPI);
 				int eventY = windowHeight - (int)(getOffsetY(evt, touchOffsetYTeaVM) * windowDPI) - 1;
 				synchronized(mouseEvents) {
@@ -348,7 +348,7 @@ public class PlatformInput {
 				evt.stopPropagation();
 				int b = evt.getButton();
 				b = b == 1 ? 2 : (b == 2 ? 1 : b);
-				buttonStates[b] = false;
+				if(b >= 0 && b < buttonStates.length) buttonStates[b] = false;
 				int eventX = (int)(getOffsetX(evt, touchOffsetXTeaVM) * windowDPI);
 				int eventY = windowHeight - (int)(getOffsetY(evt, touchOffsetYTeaVM) * windowDPI) - 1;
 				synchronized(mouseEvents) {
@@ -366,8 +366,10 @@ public class PlatformInput {
 				evt.stopPropagation();
 				mouseX = (int)(getOffsetX(evt, touchOffsetXTeaVM) * windowDPI);
 				mouseY = windowHeight - (int)(getOffsetY(evt, touchOffsetYTeaVM) * windowDPI) - 1;
-				mouseDX += evt.getMovementX();
-				mouseDY += -evt.getMovementY();
+				if(pointerLockFlag) {
+					mouseDX += evt.getMovementX();
+					mouseDY += -evt.getMovementY();
+				}
 				if(hasShownPressAnyKey) {
 					int eventX = (int)(getOffsetX(evt, touchOffsetXTeaVM) * windowDPI);
 					int eventY = windowHeight - (int)(getOffsetY(evt, touchOffsetYTeaVM) * windowDPI) - 1;
@@ -765,7 +767,7 @@ public class PlatformInput {
 				win.addEventListener("gamepaddisconnected", gamepaddisconnected = new EventListener<GamepadEvent>() {
 					@Override
 					public void handleEvent(GamepadEvent evt) {
-						if(evt.getGamepad() == selectedGamepad) {
+						if(selectedGamepad != null && evt.getGamepad().getIndex() == selectedGamepad.getIndex()) {
 							selectedGamepad = null;
 						}
 						enumerateGamepads();
@@ -1287,7 +1289,7 @@ public class PlatformInput {
 
 	public static int mouseGetDWheel() {
 		int ret = (int)mouseDWheel;
-		mouseDWheel = 0.0D;
+		mouseDWheel -= ret;
 		return ret;
 	}
 

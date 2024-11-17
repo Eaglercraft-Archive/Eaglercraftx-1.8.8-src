@@ -93,7 +93,11 @@
 ~ 	public final void generateBiomeTerrain(World worldIn, EaglercraftRandom rand, ChunkPrimer chunkPrimerIn,
 ~ 			int parInt1, int parInt2, double parDouble1) {
 
-> CHANGE  101 : 177  @  101 : 102
+> CHANGE  7 : 8  @  7 : 8
+
+~ 		BlockPos blockpos$mutableblockpos = new BlockPos();
+
+> CHANGE  93 : 169  @  93 : 94
 
 ~ 	public static void doBootstrap() {
 ~ 		ocean = (new BiomeGenOcean(0)).setColor(112).setBiomeName("Ocean").setHeight(height_Oceans);

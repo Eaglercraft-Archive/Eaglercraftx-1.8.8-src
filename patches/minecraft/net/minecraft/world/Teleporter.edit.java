@@ -19,4 +19,8 @@
 
 ~ 		this.random = new EaglercraftRandom(worldIn.getSeed(), !worldIn.getWorldInfo().isOldEaglercraftRandom());
 
+> CHANGE  152 : 153  @  152 : 153
+
+~ 		BlockPos blockpos$mutableblockpos = new BlockPos();
+
 > EOF

@@ -11,4 +11,9 @@
 
 + 
 
+> CHANGE  40 : 42  @  40 : 42
+
+~ 					BlockPos blockpos$mutableblockpos = new BlockPos();
+~ 					BlockPos blockpos$mutableblockpos1 = new BlockPos();
+
 > EOF

@@ -14,7 +14,11 @@
 
 ~ 	public void updateTick(World world, BlockPos blockpos, IBlockState iblockstate, EaglercraftRandom var4) {
 
-> DELETE  79  @  79 : 80
+> CHANGE  16 : 17  @  16 : 17
+
+~ 					BlockPos blockpos$mutableblockpos = new BlockPos();
+
+> DELETE  62  @  62 : 63
 
 > CHANGE  3 : 4  @  3 : 4
 

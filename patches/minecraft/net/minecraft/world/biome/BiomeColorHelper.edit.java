@@ -7,4 +7,8 @@
 
 > DELETE  4  @  4 : 5
 
+> CHANGE  24 : 25  @  24 : 25
+
+~ 		for (BlockPos blockpos$mutableblockpos : BlockPos.getAllInBoxMutable(parBlockPos.add(-1, 0, -1),
+
 > EOF

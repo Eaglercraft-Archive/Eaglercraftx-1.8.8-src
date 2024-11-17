@@ -15,4 +15,9 @@
 
 ~ 	public boolean generate(World world, EaglercraftRandom random, BlockPos blockpos) {
 
+> CHANGE  25 : 27  @  25 : 26
+
+~ 					for (BlockPos blockpos1 : BlockPos.getAllInBoxMutable(blockpos.add(-j, -k, -l),
+~ 							blockpos.add(j, k, l))) {
+
 > EOF

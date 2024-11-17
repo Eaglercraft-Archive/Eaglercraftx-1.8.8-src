@@ -16,6 +16,7 @@ import org.teavm.jso.workers.Worker;
 
 import net.lax1dude.eaglercraft.v1_8.internal.IPCPacketData;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformRuntime;
+import net.lax1dude.eaglercraft.v1_8.internal.PlatformWebRTC;
 import net.lax1dude.eaglercraft.v1_8.internal.teavm.ClientMain;
 import net.lax1dude.eaglercraft.v1_8.internal.teavm.TeaVMBlobURLManager;
 import net.lax1dude.eaglercraft.v1_8.internal.teavm.TeaVMClientConfigAdapter;
@@ -98,6 +99,10 @@ public class ClientPlatformSingleplayer {
 			
 			if(buf == null) {
 				logger.error("Recieved IPC packet with null buffer");
+				return;
+			}
+			
+			if(PlatformWebRTC.serverLANPeerPassIPC(channel, buf)) {
 				return;
 			}
 			

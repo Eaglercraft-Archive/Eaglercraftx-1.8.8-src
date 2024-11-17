@@ -39,7 +39,11 @@
 
 ~ 		protected Feature(EaglercraftRandom parRandom, int parInt1, int parInt2, int parInt3, int parInt4, int parInt5,
 
-> CHANGE  86 : 87  @  86 : 87
+> CHANGE  39 : 40  @  39 : 40
+
+~ 				BlockPos blockpos$mutableblockpos = new BlockPos();
+
+> CHANGE  46 : 47  @  46 : 47
 
 ~ 		public JunglePyramid(EaglercraftRandom parRandom, int parInt1, int parInt2) {
 

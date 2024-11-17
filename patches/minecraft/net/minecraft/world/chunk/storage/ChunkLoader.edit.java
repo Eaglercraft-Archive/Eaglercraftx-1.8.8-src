@@ -7,4 +7,8 @@
 
 > DELETE  8  @  8 : 9
 
+> CHANGE  87 : 88  @  87 : 88
+
+~ 		BlockPos blockpos$mutableblockpos = new BlockPos();
+
 > EOF

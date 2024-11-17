@@ -119,7 +119,7 @@ public class PlatformApplication {
 		});
 	}
 	
-	@JSBody(params = { "cb" }, script = "if(!navigator.clipboard) { cb(null); } else if (!navigator.clipboard.readText) cb(null); else navigator.clipboard.readText().then(function(s) { cb(s || null); }, function() { cb(null); });")
+	@JSBody(params = { "cb" }, script = "if(!navigator.clipboard) { cb(null); } else if (!navigator.clipboard.readText) cb(null); else navigator.clipboard.readText().then(function(s) { cb((typeof s === \"string\") ? s : null); }, function(err) { cb(null); });")
 	private static native void getClipboard1(StupidFunctionResolveString cb);
 	
 	@JSBody(params = { "str" }, script = "if(navigator.clipboard) { navigator.clipboard.writeText(str); return true; } else { return false; }")
@@ -212,7 +212,7 @@ public class PlatformApplication {
 	}
 
 	@JSBody(params = { "ctx", "buffer", "w", "h" }, script = "var imgData = ctx.createImageData(w, h); var ww = w * 4; for(var i = 0; i < h; ++i) { imgData.data.set(new Uint8ClampedArray(buffer, (h - i - 1) * ww, ww), i * ww); } ctx.putImageData(imgData, 0, 0);")
-	private static native JSObject putImageData(CanvasRenderingContext2D ctx, ArrayBuffer buffer, int w, int h);
+	private static native void putImageData(CanvasRenderingContext2D ctx, ArrayBuffer buffer, int w, int h);
 
 	@JSBody(params = { "cvs", "name", "parentElement" }, script =
 			"var vigg = function(el, url){" +
@@ -474,7 +474,7 @@ public class PlatformApplication {
 	}
 
 	@JSFunctor
-	private static interface DownloadBytesBlobURLRevoke extends JSObject {
+	static interface DownloadBytesBlobURLRevoke extends JSObject {
 		void call();
 	}
 
@@ -505,6 +505,10 @@ public class PlatformApplication {
 	public static void downloadFileWithNameTeaVM(String str, ArrayBuffer dat) {
 		TeaVMBlobURLHandle blobHandle = TeaVMBlobURLManager.registerNewURLArrayBuffer(dat, "application/octet-stream");
 		downloadBytesImpl(str, blobHandle.toExternalForm(), blobHandle::release, PlatformRuntime.parent);
+	}
+
+	static void downloadURLWithNameTeaVM(String str, String url, DownloadBytesBlobURLRevoke revoker) {
+		downloadBytesImpl(str, url, revoker, PlatformRuntime.parent);
 	}
 
 	public static void showDebugConsole() {

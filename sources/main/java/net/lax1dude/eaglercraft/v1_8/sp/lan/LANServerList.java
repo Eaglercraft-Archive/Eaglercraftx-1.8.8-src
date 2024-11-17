@@ -12,6 +12,7 @@ import java.util.Set;
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformWebRTC;
 import net.lax1dude.eaglercraft.v1_8.sp.relay.RelayManager;
+import net.lax1dude.eaglercraft.v1_8.sp.relay.RelayQueryDispatch;
 import net.lax1dude.eaglercraft.v1_8.sp.relay.RelayServer;
 import net.lax1dude.eaglercraft.v1_8.sp.relay.RelayWorldsQuery;
 import net.lax1dude.eaglercraft.v1_8.sp.relay.pkt.RelayPacket07LocalWorlds;
@@ -123,7 +124,7 @@ public class LANServerList {
 			for(int i = 0, l = RelayManager.relayManager.count(); i < l; ++i) {
 				RelayServer srv = RelayManager.relayManager.get(i);
 				if(!lanServersQueryList.containsKey(srv.address) && !deadURIs.contains(srv.address)) {
-					lanServersQueryList.put(srv.address, PlatformWebRTC.openRelayWorldsQuery(srv.address));
+					lanServersQueryList.put(srv.address, RelayQueryDispatch.openRelayWorldsQuery(srv.address));
 				}
 			}
 		}

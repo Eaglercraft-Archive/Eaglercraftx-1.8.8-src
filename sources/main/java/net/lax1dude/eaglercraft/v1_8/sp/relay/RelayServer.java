@@ -89,7 +89,7 @@ public class RelayServer {
 	public void ping() {
 		if(PlatformWebRTC.supported()) {
 			close();
-			query = PlatformWebRTC.openRelayQuery(address);
+			query = RelayQueryDispatch.openRelayQuery(address);
 			queriedVersion = -1;
 			queriedComment = null;
 			queriedVendor = null;
@@ -142,7 +142,7 @@ public class RelayServer {
 	}
 	
 	public RelayServerSocket openSocket() {
-		return PlatformWebRTC.openRelayConnection(address, Minecraft.getMinecraft().gameSettings.relayTimeout * 1000);
+		return RelayQueryDispatch.openRelayConnection(address, Minecraft.getMinecraft().gameSettings.relayTimeout * 1000);
 	}
 	
 }

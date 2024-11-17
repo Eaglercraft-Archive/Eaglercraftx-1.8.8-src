@@ -215,10 +215,12 @@ public class EagRuntime {
 	}
 	
 	public static void getStackTrace(Throwable t, Consumer<String> ret) {
+		if(t == null) return;
 		PlatformRuntime.getStackTrace(t, ret);
 	}
 	
 	public static String[] getStackTraceElements(Throwable t) {
+		if(t == null) return new String[0];
 		List<String> lst = new ArrayList<>();
 		PlatformRuntime.getStackTrace(t, (s) -> {
 			lst.add(s);
@@ -227,6 +229,9 @@ public class EagRuntime {
 	}
 	
 	public static String getStackTrace(Throwable t) {
+		if(t == null) {
+			return "[null]";
+		}
 		StringBuilder sb = new StringBuilder();
 		getStackTrace0(t, sb);
 		Throwable c = t.getCause();

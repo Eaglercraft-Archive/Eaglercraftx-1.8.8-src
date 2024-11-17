@@ -8,6 +8,7 @@ import net.lax1dude.eaglercraft.v1_8.Filesystem;
 import net.lax1dude.eaglercraft.v1_8.internal.IClientConfigAdapter;
 import net.lax1dude.eaglercraft.v1_8.internal.IEaglerFilesystem;
 import net.lax1dude.eaglercraft.v1_8.internal.IPCPacketData;
+import net.lax1dude.eaglercraft.v1_8.internal.PlatformWebRTC;
 import net.lax1dude.eaglercraft.v1_8.internal.lwjgl.DesktopClientConfigAdapter;
 import net.lax1dude.eaglercraft.v1_8.sp.server.internal.lwjgl.MemoryConnection;
 
@@ -45,6 +46,9 @@ public class ServerPlatformSingleplayer {
 	}
 
 	public static void sendPacket(IPCPacketData packet) {
+		if(PlatformWebRTC.serverLANPeerPassIPC(packet)) {
+			return;
+		}
 		synchronized(MemoryConnection.serverToClientQueue) {
 			MemoryConnection.serverToClientQueue.add(packet);
 		}
