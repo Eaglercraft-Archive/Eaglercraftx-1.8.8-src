@@ -64,7 +64,7 @@ import net.md_5.bungee.BungeeCord;
  */
 public class EaglerXBungee extends Plugin {
 
-	public static final String NATIVE_BUNGEECORD_BUILD = "1.21-R0.1-SNAPSHOT:2593130:1878";
+	public static final String NATIVE_BUNGEECORD_BUILD = "1.21-R0.1-SNAPSHOT:4886c4b:1881";
 	public static final String NATIVE_WATERFALL_BUILD = "1.21-R0.1-SNAPSHOT:de8345a:579";
 	
 	static {

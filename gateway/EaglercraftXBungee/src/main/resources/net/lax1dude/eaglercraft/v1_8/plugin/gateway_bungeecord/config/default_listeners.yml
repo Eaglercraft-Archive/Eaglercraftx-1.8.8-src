@@ -13,9 +13,12 @@ listener_01:
   - '&6An EaglercraftX server'
   allow_motd: true
   allow_query: true
+  min_minecraft_protocol: 47
+  max_minecraft_protocol: 340
   allow_protocol_v3: true
   allow_protocol_v4: true
   protocol_v4_defrag_send_delay: 10
+  use_haproxy_protocol: false
   allow_cookie_revoke_query: true
   request_motd_cache:
     cache_ttl: 7200

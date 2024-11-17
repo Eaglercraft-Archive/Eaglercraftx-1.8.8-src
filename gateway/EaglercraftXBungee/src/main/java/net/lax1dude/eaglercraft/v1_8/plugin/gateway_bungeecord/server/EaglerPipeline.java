@@ -24,6 +24,7 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.WriteBufferWaterMark;
 import io.netty.handler.codec.compression.ZlibCodecFactory;
+import io.netty.handler.codec.haproxy.HAProxyMessageDecoder;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.codec.http.websocketx.PingWebSocketFrame;
@@ -31,7 +32,6 @@ import io.netty.handler.codec.http.websocketx.extensions.WebSocketServerExtensio
 import io.netty.handler.codec.http.websocketx.extensions.compression.DeflateFrameServerExtensionHandshaker;
 import io.netty.handler.codec.http.websocketx.extensions.compression.PerMessageDeflateServerExtensionHandshaker;
 import io.netty.util.AttributeKey;
-import net.lax1dude.eaglercraft.v1_8.plugin.backend_rpc_protocol.EaglerBackendRPCProtocol;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.EaglerXBungee;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.api.EaglerXBungeeAPIHelper;
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.config.EaglerBungeeConfig;
@@ -256,7 +256,11 @@ public class EaglerPipeline {
 				channel.config().setOption(ChannelOption.IP_TOS, 24);
 			} catch (ChannelException var3) {
 			}
+			EaglerListenerConfig listener = channel.attr(LISTENER).get();
 			ChannelPipeline pipeline = channel.pipeline();
+			if(listener.isHAProxyProtocol()) {
+				pipeline.addLast("HAProxyMessageDecoder", new HAProxyMessageDecoder());
+			}
 			pipeline.addLast("HttpServerCodec", new HttpServerCodec());
 			pipeline.addLast("HttpObjectAggregator", new HttpObjectAggregator(65535));
 			int compressionLevel = EaglerXBungee.getEagler().getConfig().getHttpWebsocketCompressionLevel();
@@ -272,7 +276,7 @@ public class EaglerPipeline {
 				pipeline.addLast("HttpCompressionHandler", new WebSocketServerExtensionHandler(deflateExtensionHandshaker,
 						perMessageDeflateExtensionHandshaker));
 			}
-			pipeline.addLast("HttpHandshakeHandler", new HttpHandshakeHandler(channel.attr(LISTENER).get()));
+			pipeline.addLast("HttpHandshakeHandler", new HttpHandshakeHandler(listener));
 			channel.attr(CONNECTION_INSTANCE).set(new EaglerConnectionInstance(channel));
 			synchronized(openChannels) {
 				openChannels.add(channel);

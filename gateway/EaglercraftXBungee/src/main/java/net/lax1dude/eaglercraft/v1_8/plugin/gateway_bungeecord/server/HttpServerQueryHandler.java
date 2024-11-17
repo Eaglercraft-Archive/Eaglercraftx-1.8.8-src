@@ -13,6 +13,7 @@ import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.handler.codec.haproxy.HAProxyMessage;
 import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.CloseWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.PingWebSocketFrame;
@@ -136,6 +137,8 @@ public abstract class HttpServerQueryHandler extends ChannelInboundHandlerAdapte
 				}else if(msg instanceof CloseWebSocketFrame) {
 					ctx.close();
 				}
+			}else if(msg instanceof HAProxyMessage) {
+				EaglerXBungee.logger().warning("[" + ctx.channel().remoteAddress() + "]: Ignoring HAProxyMessage because the WebSocket connection has already been established");
 			}else {
 				EaglerXBungee.logger().severe("Unexpected Packet: " + msg.getClass().getSimpleName());
 			}
