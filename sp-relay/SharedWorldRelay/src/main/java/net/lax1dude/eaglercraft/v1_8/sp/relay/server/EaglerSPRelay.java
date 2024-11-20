@@ -91,7 +91,7 @@ public class EaglerSPRelay extends WebSocketServer {
 						Iterator<Entry<WebSocket,PendingConnection>> itr = pendingConnections.entrySet().iterator();
 						while(itr.hasNext()) {
 							Entry<WebSocket,PendingConnection> etr = itr.next();
-							if(millis - etr.getValue().openTime > 500l) {
+							if(millis - etr.getValue().openTime > 1000l) {
 								pendingToClose.add(etr.getKey());
 								itr.remove();
 							}
@@ -101,7 +101,7 @@ public class EaglerSPRelay extends WebSocketServer {
 						Iterator<EaglerSPClient> itr = clientConnections.values().iterator();
 						while(itr.hasNext()) {
 							EaglerSPClient cl = itr.next();
-							if(millis - cl.createdOn > 10000l) {
+							if(millis - cl.createdOn > 15000l) {
 								clientToClose.add(cl);
 							}
 						}
