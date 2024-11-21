@@ -118,7 +118,7 @@
 + 	public boolean hasShownProfanityFilter = false;
 + 	public float touchControlOpacity = 1.0f;
 + 	public boolean hideDefaultUsernameWarning = false;
-+ 	public boolean hideVideoSettingsWarning = false;
++ 	public boolean hideVideoSettingsWarning = EagRuntime.getPlatformType() == EnumPlatformType.DESKTOP;
 
 > CHANGE  1 : 15  @  1 : 2
 

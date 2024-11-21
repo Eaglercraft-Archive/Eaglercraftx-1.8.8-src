@@ -69,7 +69,15 @@
 + 					.getWorldRendererByLayer(EnumWorldBlockLayer.REALISTIC_WATER), compiledchunk);
 + 		}
 
-> DELETE  7  @  7 : 8
+> CHANGE  3 : 8  @  3 : 4
+
+~ 		if (compiledChunk == CompiledChunk.DUMMY) {
+~ 			compiledChunk = new CompiledChunk(this);
+~ 		} else {
+~ 			compiledChunk.reset();
+~ 		}
+
+> DELETE  3  @  3 : 4
 
 > CHANGE  2 : 4  @  2 : 11
 
@@ -79,7 +87,7 @@
 > INSERT  2 : 5  @  2
 
 + 		regionrendercache = new RegionRenderCache(this.world, blockpos.add(-1, -1, -1), blockpos1.add(1, 1, 1), 1);
-+ 		generator.setCompiledChunk(compiledchunk);
++ 		generator.setCompiledChunk(compiledChunk);
 + 
 
 > CHANGE  4 : 5  @  4 : 5
@@ -95,15 +103,24 @@
 
 ~ 					TileEntity tileentity = regionrendercache.getTileEntity(blockpos$mutableblockpos);
 
-> INSERT  21 : 34  @  21
+> CHANGE  3 : 4  @  3 : 4
+
+~ 						compiledChunk.addTileEntity(tileentity);
+
+> CHANGE  10 : 12  @  10 : 12
+
+~ 					if (!compiledChunk.isLayerStarted(enumworldblocklayer1)) {
+~ 						compiledChunk.setLayerStarted(enumworldblocklayer1);
+
+> INSERT  5 : 18  @  5
 
 + 
 + 					if (block.eaglerShadersShouldRenderGlassHighlights()) {
 + 						enumworldblocklayer1 = EnumWorldBlockLayer.GLASS_HIGHLIGHTS;
 + 						worldrenderer = generator.getRegionRenderCacheBuilder()
 + 								.getWorldRendererByLayerId(enumworldblocklayer1.ordinal());
-+ 						if (!compiledchunk.isLayerStarted(enumworldblocklayer1)) {
-+ 							compiledchunk.setLayerStarted(enumworldblocklayer1);
++ 						if (!compiledChunk.isLayerStarted(enumworldblocklayer1)) {
++ 							compiledChunk.setLayerStarted(enumworldblocklayer1);
 + 							this.preRenderBlocks(worldrenderer, blockpos);
 + 						}
 + 
@@ -117,7 +134,21 @@
 ~ 			for (int i = 0; i < layers.length; ++i) {
 ~ 				EnumWorldBlockLayer enumworldblocklayer = layers[i];
 
-> DELETE  13  @  13 : 14
+> CHANGE  1 : 2  @  1 : 2
+
+~ 					compiledChunk.setLayerUsed(enumworldblocklayer);
+
+> CHANGE  2 : 3  @  2 : 3
+
+~ 				if (compiledChunk.isLayerStarted(enumworldblocklayer)) {
+
+> CHANGE  2 : 3  @  2 : 3
+
+~ 							compiledChunk);
+
+> CHANGE  4 : 5  @  4 : 6
+
+~ 		compiledChunk.setVisibility(visgraph.computeVisibility());
 
 > CHANGE  1 : 8  @  1 : 12
 
@@ -173,10 +204,16 @@
 ~ 				compiledChunkIn.setState(worldRendererIn.func_181672_a());
 ~ 			}
 
-> CHANGE  25 : 26  @  25 : 33
+> DELETE  24  @  24 : 35
 
-~ 		this.compiledChunk = compiledChunkIn;
+> CHANGE  2 : 7  @  2 : 3
 
-> DELETE  10  @  10 : 17
+~ 		if (this.compiledChunk != CompiledChunk.DUMMY) {
+~ 			this.compiledChunk.setState(null);
+~ 			this.compiledChunk.setStateRealisticWater(null);
+~ 			this.compiledChunk = CompiledChunk.DUMMY;
+~ 		}
+
+> DELETE  5  @  5 : 12
 
 > EOF

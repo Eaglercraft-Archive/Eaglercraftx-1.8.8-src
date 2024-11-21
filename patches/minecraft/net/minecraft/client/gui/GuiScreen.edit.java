@@ -303,7 +303,7 @@
 ~ 					this.handleMouseInput();
 ~ 				}
 
-> INSERT  11 : 95  @  11
+> INSERT  11 : 96  @  11
 
 + 	public final Map<Integer, int[]> touchStarts = new HashMap<>();
 + 
@@ -331,10 +331,11 @@
 + 			}
 + 			i = applyEaglerScale(scaleFac, i * this.width / this.mc.displayWidth, this.width);
 + 			j = applyEaglerScale(scaleFac, this.height - j * this.height / this.mc.displayHeight - 1, this.height);
-+ 			float si = Touch.getEventTouchRadiusX(t) * this.width / this.mc.displayWidth / scaleFac;
++ 			float rad = Touch.getEventTouchRadiusMixed(t);
++ 			float si = rad * this.width / this.mc.displayWidth / scaleFac;
 + 			if (si < 1.0f)
 + 				si = 1.0f;
-+ 			float sj = Touch.getEventTouchRadiusY(t) * this.height / this.mc.displayHeight / scaleFac;
++ 			float sj = rad * this.height / this.mc.displayHeight / scaleFac;
 + 			if (sj < 1.0f)
 + 				sj = 1.0f;
 + 			int[] ck = touchStarts.remove(u);

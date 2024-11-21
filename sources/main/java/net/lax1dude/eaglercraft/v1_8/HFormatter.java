@@ -31,8 +31,6 @@ import java.math.BigInteger;
 import java.math.MathContext;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.text.DateFormatSymbols;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -1449,12 +1447,7 @@ public final class HFormatter implements Closeable, Flushable {
 			}
 
 			if (null == lineSeparator) {
-				lineSeparator = AccessController.doPrivileged(new PrivilegedAction<String>() {
-
-					public String run() {
-						return System.getProperty("line.separator"); //$NON-NLS-1$
-					}
-				});
+				lineSeparator = System.getProperty("line.separator");
 			}
 			return lineSeparator;
 		}

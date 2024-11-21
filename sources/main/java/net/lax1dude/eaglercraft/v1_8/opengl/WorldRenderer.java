@@ -9,6 +9,7 @@ import java.util.Comparator;
 
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
+import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 import net.lax1dude.eaglercraft.v1_8.vector.Vector3f;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.util.MathHelper;
@@ -29,6 +30,8 @@ import net.minecraft.util.MathHelper;
  * 
  */
 public class WorldRenderer {
+	
+	private static final Logger logger = LogManager.getLogger("WorldRenderer");
 	
 	private boolean needsUpdate;
 	private int drawMode;
@@ -68,7 +71,7 @@ public class WorldRenderer {
 		int i = this.byteBuffer.capacity() >> 2;
 		if (parInt1 > (i - pos)) {
 			int k = (((pos + parInt1 + (parInt1 >> 1)) >> 16) + 1) << 16;
-			LogManager.getLogger() .warn("Needed to grow BufferBuilder buffer: Old size " + (i << 2) +
+			logger.warn("Needed to grow BufferBuilder buffer: Old size " + (i << 2) +
 					" bytes, new size " + (k << 2) + " bytes.");
 			ByteBuffer bytebuffer = GLAllocation.createDirectByteBuffer(k << 2);
 			this.byteBuffer.position(0);
@@ -139,17 +142,15 @@ public class WorldRenderer {
 
 	}
 
-	/**
-	 * SLOW AND STUPID UPLOAD QUEUE SYSTEM, MUST BE REPLACED
-	 */
 	public WorldRenderer.State func_181672_a() {
-		this.intBuffer.position(0);
 		VertexFormat fmt = this.vertexFormat;
 		int i = (fmt.attribStride >> 2) * vertexCount;
+		IntBuffer buf = EagRuntime.allocateIntBuffer(i);
+		this.intBuffer.position(0);
 		this.intBuffer.limit(i);
-		int[] aint = new int[i];
-		this.intBuffer.get(aint);
-		return new WorldRenderer.State(aint, fmt);
+		buf.put(this.intBuffer);
+		buf.flip();
+		return new WorldRenderer.State(buf, fmt);
 	}
 
 	private static float func_181665_a(FloatBuffer parFloatBuffer, float parFloat1, float parFloat2, float parFloat3,
@@ -172,14 +173,14 @@ public class WorldRenderer {
 		return f12 * f12 + f13 * f13 + f14 * f14;
 	}
 
-	/**
-	 * SLOW AND STUPID COMPANION FUNCTION TO 'func_181672_a'
-	 */
 	public void setVertexState(WorldRenderer.State state) {
-		this.grow(state.getRawBuffer().length);
+		IntBuffer buf = state.getRawBuffer();
+		int pp = buf.position();
+		this.grow(buf.remaining());
 		int p = intBuffer.position();
 		this.intBuffer.position(0);
-		this.intBuffer.put(state.getRawBuffer());
+		this.intBuffer.put(buf);
+		buf.position(pp);
 		this.intBuffer.position(p);
 		this.vertexCount = state.getVertexCount();
 		this.vertexFormat = state.getVertexFormat();
@@ -521,24 +522,38 @@ public class WorldRenderer {
 	}
 
 	public class State {
-		private final int[] stateRawBuffer;
+		private final IntBuffer stateRawBuffer;
 		private final VertexFormat stateVertexFormat;
+		private int refCount = 1;
 
-		public State(int[] parArrayOfInt, VertexFormat parVertexFormat) {
+		public State(IntBuffer parArrayOfInt, VertexFormat parVertexFormat) {
 			this.stateRawBuffer = parArrayOfInt;
 			this.stateVertexFormat = parVertexFormat;
 		}
 
-		public int[] getRawBuffer() {
+		public IntBuffer getRawBuffer() {
 			return this.stateRawBuffer;
 		}
 
 		public int getVertexCount() {
-			return this.stateRawBuffer.length / (this.stateVertexFormat.attribStride >> 2);
+			return this.stateRawBuffer.remaining() / (this.stateVertexFormat.attribStride >> 2);
 		}
 
 		public VertexFormat getVertexFormat() {
 			return this.stateVertexFormat;
+		}
+
+		public void retain() {
+			++refCount;
+		}
+
+		public void release() {
+			if(--refCount == 0) {
+				EagRuntime.freeIntBuffer(stateRawBuffer);
+			}
+			if(refCount < 0) {
+				logger.error("WorldRenderer.State released multiple times");
+			}
 		}
 	}
 }

@@ -45,7 +45,11 @@
 + 			++EaglerMinecraftServer.counterLightUpdate;
 + 		}
 
-> DELETE  9  @  9 : 10
+> CHANGE  9 : 12  @  9 : 10
+
+~ 		if (!this.worldObj.isRemote) {
+~ 			++EaglerMinecraftServer.counterLightUpdate;
+~ 		}
 
 > CHANGE  10 : 13  @  10 : 11
 
@@ -158,7 +162,24 @@
 + 	}
 + 
 
-> CHANGE  176 : 178  @  176 : 178
+> INSERT  58 : 59  @  58
+
++ 			BlockPos pos2 = new BlockPos(blockpos);
+
+> CHANGE  1 : 3  @  1 : 3
+
+~ 				tileentity = this.createNewTileEntity(pos2);
+~ 				this.worldObj.setTileEntity(pos2, tileentity);
+
+> CHANGE  1 : 2  @  1 : 2
+
+~ 				this.tileEntityPosQueue.add(pos2);
+
+> INSERT  19 : 20  @  19
+
++ 		blockpos = new BlockPos(blockpos);
+
+> CHANGE  94 : 96  @  94 : 96
 
 ~ 						&& (predicate == null || predicate.apply((T) entity))) {
 ~ 					list.add((T) entity);

@@ -679,16 +679,8 @@ public class PlatformInput {
 		return 0;
 	}
 
-	public static float touchGetEventTouchRadiusX(int pointId) {
-		return 0.0f;
-	}
-
-	public static float touchGetEventTouchRadiusY(int pointId) {
-		return 0.0f;
-	}
-
 	public static float touchGetEventTouchRadiusMixed(int pointId) {
-		return touchGetEventTouchRadiusX(pointId) * 0.5f + touchGetEventTouchRadiusY(pointId) * 0.5f;
+		return 0.0f;
 	}
 
 	public static float touchGetEventTouchForce(int pointId) {
@@ -711,16 +703,8 @@ public class PlatformInput {
 		return 0;
 	}
 
-	public static float touchRadiusX(int pointId) {
-		return 0.0f;
-	}
-
-	public static float touchRadiusY(int pointId) {
-		return 0.0f;
-	}
-
 	public static float touchRadiusMixed(int pointId) {
-		return touchRadiusX(pointId) * 0.5f + touchRadiusY(pointId) * 0.5f;
+		return 0.0f;
 	}
 
 	public static float touchForce(int pointId) {

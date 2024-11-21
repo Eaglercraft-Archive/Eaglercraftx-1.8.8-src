@@ -41,9 +41,10 @@
 
 ~ 				tileentity = (TileEntity) oclass.get();
 
-> CHANGE  2 : 3  @  2 : 3
+> CHANGE  2 : 4  @  2 : 3
 
-~ 			logger.error("Could not create TileEntity", exception);
+~ 			logger.error("Could not create TileEntity");
+~ 			logger.error(exception);
 
 > CHANGE  84 : 85  @  84 : 85
 

@@ -164,7 +164,7 @@ public class LANClientNetworkManager extends EaglercraftNetworkManager {
 
 							}
 							EagUtils.sleep(20);
-						}while(EagRuntime.steadyTimeMillis() - lm < 5000l);
+						}while(EagRuntime.steadyTimeMillis() - lm < 10000l);
 
 						// no channel was opened
 						sock.writePacket(new RelayPacket06ClientFailure(ipkt.peerId));
@@ -203,7 +203,7 @@ public class LANClientNetworkManager extends EaglercraftNetworkManager {
 								continue mainLoop;
 							}
 							EagUtils.sleep(20);
-						}while(EagRuntime.steadyTimeMillis() - lm < 5000l);
+						}while(EagRuntime.steadyTimeMillis() - lm < 10000l);
 
 						// no ice candidates were sent
 						sock.close();

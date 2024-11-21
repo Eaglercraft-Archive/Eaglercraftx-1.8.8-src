@@ -496,10 +496,6 @@ public class PlatformWebRTC {
 		}
 	}
 
-	public static final byte PEERSTATE_FAILED = 0;
-	public static final byte PEERSTATE_SUCCESS = 1;
-	public static final byte PEERSTATE_LOADING = 2;
-
 	public static class LANPeer {
 		public LANServer client;
 		public String peerId;
@@ -575,12 +571,7 @@ public class PlatformWebRTC {
 
 			TeaVMUtils.addEventListener(peerConnection, "connectionstatechange", (EventListener<Event>) evt -> {
 				String connectionState = getConnectionState(peerConnection);
-				if ("disconnected".equals(connectionState)) {
-					client.signalRemoteDisconnect(peerId);
-				} else if ("connected".equals(connectionState)) {
-					if (client.peerState != PEERSTATE_SUCCESS) client.peerState = PEERSTATE_SUCCESS;
-				} else if ("failed".equals(connectionState)) {
-					if (client.peerState == PEERSTATE_LOADING) client.peerState = PEERSTATE_FAILED;
+				if ("disconnected".equals(connectionState) || "failed".equals(connectionState)) {
 					client.signalRemoteDisconnect(peerId);
 				}
 			});
@@ -604,27 +595,22 @@ public class PlatformWebRTC {
 								synchronized(serverLANEventBuffer) {
 									serverLANEventBuffer.put(peerId, e);
 								}
-								if (client.peerStateDesc != PEERSTATE_SUCCESS) client.peerStateDesc = PEERSTATE_SUCCESS;
 							}, err -> {
 								logger.error("Failed to set local description for \"{}\"! {}", peerId, TeaVMUtils.safeErrorMsgToString(err));
-								if (client.peerStateDesc == PEERSTATE_LOADING) client.peerStateDesc = PEERSTATE_FAILED;
 								client.signalRemoteDisconnect(peerId);
 							});
 						}, err -> {
 							logger.error("Failed to create answer for \"{}\"! {}", peerId, TeaVMUtils.safeErrorMsgToString(err));
-							if (client.peerStateDesc == PEERSTATE_LOADING) client.peerStateDesc = PEERSTATE_FAILED;
 							client.signalRemoteDisconnect(peerId);
 						});
 					}
 				}, err -> {
 					logger.error("Failed to set remote description for \"{}\"! {}", peerId, TeaVMUtils.safeErrorMsgToString(err));
-					if (client.peerStateDesc == PEERSTATE_LOADING) client.peerStateDesc = PEERSTATE_FAILED;
 					client.signalRemoteDisconnect(peerId);
 				});
 			} catch (Throwable err) {
 				logger.error("Failed to parse remote description for \"{}\"! {}", peerId, err.getMessage());
 				logger.error(err);
-				if (client.peerStateDesc == PEERSTATE_LOADING) client.peerStateDesc = PEERSTATE_FAILED;
 				client.signalRemoteDisconnect(peerId);
 			}
 		}
@@ -632,10 +618,8 @@ public class PlatformWebRTC {
 		public void addICECandidate(String candidates) {
 			try {
 				addIceCandidates(peerConnection, candidates);
-				if (client.peerStateIce != PEERSTATE_SUCCESS) client.peerStateIce = PEERSTATE_SUCCESS;
 			} catch (Throwable err) {
 				logger.error("Failed to parse ice candidate for \"{}\"! {}", peerId, err.getMessage());
-				if (client.peerStateIce == PEERSTATE_LOADING) client.peerStateIce = PEERSTATE_FAILED;
 				client.signalRemoteDisconnect(peerId);
 			}
 		}
@@ -659,11 +643,6 @@ public class PlatformWebRTC {
 		public Set<Map<String, String>> iceServers = new HashSet<>();
 		public Map<String, LANPeer> peerList = new HashMap<>();
 		public Map<String, LANPeer> ipcMapList = new HashMap<>();
-		public byte peerState = PEERSTATE_LOADING;
-		public byte peerStateConnect = PEERSTATE_LOADING;
-		public byte peerStateInitial = PEERSTATE_LOADING;
-		public byte peerStateDesc = PEERSTATE_LOADING;
-		public byte peerStateIce = PEERSTATE_LOADING;
 
 		public void setIceServers(String[] urls) {
 			iceServers.clear();
@@ -706,18 +685,15 @@ public class PlatformWebRTC {
 			}
 		}
 
-		public void resetPeerStates() {
-			peerState = peerStateConnect = peerStateInitial = peerStateDesc = peerStateIce = PEERSTATE_LOADING;
-		}
-
 		public void signalRemoteConnect(String peerId) {
 			try {
 				JSObject peerConnection = createRTCPeerConnection(JSONWriter.valueToString(iceServers));
 				LANPeer peerInstance = new LANPeer(this, peerId, peerConnection);
 				peerList.put(peerId, peerInstance);
-				if (peerStateConnect != PEERSTATE_SUCCESS) peerStateConnect = PEERSTATE_SUCCESS;
 			} catch (Throwable e) {
-				if (peerStateConnect == PEERSTATE_LOADING) peerStateConnect = PEERSTATE_FAILED;
+				logger.error("Failed to create peer for \"{}\"", peerId);
+				logger.error(e);
+				signalRemoteDisconnect(peerId);
 			}
 		}
 
@@ -907,7 +883,6 @@ public class PlatformWebRTC {
 		synchronized(serverLANEventBuffer) {
 			serverLANEventBuffer.clear();
 		}
-		rtcLANServer.resetPeerStates();
 		rtcLANServer.setIceServers(servers);
 	}
 

@@ -100,7 +100,7 @@ public class PlatformAudio {
 			this.gain = gain;
 			this.pitch = pitch;
 			this.repeat = repeat;
-			source.setOnEnded(this);
+			TeaVMUtils.addEventListener(source, "ended", this);
 		}
 
 		@Override
@@ -249,12 +249,11 @@ public class PlatformAudio {
 	private static native boolean detectLoadViaAudioBufferSupport(AudioContext ctx);
 
 	private static void detectOGGSupport() {
-		byte[] fileData = EagRuntime.getRequiredResourceBytes("/assets/eagler/audioctx_test_ogg.dat");
-
 		if(((TeaVMClientConfigAdapter)PlatformRuntime.getClientConfigAdapter()).isUseJOrbisAudioDecoderTeaVM()) {
 			logger.info("Note: Using embedded JOrbis OGG decoder");
 			oggSupport = false;
 		}else {
+			byte[] fileData = EagRuntime.getRequiredResourceBytes("/assets/eagler/audioctx_test_ogg.dat");
 			try {
 				Int8Array arr = Int8Array.create(fileData.length);
 				arr.set(TeaVMUtils.unwrapByteArray(fileData), 0);

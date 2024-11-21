@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import net.lax1dude.eaglercraft.v1_8.internal.teavm.TeaVMUtils;
-import net.lax1dude.eaglercraft.v1_8.internal.teavm.Touch;
 import net.lax1dude.eaglercraft.v1_8.internal.teavm.TouchEvent;
 import net.lax1dude.eaglercraft.v1_8.internal.teavm.VisualViewport;
 
@@ -102,6 +101,7 @@ public class PlatformInput {
 	private static EventListener<?> focus = null;
 	private static EventListener<?> blur = null;
 	private static EventListener<?> pointerlock = null;
+	private static EventListener<?> fullscreen = null;
 
 	private static Map<String,LegacyKeycodeTranslator.LegacyKeycode> keyCodeTranslatorMap = null;
 
@@ -685,7 +685,7 @@ public class PlatformInput {
 		if(fullscreenSupported != FULLSCREEN_NONE) {
 			fullscreenQuery = fullscreenMediaQuery();
 			if(fullscreenSupported == FULLSCREEN_CORE && (keyboardLockSupported = checkKeyboardLockSupported())) {
-				TeaVMUtils.addEventListener(fullscreenQuery, "change", new EventListener<Event>() {
+				TeaVMUtils.addEventListener(fullscreenQuery, "change", fullscreen = new EventListener<Event>() {
 					@Override
 					public void handleEvent(Event evt) {
 						if (!mediaQueryMatches(evt)) {
@@ -840,7 +840,7 @@ public class PlatformInput {
 	@JSBody(params = { "e" }, script = "return (typeof e.location === \"number\") ? e.location : 0;")
 	private static native int getLocationSafe(KeyboardEvent e);
 
-	@JSBody(params = { "el", "i", "j" }, script = "el.setSelectionRange(el, i, j)")
+	@JSBody(params = { "el", "i", "j" }, script = "el.setSelectionRange(i, j)")
 	private static native boolean setSelectionRange(HTMLElement el, int i, int j);
 
 	public static int getWindowWidth() {
@@ -1513,6 +1513,10 @@ public class PlatformInput {
 			win.getDocument().removeEventListener("pointerlockchange", pointerlock);
 			pointerlock = null;
 		}
+		if(fullscreen != null) {
+			TeaVMUtils.removeEventListener(fullscreenQuery, "change", fullscreen);
+			fullscreen = null;
+		}
 		if(mouseUngrabTimeout != -1) {
 			Window.clearTimeout(mouseUngrabTimeout);
 			mouseUngrabTimeout = -1;
@@ -1786,19 +1790,9 @@ public class PlatformInput {
 		return currentTouchEvent != null ? currentTouchEvent.getEventTouches().get(pointId).posY : 0;
 	}
 
-	public static float touchGetEventTouchRadiusX(int pointId) {
-		return currentTouchEvent != null ? (float)currentTouchEvent.getEventTouches().get(pointId).touch.getRadiusXSafe(5.0 * windowDPI) : 1.0f;
-	}
-
-	public static float touchGetEventTouchRadiusY(int pointId) {
-		return currentTouchEvent != null ? (float)currentTouchEvent.getEventTouches().get(pointId).touch.getRadiusYSafe(5.0 * windowDPI) : 1.0f;
-	}
-
 	public static float touchGetEventTouchRadiusMixed(int pointId) {
 		if(currentTouchEvent != null) {
-			Touch t = currentTouchEvent.getEventTouches().get(pointId).touch;
-			double d = 5.0 * windowDPI;
-			return (float)(t.getRadiusXSafe(d) * 0.5 + t.getRadiusYSafe(d) * 0.5);
+			return currentTouchEvent.getEventTouches().get(pointId).radius;
 		}else {
 			return 1.0f;
 		}
@@ -1834,8 +1828,7 @@ public class PlatformInput {
 
 	public static float touchRadiusMixed(int pointId) {
 		if(currentTouchState != null) {
-			Touch t = currentTouchState.getTargetTouches().get(pointId).touch;
-			return (float)(t.getRadiusX() * 0.5 + t.getRadiusY() * 0.5);
+			return currentTouchState.getTargetTouches().get(pointId).radius;
 		}else {
 			return 1.0f;
 		}
@@ -1907,7 +1900,7 @@ public class PlatformInput {
 					evt.preventDefault();
 					evt.stopPropagation();
 					JSObject obj = evt.getTimeStamp();
-					if(TeaVMUtils.isTruthy(obj)) {
+					if(obj != null && TeaVMUtils.isTruthy(obj)) {
 						double d = ((JSNumber)obj).doubleValue();
 						if(lastTouchKeyboardEvtA != 0.0 && (d - lastTouchKeyboardEvtA) < 10.0) {
 							return;
@@ -1953,7 +1946,7 @@ public class PlatformInput {
 						shownTouchKeyboardEventWarning = true;
 					}
 					JSObject obj = evt.getTimeStamp();
-					if(TeaVMUtils.isTruthy(obj)) {
+					if(obj != null && TeaVMUtils.isTruthy(obj)) {
 						double d = ((JSNumber)obj).doubleValue();
 						if(lastTouchKeyboardEvtA != 0.0 && (d - lastTouchKeyboardEvtA) < 10.0) {
 							return;
@@ -2013,7 +2006,7 @@ public class PlatformInput {
 					case "deleteByCut":
 						break;
 					default:
-						PlatformRuntime.logger.info("Ingoring InputEvent.inputType \"{}\" from on-screen keyboard", evt.getInputType());
+						PlatformRuntime.logger.info("Ignoring InputEvent.inputType \"{}\" from on-screen keyboard", evt.getInputType());
 						break;
 					}
 				}
@@ -2027,7 +2020,7 @@ public class PlatformInput {
 						PlatformRuntime.logger.info("Note: Caught legacy input events from on-screen keyboard, browser could be outdated and doesn't support beforeinput event, or does not respond to cancelling beforeinput");
 						shownLegacyTouchKeyboardWarning = true;
 					}
-					if(TeaVMUtils.isTruthy(obj)) {
+					if(obj != null && TeaVMUtils.isTruthy(obj)) {
 						double d = ((JSNumber)obj).doubleValue();
 						if(lastTouchKeyboardEvtA != 0.0 && (d - lastTouchKeyboardEvtA) < 10.0) {
 							return;

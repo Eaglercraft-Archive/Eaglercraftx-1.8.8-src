@@ -24,19 +24,23 @@ public class OffsetTouch {
 	public final int eventUID;
 	public final int posX;
 	public final int posY;
+	public final float radius;
 
-	public OffsetTouch(Touch touch, int eventUID, int posX, int posY) {
+	public OffsetTouch(Touch touch, int eventUID, int posX, int posY, float radius) {
 		this.touch = touch;
 		this.eventUID = eventUID;
 		this.posX = posX;
 		this.posY = posY;
+		this.radius = radius;
 	}
 
 	public static OffsetTouch create(Touch touch, ITouchUIDMapper mapper, int originX, int originY) {
 		double contentScale = PlatformInput.getDPI();
+		double d = 5.0 * contentScale;
 		OffsetTouch ot = new OffsetTouch(touch, mapper.call(touch.getIdentifier()),
 				(int) ((touch.getPageX() - originX) * contentScale),
-				PlatformInput.getWindowHeight() - (int) ((touch.getPageY() - originY) * contentScale) - 1);
+				PlatformInput.getWindowHeight() - (int) ((touch.getPageY() - originY) * contentScale) - 1,
+				(float)(touch.getRadiusXSafe(d) * 0.5 + touch.getRadiusYSafe(d) * 0.5));
 		return ot;
 	}
 

@@ -154,7 +154,11 @@
 
 ~ 		BlockPos blockpos$mutableblockpos = new BlockPos();
 
-> CHANGE  224 : 225  @  224 : 225
+> CHANGE  122 : 123  @  122 : 123
+
+~ 				tileEntityIn.setPos(new BlockPos(pos));
+
+> CHANGE  101 : 102  @  101 : 102
 
 ~ 		if (!this.provider.getHasNoSky() && this.getGameRules().getBoolean("doWeatherCycle")) {
 

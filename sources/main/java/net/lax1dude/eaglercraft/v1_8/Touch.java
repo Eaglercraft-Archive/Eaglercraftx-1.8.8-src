@@ -40,14 +40,6 @@ public class Touch {
 		return PlatformInput.touchGetEventTouchY(pointId);
 	}
 
-	public static float getEventTouchRadiusX(int pointId) {
-		return PlatformInput.touchGetEventTouchRadiusX(pointId);
-	}
-
-	public static float getEventTouchRadiusY(int pointId) {
-		return PlatformInput.touchGetEventTouchRadiusY(pointId);
-	}
-
 	public static float getEventTouchRadiusMixed(int pointId) {
 		return PlatformInput.touchGetEventTouchRadiusMixed(pointId);
 	}
@@ -70,14 +62,6 @@ public class Touch {
 
 	public static int touchPointY(int pointId) {
 		return PlatformInput.touchPointY(pointId);
-	}
-
-	public static float touchPointRadiusX(int pointId) {
-		return PlatformInput.touchRadiusX(pointId);
-	}
-
-	public static float touchPointRadiusY(int pointId) {
-		return PlatformInput.touchRadiusY(pointId);
 	}
 
 	public static float touchPointRadiusMixed(int pointId) {

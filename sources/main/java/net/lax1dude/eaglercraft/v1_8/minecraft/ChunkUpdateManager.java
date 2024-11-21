@@ -84,7 +84,6 @@ public class ChunkUpdateManager {
 					generator.setStatus(ChunkCompileTaskGenerator.Status.DONE);
 				}
 			}
-			generator.getRenderChunk().setCompiledChunk(compiledchunk);
 		} else if (chunkcompiletaskgenerator$type == ChunkCompileTaskGenerator.Type.RESORT_TRANSPARENCY) {
 			if(!compiledchunk.isLayerEmpty(EnumWorldBlockLayer.TRANSLUCENT)) {
 				this.uploadChunk(EnumWorldBlockLayer.TRANSLUCENT, generator.getRegionRenderCacheBuilder()
@@ -96,7 +95,6 @@ public class ChunkUpdateManager {
 								.getWorldRendererByLayer(EnumWorldBlockLayer.REALISTIC_WATER),
 						generator.getRenderChunk(), compiledchunk);
 			}
-			generator.getRenderChunk().setCompiledChunk(compiledchunk);
 			generator.setStatus(ChunkCompileTaskGenerator.Status.DONE);
 		}
 	}

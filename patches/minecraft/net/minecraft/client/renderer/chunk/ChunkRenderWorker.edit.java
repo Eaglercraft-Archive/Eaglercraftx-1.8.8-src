@@ -77,17 +77,16 @@
 ~ 					if (!compiledchunk.isLayerEmpty(enumworldblocklayer)) {
 ~ 						this.chunkRenderDispatcher.uploadChunk(enumworldblocklayer,
 
-> CHANGE  1 : 4  @  1 : 2
+> CHANGE  1 : 3  @  1 : 2
 
 ~ 								generator.getRenderChunk(), compiledchunk);
-~ 						generator.getRenderChunk().setCompiledChunk(compiledchunk);
 ~ 						generator.setStatus(ChunkCompileTaskGenerator.Status.DONE);
 
 > CHANGE  3 : 4  @  3 : 4
 
 ~ 				this.chunkRenderDispatcher.uploadChunk(
 
-> CHANGE  2 : 11  @  2 : 3
+> CHANGE  2 : 10  @  2 : 3
 
 ~ 						generator.getRenderChunk(), compiledchunk);
 ~ 				if (DeferredStateManager.isRenderingRealisticWater()) {
@@ -96,7 +95,6 @@
 ~ 									.getWorldRendererByLayer(EnumWorldBlockLayer.REALISTIC_WATER),
 ~ 							generator.getRenderChunk(), compiledchunk);
 ~ 				}
-~ 				generator.getRenderChunk().setCompiledChunk(compiledchunk);
 ~ 				generator.setStatus(ChunkCompileTaskGenerator.Status.DONE);
 
 > DELETE  2  @  2 : 42

@@ -22,7 +22,11 @@
 + 	}
 + 
 
-> CHANGE  22 : 23  @  22 : 23
+> CHANGE  17 : 18  @  17 : 18
+
+~ 		this(source.x, source.y, source.z);
+
+> CHANGE  4 : 5  @  4 : 5
 
 ~ 				: new BlockPos((double) this.x + x, (double) this.y + y, (double) this.z + z);
 

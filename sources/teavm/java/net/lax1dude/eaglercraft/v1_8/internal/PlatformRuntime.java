@@ -252,19 +252,21 @@ public class PlatformRuntime {
 		}
 
 		useVisualViewport = false;
-		if(isVisualViewportSupported()) {
-			if(isEmbeddedInBody) {
-				useVisualViewport = true;
-			}else {
-				HTMLElement bodyTag = doc.getBody();
-				if (Math.abs(bodyTag.getClientWidth() - parent.getClientWidth()) <= 10
-						&& Math.abs(bodyTag.getClientHeight() - parent.getClientHeight()) <= 10) {
+		if(teavmCfg.isUseVisualViewportTeaVM()) {
+			if(isVisualViewportSupported()) {
+				if(isEmbeddedInBody) {
 					useVisualViewport = true;
+				}else {
+					HTMLElement bodyTag = doc.getBody();
+					if (Math.abs(bodyTag.getClientWidth() - parent.getClientWidth()) <= 10
+							&& Math.abs(bodyTag.getClientHeight() - parent.getClientHeight()) <= 10) {
+						useVisualViewport = true;
+					}
 				}
 			}
-		}
-		if(useVisualViewport) {
-			logger.info("Note: Detected game is embedded in body, some screens may be resized to window.visualViewport instead for a better mobile experience");
+			if(useVisualViewport) {
+				logger.info("Note: Detected game is embedded in body, some screens may be resized to window.visualViewport instead for a better mobile experience");
+			}
 		}
 		
 		ByteBuffer endiannessTestBytes = allocateByteBuffer(4);

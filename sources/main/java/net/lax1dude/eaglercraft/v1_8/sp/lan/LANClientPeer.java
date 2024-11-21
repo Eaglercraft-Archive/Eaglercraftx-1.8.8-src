@@ -84,7 +84,7 @@ class LANClientPeer {
 
 	protected void update() {
 		if(state != CLOSED) {
-			if(state != CONNECTED && EagRuntime.steadyTimeMillis() - startTime > 10000l) {
+			if(state != CONNECTED && EagRuntime.steadyTimeMillis() - startTime > 13000l) {
 				logger.info("LAN client '{}' handshake timed out", clientId);
 				disconnect();
 				return;

@@ -52,6 +52,9 @@ public class TeaVMUtils {
 	@JSBody(params = { "obj", "name", "handler" }, script = "obj.addEventListener(name, handler);")
 	public static native void addEventListener(JSObject obj, String name, JSObject handler);
 	
+	@JSBody(params = { "obj", "name", "handler" }, script = "obj.removeEventListener(name, handler);")
+	public static native void removeEventListener(JSObject obj, String name, JSObject handler);
+	
 	@JSBody(params = {}, script = "return (new Error()).stack;")
 	public static native String dumpJSStackTrace();
 

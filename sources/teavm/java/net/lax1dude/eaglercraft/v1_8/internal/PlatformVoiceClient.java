@@ -149,6 +149,7 @@ public class PlatformVoiceClient {
 		private GainNode gain = null;
 		private PannerNode panner = null;
 		private AudioNode recNode = null;
+		private HTMLAudioElement mediaElement = null;
 		
 		public VoicePeer(EaglercraftUUID peerId, JSObject peerConnection, boolean offer) {
 			this.peerId = peerId;
@@ -164,10 +165,10 @@ public class PlatformVoiceClient {
 			});
 			TeaVMUtils.addEventListener(peerConnection, "track", (EventListener<Event>) evt -> {
 				rawStream = getFirstStream(evt);
-				HTMLAudioElement aud = (HTMLAudioElement) PlatformRuntime.doc.createElement("audio");
-				aud.setAutoplay(true);
-				aud.setMuted(true);
-				setSrcObject(aud, rawStream);
+				mediaElement = (HTMLAudioElement) PlatformRuntime.doc.createElement("audio");
+				mediaElement.setAutoplay(true);
+				mediaElement.setMuted(true);
+				setSrcObject(mediaElement, rawStream);
 				handlePeerTrack(this, rawStream);
 			});
 

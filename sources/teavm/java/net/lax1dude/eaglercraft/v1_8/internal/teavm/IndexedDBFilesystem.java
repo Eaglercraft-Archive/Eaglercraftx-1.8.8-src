@@ -205,7 +205,7 @@ public class IndexedDBFilesystem implements IEaglerFilesystem {
 			TeaVMUtils.addEventListener(f, "blocked", new EventHandler() {
 				@Override
 				public void handleEvent() {
-					cb.complete(new DatabaseOpen(false, true, null, null));
+					cb.complete(new DatabaseOpen(false, true, "database locked", null));
 				}
 			});
 			TeaVMUtils.addEventListener(f, "success", new EventHandler() {

@@ -413,15 +413,11 @@ public class PlatformWebRTC {
 											synchronized (serverLANEventBuffer) {
 												serverLANEventBuffer.put(peerId, e);
 											}
-											if (client.peerStateDesc != PEERSTATE_SUCCESS)
-												client.peerStateDesc = PEERSTATE_SUCCESS;
 										}
 
 										@Override
 										public void onFailure(String s) {
 											logger.error("Failed to set local description for \"{}\"! {}", peerId, s);
-											if (client.peerStateDesc == PEERSTATE_LOADING)
-												client.peerStateDesc = PEERSTATE_FAILED;
 											client.signalRemoteDisconnect(peerId);
 										}
 									});
@@ -430,8 +426,6 @@ public class PlatformWebRTC {
 								@Override
 								public void onFailure(String s) {
 									logger.error("Failed to create answer for \"{}\"! {}", peerId, s);
-									if (client.peerStateDesc == PEERSTATE_LOADING)
-										client.peerStateDesc = PEERSTATE_FAILED;
 									client.signalRemoteDisconnect(peerId);
 								}
 							});
@@ -441,13 +435,11 @@ public class PlatformWebRTC {
 					@Override
 					public void onFailure(String s) {
 						logger.error("Failed to set remote description for \"{}\"! {}", peerId, s);
-						if (client.peerStateDesc == PEERSTATE_LOADING) client.peerStateDesc = PEERSTATE_FAILED;
 						client.signalRemoteDisconnect(peerId);
 					}
 				});
 			} catch (Throwable err) {
 				logger.error("Failed to parse remote description for \"{}\"! {}", peerId, err.getMessage());
-				if (client.peerStateDesc == PEERSTATE_LOADING) client.peerStateDesc = PEERSTATE_FAILED;
 				client.signalRemoteDisconnect(peerId);
 			}
 		}
@@ -459,10 +451,8 @@ public class PlatformWebRTC {
 					JSONObject candidate = jsonArray.getJSONObject(i);
 					peerConnection.addIceCandidate(new RTCIceCandidate(null, candidate.getInt("sdpMLineIndex"), candidate.getString("candidate")));
 				}
-				if (client.peerStateIce != PEERSTATE_SUCCESS) client.peerStateIce = PEERSTATE_SUCCESS;
 			} catch (Throwable err) {
 				logger.error("Failed to parse ice candidate for \"{}\"! {}", peerId, err.getMessage());
-				if (client.peerStateIce == PEERSTATE_LOADING) client.peerStateIce = PEERSTATE_FAILED;
 				client.signalRemoteDisconnect(peerId);
 			}
 		}
@@ -490,11 +480,6 @@ public class PlatformWebRTC {
 		public Set<Map<String, String>> iceServers = new HashSet<>();
 		public Map<String, LANPeer> peerList = new HashMap<>();
 		public Map<String, LANPeer> ipcMapList = new HashMap<>();
-		public byte peerState = PEERSTATE_LOADING;
-		public byte peerStateConnect = PEERSTATE_LOADING;
-		public byte peerStateInitial = PEERSTATE_LOADING;
-		public byte peerStateDesc = PEERSTATE_LOADING;
-		public byte peerStateIce = PEERSTATE_LOADING;
 		private final Object lock3 = new Object();
 
 		public void setIceServers(String[] urls) {
@@ -539,10 +524,6 @@ public class PlatformWebRTC {
 			if (b) {
 				signalRemoteDisconnect(thePeer.peerId);
 			}
-		}
-
-		public void resetPeerStates() {
-			peerState = peerStateConnect = peerStateInitial = peerStateDesc = peerStateIce = PEERSTATE_LOADING;
 		}
 
 		public void signalRemoteConnect(String peerId) {
@@ -597,7 +578,6 @@ public class PlatformWebRTC {
 						final Runnable[] retry = new Runnable[1];
 						final int[] loopCount = new int[1];
 						scheduleTask(-1l, retry[0] = () -> {
-							int i = 0;
 							f: {
 								synchronized (lock3) {
 									if (iceCandidates.isEmpty()) {
@@ -650,14 +630,7 @@ public class PlatformWebRTC {
 
 					@Override
 					public void onConnectionChange(RTCPeerConnectionState connectionState) {
-						if (connectionState == RTCPeerConnectionState.DISCONNECTED) {
-							LANServer.this.signalRemoteDisconnect(peerId);
-						} else if (connectionState == RTCPeerConnectionState.CONNECTED) {
-							if (LANServer.this.peerState != PEERSTATE_SUCCESS)
-								LANServer.this.peerState = PEERSTATE_SUCCESS;
-						} else if (connectionState == RTCPeerConnectionState.FAILED) {
-							if (LANServer.this.peerState == PEERSTATE_LOADING)
-								LANServer.this.peerState = PEERSTATE_FAILED;
+						if (connectionState == RTCPeerConnectionState.DISCONNECTED || connectionState == RTCPeerConnectionState.FAILED) {
 							LANServer.this.signalRemoteDisconnect(peerId);
 						}
 					}
@@ -666,9 +639,10 @@ public class PlatformWebRTC {
 				synchronized(peerList) {
 					peerList.put(peerId, peerInstance[0]);
 				}
-				if (peerStateConnect != PEERSTATE_SUCCESS) peerStateConnect = PEERSTATE_SUCCESS;
 			} catch (Throwable e) {
-				if (peerStateConnect == PEERSTATE_LOADING) peerStateConnect = PEERSTATE_FAILED;
+				logger.error("Failed to create peer for \"{}\"", peerId);
+				logger.error(e);
+				signalRemoteDisconnect(peerId);
 			}
 		}
 
@@ -871,7 +845,6 @@ public class PlatformWebRTC {
 		synchronized(serverLANEventBuffer) {
 			serverLANEventBuffer.clear();
 		}
-		rtcLANServer.resetPeerStates();
 		rtcLANServer.setIceServers(servers);
 	}
 
