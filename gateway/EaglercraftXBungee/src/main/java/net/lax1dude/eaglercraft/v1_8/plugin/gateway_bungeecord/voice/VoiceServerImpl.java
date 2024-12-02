@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -98,8 +99,11 @@ public class VoiceServerImpl {
 	}
 
 	void handleVoiceSignalPacketTypeRequest(UUID player, UserConnection sender) {
+		UUID senderUUID;
+		EaglerInitialHandler targetInitialHandler;
+		EaglerInitialHandler senderInitialHandler;
 		synchronized (voicePlayers) {
-			UUID senderUUID = sender.getUniqueId();
+			senderUUID = sender.getUniqueId();
 			if (senderUUID.equals(player))
 				return; // prevent duplicates
 			if (!voicePlayers.containsKey(senderUUID))
@@ -129,24 +133,25 @@ public class VoiceServerImpl {
 					voiceRequests.remove(senderUUID);
 				// send each other add data
 				voicePairs.add(newPair);
-				EaglerInitialHandler targetInitialHandler = (EaglerInitialHandler) targetPlayerCon
-						.getPendingConnection();
-				if (targetInitialHandler.getEaglerProtocol().ver <= 3) {
-					targetInitialHandler.sendEaglerMessage(new SPacketVoiceSignalConnectV3EAG(
-							senderUUID.getMostSignificantBits(), senderUUID.getLeastSignificantBits(), false, false));
-				} else {
-					targetInitialHandler.sendEaglerMessage(new SPacketVoiceSignalConnectV4EAG(
-							senderUUID.getMostSignificantBits(), senderUUID.getLeastSignificantBits(), false));
-				}
-				EaglerInitialHandler senderInitialHandler = (EaglerInitialHandler) sender.getPendingConnection();
-				if (senderInitialHandler.getEaglerProtocol().ver <= 3) {
-					senderInitialHandler.sendEaglerMessage(new SPacketVoiceSignalConnectV3EAG(
-							player.getMostSignificantBits(), player.getLeastSignificantBits(), false, true));
-				} else {
-					senderInitialHandler.sendEaglerMessage(new SPacketVoiceSignalConnectV4EAG(
-							player.getMostSignificantBits(), player.getLeastSignificantBits(), true));
-				}
+				targetInitialHandler = (EaglerInitialHandler) targetPlayerCon.getPendingConnection();
+				senderInitialHandler = (EaglerInitialHandler) sender.getPendingConnection();
+			}else {
+				return;
 			}
+		}
+		if (targetInitialHandler.getEaglerProtocol().ver <= 3) {
+			targetInitialHandler.sendEaglerMessage(new SPacketVoiceSignalConnectV3EAG(
+					senderUUID.getMostSignificantBits(), senderUUID.getLeastSignificantBits(), false, false));
+		} else {
+			targetInitialHandler.sendEaglerMessage(new SPacketVoiceSignalConnectV4EAG(
+					senderUUID.getMostSignificantBits(), senderUUID.getLeastSignificantBits(), false));
+		}
+		if (senderInitialHandler.getEaglerProtocol().ver <= 3) {
+			senderInitialHandler.sendEaglerMessage(new SPacketVoiceSignalConnectV3EAG(
+					player.getMostSignificantBits(), player.getLeastSignificantBits(), false, true));
+		} else {
+			senderInitialHandler.sendEaglerMessage(new SPacketVoiceSignalConnectV4EAG(
+					player.getMostSignificantBits(), player.getLeastSignificantBits(), true));
 		}
 	}
 
@@ -159,25 +164,46 @@ public class VoiceServerImpl {
 		if(eaglerHandler.getRPCEventSubscribed(EnumSubscribedEvent.TOGGLE_VOICE)) {
 			eaglerHandler.getRPCSessionHandler().handleVoiceStateTransition(SPacketRPCEventToggledVoice.VOICE_STATE_ENABLED);
 		}
+		UUID senderUuid = eaglerHandler.getUniqueId();
+		List<UserConnection> lst;
 		synchronized (voicePlayers) {
-			if (voicePlayers.containsKey(eaglerHandler.getUniqueId())) {
+			if (voicePlayers.containsKey(senderUuid)) {
 				return;
 			}
 			boolean hasNoOtherPlayers = voicePlayers.isEmpty();
-			voicePlayers.put(eaglerHandler.getUniqueId(), sender);
+			voicePlayers.put(senderUuid, sender);
 			if (hasNoOtherPlayers) {
 				return;
 			}
-			Collection<SPacketVoiceSignalGlobalEAG.UserData> userDatas = new ArrayList<>(voicePlayers.size());
-			for(UserConnection userCon : voicePlayers.values()) {
-				UUID uuid = userCon.getUniqueId();
-				userDatas.add(new SPacketVoiceSignalGlobalEAG.UserData(uuid.getMostSignificantBits(),
-						uuid.getLeastSignificantBits(), userCon.getDisplayName()));
+			lst = new ArrayList<>(voicePlayers.values());
+		}
+		GameMessagePacket v3p = null;
+		GameMessagePacket v4p = null;
+		for (UserConnection conn : lst) {
+			EaglerInitialHandler handler = (EaglerInitialHandler) conn.getPendingConnection();
+			if (handler.getEaglerProtocol().ver <= 3) {
+				handler.sendEaglerMessage(
+						v3p == null
+								? (v3p = new SPacketVoiceSignalConnectV3EAG(senderUuid.getMostSignificantBits(),
+										senderUuid.getLeastSignificantBits(), true, false))
+								: v3p);
+			} else {
+				handler.sendEaglerMessage(
+						v4p == null
+								? (v4p = new SPacketVoiceSignalConnectAnnounceV4EAG(senderUuid.getMostSignificantBits(),
+										senderUuid.getLeastSignificantBits()))
+								: v4p);
 			}
-			GameMessagePacket packetToBroadcast = new SPacketVoiceSignalGlobalEAG(userDatas);
-			for (UserConnection userCon : voicePlayers.values()) {
-				((EaglerInitialHandler)userCon.getPendingConnection()).sendEaglerMessage(packetToBroadcast);
-			}
+		}
+		Collection<SPacketVoiceSignalGlobalEAG.UserData> userDatas = new ArrayList<>(lst.size());
+		for(UserConnection userCon : lst) {
+			UUID uuid = userCon.getUniqueId();
+			userDatas.add(new SPacketVoiceSignalGlobalEAG.UserData(uuid.getMostSignificantBits(),
+					uuid.getLeastSignificantBits(), userCon.getDisplayName()));
+		}
+		GameMessagePacket packetToBroadcast = new SPacketVoiceSignalGlobalEAG(userDatas);
+		for (UserConnection userCon : lst) {
+			((EaglerInitialHandler)userCon.getPendingConnection()).sendEaglerMessage(packetToBroadcast);
 		}
 	}
 
@@ -212,6 +238,7 @@ public class VoiceServerImpl {
 	}
 
 	void handleVoiceSignalPacketTypeDisconnectPeer(UUID player, UserConnection sender) {
+		List<Runnable> peersToDisconnect = new ArrayList<>();
 		synchronized (voicePlayers) {
 			if (!voicePlayers.containsKey(player)) {
 				return;
@@ -227,31 +254,42 @@ public class VoiceServerImpl {
 				}
 				if (target != null) {
 					pairsItr.remove();
-					UserConnection conn = voicePlayers.get(target);
-					if (conn != null) {
-						((EaglerInitialHandler) conn.getPendingConnection()).sendEaglerMessage(
-								new SPacketVoiceSignalDisconnectPeerEAG(player.getMostSignificantBits(),
-										player.getLeastSignificantBits()));
-					}
-					((EaglerInitialHandler) sender.getPendingConnection())
-							.sendEaglerMessage(new SPacketVoiceSignalDisconnectPeerEAG(target.getMostSignificantBits(),
-									target.getLeastSignificantBits()));
+					final UserConnection conn = voicePlayers.get(target);
+					final UUID target2 = target;
+					peersToDisconnect.add(() -> {
+						if (conn != null) {
+							((EaglerInitialHandler) conn.getPendingConnection()).sendEaglerMessage(
+									new SPacketVoiceSignalDisconnectPeerEAG(player.getMostSignificantBits(),
+											player.getLeastSignificantBits()));
+						}
+						((EaglerInitialHandler) sender.getPendingConnection())
+								.sendEaglerMessage(new SPacketVoiceSignalDisconnectPeerEAG(target2.getMostSignificantBits(),
+										target2.getLeastSignificantBits()));
+					});
 				}
 			}
 		}
+		for(Runnable r : peersToDisconnect) {
+			r.run();
+		}
 	}
 
-	void removeUser(UUID user) {
+	void removeUser(final UUID user) {
+		List<Runnable> peersToDisconnect;
 		synchronized (voicePlayers) {
-			UserConnection connRemove;
+			final UserConnection connRemove;
 			if ((connRemove = voicePlayers.remove(user)) == null) {
 				return;
-			}else {
-				EaglerInitialHandler eaglerHandler = (EaglerInitialHandler)connRemove.getPendingConnection();
-				eaglerHandler.fireVoiceStateChange(EaglercraftVoiceStatusChangeEvent.EnumVoiceState.DISABLED);
-				if(eaglerHandler.getRPCEventSubscribed(EnumSubscribedEvent.TOGGLE_VOICE)) {
-					eaglerHandler.getRPCSessionHandler().handleVoiceStateTransition(SPacketRPCEventToggledVoice.VOICE_STATE_DISABLED);
-				}
+			}
+			peersToDisconnect = new ArrayList<>();
+			if(connRemove != null) {
+				peersToDisconnect.add(() -> {
+					EaglerInitialHandler eaglerHandler = (EaglerInitialHandler)connRemove.getPendingConnection();
+					eaglerHandler.fireVoiceStateChange(EaglercraftVoiceStatusChangeEvent.EnumVoiceState.DISABLED);
+					if(eaglerHandler.getRPCEventSubscribed(EnumSubscribedEvent.TOGGLE_VOICE)) {
+						eaglerHandler.getRPCSessionHandler().handleVoiceStateTransition(SPacketRPCEventToggledVoice.VOICE_STATE_DISABLED);
+					}
+				});
 			}
 			voiceRequests.remove(user);
 			if (voicePlayers.size() > 0) {
@@ -261,10 +299,12 @@ public class VoiceServerImpl {
 					userDatas.add(new SPacketVoiceSignalGlobalEAG.UserData(uuid.getMostSignificantBits(),
 							uuid.getLeastSignificantBits(), userCon.getDisplayName()));
 				}
-				GameMessagePacket voicePlayersPkt = new SPacketVoiceSignalGlobalEAG(userDatas);
-				for (UserConnection userCon : voicePlayers.values()) {
+				final GameMessagePacket voicePlayersPkt = new SPacketVoiceSignalGlobalEAG(userDatas);
+				for (final UserConnection userCon : voicePlayers.values()) {
 					if (!user.equals(userCon.getUniqueId())) {
-						((EaglerInitialHandler)userCon.getPendingConnection()).sendEaglerMessage(voicePlayersPkt);
+						peersToDisconnect.add(() -> {
+							((EaglerInitialHandler)userCon.getPendingConnection()).sendEaglerMessage(voicePlayersPkt);
+						});
 					}
 				}
 			}
@@ -280,15 +320,20 @@ public class VoiceServerImpl {
 				if (target != null) {
 					pairsItr.remove();
 					if (voicePlayers.size() > 0) {
-						UserConnection conn = voicePlayers.get(target);
+						final UserConnection conn = voicePlayers.get(target);
 						if (conn != null) {
-							((EaglerInitialHandler) conn.getPendingConnection()).sendEaglerMessage(
-									new SPacketVoiceSignalDisconnectPeerEAG(user.getMostSignificantBits(),
-											user.getLeastSignificantBits()));
+							peersToDisconnect.add(() -> {
+								((EaglerInitialHandler) conn.getPendingConnection()).sendEaglerMessage(
+										new SPacketVoiceSignalDisconnectPeerEAG(user.getMostSignificantBits(),
+												user.getLeastSignificantBits()));
+							});
 						}
 					}
 				}
 			}
+		}
+		for(Runnable r : peersToDisconnect) {
+			r.run();
 		}
 	}
 
