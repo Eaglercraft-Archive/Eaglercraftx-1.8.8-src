@@ -38,7 +38,9 @@
 
 > DELETE  7  @  7 : 8
 
-> CHANGE  10 : 11  @  10 : 12
+> DELETE  4  @  4 : 5
+
+> CHANGE  5 : 6  @  5 : 7
 
 ~ import net.minecraft.world.chunk.Chunk;
 
@@ -195,7 +197,11 @@
 ~ 			for (int i = 0; i < this.worldServers.length; ++i) {
 ~ 				WorldServer worldserver = this.worldServers[i];
 
-> DELETE  20  @  20 : 23
+> CHANGE  6 : 7  @  6 : 11
+
+~ 					worldserver.saveAllChunks(true, (IProgressUpdate) null);
+
+> DELETE  9  @  9 : 12
 
 > CHANGE  16 : 22  @  16 : 21
 

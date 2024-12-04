@@ -168,7 +168,154 @@
 
 > DELETE  3  @  3 : 4
 
-> DELETE  105  @  105 : 106
+> CHANGE  3 : 7  @  3 : 5
+
+~ 		Entity object = null;
+~ 		boolean b = false;
+~ 		switch (packetIn.getType()) {
+~ 		case 10:
+
+> CHANGE  2 : 5  @  2 : 3
+
+~ 			break;
+~ 		case 90:
+~ 			b = true;
+
+> CHANGE  4 : 6  @  4 : 7
+
+~ 			break;
+~ 		case 60:
+
+> CHANGE  1 : 3  @  1 : 2
+
+~ 			break;
+~ 		case 61:
+
+> CHANGE  1 : 4  @  1 : 2
+
+~ 			break;
+~ 		case 71:
+~ 			b = true;
+
+> CHANGE  3 : 6  @  3 : 5
+
+~ 			break;
+~ 		case 77:
+~ 			b = true;
+
+> CHANGE  2 : 4  @  2 : 4
+
+~ 			break;
+~ 		case 65:
+
+> CHANGE  1 : 3  @  1 : 2
+
+~ 			break;
+~ 		case 72:
+
+> CHANGE  1 : 3  @  1 : 2
+
+~ 			break;
+~ 		case 76:
+
+> CHANGE  1 : 4  @  1 : 2
+
+~ 			break;
+~ 		case 63:
+~ 			b = true;
+
+> CHANGE  3 : 6  @  3 : 5
+
+~ 			break;
+~ 		case 64:
+~ 			b = true;
+
+> CHANGE  3 : 6  @  3 : 5
+
+~ 			break;
+~ 		case 66:
+~ 			b = true;
+
+> CHANGE  3 : 5  @  3 : 5
+
+~ 			break;
+~ 		case 62:
+
+> CHANGE  1 : 4  @  1 : 2
+
+~ 			break;
+~ 		case 73:
+~ 			b = true;
+
+> CHANGE  1 : 4  @  1 : 3
+
+~ 			break;
+~ 		case 75:
+~ 			b = true;
+
+> CHANGE  1 : 3  @  1 : 3
+
+~ 			break;
+~ 		case 1:
+
+> CHANGE  1 : 3  @  1 : 2
+
+~ 			break;
+~ 		case 50:
+
+> CHANGE  1 : 3  @  1 : 2
+
+~ 			break;
+~ 		case 78:
+
+> CHANGE  1 : 3  @  1 : 2
+
+~ 			break;
+~ 		case 51:
+
+> CHANGE  1 : 3  @  1 : 2
+
+~ 			break;
+~ 		case 2:
+
+> CHANGE  1 : 4  @  1 : 2
+
+~ 			break;
+~ 		case 70:
+~ 			b = true;
+
+> INSERT  2 : 7  @  2
+
++ 			break;
++ 		}
++ 
++ 		if (b) {
++ 			// fix for compiler bug
+
+> CHANGE  4 : 10  @  4 : 10
+
+~ 			object.serverPosX = packetIn.getX();
+~ 			object.serverPosY = packetIn.getY();
+~ 			object.serverPosZ = packetIn.getZ();
+~ 			object.rotationPitch = (float) (packetIn.getPitch() * 360) / 256.0F;
+~ 			object.rotationYaw = (float) (packetIn.getYaw() * 360) / 256.0F;
+~ 			Entity[] aentity = object.getParts();
+
+> CHANGE  1 : 2  @  1 : 2
+
+~ 				int i = packetIn.getEntityID() - object.getEntityId();
+
+> CHANGE  6 : 8  @  6 : 8
+
+~ 			object.setEntityId(packetIn.getEntityID());
+~ 			this.clientWorldController.addEntityToWorld(packetIn.getEntityID(), object);
+
+> CHANGE  8 : 10  @  8 : 10
+
+~ 				object.setVelocity((double) packetIn.getSpeedX() / 8000.0D, (double) packetIn.getSpeedY() / 8000.0D,
+~ 						(double) packetIn.getSpeedZ() / 8000.0D);
+
+> DELETE  6  @  6 : 7
 
 > DELETE  12  @  12 : 13
 

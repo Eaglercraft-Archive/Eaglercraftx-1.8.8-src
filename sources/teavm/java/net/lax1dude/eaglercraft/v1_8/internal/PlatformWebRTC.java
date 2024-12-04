@@ -421,7 +421,7 @@ public class PlatformWebRTC {
 			final Object[] evtHandler = new Object[1];
 			evtHandler[0] = (EventListener<Event>) evt -> {
 				if (!iceCandidates.isEmpty()) {
-					Window.setTimeout(() -> ((EventListener<Event>)evtHandler[0]).handleEvent(evt), 1);
+					Window.setTimeout(() -> ((EventListener<Event>)evtHandler[0]).handleEvent(evt), 10);
 					return;
 				}
 				clientDataChannelClosed = false;
@@ -541,7 +541,7 @@ public class PlatformWebRTC {
 			final Object[] evtHandler = new Object[1];
 			evtHandler[0] = (EventListener<Event>) evt -> {
 				if (!iceCandidates.isEmpty()) {
-					Window.setTimeout(() -> ((EventListener<Event>)evtHandler[0]).handleEvent(evt), 1);
+					Window.setTimeout(() -> ((EventListener<Event>)evtHandler[0]).handleEvent(evt), 10);
 					return;
 				}
 				if (getChannel(evt) == null) return;

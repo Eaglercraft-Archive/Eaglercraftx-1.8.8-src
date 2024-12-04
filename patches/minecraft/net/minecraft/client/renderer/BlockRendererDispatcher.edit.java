@@ -18,7 +18,39 @@
 
 ~ 	public void renderBlockDamage(IBlockState state, BlockPos pos, EaglerTextureAtlasSprite texture,
 
-> CHANGE  55 : 59  @  55 : 61
+> INSERT  15 : 16  @  15
+
++ 			boolean res;
+
+> CHANGE  2 : 3  @  2 : 3
+
+~ 				res = false;
+
+> CHANGE  3 : 5  @  3 : 4
+
+~ 					res = this.fluidRenderer.renderFluid(blockAccess, state, pos, worldRendererIn);
+~ 					break;
+
+> CHANGE  1 : 3  @  1 : 2
+
+~ 					res = false;
+~ 					break;
+
+> CHANGE  2 : 4  @  2 : 3
+
+~ 					res = this.blockModelRenderer.renderModel(blockAccess, ibakedmodel, state, pos, worldRendererIn);
+~ 					break;
+
+> CHANGE  1 : 3  @  1 : 2
+
+~ 					res = false;
+~ 					break;
+
+> INSERT  2 : 3  @  2
+
++ 			return res;
+
+> CHANGE  24 : 28  @  24 : 30
 
 ~ 
 ~ 		try {

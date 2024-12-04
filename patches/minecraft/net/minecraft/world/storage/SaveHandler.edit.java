@@ -12,7 +12,9 @@
 ~ import java.util.List;
 ~ 
 
-> CHANGE  7 : 11  @  7 : 12
+> DELETE  4  @  4 : 5
+
+> CHANGE  2 : 6  @  2 : 7
 
 ~ import net.lax1dude.eaglercraft.v1_8.internal.vfs2.VFile2;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
@@ -40,9 +42,9 @@
 
 ~ 	public VFile2 getWorldDirectory() {
 
-> DELETE  4  @  4 : 19
+> DELETE  3  @  3 : 21
 
-> CHANGE  3 : 4  @  3 : 4
+> CHANGE  1 : 2  @  1 : 2
 
 ~ 		throw new RuntimeException("eagler");
 

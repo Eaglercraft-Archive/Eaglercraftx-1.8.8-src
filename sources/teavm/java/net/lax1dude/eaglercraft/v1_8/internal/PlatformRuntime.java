@@ -185,8 +185,7 @@ public class PlatformRuntime {
 		}
 
 		CSSStyleDeclaration style = root.getStyle();
-		style.setProperty("overflowX", "hidden");
-		style.setProperty("overflowY", "hidden");
+		style.setProperty("overflow", "hidden");
 
 		TeaVMClientConfigAdapter teavmCfg = (TeaVMClientConfigAdapter) getClientConfigAdapter();
 		boolean allowBootMenu = teavmCfg.isAllowBootMenu();
@@ -241,8 +240,7 @@ public class PlatformRuntime {
 		style.setProperty("position", "relative");
 		style.setProperty("width", "100%");
 		style.setProperty("height", "100%");
-		style.setProperty("overflowX", "hidden");
-		style.setProperty("overflowY", "hidden");
+		style.setProperty("overflow", "hidden");
 		root.appendChild(parent);
 		ClientMain.configRootElement = parent; // hack
 
@@ -421,7 +419,7 @@ public class PlatformRuntime {
 			Collections.sort(exts);
 			logger.info("Unlocked the following OpenGL ES extensions:");
 			for(int i = 0, l = exts.size(); i < l; ++i) {
-				logger.info(" - " + exts.get(i));
+				logger.info(" - {}", exts.get(i));
 			}
 		}
 		
@@ -443,7 +441,7 @@ public class PlatformRuntime {
 
 		if(allowBootMenu && BootMenuEntryPoint.checkShouldLaunchFlag(win)) {
 			logger.info("Boot menu enable flag is set, entering boot menu...");
-			enterBootMenu();
+			enterBootMenu(BootMenuEntryPoint.wasManuallyInvoked);
 		}
 
 		byte[] finalLoadScreen = PlatformAssets.getResourceBytes("/assets/eagler/eagtek.png");
@@ -1134,7 +1132,7 @@ public class PlatformRuntime {
 			if(PlatformInput.keyboardGetEventKeyState()) {
 				int key = PlatformInput.keyboardGetEventKey();
 				if(key == KeyboardConstants.KEY_DELETE || key == KeyboardConstants.KEY_BACK) {
-					enterBootMenu();
+					enterBootMenu(true);
 				}
 			}
 		}
@@ -1143,7 +1141,7 @@ public class PlatformRuntime {
 	@JSBody(params = {}, script = "delete __isEaglerX188Running;")
 	private static native void clearRunningFlag();
 
-	static void enterBootMenu() {
+	static void enterBootMenu(boolean manual) {
 		if(!getClientConfigAdapter().isAllowBootMenu()) {
 			throw new IllegalStateException("Boot menu is disabled");
 		}
@@ -1170,7 +1168,7 @@ public class PlatformRuntime {
 		immediateContinueChannel = null;
 		clearRunningFlag();
 		logger.info("Firing boot menu escape signal...");
-		throw new TeaVMEnterBootMenuException();
+		throw new TeaVMEnterBootMenuException(manual);
 	}
 
 	public static void postCreate() {

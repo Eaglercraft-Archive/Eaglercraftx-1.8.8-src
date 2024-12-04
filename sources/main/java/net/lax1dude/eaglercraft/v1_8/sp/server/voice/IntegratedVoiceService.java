@@ -139,13 +139,23 @@ public class IntegratedVoiceService {
 	}
 
 	public void handleVoiceSignalPacketTypeConnect(EntityPlayerMP sender) {
-		if (voicePlayers.containsKey(sender.getUniqueID())) {
+		EaglercraftUUID senderUuid = sender.getUniqueID();
+		if (voicePlayers.containsKey(senderUuid)) {
 			return;
 		}
 		boolean hasNoOtherPlayers = voicePlayers.isEmpty();
-		voicePlayers.put(sender.getUniqueID(), sender);
+		voicePlayers.put(senderUuid, sender);
 		if (hasNoOtherPlayers) {
 			return;
+		}
+		GameMessagePacket v3p = null;
+		GameMessagePacket v4p = null;
+		for(EntityPlayerMP conn : voicePlayers.values()) {
+			if(conn.playerNetServerHandler.getEaglerMessageProtocol().ver <= 3) {
+				conn.playerNetServerHandler.sendEaglerMessage(v3p == null ? (v3p = new SPacketVoiceSignalConnectV3EAG(senderUuid.msb, senderUuid.lsb, true, false)) : v3p);
+			} else {
+				conn.playerNetServerHandler.sendEaglerMessage(v4p == null ? (v4p = new SPacketVoiceSignalConnectAnnounceV4EAG(senderUuid.msb, senderUuid.lsb)) : v4p);
+			}
 		}
 		Collection<SPacketVoiceSignalGlobalEAG.UserData> userDatas = new ArrayList<>(voicePlayers.size());
 		for(EntityPlayerMP player : voicePlayers.values()) {

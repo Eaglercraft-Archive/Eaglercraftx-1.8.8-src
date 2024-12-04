@@ -35,6 +35,7 @@ import net.lax1dude.eaglercraft.v1_8.internal.teavm.TeaVMUtils;
 import net.lax1dude.eaglercraft.v1_8.internal.vfs2.VFile2;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
+import net.lax1dude.eaglercraft.v1_8.sp.server.IWASMCrashCallback;
 
 /**
  * Copyright (c) 2022-2024 lax1dude. All Rights Reserved.
@@ -289,6 +290,10 @@ public class ServerPlatformSingleplayer {
 		synchronized(messageQueue) {
 			messageQueue.add(pkt);
 		}
+	}
+
+	public static void setCrashCallbackWASM(IWASMCrashCallback callback) {
+		
 	}
 
 }

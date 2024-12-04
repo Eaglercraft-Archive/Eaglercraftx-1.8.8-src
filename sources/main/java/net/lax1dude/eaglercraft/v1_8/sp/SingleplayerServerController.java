@@ -15,6 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.internal.EnumEaglerConnectionState;
+import net.lax1dude.eaglercraft.v1_8.internal.EnumPlatformType;
 import net.lax1dude.eaglercraft.v1_8.internal.IPCPacketData;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformApplication;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
@@ -84,6 +85,7 @@ public class SingleplayerServerController implements ISaveFormat {
 			issuesDetected.clear();
 			statusState = IntegratedServerState.WORLD_WORKER_BOOTING;
 			loggingState = true;
+			callFailed = false;
 			boolean singleThreadSupport = ClientPlatformSingleplayer.isSingleThreadModeSupported();
 			if(!singleThreadSupport && forceSingleThread) {
 				throw new UnsupportedOperationException("Single thread mode is not supported!");
@@ -294,10 +296,12 @@ public class SingleplayerServerController implements ISaveFormat {
 			}
 		}
 
-		boolean logWindowState = PlatformApplication.isShowingDebugConsole();
-		if(loggingState != logWindowState) {
-			loggingState = logWindowState;
-			sendIPCPacket(new IPCPacket1BEnableLogging(logWindowState));
+		if(EagRuntime.getPlatformType() == EnumPlatformType.JAVASCRIPT) {
+			boolean logWindowState = PlatformApplication.isShowingDebugConsole();
+			if(loggingState != logWindowState) {
+				loggingState = logWindowState;
+				sendIPCPacket(new IPCPacket1BEnableLogging(logWindowState));
+			}
 		}
 
 		if(ClientPlatformSingleplayer.isRunningSingleThreadMode()) {

@@ -314,7 +314,9 @@
 
 ~ 	public EntityPlayer getPlayerEntityByUUID(EaglercraftUUID uuid) {
 
-> CHANGE  197 : 198  @  197 : 198
+> DELETE  13  @  13 : 17
+
+> CHANGE  180 : 181  @  180 : 181
 
 ~ 	public EaglercraftRandom setRandomSeed(int parInt1, int parInt2, int parInt3) {
 

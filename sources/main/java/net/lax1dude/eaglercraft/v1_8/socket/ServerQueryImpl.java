@@ -65,7 +65,7 @@ class ServerQueryImpl implements IServerQuery {
 				IWebSocketFrame frame = lst.get(i);
 				alive = true;
 				if(pingTimer == -1) {
-					pingTimer = PlatformRuntime.steadyTimeMillis() - pingStart;
+					pingTimer = frame.getTimestamp() - pingStart;
 					if(pingTimer < 1) {
 						pingTimer = 1;
 					}

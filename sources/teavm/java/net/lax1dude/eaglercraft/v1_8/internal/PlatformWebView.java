@@ -200,7 +200,6 @@ public class PlatformWebView {
 			try {
 				List<String> sandboxArgs = new ArrayList<>();
 				sandboxArgs.add("allow-downloads");
-				sandboxArgs.add("allow-same-origin");
 				if(options.scriptEnabled) {
 					sandboxArgs.add("allow-scripts");
 					sandboxArgs.add("allow-pointer-lock");

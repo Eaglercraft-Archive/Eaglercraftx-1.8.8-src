@@ -202,6 +202,7 @@ public class ClientMain {
 			}catch(TeaVMEnterBootMenuException ee) {
 				try {
 					systemOut.println("ClientMain: [INFO] launching eaglercraftx boot menu");
+					BootMenuEntryPoint.wasManuallyInvoked = ee.isManual;
 					BootMenuEntryPoint.launchMenu(Window.current(), configRootElement);
 				}catch(Throwable t) {
 					showCrashScreen("Failed to enter boot menu!", t);
@@ -550,6 +551,7 @@ public class ClientMain {
 			}
 			
 			if(el == null) {
+				Window.alert("Compatibility error: " + t);
 				System.err.println("Compatibility error: " + t);
 				return;
 			}
@@ -573,11 +575,9 @@ public class ClientMain {
 					+ "<p><br /><span style=\"font-size:1.1em;border-bottom:1px dashed #AAAAAA;padding-bottom:5px;\">Things you can try:</span></p>"
 					+ "<ol>"
 					+ "<li><span style=\"font-weight:bold;\">Just try using Eaglercraft on a different device</span>, it isn't a bug it's common sense</li>"
-					+ "<li style=\"margin-top:7px;\">If you are on a mobile device, please try a proper desktop or a laptop computer</li>"
-					+ "<li style=\"margin-top:7px;\">If you are using a device with no mouse cursor, please use a device with a mouse cursor</li>"
+					+ "<li style=\"margin-top:7px;\">If this screen just appeared randomly, try restarting your browser or device</li>"
 					+ "<li style=\"margin-top:7px;\">If you are not using Chrome/Edge, try installing the latest Google Chrome</li>"
 					+ "<li style=\"margin-top:7px;\">If your browser is out of date, please update it to the latest version</li>"
-					+ "<li style=\"margin-top:7px;\">If you are using an old OS such as Windows 7, please try Windows 10 or 11</li>"
 					+ "</ol>"
 					+ "</div>");
 			

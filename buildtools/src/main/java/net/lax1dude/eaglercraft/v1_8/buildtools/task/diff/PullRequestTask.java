@@ -72,6 +72,11 @@ public class PullRequestTask {
 		File originalSourceTeaVMC = new File(EaglerBuildTools.repositoryRoot, "sources/teavmc-classpath/resources");
 		File originalSourceBootMenu = new File(EaglerBuildTools.repositoryRoot, "sources/teavm-boot-menu/java");
 		File originalSourceLWJGL = new File(EaglerBuildTools.repositoryRoot, "sources/lwjgl/java");
+		File originalSourceWASMGCTeaVMJava = new File(EaglerBuildTools.repositoryRoot, "sources/wasm-gc-teavm/java");
+		File originalSourceWASMGCTeaVMJS = new File(EaglerBuildTools.repositoryRoot, "sources/wasm-gc-teavm/js");
+		File originalSourceWASMGCTeaVMBootstrapJS = new File(EaglerBuildTools.repositoryRoot, "sources/wasm-gc-teavm-bootstrap/js");
+		File originalSourceWASMGCTeaVMLoaderC = new File(EaglerBuildTools.repositoryRoot, "sources/wasm-gc-teavm-loader/c");
+		File originalSourceWASMGCTeaVMLoaderJS = new File(EaglerBuildTools.repositoryRoot, "sources/wasm-gc-teavm-loader/js");
 		File originalUnpatchedSourceResourcesJar = new File(EaglerBuildToolsConfig.getTemporaryDirectory(), "MinecraftSrc/minecraft_res.jar");
 		File originalSourceResourcesJar = new File(EaglerBuildToolsConfig.getTemporaryDirectory(), "MinecraftSrc/minecraft_res_patch.jar");
 		File originalSourceResources = new File(EaglerBuildTools.repositoryRoot, "sources/resources");
@@ -83,6 +88,11 @@ public class PullRequestTask {
 		File diffFromBootMenu = new File(EaglerBuildToolsConfig.getWorkspaceDirectory(), "src/teavm-boot-menu/java");
 		File diffFromTeaVMC = new File(EaglerBuildToolsConfig.getWorkspaceDirectory(), "src/teavmc-classpath/resources");
 		File diffFromLWJGL = new File(EaglerBuildToolsConfig.getWorkspaceDirectory(), "src/lwjgl/java");
+		File diffFromWASMGCTeaVMJava = new File(EaglerBuildToolsConfig.getWorkspaceDirectory(), "src/wasm-gc-teavm/java");
+		File diffFromWASMGCTeaVMJS = new File(EaglerBuildToolsConfig.getWorkspaceDirectory(), "src/wasm-gc-teavm/js");
+		File diffFromWASMGCTeaVMBootstrapJS = new File(EaglerBuildToolsConfig.getWorkspaceDirectory(), "src/wasm-gc-teavm-bootstrap/js");
+		File diffFromWASMGCTeaVMLoaderC = new File(EaglerBuildToolsConfig.getWorkspaceDirectory(), "src/wasm-gc-teavm-loader/c");
+		File diffFromWASMGCTeaVMLoaderJS = new File(EaglerBuildToolsConfig.getWorkspaceDirectory(), "src/wasm-gc-teavm-loader/js");
 		File diffFromResources = new File(EaglerBuildToolsConfig.getWorkspaceDirectory(), "desktopRuntime/resources");
 		File pullRequestTo = new File(EaglerBuildTools.repositoryRoot, "pullrequest");
 		
@@ -162,6 +172,36 @@ public class PullRequestTask {
 			flag = true;
 		}
 		System.out.println("Found " + i + " changed files in /src/lwjgl/java/");
+		
+		i = copyAllModified(diffFromWASMGCTeaVMJava, originalSourceWASMGCTeaVMJava);
+		if(i > 0) {
+			flag = true;
+		}
+		System.out.println("Found " + i + " changed files in /src/wasm-gc-teavm/java/");
+		
+		i = copyAllModified(diffFromWASMGCTeaVMJS, originalSourceWASMGCTeaVMJS);
+		if(i > 0) {
+			flag = true;
+		}
+		System.out.println("Found " + i + " changed files in /src/wasm-gc-teavm/js/");
+		
+		i = copyAllModified(diffFromWASMGCTeaVMBootstrapJS, originalSourceWASMGCTeaVMBootstrapJS);
+		if(i > 0) {
+			flag = true;
+		}
+		System.out.println("Found " + i + " changed files in /src/wasm-gc-teavm-bootstrap/js/");
+		
+		i = copyAllModified(diffFromWASMGCTeaVMLoaderC, originalSourceWASMGCTeaVMLoaderC);
+		if(i > 0) {
+			flag = true;
+		}
+		System.out.println("Found " + i + " changed files in /src/wasm-gc-teavm-loader/c/");
+		
+		i = copyAllModified(diffFromWASMGCTeaVMLoaderJS, originalSourceWASMGCTeaVMLoaderJS);
+		if(i > 0) {
+			flag = true;
+		}
+		System.out.println("Found " + i + " changed files in /src/wasm-gc-teavm-loader/js/");
 		
 		i = createDiffFiles(null, minecraftJavadocTmp, originalUnpatchedSourceMainJar, 
 				originalSourceMainJar, diffFromGame, pullRequestToMain, true);

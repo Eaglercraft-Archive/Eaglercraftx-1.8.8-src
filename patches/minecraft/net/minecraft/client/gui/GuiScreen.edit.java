@@ -85,7 +85,7 @@
 
 + 		long millis = EagRuntime.steadyTimeMillis();
 + 		long closeKeyTimeout = millis - showingCloseKey;
-+ 		if (closeKeyTimeout < 3000l) {
++ 		if (closeKeyTimeout < 3000l && showingCloseKey != 0l) {
 + 			int alpha1 = 0xC0000000;
 + 			int alpha2 = 0xFF000000;
 + 			if (closeKeyTimeout > 2500l) {

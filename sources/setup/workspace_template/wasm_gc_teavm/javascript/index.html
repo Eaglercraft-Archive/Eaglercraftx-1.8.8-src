@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html style="width:100%;height:100%;background-color:black;">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" />
+		<meta name="description" content="EaglercraftX 1.8 WASM-GC test directory HTML page" />
+		<meta name="keywords" content="eaglercraft, eaglercraftx, minecraft, 1.8, 1.8.8" />
+		<title>EaglercraftX 1.8 WASM-GC</title>
+		<meta property="og:locale" content="en-US" />
+		<meta property="og:type" content="website" />
+		<meta property="og:title" content="EaglercraftX 1.8 WASM-GC" />
+		<meta property="og:description" content="test directory HTML page" />
+		<link type="image/png" rel="shortcut icon" href="favicon.png" />
+		<script type="text/javascript">
+			"use strict";
+			window.addEventListener("load", async function() {
+				if(window.location.href.indexOf("file:") === 0) {
+					alert("HTTP please, do not open this file locally, run a local HTTP server and load it via HTTP");
+				}else if(typeof WebAssembly.Suspending === "undefined") {
+					alert("JSPI is not enabled, please enable it in chrome://flags");
+				}else {
+					const splash = document.createElement("div");
+					splash.style.width = "100%";
+					splash.style.height = "100%";
+					splash.style.imageRendering = "pixelated";
+					splash.style.background = "center / contain no-repeat url(splash.png), 0px 0px / 1000000% 1000000% no-repeat url(splash.png) white";
+					document.body.appendChild(splash);
+				
+					console.log("Downloading assets.epk...");
+					var assetsEPK;
+					try {
+						assetsEPK = new Uint8Array(await fetch("assets.epk").then(resp => resp.arrayBuffer()));
+					}catch(ex) {
+						alert("Could not download assets.epk!");
+						console.error("Could not download assets.epk!");
+						console.error(ex);
+						return;
+					}
+					console.log("Downloaded " + assetsEPK.length + " byte file");
+					
+					const relayId = Math.floor(Math.random() * 3);
+					const eaglercraftXOpts = {
+						demoMode: false,
+						localesURI: "lang/",
+						worldsDB: "worlds",
+						servers: [
+							{ addr: "ws://localhost:8081/", name: "Local test server" }
+						],
+						relays: [
+							{ addr: "wss://relay.deev.is/", comment: "lax1dude relay #1", primary: relayId === 0 },
+							{ addr: "wss://relay.lax1dude.net/", comment: "lax1dude relay #2", primary: relayId === 1 },
+							{ addr: "wss://relay.shhnowisnottheti.me/", comment: "ayunami relay #1", primary: relayId === 2 }
+						]
+					};
+					
+					window.__eaglercraftXLoaderContext = {
+						getEaglercraftXOpts: function() {
+							return eaglercraftXOpts;
+						},
+						getEagRuntimeJSURL: function() {
+							return "eagruntime.js";
+						},
+						getClassesWASMURL: function() {
+							return "classes.wasm";
+						},
+						getClassesDeobfWASMURL: function() {
+							return "classes.wasm-deobfuscator.wasm";
+						},
+						getClassesTEADBGURL: function() {
+							return "classes.wasm.teadbg";
+						},
+						getEPKFiles: function() {
+							return [{
+								name: "assets.epk",
+								path: "",
+								data: assetsEPK
+							}];
+						},
+						getRootElement: function() {
+							return document.body;
+						},
+						getMainArgs: function() {
+							return [];
+						},
+						getImageURL: function(idx) {
+							switch(idx) {
+							case 0:
+								return "splash.png";
+							case 1:
+								return "pressAnyKey.png";
+							case 2:
+								return "crashLogo.png";
+							case 3:
+								return "favicon.png";
+							default:
+								return null;
+							}
+						},
+						runMain: function(fn) {
+							setTimeout(fn, 10);
+						}
+					};
+
+					var q = window.location.search;
+					if((typeof q === "string") && q[0] === "?" && (typeof URLSearchParams !== "undefined")) {
+						q = new URLSearchParams(q);
+						var s = q.get("server");
+						if(s) eaglercraftXOpts.joinServer = s;
+					}
+					
+					const scriptElement = document.createElement("script");
+					scriptElement.type = "text/javascript";
+					scriptElement.src = "eagruntime.js";
+					document.head.appendChild(scriptElement);
+				}
+			});
+		</script>
+	</head>
+	<body style="margin:0px;width:100%;height:100%;overflow:hidden;background-color:black;" id="game_frame"></body>
+</html>

@@ -39,11 +39,9 @@ class VFileOutputStream extends EaglerOutputStream {
 			try {
 				copyBuffer.put(buf, 0, count);
 				copyBuffer.flip();
-				try {
-					vfsFile.getFS().eaglerWrite(vfsFile.path, copyBuffer);
-				}catch(Throwable t) {
-					throw new IOException("Could not write stream contents to file!", t);
-				}
+				vfsFile.getFS().eaglerWrite(vfsFile.path, copyBuffer);
+			}catch(Throwable t) {
+				throw new IOException("Could not write stream contents to file!", t);
 			}finally {
 				PlatformRuntime.freeByteBuffer(copyBuffer);
 			}

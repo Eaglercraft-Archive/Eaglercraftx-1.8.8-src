@@ -48,11 +48,13 @@ public class BootMenuEntryPoint {
 	private static native void setHasAlreadyBooted();
 
 	public static boolean checkShouldLaunchFlag(Window win) {
+		wasManuallyInvoked = false;
 		int flag = BootMenuDataManager.getBootMenuFlags(win);
 		if(flag == -1) {
 			return IBootMenuConfigAdapter.instance.isShowBootMenuOnLaunch() && !getHasAlreadyBooted();
 		}
 		if((flag & 2) != 0) {
+			wasManuallyInvoked = true;
 			BootMenuDataManager.setBootMenuFlags(win, flag & ~2);
 			setHasAlreadyBooted();
 			return true;
@@ -63,6 +65,7 @@ public class BootMenuEntryPoint {
 	private static boolean hasInit = false;
 	private static byte[] signatureData = null;
 	private static byte[] bundleData = null;
+	public static boolean wasManuallyInvoked = false;
 
 	public static void launchMenu(Window parentWindow, HTMLElement parentElement) {
 		signatureData = PlatformUpdateSvc.getClientSignatureData();

@@ -1569,7 +1569,7 @@ public class PlatformInput {
 				isOnMobilePressAnyKey = true;
 				setupAnyKeyScreenMobile(allowBootMenu);
 				if(pressAnyKeyScreenMobile() && allowBootMenu) {
-					PlatformRuntime.enterBootMenu();
+					PlatformRuntime.enterBootMenu(true);
 				}
 			}finally {
 				isOnMobilePressAnyKey = false;

@@ -26,13 +26,19 @@
 
 ~ 	private String[] stacktrace;
 
-> INSERT  4 : 5  @  4
+> INSERT  2 : 5  @  2
+
++ 		if (causeThrowable == null) {
++ 			throw new NullPointerException("Crash report created for null throwable!");
++ 		}
+
+> INSERT  2 : 3  @  2
 
 + 		this.stacktrace = EagRuntime.getStackTraceElements(causeThrowable);
 
 > CHANGE  26 : 37  @  26 : 54
 
-~ 		if (EagRuntime.getPlatformType() != EnumPlatformType.JAVASCRIPT) {
+~ 		if (EagRuntime.getPlatformType() == EnumPlatformType.DESKTOP) {
 ~ 			this.theReportCategory.addCrashSectionCallable("Memory", new Callable<String>() {
 ~ 				public String call() {
 ~ 					long i = EagRuntime.maxMemory();

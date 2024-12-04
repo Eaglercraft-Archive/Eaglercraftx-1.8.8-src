@@ -485,6 +485,8 @@ public class EaglerIntegratedServerWorker {
 			// signal thread startup successful
 			sendIPCPacket(new IPCPacketFFProcessKeepAlive(0xFF));
 			
+			ServerPlatformSingleplayer.setCrashCallbackWASM(EaglerIntegratedServerWorker::sendIntegratedServerCrashWASMCB);
+			
 			while(true) {
 				mainLoop(false);
 				ServerPlatformSingleplayer.immediateContinue();
@@ -523,6 +525,13 @@ public class EaglerIntegratedServerWorker {
 
 	public static void singleThreadUpdate() {
 		mainLoop(true);
+	}
+
+	public static void sendIntegratedServerCrashWASMCB(String stringValue, boolean terminated) {
+		sendIPCPacket(new IPCPacket15Crashed(stringValue));
+		if(terminated) {
+			sendIPCPacket(new IPCPacketFFProcessKeepAlive(IPCPacketFFProcessKeepAlive.EXITED));
+		}
 	}
 
 }

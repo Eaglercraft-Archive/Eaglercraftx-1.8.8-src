@@ -10,7 +10,7 @@ public class EaglercraftVersion {
 	/// Customize these to fit your fork:
 	
 	public static final String projectForkName = "EaglercraftX";
-	public static final String projectForkVersion = "u43";
+	public static final String projectForkVersion = "u44";
 	public static final String projectForkVendor = "lax1dude";
 	
 	public static final String projectForkURL = "https://gitlab.com/lax1dude/eaglercraftx-1.8";
@@ -20,20 +20,20 @@ public class EaglercraftVersion {
 	public static final String projectOriginName = "EaglercraftX";
 	public static final String projectOriginAuthor = "lax1dude";
 	public static final String projectOriginRevision = "1.8";
-	public static final String projectOriginVersion = "u43";
+	public static final String projectOriginVersion = "u44";
 	
 	public static final String projectOriginURL = "https://gitlab.com/lax1dude/eaglercraftx-1.8"; // rest in peace
 	
 	// EPK Version Identifier
 	
-	public static final String EPKVersionIdentifier = "u43"; // Set to null to disable EPK version check
+	public static final String EPKVersionIdentifier = "u44"; // Set to null to disable EPK version check
 	
 	// Updating configuration
 	
 	public static final boolean enableUpdateService = true;
 
 	public static final String updateBundlePackageName = "net.lax1dude.eaglercraft.v1_8.client";
-	public static final int updateBundlePackageVersionInt = 43;
+	public static final int updateBundlePackageVersionInt = 44;
 
 	public static final String updateLatestLocalStorageKey = "latestUpdate_" + updateBundlePackageName;
 
@@ -52,8 +52,8 @@ public class EaglercraftVersion {
 	// Miscellaneous variables:
 
 	public static final String mainMenuStringA = "Minecraft 1.8.8";
-	public static final String mainMenuStringB = projectOriginName + " " +
-			projectOriginRevision + "-" + projectOriginVersion + " ultimate";
+	public static final String mainMenuStringB = projectOriginName + " " + projectOriginRevision + "-"
+			+ projectOriginVersion + " ultimate [" + EagRuntime.getPlatformType().getName() + "]";
 	public static final String mainMenuStringC = "";
 	public static final String mainMenuStringD = "Resources Copyright Mojang AB";
 
@@ -62,6 +62,9 @@ public class EaglercraftVersion {
 
 	public static final String mainMenuStringG = "Collector's Edition";
 	public static final String mainMenuStringH = "PBR Shaders";
+
+	public static final String screenRecordingFilePrefix = projectOriginName + " "
+			+ projectOriginRevision + "-" + projectOriginVersion;
 
 	public static final long demoWorldSeed = (long) "North Carolina".hashCode();
 

@@ -21,14 +21,14 @@
 
 ## Getting Started:
 
-### To compile the latest version of the client, on Windows:
+### To compile the latest version of the JavaScript client, on Windows:
 
 1. Make sure you have at least Java 11 installed and added to your PATH, it is recommended to use Java 17
 2. Download (clone) this repository to your computer
 3. Double click `CompileLatestClient.bat`, a GUI resembling a classic windows installer should open
 4. Follow the steps shown to you in the new window to finish compiling
 
-### To compile the latest version of the client, on Linux/macOS:
+### To compile the latest version of the JavaScript client, on Linux/macOS:
 
 1. Make sure you have at least Java 11 installed, it is recommended to use Java 17
 2. Download (clone) this repository to your computer
@@ -37,9 +37,21 @@
 5. Type `./CompileLatestClient.sh` and hit enter, a GUI resembling a classic windows installer should open
 6. Follow the steps shown to you in the new window to finish compiling
 
+### To set up the development environment
+
+1. Prepare the required files in the mcp918 folder ([readme](mcp918/readme.txt))
+2. Run the `build_init` script
+3. Run the `build_make_workspace` script
+
 ## Browser Compatibility
 
-EaglercraftX 1.8 is currently known to work on browsers as old as Chrome 38 on Windows XP, the game supports both WebGL 1.0 and WebGL 2.0 however features such as dynamic lighting and PBR shaders require WebGL 2.0. The game also supports mobile browsers that don't have a keyboard or mouse, the game will enter touch screen mode automatically when touch input is detected. The game also includes an embedded OGG codec (JOrbis) for loading audio files on iOS where the browsers don't support loading OGG files in an AudioContext.
+The JavaScript runtime of EaglercraftX 1.8 is currently known to work on browsers as old as Chrome 38 on Windows XP, the game supports both WebGL 1.0 and WebGL 2.0 however features such as dynamic lighting and PBR shaders require WebGL 2.0. The game also supports mobile browsers that don't have a keyboard or mouse, the game will enter touch screen mode automatically when touch input is detected. The game also includes an embedded OGG codec (JOrbis) for loading audio files on iOS where the browsers don't support loading OGG files in an AudioContext.
+
+## WebAssembly GC Support
+
+EaglercraftX 1.8 also has an experimental WebAssembly GC (WASM-GC) runtime, almost all of the features supported on the JavaScript runtime are also supported on the WebAssembly GC runtime, however it is still incompatible with several major browsers (especially Safari) and will not run in Chrome unless you can access the `chrome://flags` menu or request an origin trial token from Google for your website. Its based on experimental technology and may still crash sometimes due to browser bugs or unresolved issues in the Java to WASM compiler. Hopefully in the coming months the required feature (JSPI, WebAssembly JavaScript Promise Integration) will become enabled by default on the Chrome browser. It performs significantly better than the JavaScript client, around 50% more FPS and TPS in some cases, and will hopefully replace it someday. Just make sure you enable VSync when you play it, otherwise the game will run "too fast" and choke the browser's event loop, causing input lag.
+
+You can compile the WebAssembly GC runtime by creating a development environment (workspace) and reading the README in the "wasm_gc_teavm" folder.
 
 ## Singleplayer
 
@@ -200,6 +212,7 @@ The default eaglercraftXOpts values is this:
 - `ramdiskMode:` if worlds and resource packs should be stored in RAM instead of IndexedDB
 - `singleThreadMode:` if the game should run the client and integrated server in the same context instead of creating a worker object
 - `enableEPKVersionCheck:` if the game should attempt to bypass the browser's cache and retry downloading assets.epk when its outdated
+- `enforceVSync:` (WASM only) if the game should automatically re-enable VSync at launch if its disabled
 - `hooks:` can be used to define JavaScript callbacks for certain events
     * `localStorageSaved:` JavaScript callback to save local storage keys (key, data)
     * `localStorageLoaded:` JavaScript callback to load local storage keys (key) returns data

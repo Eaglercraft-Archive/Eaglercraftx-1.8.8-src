@@ -82,7 +82,7 @@ public class LANServerController {
 					}
 				}
 				EagUtils.sleep(50);
-			}while(EagRuntime.steadyTimeMillis() - millis < 1000l);
+			}while(EagRuntime.steadyTimeMillis() - millis < 2500l);
 			logger.info("Relay [{}] relay provide ICE servers timeout", sock.getURI());
 			closeLAN();
 			return null;

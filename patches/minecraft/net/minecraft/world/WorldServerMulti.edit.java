@@ -14,4 +14,6 @@
 ~ 	public WorldServerMulti(MinecraftServer server, ISaveHandler saveHandlerIn, int dimensionId, WorldServer delegate) {
 ~ 		super(server, saveHandlerIn, new DerivedWorldInfo(delegate.getWorldInfo()), dimensionId);
 
+> DELETE  32  @  32 : 35
+
 > EOF

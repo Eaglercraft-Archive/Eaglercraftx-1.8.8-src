@@ -199,6 +199,11 @@ public class DesktopClientConfigAdapter implements IClientConfigAdapter {
 	}
 
 	@Override
+	public boolean isEnforceVSync() {
+		return false;
+	}
+
+	@Override
 	public IClientConfigAdapterHooks getHooks() {
 		return hooks;
 	}

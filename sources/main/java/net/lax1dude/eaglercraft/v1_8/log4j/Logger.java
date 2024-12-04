@@ -159,6 +159,10 @@ public class Logger {
 	}
 	
 	private void logExcp(final Level level, String h, Throwable msg) {
+		if(msg == null) {
+			log(level, "{}: <null>", h);
+			return;
+		}
 		log(level, "{}: {}", h, msg.toString());
 		EagRuntime.getStackTrace(msg, (e) -> log(level, "    at {}", e));
 		PlatformRuntime.printJSExceptionIfBrowser(msg);

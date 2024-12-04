@@ -108,13 +108,21 @@
 
 ~ 			EaglercraftRandom random = new EaglercraftRandom(this.getSeed());
 
-> CHANGE  62 : 65  @  62 : 63
+> CHANGE  49 : 50  @  49 : 50
+
+~ 	public void saveAllChunks(boolean progressCallback, IProgressUpdate parIProgressUpdate) {
+
+> CHANGE  12 : 15  @  12 : 13
 
 ~ 			List<Chunk> lst = Lists.newArrayList(this.theChunkProviderServer.func_152380_a());
 ~ 			for (int i = 0, l = lst.size(); i < l; ++i) {
 ~ 				Chunk chunk = lst.get(i);
 
-> CHANGE  79 : 82  @  79 : 80
+> CHANGE  14 : 15  @  14 : 16
+
+~ 	protected void saveLevel() {
+
+> CHANGE  63 : 66  @  63 : 64
 
 ~ 		List<EntityPlayer> lst = this.playerEntities;
 ~ 		for (int i = 0, l = lst.size(); i < l; ++i) {

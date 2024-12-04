@@ -8,7 +8,6 @@ import net.lax1dude.eaglercraft.v1_8.internal.vfs2.VFile2;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 import net.minecraft.world.ChunkCoordIntPair;
-import net.minecraft.world.MinecraftException;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.AnvilChunkLoader;
@@ -88,7 +87,7 @@ public class EaglerChunkLoader extends AnvilChunkLoader {
 	}
 
 	@Override
-	public void saveChunk(World var1, Chunk var2) throws IOException, MinecraftException {
+	public void saveChunk(World var1, Chunk var2) throws IOException {
 		NBTTagCompound chunkData = new NBTTagCompound();
 		this.writeChunkToNBT(var2, var1, chunkData);
 		NBTTagCompound fileData = new NBTTagCompound();

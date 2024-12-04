@@ -69,7 +69,7 @@ public class TeaVMClientConfigAdapter implements IClientConfigAdapter, IBootMenu
 	private boolean openDebugConsoleOnLaunch = false;
 	private boolean fixDebugConsoleUnloadListener = false;
 	private boolean forceWebViewSupport = false;
-	private boolean enableWebViewCSP = false;
+	private boolean enableWebViewCSP = true;
 	private boolean autoFixLegacyStyleAttr = false;
 	private boolean showBootMenuOnLaunch = false;
 	private boolean bootMenuBlocksUnsignedClients = false;
@@ -77,7 +77,7 @@ public class TeaVMClientConfigAdapter implements IClientConfigAdapter, IBootMenu
 	private boolean forceProfanityFilter = false;
 	private boolean forceWebGL1 = false;
 	private boolean forceWebGL2 = false;
-	private boolean allowExperimentalWebGL1 = false;
+	private boolean allowExperimentalWebGL1 = true;
 	private boolean useWebGLExt = true;
 	private boolean useDelayOnSwap = false;
 	private boolean useJOrbisAudioDecoder = false;
@@ -548,6 +548,11 @@ public class TeaVMClientConfigAdapter implements IClientConfigAdapter, IBootMenu
 	@Override
 	public boolean isRamdiskMode() {
 		return ramdiskMode;
+	}
+
+	@Override
+	public boolean isEnforceVSync() {
+		return false;
 	}
 
 	@Override

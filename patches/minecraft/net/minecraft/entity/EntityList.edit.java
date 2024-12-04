@@ -7,12 +7,14 @@
 
 > DELETE  2  @  2 : 4
 
-> CHANGE  4 : 11  @  4 : 8
+> CHANGE  4 : 13  @  4 : 8
 
 ~ 
 ~ import com.google.common.collect.Lists;
 ~ import com.google.common.collect.Maps;
 ~ 
+~ import net.lax1dude.eaglercraft.v1_8.EagRuntime;
+~ import net.lax1dude.eaglercraft.v1_8.internal.EnumPlatformType;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 ~ import net.lax1dude.eaglercraft.v1_8.minecraft.EntityConstructor;
@@ -126,7 +128,22 @@
 
 ~ 		Set<String> set = stringToClassMapping.keySet();
 
-> CHANGE  29 : 97  @  29 : 91
+> CHANGE  2 : 9  @  2 : 6
+
+~ 		// TODO: Eventually TeaVM will support getModifiers
+~ 		if (EagRuntime.getPlatformType() != EnumPlatformType.WASM_GC) {
+~ 			for (String s : set) {
+~ 				Class oclass = (Class) stringToClassMapping.get(s);
+~ 				if ((oclass.getModifiers() & 1024) != 1024) {
+~ 					arraylist.add(s);
+~ 				}
+
+> INSERT  1 : 3  @  1
+
++ 		} else {
++ 			arraylist.addAll(set);
+
+> CHANGE  22 : 90  @  22 : 84
 
 ~ 		addMapping(EntityItem.class, EntityItem::new, "Item", 1);
 ~ 		addMapping(EntityXPOrb.class, EntityXPOrb::new, "XPOrb", 2);

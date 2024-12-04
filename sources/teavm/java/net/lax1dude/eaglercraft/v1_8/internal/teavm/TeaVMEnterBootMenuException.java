@@ -17,4 +17,10 @@ package net.lax1dude.eaglercraft.v1_8.internal.teavm;
  */
 public class TeaVMEnterBootMenuException extends RuntimeException {
 
+	public final boolean isManual;
+
+	public TeaVMEnterBootMenuException(boolean manual) {
+		this.isManual = manual;
+	}
+
 }

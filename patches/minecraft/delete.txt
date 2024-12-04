@@ -1,4 +1,4 @@
-# 145 files to delete:
+# 146 files to delete:
 net/minecraft/client/renderer/VertexBufferUploader.java
 net/minecraft/realms/DisconnectedRealmsScreen.java
 net/minecraft/client/stream/Metadata.java
@@ -99,6 +99,7 @@ net/minecraft/realms/RealmsAnvilLevelStorageSource.java
 net/minecraft/realms/RealmsSliderButton.java
 net/minecraft/world/storage/ThreadedFileIOBase.java
 net/minecraft/client/renderer/vertex/VertexBuffer.java
+net/minecraft/world/MinecraftException.java
 net/minecraft/network/rcon/RConConsoleSource.java
 net/minecraft/world/chunk/storage/AnvilSaveHandler.java
 net/minecraft/realms/RealmsVertexFormatElement.java

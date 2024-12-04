@@ -94,13 +94,16 @@ public class VoiceClientController {
 	}
 
 	public static void handleVoiceSignalPacketTypeGlobalNew(Collection<SPacketVoiceSignalGlobalEAG.UserData> voicePlayers) {
+		boolean isGlobal = voiceChannel == EnumVoiceChannelType.GLOBAL;
 		uuidToNameLookup.clear();
 		for (SPacketVoiceSignalGlobalEAG.UserData player : voicePlayers) {
 			EaglercraftUUID uuid = new EaglercraftUUID(player.uuidMost, player.uuidLeast);
 			if(player.username != null) {
 				uuidToNameLookup.put(uuid, player.username);
 			}
-			sendPacketRequestIfNeeded(uuid);
+			if (isGlobal) {
+				sendPacketRequestIfNeeded(uuid);
+			}
 		}
 	}
 
@@ -138,7 +141,7 @@ public class VoiceClientController {
 	}
 
 	public static void handleVoiceSignalPacketTypeConnectAnnounce(EaglercraftUUID user) {
-		if (voiceChannel != EnumVoiceChannelType.NONE) sendPacketRequest(user);
+		if (voiceChannel != EnumVoiceChannelType.NONE && (voiceChannel == EnumVoiceChannelType.GLOBAL || listeningSet.contains(user))) sendPacketRequest(user);
 	}
 
 	public static void handleVoiceSignalPacketTypeDisconnect(EaglercraftUUID user) {

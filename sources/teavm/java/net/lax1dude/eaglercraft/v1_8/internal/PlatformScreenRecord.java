@@ -188,7 +188,7 @@ public class PlatformScreenRecord {
 		TeaVMUtils.addEventListener(mediaRec, "dataavailable", new EventListener<DataAvailableEvent>() {
 			@Override
 			public void handleEvent(DataAvailableEvent evt) {
-				final String fileName = EaglercraftVersion.mainMenuStringB + " - " + EaglerProfile.getName() + " - " + fmt.format(new Date()) + "." + params.codec.fileExt;
+				final String fileName = EaglercraftVersion.screenRecordingFilePrefix + " - " + EaglerProfile.getName() + " - " + fmt.format(new Date()) + "." + params.codec.fileExt;
 				if("video/webm".equals(params.codec.container)) {
 					FixWebMDurationJS.getRecUrl(evt, (int) (PlatformRuntime.steadyTimeMillis() - startTime), url -> {
 						PlatformApplication.downloadURLWithNameTeaVM(fileName, url, () -> TeaVMUtils.freeDataURL(url));

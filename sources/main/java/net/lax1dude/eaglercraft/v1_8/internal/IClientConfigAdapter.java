@@ -98,6 +98,8 @@ public interface IClientConfigAdapter {
 
 	boolean isRamdiskMode();
 
+	boolean isEnforceVSync();
+
 	IClientConfigAdapterHooks getHooks();
 
 }

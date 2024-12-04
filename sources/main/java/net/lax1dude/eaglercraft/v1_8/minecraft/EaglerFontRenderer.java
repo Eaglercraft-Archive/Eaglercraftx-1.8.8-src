@@ -189,11 +189,15 @@ public class EaglerFontRenderer extends FontRenderer {
 			if(hasStrike) {
 				GlStateManager.color(0.25f, 0.25f, 0.25f, 1.0f);
 				GlStateManager.translate(1.0f, 1.0f, 0.0f);
+				GlStateManager.disableTexture2D();
 				tessellator.draw();
 				GlStateManager.translate(-1.0f, -1.0f, 0.0f);
 				GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
+				GlStateManager.enableTexture2D();
 				InstancedFontRenderer.render(8, 8, texScale, texScale, true);
+				GlStateManager.disableTexture2D();
 				EaglercraftGPU.renderAgain();
+				GlStateManager.enableTexture2D();
 			}else {
 				GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 				InstancedFontRenderer.render(8, 8, texScale, texScale, true);
@@ -201,7 +205,9 @@ public class EaglerFontRenderer extends FontRenderer {
 		}else {
 			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 			if(hasStrike) {
+				GlStateManager.disableTexture2D();
 				tessellator.draw();
+				GlStateManager.enableTexture2D();
 			}
 			InstancedFontRenderer.render(8, 8, texScale, texScale, false);
 		}

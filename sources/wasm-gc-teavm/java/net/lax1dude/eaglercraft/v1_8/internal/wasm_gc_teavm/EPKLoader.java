@@ -1,0 +1,191 @@
+package net.lax1dude.eaglercraft.v1_8.internal.wasm_gc_teavm;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Map;
+
+import com.jcraft.jzlib.CRC32;
+import com.jcraft.jzlib.GZIPInputStream;
+import com.jcraft.jzlib.InflaterInputStream;
+
+import net.lax1dude.eaglercraft.v1_8.internal.buffer.ByteBuffer;
+import net.lax1dude.eaglercraft.v1_8.internal.buffer.EaglerBufferInputStream;
+
+/**
+ * Copyright (c) 2022-2024 lax1dude. All Rights Reserved.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ * IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ * 
+ */
+public class EPKLoader {
+
+	public static final void loadEPK(ByteBuffer epkFile, Map<String, byte[]> loadedFiles) throws IOException {
+		loadEPK(epkFile, "", loadedFiles);
+	}
+
+	public static final void loadEPK(ByteBuffer epkFile, String path, Map<String, byte[]> loadedFiles) throws IOException {
+		int byteLength = epkFile.remaining();
+		int l = byteLength - 16;
+		if(l < 1) {
+			throw new IOException("EPK file is incomplete");
+		}
+		
+		EaglerBufferInputStream is = new EaglerBufferInputStream(epkFile);
+		
+		byte[] header = new byte[8];
+		is.read(header);
+		String type = readASCII(header);
+		
+		if(!"EAGPKG$$".equals(type)) {
+			throw new IOException("Invalid EPK file type '" + type + "'");
+		}
+		
+		byte[] endCode = new byte[] { (byte)':', (byte)':', (byte)':', (byte)'Y',
+				(byte)'E', (byte)'E', (byte)':', (byte)'>' };
+		for(int i = 0; i < 8; ++i) {
+			if(epkFile.get(byteLength - 8 + i) != endCode[i]) {
+				throw new IOException("EPK file is missing EOF code (:::YEE:>)");
+			}
+		}
+		
+		epkFile.limit(epkFile.limit() - 8);
+		
+		String vers = readASCII(is);
+		if(!vers.startsWith("ver2.")) {
+			throw new IOException("Unknown or invalid EPK version: " + vers);
+		}
+		
+		is.skip(is.read()); // skip filename
+		is.skip(loadShort(is)); // skip comment
+		is.skip(8); // skip millis date
+		
+		int numFiles = loadInt(is);
+		
+		char compressionType = (char)is.read();
+		
+		InputStream zis;
+		switch(compressionType) {
+		case 'G':
+			zis = new GZIPInputStream(is);
+			break;
+		case 'Z':
+			zis = new InflaterInputStream(is);
+			break;
+		case '0':
+			zis = is;
+			break;
+		default:
+			throw new IOException("Invalid or unsupported EPK compression: " + compressionType);
+		}
+
+		int blockFile = ('F' << 24) | ('I' << 16) | ('L' << 8) | 'E';
+		int blockEnd = ('E' << 24) | ('N' << 16) | ('D' << 8) | '$';
+		int blockHead = ('H' << 24) | ('E' << 16) | ('A' << 8) | 'D';
+		
+		if(path.length() > 0 && !path.endsWith("/")) {
+			path = path + "/";
+		}
+		
+		CRC32 crc32 = new CRC32();
+		int blockType;
+		for(int i = 0; i < numFiles; ++i) {
+			
+			blockType = loadInt(zis);
+			
+			if(blockType == blockEnd) {
+				throw new IOException("Unexpected END when there are still " + (numFiles - i) + " files remaining");
+			}
+			
+			String name = readASCII(zis);
+			int len = loadInt(zis);
+			
+			if(i == 0) {
+				if(blockType == blockHead) {
+					byte[] readType = new byte[len];
+					zis.read(readType);
+					if(!"file-type".equals(name) || !"epk/resources".equals(readASCII(readType))) {
+						throw new IOException("EPK is not of file-type 'epk/resources'!");
+					}
+					if(zis.read() != '>') {
+						throw new IOException("Object '" + name + "' is incomplete");
+					}
+					continue;
+				}else {
+					throw new IOException("File '" + name + "' did not have a file-type block as the first entry in the file");
+				}
+			}
+			
+			if(blockType == blockFile) {
+				if(len < 5) {
+					throw new IOException("File '" + name + "' is incomplete");
+				}
+				
+				int expectedCRC = loadInt(zis);
+				
+				byte[] load = new byte[len - 5];
+				zis.read(load);
+
+				if(len > 5) {
+					crc32.reset();
+					crc32.update(load, 0, load.length);
+					if(expectedCRC != (int)crc32.getValue()) {
+						throw new IOException("File '" + name + "' has an invalid checksum");
+					}
+				}
+				
+				if(zis.read() != ':') {
+					throw new IOException("File '" + name + "' is incomplete");
+				}
+				
+				loadedFiles.put(path + name, load);
+			}else {
+				zis.skip(len);
+			}
+
+			if(zis.read() != '>') {
+				throw new IOException("Object '" + name + "' is incomplete");
+			}
+		}
+		
+		if(loadInt(zis) != blockEnd) {
+			throw new IOException("EPK missing END$ object");
+		}
+		
+		zis.close();
+	}
+	
+	private static final int loadShort(InputStream is) throws IOException {
+		return (is.read() << 8) | is.read();
+	}
+	
+	private static final int loadInt(InputStream is) throws IOException {
+		return (is.read() << 24) | (is.read() << 16) | (is.read() << 8) | is.read();
+	}
+	
+	private static final String readASCII(byte[] bytesIn) throws IOException {
+		char[] charIn = new char[bytesIn.length];
+		for(int i = 0; i < bytesIn.length; ++i) {
+			charIn[i] = (char)((int)bytesIn[i] & 0xFF);
+		}
+		return new String(charIn);
+	}
+	
+	private static final String readASCII(InputStream bytesIn) throws IOException {
+		int len = bytesIn.read();
+		char[] charIn = new char[len];
+		for(int i = 0; i < len; ++i) {
+			charIn[i] = (char)(bytesIn.read() & 0xFF);
+		}
+		return new String(charIn);
+	}
+
+}

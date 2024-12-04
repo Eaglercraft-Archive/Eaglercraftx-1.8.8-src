@@ -41,6 +41,8 @@ class LANClientPeer {
 
 	protected long startTime;
 
+	protected String localICECandidate = null;
+
 	protected LANClientPeer(String clientId) {
 		this.clientId = clientId;
 		this.startTime = EagRuntime.steadyTimeMillis();
@@ -50,7 +52,13 @@ class LANClientPeer {
 	protected void handleICECandidates(String candidates) {
 		if(state == SENT_DESCRIPTION) {
 			PlatformWebRTC.serverLANPeerICECandidates(clientId, candidates);
-			state = RECEIVED_ICE_CANDIDATE;
+			if(localICECandidate != null) {
+				LANServerController.lanRelaySocket.writePacket(new RelayPacket03ICECandidate(clientId, localICECandidate));
+				localICECandidate = null;
+				state = SENT_ICE_CANDIDATE;
+			}else {
+				state = RECEIVED_ICE_CANDIDATE;
+			}
 		}else {
 			logger.error("Relay [{}] unexpected IPacket03ICECandidate for '{}'", LANServerController.lanRelaySocket.getURI(), clientId);
 		}
@@ -100,6 +108,12 @@ class LANClientPeer {
 					disconnect();
 				}else {
 					switch(state) {
+						case SENT_DESCRIPTION:{
+							if(evt instanceof LANPeerEvent.LANPeerICECandidateEvent) {
+								localICECandidate = ((LANPeerEvent.LANPeerICECandidateEvent)evt).candidates;
+								continue read_loop;
+							}
+						}
 						case RECEIVED_ICE_CANDIDATE: {
 							if(evt instanceof LANPeerEvent.LANPeerICECandidateEvent) {
 								LANServerController.lanRelaySocket.writePacket(new RelayPacket03ICECandidate(clientId, ((LANPeerEvent.LANPeerICECandidateEvent)evt).candidates));
@@ -136,7 +150,7 @@ class LANClientPeer {
 						}
 					}
 					if(state != CLOSED) {
-						logger.error("LAN client '{}' had an accident: {}", clientId, evt.getClass().getSimpleName());
+						logger.error("LAN client '{}' had an accident: {} (state {})", clientId, evt.getClass().getSimpleName(), state);
 					}
 					disconnect();
 					return;

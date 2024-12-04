@@ -144,7 +144,7 @@ public class BootMenuMain {
 		bootMenuFatOfflineLoader = new BootMenuFatOfflineLoader(parentWindow.getDocument().getHead());
 		logger.info("Entering boot menu display state");
 		eventQueue.clear();
-		changeState(new MenuStateBoot(true));
+		changeState(new MenuStateBoot(!BootMenuEntryPoint.wasManuallyInvoked));
 		enterUpdateLoop();
 	}
 

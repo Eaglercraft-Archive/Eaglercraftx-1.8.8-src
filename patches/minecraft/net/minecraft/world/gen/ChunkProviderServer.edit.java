@@ -9,7 +9,9 @@
 
 + import net.lax1dude.eaglercraft.v1_8.sp.server.EaglerMinecraftServer;
 
-> CHANGE  14 : 17  @  14 : 16
+> DELETE  6  @  6 : 7
+
+> CHANGE  7 : 10  @  7 : 9
 
 ~ import net.lax1dude.eaglercraft.v1_8.HString;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
@@ -46,17 +48,14 @@
 
 + 				++EaglerMinecraftServer.counterChunkWrite;
 
-> CHANGE  1 : 3  @  1 : 2
+> CHANGE  1 : 3  @  1 : 5
 
 ~ 				logger.error("Couldn\'t save chunk");
 ~ 				logger.error(ioexception);
 
-> CHANGE  1 : 3  @  1 : 3
+> DELETE  1  @  1 : 2
 
-~ 				logger.error("Couldn\'t save chunk; already in use by another instance of Minecraft?");
-~ 				logger.error(minecraftexception);
-
-> CHANGE  31 : 32  @  31 : 32
+> CHANGE  29 : 30  @  29 : 30
 
 ~ 		for (int j = 0, l = arraylist.size(); j < l; ++j) {
 

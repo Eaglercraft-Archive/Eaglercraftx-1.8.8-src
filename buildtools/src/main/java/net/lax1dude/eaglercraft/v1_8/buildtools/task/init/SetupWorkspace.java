@@ -129,6 +129,11 @@ public class SetupWorkspace {
 		File repoSourcesProtoRelay = new File(repoSources, "protocol-relay/java");
 		File repoSourcesBootMenu = new File(repoSources, "teavm-boot-menu/java");
 		File repoSourcesTeavmCRes = new File(repoSources, "teavmc-classpath/resources");
+		File repoSourcesWASMGCTeaVMJava = new File(repoSources, "wasm-gc-teavm/java");
+		File repoSourcesWASMGCTeaVMJS = new File(repoSources, "wasm-gc-teavm/js");
+		File repoSourcesWASMGCTeaVMBootstrapJS = new File(repoSources, "wasm-gc-teavm-bootstrap/js");
+		File repoSourcesWASMGCTeaVMLoaderC = new File(repoSources, "wasm-gc-teavm-loader/c");
+		File repoSourcesWASMGCTeaVMLoaderJS = new File(repoSources, "wasm-gc-teavm-loader/js");
 		File repoSourcesResources = new File(repoSources, "resources");
 		File srcMainJava = new File(workspaceDirectory, "src/main/java");
 		File srcGameJava = new File(workspaceDirectory, "src/game/java");
@@ -138,6 +143,11 @@ public class SetupWorkspace {
 		File srcProtoRelay = new File(workspaceDirectory, "src/protocol-relay/java");
 		File srcBootMenu = new File(workspaceDirectory, "src/teavm-boot-menu/java");
 		File srcTeavmCRes = new File(workspaceDirectory, "src/teavmc-classpath/resources");
+		File srcWASMGCTeaVMJava = new File(workspaceDirectory, "src/wasm-gc-teavm/java");
+		File srcWASMGCTeaVMJS = new File(workspaceDirectory, "src/wasm-gc-teavm/js");
+		File srcWASMGCTeaVMBootstrapJS = new File(workspaceDirectory, "src/wasm-gc-teavm-bootstrap/js");
+		File srcWASMGCTeaVMLoaderC = new File(workspaceDirectory, "src/wasm-gc-teavm-loader/c");
+		File srcWASMGCTeaVMLoaderJS = new File(workspaceDirectory, "src/wasm-gc-teavm-loader/js");
 		File resourcesExtractTo = new File(workspaceDirectory, "desktopRuntime/resources");
 		File mcLanguagesZip = new File(mcTmpDirectory, "minecraft_languages.zip");
 		File mcLanguagesExtractTo = new File(workspaceDirectory, "javascript/lang");
@@ -165,6 +175,11 @@ public class SetupWorkspace {
 			System.err.println("ERROR: Could not rename \".gitignore.default\" to \".gitignore\" in the workspace directory!");
 		}
 		
+		existingGi = new File(workspaceDirectory, "wasm_gc_teavm/.gitignore");
+		if((existingGi.exists() && !existingGi.delete()) || !(new File(workspaceDirectory, "wasm_gc_teavm/.gitignore.default").renameTo(existingGi))) {
+			System.err.println("ERROR: Could not rename \"wasm_gc_teavm/.gitignore.default\" to \"wasm_gc_teavm/.gitignore\" in the workspace directory!");
+		}
+		
 		if(repoSourcesTeaVM.isDirectory()) {
 			System.out.println("Copying files from \"/sources/teavm/java/\" to workspace...");
 			
@@ -183,6 +198,10 @@ public class SetupWorkspace {
 		System.out.println("Copying files from \"/sources/main/java/\" to workspace...");
 		
 		try {
+			if(!srcMainJava.isDirectory() && !srcMainJava.mkdirs()) {
+				System.err.println("ERROR: Could not create destination directory!");
+				return false;
+			}
 			FileUtils.copyDirectory(repoSourcesMain, srcMainJava);
 		}catch(IOException ex) {
 			System.err.println("ERROR: could not copy \"/sources/main/java/\" to \"" + srcMainJava.getAbsolutePath() + "\"!");
@@ -193,6 +212,10 @@ public class SetupWorkspace {
 			System.out.println("Copying files from \"/sources/protocol-game/java/\" to workspace...");
 			
 			try {
+				if(!srcProtoGame.isDirectory() && !srcProtoGame.mkdirs()) {
+					System.err.println("ERROR: Could not create destination directory!");
+					return false;
+				}
 				FileUtils.copyDirectory(repoSourcesProtoGame, srcProtoGame);
 			}catch(IOException ex) {
 				System.err.println("ERROR: could not copy \"/sources/protocol-game/java/\" to \"" + srcProtoGame.getAbsolutePath() + "\"!");
@@ -204,6 +227,10 @@ public class SetupWorkspace {
 			System.out.println("Copying files from \"/sources/protocol-relay/java/\" to workspace...");
 	
 			try {
+				if(!srcProtoRelay.isDirectory() && !srcProtoRelay.mkdirs()) {
+					System.err.println("ERROR: Could not create destination directory!");
+					return false;
+				}
 				FileUtils.copyDirectory(repoSourcesProtoRelay, srcProtoRelay);
 			}catch(IOException ex) {
 				System.err.println("ERROR: could not copy \"/sources/protocol-relay/java/\" to \"" + srcProtoRelay.getAbsolutePath() + "\"!");
@@ -215,6 +242,10 @@ public class SetupWorkspace {
 			System.out.println("Copying files from \"/sources/teavmc-classpath/resources/\" to workspace...");
 			
 			try {
+				if(!srcTeavmCRes.isDirectory() && !srcTeavmCRes.mkdirs()) {
+					System.err.println("ERROR: Could not create destination directory!");
+					return false;
+				}
 				FileUtils.copyDirectory(repoSourcesTeavmCRes, srcTeavmCRes);
 			}catch(IOException ex) {
 				System.err.println("ERROR: could not copy \"/sources/teavmc-classpath/resources/\" to \"" + srcTeavmCRes.getAbsolutePath() + "\"!");
@@ -226,6 +257,10 @@ public class SetupWorkspace {
 			System.out.println("Copying files from \"/sources/teavm-boot-menu/java/\" to workspace...");
 			
 			try {
+				if(!srcBootMenu.isDirectory() && !srcBootMenu.mkdirs()) {
+					System.err.println("ERROR: Could not create destination directory!");
+					return false;
+				}
 				FileUtils.copyDirectory(repoSourcesBootMenu, srcBootMenu);
 			}catch(IOException ex) {
 				System.err.println("ERROR: could not copy \"/sources/teavm-boot-menu/java/\" to \"" + srcBootMenu.getAbsolutePath() + "\"!");
@@ -244,6 +279,81 @@ public class SetupWorkspace {
 				FileUtils.copyDirectory(repoSourcesLWJGL, srcLWJGLJava);
 			}catch(IOException ex) {
 				System.err.println("ERROR: could not copy \"/sources/lwjgl/java/\" to \"" + srcLWJGLJava.getAbsolutePath() + "\"!");
+				throw ex;
+			}
+		}
+
+		if(repoSourcesWASMGCTeaVMJava.isDirectory()) {
+			System.out.println("Copying files from \"/sources/wasm-gc-teavm/java/\" to workspace...");
+			
+			try {
+				if(!srcWASMGCTeaVMJava.isDirectory() && !srcWASMGCTeaVMJava.mkdirs()) {
+					System.err.println("ERROR: Could not create destination directory!");
+					return false;
+				}
+				FileUtils.copyDirectory(repoSourcesWASMGCTeaVMJava, srcWASMGCTeaVMJava);
+			}catch(IOException ex) {
+				System.err.println("ERROR: could not copy \"/sources/wasm-gc-teavm/java/\" to \"" + srcWASMGCTeaVMJava.getAbsolutePath() + "\"!");
+				throw ex;
+			}
+		}
+
+		if(repoSourcesWASMGCTeaVMJS.isDirectory()) {
+			System.out.println("Copying files from \"/sources/wasm-gc-teavm/js/\" to workspace...");
+			
+			try {
+				if(!srcWASMGCTeaVMJS.isDirectory() && !srcWASMGCTeaVMJS.mkdirs()) {
+					System.err.println("ERROR: Could not create destination directory!");
+					return false;
+				}
+				FileUtils.copyDirectory(repoSourcesWASMGCTeaVMJS, srcWASMGCTeaVMJS);
+			}catch(IOException ex) {
+				System.err.println("ERROR: could not copy \"/sources/wasm-gc-teavm/js/\" to \"" + srcWASMGCTeaVMJS.getAbsolutePath() + "\"!");
+				throw ex;
+			}
+		}
+
+		if(repoSourcesWASMGCTeaVMBootstrapJS.isDirectory()) {
+			System.out.println("Copying files from \"/sources/wasm-gc-teavm-bootstrap/js/\" to workspace...");
+			
+			try {
+				if(!srcWASMGCTeaVMBootstrapJS.isDirectory() && !srcWASMGCTeaVMBootstrapJS.mkdirs()) {
+					System.err.println("ERROR: Could not create destination directory!");
+					return false;
+				}
+				FileUtils.copyDirectory(repoSourcesWASMGCTeaVMBootstrapJS, srcWASMGCTeaVMBootstrapJS);
+			}catch(IOException ex) {
+				System.err.println("ERROR: could not copy \"/sources/wasm-gc-teavm-bootstrap/js/\" to \"" + srcWASMGCTeaVMBootstrapJS.getAbsolutePath() + "\"!");
+				throw ex;
+			}
+		}
+
+		if(repoSourcesWASMGCTeaVMLoaderC.isDirectory()) {
+			System.out.println("Copying files from \"/sources/wasm-gc-teavm-loader/c/\" to workspace...");
+			
+			try {
+				if(!srcWASMGCTeaVMLoaderC.isDirectory() && !srcWASMGCTeaVMLoaderC.mkdirs()) {
+					System.err.println("ERROR: Could not create destination directory!");
+					return false;
+				}
+				FileUtils.copyDirectory(repoSourcesWASMGCTeaVMLoaderC, srcWASMGCTeaVMLoaderC);
+			}catch(IOException ex) {
+				System.err.println("ERROR: could not copy \"/sources/wasm-gc-teavm-loader/c/\" to \"" + srcWASMGCTeaVMLoaderC.getAbsolutePath() + "\"!");
+				throw ex;
+			}
+		}
+
+		if(repoSourcesWASMGCTeaVMLoaderJS.isDirectory()) {
+			System.out.println("Copying files from \"/sources/wasm-gc-teavm-loader/js/\" to workspace...");
+			
+			try {
+				if(!srcWASMGCTeaVMLoaderJS.isDirectory() && !srcWASMGCTeaVMLoaderJS.mkdirs()) {
+					System.err.println("ERROR: Could not create destination directory!");
+					return false;
+				}
+				FileUtils.copyDirectory(repoSourcesWASMGCTeaVMLoaderJS, srcWASMGCTeaVMLoaderJS);
+			}catch(IOException ex) {
+				System.err.println("ERROR: could not copy \"/sources/wasm-gc-teavm-loader/js/\" to \"" + srcWASMGCTeaVMLoaderJS.getAbsolutePath() + "\"!");
 				throw ex;
 			}
 		}

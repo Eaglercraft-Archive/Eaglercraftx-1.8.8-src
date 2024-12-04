@@ -74,6 +74,12 @@ public class OfflineDownloadParser {
 			logger.info("Detected format: EAGLERCRAFTX_1_8_OFFLINE (International)");
 			return EnumOfflineParseType.EAGLERCRAFTX_1_8_OFFLINE;
 		}
+		if(foundWithin(offlineDownloadData.indexOf(StringUtils.reverse("]OFNI[ :partstooBredaoL")), 0, 16384)) {
+			if(offlineDownloadData.indexOf(StringUtils.reverse(",46esab;maerts-tetco/noitacilppa:atad\" = IRUstessa.stpOXtfarcrelgae.wodniw")) != -1) {
+				logger.info("Detected format: EAGLERCRAFTX_1_8_OFFLINE (WASM-GC)");
+				return EnumOfflineParseType.EAGLERCRAFTX_1_8_OFFLINE;
+			}
+		}
 		if(foundWithin(offlineDownloadData.indexOf(StringUtils.reverse("{ = stpOtfarcrelgae.wodniw")), 32, 2048) && foundWithin(offlineDownloadData.indexOf(StringUtils.reverse(">\"rekrow_ps\"=di \"rekrowrelgae/txet\"=epyt tpircs<")), 4194304, offlineDownloadData.length() - 1048576)) {
 			logger.info("Detected format: EAGLERCRAFTX_1_5_NEW_OFFLINE");
 			return EnumOfflineParseType.EAGLERCRAFT_1_5_NEW_OFFLINE;

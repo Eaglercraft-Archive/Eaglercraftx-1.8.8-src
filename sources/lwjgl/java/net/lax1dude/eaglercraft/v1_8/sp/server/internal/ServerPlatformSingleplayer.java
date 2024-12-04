@@ -10,6 +10,7 @@ import net.lax1dude.eaglercraft.v1_8.internal.IEaglerFilesystem;
 import net.lax1dude.eaglercraft.v1_8.internal.IPCPacketData;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformWebRTC;
 import net.lax1dude.eaglercraft.v1_8.internal.lwjgl.DesktopClientConfigAdapter;
+import net.lax1dude.eaglercraft.v1_8.sp.server.IWASMCrashCallback;
 import net.lax1dude.eaglercraft.v1_8.sp.server.internal.lwjgl.MemoryConnection;
 
 /**
@@ -89,6 +90,10 @@ public class ServerPlatformSingleplayer {
 
 	public static boolean isSingleThreadMode() {
 		return false;
+	}
+
+	public static void setCrashCallbackWASM(IWASMCrashCallback callback) {
+		
 	}
 
 }

@@ -9,9 +9,11 @@
 
 ~ import net.lax1dude.eaglercraft.v1_8.internal.vfs2.VFile2;
 
-> DELETE  4  @  4 : 7
+> DELETE  1  @  1 : 2
 
-> DELETE  9  @  9 : 13
+> DELETE  2  @  2 : 5
+
+> DELETE  6  @  6 : 13
 
 > CHANGE  13 : 19  @  13 : 14
 

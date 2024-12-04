@@ -99,4 +99,9 @@ public class EagUtils {
 		return EaglercraftUUID.nameUUIDFromBytes(("EaglercraftXClientOld:" + name).getBytes(StandardCharsets.UTF_8));
 	}
 
+	public static void sleepPrint(String string) {
+		System.out.println(string);
+		PlatformRuntime.sleep(500);
+	}
+
 }

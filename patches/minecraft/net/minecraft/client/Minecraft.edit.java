@@ -18,7 +18,7 @@
 
 > DELETE  1  @  1 : 4
 
-> CHANGE  1 : 74  @  1 : 4
+> CHANGE  1 : 75  @  1 : 4
 
 ~ 
 ~ import net.lax1dude.eaglercraft.v1_8.ClientUUIDLoadingCache;
@@ -52,6 +52,7 @@
 ~ import net.lax1dude.eaglercraft.v1_8.minecraft.EaglerFontRenderer;
 ~ import net.lax1dude.eaglercraft.v1_8.minecraft.EnumInputEvent;
 ~ import net.lax1dude.eaglercraft.v1_8.minecraft.GuiScreenGenericErrorMessage;
+~ import net.lax1dude.eaglercraft.v1_8.minecraft.GuiScreenVSyncReEnabled;
 ~ import net.lax1dude.eaglercraft.v1_8.minecraft.GuiScreenVideoSettingsWarning;
 ~ import net.lax1dude.eaglercraft.v1_8.notifications.ServerNotificationRenderer;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.EaglerMeshLoader;
@@ -359,12 +360,6 @@
 
 ~ 			mainMenu = new GuiConnecting(mainMenu, this, this.serverName, this.serverPort);
 
-> CHANGE  2 : 5  @  2 : 7
-
-~ 		int vidIssues = gameSettings.checkBadVideoSettings();
-~ 		if (vidIssues != 0) {
-~ 			mainMenu = new GuiScreenVideoSettingsWarning(mainMenu, vidIssues);
-
 > CHANGE  2 : 6  @  2 : 7
 
 ~ 		mainMenu = new GuiScreenEditProfile(mainMenu);
@@ -372,8 +367,25 @@
 ~ 		if (!EagRuntime.getConfiguration().isForceProfanityFilter() && !gameSettings.hasShownProfanityFilter) {
 ~ 			mainMenu = new GuiScreenContentWarning(mainMenu);
 
-> CHANGE  2 : 14  @  2 : 3
+> CHANGE  2 : 7  @  2 : 7
 
+~ 		boolean vsyncScreen = false;
+~ 		if (EagRuntime.getConfiguration().isEnforceVSync() && Display.isVSyncSupported() && !gameSettings.enableVsync) {
+~ 			gameSettings.enableVsync = true;
+~ 			gameSettings.saveOptions();
+~ 			vsyncScreen = true;
+
+> CHANGE  2 : 23  @  2 : 3
+
+~ 		int vidIssues = gameSettings.checkBadVideoSettings();
+~ 		if (vidIssues != 0) {
+~ 			mainMenu = new GuiScreenVideoSettingsWarning(mainMenu, vidIssues);
+~ 		}
+~ 
+~ 		if (vsyncScreen) {
+~ 			mainMenu = new GuiScreenVSyncReEnabled(mainMenu);
+~ 		}
+~ 
 ~ 		this.displayGuiScreen(mainMenu);
 ~ 
 ~ 		this.renderEngine.deleteTexture(this.mojangLogo);
