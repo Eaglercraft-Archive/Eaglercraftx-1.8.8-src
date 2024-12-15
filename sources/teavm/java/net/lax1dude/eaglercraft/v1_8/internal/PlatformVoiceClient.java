@@ -111,6 +111,7 @@ public class PlatformVoiceClient {
 		if(!PlatformWebRTC.hasCheckedSupport) PlatformWebRTC.supported();
 		switch(PlatformWebRTC.supportedImpl) {
 		case PlatformWebRTC.WEBRTC_SUPPORT_CORE:
+		case PlatformWebRTC.WEBRTC_SUPPORT_CORE_NON_PROMISING:
 		case PlatformWebRTC.WEBRTC_SUPPORT_WEBKIT:
 			addCoreIceCandidate(peerConnection, str);
 			break;

@@ -49,8 +49,18 @@ public class PlatformWebRTC {
 	static final int WEBRTC_SUPPORT_CORE = 1;
 	static final int WEBRTC_SUPPORT_WEBKIT = 2;
 	static final int WEBRTC_SUPPORT_MOZ = 3;
+	static final int WEBRTC_SUPPORT_CORE_NON_PROMISING = 4;
 
-	@JSBody(script = "return (typeof RTCPeerConnection !== \"undefined\") ? 1 : ((typeof webkitRTCPeerConnection !== \"undefined\") ? 2 : ((typeof mozRTCPeerConnection !== \"undefined\") ? 3 : 0));")
+	@JSBody(script = "var checkPromising = function() { try {"
+			+ "return (typeof (new RTCPeerConnection({iceServers:[{urls:\"stun:127.69.0.1:6969\"}]})).createOffer() === \"object\") ? 1 : 4;"
+			+ "} catch(ex) {"
+			+ "return (ex.name === \"TypeError\") ? 4 : 1;"
+			+ "}};"
+			+ "return (typeof RTCPeerConnection !== \"undefined\")"
+			+ " ? checkPromising()"
+			+ " : ((typeof webkitRTCPeerConnection !== \"undefined\") ? 2"
+			+ " : ((typeof mozRTCPeerConnection !== \"undefined\") ? 3"
+			+ " : 0));")
 	private static native int checkSupportedImpl();
 
 	static boolean hasCheckedSupport = false;
@@ -69,6 +79,8 @@ public class PlatformWebRTC {
 				logger.info("Using webkit- prefix for RTCPeerConnection");
 			}else if(supportedImpl == WEBRTC_SUPPORT_MOZ) {
 				logger.info("Using moz- prefix for RTCPeerConnection");
+			}else if(supportedImpl == WEBRTC_SUPPORT_CORE_NON_PROMISING) {
+				logger.info("Using non-promising RTCPeerConnection");
 			}
 			if(supportedImpl != WEBRTC_SUPPORT_NONE) {
 				belowChrome71Fix = isChromeBelow71();
@@ -160,6 +172,7 @@ public class PlatformWebRTC {
 		if(!hasCheckedSupport) supported();
 		switch(supportedImpl) {
 		case WEBRTC_SUPPORT_CORE:
+		case WEBRTC_SUPPORT_CORE_NON_PROMISING:
 			return createCoreRTCPeerConnection(iceServers);
 		case WEBRTC_SUPPORT_WEBKIT:
 			return createWebkitRTCPeerConnection(iceServers);
@@ -191,11 +204,49 @@ public class PlatformWebRTC {
 	@JSBody(params = { "item" }, script = "return item.channel;")
 	static native JSObject getChannel(JSObject item);
 
+	@JSBody(params = { "peerConnection", "h1", "h2" }, script = "peerConnection.createOffer().then(h1).catch(h2);")
+	private static native void createOfferPromising(JSObject peerConnection, DescHandler h1, ErrorHandler h2);
+
 	@JSBody(params = { "peerConnection", "h1", "h2" }, script = "peerConnection.createOffer(h1, h2);")
-	static native void createOffer(JSObject peerConnection, DescHandler h1, ErrorHandler h2);
+	private static native void createOfferLegacy(JSObject peerConnection, DescHandler h1, ErrorHandler h2);
+
+	static void createOffer(JSObject peerConnection, DescHandler h1, ErrorHandler h2) {
+		if(!hasCheckedSupport) supported();
+		switch(supportedImpl) {
+		case WEBRTC_SUPPORT_CORE:
+			createOfferPromising(peerConnection, h1, h2);
+			break;
+		case WEBRTC_SUPPORT_WEBKIT:
+		case WEBRTC_SUPPORT_MOZ:
+		case WEBRTC_SUPPORT_CORE_NON_PROMISING:
+			createOfferLegacy(peerConnection, h1, h2);
+			break;
+		default:
+			throw new UnsupportedOperationException();
+		}
+	}
+
+	@JSBody(params = { "peerConnection", "desc", "h1", "h2" }, script = "peerConnection.setLocalDescription(desc).then(h1).catch(h2);")
+	private static native void setLocalDescriptionPromising(JSObject peerConnection, JSObject desc, EmptyHandler h1, ErrorHandler h2);
 
 	@JSBody(params = { "peerConnection", "desc", "h1", "h2" }, script = "peerConnection.setLocalDescription(desc, h1, h2);")
-	static native void setLocalDescription(JSObject peerConnection, JSObject desc, EmptyHandler h1, ErrorHandler h2);
+	private static native void setLocalDescriptionLegacy(JSObject peerConnection, JSObject desc, EmptyHandler h1, ErrorHandler h2);
+
+	static void setLocalDescription(JSObject peerConnection, JSObject desc, EmptyHandler h1, ErrorHandler h2) {
+		if(!hasCheckedSupport) supported();
+		switch(supportedImpl) {
+		case WEBRTC_SUPPORT_CORE:
+			setLocalDescriptionPromising(peerConnection, desc, h1, h2);
+			break;
+		case WEBRTC_SUPPORT_WEBKIT:
+		case WEBRTC_SUPPORT_MOZ:
+		case WEBRTC_SUPPORT_CORE_NON_PROMISING:
+			setLocalDescriptionLegacy(peerConnection, desc, h1, h2);
+			break;
+		default:
+			throw new UnsupportedOperationException();
+		}
+	}
 
 	@JSBody(params = { "peerConnection", "str" }, script = "var candidateList = JSON.parse(str); for (var i = 0; i < candidateList.length; ++i) { peerConnection.addIceCandidate(new RTCIceCandidate(candidateList[i])); }; return null;")
 	private static native void addCoreIceCandidates(JSObject peerConnection, String str);
@@ -219,6 +270,7 @@ public class PlatformWebRTC {
 		if(!hasCheckedSupport) supported();
 		switch(supportedImpl) {
 		case WEBRTC_SUPPORT_CORE:
+		case WEBRTC_SUPPORT_CORE_NON_PROMISING:
 		case WEBRTC_SUPPORT_WEBKIT:
 			addCoreIceCandidates(peerConnection, str);
 			break;
@@ -246,6 +298,7 @@ public class PlatformWebRTC {
 		}
 		switch(supportedImpl) {
 		case WEBRTC_SUPPORT_CORE:
+		case WEBRTC_SUPPORT_CORE_NON_PROMISING:
 			if(useSessionDescConstructor) {
 				setCoreRemoteDescriptionLegacy(peerConnection, str);
 			}else {
@@ -267,14 +320,20 @@ public class PlatformWebRTC {
 		}
 	}
 
+	@JSBody(params = { "peerConnection", "str", "h1", "h2" }, script = "try { peerConnection.setRemoteDescription(str).then(h1).catch(h2); return true; } catch(ex) { if(ex.name === \"TypeError\") return false; else throw ex; }")
+	private static native boolean setCoreRemoteDescription2Promising(JSObject peerConnection, JSObject str, EmptyHandler h1, ErrorHandler h2);
+
 	@JSBody(params = { "peerConnection", "str", "h1", "h2" }, script = "try { peerConnection.setRemoteDescription(str, h1, h2); return true; } catch(ex) { if(ex.name === \"TypeError\") return false; else throw ex; }")
-	private static native boolean setCoreRemoteDescription2(JSObject peerConnection, JSObject str, EmptyHandler h1, ErrorHandler h2);
+	private static native boolean setCoreRemoteDescription2Legacy(JSObject peerConnection, JSObject str, EmptyHandler h1, ErrorHandler h2);
+
+	@JSBody(params = { "peerConnection", "str", "h1", "h2" }, script = "peerConnection.setRemoteDescription(new RTCSessionDescription(str)).then(h1).catch(h2);")
+	private static native void setCoreRemoteDescription2PromisingLegacy(JSObject peerConnection, JSObject str, EmptyHandler h1, ErrorHandler h2);
 
 	@JSBody(params = { "peerConnection", "str", "h1", "h2" }, script = "peerConnection.setRemoteDescription(new RTCSessionDescription(str), h1, h2);")
-	private static native void setCoreRemoteDescription2Legacy(JSObject peerConnection, JSObject str, EmptyHandler h1, ErrorHandler h2);
+	private static native void setCoreRemoteDescription2LegacyLegacy(JSObject peerConnection, JSObject str, EmptyHandler h1, ErrorHandler h2);
 
 	@JSBody(params = { "peerConnection", "str", "h1", "h2" }, script = "peerConnection.setRemoteDescription(new mozRTCSessionDescription(str), h1, h2);")
-	private static native void setMozRemoteDescription2Legacy(JSObject peerConnection, JSObject str, EmptyHandler h1, ErrorHandler h2);
+	private static native void setMozRemoteDescription2LegacyLegacy(JSObject peerConnection, JSObject str, EmptyHandler h1, ErrorHandler h2);
 
 	static void setRemoteDescription2(JSObject peerConnection, JSObject str, EmptyHandler h1, ErrorHandler h2) {
 		if(!hasCheckedSupport) supported();
@@ -284,20 +343,31 @@ public class PlatformWebRTC {
 		switch(supportedImpl) {
 		case WEBRTC_SUPPORT_CORE:
 			if(useSessionDescConstructor) {
-				setCoreRemoteDescription2Legacy(peerConnection, str, h1, h2);
+				setCoreRemoteDescription2PromisingLegacy(peerConnection, str, h1, h2);
 			}else {
-				if(!setCoreRemoteDescription2(peerConnection, str, h1, h2)) {
+				if(!setCoreRemoteDescription2Promising(peerConnection, str, h1, h2)) {
 					useSessionDescConstructor = true;
 					logger.info("Note: Caught suspicious exception, using legacy RTCSessionDescription method");
-					setCoreRemoteDescription2Legacy(peerConnection, str, h1, h2);
+					setCoreRemoteDescription2PromisingLegacy(peerConnection, str, h1, h2);
 				}
 			}
 			break;
 		case WEBRTC_SUPPORT_WEBKIT:
-			setCoreRemoteDescription2Legacy(peerConnection, str, h1, h2);
+			setCoreRemoteDescription2LegacyLegacy(peerConnection, str, h1, h2);
 			break;
 		case WEBRTC_SUPPORT_MOZ:
-			setMozRemoteDescription2Legacy(peerConnection, str, h1, h2);
+			setMozRemoteDescription2LegacyLegacy(peerConnection, str, h1, h2);
+			break;
+		case WEBRTC_SUPPORT_CORE_NON_PROMISING:
+			if(useSessionDescConstructor) {
+				setCoreRemoteDescription2LegacyLegacy(peerConnection, str, h1, h2);
+			}else {
+				if(!setCoreRemoteDescription2Legacy(peerConnection, str, h1, h2)) {
+					useSessionDescConstructor = true;
+					logger.info("Note: Caught suspicious exception, using legacy RTCSessionDescription method");
+					setCoreRemoteDescription2LegacyLegacy(peerConnection, str, h1, h2);
+				}
+			}
 			break;
 		default:
 			throw new UnsupportedOperationException();
@@ -312,8 +382,27 @@ public class PlatformWebRTC {
 			+ "}")
 	private static native void removeExtmapAllowMixed(JSObject objIn);
 
+	@JSBody(params = { "peerConnection", "h1", "h2" }, script = "peerConnection.createAnswer().then(h1).catch(h2);")
+	private static native void createAnswerPromising(JSObject peerConnection, DescHandler h1, ErrorHandler h2);
+
 	@JSBody(params = { "peerConnection", "h1", "h2" }, script = "peerConnection.createAnswer(h1, h2);")
-	static native void createAnswer(JSObject peerConnection, DescHandler h1, ErrorHandler h2);
+	private static native void createAnswerLegacy(JSObject peerConnection, DescHandler h1, ErrorHandler h2);
+
+	static void createAnswer(JSObject peerConnection, DescHandler h1, ErrorHandler h2) {
+		if(!hasCheckedSupport) supported();
+		switch(supportedImpl) {
+		case WEBRTC_SUPPORT_CORE:
+			createAnswerPromising(peerConnection, h1, h2);
+			break;
+		case WEBRTC_SUPPORT_WEBKIT:
+		case WEBRTC_SUPPORT_MOZ:
+		case WEBRTC_SUPPORT_CORE_NON_PROMISING:
+			createAnswerLegacy(peerConnection, h1, h2);
+			break;
+		default:
+			throw new UnsupportedOperationException();
+		}
+	}
 
 	@JSBody(params = { "sock", "buffer" }, script = "sock.send(buffer);")
 	static native void nativeBinarySend(WebSocket sock, ArrayBuffer buffer);

@@ -200,6 +200,13 @@ function swapDelayImpl() {
 eagruntimeImpl.platformRuntime["immediateContinue"] = new WebAssembly.Suspending(immediateContinueImpl);
 
 /**
+ * @return {boolean}
+ */
+eagruntimeImpl.platformRuntime["immediateContinueSupported"] = function() {
+	return allowImmediateContinue;
+};
+
+/**
  * @param {number} id
  * @param {string} str
  */

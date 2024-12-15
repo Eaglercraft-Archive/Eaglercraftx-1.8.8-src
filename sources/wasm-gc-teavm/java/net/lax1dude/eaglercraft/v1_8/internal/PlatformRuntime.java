@@ -464,6 +464,9 @@ public class PlatformRuntime {
 	@Import(module = "platformRuntime", name = "immediateContinue")
 	private static native void immediateContinue0();
 
+	@Import(module = "platformRuntime", name = "immediateContinueSupported")
+	public static native boolean immediateContinueSupported();
+
 	public static void postCreate() {
 		
 	}

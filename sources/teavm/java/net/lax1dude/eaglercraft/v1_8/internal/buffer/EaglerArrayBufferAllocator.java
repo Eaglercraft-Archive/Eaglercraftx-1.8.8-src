@@ -8,7 +8,7 @@ import org.teavm.jso.typedarrays.Uint16Array;
 import org.teavm.jso.typedarrays.Uint8Array;
 
 /**
- * Copyright (c) 2022-2023 lax1dude. All Rights Reserved.
+ * Copyright (c) 2022-2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -30,8 +30,14 @@ public class EaglerArrayBufferAllocator {
 		}
 	}
 
+	private static final ByteBuffer ZERO_LENGTH_BYTE_BUFFER = new EaglerArrayByteBuffer(Int8Array.create(0));
+
 	public static ByteBuffer allocateByteBuffer(int size) {
-		return new EaglerArrayByteBuffer(Int8Array.create(size));
+		if(size != 0) {
+			return new EaglerArrayByteBuffer(Int8Array.create(size));
+		}else {
+			return ZERO_LENGTH_BYTE_BUFFER;
+		}
 	}
 
 	public static ByteBuffer wrapByteBufferTeaVM(DataView dv) {
@@ -42,16 +48,28 @@ public class EaglerArrayBufferAllocator {
 		return new EaglerArrayByteBuffer(typedArray);
 	}
 
+	private static final IntBuffer ZERO_LENGTH_INT_BUFFER = new EaglerArrayIntBuffer(Int32Array.create(0));
+
 	public static IntBuffer allocateIntBuffer(int size) {
-		return new EaglerArrayIntBuffer(Int32Array.create(size));
+		if(size != 0) {
+			return new EaglerArrayIntBuffer(Int32Array.create(size));
+		}else {
+			return ZERO_LENGTH_INT_BUFFER;
+		}
 	}
 
 	public static IntBuffer wrapIntBufferTeaVM(Int32Array typedArray) {
 		return new EaglerArrayIntBuffer(typedArray);
 	}
 
+	private static final FloatBuffer ZERO_LENGTH_FLOAT_BUFFER = new EaglerArrayFloatBuffer(Float32Array.create(0));
+
 	public static FloatBuffer allocateFloatBuffer(int size) {
-		return new EaglerArrayFloatBuffer(Float32Array.create(size));
+		if(size != 0) {
+			return new EaglerArrayFloatBuffer(Float32Array.create(size));
+		}else {
+			return ZERO_LENGTH_FLOAT_BUFFER;
+		}
 	}
 
 	public static FloatBuffer wrapFloatBufferTeaVM(Float32Array typedArray) {

@@ -561,21 +561,39 @@ async function initPlatformInput(inputImports) {
 	 * @return {Promise}
 	 */
 	function syncDelay(fpsLimit) {
-		if(fpsLimit > 0 && fpsLimit < 1000) {
+		if(fpsLimit > 0 && fpsLimit <= 1000) {
+			const frameMillis = (1000 / fpsLimit);
 			if(manualSyncTimer === 0) {
-				manualSyncTimer = performance.now();
+				manualSyncTimer = performance.now() + frameMillis;
 			}else {
-				const millis = performance.now();
-				const frameMillis = (1000 / fpsLimit);
-				var frameTime = millis - manualSyncTimer;
-				if(frameTime > 2000 || frameTime < 0) {
-					frameTime = frameMillis;
+				var millis = performance.now();
+				var remaining = (manualSyncTimer - millis) | 0;
+				if(remaining > 0) {
+					if(!runtimeOpts.useDelayOnSwap && allowImmediateContinue) {
+						return immediateContinueImpl().then(function() {
+							var millis0 = performance.now();
+							var remaining0 = (manualSyncTimer - millis0) | 0;
+							if(remaining0 > 0) {
+								return sleepPromise(remaining0).then(function() {
+									var millis1 = performance.now();
+									if((manualSyncTimer += frameMillis) < millis1) {
+										manualSyncTimer = millis1;
+									}
+								});
+							}else if((manualSyncTimer += frameMillis) < millis0) {
+								manualSyncTimer = millis0;
+							}
+						});
+					}else {
+						return sleepPromise(remaining).then(function() {
+							var millis0 = performance.now();
+							if((manualSyncTimer += frameMillis) < millis0) {
+								manualSyncTimer = millis0;
+							}
+						});
+					}
+				}else if((manualSyncTimer += frameMillis) < millis) {
 					manualSyncTimer = millis;
-				}else {
-					manualSyncTimer += frameMillis;
-				}
-				if(frameTime >= 0 && frameTime < frameMillis) {
-					return sleepPromise(frameMillis - frameTime);
 				}
 			}
 		}else {

@@ -19,7 +19,6 @@ import net.lax1dude.eaglercraft.v1_8.internal.PlatformInput;
  */
 public class Display {
 
-	private static long lastSwap = 0l;
 	private static long lastDPIUpdate = -250l;
 	private static float cacheDPI = 1.0f;
 
@@ -77,41 +76,6 @@ public class Display {
 
 	public static void update(int limitFramerate) {
 		PlatformInput.update(limitFramerate);
-	}
-
-	private static final long[] defaultSyncPtr = new long[1];
-
-	public static void sync(int limitFramerate) {
-		sync(limitFramerate, defaultSyncPtr);
-	}
-
-	public static boolean sync(int limitFramerate, long[] timerPtr) {
-		boolean limitFPS = limitFramerate > 0 && limitFramerate < 1000;
-		boolean blocked = false;
-		
-		if(limitFPS) {
-			if(timerPtr[0] == 0l) {
-				timerPtr[0] = EagRuntime.steadyTimeMillis();
-			}else {
-				long millis = EagRuntime.steadyTimeMillis();
-				long frameMillis = (1000l / limitFramerate);
-				long frameTime = millis - timerPtr[0];
-				if(frameTime > 2000l || frameTime < 0l) {
-					frameTime = frameMillis;
-					timerPtr[0] = millis;
-				}else {
-					timerPtr[0] += frameMillis;
-				}
-				if(frameTime >= 0l && frameTime < frameMillis) {
-					EagUtils.sleep(frameMillis - frameTime);
-					blocked = true;
-				}
-			}
-		}else {
-			timerPtr[0] = 0l;
-		}
-		
-		return blocked;
 	}
 
 	public static boolean contextLost() {

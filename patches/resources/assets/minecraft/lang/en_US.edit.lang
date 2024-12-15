@@ -426,7 +426,7 @@
 + eaglercraft.singleplayer.demo.create.join=Join Shared World
 + eaglercraft.singleplayer.demo.create.join.tooltip=Join someone else's world and play multiplayer
 + 
-+ eaglercraft.createWorld.seedNote=Note: Vanilla seeds now work!
++ eaglercraft.createWorld.seedNote=Note: Vanilla seeds work
 + 
 + eaglercraft.singleplayer.oldseedwarning.title=Old World Detected!
 + eaglercraft.singleplayer.oldseedwarning.msg1=Please use EaglercraftX u32 or older to "Re-Create" this world

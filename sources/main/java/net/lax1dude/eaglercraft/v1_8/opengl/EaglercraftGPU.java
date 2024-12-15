@@ -930,6 +930,8 @@ public class EaglercraftGPU {
 		InstancedParticleRenderer.destroy();
 		EffectPipelineFXAA.destroy();
 		TextureCopyUtil.destroy();
+		FixedFunctionPipeline.flushCache();
+		StreamBuffer.destroyPool();
 		emulatedVAOs = false;
 		emulatedVAOState = null;
 		glesVers = -1;

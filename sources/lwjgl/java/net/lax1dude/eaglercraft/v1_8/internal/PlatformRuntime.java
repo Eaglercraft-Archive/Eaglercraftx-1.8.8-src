@@ -647,4 +647,8 @@ public class PlatformRuntime {
 		// nope
 	}
 
+	public static boolean immediateContinueSupported() {
+		return false;
+	}
+
 }

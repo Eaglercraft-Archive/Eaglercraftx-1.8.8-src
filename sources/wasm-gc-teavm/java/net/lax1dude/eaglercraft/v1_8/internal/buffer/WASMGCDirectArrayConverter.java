@@ -1,7 +1,6 @@
 package net.lax1dude.eaglercraft.v1_8.internal.buffer;
 
 import org.teavm.interop.Address;
-import org.teavm.interop.DirectMalloc;
 import org.teavm.jso.typedarrays.Float32Array;
 import org.teavm.jso.typedarrays.Int16Array;
 import org.teavm.jso.typedarrays.Int32Array;

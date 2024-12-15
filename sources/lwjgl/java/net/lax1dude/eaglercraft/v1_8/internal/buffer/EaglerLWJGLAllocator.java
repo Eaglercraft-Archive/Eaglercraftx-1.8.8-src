@@ -33,48 +33,74 @@ public class EaglerLWJGLAllocator {
 		return allocCount;
 	}
 
+	private static final ByteBuffer ZERO_LENGTH_BYTE_BUFFER = new EaglerLWJGLByteBuffer(0l, 0, true);
+
 	public static ByteBuffer allocByteBuffer(int len) {
-		long ret = JEmalloc.nje_malloc(len);
-		if(ret == 0l) {
-			throw new OutOfMemoryError("Native je_malloc call returned null pointer!");
+		if(len != 0) {
+			long ret = JEmalloc.nje_malloc(len);
+			if(ret == 0l) {
+				throw new OutOfMemoryError("Native je_malloc call returned null pointer!");
+			}
+			if(enableAllocCount) ++allocCount;
+			return new EaglerLWJGLByteBuffer(ret, len, true);
+		}else {
+			return ZERO_LENGTH_BYTE_BUFFER;
 		}
-		if(enableAllocCount) ++allocCount;
-		return new EaglerLWJGLByteBuffer(ret, len, true);
 	}
+
+	private static final ShortBuffer ZERO_LENGTH_SHORT_BUFFER = new EaglerLWJGLShortBuffer(0l, 0, true);
 
 	public static ShortBuffer allocShortBuffer(int len) {
-		long ret = JEmalloc.nje_malloc(len << 1);
-		if(ret == 0l) {
-			throw new OutOfMemoryError("Native je_malloc call returned null pointer!");
+		if(len != 0) {
+			long ret = JEmalloc.nje_malloc(len << 1);
+			if(ret == 0l) {
+				throw new OutOfMemoryError("Native je_malloc call returned null pointer!");
+			}
+			if(enableAllocCount) ++allocCount;
+			return new EaglerLWJGLShortBuffer(ret, len, true);
+		}else {
+			return ZERO_LENGTH_SHORT_BUFFER;
 		}
-		if(enableAllocCount) ++allocCount;
-		return new EaglerLWJGLShortBuffer(ret, len, true);
 	}
+
+	private static final IntBuffer ZERO_LENGTH_INT_BUFFER = new EaglerLWJGLIntBuffer(0l, 0, true);
 
 	public static IntBuffer allocIntBuffer(int len) {
-		long ret = JEmalloc.nje_malloc(len << 2);
-		if(ret == 0l) {
-			throw new OutOfMemoryError("Native je_malloc call returned null pointer!");
+		if(len != 0) {
+			long ret = JEmalloc.nje_malloc(len << 2);
+			if(ret == 0l) {
+				throw new OutOfMemoryError("Native je_malloc call returned null pointer!");
+			}
+			if(enableAllocCount) ++allocCount;
+			return new EaglerLWJGLIntBuffer(ret, len, true);
+		}else {
+			return ZERO_LENGTH_INT_BUFFER;
 		}
-		if(enableAllocCount) ++allocCount;
-		return new EaglerLWJGLIntBuffer(ret, len, true);
 	}
 
+	private static final FloatBuffer ZERO_LENGTH_FLOAT_BUFFER = new EaglerLWJGLFloatBuffer(0l, 0, true);
+
 	public static FloatBuffer allocFloatBuffer(int len) {
-		long ret = JEmalloc.nje_malloc(len << 2);
-		if(ret == 0l) {
-			throw new OutOfMemoryError("Native je_malloc call returned null pointer!");
+		if(len != 0) {
+			long ret = JEmalloc.nje_malloc(len << 2);
+			if(ret == 0l) {
+				throw new OutOfMemoryError("Native je_malloc call returned null pointer!");
+			}
+			if(enableAllocCount) ++allocCount;
+			return new EaglerLWJGLFloatBuffer(ret, len, true);
+		}else {
+			return ZERO_LENGTH_FLOAT_BUFFER;
 		}
-		if(enableAllocCount) ++allocCount;
-		return new EaglerLWJGLFloatBuffer(ret, len, true);
 	}
 
 	public static void freeByteBuffer(ByteBuffer buffer) {
 		if(buffer instanceof EaglerLWJGLByteBuffer) {
 			EaglerLWJGLByteBuffer buf = (EaglerLWJGLByteBuffer)buffer;
 			if(buf.original) {
-				JEmalloc.nje_free(buf.address);
-				if(enableAllocCount) --allocCount;
+				if(buf.address != 0l) {
+					JEmalloc.nje_free(buf.address);
+					if(enableAllocCount) --allocCount;
+				}
 			}else {
 				throwNotOriginal(buffer);
 			}
@@ -96,8 +122,10 @@ public class EaglerLWJGLAllocator {
 		if(buffer instanceof EaglerLWJGLShortBuffer) {
 			EaglerLWJGLShortBuffer buf = (EaglerLWJGLShortBuffer)buffer;
 			if(buf.original) {
-				JEmalloc.nje_free(buf.address);
-				if(enableAllocCount) --allocCount;
+				if(buf.address != 0l) {
+					JEmalloc.nje_free(buf.address);
+					if(enableAllocCount) --allocCount;
+				}
 			}else {
 				throwNotOriginal(buffer);
 			}
@@ -119,8 +147,10 @@ public class EaglerLWJGLAllocator {
 		if(buffer instanceof EaglerLWJGLIntBuffer) {
 			EaglerLWJGLIntBuffer buf = (EaglerLWJGLIntBuffer)buffer;
 			if(buf.original) {
-				JEmalloc.nje_free(buf.address);
-				if(enableAllocCount) --allocCount;
+				if(buf.address != 0l) {
+					JEmalloc.nje_free(buf.address);
+					if(enableAllocCount) --allocCount;
+				}
 			}else {
 				throwNotOriginal(buffer);
 			}
@@ -142,8 +172,10 @@ public class EaglerLWJGLAllocator {
 		if(buffer instanceof EaglerLWJGLFloatBuffer) {
 			EaglerLWJGLFloatBuffer buf = (EaglerLWJGLFloatBuffer)buffer;
 			if(buf.original) {
-				JEmalloc.nje_free(buf.address);
-				if(enableAllocCount) --allocCount;
+				if(buf.address != 0l) {
+					JEmalloc.nje_free(buf.address);
+					if(enableAllocCount) --allocCount;
+				}
 			}else {
 				throwNotOriginal(buffer);
 			}

@@ -36,8 +36,6 @@ import org.teavm.jso.gamepad.Gamepad;
 import org.teavm.jso.gamepad.GamepadButton;
 import org.teavm.jso.gamepad.GamepadEvent;
 
-import net.lax1dude.eaglercraft.v1_8.Display;
-import net.lax1dude.eaglercraft.v1_8.EagUtils;
 import net.lax1dude.eaglercraft.v1_8.internal.teavm.ClientMain;
 import net.lax1dude.eaglercraft.v1_8.internal.teavm.EarlyLoadScreen;
 import net.lax1dude.eaglercraft.v1_8.internal.teavm.InputEvent;
@@ -889,7 +887,7 @@ public class PlatformInput {
 		update(0);
 	}
 
-	private static final long[] syncTimer = new long[1];
+	private static double syncTimer = 0.0;
 
 	public static void update(int fpsLimit) {
 		double r = getDevicePixelRatio(win);
@@ -943,21 +941,44 @@ public class PlatformInput {
 		PlatformScreenRecord.captureFrameHook();
 		if(getVisibilityState(win.getDocument())) {
 			if(vsyncSupport && vsync) {
-				syncTimer[0] = 0l;
+				syncTimer = 0.0;
 				asyncRequestAnimationFrame();
 			}else {
-				if(fpsLimit <= 0) {
-					syncTimer[0] = 0l;
+				if(fpsLimit <= 0 || fpsLimit > 1000) {
+					syncTimer = 0.0;
 					PlatformRuntime.swapDelayTeaVM();
 				}else {
-					if(!Display.sync(fpsLimit, syncTimer)) {
+					double frameMillis = (1000.0 / fpsLimit);
+					if(syncTimer == 0.0) {
+						syncTimer = PlatformRuntime.steadyTimeMillisTeaVM() + frameMillis;
 						PlatformRuntime.swapDelayTeaVM();
+					}else {
+						double millis = PlatformRuntime.steadyTimeMillisTeaVM();
+						int remaining = (int)(syncTimer - millis);
+						if(remaining > 0) {
+							if(!PlatformRuntime.useDelayOnSwap && PlatformRuntime.immediateContinueSupport) {
+								PlatformRuntime.immediateContinue(); // cannot stack setTimeouts, or it will throttle
+								millis = PlatformRuntime.steadyTimeMillisTeaVM();
+								remaining = (int)(syncTimer - millis);
+								if(remaining > 0) {
+									PlatformRuntime.sleep((int)remaining);
+								}
+							}else {
+								PlatformRuntime.sleep((int)remaining);
+							}
+						}else {
+							PlatformRuntime.swapDelayTeaVM();
+						}
+						millis = PlatformRuntime.steadyTimeMillisTeaVM();
+						if((syncTimer += frameMillis) < millis) {
+							syncTimer = millis;
+						}
 					}
 				}
 			}
 		}else {
-			syncTimer[0] = 0l;
-			EagUtils.sleep(50);
+			syncTimer = 0.0;
+			PlatformRuntime.sleep(50);
 		}
 	}
 
@@ -1579,7 +1600,7 @@ public class PlatformInput {
 				EarlyLoadScreen.paintEnable(PlatformOpenGL.checkVAOCapable(), allowBootMenu);
 				
 				while(mouseEvents.isEmpty() && keyEvents.isEmpty() && touchEvents.isEmpty()) {
-					EagUtils.sleep(100);
+					PlatformRuntime.sleep(100);
 				}
 			}
 		}
@@ -1864,7 +1885,7 @@ public class PlatformInput {
 			if(touchKeyboardField != null) {
 				touchKeyboardField.blur();
 				touchKeyboardField.setValue("");
-				EagUtils.sleep(10);
+				PlatformRuntime.sleep(10);
 				if(touchKeyboardForm != null) {
 					touchKeyboardForm.removeChild(touchKeyboardField);
 				}else {
@@ -2135,7 +2156,7 @@ public class PlatformInput {
 			touchKeyboardField.blur();
 			touchKeyboardField.setValue("");
 			if(sync) {
-				EagUtils.sleep(10);
+				PlatformRuntime.sleep(10);
 				if(touchKeyboardForm != null) {
 					touchKeyboardForm.removeChild(touchKeyboardField);
 				}else {

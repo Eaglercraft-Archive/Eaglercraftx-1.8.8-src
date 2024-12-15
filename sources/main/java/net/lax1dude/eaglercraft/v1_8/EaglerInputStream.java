@@ -142,6 +142,16 @@ public class EaglerInputStream extends InputStream {
 		}
 	}
 
+	public static byte[] inputStreamToBytesNoClose(InputStream is) throws IOException {
+		EaglerOutputStream os = new EaglerOutputStream(1024);
+		byte[] buf = new byte[1024];
+		int i;
+		while ((i = is.read(buf)) != -1) {
+			os.write(buf, 0, i);
+		}
+		return os.toByteArray();
+	}
+
 	public byte[] getAsArray() {
 		if (pos == 0 && count == buf.length) {
 			return buf;

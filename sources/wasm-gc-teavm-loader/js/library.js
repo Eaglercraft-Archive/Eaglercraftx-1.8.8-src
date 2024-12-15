@@ -41,6 +41,11 @@ addToLibrary({
 		return id;
 	},
 	resultFailed: function(msg) {
+		results = null;
+		epwFile = null;
+		
+		setTimeout(unsetHeapViews, 20);
+		
 		const parentElement = createCrashParentElement();
 		
 		const messageContainer = document.createElement("div");
@@ -85,40 +90,43 @@ addToLibrary({
 		for(var i = 0, j; i < numEPKs; ++i) {
 			j = idx + 11 + i * 3;
 			epkFiles[i] = {
-				data: results[HEAP32[j]],
-				name: results[HEAP32[j + 1]],
-				path: results[HEAP32[j + 2]]
+				"data": results[HEAP32[j]],
+				"name": results[HEAP32[j + 1]],
+				"path": results[HEAP32[j + 2]]
 			};
 		}
 		
-		results.length = 0;
+		results = null;
+		epwFile = null;
 		
-		window.__eaglercraftXLoaderContext = {
-			getEaglercraftXOpts: function() {
+		setTimeout(unsetHeapViews, 20);
+		
+		window["__eaglercraftXLoaderContext"] = {
+			"getEaglercraftXOpts": function() {
 				return optsObj;
 			},
-			getEagRuntimeJSURL: function() {
+			"getEagRuntimeJSURL": function() {
 				return eagRuntimeJSURL;
 			},
-			getClassesWASMURL: function() {
+			"getClassesWASMURL": function() {
 				return classesWASMURL;
 			},
-			getClassesDeobfWASMURL: function() {
+			"getClassesDeobfWASMURL": function() {
 				return classesDeobfWASMURL;
 			},
-			getClassesTEADBGURL: function() {
+			"getClassesTEADBGURL": function() {
 				return classesDeobfTEADBGURL;
 			},
-			getEPKFiles: function() {
+			"getEPKFiles": function() {
 				return epkFiles;
 			},
-			getRootElement: function() {
+			"getRootElement": function() {
 				return rootElement;
 			},
-			getMainArgs: function() {
+			"getMainArgs": function() {
 				return [];
 			},
-			getImageURL: function(idx) {
+			"getImageURL": function(idx) {
 				switch(idx) {
 				case 0:
 					return splashURL;
@@ -132,7 +140,7 @@ addToLibrary({
 					return null;
 				}
 			},
-			runMain: function(fn) {
+			"runMain": function(fn) {
 				setTimeout(fn, 10);
 			}
 		};
@@ -151,6 +159,11 @@ addToLibrary({
 		
 		const markupData = results[HEAP32[idx + 2]];
 		const markup = markupData ? UTF8Decoder.decode(markupData) : "<h1>Failed to load error screen</h1>";
+		
+		results = null;
+		epwFile = null;
+		
+		setTimeout(unsetHeapViews, 20);
 		
 		const parentElement = createCrashParentElement();
 		

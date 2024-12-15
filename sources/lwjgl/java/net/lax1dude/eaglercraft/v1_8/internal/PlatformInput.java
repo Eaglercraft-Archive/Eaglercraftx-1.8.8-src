@@ -14,8 +14,6 @@ import org.lwjgl.glfw.GLFWGamepadState;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.system.MemoryStack;
 
-import net.lax1dude.eaglercraft.v1_8.Display;
-
 /**
  * Copyright (c) 2022-2024 lax1dude, ayunami2000. All Rights Reserved.
  * 
@@ -302,7 +300,7 @@ public class PlatformInput {
 		update(0);
 	}
 
-	private static final long[] syncTimer = new long[1];
+	private static long syncTimer = 0l;
 
 	public static void update(int limitFps) {
 		glfwPollEvents();
@@ -311,10 +309,23 @@ public class PlatformInput {
 			glfwVSyncState = vsync;
 		}
 		glfwSwapBuffers(win);
-		if(limitFps > 0 && !vsync) {
-			Display.sync(limitFps, syncTimer);
+		if(!vsync && limitFps > 0 && limitFps <= 1000) {
+			long frameNanos = (1000000000l / limitFps);
+			if(syncTimer == 0l) {
+				syncTimer = System.nanoTime() + frameNanos;
+			}else {
+				long nanos = System.nanoTime();
+				int remaining = (int)((syncTimer - nanos) / 1000000l);
+				if(remaining > 0) {
+					PlatformRuntime.sleep(remaining);
+					nanos = System.nanoTime();
+				}
+				if((syncTimer += frameNanos) < nanos) {
+					syncTimer = nanos;
+				}
+			}
 		}else {
-			syncTimer[0] = 0l;
+			syncTimer = 0l;
 		}
 	}
 

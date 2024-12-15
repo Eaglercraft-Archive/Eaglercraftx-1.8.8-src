@@ -32,7 +32,7 @@ public class WASMGCBufferAllocator {
 
 	public static Address malloc(int size) {
 		if(size == 0) {
-			throw new IllegalArgumentException("Tried to allocate 0 bytes!");
+			return Address.fromInt(0);
 		}
 		Address addr;
 		if(enableBufferOverflowCheck) {
@@ -55,11 +55,11 @@ public class WASMGCBufferAllocator {
 	}
 
 	public static Address calloc(int size) {
+		if(size == 0) {
+			return Address.fromInt(0);
+		}
 		Address addr;
 		if(enableBufferOverflowCheck) {
-			if(size == 0) {
-				throw new OutOfMemoryError("Tried to allocate 0 bytes!");
-			}
 			addr = DirectMalloc.calloc(size + 12);
 			if(addr.toInt() == 0) {
 				throw new OutOfMemoryError("DirectMalloc returned null pointer!");
@@ -87,33 +87,55 @@ public class WASMGCBufferAllocator {
 				if(tag != ptr.add(size + 8).getInt()) {
 					throw new RuntimeException("Detected a buffer write overflow");
 				}
-				DirectMalloc.free(ptr);
-			}else {
-				DirectMalloc.free(ptr);
 			}
+			DirectMalloc.free(ptr);
 		}
 	}
 
+	private static final ByteBuffer ZERO_LENGTH_BYTE_BUFFER = new DirectMallocByteBuffer(Address.fromInt(0), 0, true);
+
 	public static ByteBuffer allocateByteBuffer(int size) {
-		return new DirectMallocByteBuffer(malloc(size), size, true);
+		if(size != 0) {
+			return new DirectMallocByteBuffer(malloc(size), size, true);
+		}else {
+			return ZERO_LENGTH_BYTE_BUFFER;
+		}
 	}
+
+	private static final ShortBuffer ZERO_LENGTH_SHORT_BUFFER = new DirectMallocShortBuffer(Address.fromInt(0), 0, true);
 
 	public static ShortBuffer allocateShortBuffer(int size) {
-		return new DirectMallocShortBuffer(malloc(size << 1), size, true);
+		if(size != 0) {
+			return new DirectMallocShortBuffer(malloc(size << 1), size, true);
+		}else {
+			return ZERO_LENGTH_SHORT_BUFFER;
+		}
 	}
+
+	private static final IntBuffer ZERO_LENGTH_INT_BUFFER = new DirectMallocIntBuffer(Address.fromInt(0), 0, true);
 
 	public static IntBuffer allocateIntBuffer(int size) {
-		return new DirectMallocIntBuffer(malloc(size << 2), size, true);
+		if(size != 0) {
+			return new DirectMallocIntBuffer(malloc(size << 2), size, true);
+		}else {
+			return ZERO_LENGTH_INT_BUFFER;
+		}
 	}
 
+	private static final FloatBuffer ZERO_LENGTH_FLOAT_BUFFER = new DirectMallocFloatBuffer(Address.fromInt(0), 0, true);
+
 	public static FloatBuffer allocateFloatBuffer(int size) {
-		return new DirectMallocFloatBuffer(malloc(size << 2), size, true);
+		if(size != 0) {
+			return new DirectMallocFloatBuffer(malloc(size << 2), size, true);
+		}else {
+			return ZERO_LENGTH_FLOAT_BUFFER;
+		}
 	}
 
 	public static void freeByteBuffer(ByteBuffer buffer) {
 		DirectMallocByteBuffer buf = (DirectMallocByteBuffer)buffer;
 		if(buf.original) {
-			WASMGCBufferAllocator.free(buf.address);
+			free(buf.address);
 		}else {
 			throwNotOriginal(buf);
 		}
@@ -122,7 +144,7 @@ public class WASMGCBufferAllocator {
 	public static void freeShortBuffer(ShortBuffer buffer) {
 		DirectMallocShortBuffer buf = (DirectMallocShortBuffer)buffer;
 		if(buf.original) {
-			WASMGCBufferAllocator.free(buf.address);
+			free(buf.address);
 		}else {
 			throwNotOriginal(buf);
 		}
@@ -131,7 +153,7 @@ public class WASMGCBufferAllocator {
 	public static void freeIntBuffer(IntBuffer buffer) {
 		DirectMallocIntBuffer buf = (DirectMallocIntBuffer)buffer;
 		if(buf.original) {
-			WASMGCBufferAllocator.free(buf.address);
+			free(buf.address);
 		}else {
 			throwNotOriginal(buf);
 		}
@@ -140,7 +162,7 @@ public class WASMGCBufferAllocator {
 	public static void freeFloatBuffer(FloatBuffer buffer) {
 		DirectMallocFloatBuffer buf = (DirectMallocFloatBuffer)buffer;
 		if(buf.original) {
-			WASMGCBufferAllocator.free(buf.address);
+			free(buf.address);
 		}else {
 			throwNotOriginal(buf);
 		}

@@ -211,7 +211,7 @@ public class EaglerFolderResourcePack extends AbstractResourcePack {
 									i += j;
 								}
 							}else {
-								buffer = EaglerInputStream.inputStreamToBytes(ziss);
+								buffer = EaglerInputStream.inputStreamToBytesNoClose(ziss);
 							}
 							(new VFile2(prefix, folderName, fn.substring(prefixLen))).setAllBytes(buffer);
 							totalSize += buffer.length;

@@ -14,20 +14,24 @@
  * 
  */
 
+var loaderWASMPath = window["__eaglercraftXLoaderContextPre"]["loaderWASMURL"];
+
 Module["locateFile"] = function(path) {
 	if(path === "loader.wasm") {
-		return window.__eaglercraftXLoaderContextPre.loaderWASMURL;
+		return loaderWASMPath;
 	}else {
 		return path;
 	}
 };
 
-const rootElement = window.__eaglercraftXLoaderContextPre.rootElement;
-const optsObj = window.__eaglercraftXLoaderContextPre.eaglercraftXOpts;
-const epwFile = window.__eaglercraftXLoaderContextPre.theEPWFileBuffer;
-const splashURL = window.__eaglercraftXLoaderContextPre.splashURL;
+var rootElement = window["__eaglercraftXLoaderContextPre"]["rootElement"];
+var optsObj = window["__eaglercraftXLoaderContextPre"]["eaglercraftXOpts"];
+var epwFile = window["__eaglercraftXLoaderContextPre"]["theEPWFileBuffer"];
+var splashURL = window["__eaglercraftXLoaderContextPre"]["splashURL"];
 
-const results = [ null ];
+delete window["__eaglercraftXLoaderContextPre"];
+
+var results = [ null ];
 
 function createCrashParentElement() {
 	var oldSplash = null;
@@ -58,4 +62,10 @@ function createCrashParentElement() {
 	rootElement.appendChild(parentElement);
 	
 	return parentElement;
+}
+
+function unsetHeapViews() {
+	HEAP = HEAP8 = HEAPU8 = HEAP16 = HEAPU16 = HEAP32 = HEAPU32 = HEAPF32 = HEAPF64 = null;
+	wasmMemory = null;
+	Module = null;
 }

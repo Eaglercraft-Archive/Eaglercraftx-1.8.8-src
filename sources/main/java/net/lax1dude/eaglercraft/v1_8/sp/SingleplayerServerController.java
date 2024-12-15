@@ -153,7 +153,7 @@ public class SingleplayerServerController implements ISaveFormat {
 	}
 	
 	public static boolean isChannelNameAllowed(String ch) {
-		return !IPC_CHANNEL.equals(ch) && !PLAYER_CHANNEL.equals(ch);
+		return !ch.startsWith("~!");
 	}
 	
 	public static void openPlayerChannel(String ch) {

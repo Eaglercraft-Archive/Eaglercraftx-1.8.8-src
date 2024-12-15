@@ -74,13 +74,12 @@
 
 > DELETE  1  @  1 : 10
 
-> INSERT  3 : 8  @  3
+> INSERT  3 : 7  @  3
 
 + 			if (lanServerList == null) {
 + 				lanServerList = new LANServerList();
-+ 			} else {
-+ 				lanServerList.forceRefresh();
 + 			}
++ 			lanServerList.forceRefresh();
 
 > INSERT  12 : 17  @  12
 

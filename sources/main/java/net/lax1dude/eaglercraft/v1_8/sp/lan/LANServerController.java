@@ -12,6 +12,7 @@ import net.lax1dude.eaglercraft.v1_8.EagUtils;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformWebRTC;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
+import net.lax1dude.eaglercraft.v1_8.sp.SingleplayerServerController;
 import net.lax1dude.eaglercraft.v1_8.sp.relay.RelayManager;
 import net.lax1dude.eaglercraft.v1_8.sp.relay.RelayServerSocket;
 import net.lax1dude.eaglercraft.v1_8.sp.relay.pkt.*;
@@ -142,7 +143,9 @@ public class LANServerController {
 			while((pkt = lanRelaySocket.readPacket()) != null) {
 				if(pkt instanceof RelayPacket02NewClient) {
 					RelayPacket02NewClient ipkt = (RelayPacket02NewClient) pkt;
-					if(clients.containsKey(ipkt.clientId)) {
+					if(!SingleplayerServerController.isChannelNameAllowed(ipkt.clientId)) {
+						logger.error("Relay [{}] relay tried to open disallowed channel name: '{}'", lanRelaySocket.getURI(), ipkt.clientId);
+					}else if(clients.containsKey(ipkt.clientId)) {
 						logger.error("Relay [{}] relay provided duplicate client '{}'", lanRelaySocket.getURI(), ipkt.clientId);
 					}else {
 						clients.put(ipkt.clientId, new LANClientPeer(ipkt.clientId));

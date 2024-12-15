@@ -28,6 +28,7 @@ async function entryPoint() {
 		crashURL = self.__eaglercraftXLoaderContext.getImageURL(2);
 		faviconURL = self.__eaglercraftXLoaderContext.getImageURL(3);
 		const args = self.__eaglercraftXLoaderContext.getMainArgs();
+		delete self.__eaglercraftXLoaderContext;
 		const isWorker = args[0] === "_worker_process_";
 
 		if(!isWorker) {

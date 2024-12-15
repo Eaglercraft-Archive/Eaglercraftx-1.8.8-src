@@ -766,6 +766,10 @@ public class PlatformRuntime {
 		}
 	}
 
+	public static boolean immediateContinueSupported() {
+		return immediateContinueSupport;
+	}
+
 	@Async
 	private static native void immediateContinueTeaVM0();
 
@@ -1100,6 +1104,10 @@ public class PlatformRuntime {
 
 	@JSBody(params = { "steadyTimeFunc" }, script = "return steadyTimeFunc();")
 	private static native double steadyTimeMillis0(JSObject steadyTimeFunc);
+
+	public static double steadyTimeMillisTeaVM() {
+		return steadyTimeMillis0(steadyTimeFunc);
+	}
 
 	public static long steadyTimeMillis() {
 		return (long)steadyTimeMillis0(steadyTimeFunc);

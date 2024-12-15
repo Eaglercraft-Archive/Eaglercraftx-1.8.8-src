@@ -70,7 +70,6 @@ public class WorldConverterMCA {
 			ZipEntry f = null;
 			int lastProgUpdate = 0;
 			int prog = 0;
-			byte[] bb = new byte[16384];
 			while ((f = zis.getNextEntry()) != null) {
 				if (f.getName().contains("__MACOSX/")) continue;
 				if (f.isDirectory()) continue;
@@ -85,7 +84,7 @@ public class WorldConverterMCA {
 						j += k;
 					}
 				}else {
-					b = EaglerInputStream.inputStreamToBytes(zis);
+					b = EaglerInputStream.inputStreamToBytesNoClose(zis);
 				}
 				String fileName = f.getName().substring(folderPrefixOffset);
 				if (fileName.equals("level.dat") || fileName.equals("level.dat_old")) {

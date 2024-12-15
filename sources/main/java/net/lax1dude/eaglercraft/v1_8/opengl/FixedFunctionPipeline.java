@@ -76,8 +76,8 @@ public class FixedFunctionPipeline {
 		StreamBufferInstance sb = self.streamBuffer.getBuffer(buffer.remaining());
 		self.currentVertexArray = sb;
 		
-		EaglercraftGPU.bindGLBufferArray(sb.vertexArray);
-		EaglercraftGPU.bindGLArrayBuffer(sb.vertexBuffer);
+		EaglercraftGPU.bindGLBufferArray(sb.getVertexArray());
+		EaglercraftGPU.bindGLArrayBuffer(sb.getVertexBuffer());
 		
 		_wglBufferSubData(GL_ARRAY_BUFFER, 0, buffer);
 		

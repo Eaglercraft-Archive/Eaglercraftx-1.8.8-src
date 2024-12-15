@@ -382,7 +382,7 @@ public class ClientBootFactory {
 		System.arraycopy(classesServerJS, 0, concatClassesServerJS, appendToClassesServerJS.length, classesServerJS.length);
 		TeaVMBlobURLHandle classesServerJSURL = TeaVMBlobURLManager.registerNewURLByte(concatClassesServerJS, "text/javascript");
 		toCleanOnException.add(classesServerJSURL);
-		launchOpts.put("serverWorkerURI", classesServerJSURL);
+		launchOpts.put("serverWorkerURI", classesServerJSURL.toExternalForm());
 		doUpdateMessage(cb, "Resolving assets.epk (" + clientData.epkFiles.get(0).dataUUID + ")");
 		TeaVMBlobURLHandle assetsEPKURL = loadingCache.get(new UUIDStringPair(clientData.epkFiles.get(0).dataUUID, "application/octet-stream"));
 		if(assetsEPKURL == null) {

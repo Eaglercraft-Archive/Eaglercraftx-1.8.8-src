@@ -103,11 +103,10 @@ public class WorldConverterEPK {
 	public static byte[] exportWorld(String worldName) {
 		String realWorldName = worldName;
 		String worldOwner = "UNKNOWN";
-		String splitter = new String(new char[] { (char)253, (char)233, (char)233 });
-		if(worldName.contains(splitter)) {
-			int i = worldName.lastIndexOf(splitter);
-			worldOwner = worldName.substring(i + 3);
-			realWorldName = worldName.substring(0, i);
+		int j = worldName.lastIndexOf(new String(new char[] { (char)253, (char)233, (char)233 }));
+		if(j != -1) {
+			worldOwner = worldName.substring(j + 3);
+			realWorldName = worldName.substring(0, j);
 		}
 		VFile2 worldDir = EaglerIntegratedServerWorker.saveFormat.getSaveLoader(realWorldName, false).getWorldDirectory();
 		logger.info("Exporting world directory \"{}\" as EPK", worldDir.getPath());

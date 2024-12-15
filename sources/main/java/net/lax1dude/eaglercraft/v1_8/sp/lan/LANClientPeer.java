@@ -1,5 +1,6 @@
 package net.lax1dude.eaglercraft.v1_8.sp.lan;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
@@ -42,6 +43,8 @@ class LANClientPeer {
 	protected long startTime;
 
 	protected String localICECandidate = null;
+	protected boolean localChannel = false;
+	protected List<byte[]> packetPreBuffer = null;
 
 	protected LANClientPeer(String clientId) {
 		this.clientId = clientId;
@@ -75,7 +78,19 @@ class LANClientPeer {
 
 	protected void handleSuccess() {
 		if(state == SENT_ICE_CANDIDATE) {
-			state = RECEIVED_SUCCESS;
+			if(localChannel) {
+				SingleplayerServerController.openPlayerChannel(clientId);
+				PlatformWebRTC.serverLANPeerMapIPC(clientId, clientId);
+				if(packetPreBuffer != null) {
+					for(byte[] b : packetPreBuffer) {
+						ClientPlatformSingleplayer.sendPacket(new IPCPacketData(clientId, b));
+					}
+					packetPreBuffer = null;
+				}
+				state = CONNECTED;
+			}else {
+				state = RECEIVED_SUCCESS;
+			}
 		}else if(state != CONNECTED) {
 			logger.error("Relay [{}] unexpected IPacket05ClientSuccess for '{}'", LANServerController.lanRelaySocket.getURI(), clientId);
 		}
@@ -113,13 +128,7 @@ class LANClientPeer {
 								localICECandidate = ((LANPeerEvent.LANPeerICECandidateEvent)evt).candidates;
 								continue read_loop;
 							}
-						}
-						case RECEIVED_ICE_CANDIDATE: {
-							if(evt instanceof LANPeerEvent.LANPeerICECandidateEvent) {
-								LANServerController.lanRelaySocket.writePacket(new RelayPacket03ICECandidate(clientId, ((LANPeerEvent.LANPeerICECandidateEvent)evt).candidates));
-								state = SENT_ICE_CANDIDATE;
-								continue read_loop;
-							}
+							break;
 						}
 						case RECEIVED_DESCRIPTION: {
 							if(evt instanceof LANPeerEvent.LANPeerDescriptionEvent) {
@@ -127,15 +136,50 @@ class LANClientPeer {
 								state = SENT_DESCRIPTION;
 								continue read_loop;
 							}
+							break;
 						}
-						case SENT_ICE_CANDIDATE:
+						case RECEIVED_ICE_CANDIDATE: {
+							if(evt instanceof LANPeerEvent.LANPeerICECandidateEvent) {
+								LANServerController.lanRelaySocket.writePacket(new RelayPacket03ICECandidate(clientId, ((LANPeerEvent.LANPeerICECandidateEvent)evt).candidates));
+								state = SENT_ICE_CANDIDATE;
+								continue read_loop;
+							}else if(evt instanceof LANPeerEvent.LANPeerDataChannelEvent) {
+								localChannel = true;
+								continue read_loop;
+							}else if(evt instanceof LANPeerEvent.LANPeerPacketEvent) {
+								if(packetPreBuffer == null) packetPreBuffer = new LinkedList<>();
+								packetPreBuffer.add(((LANPeerEvent.LANPeerPacketEvent)evt).payload);
+								continue read_loop;
+							}
+							break;
+						}
+						case SENT_ICE_CANDIDATE: {
+							if(evt instanceof LANPeerEvent.LANPeerDataChannelEvent) {
+								localChannel = true;
+								continue read_loop;
+							}else if(evt instanceof LANPeerEvent.LANPeerPacketEvent) {
+								if(packetPreBuffer == null) packetPreBuffer = new LinkedList<>();
+								packetPreBuffer.add(((LANPeerEvent.LANPeerPacketEvent)evt).payload);
+								continue read_loop;
+							}
+							break;
+						}
 						case RECEIVED_SUCCESS: {
 							if(evt instanceof LANPeerEvent.LANPeerDataChannelEvent) {
 								SingleplayerServerController.openPlayerChannel(clientId);
 								PlatformWebRTC.serverLANPeerMapIPC(clientId, clientId);
+								if(packetPreBuffer != null) {
+									for(byte[] b : packetPreBuffer) {
+										ClientPlatformSingleplayer.sendPacket(new IPCPacketData(clientId, b));
+									}
+									packetPreBuffer = null;
+								}
 								state = CONNECTED;
 								continue read_loop;
+							}else if(evt instanceof LANPeerEvent.LANPeerICECandidateEvent) {
+								continue read_loop;
 							}
+							break;
 						}
 						case CONNECTED: {
 							if(evt instanceof LANPeerEvent.LANPeerPacketEvent) {
@@ -144,6 +188,7 @@ class LANClientPeer {
 								ClientPlatformSingleplayer.sendPacket(new IPCPacketData(clientId, ((LANPeerEvent.LANPeerPacketEvent)evt).payload));
 								continue read_loop;
 							}
+							break;
 						}
 						default: {
 							break;
