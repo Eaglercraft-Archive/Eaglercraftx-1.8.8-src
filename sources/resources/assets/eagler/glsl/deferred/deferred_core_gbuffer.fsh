@@ -104,7 +104,7 @@ void main() {
 
 	vec3 normal;
 #ifdef COMPILE_NORMAL_ATTRIB
-	normal = normalize(v_normal3f);
+	normal = v_normal3f;
 #else
 	normal = u_uniformNormal3f;
 #endif

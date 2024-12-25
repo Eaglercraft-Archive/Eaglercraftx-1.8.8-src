@@ -206,8 +206,8 @@ void main() {
 #endif
 
 #ifdef COMPILE_NORMAL_ATTRIB
-	normalVector3f = normalize(v_normal3f);
-	block1f = v_block1f;
+	normalVector3f = v_normal3f;
+	block1f = round(v_block1f);
 #else
 	normalVector3f = u_uniformNormal3f;
 	block1f = u_blockConstant1f;

@@ -80,6 +80,7 @@ async function initPlatformInput(inputImports) {
 
 	var pointerLockSupported = false;
 	var pointerLockFlag = false;
+	var pointerLockWaiting = false;
 	var mouseUngrabTimer = 0;
 	var mouseGrabTimer = 0;
 	var mouseUngrabTimeout = -1;
@@ -116,6 +117,7 @@ async function initPlatformInput(inputImports) {
 		focus: null,
 		blur: null,
 		pointerlock: null,
+		pointerlockerr: null,
 		fullscreenChange: null
 	};
 
@@ -412,6 +414,10 @@ async function initPlatformInput(inputImports) {
 				}
 				pointerLockFlag = grab;
 			}, 60);
+			pointerLockWaiting = false;
+		}));
+		document.addEventListener("pointerlockerror", /** @type {function(Event)} */ (currentEventListeners.pointerlockerr = function(evt) {
+			pointerLockWaiting = false;
 		}));
 	}else {
 		eagError("Pointer lock is not supported on this browser");
@@ -646,6 +652,7 @@ async function initPlatformInput(inputImports) {
 		const t = performance.now() | 0;
 		mouseGrabTimer = t;
 		if(grab) {
+			pointerLockWaiting = true;
 			try {
 				canvasElement.requestPointerLock();
 			}catch(ex) {
@@ -663,9 +670,11 @@ async function initPlatformInput(inputImports) {
 		}else {
 			if(mouseUngrabTimeout !== -1) window.clearTimeout(mouseUngrabTimeout);
 			mouseUngrabTimeout = -1;
-			try {
-				document.exitPointerLock();
-			}catch(ex) {
+			if(!pointerLockWaiting) {
+				try {
+					document.exitPointerLock();
+				}catch(ex) {
+				}
 			}
 		}
 	};
@@ -690,7 +699,7 @@ async function initPlatformInput(inputImports) {
 	 * @return {boolean}
 	 */
 	inputImports["isPointerLocked"] = function() {
-		return pointerLockSupported && document.pointerLockElement === canvasElement;
+		return pointerLockSupported && (pointerLockWaiting || document.pointerLockElement === canvasElement);
 	};
 
 	/**
@@ -1123,6 +1132,10 @@ async function initPlatformInput(inputImports) {
 			if(currentEventListeners.pointerlock) {
 				document.removeEventListener("pointerlockchange", /** @type {function(Event)} */ (currentEventListeners.pointerlock));
 				currentEventListeners.pointerlock = null;
+			}
+			if(currentEventListeners.pointerlockerr) {
+				document.removeEventListener("pointerlockerror", /** @type {function(Event)} */ (currentEventListeners.pointerlockerr));
+				currentEventListeners.pointerlockerr = null;
 			}
 			if(currentEventListeners.fullscreenChange) {
 				fullscreenQuery.removeEventListener("change", /** @type {function(Event)} */ (currentEventListeners.fullscreenChange));

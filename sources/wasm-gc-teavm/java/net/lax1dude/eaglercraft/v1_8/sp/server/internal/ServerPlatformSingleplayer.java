@@ -143,4 +143,7 @@ public class ServerPlatformSingleplayer {
 	@Import(module = "serverPlatformSingleplayer", name = "setCrashCallback")
 	private static native JSWASMCrashCallbackInterface setCrashCallbackWASM0();
 
+	@Import(module = "serverPlatformSingleplayer", name = "isTabAboutToClose")
+	public static native boolean isTabAboutToCloseWASM();
+
 }

@@ -196,6 +196,13 @@ function initializeClientPlatfSP(spImports) {
 		}
 	};
 
+	window.__curEaglerX188UnloadListenerCB = function() {
+		if(workerObj) {
+			workerObj.postMessage({
+				"ch": "~!WASM_AUTOSAVE"
+			});
+		}
+	};
 }
 
 function initializeNoClientPlatfSP(spImports) {

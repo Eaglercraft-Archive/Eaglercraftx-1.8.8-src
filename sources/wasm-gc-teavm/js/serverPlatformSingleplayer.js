@@ -19,6 +19,9 @@ const serverPlatfSPName = "serverPlatformSingleplayer";
 /** @type {function(string, boolean)|null} */
 var sendIntegratedServerCrash = null;
 
+/** @type {boolean} */
+var isTabClosingFlag = false;
+
 function initializeServerPlatfSP(spImports) {
 
 	const serverMessageQueue = new EaglerLinkedQueue();
@@ -32,6 +35,11 @@ function initializeServerPlatfSP(spImports) {
 		
 		if(!channel) {
 			eagError("Recieved IPC packet with null channel");
+			return;
+		}
+		
+		if(channel === "~!WASM_AUTOSAVE") {
+			isTabClosingFlag = true;
 			return;
 		}
 		
@@ -72,6 +80,14 @@ function initializeServerPlatfSP(spImports) {
 		};
 	};
 
+	/**
+	 * @return {boolean}
+	 */
+	spImports["isTabAboutToClose"] = function() {
+		const ret = isTabClosingFlag;
+		isTabClosingFlag = false;
+		return ret;
+	};
 }
 
 function initializeNoServerPlatfSP(spImports) {
@@ -79,4 +95,5 @@ function initializeNoServerPlatfSP(spImports) {
 	setUnsupportedFunc(spImports, serverPlatfSPName, "getAvailablePackets");
 	setUnsupportedFunc(spImports, serverPlatfSPName, "getNextPacket");
 	setUnsupportedFunc(spImports, serverPlatfSPName, "setCrashCallback");
+	setUnsupportedFunc(spImports, serverPlatfSPName, "isTabAboutToClose");
 }

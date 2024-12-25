@@ -133,9 +133,6 @@ async function initializeContext() {
 	
 	currentRedirectorFunc = addLogMessageImpl;
 	
-	window.__curEaglerX188UnloadListenerCB = function() {
-		//TODO: Autosave somehow?
-	};
 	if(window.__isEaglerX188UnloadListenerSet !== "yes") {
 		window.onbeforeunload = function(evt) {
 			if(window.__curEaglerX188UnloadListenerCB) {

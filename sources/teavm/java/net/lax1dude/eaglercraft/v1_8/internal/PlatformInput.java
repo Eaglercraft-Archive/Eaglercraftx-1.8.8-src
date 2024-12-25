@@ -99,6 +99,7 @@ public class PlatformInput {
 	private static EventListener<?> focus = null;
 	private static EventListener<?> blur = null;
 	private static EventListener<?> pointerlock = null;
+	private static EventListener<?> pointerlockerr = null;
 	private static EventListener<?> fullscreen = null;
 
 	private static Map<String,LegacyKeycodeTranslator.LegacyKeycode> keyCodeTranslatorMap = null;
@@ -224,6 +225,7 @@ public class PlatformInput {
 	private static long mouseGrabTimer = 0l;
 	private static int mouseUngrabTimeout = -1;
 	private static boolean pointerLockFlag = false;
+	private static boolean pointerLockWaiting = false;
 
 	private static final int FULLSCREEN_NONE = 0;
 	private static final int FULLSCREEN_CORE = 1;
@@ -643,7 +645,7 @@ public class PlatformInput {
 					Window.setTimeout(new TimerHandler() {
 						@Override
 						public void onTimer() {
-							boolean grab = isPointerLocked();
+							boolean grab = isPointerLockedImpl();
 							if(!grab) {
 								if(pointerLockFlag) {
 									mouseUngrabTimer = PlatformRuntime.steadyTimeMillis();
@@ -654,6 +656,13 @@ public class PlatformInput {
 					}, 60);
 					mouseDX = 0.0D;
 					mouseDY = 0.0D;
+					pointerLockWaiting = false;
+				}
+			});
+			win.getDocument().addEventListener(pointerLockSupported == POINTER_LOCK_MOZ ? "mozpointerlockerror" : "pointerlockerror", pointerlockerr = new EventListener<Event>() {
+				@Override
+				public void handleEvent(Event evt) {
+					pointerLockWaiting = false;
 				}
 			});
 			if(pointerLockSupported == POINTER_LOCK_MOZ) {
@@ -693,9 +702,9 @@ public class PlatformInput {
 					}
 				});
 			}
-			if(pointerLockSupported == FULLSCREEN_WEBKIT) {
+			if(fullscreenSupported == FULLSCREEN_WEBKIT) {
 				PlatformRuntime.logger.info("Using webkit- vendor prefix for fullscreen");
-			}else if(pointerLockSupported == FULLSCREEN_MOZ) {
+			}else if(fullscreenSupported == FULLSCREEN_MOZ) {
 				PlatformRuntime.logger.info("Using moz- vendor prefix for fullscreen");
 			}
 		}else {
@@ -1322,6 +1331,7 @@ public class PlatformInput {
 		pointerLockFlag = grab;
 		mouseGrabTimer = t;
 		if(grab) {
+			pointerLockWaiting = true;
 			callRequestPointerLock(canvas);
 			if(mouseUngrabTimeout != -1) Window.clearTimeout(mouseUngrabTimeout);
 			mouseUngrabTimeout = -1;
@@ -1336,7 +1346,9 @@ public class PlatformInput {
 		}else {
 			if(mouseUngrabTimeout != -1) Window.clearTimeout(mouseUngrabTimeout);
 			mouseUngrabTimeout = -1;
-			callExitPointerLock(win.getDocument());
+			if(!pointerLockWaiting) {
+				callExitPointerLock(win.getDocument());
+			}
 		}
 		mouseDX = 0.0D;
 		mouseDY = 0.0D;
@@ -1408,6 +1420,11 @@ public class PlatformInput {
 	}
 
 	public static boolean isPointerLocked() {
+		if(pointerLockWaiting) return true; // workaround for chrome bug
+		return isPointerLockedImpl();
+	}
+
+	private static boolean isPointerLockedImpl() {
 		switch(pointerLockSupported) {
 		case POINTER_LOCK_CORE:
 			return isPointerLocked0(win.getDocument(), canvas);
@@ -1533,6 +1550,10 @@ public class PlatformInput {
 		if(pointerlock != null) {
 			win.getDocument().removeEventListener("pointerlockchange", pointerlock);
 			pointerlock = null;
+		}
+		if(pointerlockerr != null) {
+			win.getDocument().removeEventListener("pointerlockerror", pointerlockerr);
+			pointerlockerr = null;
 		}
 		if(fullscreen != null) {
 			TeaVMUtils.removeEventListener(fullscreenQuery, "change", fullscreen);

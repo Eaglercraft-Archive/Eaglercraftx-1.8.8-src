@@ -336,7 +336,7 @@
 + 	}
 + 
 
-> INSERT  27 : 243  @  27
+> INSERT  27 : 247  @  27
 
 + 
 + 	private int hotbarAreaX = -1;
@@ -369,12 +369,16 @@
 + 					&& touchVPosX < interactButtonX + interactButtonW && touchVPosY < interactButtonY + interactButtonH;
 + 			float f = MathHelper.clamp_float(mc.gameSettings.touchControlOpacity, 0.0f, 1.0f);
 + 			if (f > 0.0f) {
++ 				if (f < 1.0f)
++ 					GlStateManager.enableBlend();
 + 				GlStateManager.color(1.0f, 1.0f, 1.0f, f);
 + 				drawTexturedModalRect(xx, yy, 0, hover ? 216 : 236, 118, 20);
 + 				GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 + 				drawCenteredString(mc.fontRendererObj, I18n.format("touch.interact.entity"),
 + 						parScaledResolution.getScaledWidth() / 2, yy + 6,
 + 						(hover ? 16777120 : 14737632) | ((int) (f * 255.0f) << 24));
++ 				if (f < 1.0f)
++ 					GlStateManager.disableBlend();
 + 			}
 + 		} else {
 + 			interactButtonX = -1;

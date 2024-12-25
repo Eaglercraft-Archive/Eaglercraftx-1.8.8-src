@@ -86,6 +86,11 @@ public class EaglerIntegratedServerWorker {
 				}
 			}
 		}
+		if(ServerPlatformSingleplayer.isTabAboutToCloseWASM() && !isServerStopped()) {
+			logger.info("Autosaving worlds because the tab is about to close!");
+			currentProcess.getConfigurationManager().saveAllPlayerData();
+			currentProcess.saveAllWorlds(false);
+		}
 	}
 
 	public static void tick() {

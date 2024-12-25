@@ -296,4 +296,8 @@ public class ServerPlatformSingleplayer {
 		
 	}
 
+	public static boolean isTabAboutToCloseWASM() {
+		return false;
+	}
+
 }

@@ -146,7 +146,7 @@ void main() {
 #endif
 
 #ifdef COMPILE_NORMAL_ATTRIB
-	vec3 normal = normalize(v_normal3f);
+	vec3 normal = v_normal3f;
 #else
 	vec3 normal = u_uniformNormal3f;
 #endif
