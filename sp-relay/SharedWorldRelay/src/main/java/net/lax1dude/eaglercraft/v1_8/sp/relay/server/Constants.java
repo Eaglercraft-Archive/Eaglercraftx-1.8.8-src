@@ -17,7 +17,7 @@ package net.lax1dude.eaglercraft.v1_8.sp.relay.server;
  */
 public class Constants {
 	
-	public static final String versionName = "1.3";
+	public static final String versionName = "1.4";
 	public static final String versionBrand = "lax1dude";
 	public static final int protocolVersion = 1;
 

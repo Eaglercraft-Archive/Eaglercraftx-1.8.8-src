@@ -73,7 +73,10 @@ public class EaglerSPServer {
 	public boolean handle(RelayPacket _packet) throws IOException {
 		if(_packet instanceof RelayPacket03ICECandidate) {
 			RelayPacket03ICECandidate packet = (RelayPacket03ICECandidate)_packet;
-			EaglerSPClient cl = clients.get(packet.peerId);
+			EaglerSPClient cl;
+			synchronized(clients) {
+				cl = clients.get(packet.peerId);
+			}
 			if(cl != null) {
 				if(LoginState.assertEquals(cl, LoginState.SENT_ICE_CANDIDATE)) {
 					cl.state = LoginState.RECIEVED_ICE_CANIDATE;
@@ -87,7 +90,10 @@ public class EaglerSPServer {
 			return true;
 		}else if(_packet instanceof RelayPacket04Description) {
 			RelayPacket04Description packet = (RelayPacket04Description)_packet;
-			EaglerSPClient cl = clients.get(packet.peerId);
+			EaglerSPClient cl;
+			synchronized(clients) {
+				cl = clients.get(packet.peerId);
+			}
 			if(cl != null) {
 				if(LoginState.assertEquals(cl, LoginState.SENT_DESCRIPTION)) {
 					cl.state = LoginState.RECIEVED_DESCRIPTION;
@@ -101,7 +107,10 @@ public class EaglerSPServer {
 			return true;
 		}else if(_packet instanceof RelayPacketFEDisconnectClient) {
 			RelayPacketFEDisconnectClient packet = (RelayPacketFEDisconnectClient)_packet;
-			EaglerSPClient cl = clients.get(packet.clientId);
+			EaglerSPClient cl;
+			synchronized(clients) {
+				cl = clients.get(packet.clientId);
+			}
 			if(cl != null) {
 				cl.handleServerDisconnectClient(packet);
 				EaglerSPRelay.logger.debug("[{}][Server -> Relay -> Client] PKT 0xFE: Disconnect: {}: {}", (Object) cl.socket.getAttachment(),
