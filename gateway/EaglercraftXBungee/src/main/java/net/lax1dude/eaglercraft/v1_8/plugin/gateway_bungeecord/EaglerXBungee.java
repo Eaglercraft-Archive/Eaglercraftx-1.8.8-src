@@ -64,8 +64,11 @@ import net.md_5.bungee.BungeeCord;
  */
 public class EaglerXBungee extends Plugin {
 
-	public static final String NATIVE_BUNGEECORD_BUILD = "1.21-R0.1-SNAPSHOT:20a71b0:1887";
-	public static final String NATIVE_WATERFALL_BUILD = "1.21-R0.1-SNAPSHOT:bf1be7e:581";
+	public static final String NATIVE_BUNGEECORD_BUILD = "1.21-R0.1-SNAPSHOT:1265a99:1892";
+	public static final String NATIVE_BUNGEECORD_BUILD_DL = "https://ci.md-5.net/job/BungeeCord/1892/artifact/bootstrap/target/BungeeCord.jar";
+	
+	public static final String NATIVE_WATERFALL_BUILD = "1.21-R0.1-SNAPSHOT:9ab9e2b:582";
+	public static final String NATIVE_WATERFALL_BUILD_DL = "https://api.papermc.io/v2/projects/waterfall/versions/1.21/builds/582/downloads/waterfall-1.21-582.jar";
 	
 	static {
 		CompatWarning.displayCompatWarning();

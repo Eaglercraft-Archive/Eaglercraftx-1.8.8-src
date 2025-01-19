@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.api.EaglerXBungeeAPIHelper;
 
@@ -44,6 +46,7 @@ public class AuthLoadingCache<K, V> {
 		boolean shouldEvict(K key, V value);
 	}
 
+	private final ReadWriteLock cacheMapLock;
 	private final Map<K, CacheEntry<V>> cacheMap;
 	private final CacheLoader<K, V> provider;
 	private final long cacheTTL;
@@ -51,6 +54,7 @@ public class AuthLoadingCache<K, V> {
 	private long cacheTimer;
 
 	public AuthLoadingCache(CacheLoader<K, V> provider, long cacheTTL) {
+		this.cacheMapLock = new ReentrantReadWriteLock();
 		this.cacheMap = new HashMap<>();
 		this.provider = provider;
 		this.cacheTTL = cacheTTL;
@@ -58,13 +62,19 @@ public class AuthLoadingCache<K, V> {
 
 	public V get(K key) {
 		CacheEntry<V> etr;
-		synchronized(cacheMap) {
+		cacheMapLock.readLock().lock();
+		try {
 			etr = cacheMap.get(key);
+		}finally {
+			cacheMapLock.readLock().unlock();
 		}
 		if(etr == null) {
+			cacheMapLock.writeLock().lock();
 			V loaded = provider.load(key);
-			synchronized(cacheMap) {
+			try {
 				cacheMap.put(key, new CacheEntry<>(loaded));
+			}finally {
+				cacheMapLock.writeLock().unlock();
 			}
 			return loaded;
 		}else {
@@ -74,13 +84,17 @@ public class AuthLoadingCache<K, V> {
 	}
 
 	public void evict(K key) {
-		synchronized(cacheMap) {
+		cacheMapLock.writeLock().lock();
+		try {
 			cacheMap.remove(key);
+		}finally {
+			cacheMapLock.writeLock().unlock();
 		}
 	}
 
 	public void evictAll(CacheVisitor<K, V> visitor) {
-		synchronized(cacheMap) {
+		cacheMapLock.writeLock().lock();
+		try {
 			Iterator<Entry<K,CacheEntry<V>>> itr = cacheMap.entrySet().iterator();
 			while(itr.hasNext()) {
 				Entry<K,CacheEntry<V>> etr = itr.next();
@@ -88,6 +102,8 @@ public class AuthLoadingCache<K, V> {
 					itr.remove();
 				}
 			}
+		}finally {
+			cacheMapLock.writeLock().unlock();
 		}
 	}
 
@@ -95,7 +111,8 @@ public class AuthLoadingCache<K, V> {
 		long millis = EaglerXBungeeAPIHelper.steadyTimeMillis();
 		if(millis - cacheTimer > (cacheTTL / 2L)) {
 			cacheTimer = millis;
-			synchronized(cacheMap) {
+			cacheMapLock.writeLock().lock();
+			try {
 				Iterator<CacheEntry<V>> mapItr = cacheMap.values().iterator();
 				while(mapItr.hasNext()) {
 					CacheEntry<V> etr = mapItr.next();
@@ -103,13 +120,18 @@ public class AuthLoadingCache<K, V> {
 						mapItr.remove();
 					}
 				}
+			}finally {
+				cacheMapLock.writeLock().unlock();
 			}
 		}
 	}
 
 	public void flush() {
-		synchronized(cacheMap) {
+		cacheMapLock.writeLock().lock();
+		try {
 			cacheMap.clear();
+		}finally {
+			cacheMapLock.writeLock().unlock();
 		}
 	}
 

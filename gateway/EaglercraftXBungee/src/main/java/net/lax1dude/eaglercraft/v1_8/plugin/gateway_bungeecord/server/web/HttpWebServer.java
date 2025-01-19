@@ -40,7 +40,6 @@ public class HttpWebServer {
 	private final String page404;
 	private static HttpMemoryCache default404Page;
 	private static HttpMemoryCache default404UpgradePage;
-	private static final Object cacheClearLock = new Object();
 	
 	public HttpWebServer(File directory, Map<String,HttpContentType> contentTypes, List<String> index, String page404) {
 		this.directory = directory;
@@ -52,15 +51,13 @@ public class HttpWebServer {
 	
 	public void flushCache() {
 		long millis = EaglerXBungeeAPIHelper.steadyTimeMillis();
-		synchronized(cacheClearLock) {
-			synchronized(filesCache) {
-				Iterator<HttpMemoryCache> itr = filesCache.values().iterator();
-				while(itr.hasNext()) {
-					HttpMemoryCache i = itr.next();
-					if(i.contentType.fileBrowserCacheTTL != Long.MAX_VALUE && millis - i.lastCacheHit > 900000l) {
-						i.fileData.release();
-						itr.remove();
-					}
+		synchronized(filesCache) {
+			Iterator<HttpMemoryCache> itr = filesCache.values().iterator();
+			while(itr.hasNext()) {
+				HttpMemoryCache i = itr.next();
+				if(i.contentType.fileBrowserCacheTTL != Long.MAX_VALUE && millis - i.lastCacheHit > 900000l) {
+					i.fileData.release();
+					itr.remove();
 				}
 			}
 		}
@@ -94,19 +91,16 @@ public class HttpWebServer {
 			
 			String joinedPath = String.join("/", pathList);
 	
-			synchronized(cacheClearLock) {
-				synchronized(filesCache) {
-					cached = filesCache.get(joinedPath);
-				}
+			//TODO: Rewrite this to cause less lock contention
+			synchronized(filesCache) {
+				cached = filesCache.get(joinedPath);
 				
 				if(cached != null) {
 					cached = validateCache(cached);
 					if(cached != null) {
 						return cached;
 					}else {
-						synchronized(filesCache) {
-							filesCache.remove(joinedPath);
-						}
+						filesCache.remove(joinedPath);
 					}
 				}
 				
@@ -123,19 +117,13 @@ public class HttpWebServer {
 				if(f.isDirectory()) {
 					for(int i = 0, l = index.size(); i < l; ++i) {
 						String p = joinedPath + "/" + index.get(i);
-						synchronized(filesCache) {
-							cached = filesCache.get(p);
-						}
+						cached = filesCache.get(p);
 						if(cached != null) {
 							cached = validateCache(cached);
 							if(cached != null) {
-								synchronized(filesCache) {
-									filesCache.put(joinedPath, cached);
-								}
+								filesCache.put(joinedPath, cached);
 							}else {
-								synchronized(filesCache) {
-									filesCache.remove(p);
-								}
+								filesCache.remove(p);
 								if(page404 == null || path.equals(page404)) {
 									return default404Page;
 								}else {
@@ -151,9 +139,7 @@ public class HttpWebServer {
 						if(ff.isFile()) {
 							HttpMemoryCache memCache = retrieveFile(ff, p);
 							if(memCache != null) {
-								synchronized(filesCache) {
-									filesCache.put(joinedPath, memCache);
-								}
+								filesCache.put(joinedPath, memCache);
 								return memCache;
 							}
 						}
@@ -166,9 +152,7 @@ public class HttpWebServer {
 				}else {
 					HttpMemoryCache memCache = retrieveFile(f, joinedPath);
 					if(memCache != null) {
-						synchronized(filesCache) {
-							filesCache.put(joinedPath, memCache);
-						}
+						filesCache.put(joinedPath, memCache);
 						return memCache;
 					}else {
 						if(page404 == null || path.equals(page404)) {

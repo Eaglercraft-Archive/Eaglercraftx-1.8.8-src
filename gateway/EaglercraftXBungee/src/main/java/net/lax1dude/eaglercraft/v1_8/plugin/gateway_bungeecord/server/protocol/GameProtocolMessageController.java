@@ -1,6 +1,7 @@
 package net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.server.protocol;
 
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -238,10 +239,12 @@ public class GameProtocolMessageController {
 			while(!sendQueueV4.isEmpty()) {
 				sendCount = 0;
 				totalLen = 0;
+				Iterator<byte[]> itr = sendQueueV4.iterator();
 				do {
-					i = sendQueueV4.get(sendCount++).length;
+					i = itr.next().length;
 					totalLen += GamePacketOutputBuffer.getVarIntSize(i) + i;
-				}while(totalLen < 32760 && sendCount < sendQueueV4.size());
+					++sendCount;
+				}while(totalLen < 32760 && itr.hasNext());
 				if(totalLen >= 32760) {
 					--sendCount;
 				}
