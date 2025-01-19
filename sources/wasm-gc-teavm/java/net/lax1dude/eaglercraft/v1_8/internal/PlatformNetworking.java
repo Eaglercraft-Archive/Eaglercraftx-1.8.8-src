@@ -1,21 +1,7 @@
 package net.lax1dude.eaglercraft.v1_8.internal;
 
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.teavm.interop.Import;
-import org.teavm.jso.JSObject;
-import org.teavm.jso.JSProperty;
 import org.teavm.jso.core.JSString;
-import org.teavm.jso.typedarrays.ArrayBuffer;
-import org.teavm.jso.typedarrays.Uint8Array;
-
-import net.lax1dude.eaglercraft.v1_8.EagUtils;
-import net.lax1dude.eaglercraft.v1_8.EaglerInputStream;
-import net.lax1dude.eaglercraft.v1_8.internal.buffer.ByteBuffer;
-import net.lax1dude.eaglercraft.v1_8.internal.buffer.WASMGCBufferAllocator;
-import net.lax1dude.eaglercraft.v1_8.internal.buffer.WASMGCDirectArrayConverter;
 import net.lax1dude.eaglercraft.v1_8.internal.wasm_gc_teavm.BetterJSStringConverter;
 import net.lax1dude.eaglercraft.v1_8.internal.wasm_gc_teavm.WASMGCWebSocketClient;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;

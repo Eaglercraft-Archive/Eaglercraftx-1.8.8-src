@@ -1,7 +1,7 @@
 package net.lax1dude.eaglercraft.v1_8.internal.buffer;
 
 /**
- * Copyright (c) 2022 lax1dude. All Rights Reserved.
+ * Copyright (c) 2022-2025 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -15,48 +15,60 @@ package net.lax1dude.eaglercraft.v1_8.internal.buffer;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-public interface ShortBuffer extends Buffer {
+public abstract class ShortBuffer implements Buffer {
 
-	ShortBuffer duplicate();
+	public abstract ShortBuffer duplicate();
 
-	short get();
+	public abstract short get();
 
-	ShortBuffer put(short b);
+	public abstract ShortBuffer put(short b);
 
-	short get(int index);
+	public abstract short get(int index);
 
-	ShortBuffer put(int index, short b);
+	public abstract ShortBuffer put(int index, short b);
 
-	short getElement(int index);
+	public abstract short getElement(int index);
 
-	void putElement(int index, short value);
+	public abstract void putElement(int index, short value);
 
-	ShortBuffer get(short[] dst, int offset, int length);
+	public abstract ShortBuffer get(short[] dst, int offset, int length);
 
-	ShortBuffer get(short[] dst);
+	public abstract ShortBuffer get(short[] dst);
 
-	ShortBuffer put(ShortBuffer src);
+	public abstract ShortBuffer put(ShortBuffer src);
 
-	ShortBuffer put(short[] src, int offset, int length);
+	public abstract ShortBuffer put(short[] src, int offset, int length);
 
-	ShortBuffer put(short[] src);
+	public abstract ShortBuffer put(short[] src);
 
-	boolean isDirect();
+	public abstract boolean isDirect();
 
-	ShortBuffer mark();
+	public abstract ShortBuffer mark();
 
-	ShortBuffer reset();
+	public abstract ShortBuffer reset();
 
-	ShortBuffer clear();
+	public abstract ShortBuffer clear();
 
-	ShortBuffer flip();
+	public abstract ShortBuffer flip();
 
-	ShortBuffer rewind();
+	public abstract ShortBuffer rewind();
 
-	ShortBuffer limit(int newLimit);
+	public abstract ShortBuffer limit(int newLimit);
 
-	ShortBuffer position(int newPosition);
+	public abstract int limit();
 
-	short[] array();
+	public abstract ShortBuffer position(int newPosition);
+
+	public abstract int position();
+
+	public abstract int remaining();
+
+	public abstract boolean hasRemaining();
+
+	public abstract int capacity();
+
+	public abstract boolean hasArray();
+
+	public abstract short[] array();
 
 }

@@ -1,19 +1,18 @@
 
 # Eagler Context Redacted Diff
-# Copyright (c) 2024 lax1dude. All rights reserved.
+# Copyright (c) 2025 lax1dude. All rights reserved.
 
 # Version: 1.0
 # Author: lax1dude
 
 > DELETE  2  @  2 : 5
 
-> CHANGE  3 : 12  @  3 : 4
+> CHANGE  3 : 11  @  3 : 4
 
 ~ 
 ~ import com.google.common.collect.Maps;
 ~ import com.google.common.collect.Sets;
 ~ 
-~ import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.VertexFormat;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.WorldRenderer;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.DeferredStateManager;
@@ -34,9 +33,7 @@
 
 > DELETE  5  @  5 : 7
 
-> CHANGE  3 : 4  @  3 : 5
-
-~ 	private final float[] modelviewMatrix = new float[16];
+> DELETE  3  @  3 : 5
 
 > INSERT  3 : 9  @  3
 
@@ -57,7 +54,9 @@
 ~ 		for (int i = 0; i < facings.length; ++i) {
 ~ 			this.field_181702_p.put(facings[i], pos.offset(facings[i], 16));
 
-> INSERT  17 : 26  @  17
+> DELETE  1  @  1 : 3
+
+> INSERT  14 : 23  @  14
 
 + 		if (DeferredStateManager.isRenderingRealisticWater() && compiledchunk.getStateRealisticWater() != null
 + 				&& !compiledchunk.isLayerEmpty(EnumWorldBlockLayer.REALISTIC_WATER)) {
@@ -204,7 +203,9 @@
 ~ 				compiledChunkIn.setState(worldRendererIn.func_181672_a());
 ~ 			}
 
-> DELETE  24  @  24 : 35
+> DELETE  5  @  5 : 20
+
+> DELETE  4  @  4 : 15
 
 > CHANGE  2 : 7  @  2 : 3
 

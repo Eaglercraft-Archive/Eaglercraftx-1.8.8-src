@@ -58,13 +58,6 @@ public class TeaVMBinaries {
 	public static final MavenJAREntry teavmRelocatedLibsASMUtil = new MavenJAREntry("org/teavm/teavm-relocated-libs-asm-util/0.9.2/teavm-relocated-libs-asm-util-0.9.2.jar");
 	public static final MavenJAREntry teavmRelocatedLibsHPPC = new MavenJAREntry("org/teavm/teavm-relocated-libs-hppc/0.9.2/teavm-relocated-libs-hppc-0.9.2.jar");
 	public static final MavenJAREntry teavmRelocatedLibsRhino = new MavenJAREntry("org/teavm/teavm-relocated-libs-rhino/0.9.2/teavm-relocated-libs-rhino-0.9.2.jar");
-	public static final MavenJAREntry asm = new MavenJAREntry("org/ow2/asm/asm/9.5/asm-9.5.jar");
-	public static final MavenJAREntry asmAnalysis = new MavenJAREntry("org/ow2/asm/asm-analysis/9.5/asm-analysis-9.5.jar");
-	public static final MavenJAREntry asmCommons = new MavenJAREntry("org/ow2/asm/asm-commons/9.5/asm-commons-9.5.jar");
-	public static final MavenJAREntry asmTree = new MavenJAREntry("org/ow2/asm/asm-tree/9.5/asm-tree-9.5.jar");
-	public static final MavenJAREntry asmUtil = new MavenJAREntry("org/ow2/asm/asm-util/9.5/asm-util-9.5.jar");
-	public static final MavenJAREntry hppc = new MavenJAREntry("com/carrotsearch/hppc/0.9.1/hppc-0.9.1.jar");
-	public static final MavenJAREntry rhino = new MavenJAREntry("org/mozilla/rhino/1.7.14/rhino-1.7.14.jar");
 	public static final MavenJAREntry teavmMetaprogrammingAPI = new MavenJAREntry("org/teavm/teavm-metaprogramming-api/0.9.2/teavm-metaprogramming-api-0.9.2.jar");
 	public static final MavenJAREntry teavmMetaprogrammingImpl = new MavenJAREntry("org/teavm/teavm-metaprogramming-impl/0.9.2/teavm-metaprogramming-impl-0.9.2.jar");
 	public static final MavenJAREntry teavmJodaTime = new MavenJAREntry("joda-time/joda-time/2.12.2/joda-time-2.12.2.jar");
@@ -73,10 +66,8 @@ public class TeaVMBinaries {
 	private static final MavenJAREntry[] jarsList = new MavenJAREntry[] { teavmCore, teavmCli, teavmTooling,
 			teavmPlatform, teavmClasslib, teavmInterop, teavmJSO, teavmJSOApis, teavmJSOImpl, teavmRelocatedLibsASM,
 			teavmRelocatedLibsASMAnalysis, teavmRelocatedLibsASMCommons, teavmRelocatedLibsASMTree,
-			teavmRelocatedLibsASMUtil, teavmRelocatedLibsHPPC, teavmRelocatedLibsRhino, asm, asmAnalysis, asmCommons,
-			asmTree, asmUtil, hppc, rhino, teavmMetaprogrammingAPI, teavmMetaprogrammingImpl, teavmJodaTime,
-			teavmJZLIB
-	};
+			teavmRelocatedLibsASMUtil, teavmRelocatedLibsHPPC, teavmRelocatedLibsRhino, teavmMetaprogrammingAPI,
+			teavmMetaprogrammingImpl, teavmJodaTime, teavmJZLIB };
 
 	public static File teavmBridge = null;
 
@@ -205,8 +196,7 @@ public class TeaVMBinaries {
 		return new File[] { teavmCore.file, teavmCli.file, teavmTooling.file, teavmInterop.file,
 				teavmRelocatedLibsASM.file, teavmRelocatedLibsASMAnalysis.file, teavmRelocatedLibsASMCommons.file,
 				teavmRelocatedLibsASMTree.file, teavmRelocatedLibsASMUtil.file, teavmRelocatedLibsHPPC.file,
-				teavmRelocatedLibsRhino.file, asm.file, asmAnalysis.file, asmCommons.file, asmTree.file, asmUtil.file,
-				hppc.file, rhino.file, teavmMetaprogrammingAPI.file, teavmBridge };
+				teavmRelocatedLibsRhino.file, teavmMetaprogrammingAPI.file, teavmBridge };
 	}
 
 	public static String[] getTeaVMRuntimeClasspath() {

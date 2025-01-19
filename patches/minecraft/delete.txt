@@ -1,4 +1,4 @@
-# 146 files to delete:
+# 148 files to delete:
 net/minecraft/client/renderer/VertexBufferUploader.java
 net/minecraft/realms/DisconnectedRealmsScreen.java
 net/minecraft/client/stream/Metadata.java
@@ -95,6 +95,7 @@ net/minecraft/realms/Tezzelator.java
 net/minecraft/command/server/CommandSaveOff.java
 net/minecraft/realms/RealmsLevelSummary.java
 net/minecraft/realms/RealmsServerAddress.java
+net/minecraft/util/LongHashMap.java
 net/minecraft/realms/RealmsAnvilLevelStorageSource.java
 net/minecraft/realms/RealmsSliderButton.java
 net/minecraft/world/storage/ThreadedFileIOBase.java
@@ -140,6 +141,7 @@ net/minecraft/command/server/CommandStop.java
 net/minecraft/realms/RealmsSharedConstants.java
 net/minecraft/server/management/UserList.java
 net/minecraft/realms/RealmsSimpleScrolledSelectionList.java
+net/minecraft/util/IntHashMap.java
 net/minecraft/client/resources/FolderResourcePack.java
 net/minecraft/client/stream/MetadataCombat.java
 net/minecraft/client/network/LanServerDetector.java

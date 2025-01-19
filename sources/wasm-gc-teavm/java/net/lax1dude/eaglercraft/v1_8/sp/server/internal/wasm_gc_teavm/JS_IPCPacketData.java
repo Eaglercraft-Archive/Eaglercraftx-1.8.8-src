@@ -2,10 +2,12 @@ package net.lax1dude.eaglercraft.v1_8.sp.server.internal.wasm_gc_teavm;
 
 import org.teavm.jso.JSObject;
 import org.teavm.jso.JSProperty;
+import org.teavm.jso.core.JSString;
 import org.teavm.jso.typedarrays.Uint8Array;
 
 import net.lax1dude.eaglercraft.v1_8.internal.IPCPacketData;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.WASMGCDirectArrayConverter;
+import net.lax1dude.eaglercraft.v1_8.internal.wasm_gc_teavm.BetterJSStringConverter;
 
 /**
  * Copyright (c) 2024 lax1dude. All Rights Reserved.
@@ -25,13 +27,14 @@ import net.lax1dude.eaglercraft.v1_8.internal.buffer.WASMGCDirectArrayConverter;
 public interface JS_IPCPacketData extends JSObject {
 
 	@JSProperty
-	String getCh();
+	JSString getCh();
 
 	@JSProperty
 	Uint8Array getData();
 
 	default IPCPacketData internalize() {
-		return new IPCPacketData(getCh(), WASMGCDirectArrayConverter.externU8ArrayToByteArray(getData()));
+		return new IPCPacketData(BetterJSStringConverter.stringFromJS(getCh()),
+				WASMGCDirectArrayConverter.externU8ArrayToByteArray(getData()));
 	}
 
 }

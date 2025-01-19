@@ -1,14 +1,16 @@
 
 # Eagler Context Redacted Diff
-# Copyright (c) 2024 lax1dude. All rights reserved.
+# Copyright (c) 2025 lax1dude. All rights reserved.
 
 # Version: 1.0
 # Author: lax1dude
 
-> INSERT  2 : 4  @  2
+> INSERT  2 : 6  @  2
 
 + import java.util.List;
 + 
++ import com.carrotsearch.hppc.IntObjectHashMap;
++ import com.carrotsearch.hppc.IntObjectMap;
 
 > CHANGE  4 : 7  @  4 : 5
 
@@ -16,27 +18,51 @@
 ~ import net.lax1dude.eaglercraft.v1_8.PointerInputAbstraction;
 ~ import net.lax1dude.eaglercraft.v1_8.minecraft.EnumInputEvent;
 
-> DELETE  1  @  1 : 9
+> DELETE  1  @  1 : 10
 
-> CHANGE  22 : 24  @  22 : 23
+> CHANGE  3 : 4  @  3 : 4
+
+~ 	private final IntObjectMap<Gui> field_178073_v = new IntObjectHashMap<>();
+
+> CHANGE  17 : 19  @  17 : 18
 
 ~ 		for (int n = 0; n < this.field_178078_x.length; ++n) {
 ~ 			GuiPageButtonList.GuiListEntry[] aguipagebuttonlist$guilistentry = this.field_178078_x[n];
 
-> CHANGE  86 : 91  @  86 : 90
+> CHANGE  11 : 12  @  11 : 12
+
+~ 					this.field_178073_v.put(guipagebuttonlist$guilistentry.func_178935_b(), gui);
+
+> CHANGE  6 : 7  @  6 : 7
+
+~ 					this.field_178073_v.put(guipagebuttonlist$guilistentry1.func_178935_b(), gui1);
+
+> CHANGE  16 : 17  @  16 : 17
+
+~ 			Gui gui = this.field_178073_v.get(guipagebuttonlist$guilistentry.func_178935_b());
+
+> CHANGE  1 : 2  @  1 : 2
+
+~ 					? this.field_178073_v.get(guipagebuttonlist$guilistentry1.func_178935_b())
+
+> CHANGE  44 : 45  @  44 : 45
+
+~ 		return this.field_178073_v.get(parInt1);
+
+> CHANGE  3 : 8  @  3 : 7
 
 ~ 
 ~ 		GuiListEntry[] etr = this.field_178078_x[parInt1];
 ~ 		for (int i = 0; i < etr.length; ++i) {
 ~ 			if (etr[i] != null) {
-~ 				this.func_178066_a((Gui) this.field_178073_v.lookup(etr[i].func_178935_b()), false);
+~ 				this.func_178066_a(this.field_178073_v.get(etr[i].func_178935_b()), false);
 
 > CHANGE  3 : 7  @  3 : 7
 
 ~ 		etr = this.field_178078_x[parInt2];
 ~ 		for (int i = 0; i < etr.length; ++i) {
 ~ 			if (etr[i] != null) {
-~ 				this.func_178066_a((Gui) this.field_178073_v.lookup(etr[i].func_178935_b()), true);
+~ 				this.func_178066_a(this.field_178073_v.get(etr[i].func_178935_b()), true);
 
 > CHANGE  33 : 35  @  33 : 34
 

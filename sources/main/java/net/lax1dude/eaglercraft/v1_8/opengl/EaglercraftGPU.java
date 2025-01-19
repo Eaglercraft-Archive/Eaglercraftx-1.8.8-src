@@ -7,8 +7,8 @@ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 import net.minecraft.util.MathHelper;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.carrotsearch.hppc.IntObjectHashMap;
+import com.carrotsearch.hppc.IntObjectMap;
 
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.internal.GLObjectMap;
@@ -213,15 +213,18 @@ public class EaglercraftGPU {
 		++GlStateManager.stateNormalSerial;
 	}
 	
-	private static final Map<Integer,String> stringCache = new HashMap<>();
+	private static final IntObjectMap<String> stringCache = new IntObjectHashMap<>();
 
 	public static final String glGetString(int param) {
 		String str = stringCache.get(param);
 		if(str == null) {
 			str = _wglGetString(param);
+			if(str == null) {
+				str = "";
+			}
 			stringCache.put(param, str);
 		}
-		return str;
+		return str.length() == 0 ? null : str;
 	}
 
 	public static final void glGetInteger(int param, int[] values) {

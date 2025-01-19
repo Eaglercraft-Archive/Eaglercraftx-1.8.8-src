@@ -2,8 +2,8 @@ package net.lax1dude.eaglercraft.v1_8.sp.server.socket;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import net.lax1dude.eaglercraft.v1_8.EaglerOutputStream;
@@ -48,10 +48,9 @@ public class IntegratedServerPlayerNetworkManager {
 	public final String playerChannel;
 	private EnumConnectionState packetState = EnumConnectionState.HANDSHAKING;
 	private static PacketBuffer temporaryBuffer;
-	private static EaglerOutputStream temporaryOutputStream;
+	private static byte[] compressedPacketTmp;
 	private int debugPacketCounter = 0;
-	private byte[][] recievedPacketBuffer = new byte[16384][];
-	private int recievedPacketBufferCounter = 0;
+	private final List<byte[]> recievedPacketBuffer = new LinkedList<>();
 	private final boolean enableSendCompression;
 
 	private boolean firstPacket = true;
@@ -69,11 +68,6 @@ public class IntegratedServerPlayerNetworkManager {
 		}
 		this.playerChannel = playerChannel;
 		this.enableSendCompression = !SingleplayerServerController.PLAYER_CHANNEL.equals(playerChannel);
-		if(this.enableSendCompression) {
-			if(temporaryOutputStream == null) {
-				temporaryOutputStream = new EaglerOutputStream(16386);
-			}
-		}
 	}
 	
 	public void connect() {
@@ -97,19 +91,14 @@ public class IntegratedServerPlayerNetworkManager {
 	}
 
 	public void addRecievedPacket(byte[] next) {
-		if(recievedPacketBufferCounter < recievedPacketBuffer.length - 1) {
-			recievedPacketBuffer[recievedPacketBufferCounter++] = next;
-		}else {
-			logger.error("Dropping packets on recievedPacketBuffer for channel \"{}\"! (overflow)", playerChannel);
-		}
+		recievedPacketBuffer.add(next);
 	}
 
 	public void processReceivedPackets() {
 		if(nethandler == null) return;
 
-		
-		for(int i = 0; i < recievedPacketBufferCounter; ++i) {
-			byte[] data = recievedPacketBuffer[i];
+		while(!recievedPacketBuffer.isEmpty()) {
+			byte[] data = recievedPacketBuffer.remove(0);
 			byte[] fullData;
 
 			if(enableSendCompression) {
@@ -132,7 +121,6 @@ public class IntegratedServerPlayerNetworkManager {
 						ServerPlatformSingleplayer.sendPacket(new IPCPacketData(playerChannel, kickPacketBAO.toByteArray()));
 						closeChannel(new ChatComponentText("Recieved unsuppoorted connection from an Eaglercraft 1.5.2 client!"));
 						firstPacket = false;
-						recievedPacketBufferCounter = 0;
 						return;
 					}
 					firstPacket = false;
@@ -169,7 +157,6 @@ public class IntegratedServerPlayerNetworkManager {
 				fullData = data;
 			}
 			
-			recievedPacketBuffer[i] = null;
 			++debugPacketCounter;
 			try {
 				ByteBuf nettyBuffer = Unpooled.buffer(fullData, fullData.length);
@@ -206,7 +193,6 @@ public class IntegratedServerPlayerNetworkManager {
 				logger.error(t);
 			}
 		}
-		recievedPacketBufferCounter = 0;
 	}
 
 	public void sendPacket(Packet pkt) {
@@ -234,22 +220,24 @@ public class IntegratedServerPlayerNetworkManager {
 		int len = temporaryBuffer.readableBytes();
 		if(enableSendCompression) {
 			if(len > compressionThreshold) {
-				temporaryOutputStream.reset();
-				byte[] compressedData;
+				if(compressedPacketTmp == null || compressedPacketTmp.length < len) {
+					compressedPacketTmp = new byte[len];
+				}
+				int cmpLen;
 				try {
-					temporaryOutputStream.write(2);
-					temporaryOutputStream.write((len >>> 24) & 0xFF);
-					temporaryOutputStream.write((len >>> 16) & 0xFF);
-					temporaryOutputStream.write((len >>> 8) & 0xFF);
-					temporaryOutputStream.write(len & 0xFF);
-					try(OutputStream os = EaglerZLIB.newDeflaterOutputStream(temporaryOutputStream)) {
-						temporaryBuffer.readBytes(os, len);
-					}
-					compressedData = temporaryOutputStream.toByteArray();
+					cmpLen = EaglerZLIB.deflateFull(temporaryBuffer.array(), 0, len, compressedPacketTmp, 0, compressedPacketTmp.length);
 				}catch(IOException ex) {
 					logger.error("Failed to compress packet {}!", pkt.getClass().getSimpleName());
+					logger.error(ex);
 					return;
 				}
+				byte[] compressedData = new byte[5 + cmpLen];
+				compressedData[0] = (byte)2;
+				compressedData[1] = (byte)((len >>> 24) & 0xFF);
+				compressedData[2] = (byte)((len >>> 16) & 0xFF);
+				compressedData[3] = (byte)((len >>> 8) & 0xFF);
+				compressedData[4] = (byte)(len & 0xFF);
+				System.arraycopy(compressedPacketTmp, 0, compressedData, 5, cmpLen);
 				if(compressedData.length > fragmentSize) {
 					int fragmentSizeN1 = fragmentSize - 1;
 					for (int j = 1; j < compressedData.length; j += fragmentSizeN1) {

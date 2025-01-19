@@ -1,6 +1,6 @@
 
 # Eagler Context Redacted Diff
-# Copyright (c) 2024 lax1dude. All rights reserved.
+# Copyright (c) 2025 lax1dude. All rights reserved.
 
 # Version: 1.0
 # Author: lax1dude
@@ -9,20 +9,14 @@
 
 > DELETE  1  @  1 : 3
 
-> INSERT  2 : 3  @  2
-
-+ import java.util.HashMap;
-
-> INSERT  1 : 2  @  1
-
-+ import java.util.Map;
-
-> INSERT  1 : 24  @  1
+> INSERT  4 : 29  @  4
 
 + 
 + import net.lax1dude.eaglercraft.v1_8.internal.EnumTouchEvent;
 + import org.apache.commons.lang3.StringUtils;
 + 
++ import com.carrotsearch.hppc.IntObjectHashMap;
++ import com.carrotsearch.hppc.IntObjectMap;
 + import com.google.common.base.Splitter;
 + import com.google.common.collect.Lists;
 + import com.google.common.collect.Sets;
@@ -305,7 +299,7 @@
 
 > INSERT  11 : 96  @  11
 
-+ 	public final Map<Integer, int[]> touchStarts = new HashMap<>();
++ 	public final IntObjectMap<int[]> touchStarts = new IntObjectHashMap<>();
 + 
 + 	/**
 + 	 * Handles touch input.

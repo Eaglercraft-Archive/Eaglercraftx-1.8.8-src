@@ -54,6 +54,7 @@ public class ShaderSource {
 	public static final ResourceLocation realistic_water_render_fsh = new ResourceLocation("eagler:glsl/deferred/realistic_water_render.fsh");
 	public static final ResourceLocation realistic_water_control_fsh = new ResourceLocation("eagler:glsl/deferred/realistic_water_control.fsh");
 	public static final ResourceLocation realistic_water_normals_fsh = new ResourceLocation("eagler:glsl/deferred/realistic_water_normals.fsh");
+	public static final ResourceLocation realistic_water_normals_mix_fsh = new ResourceLocation("eagler:glsl/deferred/realistic_water_normals_mix.fsh");
 	public static final ResourceLocation realistic_water_noise_fsh = new ResourceLocation("eagler:glsl/deferred/realistic_water_noise.fsh");
 	public static final ResourceLocation gbuffer_debug_view_fsh = new ResourceLocation("eagler:glsl/deferred/gbuffer_debug_view.fsh");
 	public static final ResourceLocation ssao_generate_fsh = new ResourceLocation("eagler:glsl/deferred/ssao_generate.fsh");

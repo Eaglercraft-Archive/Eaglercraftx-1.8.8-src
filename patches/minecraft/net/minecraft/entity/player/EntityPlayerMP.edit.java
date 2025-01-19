@@ -1,11 +1,20 @@
 
 # Eagler Context Redacted Diff
-# Copyright (c) 2024 lax1dude. All rights reserved.
+# Copyright (c) 2025 lax1dude. All rights reserved.
 
 # Version: 1.0
 # Author: lax1dude
 
-> CHANGE  4 : 6  @  4 : 6
+> INSERT  2 : 8  @  2
+
++ import com.carrotsearch.hppc.IntArrayDeque;
++ import com.carrotsearch.hppc.IntDeque;
++ import com.carrotsearch.hppc.LongHashSet;
++ import com.carrotsearch.hppc.LongSet;
++ import com.carrotsearch.hppc.cursors.IntCursor;
++ import com.carrotsearch.hppc.cursors.LongCursor;
+
+> CHANGE  2 : 4  @  2 : 4
 
 ~ import net.lax1dude.eaglercraft.v1_8.mojang.authlib.GameProfile;
 ~ import net.lax1dude.eaglercraft.v1_8.netty.Unpooled;
@@ -14,7 +23,9 @@
 
 > DELETE  51  @  51 : 52
 
-> CHANGE  22 : 26  @  22 : 24
+> DELETE  15  @  15 : 16
+
+> CHANGE  6 : 10  @  6 : 8
 
 ~ import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
@@ -25,7 +36,12 @@
 
 + 
 
-> CHANGE  18 : 19  @  18 : 19
+> CHANGE  7 : 9  @  7 : 9
+
+~ 	public final LongSet loadedChunks = new LongHashSet();
+~ 	private final IntDeque destroyedItemsNetCache = new IntArrayDeque();
+
+> CHANGE  9 : 10  @  9 : 10
 
 ~ 	private long playerLastActiveTime = EagRuntime.steadyTimeMillis();
 
@@ -38,17 +54,56 @@
 
 ~ 		if (!this.openContainer.canInteractWith(this)) {
 
-> CHANGE  51 : 53  @  51 : 53
+> DELETE  7  @  7 : 8
+
+> CHANGE  2 : 4  @  2 : 5
+
+~ 			while (!destroyedItemsNetCache.isEmpty() && j < i) {
+~ 				aint[j++] = destroyedItemsNetCache.removeFirst();
+
+> CHANGE  6 : 9  @  6 : 9
+
+~ 			ArrayList<Chunk> arraylist = Lists.newArrayList();
+~ 			Iterator<LongCursor> iterator1 = this.loadedChunks.iterator();
+~ 			ArrayList<TileEntity> arraylist1 = Lists.newArrayList();
+
+> CHANGE  2 : 11  @  2 : 15
+
+~ 				long l = iterator1.next().value;
+~ 				int chunkXPos = (int) (l & 4294967295L);
+~ 				int chunkZPos = (int) (l >>> 32);
+~ 				if (this.worldObj.isBlockLoaded(new BlockPos(chunkXPos << 4, 0, chunkZPos << 4))) {
+~ 					Chunk chunk = this.worldObj.getChunkFromChunkCoords(chunkXPos, chunkZPos);
+~ 					if (chunk.isPopulated()) {
+~ 						arraylist.add(chunk);
+~ 						arraylist1.addAll(((WorldServer) this.worldObj).getTileEntitiesIn(chunkXPos * 16, 0,
+~ 								chunkZPos * 16, chunkXPos * 16 + 16, 256, chunkZPos * 16 + 16));
+
+> DELETE  1  @  1 : 3
+
+> CHANGE  5 : 6  @  5 : 7
+
+~ 					this.playerNetServerHandler.sendPacket(new S21PacketChunkData(arraylist.get(0), true, '\uffff'));
+
+> CHANGE  4 : 6  @  4 : 6
 
 ~ 				for (int i = 0, l = arraylist1.size(); i < l; ++i) {
-~ 					this.sendTileEntityUpdate((TileEntity) arraylist1.get(i));
+~ 					this.sendTileEntityUpdate(arraylist1.get(i));
 
-> CHANGE  2 : 4  @  2 : 4
+> CHANGE  2 : 6  @  2 : 4
 
 ~ 				for (int i = 0, l = arraylist.size(); i < l; ++i) {
-~ 					this.getServerForPlayer().getEntityTracker().func_85172_a(this, (Chunk) arraylist.get(i));
+~ 					Chunk c = arraylist.get(i);
+~ 					this.getServerForPlayer().getEntityTracker().func_85172_a(this, c);
+~ 					this.loadedChunks.removeAll(c.getChunkCoordLong());
 
-> CHANGE  581 : 582  @  581 : 582
+> CHANGE  518 : 521  @  518 : 519
+
+~ 		for (IntCursor cur : ((EntityPlayerMP) oldPlayer).destroyedItemsNetCache) {
+~ 			destroyedItemsNetCache.addLast(cur.value);
+~ 		}
+
+> CHANGE  62 : 63  @  62 : 63
 
 ~ 		if ("seed".equals(s)) {
 
@@ -63,5 +118,9 @@
 > INSERT  6 : 7  @  6
 
 + 		this.mcServer.getConfigurationManager().updatePlayerViewDistance(this, packetIn.getViewDistance());
+
+> CHANGE  27 : 28  @  27 : 28
+
+~ 			this.destroyedItemsNetCache.addLast(parEntity.getEntityId());
 
 > EOF

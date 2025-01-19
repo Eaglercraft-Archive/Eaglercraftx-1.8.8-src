@@ -1,6 +1,6 @@
 
 # Eagler Context Redacted Diff
-# Copyright (c) 2024 lax1dude. All rights reserved.
+# Copyright (c) 2025 lax1dude. All rights reserved.
 
 # Version: 1.0
 # Author: lax1dude
@@ -48,7 +48,11 @@
 
 > DELETE  5  @  5 : 7
 
-> DELETE  5  @  5 : 11
+> INSERT  3 : 4  @  3
+
++ import net.minecraft.util.EnumChatFormatting;
+
+> DELETE  2  @  2 : 8
 
 > DELETE  3  @  3 : 8
 
@@ -337,7 +341,7 @@
 
 ~ 																									.calculateChatboxHeight(
 
-> CHANGE  2 : 25  @  2 : 36
+> CHANGE  2 : 30  @  2 : 36
 
 ~ 																							: (parOptions == GameSettings.Options.CHAT_WIDTH
 ~ 																									? s + GuiNewChat
@@ -362,6 +366,11 @@
 ~ 																																	* 100.0F)
 ~ 																																	+ "%")
 ~ 																															: "yee")))))))))))));
+~ 		} else if (EagRuntime.getPlatformType() != EnumPlatformType.DESKTOP
+~ 				&& parOptions == GameSettings.Options.EAGLER_VSYNC) {
+~ 			boolean flag = this.getOptionOrdinalValue(parOptions);
+~ 			return flag ? s + I18n.format("options.on", new Object[0])
+~ 					: EnumChatFormatting.RED + s + I18n.format("options.off", new Object[0]);
 
 > DELETE  11  @  11 : 19
 

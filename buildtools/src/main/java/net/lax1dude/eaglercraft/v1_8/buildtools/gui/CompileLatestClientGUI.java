@@ -56,7 +56,7 @@ public class CompileLatestClientGUI {
 	public static void main(String[] args) {
 		System.out.println();
 		System.out.println("Launching client compiler wizard...");
-		System.out.println("Copyright (c) 2022-2024 lax1dude");
+		System.out.println("Copyright (c) 2022-2025 lax1dude");
 		System.out.println();
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {

@@ -1,6 +1,6 @@
 
 # Eagler Context Redacted Diff
-# Copyright (c) 2024 lax1dude. All rights reserved.
+# Copyright (c) 2025 lax1dude. All rights reserved.
 
 # Version: 1.0
 # Author: lax1dude
@@ -11,7 +11,14 @@
 
 > DELETE  6  @  6 : 8
 
-> CHANGE  167 : 168  @  167 : 168
+> INSERT  47 : 51  @  47
+
++ 	public BiomeGenBase getBiomeGenerator(int x, int z, BiomeGenBase biomeGenBaseIn) {
++ 		return this.biomeCache.func_180284_a(x, z, biomeGenBaseIn);
++ 	}
++ 
+
+> CHANGE  120 : 121  @  120 : 121
 
 ~ 	public BlockPos findBiomePosition(int x, int z, int range, List<BiomeGenBase> biomes, EaglercraftRandom random) {
 

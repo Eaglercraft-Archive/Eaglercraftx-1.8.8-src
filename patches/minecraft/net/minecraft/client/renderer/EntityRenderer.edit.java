@@ -1,6 +1,6 @@
 
 # Eagler Context Redacted Diff
-# Copyright (c) 2024 lax1dude. All rights reserved.
+# Copyright (c) 2025 lax1dude. All rights reserved.
 
 # Version: 1.0
 # Author: lax1dude
@@ -692,7 +692,7 @@
 
 > DELETE  9  @  9 : 10
 
-> INSERT  12 : 952  @  12
+> INSERT  12 : 953  @  12
 
 + 
 + 	private static final Vector4f tmpVec4f_1 = new Vector4f();
@@ -738,7 +738,7 @@
 + //		System.out.println(builder.toString());
 + 
 + 		float waveTimer = (float) ((EagRuntime.steadyTimeMillis() % 600000l) * 0.001);
-+ 		DeferredStateManager.setWaterWindOffset(0.0f, 0.0f, waveTimer, waveTimer);
++ 		DeferredStateManager.setWaterWindOffset(waveTimer * 0.25f, waveTimer * 0.13f, waveTimer * 1.45f, waveTimer);
 + 
 + 		float blockWaveDistX = (float) (d0 - blockWaveOffsetX);
 + 		float blockWaveDistY = (float) (d1 - blockWaveOffsetY);
@@ -1373,7 +1373,7 @@
 + 					+ mc.theWorld.getThunderStrength(partialTicks) * 5.0f;
 + 			ds *= MathHelper.clamp_float(6.0f - DeferredStateManager.getSunHeight() * 17.0f, 1.0f, 3.0f);
 + 			if (conf.is_rendering_lightShafts) {
-+ 				ds *= Math.max(2.0f - Math.abs(DeferredStateManager.getSunHeight()) * 5.0f, 1.0f);
++ 				ds *= Math.max(2.5f - Math.abs(DeferredStateManager.getSunHeight()) * 5.0f, 2.5f);
 + 			}
 + 			DeferredStateManager.enableFogExp(ds, true, 1.0f, 1.0f, 1.0f, 1.0f, ff, ff, ff, 1.0f);
 + 		}
@@ -1471,6 +1471,7 @@
 + 			for (int i = 0, l = lst.size(); i < l; ++i) {
 + 				lst.get(i).draw(ShadersRenderPassFuture.PassType.MAIN);
 + 			}
++ 			DeferredStateManager.forwardCallbackGBuffer.reset();
 + 			GlStateManager.matrixMode(5889);
 + 			GlStateManager.popMatrix();
 + 			GlStateManager.matrixMode(5888);

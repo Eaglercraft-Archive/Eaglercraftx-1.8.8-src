@@ -1,13 +1,20 @@
 
 # Eagler Context Redacted Diff
-# Copyright (c) 2024 lax1dude. All rights reserved.
+# Copyright (c) 2025 lax1dude. All rights reserved.
 
 # Version: 1.0
 # Author: lax1dude
 
 > DELETE  8  @  8 : 12
 
-> CHANGE  77 : 78  @  77 : 78
+> INSERT  75 : 79  @  75
+
++ 	public int getBiomeColorForCoords(BlockPos var1, int index) {
++ 		return this.worldObj.getBiomeColorForCoords(var1, index);
++ 	}
++ 
+
+> CHANGE  2 : 3  @  2 : 3
 
 ~ 			return Chunk.getNoSkyLightValue();
 

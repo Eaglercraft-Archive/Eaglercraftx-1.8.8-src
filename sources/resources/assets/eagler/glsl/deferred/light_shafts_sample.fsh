@@ -84,7 +84,7 @@ float shadow(in vec3 coords) {
 void main() {
 	output1f = 0.0;
 	float depth = textureLod(u_gbufferDepthTexture, v_position2f, 0.0).r;
-	if(depth < 0.00001) {
+	if(depth == 0.0) {
 		return;
 	}
 

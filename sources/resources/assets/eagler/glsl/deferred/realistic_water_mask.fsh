@@ -29,9 +29,15 @@ uniform vec2 u_textureCoords02;
 #endif
 
 void main() {
-#ifdef COMPILE_NORMAL_ATTRIB
-	output4f = vec4(v_normal3f * 0.5 + 0.5, 1.0);
+#ifdef COMPILE_LIGHTMAP_ATTRIB
+	float skyLight = v_lightmap2f.y;
 #else
-	output4f = vec4(0.0, 1.0, 0.0, 1.0);
+	float skyLight = u_textureCoords02.y;
+#endif
+	skyLight = 0.004 + skyLight * 0.996;
+#ifdef COMPILE_NORMAL_ATTRIB
+	output4f = vec4(v_normal3f * 0.5 + 0.5, skyLight);
+#else
+	output4f = vec4(0.0, 1.0, 0.0, skyLight);
 #endif
 }

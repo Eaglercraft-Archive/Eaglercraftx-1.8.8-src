@@ -202,7 +202,7 @@ public class WASMGCBufferAllocator {
 	}
 
 	public static Uint8Array getUnsignedByteBufferView(ShortBuffer buffer) {
-		DirectMallocIntBuffer buf = (DirectMallocIntBuffer)buffer;
+		DirectMallocShortBuffer buf = (DirectMallocShortBuffer)buffer;
 		return getUnsignedByteBufferView0(buf.address.add(buf.position()), buf.remaining() << 1);
 	}
 

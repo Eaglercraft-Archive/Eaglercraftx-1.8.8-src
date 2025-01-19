@@ -1,23 +1,24 @@
 
 # Eagler Context Redacted Diff
-# Copyright (c) 2024 lax1dude. All rights reserved.
+# Copyright (c) 2025 lax1dude. All rights reserved.
 
 # Version: 1.0
 # Author: lax1dude
 
 > DELETE  2  @  2 : 3
 
-> INSERT  4 : 13  @  4
+> CHANGE  3 : 13  @  3 : 4
 
-+ 
-+ import com.google.common.collect.Lists;
-+ 
-+ import net.lax1dude.eaglercraft.v1_8.Keyboard;
-+ import net.lax1dude.eaglercraft.v1_8.Mouse;
-+ import net.lax1dude.eaglercraft.v1_8.PointerInputAbstraction;
-+ import net.lax1dude.eaglercraft.v1_8.internal.EnumCursorType;
-+ import net.lax1dude.eaglercraft.v1_8.minecraft.EnumInputEvent;
-+ import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
+~ 
+~ import com.carrotsearch.hppc.IntIntMap;
+~ import com.google.common.collect.Lists;
+~ 
+~ import net.lax1dude.eaglercraft.v1_8.Keyboard;
+~ import net.lax1dude.eaglercraft.v1_8.Mouse;
+~ import net.lax1dude.eaglercraft.v1_8.PointerInputAbstraction;
+~ import net.lax1dude.eaglercraft.v1_8.internal.EnumCursorType;
+~ import net.lax1dude.eaglercraft.v1_8.minecraft.EnumInputEvent;
+~ import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 
 > DELETE  4  @  4 : 7
 
@@ -100,7 +101,15 @@
 ~ 			List list = itemstack.getTooltipProfanityFilter(this.mc.thePlayer,
 ~ 					this.mc.gameSettings.advancedItemTooltips);
 
-> CHANGE  7 : 9  @  7 : 8
+> CHANGE  2 : 3  @  2 : 3
+
+~ 				IntIntMap map = EnchantmentHelper.getEnchantments(itemstack);
+
+> CHANGE  1 : 2  @  1 : 3
+
+~ 					Enchantment enchantment = Enchantment.getEnchantmentById(map.keys().iterator().next().value);
+
+> CHANGE  1 : 3  @  1 : 2
 
 ~ 					for (int m = 0; m < CreativeTabs.creativeTabArray.length; ++m) {
 ~ 						CreativeTabs creativetabs1 = CreativeTabs.creativeTabArray[m];

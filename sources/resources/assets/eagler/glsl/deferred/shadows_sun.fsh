@@ -79,7 +79,7 @@ void main() {
 	output1f = 0.0;
 #endif
 	float depth = textureLod(u_gbufferDepthTexture, v_position2f, 0.0).r;
-	if(depth < 0.00001) {
+	if(depth == 0.0) {
 		return;
 	}
 	vec4 normalVector4f = textureLod(u_gbufferNormalTexture, v_position2f, 0.0);

@@ -7,6 +7,10 @@ import net.minecraft.client.gui.ScaledResolution;
 
 import java.util.*;
 
+import com.carrotsearch.hppc.IntObjectHashMap;
+import com.carrotsearch.hppc.IntObjectMap;
+import com.carrotsearch.hppc.cursors.ObjectCursor;
+
 /**
  * Copyright (c) 2024 lax1dude, ayunami2000. All Rights Reserved.
  * 
@@ -24,7 +28,7 @@ import java.util.*;
  */
 public class TouchControls {
 
-	public static final Map<Integer, TouchControlInput> touchControls = new HashMap<>();
+	public static final IntObjectMap<TouchControlInput> touchControls = new IntObjectHashMap<>();
 	protected static Set<EnumTouchControl> touchControlPressed = EnumSet.noneOf(EnumTouchControl.class);
 
 	protected static boolean isSneakToggled = false;
@@ -112,7 +116,8 @@ public class TouchControls {
 		if(!touchControls.isEmpty()) {
 			Set<EnumTouchControl> newPressed = EnumSet.noneOf(EnumTouchControl.class);
 			TouchOverlayRenderer renderer = Minecraft.getMinecraft().touchOverlayRenderer;
-			for (TouchControlInput input : touchControls.values()) {
+			for (ObjectCursor<TouchControlInput> input_ : touchControls.values()) {
+				TouchControlInput input = input_.value;
 				TouchAction action = input.control.getAction();
 				if(action != null) {
 					action.call(input.control, input.x, input.y);

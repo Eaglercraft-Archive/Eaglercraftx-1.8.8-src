@@ -1,6 +1,8 @@
 package net.lax1dude.eaglercraft.v1_8.sp.socket;
 
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 
 import net.lax1dude.eaglercraft.v1_8.internal.EnumEaglerConnectionState;
 import net.lax1dude.eaglercraft.v1_8.internal.IPCPacketData;
@@ -34,8 +36,7 @@ import net.minecraft.util.IChatComponent;
 public class ClientIntegratedServerNetworkManager extends EaglercraftNetworkManager {
 
 	private int debugPacketCounter = 0;
-	private byte[][] recievedPacketBuffer = new byte[16384][];
-	private int recievedPacketBufferCounter = 0;
+	private final List<byte[]> recievedPacketBuffer = new LinkedList<>();
 	public boolean isPlayerChannelOpen = false;
 
 	public ClientIntegratedServerNetworkManager(String channel) {
@@ -65,20 +66,15 @@ public class ClientIntegratedServerNetworkManager extends EaglercraftNetworkMana
 	}
 
 	public void addRecievedPacket(byte[] next) {
-		if(recievedPacketBufferCounter < recievedPacketBuffer.length - 1) {
-			recievedPacketBuffer[recievedPacketBufferCounter++] = next;
-		}else {
-			logger.error("Dropping packets on recievedPacketBuffer for channel \"{}\"! (overflow)", address);
-		}
+		recievedPacketBuffer.add(next);
 	}
 
 	@Override
 	public void processReceivedPackets() throws IOException {
 		if(nethandler == null) return;
 
-		for(int i = 0; i < recievedPacketBufferCounter; ++i) {
-			byte[] next = recievedPacketBuffer[i];
-			recievedPacketBuffer[i] = null;
+		while(!recievedPacketBuffer.isEmpty()) {
+			byte[] next = recievedPacketBuffer.remove(0);
 			++debugPacketCounter;
 			try {
 				ByteBuf nettyBuffer = Unpooled.buffer(next, next.length);
@@ -115,7 +111,6 @@ public class ClientIntegratedServerNetworkManager extends EaglercraftNetworkMana
 				logger.error(t);
 			}
 		}
-		recievedPacketBufferCounter = 0;
 	}
 
 	@Override
@@ -170,9 +165,6 @@ public class ClientIntegratedServerNetworkManager extends EaglercraftNetworkMana
 	}
 
 	public void clearRecieveQueue() {
-		for(int i = 0; i < recievedPacketBufferCounter; ++i) {
-			recievedPacketBuffer[i] = null;
-		}
-		recievedPacketBufferCounter = 0;
+		recievedPacketBuffer.clear();
 	}
 }

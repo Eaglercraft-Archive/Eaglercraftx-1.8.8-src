@@ -404,6 +404,7 @@ void main() {
 
 	vec3 dlightDist3f, dlightDir3f, dlightColor3f;
 	int safeLightCount = u_dynamicLightCount1i > 12 ? 0 : u_dynamicLightCount1i; // hate this
+	float cm;
 	for(int i = 0; i < safeLightCount; ++i) {
 		dlightDist3f = worldPosition4f.xyz - u_dynamicLightArray[i].u_lightPosition4f.xyz;
 		dlightDir3f = normalize(dlightDist3f);
@@ -412,9 +413,11 @@ void main() {
 			continue;
 		}
 		dlightColor3f = u_dynamicLightArray[i].u_lightColor4f.rgb / dot(dlightDist3f, dlightDist3f);
-		if(dlightColor3f.r + dlightColor3f.g + dlightColor3f.b < 0.025) {
+		cm = dlightColor3f.r + dlightColor3f.g + dlightColor3f.b;
+		if(cm < 0.025) {
 			continue;
 		}
+		dlightColor3f *= ((cm - 0.025) / cm);
 		lightColor3f += eaglercraftLighting(diffuseColor4f.rgb, dlightColor3f, -worldDirection4f.xyz, dlightDir3f, normalVector3f, materialData3f, metalN, metalK) * u_blockSkySunDynamicLightFac4f.w;
 	}
 
@@ -451,7 +454,7 @@ void main() {
 
 #ifdef COMPILE_FOG_LIGHT_SHAFTS
 		fogBlend4f.rgb *= pow(textureLod(u_lightShaftsTexture, v_positionClip2f * 0.5 + 0.5, 0.0).r * 0.9 + 0.1, 2.25);
-		fogBlend4f.a = fogBlend4f.a * 0.9 + 0.1;
+		fogBlend4f.a = fogBlend4f.a * 0.85 + 0.2;
 #endif
 		break;
 	}

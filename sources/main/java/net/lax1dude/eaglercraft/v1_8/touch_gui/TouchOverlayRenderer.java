@@ -17,6 +17,7 @@ import static net.lax1dude.eaglercraft.v1_8.opengl.RealOpenGLEnums.*;
 
 import java.util.Set;
 
+import com.carrotsearch.hppc.cursors.ObjectCursor;
 import com.google.common.collect.Sets;
 
 /**
@@ -103,8 +104,8 @@ public class TouchOverlayRenderer {
 				GlStateManager.clear(GL_COLOR_BUFFER_BIT);
 			}
 			Set<EnumTouchControl> controls = Sets.newHashSet(EnumTouchControl._VALUES);
-			for (TouchControlInput input : TouchControls.touchControls.values()) {
-				controls.remove(input.control);
+			for (ObjectCursor<TouchControlInput> input : TouchControls.touchControls.values()) {
+				controls.remove(input.value.control);
 			}
 			for (EnumTouchControl control : controls) {
 				if(invalidDeep || control.invalid) {
@@ -115,7 +116,8 @@ public class TouchOverlayRenderer {
 					control.invalid = false;
 				}
 			}
-			for (TouchControlInput input : TouchControls.touchControls.values()) {
+			for (ObjectCursor<TouchControlInput> input_ : TouchControls.touchControls.values()) {
+				TouchControlInput input = input_.value;
 				EnumTouchControl control = input.control;
 				if(invalidDeep || control.invalid) {
 					if(control.visible) {

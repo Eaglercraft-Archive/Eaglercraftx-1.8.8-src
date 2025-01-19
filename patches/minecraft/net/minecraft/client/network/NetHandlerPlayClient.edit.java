@@ -1,39 +1,38 @@
 
 # Eagler Context Redacted Diff
-# Copyright (c) 2024 lax1dude. All rights reserved.
+# Copyright (c) 2025 lax1dude. All rights reserved.
 
 # Version: 1.0
 # Author: lax1dude
 
 > DELETE  2  @  2 : 8
 
-> DELETE  4  @  4 : 6
+> CHANGE  4 : 28  @  4 : 7
 
-> INSERT  1 : 24  @  1
-
-+ 
-+ import net.lax1dude.eaglercraft.v1_8.ClientUUIDLoadingCache;
-+ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
-+ import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
-+ 
-+ import com.google.common.collect.Maps;
-+ 
-+ import net.lax1dude.eaglercraft.v1_8.netty.Unpooled;
-+ import net.lax1dude.eaglercraft.v1_8.notifications.ServerNotificationManager;
-+ import net.lax1dude.eaglercraft.v1_8.profile.ServerCapeCache;
-+ import net.lax1dude.eaglercraft.v1_8.profile.ServerSkinCache;
-+ import net.lax1dude.eaglercraft.v1_8.socket.EaglercraftNetworkManager;
-+ import net.lax1dude.eaglercraft.v1_8.socket.protocol.GamePluginMessageProtocol;
-+ import net.lax1dude.eaglercraft.v1_8.socket.protocol.client.GameProtocolMessageController;
-+ import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.GameMessagePacket;
-+ import net.lax1dude.eaglercraft.v1_8.sp.lan.LANClientNetworkManager;
-+ import net.lax1dude.eaglercraft.v1_8.sp.socket.ClientIntegratedServerNetworkManager;
-+ import net.lax1dude.eaglercraft.v1_8.voice.VoiceClientController;
-+ import net.lax1dude.eaglercraft.v1_8.webview.WebViewOverlayController;
-+ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
-+ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
-+ import net.lax1dude.eaglercraft.v1_8.minecraft.EaglerFolderResourcePack;
-+ import net.lax1dude.eaglercraft.v1_8.mojang.authlib.GameProfile;
+~ 
+~ import net.lax1dude.eaglercraft.v1_8.ClientUUIDLoadingCache;
+~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
+~ import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
+~ 
+~ import com.carrotsearch.hppc.cursors.ObjectIntCursor;
+~ import com.google.common.collect.Maps;
+~ 
+~ import net.lax1dude.eaglercraft.v1_8.netty.Unpooled;
+~ import net.lax1dude.eaglercraft.v1_8.notifications.ServerNotificationManager;
+~ import net.lax1dude.eaglercraft.v1_8.profile.ServerCapeCache;
+~ import net.lax1dude.eaglercraft.v1_8.profile.ServerSkinCache;
+~ import net.lax1dude.eaglercraft.v1_8.socket.EaglercraftNetworkManager;
+~ import net.lax1dude.eaglercraft.v1_8.socket.protocol.GamePluginMessageProtocol;
+~ import net.lax1dude.eaglercraft.v1_8.socket.protocol.client.GameProtocolMessageController;
+~ import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.GameMessagePacket;
+~ import net.lax1dude.eaglercraft.v1_8.sp.lan.LANClientNetworkManager;
+~ import net.lax1dude.eaglercraft.v1_8.sp.socket.ClientIntegratedServerNetworkManager;
+~ import net.lax1dude.eaglercraft.v1_8.voice.VoiceClientController;
+~ import net.lax1dude.eaglercraft.v1_8.webview.WebViewOverlayController;
+~ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
+~ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
+~ import net.lax1dude.eaglercraft.v1_8.minecraft.EaglerFolderResourcePack;
+~ import net.lax1dude.eaglercraft.v1_8.mojang.authlib.GameProfile;
 
 > DELETE  14  @  14 : 16
 
@@ -443,7 +442,13 @@
 
 > DELETE  11  @  11 : 12
 
-> DELETE  9  @  9 : 10
+> CHANGE  2 : 5  @  2 : 5
+
+~ 		for (ObjectIntCursor<StatBase> entry : packetIn.func_148974_c()) {
+~ 			StatBase statbase = entry.key;
+~ 			int i = entry.value;
+
+> DELETE  4  @  4 : 5
 
 > DELETE  25  @  25 : 26
 

@@ -1,6 +1,7 @@
 package net.lax1dude.eaglercraft.v1_8.socket.protocol.client;
 
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -149,10 +150,12 @@ public class GameProtocolMessageController {
 				while(sendQueueV4.size() > 0) {
 					sendCount = 0;
 					totalLen = 0;
+					Iterator<PacketBuffer> itr = sendQueueV4.iterator();
 					do {
-						i = sendQueueV4.get(sendCount++).readableBytes();
+						i = itr.next().readableBytes();
 						totalLen += GamePacketOutputBuffer.getVarIntSize(i) + i;
-					}while(totalLen < 32760 && sendCount < sendQueueV4.size());
+						++sendCount;
+					}while(totalLen < 32760 && itr.hasNext());
 					if(totalLen >= 32760) {
 						--sendCount;
 					}

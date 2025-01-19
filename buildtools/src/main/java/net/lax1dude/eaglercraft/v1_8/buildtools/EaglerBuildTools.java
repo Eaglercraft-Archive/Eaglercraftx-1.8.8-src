@@ -32,7 +32,7 @@ public class EaglerBuildTools {
 
 	public static void main(String[] args) {
 		System.out.println("Eaglercraft 1.8 Build Tools");
-		System.out.println("Copyright (c) 2022-2024 lax1dude");
+		System.out.println("Copyright (c) 2022-2025 lax1dude");
 		System.out.println();
 		
 		if(!System.getProperty("eaglercraft.isJava11", "false").equalsIgnoreCase("true")) {

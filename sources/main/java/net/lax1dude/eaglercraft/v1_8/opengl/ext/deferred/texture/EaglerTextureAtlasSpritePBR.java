@@ -1,10 +1,10 @@
 package net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.texture;
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Callable;
 
+import com.carrotsearch.hppc.cursors.IntCursor;
 import com.google.common.collect.Lists;
 
 import net.lax1dude.eaglercraft.v1_8.HString;
@@ -104,10 +104,8 @@ public class EaglerTextureAtlasSpritePBR extends EaglerTextureAtlasSprite {
 			int l = i;
 			this.height = this.width;
 			if (meta.getFrameCount() > 0) {
-				Iterator iterator = meta.getFrameIndexSet().iterator();
-
-				while (iterator.hasNext()) {
-					int i1 = ((Integer) iterator.next()).intValue();
+				for (IntCursor cur : meta.getFrameIndexSet()) {
+					int i1 = cur.value;
 					if (i1 >= j1) {
 						throw new RuntimeException("invalid frameindex " + i1);
 					}

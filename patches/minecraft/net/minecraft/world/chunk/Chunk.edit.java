@@ -1,6 +1,6 @@
 
 # Eagler Context Redacted Diff
-# Copyright (c) 2024 lax1dude. All rights reserved.
+# Copyright (c) 2025 lax1dude. All rights reserved.
 
 # Version: 1.0
 # Author: lax1dude
@@ -11,17 +11,17 @@
 
 + import java.util.LinkedList;
 
-> CHANGE  2 : 4  @  2 : 3
+> CHANGE  2 : 5  @  2 : 5
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
-
-> CHANGE  1 : 3  @  1 : 2
-
-~ 
 ~ import net.lax1dude.eaglercraft.v1_8.sp.server.EaglerMinecraftServer;
 
-> DELETE  18  @  18 : 19
+> DELETE  4  @  4 : 6
+
+> DELETE  8  @  8 : 9
+
+> DELETE  3  @  3 : 4
 
 > DELETE  2  @  2 : 5
 
@@ -31,15 +31,28 @@
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.DeferredStateManager;
 
-> CHANGE  24 : 25  @  24 : 25
+> CHANGE  24 : 26  @  24 : 25
 
 ~ 	private List<BlockPos> tileEntityPosQueue;
+~ 	private final ChunkCoordIntPair coordsCache;
 
 > CHANGE  8 : 9  @  8 : 9
 
 ~ 		this.tileEntityPosQueue = new LinkedList();
 
-> INSERT  135 : 138  @  135
+> INSERT  5 : 6  @  5
+
++ 		this.coordsCache = new ChunkCoordIntPair(x, z);
+
+> CHANGE  38 : 39  @  38 : 39
+
+~ 		return this.getHeightValue(pos.x & 15, pos.z & 15);
+
+> CHANGE  29 : 30  @  29 : 30
+
+~ 					Block block = this.getBlock(j, l - 1, k);
+
+> INSERT  61 : 64  @  61
 
 + 		if (!this.worldObj.isRemote) {
 + 			++EaglerMinecraftServer.counterLightUpdate;
@@ -78,66 +91,70 @@
 + 				++EaglerMinecraftServer.counterLightUpdate;
 + 			}
 
-> CHANGE  61 : 70  @  61 : 65
+> CHANGE  9 : 10  @  9 : 10
 
-~ 		try {
-~ 			if (pos.getY() >= 0 && pos.getY() >> 4 < this.storageArrays.length) {
-~ 				ExtendedBlockStorage extendedblockstorage = this.storageArrays[pos.getY() >> 4];
-~ 				if (extendedblockstorage != null) {
-~ 					int j = pos.getX() & 15;
-~ 					int k = pos.getY() & 15;
-~ 					int i = pos.getZ() & 15;
-~ 					return extendedblockstorage.get(j, k, i);
-~ 				}
+~ 		return this.getBlock(x, y, z).getLightOpacity();
 
-> CHANGE  2 : 9  @  2 : 17
+> CHANGE  2 : 3  @  2 : 4
 
-~ 			return Blocks.air.getDefaultState();
-~ 		} catch (Throwable throwable) {
-~ 			CrashReport crashreport = CrashReport.makeCrashReport(throwable, "Getting block state");
-~ 			CrashReportCategory crashreportcategory = crashreport.makeCategory("Block being got");
-~ 			crashreportcategory.addCrashSectionCallable("Location", new Callable<String>() {
-~ 				public String call() throws Exception {
-~ 					return CrashReportCategory.getCoordinateInfo(pos);
+~ 	public Block getBlock(int x, int y, int z) {
 
-> INSERT  1 : 5  @  1
+> CHANGE  3 : 4  @  3 : 9
 
-+ 			});
-+ 			throw new ReportedException(crashreport);
-+ 		}
-+ 	}
+~ 				return extendedblockstorage.getBlockByExtId(x, y & 15, z);
 
-> CHANGE  1 : 14  @  1 : 11
+> CHANGE  3 : 4  @  3 : 4
 
-~ 	/**
-~ 	 * only use with a regular "net.minecraft.util.BlockPos"!
-~ 	 */
-~ 	public IBlockState getBlockStateFaster(final BlockPos pos) {
-~ 		try {
-~ 			if (pos.y >= 0 && pos.y >> 4 < this.storageArrays.length) {
-~ 				ExtendedBlockStorage extendedblockstorage = this.storageArrays[pos.getY() >> 4];
-~ 				if (extendedblockstorage != null) {
-~ 					int j = pos.x & 15;
-~ 					int k = pos.y & 15;
-~ 					int i = pos.z & 15;
-~ 					return extendedblockstorage.get(j, k, i);
-~ 				}
+~ 		return Blocks.air;
 
-> INSERT  1 : 12  @  1
+> CHANGE  2 : 11  @  2 : 15
+
+~ 	public Block getBlock(final BlockPos pos) {
+~ 		if (pos.y >= 0 && pos.y >> 4 < this.storageArrays.length) {
+~ 			ExtendedBlockStorage extendedblockstorage = this.storageArrays[pos.y >> 4];
+~ 			if (extendedblockstorage != null) {
+~ 				int j = pos.x & 15;
+~ 				int k = pos.y & 15;
+~ 				int i = pos.z & 15;
+~ 				return extendedblockstorage.getBlockByExtId(j, k, i);
+~ 			}
+
+> DELETE  1  @  1 : 2
+
+> CHANGE  1 : 2  @  1 : 14
+
+~ 		return Blocks.air;
+
+> CHANGE  3 : 10  @  3 : 7
+
+~ 		if (pos.y >= 0 && pos.y >> 4 < this.storageArrays.length) {
+~ 			ExtendedBlockStorage extendedblockstorage = this.storageArrays[pos.y >> 4];
+~ 			if (extendedblockstorage != null) {
+~ 				int j = pos.x & 15;
+~ 				int k = pos.y & 15;
+~ 				int i = pos.z & 15;
+~ 				return extendedblockstorage.get(j, k, i);
+
+> DELETE  1  @  1 : 30
+
+> INSERT  1 : 3  @  1
 
 + 
-+ 			return Blocks.air.getDefaultState();
-+ 		} catch (Throwable throwable) {
-+ 			CrashReport crashreport = CrashReport.makeCrashReport(throwable, "Getting block state");
-+ 			CrashReportCategory crashreportcategory = crashreport.makeCategory("Block being got");
-+ 			crashreportcategory.addCrashSectionCallable("Location", new Callable<String>() {
-+ 				public String call() throws Exception {
-+ 					return CrashReportCategory.getCoordinateInfo(pos);
-+ 				}
-+ 			});
-+ 			throw new ReportedException(crashreport);
++ 		return Blocks.air.getDefaultState();
 
-> CHANGE  110 : 112  @  110 : 111
+> CHANGE  16 : 19  @  16 : 19
+
+~ 		int i = pos.x & 15;
+~ 		int j = pos.y;
+~ 		int k = pos.z & 15;
+
+> CHANGE  86 : 89  @  86 : 89
+
+~ 		int i = blockpos.x & 15;
+~ 		int j = blockpos.y;
+~ 		int k = blockpos.z & 15;
+
+> CHANGE  1 : 3  @  1 : 2
 
 ~ 		return extendedblockstorage == null
 ~ 				? (this.canSeeSky(blockpos) ? enumskyblock.defaultLightValue : getNoSkyLightValue())
@@ -146,7 +163,19 @@
 
 ~ 						? (this.worldObj.provider.getHasNoSky() ? getNoSkyLightValue()
 
-> CHANGE  35 : 36  @  35 : 36
+> CHANGE  6 : 9  @  6 : 9
+
+~ 		int j = blockpos.x & 15;
+~ 		int k = blockpos.y;
+~ 		int l = blockpos.z & 15;
+
+> CHANGE  19 : 22  @  19 : 22
+
+~ 		int j = blockpos.x & 15;
+~ 		int k = blockpos.y;
+~ 		int l = blockpos.z & 15;
+
+> CHANGE  4 : 5  @  4 : 5
 
 ~ 					: getNoSkyLightValue();
 
@@ -162,7 +191,13 @@
 + 	}
 + 
 
-> INSERT  58 : 59  @  58
+> CHANGE  43 : 46  @  43 : 46
+
+~ 		int i = blockpos.x & 15;
+~ 		int j = blockpos.y;
+~ 		int k = blockpos.z & 15;
+
+> INSERT  12 : 13  @  12
 
 + 			BlockPos pos2 = new BlockPos(blockpos);
 
@@ -197,7 +232,18 @@
 
 ~ 			BlockPos blockpos = (BlockPos) this.tileEntityPosQueue.remove(0);
 
-> CHANGE  113 : 114  @  113 : 114
+> CHANGE  15 : 16  @  15 : 16
+
+~ 		return coordsCache;
+
+> INSERT  2 : 6  @  2
+
++ 	public long getChunkCoordLong() {
++ 		return ChunkCoordIntPair.chunkXZ2Int(this.xPosition, this.zPosition);
++ 	}
++ 
+
+> CHANGE  95 : 96  @  95 : 96
 
 ~ 		if (chunkManager != null && k == 255) {
 

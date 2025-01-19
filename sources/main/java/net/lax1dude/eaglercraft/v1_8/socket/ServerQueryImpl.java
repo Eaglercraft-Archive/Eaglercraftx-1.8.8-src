@@ -10,7 +10,6 @@ import net.lax1dude.eaglercraft.v1_8.internal.EnumServerRateLimit;
 import net.lax1dude.eaglercraft.v1_8.internal.IServerQuery;
 import net.lax1dude.eaglercraft.v1_8.internal.IWebSocketClient;
 import net.lax1dude.eaglercraft.v1_8.internal.IWebSocketFrame;
-import net.lax1dude.eaglercraft.v1_8.internal.PlatformRuntime;
 import net.lax1dude.eaglercraft.v1_8.internal.QueryResponse;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;

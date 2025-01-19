@@ -1,30 +1,29 @@
 
 # Eagler Context Redacted Diff
-# Copyright (c) 2024 lax1dude. All rights reserved.
+# Copyright (c) 2025 lax1dude. All rights reserved.
 
 # Version: 1.0
 # Author: lax1dude
 
-> DELETE  2  @  2 : 9
+> CHANGE  2 : 5  @  2 : 13
 
-> DELETE  1  @  1 : 4
+~ import org.json.JSONArray;
+~ import org.json.JSONException;
+~ import org.json.JSONObject;
 
-> INSERT  1 : 7  @  1
+> INSERT  1 : 3  @  1
 
-+ import org.json.JSONArray;
-+ import org.json.JSONException;
-+ import org.json.JSONObject;
-+ 
-+ import com.google.common.collect.Lists;
++ import com.carrotsearch.hppc.IntArrayList;
 + 
 
-> CHANGE  1 : 4  @  1 : 6
+> CHANGE  1 : 5  @  1 : 7
 
 ~ 	public TextureMetadataSection deserialize(JSONObject jsonobject) throws JSONException {
 ~ 		boolean flag = jsonobject.optBoolean("blur", false);
 ~ 		boolean flag1 = jsonobject.optBoolean("clamp", false);
+~ 		IntArrayList arraylist = new IntArrayList();
 
-> CHANGE  3 : 4  @  3 : 4
+> CHANGE  2 : 3  @  2 : 3
 
 ~ 				JSONArray jsonarray = jsonobject.getJSONArray("mipmaps");
 

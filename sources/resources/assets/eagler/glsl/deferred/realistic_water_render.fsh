@@ -1,7 +1,7 @@
 #line 2
 
 /*
- * Copyright (c) 2023 lax1dude. All Rights Reserved.
+ * Copyright (c) 2023-2025 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -230,16 +230,17 @@ void main() {
 	worldPosition4fOff.xyz += u_wavingBlockOffset3f;
 
 	vec2 rotatedUV2f = worldPosition4fOff.xz + (block1f == 10.0 ? u_waterWindOffset4f.z * texCoords2f : u_waterWindOffset4f.xy);
-	rotatedUV2f *= (block1f == 10.0 ? 0.75 : 0.25);
+	rotatedUV2f *= (block1f == 10.0 ? 0.30 : 0.10);
 	mat3 cf = cotangent_frame(normalVector3f, worldDirection4f.xyz, rotatedUV2f);
-	vec3 surfaceNormalsMap3f = vec3(textureLod(u_normalMap, rotatedUV2f, 0.0).rg, 0.0);
-	surfaceNormalsMap3f.xy *= 2.0;
-	surfaceNormalsMap3f.xy -= 1.0;
+	vec3 surfaceNormalsMap3f = vec3(textureLod(u_normalMap, rotatedUV2f * 0.68, 0.0).rg - 0.5, 0.0);
+	surfaceNormalsMap3f.xy += textureLod(u_normalMap, rotatedUV2f, 0.0).rg - 0.5;
+	surfaceNormalsMap3f.xy += textureLod(u_normalMap, rotatedUV2f * 2.33, 0.0).rg - 0.5;
+	surfaceNormalsMap3f.xy *= (2.0 / 3.0);
 
 	vec3 surfaceNormalsMapFlat3f = cf * surfaceNormalsMap3f;
-	surfaceNormalsMapFlat3f *= 0.1;
+	surfaceNormalsMapFlat3f *= 0.15;
 
-	surfaceNormalsMap3f.z = 8.0;
+	surfaceNormalsMap3f.z = 7.0;
 	surfaceNormalsMap3f = normalize(surfaceNormalsMap3f);
 	normalVector3f = surfaceNormalsMap3f = cf * surfaceNormalsMap3f;
 
@@ -267,6 +268,18 @@ void main() {
 
 	vec4 envMapSample4f = textureLod(u_reflectionMap, reflectCoordsR.xy, 0.0);
 	vec4 refractionSample = textureLod(u_refractionMap, reflectCoordsL.xy, 0.0);
+
+	if(refractionSample.a == 0.0) {
+		reflectCoordsL = mat4x3(
+			u_modelViewProjMat4f_[0].xyw,
+			u_modelViewProjMat4f_[1].xyw,
+			u_modelViewProjMat4f_[2].xyw,
+			u_modelViewProjMat4f_[3].xyw) * worldPosition4f;
+		reflectCoordsL.xy /= reflectCoordsL.z;
+		reflectCoordsL.xy *= 0.5;
+		reflectCoordsL.xy += 0.5;
+		refractionSample = textureLod(u_refractionMap, reflectCoordsL.xy, 0.0);
+	}
 
 #ifdef COMPILE_COLOR_ATTRIB
 	refractionSample *= v_color4f * v_color4f * u_color4f * u_color4f;
@@ -374,6 +387,7 @@ void main() {
 
 	vec3 dlightDist3f, dlightDir3f, dlightColor3f;
 	int safeLightCount = u_dynamicLightCount1i > 12 ? 0 : u_dynamicLightCount1i; // hate this
+	float cm;
 	for(int i = 0; i < safeLightCount; ++i) {
 		dlightDist3f = u_dynamicLightArray[i].u_lightPosition4f.xyz - worldPosition4f.xyz;
 		dlightDir3f = normalize(dlightDist3f);
@@ -381,9 +395,11 @@ void main() {
 			continue;
 		}
 		dlightColor3f = u_dynamicLightArray[i].u_lightColor4f.rgb / dot(dlightDist3f, dlightDist3f);
-		if(dlightColor3f.r + dlightColor3f.g + dlightColor3f.b < 0.025) {
+		cm = dlightColor3f.r + dlightColor3f.g + dlightColor3f.b;
+		if(cm < 0.025) {
 			continue;
 		}
+		dlightColor3f *= ((cm - 0.025) / cm);
 		lightColor3f += eaglercraftLighting_Water(diffuseColor4f.rgb, dlightColor3f, -worldDirection4f.xyz, dlightDir3f, normalVector3f) * u_blockSkySunDynamicLightFac4f.w;
 	}
 
@@ -419,7 +435,7 @@ void main() {
 
 #ifdef COMPILE_FOG_LIGHT_SHAFTS
 		fogBlend4f.rgb *= pow(textureLod(u_lightShaftsTexture, v_positionClip2f * 0.5 + 0.5, 0.0).r * 0.9 + 0.1, 2.25);
-		fogBlend4f.a = fogBlend4f.a * 0.9 + 0.1;
+		fogBlend4f.a = fogBlend4f.a * 0.85 + 0.2;
 #endif
 		break;
 	}

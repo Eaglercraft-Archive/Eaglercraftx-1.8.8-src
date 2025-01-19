@@ -2,7 +2,7 @@ package net.lax1dude.eaglercraft.v1_8.internal.buffer;
 
 
 /**
- * Copyright (c) 2022 lax1dude. All Rights Reserved.
+ * Copyright (c) 2022-2025 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -16,88 +16,100 @@ package net.lax1dude.eaglercraft.v1_8.internal.buffer;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-public interface ByteBuffer extends Buffer {
+public abstract class ByteBuffer implements Buffer {
 
-	ByteBuffer duplicate();
+	public abstract ByteBuffer duplicate();
 
-	byte get();
+	public abstract byte get();
 
-	ByteBuffer put(byte b);
+	public abstract ByteBuffer put(byte b);
 
-	byte get(int index);
+	public abstract byte get(int index);
 
-	ByteBuffer put(int index, byte b);
+	public abstract ByteBuffer put(int index, byte b);
 
-	ByteBuffer get(byte[] dst, int offset, int length);
+	public abstract ByteBuffer get(byte[] dst, int offset, int length);
 
-	ByteBuffer get(byte[] dst);
+	public abstract ByteBuffer get(byte[] dst);
 
-	ByteBuffer put(ByteBuffer src);
+	public abstract ByteBuffer put(ByteBuffer src);
 
-	ByteBuffer put(byte[] src, int offset, int length);
+	public abstract ByteBuffer put(byte[] src, int offset, int length);
 
-	ByteBuffer put(byte[] src);
+	public abstract ByteBuffer put(byte[] src);
 
-	char getChar();
+	public abstract char getChar();
 
-	ByteBuffer putChar(char value);
+	public abstract ByteBuffer putChar(char value);
 
-	char getChar(int index);
+	public abstract char getChar(int index);
 
-	ByteBuffer putChar(int index, char value);
+	public abstract ByteBuffer putChar(int index, char value);
 
-	short getShort();
+	public abstract short getShort();
 
-	ByteBuffer putShort(short value);
+	public abstract ByteBuffer putShort(short value);
 
-	short getShort(int index);
+	public abstract short getShort(int index);
 
-	ByteBuffer putShort(int index, short value);
+	public abstract ByteBuffer putShort(int index, short value);
 
-	ShortBuffer asShortBuffer();
+	public abstract ShortBuffer asShortBuffer();
 
-	int getInt();
+	public abstract int getInt();
 
-	ByteBuffer putInt(int value);
+	public abstract ByteBuffer putInt(int value);
 
-	int getInt(int index);
+	public abstract int getInt(int index);
 
-	ByteBuffer putInt(int index, int value);
+	public abstract ByteBuffer putInt(int index, int value);
 
-	IntBuffer asIntBuffer();
+	public abstract IntBuffer asIntBuffer();
 
-	long getLong();
+	public abstract long getLong();
 
-	ByteBuffer putLong(long value);
+	public abstract ByteBuffer putLong(long value);
 
-	long getLong(int index);
+	public abstract long getLong(int index);
 
-	ByteBuffer putLong(int index, long value);
+	public abstract ByteBuffer putLong(int index, long value);
 
-	float getFloat();
+	public abstract float getFloat();
 
-	ByteBuffer putFloat(float value);
+	public abstract ByteBuffer putFloat(float value);
 
-	float getFloat(int index);
+	public abstract float getFloat(int index);
 
-	ByteBuffer putFloat(int index, float value);
+	public abstract ByteBuffer putFloat(int index, float value);
 
-	FloatBuffer asFloatBuffer();
+	public abstract FloatBuffer asFloatBuffer();
 
-	ByteBuffer mark();
+	public abstract ByteBuffer mark();
 
-	ByteBuffer reset();
+	public abstract ByteBuffer reset();
 
-	ByteBuffer clear();
+	public abstract ByteBuffer clear();
 
-	ByteBuffer flip();
+	public abstract ByteBuffer flip();
 
-	ByteBuffer rewind();
+	public abstract ByteBuffer rewind();
 
-	ByteBuffer limit(int newLimit);
+	public abstract ByteBuffer limit(int newLimit);
 
-	ByteBuffer position(int newPosition);
+	public abstract int limit();
 
-	byte[] array();
+	public abstract ByteBuffer position(int newPosition);
+
+	public abstract int position();
+
+	public abstract int remaining();
+
+	public abstract boolean hasRemaining();
+
+	public abstract int capacity();
+
+	public abstract boolean hasArray();
+
+	public abstract byte[] array();
 
 }

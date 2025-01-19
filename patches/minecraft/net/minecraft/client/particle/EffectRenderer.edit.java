@@ -1,13 +1,13 @@
 
 # Eagler Context Redacted Diff
-# Copyright (c) 2024 lax1dude. All rights reserved.
+# Copyright (c) 2025 lax1dude. All rights reserved.
 
 # Version: 1.0
 # Author: lax1dude
 
 > DELETE  2  @  2 : 4
 
-> CHANGE  3 : 7  @  3 : 4
+> CHANGE  2 : 6  @  2 : 4
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ import net.lax1dude.eaglercraft.v1_8.minecraft.AcceleratedEffectRenderer;
@@ -17,9 +17,9 @@
 > INSERT  1 : 10  @  1
 
 + 
++ import com.carrotsearch.hppc.IntObjectHashMap;
++ import com.carrotsearch.hppc.IntObjectMap;
 + import com.google.common.collect.Lists;
-+ import com.google.common.collect.Maps;
-+ 
 + import net.lax1dude.eaglercraft.v1_8.opengl.EaglercraftGPU;
 + import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 + import net.lax1dude.eaglercraft.v1_8.opengl.WorldRenderer;
@@ -37,11 +37,12 @@
 + 	private static final ResourceLocation particleMaterialsTextures = new ResourceLocation(
 + 			"eagler:glsl/deferred/particles_s.png");
 
-> CHANGE  4 : 5  @  4 : 5
+> CHANGE  4 : 6  @  4 : 6
 
 ~ 	private EaglercraftRandom rand = new EaglercraftRandom();
+~ 	private IntObjectMap<IParticleFactory> particleTypes = new IntObjectHashMap<>();
 
-> INSERT  2 : 5  @  2
+> INSERT  1 : 4  @  1
 
 + 	public static final AcceleratedEffectRenderer vanillaAcceleratedParticleRenderer = new AcceleratedEffectRenderer();
 + 	public IAcceleratedParticleEngine acceleratedParticleRenderer = null;
@@ -52,7 +53,15 @@
 + 		this.acceleratedParticleRenderer = EaglercraftGPU.checkInstancingCapable() ? vanillaAcceleratedParticleRenderer
 + 				: null;
 
-> CHANGE  91 : 93  @  91 : 92
+> CHANGE  52 : 53  @  52 : 53
+
+~ 		this.particleTypes.put(id, particleFactory);
+
+> CHANGE  8 : 9  @  8 : 9
+
+~ 		IParticleFactory iparticlefactory = this.particleTypes.get(particleId);
+
+> CHANGE  29 : 31  @  29 : 30
 
 ~ 		for (int i = 0, l = this.particleEmitters.size(); i < l; ++i) {
 ~ 			EntityParticleEmitter entityparticleemitter = this.particleEmitters.get(i);

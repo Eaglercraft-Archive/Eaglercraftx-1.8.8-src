@@ -2,13 +2,6 @@ package net.lax1dude.eaglercraft.v1_8.internal.wasm_gc_teavm;
 
 import org.teavm.jso.JSBody;
 import org.teavm.jso.JSObject;
-import org.teavm.jso.typedarrays.ArrayBuffer;
-import org.teavm.jso.typedarrays.ArrayBufferView;
-import org.teavm.jso.typedarrays.Float32Array;
-import org.teavm.jso.typedarrays.Int16Array;
-import org.teavm.jso.typedarrays.Int32Array;
-import org.teavm.jso.typedarrays.Int8Array;
-import org.teavm.jso.typedarrays.Uint8Array;
 
 /**
  * Copyright (c) 2024 lax1dude. All Rights Reserved.

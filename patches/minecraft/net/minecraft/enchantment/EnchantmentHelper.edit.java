@@ -1,16 +1,21 @@
 
 # Eagler Context Redacted Diff
-# Copyright (c) 2024 lax1dude. All rights reserved.
+# Copyright (c) 2025 lax1dude. All rights reserved.
 
 # Version: 1.0
 # Author: lax1dude
 
 > DELETE  2  @  2 : 4
 
-> CHANGE  6 : 11  @  6 : 9
+> DELETE  3  @  3 : 4
+
+> CHANGE  2 : 10  @  2 : 5
 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
+~ import com.carrotsearch.hppc.IntIntHashMap;
+~ import com.carrotsearch.hppc.IntIntMap;
+~ import com.carrotsearch.hppc.cursors.IntCursor;
 ~ import com.google.common.collect.Lists;
 ~ import com.google.common.collect.Maps;
 ~ 
@@ -19,7 +24,27 @@
 
 ~ 	private static final EaglercraftRandom enchantmentRand = new EaglercraftRandom();
 
-> CHANGE  76 : 78  @  76 : 78
+> CHANGE  26 : 28  @  26 : 28
+
+~ 	public static IntIntMap getEnchantments(ItemStack stack) {
+~ 		IntIntHashMap linkedhashmap = new IntIntHashMap();
+
+> CHANGE  6 : 7  @  6 : 7
+
+~ 				linkedhashmap.put(short1, short2);
+
+> CHANGE  6 : 7  @  6 : 7
+
+~ 	public static void setEnchantments(IntIntMap enchMap, ItemStack stack) {
+
+> DELETE  1  @  1 : 2
+
+> CHANGE  1 : 3  @  1 : 3
+
+~ 		for (IntCursor cur : enchMap.keys()) {
+~ 			int i = cur.value;
+
+> CHANGE  29 : 31  @  29 : 31
 
 ~ 			for (int k = 0; k < stacks.length; ++k) {
 ~ 				int j = getEnchantmentLevel(enchID, stacks[k]);

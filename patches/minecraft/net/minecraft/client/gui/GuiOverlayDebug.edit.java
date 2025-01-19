@@ -1,6 +1,6 @@
 
 # Eagler Context Redacted Diff
-# Copyright (c) 2024 lax1dude. All rights reserved.
+# Copyright (c) 2025 lax1dude. All rights reserved.
 
 # Version: 1.0
 # Author: lax1dude
@@ -9,22 +9,22 @@
 
 ~ import java.text.SimpleDateFormat;
 
-> INSERT  1 : 3  @  1
+> INSERT  1 : 2  @  1
 
 + import java.util.Calendar;
-+ import java.util.Iterator;
 
 > INSERT  1 : 2  @  1
 
 + import java.util.Locale;
 
-> INSERT  1 : 17  @  1
+> INSERT  1 : 18  @  1
 
 + 
 + import org.apache.commons.lang3.StringUtils;
 + 
 + import java.util.TimeZone;
 + 
++ import com.carrotsearch.hppc.cursors.ObjectCursor;
 + import com.google.common.base.Strings;
 + import com.google.common.collect.Lists;
 + 
@@ -108,7 +108,7 @@
 ~ 			}
 ~ 		}
 
-> INSERT  2 : 140  @  2
+> INSERT  2 : 137  @  2
 
 + 	private void drawFPS(int x, int y) {
 + 		this.fontRenderer.drawStringWithShadow(this.mc.renderGlobal.getDebugInfoShort(), x, y, 0xFFFFFF);
@@ -153,28 +153,25 @@
 + 		this.fontRenderer.drawStringWithShadow(line, x - lw, y - i, 0xFFFFFF);
 + 		i += 11;
 + 
-+ 		Iterator<PotionEffect> potions = mc.thePlayer.getActivePotionEffects().iterator();
-+ 		if (potions.hasNext()) {
-+ 			while (potions.hasNext()) {
-+ 				i += 11;
-+ 				PotionEffect e = potions.next();
-+ 				int t = e.getDuration() / 20;
-+ 				int m = t / 60;
-+ 				int s = t % 60;
-+ 				int j = e.getAmplifier();
-+ 				if (j > 0) {
-+ 					line = I18n.format(e.getEffectName())
-+ 							+ (j > 0 ? (" " + EnumChatFormatting.YELLOW + EnumChatFormatting.BOLD
-+ 									+ I18n.format("potion.potency." + j) + EnumChatFormatting.RESET) : "")
-+ 							+ " [" + EnumChatFormatting.YELLOW + HString.format("%02d:%02d", m, s)
-+ 							+ EnumChatFormatting.RESET + "]";
-+ 				} else {
-+ 					line = I18n.format(e.getEffectName()) + " [" + EnumChatFormatting.YELLOW
-+ 							+ HString.format("%02d:%02d", m, s) + EnumChatFormatting.RESET + "]";
-+ 				}
-+ 				lw = fontRenderer.getStringWidth(line);
-+ 				this.fontRenderer.drawStringWithShadow(line, x - lw, y - i, 0xFFFFFF);
++ 		for (ObjectCursor<PotionEffect> ee : mc.thePlayer.getActivePotionEffects()) {
++ 			i += 11;
++ 			PotionEffect e = ee.value;
++ 			int t = e.getDuration() / 20;
++ 			int m = t / 60;
++ 			int s = t % 60;
++ 			int j = e.getAmplifier();
++ 			if (j > 0) {
++ 				line = I18n.format(e.getEffectName())
++ 						+ (j > 0 ? (" " + EnumChatFormatting.YELLOW + EnumChatFormatting.BOLD
++ 								+ I18n.format("potion.potency." + j) + EnumChatFormatting.RESET) : "")
++ 						+ " [" + EnumChatFormatting.YELLOW + HString.format("%02d:%02d", m, s)
++ 						+ EnumChatFormatting.RESET + "]";
++ 			} else {
++ 				line = I18n.format(e.getEffectName()) + " [" + EnumChatFormatting.YELLOW
++ 						+ HString.format("%02d:%02d", m, s) + EnumChatFormatting.RESET + "]";
 + 			}
++ 			lw = fontRenderer.getStringWidth(line);
++ 			this.fontRenderer.drawStringWithShadow(line, x - lw, y - i, 0xFFFFFF);
 + 		}
 + 
 + 	}
@@ -350,7 +347,7 @@
 ~ 			long j = EagRuntime.totalMemory();
 ~ 			long k = EagRuntime.freeMemory();
 ~ 			long l = j - k;
-~ 			arraylist = Lists.newArrayList(new String[] {
+~ 			arraylist = Lists.newArrayList(new String[] { "Platform: Desktop",
 ~ 					HString.format("Java: %s %dbit",
 ~ 							new Object[] { System.getProperty("java.version"),
 ~ 									Integer.valueOf(this.mc.isJava64bit() ? 64 : 32) }),
@@ -365,12 +362,12 @@
 ~ 									EaglercraftGPU.glGetString(7936) }),
 ~ 					EaglercraftGPU.glGetString(7937), EaglercraftGPU.glGetString(7938) });
 ~ 		} else {
-~ 			arraylist = Lists.newArrayList(
-~ 					new String[] { "Java: TeaVM", "", HString.format("CPU: %s", new Object[] { "eaglercraft" }), "",
-~ 							HString.format("Display: %dx%d (%s)",
-~ 									new Object[] { Integer.valueOf(Display.getWidth()),
-~ 											Integer.valueOf(Display.getHeight()), EaglercraftGPU.glGetString(7936) }),
-~ 							EaglercraftGPU.glGetString(7937), EaglercraftGPU.glGetString(7938) });
+~ 			arraylist = Lists.newArrayList(new String[] { "Platform: " + EagRuntime.getPlatformType().getName(),
+~ 					"Java: TeaVM", "", HString.format("CPU: %s", new Object[] { "eaglercraft" }), "",
+~ 					HString.format("Display: %dx%d (%s)",
+~ 							new Object[] { Integer.valueOf(Display.getWidth()), Integer.valueOf(Display.getHeight()),
+~ 									EaglercraftGPU.glGetString(7936) }),
+~ 					EaglercraftGPU.glGetString(7937), EaglercraftGPU.glGetString(7938) });
 ~ 		}
 
 > DELETE  8  @  8 : 12

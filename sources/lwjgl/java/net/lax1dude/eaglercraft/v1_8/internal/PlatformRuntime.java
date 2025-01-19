@@ -18,9 +18,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import java.util.function.Consumer;
+import java.util.zip.DataFormatException;
+import java.util.zip.Deflater;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
 
 import javax.imageio.ImageIO;
@@ -556,12 +559,37 @@ public class PlatformRuntime {
 		return new DeflaterOutputStream(os);
 	}
 	
+	public static int deflateFull(byte[] input, int inputOff, int inputLen, byte[] output, int outputOff,
+			int outputLen) throws IOException {
+		Deflater df = new Deflater();
+		df.setInput(input, inputOff, inputLen);
+		df.finish();
+		int i = df.deflate(output, outputOff, outputLen);
+		df.end();
+		return i;
+	}
+	
 	public static OutputStream newGZIPOutputStream(OutputStream os) throws IOException {
 		return new GZIPOutputStream(os);
 	}
 	
 	public static InputStream newInflaterInputStream(InputStream is) throws IOException {
 		return new InflaterInputStream(is);
+	}
+	
+	public static int inflateFull(byte[] input, int inputOff, int inputLen, byte[] output, int outputOff,
+			int outputLen) throws IOException {
+		Inflater df = new Inflater();
+		int i;
+		try {
+			df.setInput(input, inputOff, inputLen);
+			i = df.inflate(output, outputOff, outputLen);
+		}catch(DataFormatException ex) {
+			throw new IOException("Failed to inflate!", ex);
+		}finally {
+			df.end();
+		}
+		return i;
 	}
 	
 	public static InputStream newGZIPInputStream(InputStream is) throws IOException {

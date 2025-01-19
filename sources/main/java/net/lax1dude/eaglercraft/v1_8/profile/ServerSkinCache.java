@@ -201,7 +201,7 @@ public class ServerSkinCache {
 	}
 
 	public SkinCacheEntry getSkin(String url, SkinModel skinModelResponse) {
-		if(url.length() > 0xFFFF) {
+		if(url.length() > 0x7F00) {
 			return skinModelResponse == SkinModel.ALEX ? defaultSlimCacheEntry : defaultCacheEntry;
 		}
 		EaglercraftUUID generatedUUID = SkinPackets.createEaglerURLSkinUUID(url);

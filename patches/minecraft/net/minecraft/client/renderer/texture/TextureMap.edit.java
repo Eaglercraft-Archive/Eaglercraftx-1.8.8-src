@@ -1,6 +1,6 @@
 
 # Eagler Context Redacted Diff
-# Copyright (c) 2024 lax1dude. All rights reserved.
+# Copyright (c) 2025 lax1dude. All rights reserved.
 
 # Version: 1.0
 # Author: lax1dude
@@ -11,9 +11,13 @@
 
 + import java.util.Collection;
 
-> INSERT  6 : 20  @  6
+> DELETE  1  @  1 : 2
+
+> INSERT  4 : 20  @  4
 
 + 
++ import com.carrotsearch.hppc.IntIndexedContainer;
++ import com.carrotsearch.hppc.cursors.IntCursor;
 + import com.google.common.collect.Lists;
 + import com.google.common.collect.Maps;
 + 
@@ -163,7 +167,7 @@
 
 ~ 			EaglerTextureAtlasSprite textureatlassprite = (EaglerTextureAtlasSprite) entry.getValue();
 
-> INSERT  3 : 108  @  3
+> INSERT  3 : 105  @  3
 
 + 			if (isEaglerPBRMode) {
 + 				try {
@@ -192,7 +196,7 @@
 + 					TextureMetadataSection texturemetadatasection = (TextureMetadataSection) iresource
 + 							.getMetadata("texture");
 + 					if (texturemetadatasection != null) {
-+ 						List list = texturemetadatasection.getListMipmaps();
++ 						IntIndexedContainer list = texturemetadatasection.getListMipmaps();
 + 						if (!list.isEmpty()) {
 + 							int l = abufferedimageColor[0].width;
 + 							int i1 = abufferedimageColor[0].height;
@@ -201,11 +205,8 @@
 + 										"Unable to load extra miplevels, source-texture is not power of two");
 + 							}
 + 						}
-+ 
-+ 						Iterator iterator = list.iterator();
-+ 
-+ 						while (iterator.hasNext()) {
-+ 							int i2 = ((Integer) iterator.next()).intValue();
++ 						for (IntCursor cur : list) {
++ 							int i2 = cur.value;
 + 							if (i2 > 0 && i2 < abufferedimageColor.length - 1 && abufferedimageColor[i2] == null) {
 + 								ResourceLocation resourcelocation2 = this.completeResourceLocation(resourcelocation,
 + 										i2);
@@ -275,12 +276,21 @@
 
 ~ 				ImageData[] abufferedimage = new ImageData[1 + this.mipmapLevels];
 
-> CHANGE  6 : 8  @  6 : 8
+> CHANGE  4 : 5  @  4 : 5
+
+~ 					IntIndexedContainer list = texturemetadatasection.getListMipmaps();
+
+> CHANGE  1 : 3  @  1 : 3
 
 ~ 						int l = abufferedimage[0].width;
 ~ 						int i1 = abufferedimage[0].height;
 
-> CHANGE  18 : 20  @  18 : 19
+> CHANGE  6 : 8  @  6 : 10
+
+~ 					for (IntCursor cur : list) {
+~ 						int i2 = cur.value;
+
+> CHANGE  8 : 10  @  8 : 9
 
 ~ 										new Object[] { Integer.valueOf(i2), resourcelocation2 });
 ~ 								logger.error(ioexception);

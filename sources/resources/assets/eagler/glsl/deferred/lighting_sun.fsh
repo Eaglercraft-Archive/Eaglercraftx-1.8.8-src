@@ -64,6 +64,14 @@ void main() {
 #endif
 #endif
 
+	float depth = textureLod(u_gbufferDepthTexture, v_position2f, 0.0).r;
+
+#ifndef COMPILE_SUN_SHADOW
+	if(depth == 0.0) {
+		discard;
+	}
+#endif
+
 	vec4 sampleVar4f = textureLod(u_gbufferNormalTexture, v_position2f, 0.0);
 
 #ifndef COMPILE_SUN_SHADOW
@@ -76,14 +84,6 @@ void main() {
 
 	normalVector3f.xyz = sampleVar4f.rgb * 2.0 - 1.0;
 	lightmapCoords2f.y = sampleVar4f.a;
-
-	float depth = textureLod(u_gbufferDepthTexture, v_position2f, 0.0).r;
-
-#ifndef COMPILE_SUN_SHADOW
-	if(depth < 0.00001) {
-		discard;
-	}
-#endif
 
 	sampleVar4f = textureLod(u_gbufferColorTexture, v_position2f, 0.0);
 	diffuseColor3f.rgb = sampleVar4f.rgb;

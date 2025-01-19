@@ -52,7 +52,7 @@ void main() {
 	vec4 fragPos4f = vec4(v_position2f, textureLod(u_fogDepthTexture, v_position2f, 0.0).r, 1.0);
 
 #ifdef COMPILE_FOG_ATMOSPHERE
-	if(fragPos4f.z <= 0.0000001) {
+	if(fragPos4f.z == 0.0) {
 		discard;
 	}
 #endif

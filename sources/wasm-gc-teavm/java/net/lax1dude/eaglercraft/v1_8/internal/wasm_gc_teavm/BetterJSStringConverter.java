@@ -1,13 +1,11 @@
 package net.lax1dude.eaglercraft.v1_8.internal.wasm_gc_teavm;
 
 import org.teavm.interop.Address;
-import org.teavm.interop.DirectMalloc;
 import org.teavm.interop.Import;
 import org.teavm.interop.Unmanaged;
 import org.teavm.jso.core.JSArray;
 import org.teavm.jso.core.JSString;
 
-import net.lax1dude.eaglercraft.v1_8.EagUtils;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.WASMGCBufferAllocator;
 
 /**

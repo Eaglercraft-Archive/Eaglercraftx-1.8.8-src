@@ -1,15 +1,19 @@
 
 # Eagler Context Redacted Diff
-# Copyright (c) 2024 lax1dude. All rights reserved.
+# Copyright (c) 2025 lax1dude. All rights reserved.
 
 # Version: 1.0
 # Author: lax1dude
 
 > DELETE  2  @  2 : 4
 
-> CHANGE  4 : 13  @  4 : 8
+> CHANGE  4 : 17  @  4 : 8
 
 ~ 
+~ import com.carrotsearch.hppc.IntObjectHashMap;
+~ import com.carrotsearch.hppc.IntObjectMap;
+~ import com.carrotsearch.hppc.ObjectIntHashMap;
+~ import com.carrotsearch.hppc.ObjectIntMap;
 ~ import com.google.common.collect.Lists;
 ~ import com.google.common.collect.Maps;
 ~ 
@@ -26,42 +30,48 @@
 + 	private static final Map<String, EntityConstructor<? extends Entity>> stringToConstructorMapping = Maps
 + 			.newHashMap();
 
-> INSERT  2 : 3  @  2
+> CHANGE  1 : 8  @  1 : 5
 
-+ 	private static final Map<Integer, EntityConstructor<? extends Entity>> idToConstructorMapping = Maps.newHashMap();
+~ 	private static final IntObjectMap<Class<? extends Entity>> idToClassMapping = new IntObjectHashMap<>();
+~ 	private static final IntObjectMap<EntityConstructor<? extends Entity>> idToConstructorMapping = new IntObjectHashMap<>();
+~ 	private static final ObjectIntMap<Class<? extends Entity>> classToIDMapping = new ObjectIntHashMap<>();
+~ 	private static final Map<Class<? extends Entity>, EntityConstructor<? extends Entity>> classToConstructorMapping = Maps
+~ 			.newHashMap();
+~ 	private static final ObjectIntMap<String> stringToIDMapping = new ObjectIntHashMap<>();
+~ 	public static final IntObjectMap<EntityList.EntityEggInfo> entityEggs = new IntObjectHashMap<>();
 
-> INSERT  1 : 3  @  1
-
-+ 	private static final Map<Class<? extends Entity>, EntityConstructor<? extends Entity>> classToConstructorMapping = Maps
-+ 			.newHashMap();
-
-> CHANGE  3 : 5  @  3 : 4
+> CHANGE  1 : 3  @  1 : 2
 
 ~ 	private static void addMapping(Class<? extends Entity> entityClass,
 ~ 			EntityConstructor<? extends Entity> entityConstructor, String entityName, int id) {
 
-> INSERT  10 : 11  @  10
+> CHANGE  2 : 3  @  2 : 3
+
+~ 		} else if (idToClassMapping.containsKey(id)) {
+
+> INSERT  7 : 8  @  7
 
 + 			stringToConstructorMapping.put(entityName, entityConstructor);
 
-> INSERT  2 : 3  @  2
+> CHANGE  1 : 6  @  1 : 4
 
-+ 			idToConstructorMapping.put(Integer.valueOf(id), entityConstructor);
+~ 			idToClassMapping.put(id, entityClass);
+~ 			idToConstructorMapping.put(id, entityConstructor);
+~ 			classToIDMapping.put(entityClass, id);
+~ 			classToConstructorMapping.put(entityClass, entityConstructor);
+~ 			stringToIDMapping.put(entityName, id);
 
-> INSERT  1 : 2  @  1
-
-+ 			classToConstructorMapping.put(entityClass, entityConstructor);
-
-> CHANGE  4 : 6  @  4 : 5
+> CHANGE  3 : 5  @  3 : 4
 
 ~ 	private static void addMapping(Class<? extends Entity> entityClass,
 ~ 			EntityConstructor<? extends Entity> entityConstructor, String entityName, int entityID, int baseColor,
 
-> CHANGE  1 : 2  @  1 : 2
+> CHANGE  1 : 3  @  1 : 3
 
 ~ 		addMapping(entityClass, entityConstructor, entityName, entityID);
+~ 		entityEggs.put(entityID, new EntityList.EntityEggInfo(entityID, baseColor, spotColor));
 
-> CHANGE  7 : 10  @  7 : 11
+> CHANGE  6 : 9  @  6 : 10
 
 ~ 			EntityConstructor<? extends Entity> constructor = stringToConstructorMapping.get(entityName);
 ~ 			if (constructor != null) {
@@ -117,14 +127,36 @@
 
 ~ 			logger.error("Could not create entity", exception);
 
-> INSERT  18 : 22  @  18
+> CHANGE  10 : 12  @  10 : 12
+
+~ 		int integer = classToIDMapping.getOrDefault(entityIn.getClass(), -1);
+~ 		return integer == -1 ? 0 : integer;
+
+> CHANGE  3 : 4  @  3 : 4
+
+~ 		return idToClassMapping.get(entityID);
+
+> INSERT  2 : 6  @  2
 
 + 	public static EntityConstructor<? extends Entity> getConstructorFromID(int entityID) {
-+ 		return idToConstructorMapping.get(Integer.valueOf(entityID));
++ 		return idToConstructorMapping.get(entityID);
 + 	}
 + 
 
-> CHANGE  17 : 18  @  17 : 18
+> CHANGE  1 : 2  @  1 : 2
+
+~ 		return classToStringMapping.get(entityIn.getClass());
+
+> CHANGE  3 : 5  @  3 : 5
+
+~ 		int integer = stringToIDMapping.getOrDefault(entityName, -1);
+~ 		return integer == -1 ? 90 : integer;
+
+> CHANGE  3 : 4  @  3 : 4
+
+~ 		return classToStringMapping.get(getClassFromID(entityID));
+
+> CHANGE  6 : 7  @  6 : 7
 
 ~ 		Set<String> set = stringToClassMapping.keySet();
 

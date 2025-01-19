@@ -3,8 +3,10 @@ package net.lax1dude.eaglercraft.v1_8.sp.ipc;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.function.Supplier;
+
+import com.carrotsearch.hppc.IntObjectHashMap;
+import com.carrotsearch.hppc.IntObjectMap;
 
 /**
  * Copyright (c) 2023-2024 lax1dude. All Rights Reserved.
@@ -23,7 +25,7 @@ import java.util.function.Supplier;
  */
 public class IPCPacketManager {
 	
-	public static final HashMap<Integer, Supplier<IPCPacketBase>> mappings = new HashMap<>();
+	public static final IntObjectMap<Supplier<IPCPacketBase>> mappings = new IntObjectHashMap<>();
 
 	public final IPCInputStream IPC_INPUT_STREAM = new IPCInputStream();
 	public final IPCOutputStream IPC_OUTPUT_STREAM = new IPCOutputStream();

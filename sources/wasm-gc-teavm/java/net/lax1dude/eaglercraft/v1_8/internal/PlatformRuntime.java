@@ -3,8 +3,6 @@ package net.lax1dude.eaglercraft.v1_8.internal;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.function.Consumer;
 
 import org.teavm.interop.Import;
@@ -19,9 +17,13 @@ import org.teavm.jso.dom.html.HTMLElement;
 import org.teavm.jso.typedarrays.ArrayBuffer;
 import org.teavm.jso.typedarrays.Uint8Array;
 
+import com.carrotsearch.hppc.IntObjectHashMap;
+import com.carrotsearch.hppc.IntObjectMap;
+import com.jcraft.jzlib.Deflater;
 import com.jcraft.jzlib.DeflaterOutputStream;
 import com.jcraft.jzlib.GZIPInputStream;
 import com.jcraft.jzlib.GZIPOutputStream;
+import com.jcraft.jzlib.Inflater;
 import com.jcraft.jzlib.InflaterInputStream;
 
 import net.lax1dude.eaglercraft.v1_8.Filesystem;
@@ -163,11 +165,21 @@ public class PlatformRuntime {
 	}
 
 	public static String getGLVersion() {
-		return PlatformOpenGL._wglGetString(RealOpenGLEnums.GL_VERSION);
+		String ret = PlatformOpenGL._wglGetString(RealOpenGLEnums.GL_VERSION);
+		if(ret != null) {
+			return ret;
+		}else {
+			return "null";
+		}
 	}
 
 	public static String getGLRenderer() {
-		return PlatformOpenGL._wglGetString(RealOpenGLEnums.GL_RENDERER);
+		String ret = PlatformOpenGL._wglGetString(RealOpenGLEnums.GL_RENDERER);
+		if(ret != null) {
+			return ret;
+		}else {
+			return "null";
+		}
 	}
 
 	public static ByteBuffer allocateByteBuffer(int length) {
@@ -311,7 +323,7 @@ public class PlatformRuntime {
 	@Import(module = "platformRuntime", name = "getNextEvent")
 	private static native JSEagRuntimeEvent getNextEvent();
 
-	private static final Map<Integer, Consumer<ArrayBuffer>> waitingAsyncDownloads = new HashMap<>();
+	private static final IntObjectMap<Consumer<ArrayBuffer>> waitingAsyncDownloads = new IntObjectHashMap<>();
 	private static int asyncDownloadID = 0;
 
 	private static void queueAsyncDownload(String uri, boolean forceCache, Consumer<ArrayBuffer> cb) {
@@ -479,12 +491,45 @@ public class PlatformRuntime {
 		return new DeflaterOutputStream(os);
 	}
 
+	@SuppressWarnings("deprecation")
+	public static int deflateFull(byte[] input, int inputOff, int inputLen, byte[] output, int outputOff,
+			int outputLen) throws IOException {
+		Deflater df = new Deflater();
+		df.setInput(input, inputOff, inputLen, false);
+		df.setOutput(output, outputOff, outputLen);
+		df.init(5);
+		int c;
+		do {
+			c = df.deflate(4);
+			if(c != 0 && c != 1) {
+				throw new IOException("Deflater failed! Code " + c);
+			}
+		}while(c != 1);
+		return (int)df.getTotalOut();
+	}
+
 	public static OutputStream newGZIPOutputStream(OutputStream os) throws IOException {
 		return new GZIPOutputStream(os);
 	}
 
 	public static InputStream newInflaterInputStream(InputStream is) throws IOException {
 		return new InflaterInputStream(is);
+	}
+
+	@SuppressWarnings("deprecation")
+	public static int inflateFull(byte[] input, int inputOff, int inputLen, byte[] output, int outputOff,
+			int outputLen) throws IOException {
+		Inflater df = new Inflater();
+		df.setInput(input, inputOff, inputLen, false);
+		df.setOutput(output, outputOff, outputLen);
+		int c;
+		do {
+			c = df.inflate(0);
+			if(c != 0 && c != 1) {
+				throw new IOException("Inflater failed! Code " + c);
+			}
+		}while(c != 1);
+		return (int)df.getTotalOut();
 	}
 
 	public static InputStream newGZIPInputStream(InputStream is) throws IOException {

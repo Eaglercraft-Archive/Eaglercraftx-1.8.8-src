@@ -49,6 +49,7 @@ public class EaglerMeshLoader implements IResourceManagerReloadListener {
 		if(theMesh == null) {
 			theMesh = new HighPolyMesh();
 			reloadMesh(meshLoc, theMesh, Minecraft.getMinecraft().getResourceManager());
+			meshCache.put(meshLoc, theMesh);
 		}
 		meshLoc.cachedPointerType = ResourceLocation.CACHED_POINTER_EAGLER_MESH;
 		meshLoc.cachedPointer = theMesh;

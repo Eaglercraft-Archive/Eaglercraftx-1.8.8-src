@@ -48,6 +48,7 @@ public class PipelineShaderReprojSSR extends ShaderProgram<PipelineShaderReprojS
 		public IUniformGL u_inverseProjectionMatrix4f;
 		public IUniformGL u_sampleStep1f;
 		public IUniformGL u_pixelAlignment4f = null;
+		public IUniformGL u_sampleDelta1i;
 
 		@Override
 		public void loadUniforms(IProgramGL prog) {
@@ -62,6 +63,7 @@ public class PipelineShaderReprojSSR extends ShaderProgram<PipelineShaderReprojS
 			u_inverseProjectionMatrix4f = _wglGetUniformLocation(prog, "u_inverseProjectionMatrix4f");
 			u_sampleStep1f = _wglGetUniformLocation(prog, "u_sampleStep1f");
 			u_pixelAlignment4f = _wglGetUniformLocation(prog, "u_pixelAlignment4f");
+			u_sampleDelta1i = _wglGetUniformLocation(prog, "u_sampleDelta1i");
 		}
 
 	}

@@ -1,6 +1,6 @@
 
 # Eagler Context Redacted Diff
-# Copyright (c) 2024 lax1dude. All rights reserved.
+# Copyright (c) 2025 lax1dude. All rights reserved.
 
 # Version: 1.0
 # Author: lax1dude
@@ -34,8 +34,21 @@
 
 ~ 			EaglercraftRandom random = this.enderman.getRNG();
 
-> CHANGE  36 : 37  @  36 : 37
+> CHANGE  5 : 9  @  5 : 6
+
+~ 			IBlockState iblockstate = world.getBlockState(blockpos);
+~ 			if (iblockstate == null)
+~ 				return;
+~ 			Block block = iblockstate.getBlock();
+
+> CHANGE  30 : 31  @  30 : 31
 
 ~ 			EaglercraftRandom random = this.enderman.getRNG();
+
+> CHANGE  5 : 8  @  5 : 6
+
+~ 			IBlockState iblockstate = world.getBlockStateIfLoaded(blockpos);
+~ 			if (iblockstate == null)
+~ 				return;
 
 > EOF

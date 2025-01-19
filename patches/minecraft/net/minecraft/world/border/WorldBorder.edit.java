@@ -1,6 +1,6 @@
 
 # Eagler Context Redacted Diff
-# Copyright (c) 2024 lax1dude. All rights reserved.
+# Copyright (c) 2025 lax1dude. All rights reserved.
 
 # Version: 1.0
 # Author: lax1dude
@@ -16,7 +16,17 @@
 
 > DELETE  4  @  4 : 6
 
-> CHANGE  105 : 108  @  105 : 107
+> INSERT  34 : 41  @  34
+
++ 	public boolean contains(long range) {
++ 		int chunkXPos = (int) (range & 4294967295L);
++ 		int chunkZPos = (int) (range >>> 32);
++ 		return (double) ((chunkXPos << 4) + 15) > this.minX() && (double) (chunkXPos << 4) < this.maxX()
++ 				&& (double) ((chunkZPos << 4) + 15) > this.minZ() && (double) (chunkZPos << 4) < this.maxZ();
++ 	}
++ 
+
+> CHANGE  71 : 74  @  71 : 73
 
 ~ 		List<IBorderListener> lst = this.getListeners();
 ~ 		for (int i = 0, l = lst.size(); i < l; ++i) {

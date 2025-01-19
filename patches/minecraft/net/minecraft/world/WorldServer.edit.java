@@ -1,11 +1,15 @@
 
 # Eagler Context Redacted Diff
-# Copyright (c) 2024 lax1dude. All rights reserved.
+# Copyright (c) 2025 lax1dude. All rights reserved.
 
 # Version: 1.0
 # Author: lax1dude
 
-> DELETE  6  @  6 : 7
+> INSERT  2 : 3  @  2
+
++ import com.carrotsearch.hppc.cursors.LongCursor;
+
+> DELETE  4  @  4 : 5
 
 > CHANGE  4 : 5  @  4 : 5
 
@@ -66,9 +70,23 @@
 ~ 			for (int k = 0, l = this.playerEntities.size(); k < l; ++k) {
 ~ 				EntityPlayer entityplayer = this.playerEntities.get(k);
 
-> DELETE  48  @  48 : 49
+> CHANGE  36 : 39  @  36 : 39
 
-> DELETE  2  @  2 : 3
+~ 			for (LongCursor chunkcoordintpair1 : this.activeChunkSet) {
+~ 				long l = chunkcoordintpair1.value;
+~ 				this.getChunkFromChunkCoords((int) (l & 4294967295L), (int) (l >>> 32)).func_150804_b(false);
+
+> CHANGE  6 : 13  @  6 : 11
+
+~ 			for (LongCursor chunkcoordintpair : this.activeChunkSet) {
+~ 				long ll = chunkcoordintpair.value;
+~ 				int chunkXPos = (int) (ll & 4294967295L);
+~ 				int chunkZPos = (int) (ll >>> 32);
+~ 				int k = chunkXPos * 16;
+~ 				int l = chunkZPos * 16;
+~ 				Chunk chunk = this.getChunkFromChunkCoords(chunkXPos, chunkZPos);
+
+> DELETE  1  @  1 : 2
 
 > DELETE  1  @  1 : 2
 
@@ -104,7 +122,28 @@
 
 > DELETE  15  @  15 : 16
 
-> CHANGE  144 : 145  @  144 : 145
+> CHANGE  76 : 77  @  76 : 77
+
+~ 		ArrayList<TileEntity> arraylist = Lists.newArrayList();
+
+> CHANGE  1 : 15  @  1 : 7
+
+~ 		for (int chunkX = (minX >> 4); chunkX <= ((maxX - 1) >> 4); chunkX++) {
+~ 			for (int chunkZ = (minZ >> 4); chunkZ <= ((maxZ - 1) >> 4); chunkZ++) {
+~ 				Chunk chunk = getChunkFromChunkCoords(chunkX, chunkZ);
+~ 				if (chunk == null) {
+~ 					continue;
+~ 				}
+~ 
+~ 				for (TileEntity tileentity : chunk.getTileEntityMap().values()) {
+~ 					BlockPos pos = tileentity.getPos();
+~ 					if ((pos.x >= minX) && (pos.y >= minY) && (pos.z >= minZ) && (pos.x < maxX) && (pos.y < maxY)
+~ 							&& (pos.z < maxZ)) {
+~ 						arraylist.add(tileentity);
+~ 					}
+~ 				}
+
+> CHANGE  60 : 61  @  60 : 61
 
 ~ 			EaglercraftRandom random = new EaglercraftRandom(this.getSeed());
 
@@ -122,7 +161,23 @@
 
 ~ 	protected void saveLevel() {
 
-> CHANGE  63 : 66  @  63 : 64
+> CHANGE  16 : 17  @  16 : 17
+
+~ 		this.entitiesById.put(entity.getEntityId(), entity);
+
+> CHANGE  4 : 5  @  4 : 5
+
+~ 				this.entitiesById.put(aentity[i].getEntityId(), aentity[i]);
+
+> CHANGE  7 : 8  @  7 : 8
+
+~ 		this.entitiesById.remove(entity.getEntityId());
+
+> CHANGE  4 : 5  @  4 : 5
+
+~ 				this.entitiesById.remove(aentity[i].getEntityId());
+
+> CHANGE  28 : 31  @  28 : 29
 
 ~ 		List<EntityPlayer> lst = this.playerEntities;
 ~ 		for (int i = 0, l = lst.size(); i < l; ++i) {

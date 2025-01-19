@@ -1,6 +1,6 @@
 
 # Eagler Context Redacted Diff
-# Copyright (c) 2024 lax1dude. All rights reserved.
+# Copyright (c) 2025 lax1dude. All rights reserved.
 
 # Version: 1.0
 # Author: lax1dude
@@ -33,7 +33,7 @@
 
 > CHANGE  101 : 102  @  101 : 102
 
-~ 		EaglercraftGPU.glNormal3f(0.0F, 0.0F, -1.0F);
+~ 		EaglercraftGPU.glNormal3f(0.0F, 0.0F, 1.0F);
 
 > CHANGE  194 : 195  @  194 : 195
 

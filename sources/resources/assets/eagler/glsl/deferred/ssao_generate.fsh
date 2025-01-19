@@ -54,7 +54,7 @@ vec3(0.716,-0.439,0.543),vec3(-0.400,0.733,0.550));
 void main() {
 	vec3 originalClipSpacePos = vec3(v_position2f, textureLod(u_gbufferDepthTexture, v_position2f, 0.0).r);
 	
-	if(originalClipSpacePos.z <= 0.0000001) {
+	if(originalClipSpacePos.z == 0.0) {
 		output1f = 1.0;
 		return;
 	}

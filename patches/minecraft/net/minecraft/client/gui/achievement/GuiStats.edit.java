@@ -1,15 +1,16 @@
 
 # Eagler Context Redacted Diff
-# Copyright (c) 2024 lax1dude. All rights reserved.
+# Copyright (c) 2025 lax1dude. All rights reserved.
 
 # Version: 1.0
 # Author: lax1dude
 
 > DELETE  2  @  2 : 3
 
-> INSERT  4 : 10  @  4
+> INSERT  4 : 11  @  4
 
 + 
++ import com.carrotsearch.hppc.cursors.ObjectCursor;
 + import com.google.common.collect.Lists;
 + 
 + import net.lax1dude.eaglercraft.v1_8.PointerInputAbstraction;
@@ -49,5 +50,10 @@
 
 ~ 			for (int m = 0, l = StatList.itemStats.size(); m < l; ++m) {
 ~ 				StatCrafting statcrafting = StatList.itemStats.get(m);
+
+> CHANGE  100 : 102  @  100 : 101
+
+~ 			for (ObjectCursor<EntityList.EntityEggInfo> entitylist$entityegginfo_ : EntityList.entityEggs.values()) {
+~ 				EntityList.EntityEggInfo entitylist$entityegginfo = entitylist$entityegginfo_.value;
 
 > EOF

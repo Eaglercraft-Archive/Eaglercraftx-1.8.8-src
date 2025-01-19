@@ -25,5 +25,5 @@ in vec2 v_position2f;
 uniform sampler2D u_depthTexture;
 
 void main() {
-	gl_FragDepth = textureLod(u_depthTexture, v_position2f, 0.0).r <= 0.0000001 ? 0.0 : 1.0;
+	gl_FragDepth = textureLod(u_depthTexture, v_position2f, 0.0).r == 0.0 ? 0.0 : 1.0;
 }

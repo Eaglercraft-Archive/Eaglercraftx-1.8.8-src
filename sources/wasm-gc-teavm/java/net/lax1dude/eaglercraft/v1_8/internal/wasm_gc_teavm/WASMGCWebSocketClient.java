@@ -1,6 +1,5 @@
 package net.lax1dude.eaglercraft.v1_8.internal.wasm_gc_teavm;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 

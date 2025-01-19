@@ -1,19 +1,30 @@
 
 # Eagler Context Redacted Diff
-# Copyright (c) 2024 lax1dude. All rights reserved.
+# Copyright (c) 2025 lax1dude. All rights reserved.
 
 # Version: 1.0
 # Author: lax1dude
 
-> INSERT  3 : 5  @  3
+> CHANGE  2 : 6  @  2 : 3
 
-+ 
-+ import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
+~ import com.carrotsearch.hppc.ObjectContainer;
+~ import com.carrotsearch.hppc.cursors.ObjectCursor;
+~ 
+~ import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 
 > DELETE  1  @  1 : 2
 
-> INSERT  44 : 45  @  44
+> CHANGE  40 : 41  @  40 : 41
+
+~ 		ObjectContainer<PotionEffect> collection = this.mc.thePlayer.getActivePotionEffects();
+
+> INSERT  3 : 4  @  3
 
 + 			GlStateManager.enableAlpha();
+
+> CHANGE  5 : 7  @  5 : 6
+
+~ 			for (ObjectCursor<PotionEffect> potioneffect_ : collection) {
+~ 				PotionEffect potioneffect = potioneffect_.value;
 
 > EOF

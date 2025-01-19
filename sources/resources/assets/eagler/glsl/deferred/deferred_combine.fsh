@@ -68,7 +68,7 @@ void main() {
 	vec4 materialData4f;
 
 	float depth = textureLod(u_gbufferDepthTexture, v_position2f, 0.0).r;
-	if(depth < 0.00001) {
+	if(depth == 0.0) {
 		discard;
 	}
 

@@ -4,7 +4,7 @@ import org.teavm.interop.Address;
 import org.teavm.interop.DirectMalloc;
 
 /**
- * Copyright (c) 2024 lax1dude. All Rights Reserved.
+ * Copyright (c) 2024-2025 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -18,7 +18,7 @@ import org.teavm.interop.DirectMalloc;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-public class DirectMallocShortBuffer implements ShortBuffer {
+public class DirectMallocShortBuffer extends ShortBuffer {
 
 	final Address address;
 	final boolean original;

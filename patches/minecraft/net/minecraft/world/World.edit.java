@@ -1,21 +1,27 @@
 
 # Eagler Context Redacted Diff
-# Copyright (c) 2024 lax1dude. All rights reserved.
+# Copyright (c) 2025 lax1dude. All rights reserved.
 
 # Version: 1.0
 # Author: lax1dude
 
-> INSERT  5 : 6  @  5
+> INSERT  2 : 6  @  2
+
++ import com.carrotsearch.hppc.IntObjectHashMap;
++ import com.carrotsearch.hppc.IntObjectMap;
++ import com.carrotsearch.hppc.LongHashSet;
++ import com.carrotsearch.hppc.LongSet;
+
+> INSERT  3 : 4  @  3
 
 + 
 
-> CHANGE  5 : 7  @  5 : 6
+> DELETE  5  @  5 : 6
+
+> CHANGE  1 : 6  @  1 : 2
 
 ~ 
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
-
-> CHANGE  1 : 4  @  1 : 2
-
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
 ~ import net.lax1dude.eaglercraft.v1_8.HString;
 ~ 
@@ -26,9 +32,22 @@
 
 > DELETE  16  @  16 : 17
 
-> DELETE  15  @  15 : 29
+> DELETE  9  @  9 : 10
 
-> CHANGE  24 : 25  @  24 : 25
+> CHANGE  5 : 6  @  5 : 19
+
+~ import net.minecraft.world.biome.BiomeColorHelper;
+
+> CHANGE  15 : 17  @  15 : 17
+
+~ 	public final Set<TileEntity> loadedTileEntityList = Sets.newIdentityHashSet();
+~ 	public final Set<TileEntity> tickableTileEntities = Sets.newIdentityHashSet();
+
+> CHANGE  4 : 5  @  4 : 5
+
+~ 	protected final IntObjectMap<Entity> entitiesById = new IntObjectHashMap<>();
+
+> CHANGE  2 : 3  @  2 : 3
 
 ~ 	protected int updateLCG = (new EaglercraftRandom()).nextInt();
 
@@ -38,9 +57,11 @@
 
 > DELETE  8  @  8 : 9
 
-> DELETE  2  @  2 : 3
+> CHANGE  2 : 3  @  2 : 4
 
-> INSERT  7 : 8  @  7
+~ 	protected LongSet activeChunkSet = new LongHashSet();
+
+> INSERT  6 : 7  @  6
 
 + 	public final boolean isRemote;
 
@@ -61,7 +82,42 @@
 ~ 						return CrashReportCategory
 ~ 								.getCoordinateInfo(new net.minecraft.util.BlockPos(pos.getX(), pos.getY(), pos.getZ()));
 
-> DELETE  123  @  123 : 124
+> INSERT  9 : 13  @  9
+
++ 	public int getBiomeColorForCoords(BlockPos var1, int index) {
++ 		return BiomeColorHelper.getBiomeColorForCoordsOld(this, var1, index);
++ 	}
++ 
+
+> CHANGE  34 : 35  @  34 : 35
+
+~ 		return !this.isValid(pos) ? false : this.isChunkLoaded(pos.x >> 4, pos.z >> 4, true);
+
+> CHANGE  3 : 4  @  3 : 4
+
+~ 		return !this.isValid(pos) ? false : this.isChunkLoaded(pos.x >> 4, pos.z >> 4, allowEmpty);
+
+> CHANGE  53 : 54  @  53 : 54
+
+~ 		return this.chunkProvider.provideChunk(pos.x >> 4, pos.z >> 4);
+
+> INSERT  2 : 8  @  2
+
++ 	public Chunk getChunkFromBlockCoordsIfLoaded(BlockPos pos) {
++ 		int x = pos.x >> 4;
++ 		int z = pos.z >> 4;
++ 		return this.chunkProvider.chunkExists(x, z) ? this.chunkProvider.provideChunk(x, z) : null;
++ 	}
++ 
+
+> INSERT  4 : 8  @  4
+
++ 	public Chunk getChunkFromChunkCoordsIfLoaded(int chunkX, int chunkZ) {
++ 		return this.chunkProvider.chunkExists(chunkX, chunkZ) ? this.chunkProvider.provideChunk(chunkX, chunkZ) : null;
++ 	}
++ 
+
+> DELETE  15  @  15 : 16
 
 > DELETE  1  @  1 : 2
 
@@ -100,7 +156,31 @@
 ~ 			}
 ~ 		} else if (j < lightValue) {
 
-> CHANGE  320 : 321  @  320 : 321
+> INSERT  19 : 28  @  19
+
++ 	public IBlockState getBlockStateIfLoaded(BlockPos pos) {
++ 		if (!this.isValid(pos)) {
++ 			return Blocks.air.getDefaultState();
++ 		} else {
++ 			Chunk chunk = this.getChunkFromBlockCoordsIfLoaded(pos);
++ 			return chunk != null ? chunk.getBlockState(pos) : null;
++ 		}
++ 	}
++ 
+
+> CHANGE  23 : 26  @  23 : 24
+
+~ 				IBlockState iblockstate = this.getBlockStateIfLoaded(blockpos);
+~ 				if (iblockstate == null)
+~ 					return null;
+
+> CHANGE  98 : 101  @  98 : 99
+
+~ 					IBlockState iblockstate1 = this.getBlockStateIfLoaded(blockpos);
+~ 					if (iblockstate1 == null)
+~ 						return null;
+
+> CHANGE  178 : 179  @  178 : 179
 
 ~ 		BlockPos blockpos$mutableblockpos = new BlockPos();
 
@@ -180,7 +260,17 @@
 
 > DELETE  23  @  23 : 24
 
-> DELETE  14  @  14 : 15
+> CHANGE  5 : 8  @  5 : 6
+
+~ 			int l = this.getRenderDistanceChunks() - 1;
+~ 			if (l < 1)
+~ 				l = 1;
+
+> CHANGE  3 : 4  @  3 : 4
+
+~ 					this.activeChunkSet.add(ChunkCoordIntPair.chunkXZ2Int(i1 + j, j1 + k));
+
+> DELETE  4  @  4 : 5
 
 > DELETE  4  @  4 : 5
 
@@ -250,7 +340,13 @@
 
 > DELETE  8  @  8 : 9
 
-> CHANGE  43 : 46  @  43 : 45
+> CHANGE  30 : 33  @  30 : 33
+
+~ 				Chunk chunk = this.getChunkFromChunkCoordsIfLoaded(i1, j1);
+~ 				if (chunk != null) {
+~ 					chunk.getEntitiesWithinAABBForEntity(entityIn, boundingBox, arraylist, predicate);
+
+> CHANGE  10 : 13  @  10 : 12
 
 ~ 		for (int i = 0, l = this.loadedEntityList.size(); i < l; ++i) {
 ~ 			Entity entity = this.loadedEntityList.get(i);
@@ -262,7 +358,11 @@
 ~ 			Entity entity = this.playerEntities.get(i);
 ~ 			if (playerType.isAssignableFrom(entity.getClass()) && filter.apply((T) entity)) {
 
-> CHANGE  68 : 70  @  68 : 69
+> CHANGE  51 : 52  @  51 : 52
+
+~ 		return this.entitiesById.get(id);
+
+> CHANGE  16 : 18  @  16 : 17
 
 ~ 		for (int j = 0, l = this.loadedEntityList.size(); j < l; ++j) {
 ~ 			Entity entity = this.loadedEntityList.get(j);

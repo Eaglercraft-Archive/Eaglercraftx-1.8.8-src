@@ -316,6 +316,14 @@ public class DebugFramebufferView {
 				GlStateManager.bindTexture(pipeline.realisticWaterMaskTexture);
 				DrawUtils.drawStandardQuad2D();
 			})),
+			(new DebugFramebufferView("Water: Combined Normals", (pipeline) -> {
+				if(!pipeline.config.is_rendering_realisticWater) throw new NoDataException();
+				PipelineShaderGBufferDebugView dbv = pipeline.useDebugViewShader(1);
+				EaglerDeferredPipeline.uniformMatrixHelper(dbv.uniforms.u_inverseViewMatrix, DeferredStateManager.inverseViewMatrix);
+				GlStateManager.setActiveTexture(GL_TEXTURE0);
+				GlStateManager.bindTexture(pipeline.realisticWaterCombinedNormalsTexture);
+				DrawUtils.drawStandardQuad2D();
+			})),
 			(new DebugFramebufferView("Water: Surface Depth", (pipeline) -> {
 				if(!pipeline.config.is_rendering_realisticWater) throw new NoDataException();
 				float depthStart = 0.001f;

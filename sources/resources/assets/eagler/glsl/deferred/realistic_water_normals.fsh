@@ -1,7 +1,7 @@
 #line 2
 
 /*
- * Copyright (c) 2023 lax1dude. All Rights Reserved.
+ * Copyright (c) 2023-2025 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -31,5 +31,5 @@ void main() {
 	float A = textureLod(u_displacementTexture, v_position2f, 0.0).r;
 	float B = textureLod(u_displacementTexture, v_position2f + vec2(u_sampleOffset2f.x, 0.0), 0.0).r;
 	float C = textureLod(u_displacementTexture, v_position2f - vec2(0.0, u_sampleOffset2f.y), 0.0).r;
-	realisticWaterNormalOutput2f = clamp((vec2(A * A) - vec2(B, C) * vec2(B, C)) * 10.0 + 0.5, vec2(0.0), vec2(1.0));
+	realisticWaterNormalOutput2f = clamp((vec2(A * A) - vec2(B, C) * vec2(B, C)) * 0.5 + 0.5, vec2(0.0), vec2(1.0));
 }

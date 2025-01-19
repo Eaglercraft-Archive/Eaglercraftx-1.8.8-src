@@ -2,9 +2,7 @@ package net.lax1dude.eaglercraft.v1_8.sp.lan;
 
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.EagUtils;
-import net.lax1dude.eaglercraft.v1_8.EaglerInputStream;
 import net.lax1dude.eaglercraft.v1_8.EaglerZLIB;
-import net.lax1dude.eaglercraft.v1_8.IOUtils;
 import net.lax1dude.eaglercraft.v1_8.internal.EnumEaglerConnectionState;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformWebRTC;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
@@ -21,7 +19,6 @@ import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IChatComponent;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -308,13 +305,26 @@ public class LANClientNetworkManager extends EaglercraftNetworkManager {
 			}
 			for(int k = 0, l = packets.size(); k < l; ++k) {
 				byte[] data = packets.get(k);
+
+				if(firstPacket) {
+					// 1.5 kick packet
+					if(data.length == 31 && data[0] == (byte)0xFF && data[1] == (byte)0x00 && data[2] == (byte)0x0E) {
+						logger.error("Detected a 1.5 LAN server!");
+						this.closeChannel(new ChatComponentTranslation("singleplayer.outdatedLANServerKick"));
+						firstPacket = false;
+						return;
+					}
+					firstPacket = false;
+				}
+
 				byte[] fullData;
 				boolean compressed = false;
+				int off = 0;
 
 				if (data[0] == 0 || data[0] == 2) {
 					if(fragmentedPacket.isEmpty()) {
-						fullData = new byte[data.length - 1];
-						System.arraycopy(data, 1, fullData, 0, fullData.length);
+						fullData = data;
+						off = 1;
 					}else {
 						fragmentedPacket.add(data);
 						int len = 0;
@@ -341,34 +351,23 @@ public class LANClientNetworkManager extends EaglercraftNetworkManager {
 				}
 
 				if(compressed) {
-					if(fullData.length < 4) {
+					if(fullData.length < 4 + off) {
 						throw new IOException("Recieved invalid " + fullData.length + " byte compressed packet");
 					}
-					EaglerInputStream bi = new EaglerInputStream(fullData);
-					int i = (bi.read() << 24) | (bi.read() << 16) | (bi.read() << 8) | bi.read();
-					fullData = new byte[i];
-					int r;
-					try(InputStream inflaterInputStream = EaglerZLIB.newInflaterInputStream(bi)) {
-						r = IOUtils.readFully(inflaterInputStream, fullData);
-					}
+					int i = (((int) fullData[off] & 0xFF) << 24) | (((int) fullData[off + 1] & 0xFF) << 16)
+							| (((int) fullData[off + 2] & 0xFF) << 8) | ((int) fullData[off + 3] & 0xFF);
+					byte[] fullData2 = new byte[i];
+					int r = EaglerZLIB.inflateFull(fullData, off + 4, fullData.length - off - 4, fullData2, 0, i);
+					fullData = fullData2;
+					off = 0;
 					if (i != r) {
 						logger.warn("Decompressed packet expected size {} differs from actual size {}!", i, r);
 					}
 				}
 
-				if(firstPacket) {
-					// 1.5 kick packet
-					if(fullData.length == 31 && fullData[0] == (byte)0xFF && fullData[1] == (byte)0x00 && fullData[2] == (byte)0x0E) {
-						logger.error("Detected a 1.5 LAN server!");
-						this.closeChannel(new ChatComponentTranslation("singleplayer.outdatedLANServerKick"));
-						firstPacket = false;
-						return;
-					}
-					firstPacket = false;
-				}
-
 				ByteBuf nettyBuffer = Unpooled.buffer(fullData, fullData.length);
 				nettyBuffer.writerIndex(fullData.length);
+				nettyBuffer.readerIndex(off);
 				PacketBuffer input = new PacketBuffer(nettyBuffer);
 				int pktId = input.readVarIntFromBuffer();
 

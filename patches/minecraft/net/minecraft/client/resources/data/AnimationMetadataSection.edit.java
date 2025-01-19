@@ -1,22 +1,25 @@
 
 # Eagler Context Redacted Diff
-# Copyright (c) 2024 lax1dude. All rights reserved.
+# Copyright (c) 2025 lax1dude. All rights reserved.
 
 # Version: 1.0
 # Author: lax1dude
 
-> DELETE  2  @  2 : 3
+> DELETE  2  @  2 : 4
 
-> DELETE  3  @  3 : 5
+> CHANGE  1 : 3  @  1 : 4
 
-> INSERT  1 : 3  @  1
+~ import com.carrotsearch.hppc.IntHashSet;
+~ import com.carrotsearch.hppc.IntSet;
 
-+ import com.google.common.collect.Sets;
-+ 
+> CHANGE  54 : 56  @  54 : 56
 
-> CHANGE  56 : 58  @  56 : 58
+~ 	public IntSet getFrameIndexSet() {
+~ 		IntHashSet hashset = new IntHashSet();
+
+> CHANGE  1 : 3  @  1 : 3
 
 ~ 		for (int i = 0, l = this.animationFrames.size(); i < l; ++i) {
-~ 			hashset.add(Integer.valueOf(this.animationFrames.get(i).getFrameIndex()));
+~ 			hashset.add(this.animationFrames.get(i).getFrameIndex());
 
 > EOF

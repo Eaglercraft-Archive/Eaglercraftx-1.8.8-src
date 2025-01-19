@@ -3,8 +3,8 @@ package net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
+import com.carrotsearch.hppc.ObjectIntHashMap;
+import com.carrotsearch.hppc.ObjectIntMap;
 
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
@@ -32,7 +32,7 @@ public class BlockVertexIDs implements IResourceManagerReloadListener {
 
 	private static final Logger logger = LogManager.getLogger("BlockVertexIDsCSV");
 
-	public static final Map<String,Integer> modelToID = new HashMap<>();
+	public static final ObjectIntMap<String> modelToID = new ObjectIntHashMap<>();
 
 	public static int builtin_water_still_vertex_id = 0;
 	public static int builtin_water_flow_vertex_id = 0;

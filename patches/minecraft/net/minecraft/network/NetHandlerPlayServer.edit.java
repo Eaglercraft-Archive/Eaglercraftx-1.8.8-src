@@ -1,11 +1,16 @@
 
 # Eagler Context Redacted Diff
-# Copyright (c) 2024 lax1dude. All rights reserved.
+# Copyright (c) 2025 lax1dude. All rights reserved.
 
 # Version: 1.0
 # Author: lax1dude
 
-> CHANGE  5 : 10  @  5 : 9
+> INSERT  2 : 4  @  2
+
++ import com.carrotsearch.hppc.IntShortHashMap;
++ import com.carrotsearch.hppc.IntShortMap;
+
+> CHANGE  3 : 8  @  3 : 7
 
 ~ import net.lax1dude.eaglercraft.v1_8.socket.protocol.GamePluginMessageProtocol;
 ~ import net.lax1dude.eaglercraft.v1_8.socket.protocol.client.GameProtocolMessageController;
@@ -25,7 +30,9 @@
 
 > DELETE  35  @  35 : 36
 
-> INSERT  16 : 18  @  16
+> DELETE  13  @  13 : 14
+
+> INSERT  2 : 4  @  2
 
 + import net.lax1dude.eaglercraft.v1_8.sp.server.socket.IntegratedServerPlayerNetworkManager;
 + 
@@ -48,7 +55,11 @@
 ~ 	public final IntegratedServerPlayerNetworkManager netManager;
 ~ 	public final MinecraftServer serverController;
 
-> INSERT  15 : 17  @  15
+> CHANGE  10 : 11  @  10 : 11
+
+~ 	private IntShortMap field_147372_n = new IntShortHashMap();
+
+> INSERT  4 : 6  @  4
 
 + 	private boolean hasDisconnected = false;
 + 	private GameProtocolMessageController eaglerMessageController = null;
@@ -161,13 +172,25 @@
 
 > DELETE  4  @  4 : 5
 
-> DELETE  41  @  41 : 42
+> CHANGE  22 : 24  @  22 : 24
+
+~ 					this.field_147372_n.put(this.playerEntity.openContainer.windowId,
+~ 							c0epacketclickwindow.getActionNumber());
+
+> DELETE  17  @  17 : 18
 
 > DELETE  10  @  10 : 12
 
-> DELETE  48  @  48 : 50
+> CHANGE  48 : 52  @  48 : 53
 
-> DELETE  11  @  11 : 12
+~ 		int windowId = this.playerEntity.openContainer.windowId;
+~ 		if (this.field_147372_n.containsKey(windowId)
+~ 				&& c0fpacketconfirmtransaction.getUid() == this.field_147372_n.get(windowId)
+~ 				&& windowId == c0fpacketconfirmtransaction.getWindowId()
+
+> DELETE  4  @  4 : 5
+
+> DELETE  3  @  3 : 4
 
 > CHANGE  19 : 25  @  19 : 21
 

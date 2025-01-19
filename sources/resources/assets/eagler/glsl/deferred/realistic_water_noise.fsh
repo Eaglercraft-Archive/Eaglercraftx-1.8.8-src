@@ -1,7 +1,7 @@
 #line 2
 
 /*
- * Copyright (c) 2023 lax1dude. All Rights Reserved.
+ * Copyright (c) 2023-2025 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -37,5 +37,5 @@ void main() {
 	sampleC = textureLod(u_noiseTexture, fract(sampleC) * 0.46875 + vec2(0.515625, 0.515625), 0.0).rg;
 	vec2 sampleD = v_position2f + vec2(-0.135, 0.092) * u_waveTimer4f.x + sampleC * 0.1;
 	sampleD = textureLod(u_noiseTexture, fract(sampleD) * 0.46875 + vec2(0.015625, 0.515625), 0.0).rg;
-	realisticWaterDisplacementOutput1f = dot(vec4(sampleA.r, sampleB.r, sampleC.r, sampleD.r), vec4(0.63, 0.40, 0.035, 0.035)) + dot(vec2(sampleC.g, sampleD.g), vec2(-0.075 * sampleA.g, 0.053 * sampleA.r));
+	realisticWaterDisplacementOutput1f = exp((dot(vec4(sampleA.r, sampleB.r, sampleC.r, sampleD.r), vec4(0.63, 0.40, 0.035, 0.035)) + dot(vec2(sampleC.g, sampleD.g), vec2(-0.075 * sampleA.g, 0.053 * sampleA.r))) * 2.0);
 }

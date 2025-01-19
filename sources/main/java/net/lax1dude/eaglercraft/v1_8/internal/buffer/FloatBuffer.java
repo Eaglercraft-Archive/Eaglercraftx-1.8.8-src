@@ -1,7 +1,7 @@
 package net.lax1dude.eaglercraft.v1_8.internal.buffer;
 
 /**
- * Copyright (c) 2022 lax1dude. All Rights Reserved.
+ * Copyright (c) 2022-2025 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -15,49 +15,61 @@ package net.lax1dude.eaglercraft.v1_8.internal.buffer;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-public interface FloatBuffer extends Buffer {
+public abstract class FloatBuffer implements Buffer {
 
-	FloatBuffer duplicate();
+	public abstract FloatBuffer duplicate();
 
-	float get();
+	public abstract float get();
 
-	FloatBuffer put(float b);
+	public abstract FloatBuffer put(float b);
 
-	float get(int index);
+	public abstract float get(int index);
 
-	FloatBuffer put(int index, float b);
+	public abstract FloatBuffer put(int index, float b);
 
-	float getElement(int index);
+	public abstract float getElement(int index);
 
-	void putElement(int index, float value);
+	public abstract void putElement(int index, float value);
 
-	FloatBuffer get(float[] dst, int offset, int length);
+	public abstract FloatBuffer get(float[] dst, int offset, int length);
 
-	FloatBuffer get(float[] dst);
+	public abstract FloatBuffer get(float[] dst);
 
-	FloatBuffer put(FloatBuffer src);
+	public abstract FloatBuffer put(FloatBuffer src);
 
-	FloatBuffer put(float[] src, int offset, int length);
+	public abstract FloatBuffer put(float[] src, int offset, int length);
 
-	FloatBuffer put(float[] src);
+	public abstract FloatBuffer put(float[] src);
 
-	boolean isDirect();
+	public abstract boolean isDirect();
 
-	FloatBuffer mark();
+	public abstract FloatBuffer mark();
 
-	FloatBuffer reset();
+	public abstract FloatBuffer reset();
 
-	FloatBuffer clear();
+	public abstract FloatBuffer clear();
 
-	FloatBuffer flip();
+	public abstract FloatBuffer flip();
 
-	FloatBuffer rewind();
+	public abstract FloatBuffer rewind();
 
-	FloatBuffer limit(int newLimit);
+	public abstract FloatBuffer limit(int newLimit);
 
-	FloatBuffer position(int newPosition);
+	public abstract int limit();
 
-	float[] array();
+	public abstract FloatBuffer position(int newPosition);
+
+	public abstract int position();
+
+	public abstract int remaining();
+
+	public abstract boolean hasRemaining();
+
+	public abstract int capacity();
+
+	public abstract boolean hasArray();
+
+	public abstract float[] array();
 
 }
 

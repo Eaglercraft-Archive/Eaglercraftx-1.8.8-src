@@ -1,6 +1,6 @@
 
 # Eagler Context Redacted Diff
-# Copyright (c) 2024 lax1dude. All rights reserved.
+# Copyright (c) 2025 lax1dude. All rights reserved.
 
 # Version: 1.0
 # Author: lax1dude
@@ -99,17 +99,17 @@
 + 					if (deferred) {
 + 						ModelBlock currentBlockModel = modelblock;
 + 						ResourceLocation currentResourceLocation = modelblockdefinition$variant.getModelLocation();
-+ 						Integer blockId = null;
++ 						int blockId = -1;
 + 						do {
-+ 							blockId = BlockVertexIDs.modelToID.get(currentResourceLocation.toString());
-+ 							if (blockId != null) {
++ 							blockId = BlockVertexIDs.modelToID.getOrDefault(currentResourceLocation.toString(), -1);
++ 							if (blockId != -1) {
 + 								break;
 + 							}
 + 							currentResourceLocation = currentBlockModel.getParentLocation();
 + 							currentBlockModel = models.get(currentResourceLocation);
 + 						} while (currentBlockModel != null);
-+ 						if (blockId != null) {
-+ 							VertexMarkerState.markId = blockId.intValue();
++ 						if (blockId != -1) {
++ 							VertexMarkerState.markId = blockId;
 + 							try {
 + 								weightedbakedmodel$builder.add(
 + 										this.bakeModel(modelblock, modelblockdefinition$variant.getRotation(),

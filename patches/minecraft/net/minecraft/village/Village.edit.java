@@ -1,6 +1,6 @@
 
 # Eagler Context Redacted Diff
-# Copyright (c) 2024 lax1dude. All rights reserved.
+# Copyright (c) 2025 lax1dude. All rights reserved.
 
 # Version: 1.0
 # Author: lax1dude
@@ -13,7 +13,38 @@
 
 > DELETE  4  @  4 : 5
 
-> CHANGE  139 : 141  @  139 : 140
+> INSERT  23 : 45  @  23
+
++ 	private BlockPos[] positions = null;
++ 
++ 	private void calculateNewCheckPositions() {
++ 		if (this.center == null || this.center.equals(BlockPos.ORIGIN)) {
++ 			this.positions = null;
++ 		} else {
++ 			this.positions = new BlockPos[] { this.center.add(-this.villageRadius, 0, -this.villageRadius),
++ 					this.center.add(-this.villageRadius, 0, this.villageRadius),
++ 					this.center.add(this.villageRadius, 0, -this.villageRadius),
++ 					this.center.add(this.villageRadius, 0, this.villageRadius), this.center };
++ 		}
++ 	}
++ 
++ 	public boolean isVillageAreaLoaded() {
++ 		for (int i = 0; this.positions != null && i < this.positions.length; i++) {
++ 			if (this.worldObj.isBlockLoaded(this.positions[i])) {
++ 				return true;
++ 			}
++ 		}
++ 		return false;
++ 	}
++ 
+
+> INSERT  5 : 8  @  5
+
++ 		if (!isVillageAreaLoaded()) {
++ 			return;
++ 		}
+
+> CHANGE  111 : 113  @  111 : 112
 
 ~ 		for (int m = 0, n = this.villageDoorInfoList.size(); m < n; ++m) {
 ~ 			VillageDoorInfo villagedoorinfo1 = this.villageDoorInfoList.get(m);
@@ -38,11 +69,20 @@
 ~ 			for (int m = 0, n = this.villageDoorInfoList.size(); m < n; ++m) {
 ~ 				j = Math.max(this.villageDoorInfoList.get(m).getDistanceToDoorBlockSq(this.center), j);
 
-> CHANGE  49 : 50  @  49 : 57
+> INSERT  4 : 6  @  4
+
++ 
++ 		calculateNewCheckPositions();
+
+> CHANGE  45 : 46  @  45 : 53
 
 ~ 			if (nbttagcompound1.hasKey("Name")) {
 
-> CHANGE  22 : 24  @  22 : 23
+> INSERT  5 : 6  @  5
+
++ 		calculateNewCheckPositions();
+
+> CHANGE  17 : 19  @  17 : 18
 
 ~ 		for (int m = 0, n = this.villageDoorInfoList.size(); m < n; ++m) {
 ~ 			VillageDoorInfo villagedoorinfo = this.villageDoorInfoList.get(m);

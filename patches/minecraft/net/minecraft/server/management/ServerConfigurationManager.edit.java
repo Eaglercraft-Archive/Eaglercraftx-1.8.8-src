@@ -1,11 +1,15 @@
 
 # Eagler Context Redacted Diff
-# Copyright (c) 2024 lax1dude. All rights reserved.
+# Copyright (c) 2025 lax1dude. All rights reserved.
 
 # Version: 1.0
 # Author: lax1dude
 
-> CHANGE  5 : 8  @  5 : 9
+> INSERT  2 : 3  @  2
+
++ import com.carrotsearch.hppc.cursors.ObjectCursor;
+
+> CHANGE  3 : 6  @  3 : 7
 
 ~ import net.lax1dude.eaglercraft.v1_8.mojang.authlib.GameProfile;
 ~ import net.lax1dude.eaglercraft.v1_8.netty.Unpooled;
@@ -104,7 +108,12 @@
 + 			playerIn.addChatMessage(shaderF4Msg);
 + 		}
 
-> INSERT  23 : 31  @  23
+> CHANGE  8 : 10  @  8 : 10
+
+~ 		for (ObjectCursor<PotionEffect> potioneffect : playerIn.getActivePotionEffects()) {
+~ 			nethandlerplayserver.sendPacket(new S1DPacketEntityEffect(playerIn.getEntityId(), potioneffect.value));
+
+> INSERT  13 : 21  @  13
 
 + 		if (EagRuntime.getConfiguration().allowUpdateSvc()) {
 + 			for (int i = 0, l = playerEntityList.size(); i < l; ++i) {
@@ -190,7 +199,13 @@
 + 		entityplayermp.updateCertificate = playerIn.updateCertificate;
 + 		entityplayermp.clientBrandUUID = playerIn.clientBrandUUID;
 
-> DELETE  75  @  75 : 76
+> CHANGE  63 : 66  @  63 : 65
+
+~ 		for (ObjectCursor<PotionEffect> potioneffect : playerIn.getActivePotionEffects()) {
+~ 			playerIn.playerNetServerHandler
+~ 					.sendPacket(new S1DPacketEntityEffect(playerIn.getEntityId(), potioneffect.value));
+
+> DELETE  10  @  10 : 11
 
 > DELETE  35  @  35 : 36
 
@@ -270,13 +285,21 @@
 
 ~ 			this.playerStatFiles.put(name, statisticsfile);
 
-> CHANGE  8 : 11  @  8 : 9
+> INSERT  7 : 8  @  7
+
++ 		int entityViewDist = getEntityViewDistance();
+
+> CHANGE  1 : 4  @  1 : 2
 
 ~ 			WorldServer[] srv = this.mcServer.worldServers;
 ~ 			for (int i = 0; i < srv.length; ++i) {
 ~ 				WorldServer worldserver = srv[i];
 
-> DELETE  4  @  4 : 5
+> INSERT  2 : 3  @  2
+
++ 					worldserver.getEntityTracker().updateMaxTrackingThreshold(entityViewDist);
+
+> DELETE  2  @  2 : 3
 
 > CHANGE  7 : 8  @  7 : 8
 

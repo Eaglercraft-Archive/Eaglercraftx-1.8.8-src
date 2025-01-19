@@ -39,7 +39,7 @@ void main() {
 	if(inputColor.a > 0.0) {
 		emission = textureLod(u_gbufferMaterialTexture, alignedUV, 0.0).b;
 	}else {
-		emission = textureLod(u_gbufferDepthTexture, alignedUV, 0.0).r <= 0.0000001 ? 10.0 : 0.0;
+		emission = textureLod(u_gbufferDepthTexture, alignedUV, 0.0).r == 0.0 ? 10.0 : 0.0;
 	}
 	float f = dot(inputColor.rgb, vec3(0.2126, 0.7152, 0.0722)) * (5.0 + emission * 15.0);
 	if(f > 2.0 + exposure) {

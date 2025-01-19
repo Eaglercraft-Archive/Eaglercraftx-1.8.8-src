@@ -1,14 +1,16 @@
 
 # Eagler Context Redacted Diff
-# Copyright (c) 2024 lax1dude. All rights reserved.
+# Copyright (c) 2025 lax1dude. All rights reserved.
 
 # Version: 1.0
 # Author: lax1dude
 
 > DELETE  2  @  2 : 6
 
-> CHANGE  4 : 12  @  4 : 6
+> CHANGE  4 : 14  @  4 : 6
 
+~ 
+~ import net.lax1dude.eaglercraft.v1_8.EaglerBidiReorder;
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 ~ 
 ~ import net.lax1dude.eaglercraft.v1_8.HString;
@@ -129,18 +131,7 @@
 ~ 			tessellator.draw();
 ~ 
 
-> CHANGE  27 : 35  @  27 : 34
-
-~ //		try {
-~ //			Bidi bidi = new Bidi((new ArabicShaping(8)).shape(parString1), 127);
-~ //			bidi.setReorderingMode(0);
-~ //			return bidi.writeReordered(2);
-~ //		} catch (ArabicShapingException var3) {
-~ //			return parString1;
-~ //		}
-~ 		return parString1;
-
-> CHANGE  2 : 3  @  2 : 3
+> CHANGE  26 : 27  @  26 : 37
 
 ~ 	protected void resetStyles() {
 
@@ -169,8 +160,9 @@
 
 ~ 	private int renderStringAligned(String text, int x, int y, int wrapWidth, int color, boolean parFlag) {
 
-> CHANGE  2 : 3  @  2 : 3
+> CHANGE  1 : 3  @  1 : 3
 
+~ 			int i = this.getStringWidth(EaglerBidiReorder.bidiReorder(text));
 ~ 			x = x + wrapWidth - i;
 
 > CHANGE  2 : 3  @  2 : 3
@@ -182,7 +174,11 @@
 ~ 			this.posX = x;
 ~ 			this.posY = y;
 
-> DELETE  21  @  21 : 22
+> CHANGE  2 : 3  @  2 : 3
+
+~ 				text = EaglerBidiReorder.bidiReorder(text);
+
+> DELETE  18  @  18 : 19
 
 > INSERT  1 : 2  @  1
 

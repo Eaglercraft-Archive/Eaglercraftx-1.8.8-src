@@ -20,6 +20,9 @@ import org.teavm.jso.webaudio.MediaStreamAudioDestinationNode;
 import org.teavm.jso.webaudio.MediaStreamAudioSourceNode;
 import org.teavm.jso.webaudio.PannerNode;
 
+import com.carrotsearch.hppc.IntObjectHashMap;
+import com.carrotsearch.hppc.IntObjectMap;
+
 import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
 import net.lax1dude.eaglercraft.v1_8.internal.wasm_gc_teavm.BetterJSStringConverter;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
@@ -133,7 +136,7 @@ public class PlatformVoiceClient {
 	}
 
 	static final Map<EaglercraftUUID, VoicePeer> peerList = new HashMap<>();
-	static final Map<Integer, VoicePeer> peerListI = new HashMap<>();
+	static final IntObjectMap<VoicePeer> peerListI = new IntObjectHashMap<>();
 
 	private static class VoicePeer {
 

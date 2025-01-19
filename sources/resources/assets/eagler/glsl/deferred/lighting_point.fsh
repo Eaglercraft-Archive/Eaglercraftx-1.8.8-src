@@ -47,7 +47,7 @@ void main() {
 	vec3 materialData3f;
 
 	float depth = textureLod(u_gbufferDepthTexture, v_position2f, 0.0).r;
-	if(depth < 0.00001) {
+	if(depth == 0.0) {
 		discard;
 	}
 
@@ -59,10 +59,13 @@ void main() {
 	worldSpacePosition = u_inverseViewMatrix4f * worldSpacePosition;
 	vec3 lightDist = (worldSpacePosition.xyz / worldSpacePosition.w) - u_lightPosition3f;
 	vec3 color3f = u_lightColor3f / dot(lightDist, lightDist);
+	float cm = color3f.r + color3f.g + color3f.b;
 
-	if(color3f.r + color3f.g + color3f.b < 0.025) {
+	if(cm < 0.025) {
 		discard;
 	}
+
+	color3f *= ((cm - 0.025) / cm);
 
 	vec4 sampleVar4f = textureLod(u_gbufferColorTexture, v_position2f, 0.0);
 	diffuseColor3f.rgb = sampleVar4f.rgb;

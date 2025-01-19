@@ -1,6 +1,6 @@
 
 # Eagler Context Redacted Diff
-# Copyright (c) 2024 lax1dude. All rights reserved.
+# Copyright (c) 2025 lax1dude. All rights reserved.
 
 # Version: 1.0
 # Author: lax1dude
@@ -37,7 +37,22 @@
 
 ~ 	public void updateTick(World world, BlockPos blockpos, IBlockState iblockstate, EaglercraftRandom random) {
 
-> CHANGE  48 : 49  @  48 : 49
+> CHANGE  1 : 2  @  1 : 2
+
+~ 		List<BlockRedstoneTorch.Toggle> list = toggles.get(world);
+
+> CHANGE  1 : 9  @  1 : 4
+
+~ 		if (list != null) {
+~ 			int index = 0;
+~ 			while (index < list.size() && world.getTotalWorldTime() - list.get(index).time > 60L) {
+~ 				index++;
+~ 			}
+~ 			if (index > 0) {
+~ 				list.subList(0, index).clear();
+~ 			}
+
+> CHANGE  42 : 43  @  42 : 43
 
 ~ 	public Item getItemDropped(IBlockState var1, EaglercraftRandom var2, int var3) {
 

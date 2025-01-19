@@ -1,19 +1,15 @@
 
 # Eagler Context Redacted Diff
-# Copyright (c) 2024 lax1dude. All rights reserved.
+# Copyright (c) 2025 lax1dude. All rights reserved.
 
 # Version: 1.0
 # Author: lax1dude
 
-> CHANGE  2 : 3  @  2 : 3
+> CHANGE  2 : 5  @  2 : 4
 
 ~ import java.util.List;
-
-> INSERT  1 : 4  @  1
-
-+ 
-+ import com.google.common.collect.Maps;
-+ 
+~ import com.carrotsearch.hppc.IntObjectHashMap;
+~ import com.carrotsearch.hppc.IntObjectMap;
 
 > DELETE  8  @  8 : 13
 
@@ -50,10 +46,18 @@
 + 	}
 + 
 
-> CHANGE  29 : 32  @  29 : 32
+> CHANGE  5 : 6  @  5 : 6
+
+~ 		private static final IntObjectMap<EntityMinecart.EnumMinecartType> ID_LOOKUP = new IntObjectHashMap<>();
+
+> CHANGE  17 : 18  @  17 : 19
+
+~ 			EntityMinecart.EnumMinecartType entityminecart$enumminecarttype = ID_LOOKUP.get(id);
+
+> CHANGE  4 : 7  @  4 : 7
 
 ~ 			EntityMinecart.EnumMinecartType[] types = values();
 ~ 			for (int i = 0; i < types.length; ++i) {
-~ 				ID_LOOKUP.put(Integer.valueOf(types[i].getNetworkID()), types[i]);
+~ 				ID_LOOKUP.put(types[i].getNetworkID(), types[i]);
 
 > EOF
