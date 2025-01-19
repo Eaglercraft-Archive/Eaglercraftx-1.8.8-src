@@ -34,6 +34,7 @@ public class CompatWarning {
 				":>  apart from the versions listed below:",
 				":>  ",
 				":>  - Velocity: " + EaglerXVelocityVersion.NATIVE_VELOCITY_BUILD,
+				":>  - " + EaglerXVelocityVersion.NATIVE_VELOCITY_BUILD_DL,
 				":>  ",
 				":>  This is not a Bukkit/Spigot plugin!",
 				":>  ",

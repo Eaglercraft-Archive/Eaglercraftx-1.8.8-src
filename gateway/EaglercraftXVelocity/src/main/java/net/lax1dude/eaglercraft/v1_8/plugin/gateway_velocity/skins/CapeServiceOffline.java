@@ -1,8 +1,8 @@
 package net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.skins;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.server.EaglerPlayerData;
 import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.GameMessagePacket;
@@ -12,7 +12,7 @@ import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.server.SPacketOtherCape
 import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.server.SPacketOtherCapePresetEAG;
 
 /**
- * Copyright (c) 2024 lax1dude. All Rights Reserved.
+ * Copyright (c) 2024-2025 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -30,20 +30,15 @@ public class CapeServiceOffline {
 
 	public static final int masterRateLimitPerPlayer = 250;
 
-	private final Map<UUID, GameMessagePacket> capesCache = new HashMap<>();
+	private final ConcurrentMap<UUID, GameMessagePacket> capesCache = new ConcurrentHashMap<>();
 
 	public void registerEaglercraftPlayer(UUID playerUUID, GameMessagePacket capePacket) {
-		synchronized(capesCache) {
-			capesCache.put(playerUUID, capePacket);
-		}
+		capesCache.put(playerUUID, capePacket);
 	}
 
 	public void processGetOtherCape(UUID searchUUID, EaglerPlayerData sender) {
 		if(sender.skinLookupRateLimiter.rateLimit(masterRateLimitPerPlayer)) {
-			GameMessagePacket maybeCape;
-			synchronized(capesCache) {
-				maybeCape = capesCache.get(searchUUID);
-			}
+			GameMessagePacket maybeCape = capesCache.get(searchUUID);
 			if(maybeCape != null) {
 				sender.sendEaglerMessage(maybeCape);
 			}else {
@@ -54,10 +49,7 @@ public class CapeServiceOffline {
 	}
 
 	public void processForceCape(UUID clientUUID, EaglerPlayerData initialHandler) {
-		GameMessagePacket maybeCape;
-		synchronized(capesCache) {
-			maybeCape = capesCache.get(clientUUID);
-		}
+		GameMessagePacket maybeCape = capesCache.get(clientUUID);
 		if(maybeCape != null) {
 			if (maybeCape instanceof SPacketOtherCapePresetEAG) {
 				initialHandler.sendEaglerMessage(
@@ -70,15 +62,11 @@ public class CapeServiceOffline {
 	}
 
 	public void unregisterPlayer(UUID playerUUID) {
-		synchronized(capesCache) {
-			capesCache.remove(playerUUID);
-		}
+		capesCache.remove(playerUUID);
 	}
 
 	public GameMessagePacket getCape(UUID clientUUID) {
-		synchronized(capesCache) {
-			return capesCache.get(clientUUID);
-		}
+		return capesCache.get(clientUUID);
 	}
 
 	public byte[] getCapeHandshakeData(UUID clientUUID) {
@@ -107,8 +95,6 @@ public class CapeServiceOffline {
 	}
 
 	public void shutdown() {
-		synchronized(capesCache) {
-			capesCache.clear();
-		}
+		capesCache.clear();
 	}
 }

@@ -118,6 +118,7 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 	private static final Method loginEventFiredMethod;
 	private static final Constructor<ConnectedPlayer> stupid3Constructor;
 	private static final Constructor<ConnectedPlayer> stupid3Constructor_new;
+	private static final Constructor<ConnectedPlayer> stupid3Constructor_new_new;
 	private static final Method setPermissionFunctionMethod;
 	private static final Field defaultPermissionsField;
 	private static final Constructor<InitialConnectSessionHandler> stupid4Constructor;
@@ -137,16 +138,24 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 			loginEventFiredMethod.setAccessible(true);
 			Constructor<ConnectedPlayer> c3 = null;
 			Constructor<ConnectedPlayer> c3_new = null;
+			Constructor<ConnectedPlayer> c3_new_new = null;
 			try {
-				c3_new = ConnectedPlayer.class.getDeclaredConstructor(VelocityServer.class, GameProfile.class, MinecraftConnection.class, InetSocketAddress.class, String.class, boolean.class, IdentifiedKey.class);
-				c3_new.setAccessible(true);
+				c3_new_new = ConnectedPlayer.class.getDeclaredConstructor(VelocityServer.class, GameProfile.class, MinecraftConnection.class, InetSocketAddress.class, String.class, boolean.class, HandshakeIntent.class, IdentifiedKey.class);
+				c3_new_new.setAccessible(true);
 			} catch (NoSuchMethodException e) {
-				c3 = ConnectedPlayer.class.getDeclaredConstructor(VelocityServer.class, GameProfile.class, MinecraftConnection.class, InetSocketAddress.class, boolean.class, IdentifiedKey.class);
-				c3.setAccessible(true);
-				c3_new = null;
+				try {
+					c3_new_new = null;
+					c3_new = ConnectedPlayer.class.getDeclaredConstructor(VelocityServer.class, GameProfile.class, MinecraftConnection.class, InetSocketAddress.class, String.class, boolean.class, IdentifiedKey.class);
+					c3_new.setAccessible(true);
+				} catch (NoSuchMethodException ee) {
+					c3_new = null;
+					c3 = ConnectedPlayer.class.getDeclaredConstructor(VelocityServer.class, GameProfile.class, MinecraftConnection.class, InetSocketAddress.class, boolean.class, IdentifiedKey.class);
+					c3.setAccessible(true);
+				}
 			}
 			stupid3Constructor = c3;
 			stupid3Constructor_new = c3_new;
+			stupid3Constructor_new_new = c3_new_new;
 			setPermissionFunctionMethod = ConnectedPlayer.class.getDeclaredMethod("setPermissionFunction", PermissionFunction.class);
 			setPermissionFunctionMethod.setAccessible(true);
 			defaultPermissionsField = ConnectedPlayer.class.getDeclaredField("DEFAULT_PERMISSIONS");
@@ -1080,7 +1089,13 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 								}
 
 								ConnectedPlayer player;
-								if(stupid3Constructor_new != null) {
+								if(stupid3Constructor_new_new != null) {
+									try {
+										player = stupid3Constructor_new_new.newInstance(bungee, gp, con, lic.getVirtualHost().orElse(null), lic.getRawVirtualHost().orElse(null), false, HandshakeIntent.LOGIN, lic.getIdentifiedKey());
+									} catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+										throw new RuntimeException(e);
+									}
+								}else if(stupid3Constructor_new != null) {
 									try {
 										player = stupid3Constructor_new.newInstance(bungee, gp, con, lic.getVirtualHost().orElse(null), lic.getRawVirtualHost().orElse(null), false, lic.getIdentifiedKey());
 									} catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
@@ -1309,14 +1324,11 @@ public class HttpWebSocketHandler extends ChannelInboundHandlerAdapter {
 
 														pp.remove(HttpWebSocketHandler.this);
 
-														pp
-																.addLast("EaglerMinecraftByteBufDecoder", new EaglerMinecraftDecoder())
-																.addLast(LEGACY_PING_DECODER, new LegacyPingDecoder())
+														pp.addLast("EaglerMinecraftByteBufDecoder", new EaglerMinecraftDecoder())
 																.addLast(READ_TIMEOUT,
 																		new ReadTimeoutHandler(bungee.getConfiguration().getReadTimeout(),
 																				TimeUnit.MILLISECONDS))
 																.addLast("EaglerMinecraftByteBufEncoder", new EaglerMinecraftEncoder())
-																.addLast(LEGACY_PING_ENCODER, LegacyPingEncoder.INSTANCE)
 																.addLast(MINECRAFT_DECODER, new MinecraftDecoder(ProtocolUtils.Direction.SERVERBOUND))
 																.addLast(MINECRAFT_ENCODER, new MinecraftEncoder(ProtocolUtils.Direction.CLIENTBOUND));
 														
