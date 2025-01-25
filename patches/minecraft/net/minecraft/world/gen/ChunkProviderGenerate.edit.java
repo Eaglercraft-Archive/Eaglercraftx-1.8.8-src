@@ -37,4 +37,11 @@
 ~ 		this.ravineGenerator = new MapGenRavine(scramble);
 ~ 		this.oceanMonumentGenerator = new StructureOceanMonument(scramble);
 
+> INSERT  421 : 425  @  421
+
++ 
++ 	public Chunk getLoadedChunk(int var1, int var2) {
++ 		return provideChunk(var1, var2);
++ 	}
+
 > EOF

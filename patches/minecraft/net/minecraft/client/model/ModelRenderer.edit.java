@@ -23,7 +23,26 @@
 
 > DELETE  1  @  1 : 3
 
-> CHANGE  214 : 216  @  214 : 216
+> CHANGE  126 : 127  @  126 : 129
+
+~ 					GlStateManager.rotateZYXRad(this.rotateAngleX, this.rotateAngleY, this.rotateAngleZ);
+
+> DELETE  1  @  1 : 9
+
+> DELETE  25  @  25 : 28
+
+> CHANGE  1 : 3  @  1 : 4
+
+~ 				// note: vanilla order for this function is YXZ not ZYX for some reason
+~ 				GlStateManager.rotateZYXRad(this.rotateAngleX, this.rotateAngleY, this.rotateAngleZ);
+
+> DELETE  1  @  1 : 5
+
+> CHANGE  21 : 22  @  21 : 32
+
+~ 					GlStateManager.rotateZYXRad(this.rotateAngleX, this.rotateAngleY, this.rotateAngleZ);
+
+> CHANGE  7 : 9  @  7 : 9
 
 ~ 		this.displayList = GLAllocation.generateDisplayLists();
 ~ 		EaglercraftGPU.glNewList(this.displayList, GL_COMPILE);

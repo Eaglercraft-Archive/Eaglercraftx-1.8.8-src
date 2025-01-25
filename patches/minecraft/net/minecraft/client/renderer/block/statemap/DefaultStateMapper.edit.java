@@ -7,4 +7,8 @@
 
 > DELETE  4  @  4 : 5
 
+> CHANGE  7 : 8  @  7 : 8
+
+~ 				getPropertyString(iblockstate.getProperties()));
+
 > EOF

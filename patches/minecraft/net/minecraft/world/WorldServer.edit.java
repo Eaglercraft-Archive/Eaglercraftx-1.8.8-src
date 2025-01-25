@@ -42,7 +42,11 @@
 
 > DELETE  6  @  6 : 7
 
-> DELETE  11  @  11 : 12
+> INSERT  1 : 2  @  1
+
++ 		alfheim$getLightingEngine().processLightUpdates();
+
+> DELETE  10  @  10 : 11
 
 > DELETE  1  @  1 : 2
 

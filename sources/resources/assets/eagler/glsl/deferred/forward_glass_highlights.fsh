@@ -238,7 +238,7 @@ void main() {
 
 	for(;;) {
 		float dst2 = dot(worldPosition4f.xyz, worldPosition4f.xyz);
-		if(dst2 > 16.0) {
+		if(dst2 > 25.0) {
 			break;
 		}
 		vec3 reflectDir = reflect(worldDirection4f.xyz, normalVector3f);
@@ -256,8 +256,9 @@ void main() {
 			reflectDir.xz += vec2(0.5, reflectDir.y > 0.0 ? 0.25 : 0.75);
 			envMapSample4f = textureLod(u_environmentMap, reflectDir.xz, 0.0);
 		}
-		if(envMapSample4f.a > 0.0) {
-			lightColor3f += eaglercraftIBL_Specular_Glass(envMapSample4f.rgb, worldDirection4f.xyz, normalVector3f) * (1.0 - sqrt(dst2) * 0.25);
+		envMapSample4f.a += min(lightmapCoords2f.g * 2.0, 1.0) * (1.0 - envMapSample4f.a);
+		if(envMapSample4f.a == 1.0) {
+			lightColor3f += eaglercraftIBL_Specular_Glass(envMapSample4f.rgb * envMapSample4f.a, worldDirection4f.xyz, normalVector3f) * (1.0 - sqrt(dst2) * 0.2);
 		}
 		break;
 	}

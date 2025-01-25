@@ -1,0 +1,25 @@
+
+# Eagler Context Redacted Diff
+# Copyright (c) 2025 lax1dude. All rights reserved.
+
+# Version: 1.0
+# Author: lax1dude
+
+> CHANGE  5 : 7  @  5 : 7
+
+~         "east=false,north=false,south=true,west=false": { "model": "pink_pane_n", "y": 180 },
+~         "east=false,north=false,south=false,west=true": { "model": "pink_pane_n", "y": 270 },
+
+> CHANGE  1 : 4  @  1 : 4
+
+~         "east=true,north=false,south=true,west=false": { "model": "pink_pane_ne", "y": 90 },
+~         "east=false,north=false,south=true,west=true": { "model": "pink_pane_ne", "y": 180 },
+~         "east=false,north=true,south=false,west=true": { "model": "pink_pane_ne", "y": 270 },
+
+> CHANGE  3 : 6  @  3 : 6
+
+~         "east=true,north=false,south=true,west=true": { "model": "pink_pane_nse", "y": 90 },
+~         "east=false,north=true,south=true,west=true": { "model": "pink_pane_nse", "y": 180 },
+~         "east=true,north=true,south=false,west=true": { "model": "pink_pane_nse", "y": 270 },
+
+> EOF

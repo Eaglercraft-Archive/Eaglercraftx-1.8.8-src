@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -64,7 +65,12 @@ public class IOUtils {
 				while((s = rd.readLine()) != null) {
 					b.append(s).append('\n');
 				}
-				return b.toString();
+				// Handle BOM
+				if(c == StandardCharsets.UTF_8 && b.length() > 0 && b.charAt(0) == 65279) {
+					return b.substring(1, b.length());
+				}else {
+					return b.toString();
+				}
 			}finally {
 				is.close();
 			}

@@ -34,7 +34,7 @@
 
 ~ 	public int quantityDropped(EaglercraftRandom var1) {
 
-> INSERT  65 : 78  @  65
+> INSERT  65 : 89  @  65
 
 + 
 + 	public boolean onBlockActivated(World world, BlockPos blockpos, IBlockState var3, EntityPlayer entityplayer,
@@ -48,6 +48,17 @@
 + 			return true;
 + 		}
 + 		return super.onBlockActivated(world, blockpos, var3, entityplayer, var5, var6, var7, var8);
++ 	}
++ 
++ 	public boolean alfheim$useNeighborBrightness(final IBlockState blockState, final EnumFacing facing,
++ 			final IBlockAccess blockAccess, final BlockPos blockPos) {
++ 		if (isFullCube())
++ 			return false;
++ 
++ 		if (facing.getAxis() != EnumFacing.Axis.Y)
++ 			return true;
++ 
++ 		return facing == (blockState.getValue(HALF) == EnumBlockHalf.TOP ? EnumFacing.DOWN : EnumFacing.UP);
 + 	}
 
 > EOF

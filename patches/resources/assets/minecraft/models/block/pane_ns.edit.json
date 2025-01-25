@@ -1,0 +1,17 @@
+
+# Eagler Context Redacted Diff
+# Copyright (c) 2025 lax1dude. All rights reserved.
+
+# Version: 1.0
+# Author: lax1dude
+
+> CHANGE  10 : 16  @  10 : 16
+
+~                 "down":  { "uv": [ 7, 0, 9, 16 ], "texture": "#edge", "cull": false },
+~                 "up":    { "uv": [ 7, 0, 9, 16 ], "texture": "#edge", "cull": false },
+~                 "north": { "uv": [ 7, 0, 9, 16 ], "texture": "#edge" },
+~                 "south": { "uv": [ 7, 0, 9, 16 ], "texture": "#edge" },
+~                 "west":  { "uv": [ 0, 0, 16, 16 ], "texture": "#pane", "cull": false },
+~                 "east":  { "uv": [ 0, 0, 16, 16 ], "texture": "#pane", "cull": false }
+
+> EOF

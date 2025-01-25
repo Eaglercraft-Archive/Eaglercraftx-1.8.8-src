@@ -55,4 +55,11 @@
 
 ~ 		return "MultiplayerChunkCache: " + this.chunkMapping.size() + ", " + this.chunkListing.size();
 
+> INSERT  20 : 24  @  20
+
++ 
++ 	public Chunk getLoadedChunk(int var1, int var2) {
++ 		return this.chunkMapping.get(ChunkCoordIntPair.chunkXZ2Int(var1, var2));
++ 	}
+
 > EOF

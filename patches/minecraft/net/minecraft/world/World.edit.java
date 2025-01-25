@@ -12,8 +12,10 @@
 + import com.carrotsearch.hppc.LongHashSet;
 + import com.carrotsearch.hppc.LongSet;
 
-> INSERT  3 : 4  @  3
+> INSERT  3 : 6  @  3
 
++ 
++ import dev.redstudio.alfheim.lighting.LightingEngine;
 + 
 
 > DELETE  5  @  5 : 6
@@ -61,21 +63,26 @@
 
 ~ 	protected LongSet activeChunkSet = new LongHashSet();
 
-> INSERT  6 : 7  @  6
+> CHANGE  5 : 6  @  5 : 6
 
-+ 	public final boolean isRemote;
+~ 	public final boolean isRemote;
 
-> CHANGE  1 : 2  @  1 : 3
+> CHANGE  1 : 4  @  1 : 3
 
+~ 	private LightingEngine alfheim$lightingEngine;
+~ 
 ~ 	protected World(ISaveHandler saveHandlerIn, WorldInfo info, WorldProvider providerIn, boolean client) {
 
-> DELETE  5  @  5 : 6
+> DELETE  3  @  3 : 4
+
+> DELETE  1  @  1 : 2
 
 > DELETE  2  @  2 : 3
 
-> INSERT  1 : 2  @  1
+> INSERT  1 : 3  @  1
 
 + 		this.isRemote = client;
++ 		this.alfheim$lightingEngine = new LightingEngine(this);
 
 > CHANGE  17 : 19  @  17 : 18
 
@@ -125,29 +132,27 @@
 
 ~ 							return HString.format("ID #%d (%s // %s)",
 
-> CHANGE  60 : 66  @  60 : 65
+> CHANGE  58 : 60  @  58 : 68
 
-~ 				BlockPos tmp = new BlockPos(0, 0, 0);
-~ 				int i1 = this.getLight(pos.up(tmp), false);
-~ 				int i = this.getLight(pos.east(tmp), false);
-~ 				int j = this.getLight(pos.west(tmp), false);
-~ 				int k = this.getLight(pos.south(tmp), false);
-~ 				int l = this.getLight(pos.north(tmp), false);
+~ 		if (!checkNeighbors)
+~ 			return getLight(pos);
 
-> CHANGE  63 : 64  @  63 : 64
+> CHANGE  1 : 2  @  1 : 4
 
-~ 			return Chunk.getNoSkyLightValue();
+~ 		final IBlockState blockState = getBlockState(pos);
 
-> CHANGE  10 : 16  @  10 : 15
+> CHANGE  1 : 4  @  1 : 23
 
-~ 				BlockPos tmp = new BlockPos();
-~ 				int i1 = this.getLightFor(type, pos.up(tmp));
-~ 				int i = this.getLightFor(type, pos.east(tmp));
-~ 				int j = this.getLightFor(type, pos.west(tmp));
-~ 				int k = this.getLightFor(type, pos.south(tmp));
-~ 				int l = this.getLightFor(type, pos.north(tmp));
+~ 		return Math.max(blockState.getBlock().alfheim$getLightFor(blockState, this, EnumSkyBlock.BLOCK, pos),
+~ 				blockState.getBlock().alfheim$getLightFor(blockState, this, EnumSkyBlock.SKY, pos)
+~ 						- skylightSubtracted);
 
-> CHANGE  59 : 65  @  59 : 60
+> CHANGE  32 : 34  @  32 : 71
+
+~ 		IBlockState state = getBlockState(pos);
+~ 		return state.getBlock().alfheim$getLightFor(state, this, type, pos);
+
+> CHANGE  37 : 43  @  37 : 38
 
 ~ 		if (lightValue < 0) {
 ~ 			j += -lightValue;
@@ -260,11 +265,16 @@
 
 > DELETE  23  @  23 : 24
 
-> CHANGE  5 : 8  @  5 : 6
+> INSERT  1 : 7  @  1
 
-~ 			int l = this.getRenderDistanceChunks() - 1;
-~ 			if (l < 1)
-~ 				l = 1;
++ 		int l = this.getRenderDistanceChunks() - 1;
++ 		if (l > 7)
++ 			l = 7;
++ 		else if (l < 1)
++ 			l = 1;
++ 
+
+> DELETE  4  @  4 : 5
 
 > CHANGE  3 : 4  @  3 : 4
 
@@ -296,51 +306,12 @@
 ~ 				for (int m = 0; m < facings.length; ++m) {
 ~ 					EnumFacing enumfacing = facings[m];
 
-> DELETE  22  @  22 : 23
+> CHANGE  17 : 19  @  17 : 127
 
-> CHANGE  25 : 26  @  25 : 26
+~ 		alfheim$lightingEngine.scheduleLightUpdate(lightType, pos);
+~ 		return true;
 
-~ 								BlockPos blockpos$mutableblockpos = new BlockPos();
-
-> CHANGE  1 : 4  @  1 : 2
-
-~ 								EnumFacing[] facings = EnumFacing._VALUES;
-~ 								for (int m = 0; m < facings.length; ++m) {
-~ 									EnumFacing enumfacing = facings[m];
-
-> DELETE  20  @  20 : 23
-
-> INSERT  6 : 7  @  6
-
-+ 				BlockPos tmp = new BlockPos(0, 0, 0);
-
-> CHANGE  10 : 11  @  10 : 11
-
-~ 							if (this.getLightFor(lightType, blockpos1.west(tmp)) < j6) {
-
-> CHANGE  4 : 5  @  4 : 5
-
-~ 							if (this.getLightFor(lightType, blockpos1.east(tmp)) < j6) {
-
-> CHANGE  4 : 5  @  4 : 5
-
-~ 							if (this.getLightFor(lightType, blockpos1.down(tmp)) < j6) {
-
-> CHANGE  4 : 5  @  4 : 5
-
-~ 							if (this.getLightFor(lightType, blockpos1.up(tmp)) < j6) {
-
-> CHANGE  4 : 5  @  4 : 5
-
-~ 							if (this.getLightFor(lightType, blockpos1.north(tmp)) < j6) {
-
-> CHANGE  4 : 5  @  4 : 5
-
-~ 							if (this.getLightFor(lightType, blockpos1.south(tmp)) < j6) {
-
-> DELETE  8  @  8 : 9
-
-> CHANGE  30 : 33  @  30 : 33
+> CHANGE  28 : 31  @  28 : 31
 
 ~ 				Chunk chunk = this.getChunkFromChunkCoordsIfLoaded(i1, j1);
 ~ 				if (chunk != null) {
@@ -431,5 +402,12 @@
 + 		if (!MinecraftServer.getServer().worldServers[0].getWorldInfo().getGameRulesInstance()
 + 				.getBoolean("loadSpawnChunks"))
 + 			return false;
+
+> INSERT  6 : 10  @  6
+
++ 
++ 	public LightingEngine alfheim$getLightingEngine() {
++ 		return alfheim$lightingEngine;
++ 	}
 
 > EOF

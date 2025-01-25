@@ -79,7 +79,9 @@
 
 + import net.minecraft.util.Vec3i;
 
-> DELETE  2  @  2 : 9
+> CHANGE  2 : 3  @  2 : 9
+
+~ import net.optifine.Config;
 
 > CHANGE  9 : 10  @  9 : 10
 
@@ -92,9 +94,11 @@
 + 	private GameOverlayFramebuffer overlayFramebuffer;
 + 	private float eagPartialTicks = 0.0f;
 
-> INSERT  1 : 3  @  1
+> INSERT  1 : 5  @  1
 
 + 	public float currentProjMatrixFOV = 0.0f;
++ 
++ 	private boolean initializedOF = false;
 + 
 
 > DELETE  1  @  1 : 2
@@ -155,7 +159,11 @@
 
 ~ 				f = this.mc.isZoomKey ? this.mc.adjustedZoomValue : this.mc.gameSettings.fovSetting;
 
-> CHANGE  169 : 173  @  169 : 172
+> CHANGE  156 : 157  @  156 : 157
+
+~ 		this.farPlaneDistance = (float) (this.mc.gameSettings.renderDistanceChunks * 16 + 16);
+
+> CHANGE  12 : 16  @  12 : 15
 
 ~ 		float farPlane = this.farPlaneDistance * 2.0f * MathHelper.SQRT_2;
 ~ 		GlStateManager.gluPerspective(currentProjMatrixFOV = this.getFOVModifier(partialTicks, true),
@@ -215,8 +223,12 @@
 
 > DELETE  1  @  1 : 2
 
-> CHANGE  10 : 11  @  10 : 11
+> CHANGE  10 : 15  @  10 : 11
 
+~ 		if (!initializedOF) {
+~ 			Config.frameInitHook();
+~ 			initializedOF = true;
+~ 		}
 ~ 		boolean flag = Display.isActive() || mc.gameSettings.touchscreen;
 
 > CHANGE  1 : 2  @  1 : 2

@@ -60,4 +60,13 @@
 ~ 		for (int l = 0; l < amovingobjectposition.length; ++l) {
 ~ 			MovingObjectPosition movingobjectposition = amovingobjectposition[l];
 
+> INSERT  97 : 103  @  97
+
++ 
++ 	public boolean alfheim$useNeighborBrightness(final IBlockState blockState, final EnumFacing facing,
++ 			final IBlockAccess blockAccess, final BlockPos blockPos) {
++ 		return facing == (blockState.getValue(HALF) == EnumHalf.TOP ? EnumFacing.DOWN : EnumFacing.UP)
++ 				|| facing == blockState.getValue(FACING).getOpposite();
++ 	}
+
 > EOF

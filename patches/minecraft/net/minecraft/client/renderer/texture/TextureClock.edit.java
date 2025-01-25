@@ -16,16 +16,22 @@
 
 ~ public class TextureClock extends EaglerTextureAtlasSprite {
 
-> CHANGE  7 : 8  @  7 : 8
+> CHANGE  41 : 48  @  41 : 43
 
-~ 	public void updateAnimation(IFramebufferGL[] copyColorFramebuffer) {
+~ 				currentAnimUpdater = (mapWidth, mapHeight, mapLevel) -> {
+~ 					animationCache.copyFrameToTex2D(this.frameCounter, mapLevel, this.originX >> mapLevel,
+~ 							this.originY >> mapLevel, this.width >> mapLevel, this.height >> mapLevel, mapWidth,
+~ 							mapHeight);
+~ 				};
+~ 			} else {
+~ 				currentAnimUpdater = null;
 
-> CHANGE  33 : 35  @  33 : 35
+> INSERT  2 : 4  @  2
 
-~ 				animationCache.copyFrameLevelsToTex2D(this.frameCounter, this.originX, this.originY, this.width,
-~ 						this.height, copyColorFramebuffer);
++ 		} else {
++ 			currentAnimUpdater = null;
 
-> INSERT  4 : 5  @  4
+> INSERT  2 : 3  @  2
 
 + 
 

@@ -7,7 +7,7 @@
 
 > DELETE  2  @  2 : 9
 
-> CHANGE  2 : 13  @  2 : 3
+> CHANGE  2 : 14  @  2 : 3
 
 ~ import java.nio.charset.StandardCharsets;
 ~ 
@@ -19,15 +19,17 @@
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 ~ import net.lax1dude.eaglercraft.v1_8.minecraft.EaglerFolderResourcePack;
+~ import net.lax1dude.eaglercraft.v1_8.minecraft.ResourceIndex;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.ImageData;
 
 > DELETE  1  @  1 : 2
 
 > DELETE  3  @  3 : 6
 
-> CHANGE  3 : 4  @  3 : 4
+> CHANGE  3 : 5  @  3 : 4
 
 ~ 	protected final String resourcePackFile;
+~ 	protected ResourceIndex resourceIndex;
 
 > CHANGE  1 : 2  @  1 : 2
 
@@ -50,11 +52,11 @@
 ~ 			throw e;
 ~ 		}
 
-> CHANGE  4 : 5  @  4 : 6
+> CHANGE  4 : 5  @  4 : 7
 
 ~ 		JSONObject jsonobject = null;
 
-> CHANGE  2 : 5  @  2 : 6
+> CHANGE  1 : 4  @  1 : 5
 
 ~ 			jsonobject = new JSONObject(IOUtils.inputStreamToString(parInputStream, StandardCharsets.UTF_8));
 ~ 		} catch (RuntimeException | IOException runtimeexception) {
@@ -71,5 +73,12 @@
 > CHANGE  4 : 5  @  4 : 5
 
 ~ 		return this.resourcePackFile;
+
+> INSERT  1 : 5  @  1
+
++ 
++ 	public ResourceIndex getEaglerFileIndex() {
++ 		return this.resourceIndex;
++ 	}
 
 > EOF

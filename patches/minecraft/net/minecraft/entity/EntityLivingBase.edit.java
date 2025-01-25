@@ -14,7 +14,11 @@
 + import com.carrotsearch.hppc.cursors.IntObjectCursor;
 + import com.carrotsearch.hppc.cursors.ObjectCursor;
 
-> DELETE  2  @  2 : 5
+> CHANGE  2 : 5  @  2 : 5
+
+~ 
+~ import java.util.Arrays;
+~ import java.util.Collections;
 
 > CHANGE  1 : 3  @  1 : 4
 
@@ -110,7 +114,23 @@
 
 ~ 	public ObjectContainer<PotionEffect> getActivePotionEffects() {
 
-> CHANGE  4 : 5  @  4 : 5
+> INSERT  3 : 16  @  3
+
++ 	public List<PotionEffect> getActivePotionEffectsList() {
++ 		if (activePotionsMap.isEmpty()) {
++ 			return Collections.emptyList();
++ 		}
++ 		PotionEffect[] arr = this.activePotionsMap.values().toArray(PotionEffect.class);
++ 		if (arr.length > 1) {
++ 			Arrays.sort(arr, (p1, p2) -> {
++ 				return p1.getPotionID() - p2.getPotionID();
++ 			});
++ 		}
++ 		return Arrays.asList(arr);
++ 	}
++ 
+
+> CHANGE  1 : 2  @  1 : 2
 
 ~ 		return this.activePotionsMap.containsKey(potionId);
 

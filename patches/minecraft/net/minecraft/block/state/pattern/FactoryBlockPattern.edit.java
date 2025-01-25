@@ -5,26 +5,29 @@
 # Version: 1.0
 # Author: lax1dude
 
-> INSERT  2 : 10  @  2
+> DELETE  2  @  2 : 8
 
-+ import java.util.ArrayList;
-+ import java.util.List;
-+ 
-+ import org.apache.commons.lang3.StringUtils;
-+ 
-+ import com.carrotsearch.hppc.CharObjectHashMap;
-+ import com.carrotsearch.hppc.CharObjectMap;
-+ import com.carrotsearch.hppc.cursors.CharObjectCursor;
+> INSERT  1 : 2  @  1
 
-> CHANGE  4 : 5  @  4 : 10
++ import java.util.HashMap;
+
+> CHANGE  3 : 4  @  3 : 6
 
 ~ 
 
-> DELETE  1  @  1 : 4
+> INSERT  2 : 9  @  2
 
-> CHANGE  4 : 5  @  4 : 5
++ import com.google.common.base.Joiner;
++ import com.google.common.base.Predicate;
++ import com.google.common.base.Predicates;
++ import com.google.common.collect.Lists;
++ 
++ import net.minecraft.block.state.BlockWorldState;
++ 
 
-~ 	private final CharObjectMap<Predicate<BlockWorldState>> symbolMap = new CharObjectHashMap<>();
+> CHANGE  3 : 4  @  3 : 4
+
+~ 	private final Map<Character, Predicate<BlockWorldState>> symbolMap = new HashMap<>();
 
 > CHANGE  4 : 5  @  4 : 5
 
@@ -59,10 +62,8 @@
 
 ~ 					apredicate[i][j][k] = this.symbolMap.get(((String[]) this.depth.get(i))[j].charAt(k));
 
-> CHANGE  10 : 13  @  10 : 13
+> CHANGE  10 : 11  @  10 : 11
 
-~ 		for (CharObjectCursor<Predicate<BlockWorldState>> entry : this.symbolMap) {
-~ 			if (entry.value == null) {
-~ 				arraylist.add(entry.key);
+~ 		for (Entry<Character, Predicate<BlockWorldState>> entry : this.symbolMap.entrySet()) {
 
 > EOF

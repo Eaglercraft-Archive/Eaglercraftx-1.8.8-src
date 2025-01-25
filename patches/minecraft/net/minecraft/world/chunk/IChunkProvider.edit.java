@@ -11,4 +11,9 @@
 
 > DELETE  5  @  5 : 6
 
+> INSERT  29 : 31  @  29
+
++ 
++ 	Chunk getLoadedChunk(int var1, int var2);
+
 > EOF

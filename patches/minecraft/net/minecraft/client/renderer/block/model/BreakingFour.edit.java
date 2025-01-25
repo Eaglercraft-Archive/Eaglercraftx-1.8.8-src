@@ -12,24 +12,24 @@
 + import net.lax1dude.eaglercraft.v1_8.minecraft.EaglerTextureAtlasSprite;
 + 
 
-> CHANGE  1 : 2  @  1 : 2
+> DELETE  1  @  1 : 2
 
-~ 	private final EaglerTextureAtlasSprite texture;
-
-> CHANGE  1 : 5  @  1 : 4
+> CHANGE  1 : 5  @  1 : 5
 
 ~ 	public BreakingFour(BakedQuad parBakedQuad, EaglerTextureAtlasSprite textureIn) {
 ~ 		super(Arrays.copyOf(parBakedQuad.getVertexData(), parBakedQuad.getVertexData().length),
 ~ 				Arrays.copyOf(parBakedQuad.getVertexDataWithNormals(), parBakedQuad.getVertexDataWithNormals().length),
-~ 				parBakedQuad.tintIndex, parBakedQuad.face);
+~ 				parBakedQuad.tintIndex, parBakedQuad.face, textureIn);
 
-> INSERT  46 : 52  @  46
+> CHANGE  43 : 51  @  43 : 45
 
-+ 		if (this.vertexDataWithNormals != null) {
-+ 			int i2 = 8 * parInt1;
-+ 			this.vertexDataWithNormals[i2 + 4] = this.vertexData[i + 4];
-+ 			this.vertexDataWithNormals[i2 + 4 + 1] = this.vertexData[i + 4 + 1];
-+ 
-+ 		}
+~ 		this.vertexData[i + 4] = Float.floatToRawIntBits(sprite.getInterpolatedU((double) f3));
+~ 		this.vertexData[i + 4 + 1] = Float.floatToRawIntBits(sprite.getInterpolatedV((double) f4));
+~ 		if (this.vertexDataWithNormals != null) {
+~ 			int i2 = 8 * parInt1;
+~ 			this.vertexDataWithNormals[i2 + 4] = this.vertexData[i + 4];
+~ 			this.vertexDataWithNormals[i2 + 4 + 1] = this.vertexData[i + 4 + 1];
+~ 
+~ 		}
 
 > EOF

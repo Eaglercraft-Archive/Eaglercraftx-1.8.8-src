@@ -141,8 +141,9 @@ void main() {
 			reflectDir.xz += vec2(0.5, reflectDir.y > 0.0 ? 0.25 : 0.75);
 			envMapSample4f = textureLod(u_environmentMap, reflectDir.xz, 0.0);
 		}
-		if(envMapSample4f.a > 0.0) {
-			specular = eaglercraftIBL_Specular(diffuseColor3f.rgb, envMapSample4f.rgb, viewDir3f, normalVector3f, materialData4f.rgb);
+		envMapSample4f.a += min(lightmapCoords2f.g * 2.0, 1.0) * (1.0 - envMapSample4f.a);
+		if(envMapSample4f.a == 1.0) {
+			specular = eaglercraftIBL_Specular(diffuseColor3f.rgb, envMapSample4f.rgb * envMapSample4f.a, viewDir3f, normalVector3f, materialData4f.rgb);
 			specular *= 1.0 - sqrt(posDst) * 0.2;
 		}
 		break;

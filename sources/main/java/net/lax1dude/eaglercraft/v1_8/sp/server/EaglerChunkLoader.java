@@ -88,6 +88,7 @@ public class EaglerChunkLoader extends AnvilChunkLoader {
 
 	@Override
 	public void saveChunk(World var1, Chunk var2) throws IOException {
+		var1.alfheim$getLightingEngine().processLightUpdates();
 		NBTTagCompound chunkData = new NBTTagCompound();
 		this.writeChunkToNBT(var2, var1, chunkData);
 		NBTTagCompound fileData = new NBTTagCompound();

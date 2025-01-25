@@ -16,6 +16,11 @@
 
 const clientPlatfSPName = "clientPlatformSingleplayer";
 
+/** @type {HTMLElement} */
+var integratedServerCrashPanel = null;
+
+var integratedServerCrashPanelShowing = false;
+
 function initializeClientPlatfSP(spImports) {
 
 	/** @type {Worker|null} */
@@ -163,9 +168,6 @@ function initializeClientPlatfSP(spImports) {
 		}
 	};
 
-	/** @type {HTMLElement} */
-	var integratedServerCrashPanel = null;
-
 	/**
 	 * @param {string} report
 	 * @param {number} x
@@ -188,12 +190,14 @@ function initializeClientPlatfSP(spImports) {
 		integratedServerCrashPanel.style.width = "" + ((w / s) - 20) + "px";
 		integratedServerCrashPanel.style.height = "" + ((h / s) - 20) + "px";
 		integratedServerCrashPanel.style.display = "block";
+		integratedServerCrashPanelShowing = true;
 	};
 
 	spImports["hideCrashReportOverlay"] = function() {
 		if(integratedServerCrashPanel) {
 			integratedServerCrashPanel.style.display = "none";
 		}
+		integratedServerCrashPanelShowing = false;
 	};
 
 	window.__curEaglerX188UnloadListenerCB = function() {

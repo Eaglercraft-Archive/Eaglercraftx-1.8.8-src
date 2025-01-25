@@ -12,8 +12,12 @@ import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 import net.lax1dude.eaglercraft.v1_8.vector.Vector3f;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.GLAllocation;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumWorldBlockLayer;
 import net.minecraft.util.MathHelper;
+import net.optifine.render.RenderEnv;
 
 /**
  * Copyright (c) 2022-2023 lax1dude, ayunami2000. All Rights Reserved.
@@ -49,6 +53,9 @@ public class WorldRenderer {
 	private FloatBuffer floatBuffer;
 	
 	private boolean hasBeenFreed = false;
+
+	private EnumWorldBlockLayer blockLayer = null;
+	public RenderEnv renderEnv = null;
 
 	public WorldRenderer(int bufferSizeIn) {
 		this.byteBuffer = GLAllocation.createDirectByteBuffer(bufferSizeIn << 2);
@@ -553,6 +560,20 @@ public class WorldRenderer {
 			this.putColorRGB_F(red, green, blue, i + 1);
 		}
 
+	}
+
+	public RenderEnv getRenderEnv(IBlockState p_getRenderEnv_1_, BlockPos p_getRenderEnv_2_) {
+		if (this.renderEnv == null) {
+			this.renderEnv = new RenderEnv(p_getRenderEnv_1_, p_getRenderEnv_2_);
+			return this.renderEnv;
+		} else {
+			this.renderEnv.reset(p_getRenderEnv_1_, p_getRenderEnv_2_);
+			return this.renderEnv;
+		}
+	}
+
+	public EnumWorldBlockLayer getBlockLayer() {
+		return this.blockLayer;
 	}
 
 	public class State {

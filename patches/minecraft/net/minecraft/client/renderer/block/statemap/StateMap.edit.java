@@ -24,4 +24,8 @@
 
 ~ 			s = this.name.getName(linkedhashmap.remove(this.name));
 
+> CHANGE  10 : 11  @  10 : 11
+
+~ 		return new ModelResourceLocation(s, getPropertyString(linkedhashmap));
+
 > EOF

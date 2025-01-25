@@ -15,4 +15,8 @@
 
 > DELETE  3  @  3 : 4
 
+> CHANGE  5 : 6  @  5 : 6
+
+~ 	public static String getPropertyString(Map<IProperty, Comparable> parMap) {
+
 > EOF

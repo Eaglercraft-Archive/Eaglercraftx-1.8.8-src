@@ -222,6 +222,7 @@ async function initPlatformInput(inputImports) {
 	reportWindowSize();
 
 	parentElement.addEventListener("contextmenu", currentEventListeners.contextmenu = function(/** Event */ evt) {
+		if(evt.target === integratedServerCrashPanel) return;
 		evt.preventDefault();
 		evt.stopPropagation();
 	});
@@ -369,8 +370,10 @@ async function initPlatformInput(inputImports) {
 	}
 
 	window.addEventListener("keydown", /** @type {function(Event)} */ (currentEventListeners.keydown = function(/** KeyboardEvent */ evt) {
-		evt.preventDefault();
-		evt.stopPropagation();
+		if(integratedServerCrashPanelShowing) {
+			evt.preventDefault();
+			evt.stopPropagation();
+		}
 		if(evt.key === "F11" && !evt.repeat) {
 			toggleFullscreenImpl();
 			return;
@@ -380,8 +383,10 @@ async function initPlatformInput(inputImports) {
 	}));
 
 	window.addEventListener("keyup", /** @type {function(Event)} */ (currentEventListeners.keyup = function(/** KeyboardEvent */ evt) {
-		evt.preventDefault();
-		evt.stopPropagation();
+		if(integratedServerCrashPanelShowing) {
+			evt.preventDefault();
+			evt.stopPropagation();
+		}
 		pushEvent(EVENT_TYPE_INPUT, EVENT_INPUT_KEYBOARD, createKeyEvent(EVENT_KEY_UP, evt));
 	}));
 

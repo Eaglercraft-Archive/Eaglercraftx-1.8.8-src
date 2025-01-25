@@ -5,10 +5,9 @@
 # Version: 1.0
 # Author: lax1dude
 
-> CHANGE  2 : 6  @  2 : 3
+> CHANGE  2 : 5  @  2 : 3
 
-~ import com.carrotsearch.hppc.ObjectContainer;
-~ import com.carrotsearch.hppc.cursors.ObjectCursor;
+~ import java.util.List;
 ~ 
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 
@@ -16,15 +15,14 @@
 
 > CHANGE  40 : 41  @  40 : 41
 
-~ 		ObjectContainer<PotionEffect> collection = this.mc.thePlayer.getActivePotionEffects();
+~ 		List<PotionEffect> collection = this.mc.thePlayer.getActivePotionEffectsList();
 
 > INSERT  3 : 4  @  3
 
 + 			GlStateManager.enableAlpha();
 
-> CHANGE  5 : 7  @  5 : 6
+> CHANGE  5 : 6  @  5 : 6
 
-~ 			for (ObjectCursor<PotionEffect> potioneffect_ : collection) {
-~ 				PotionEffect potioneffect = potioneffect_.value;
+~ 			for (PotionEffect potioneffect : collection) {
 
 > EOF

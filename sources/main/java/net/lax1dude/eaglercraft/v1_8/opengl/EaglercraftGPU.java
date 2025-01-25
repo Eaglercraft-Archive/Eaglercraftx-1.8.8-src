@@ -246,6 +246,7 @@ public class EaglercraftGPU {
 
 	public static final void glTexImage2D(int target, int level, int internalFormat, int w, int h, int unused,
 			int format, int type, ByteBuffer pixels) {
+		GlStateManager.setTextureCachedSize(target, w, h);
 		if(glesVers >= 300) {
 			_wglTexImage2D(target, level, internalFormat, w, h, unused, format, type, pixels);
 		}else {
@@ -256,6 +257,7 @@ public class EaglercraftGPU {
 
 	public static final void glTexImage2D(int target, int level, int internalFormat, int w, int h, int unused,
 			int format, int type, IntBuffer pixels) {
+		GlStateManager.setTextureCachedSize(target, w, h);
 		if(glesVers >= 300) {
 			_wglTexImage2D(target, level, internalFormat, w, h, unused, format, type, pixels);
 		}else {
@@ -270,6 +272,7 @@ public class EaglercraftGPU {
 	}
 
 	public static final void glTexStorage2D(int target, int levels, int internalFormat, int w, int h) {
+		GlStateManager.setTextureCachedSize(target, w, h);
 		if(texStorageCapable && (glesVers >= 300 || levels == 1 || (MathHelper.calculateLogBaseTwo(Math.max(w, h)) + 1) == levels)) {
 			_wglTexStorage2D(target, levels, internalFormat, w, h);
 		}else {
@@ -914,7 +917,6 @@ public class EaglercraftGPU {
 		PlatformOpenGL.enterVAOEmulationHook();
 		GLSLHeader.init();
 		DrawUtils.init();
-		SpriteLevelMixer.initialize();
 		if(instancingCapable) {
 			InstancedFontRenderer.initialize();
 			InstancedParticleRenderer.initialize();
@@ -928,7 +930,6 @@ public class EaglercraftGPU {
 	public static final void destroyCache() {
 		GLSLHeader.destroy();
 		DrawUtils.destroy();
-		SpriteLevelMixer.destroy();
 		InstancedFontRenderer.destroy();
 		InstancedParticleRenderer.destroy();
 		EffectPipelineFXAA.destroy();

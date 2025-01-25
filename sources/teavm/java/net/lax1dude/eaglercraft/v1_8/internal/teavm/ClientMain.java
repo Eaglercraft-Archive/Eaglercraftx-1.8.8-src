@@ -618,7 +618,8 @@ public class ClientMain {
 		}
 	}
 
-	private static HTMLElement integratedServerCrashPanel = null;
+	public static HTMLElement integratedServerCrashPanel = null;
+	public static boolean integratedServerCrashPanelShowing = false;
 
 	public static void showIntegratedServerCrashReportOverlay(String report, int x, int y, int w, int h) {
 		if(integratedServerCrashPanel == null) {
@@ -655,12 +656,14 @@ public class ClientMain {
 		style.setProperty("width", "" + ((w / s) - 20) + "px");
 		style.setProperty("height", "" + ((h / s) - 20) + "px");
 		style.setProperty("display", "block");
+		integratedServerCrashPanelShowing = true;
 	}
 
 	public static void hideIntegratedServerCrashReportOverlay() {
 		if(integratedServerCrashPanel != null) {
 			integratedServerCrashPanel.getStyle().setProperty("display", "none");
 		}
+		integratedServerCrashPanelShowing = false;
 	}
 
 	@JSBody(params = { "el", "str" }, script = "el.innerText = str;")

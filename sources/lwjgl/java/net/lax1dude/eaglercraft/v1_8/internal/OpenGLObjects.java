@@ -58,6 +58,8 @@ class OpenGLObjects {
 	static class TextureGL implements ITextureGL {
 		
 		final int ptr;
+		int width;
+		int height;
 		
 		TextureGL(int ptr) {
 			this.ptr = ptr;
@@ -71,7 +73,23 @@ class OpenGLObjects {
 		public void free() {
 			PlatformOpenGL._wglDeleteTextures(this);
 		}
-		
+
+		@Override
+		public void setCacheSize(int w, int h) {
+			width = w;
+			height = h;
+		}
+
+		@Override
+		public int getWidth() {
+			return width;
+		}
+
+		@Override
+		public int getHeight() {
+			return height;
+		}
+
 	}
 
 	static class ProgramGL implements IProgramGL {

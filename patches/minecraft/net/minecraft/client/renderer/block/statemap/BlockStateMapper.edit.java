@@ -17,4 +17,8 @@
 
 > DELETE  2  @  2 : 4
 
+> CHANGE  3 : 4  @  3 : 4
+
+~ 	public Map<Block, IStateMapper> blockStateMap = Maps.newIdentityHashMap();
+
 > EOF

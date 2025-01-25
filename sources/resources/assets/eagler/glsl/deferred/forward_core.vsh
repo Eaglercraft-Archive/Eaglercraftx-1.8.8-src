@@ -21,7 +21,7 @@ in vec3 a_position3f;
 out vec4 v_position4f;
 
 #ifdef COMPILE_FOG_LIGHT_SHAFTS
-out vec2 v_positionClip2f;
+out vec3 v_positionClip3f;
 #endif
 
 #ifdef COMPILE_TEXTURE_ATTRIB
@@ -98,6 +98,6 @@ void main() {
 #endif
 
 #ifdef COMPILE_FOG_LIGHT_SHAFTS
-	v_positionClip2f = gl_Position.xy / gl_Position.w;
+	v_positionClip3f = gl_Position.xyw;
 #endif
 }

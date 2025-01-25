@@ -25,13 +25,24 @@
 
 > DELETE  1  @  1 : 2
 
-> CHANGE  47 : 48  @  47 : 48
+> INSERT  4 : 6  @  4
+
++ import net.optifine.Config;
++ import net.optifine.CustomItems;
+
+> CHANGE  43 : 44  @  43 : 44
 
 ~ 			this.func_177179_a((T) modelbase, parInt1);
 
-> INSERT  2 : 3  @  2
+> CHANGE  1 : 8  @  1 : 2
 
-+ 			DeferredStateManager.setDefaultMaterialConstants();
+~ 
+~ 			if (!Config.isCustomItems()
+~ 					|| !CustomItems.bindCustomArmorTexture(itemstack, flag ? 2 : 1, (String) null)) {
+~ 				this.renderer.bindTexture(this.getArmorResource(itemarmor, flag));
+~ 			}
+~ 
+~ 			DeferredStateManager.setDefaultMaterialConstants();
 
 > INSERT  1 : 18  @  1
 
@@ -53,11 +64,18 @@
 + 			}
 + 			switch (itemarmor.getArmorMaterial()) {
 
-> INSERT  14 : 15  @  14
+> CHANGE  7 : 11  @  7 : 8
+
+~ 				if (!Config.isCustomItems()
+~ 						|| !CustomItems.bindCustomArmorTexture(itemstack, flag ? 2 : 1, "overlay")) {
+~ 					this.renderer.bindTexture(this.getArmorResource(itemarmor, flag, "overlay"));
+~ 				}
+
+> INSERT  6 : 7  @  6
 
 + 				DeferredStateManager.setDefaultMaterialConstants();
 
-> CHANGE  2 : 41  @  2 : 3
+> CHANGE  2 : 43  @  2 : 4
 
 ~ 					if (DeferredStateManager.isInDeferredPass()) {
 ~ 						if (!DeferredStateManager.isEnableShadowRender()
@@ -86,7 +104,8 @@
 ~ 									modelbase.setLivingAnimations(entitylivingbaseIn, armorSlot, parFloat2, parFloat3);
 ~ 									LayerArmorBase.this.func_177179_a((T) modelbase, parInt1);
 ~ 									LayerArmorBase.this.func_177183_a(entitylivingbaseIn, (T) modelbase, armorSlot,
-~ 											parFloat2, parFloat3, parFloat4, parFloat5, parFloat6, parFloat7);
+~ 											parFloat2, parFloat3, parFloat4, parFloat5, parFloat6, parFloat7,
+~ 											itemstack);
 ~ 									DeferredStateManager.setHDRTranslucentPassBlendFunc();
 ~ 									GlStateManager.enableBlend();
 ~ 									GlStateManager.popMatrix();
@@ -98,8 +117,17 @@
 ~ 						break;
 ~ 					}
 ~ 					this.func_177183_a(entitylivingbaseIn, (T) modelbase, armorSlot, parFloat2, parFloat3, parFloat4,
+~ 							parFloat5, parFloat6, parFloat7, itemstack);
 
-> CHANGE  27 : 31  @  27 : 28
+> CHANGE  19 : 24  @  19 : 20
+
+~ 			float parFloat3, float parFloat4, float parFloat5, float parFloat6, float parFloat7, ItemStack itemstack) {
+~ 		if (Config.isCustomItems() && CustomItems.renderCustomArmorEffect(entitylivingbaseIn, itemstack, modelbaseIn,
+~ 				parFloat1, parFloat2, parFloat3, parFloat4, parFloat5, parFloat6, parFloat7)) {
+~ 			return;
+~ 		}
+
+> CHANGE  6 : 10  @  6 : 7
 
 ~ 		boolean d = !DeferredStateManager.isInDeferredPass();
 ~ 		if (d) {

@@ -13,7 +13,11 @@
 + import com.google.common.collect.Lists;
 + 
 
-> CHANGE  59 : 60  @  59 : 60
+> INSERT  19 : 20  @  19
+
++ 		chunkIn.alfheim$getLightingEngine().processLightUpdates();
+
+> CHANGE  40 : 41  @  40 : 41
 
 ~ 		ArrayList<ExtendedBlockStorage> arraylist = Lists.newArrayList();
 

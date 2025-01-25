@@ -16,28 +16,22 @@
 
 ~ public class TextureCompass extends EaglerTextureAtlasSprite {
 
-> CHANGE  9 : 10  @  9 : 10
+> CHANGE  62 : 69  @  62 : 64
 
-~ 	public void updateAnimation(IFramebufferGL[] copyColorFramebuffer) {
+~ 				currentAnimUpdater = (mapWidth, mapHeight, mapLevel) -> {
+~ 					animationCache.copyFrameToTex2D(this.frameCounter, mapLevel, this.originX >> mapLevel,
+~ 							this.originY >> mapLevel, this.width >> mapLevel, this.height >> mapLevel, mapWidth,
+~ 							mapHeight);
+~ 				};
+~ 			} else {
+~ 				currentAnimUpdater = null;
 
-> CHANGE  3 : 4  @  3 : 4
+> INSERT  2 : 4  @  2
 
-~ 					(double) minecraft.thePlayer.rotationYaw, false, false, copyColorFramebuffer);
++ 		} else {
++ 			currentAnimUpdater = null;
 
-> CHANGE  1 : 2  @  1 : 2
-
-~ 			this.updateCompass((World) null, 0.0D, 0.0D, 0.0D, true, false, copyColorFramebuffer);
-
-> CHANGE  5 : 6  @  5 : 6
-
-~ 			boolean parFlag2, IFramebufferGL[] copyColorFramebuffer) {
-
-> CHANGE  40 : 42  @  40 : 42
-
-~ 				animationCache.copyFrameLevelsToTex2D(this.frameCounter, this.originX, this.originY, this.width,
-~ 						this.height, copyColorFramebuffer);
-
-> INSERT  4 : 5  @  4
+> INSERT  2 : 3  @  2
 
 + 
 

@@ -5,29 +5,85 @@
 # Version: 1.0
 # Author: lax1dude
 
-> INSERT  6 : 7  @  6
+> INSERT  2 : 3  @  2
+
++ import net.lax1dude.eaglercraft.v1_8.minecraft.EaglerTextureAtlasSprite;
+
+> INSERT  1 : 2  @  1
+
++ import net.optifine.model.QuadBounds;
+
+> INSERT  3 : 4  @  3
 
 + 	protected final int[] vertexDataWithNormals;
 
-> INSERT  5 : 6  @  5
+> INSERT  2 : 4  @  2
 
-+ 		this.vertexDataWithNormals = null;
++ 	protected final EaglerTextureAtlasSprite sprite;
++ 	private QuadBounds quadBounds;
 
-> INSERT  4 : 11  @  4
+> CHANGE  1 : 3  @  1 : 2
 
-+ 	public BakedQuad(int[] vertexDataIn, int[] vertexDataWithNormalsIn, int tintIndexIn, EnumFacing faceIn) {
-+ 		this.vertexData = vertexDataIn;
+~ 	public BakedQuad(int[] vertexDataIn, int[] vertexDataWithNormalsIn, int tintIndexIn, EnumFacing faceIn,
+~ 			EaglerTextureAtlasSprite sprite) {
+
+> INSERT  1 : 2  @  1
+
 + 		this.vertexDataWithNormals = vertexDataWithNormalsIn;
-+ 		this.tintIndex = tintIndexIn;
-+ 		this.face = faceIn;
-+ 	}
-+ 
 
-> INSERT  4 : 8  @  4
+> INSERT  2 : 3  @  2
+
++ 		this.sprite = sprite;
+
+> INSERT  6 : 10  @  6
 
 + 	public int[] getVertexDataWithNormals() {
 + 		return this.vertexDataWithNormals;
 + 	}
 + 
+
+> INSERT  11 : 52  @  11
+
++ 
++ 	public EaglerTextureAtlasSprite getSprite() {
++ 		return sprite;
++ 	}
++ 
++ 	public QuadBounds getQuadBounds() {
++ 		if (this.quadBounds == null) {
++ 			this.quadBounds = new QuadBounds(this.getVertexData());
++ 		}
++ 
++ 		return this.quadBounds;
++ 	}
++ 
++ 	public float getMidX() {
++ 		QuadBounds quadbounds = this.getQuadBounds();
++ 		return (quadbounds.getMaxX() + quadbounds.getMinX()) / 2.0F;
++ 	}
++ 
++ 	public double getMidY() {
++ 		QuadBounds quadbounds = this.getQuadBounds();
++ 		return (double) ((quadbounds.getMaxY() + quadbounds.getMinY()) / 2.0F);
++ 	}
++ 
++ 	public double getMidZ() {
++ 		QuadBounds quadbounds = this.getQuadBounds();
++ 		return (double) ((quadbounds.getMaxZ() + quadbounds.getMinZ()) / 2.0F);
++ 	}
++ 
++ 	public boolean isFaceQuad() {
++ 		QuadBounds quadbounds = this.getQuadBounds();
++ 		return quadbounds.isFaceQuad(this.face);
++ 	}
++ 
++ 	public boolean isFullQuad() {
++ 		QuadBounds quadbounds = this.getQuadBounds();
++ 		return quadbounds.isFullQuad(this.face);
++ 	}
++ 
++ 	public boolean isFullFaceQuad() {
++ 		return this.isFullQuad() && this.isFaceQuad();
++ 	}
 
 > EOF

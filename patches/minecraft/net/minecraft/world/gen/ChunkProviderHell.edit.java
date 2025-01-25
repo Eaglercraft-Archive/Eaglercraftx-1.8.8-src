@@ -27,4 +27,11 @@
 ~ 		this.genNetherBridge = new MapGenNetherBridge(scramble);
 ~ 		this.netherCaveGenerator = new MapGenCavesHell(scramble);
 
+> INSERT  351 : 355  @  351
+
++ 
++ 	public Chunk getLoadedChunk(int var1, int var2) {
++ 		return provideChunk(var1, var2);
++ 	}
+
 > EOF

@@ -19,7 +19,7 @@
 precision highp sampler2DShadow;
 
 in vec4 v_position4f;
-in vec2 v_positionClip2f;
+in vec3 v_positionClip3f;
 
 #ifdef COMPILE_TEXTURE_ATTRIB
 in vec2 v_texture2f;
@@ -434,7 +434,7 @@ void main() {
 		fogBlend4f.rgb *= textureLod(u_irradianceMap, atmosSamplePos.xz, 0.0).rgb + u_fogColorAddSun4f.rgb;
 
 #ifdef COMPILE_FOG_LIGHT_SHAFTS
-		fogBlend4f.rgb *= pow(textureLod(u_lightShaftsTexture, v_positionClip2f * 0.5 + 0.5, 0.0).r * 0.9 + 0.1, 2.25);
+		fogBlend4f.rgb *= pow(textureLod(u_lightShaftsTexture, (v_positionClip3f.xy / v_positionClip3f.z) * 0.5 + 0.5, 0.0).r * 0.9 + 0.1, 2.25);
 		fogBlend4f.a = fogBlend4f.a * 0.85 + 0.2;
 #endif
 		break;

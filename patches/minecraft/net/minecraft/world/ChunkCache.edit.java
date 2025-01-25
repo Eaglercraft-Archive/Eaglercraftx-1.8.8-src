@@ -5,24 +5,22 @@
 # Version: 1.0
 # Author: lax1dude
 
-> DELETE  8  @  8 : 12
+> INSERT  2 : 3  @  2
 
-> INSERT  75 : 79  @  75
++ import net.minecraft.block.Block;
 
-+ 	public int getBiomeColorForCoords(BlockPos var1, int index) {
-+ 		return this.worldObj.getBiomeColorForCoords(var1, index);
-+ 	}
-+ 
+> DELETE  6  @  6 : 10
 
-> CHANGE  2 : 3  @  2 : 3
+> CHANGE  47 : 51  @  47 : 49
 
-~ 			return Chunk.getNoSkyLightValue();
+~ 		IBlockState state = getBlockState(blockpos);
+~ 		Block b = state.getBlock();
+~ 		int j = b.alfheim$getLightFor(state, this, EnumSkyBlock.SKY, blockpos);
+~ 		int k = b.alfheim$getLightFor(state, this, EnumSkyBlock.BLOCK, blockpos);
 
-> CHANGE  4 : 8  @  4 : 6
+> CHANGE  26 : 28  @  26 : 53
 
-~ 				EnumFacing[] facings = EnumFacing._VALUES;
-~ 				BlockPos tmp = new BlockPos(0, 0, 0);
-~ 				for (int i = 0; i < facings.length; ++i) {
-~ 					int k = this.getLightFor(pos, parBlockPos.offsetEvenFaster(facings[i], tmp));
+~ 	public int getBiomeColorForCoords(BlockPos var1, int index) {
+~ 		return this.worldObj.getBiomeColorForCoords(var1, index);
 
 > EOF

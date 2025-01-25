@@ -2440,6 +2440,15 @@ public class EaglerDeferredPipeline {
 		GlStateManager.setActiveTexture(GL_TEXTURE10);
 		GlStateManager.bindTexture(skyIrradianceTexture);
 		GlStateManager.setActiveTexture(GL_TEXTURE0);
+		GlStateManager.disableDepth();
+		GlStateManager.disableBlend();
+		GlStateManager.depthMask(false);
+		GlStateManager.bindTexture(envMapSkyTexture);
+		GlStateManager.viewport(0, 0, 128, 256);
+		TextureCopyUtil.blitTexture();
+		GlStateManager.depthMask(true);
+		GlStateManager.enableBlend();
+		GlStateManager.enableDepth();
 		DeferredStateManager.checkGLError("Post: beginDrawEnvMap()");
 	}
 
@@ -2470,7 +2479,7 @@ public class EaglerDeferredPipeline {
 	public void beginDrawEnvMapTranslucent() {
 		DeferredStateManager.checkGLError("Pre: beginDrawEnvMapTranslucent()");
 		GlStateManager.enableBlend();
-		GlStateManager.tryBlendFuncSeparate(GL_ONE, GL_ONE_MINUS_SRC_ALPHA, GL_ONE_MINUS_DST_ALPHA, GL_ONE);
+		GlStateManager.tryBlendFuncSeparate(GL_ONE, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
 		bindEnvMapBlockTexture();
 		DeferredStateManager.checkGLError("Post: beginDrawEnvMapTranslucent()");
 	}

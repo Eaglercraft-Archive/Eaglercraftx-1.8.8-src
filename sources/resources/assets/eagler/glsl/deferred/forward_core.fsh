@@ -21,7 +21,7 @@ precision highp sampler2DShadow;
 in vec4 v_position4f;
 
 #ifdef COMPILE_FOG_LIGHT_SHAFTS
-in vec2 v_positionClip2f;
+in vec3 v_positionClip3f;
 #endif
 
 #ifdef COMPILE_TEXTURE_ATTRIB
@@ -351,7 +351,7 @@ void main() {
 	f += materialData3f.r < 0.5 ? 1.0 : 0.0;
 	while(f == 0.0) {
 		float dst2 = dot(worldPosition4f.xyz, worldPosition4f.xyz);
-		if(dst2 > 16.0) {
+		if(dst2 > 25.0) {
 			break;
 		}
 		vec3 reflectDir = reflect(worldDirection4f.xyz, normalVector3f);
@@ -369,8 +369,9 @@ void main() {
 			reflectDir.xz += vec2(0.5, reflectDir.y > 0.0 ? 0.25 : 0.75);
 			envMapSample4f = textureLod(u_environmentMap, reflectDir.xz, 0.0);
 		}
-		if(envMapSample4f.a > 0.0) {
-			lightColor3f += eaglercraftIBL_Specular(diffuseColor4f.rgb, envMapSample4f.rgb, worldDirection4f.xyz, normalVector3f, materialData3f, metalN, metalK) * (1.0 - sqrt(dst2) * 0.25);
+		envMapSample4f.a += min(lightmapCoords2f.g * 2.0, 1.0) * (1.0 - envMapSample4f.a);
+		if(envMapSample4f.a == 1.0) {
+			lightColor3f += eaglercraftIBL_Specular(diffuseColor4f.rgb, envMapSample4f.rgb * envMapSample4f.a, worldDirection4f.xyz, normalVector3f, materialData3f, metalN, metalK) * (1.0 - sqrt(dst2) * 0.2);
 		}
 		break;
 	}
@@ -453,7 +454,7 @@ void main() {
 		fogBlend4f.rgb *= textureLod(u_irradianceMap, atmosSamplePos.xz, 0.0).rgb;
 
 #ifdef COMPILE_FOG_LIGHT_SHAFTS
-		fogBlend4f.rgb *= pow(textureLod(u_lightShaftsTexture, v_positionClip2f * 0.5 + 0.5, 0.0).r * 0.9 + 0.1, 2.25);
+		fogBlend4f.rgb *= pow(textureLod(u_lightShaftsTexture, (v_positionClip3f.xy / v_positionClip3f.z) * 0.5 + 0.5, 0.0).r * 0.9 + 0.1, 2.25);
 		fogBlend4f.a = fogBlend4f.a * 0.85 + 0.2;
 #endif
 		break;

@@ -16,25 +16,150 @@
 
 > DELETE  3  @  3 : 7
 
-> CHANGE  44 : 45  @  44 : 45
+> INSERT  8 : 9  @  8
 
-~ 		float[] afloat = new float[EnumFacing._VALUES.length * 2];
++ import net.minecraft.util.EnumWorldBlockLayer;
 
-> CHANGE  3 : 6  @  3 : 4
+> INSERT  4 : 9  @  4
+
++ import net.optifine.BetterSnow;
++ import net.optifine.Config;
++ import net.optifine.model.BlockModelCustomizer;
++ import net.optifine.model.ListQuadsOverlay;
++ import net.optifine.render.RenderEnv;
+
+> INSERT  2 : 5  @  2
+
++ 	private static final EnumWorldBlockLayer[] OVERLAY_LAYERS = new EnumWorldBlockLayer[] { EnumWorldBlockLayer.CUTOUT,
++ 			EnumWorldBlockLayer.CUTOUT_MIPPED, EnumWorldBlockLayer.TRANSLUCENT };
++ 
+
+> CHANGE  13 : 27  @  13 : 18
+
+~ 			RenderEnv renderenv = worldRendererIn.getRenderEnv(blockStateIn, blockPosIn);
+~ 			modelIn = BlockModelCustomizer.getRenderModel(modelIn, blockStateIn, renderenv);
+~ 			boolean flag1 = flag
+~ 					? this.renderModelAmbientOcclusion(blockAccessIn, modelIn, blockStateIn, blockPosIn,
+~ 							worldRendererIn, checkSides)
+~ 					: this.renderModelStandard(blockAccessIn, modelIn, blockStateIn, blockPosIn, worldRendererIn,
+~ 							checkSides);
+~ 
+~ 			if (flag1) {
+~ 				renderOverlayModels(blockAccessIn, modelIn, blockStateIn, blockPosIn, worldRendererIn, checkSides, 0L,
+~ 						renderenv, flag);
+~ 			}
+~ 
+~ 			return flag1;
+
+> CHANGE  9 : 72  @  9 : 11
+
+~ 	private void renderOverlayModels(IBlockAccess p_renderOverlayModels_1_, IBakedModel p_renderOverlayModels_2_,
+~ 			IBlockState p_renderOverlayModels_3_, BlockPos p_renderOverlayModels_4_,
+~ 			WorldRenderer p_renderOverlayModels_5_, boolean p_renderOverlayModels_6_, long p_renderOverlayModels_7_,
+~ 			RenderEnv p_renderOverlayModels_9_, boolean p_renderOverlayModels_10_) {
+~ 		if (p_renderOverlayModels_9_.isOverlaysRendered()) {
+~ 			for (int i = 0; i < OVERLAY_LAYERS.length; ++i) {
+~ 				EnumWorldBlockLayer enumworldblocklayer = OVERLAY_LAYERS[i];
+~ 				ListQuadsOverlay listquadsoverlay = p_renderOverlayModels_9_.getListQuadsOverlay(enumworldblocklayer);
+~ 
+~ 				if (listquadsoverlay.size() > 0) {
+~ 					RegionRenderCacheBuilder regionrendercachebuilder = p_renderOverlayModels_9_
+~ 							.getRegionRenderCacheBuilder();
+~ 
+~ 					if (regionrendercachebuilder != null) {
+~ 						WorldRenderer worldrenderer = regionrendercachebuilder
+~ 								.getWorldRendererByLayer(enumworldblocklayer);
+~ 
+~ //						if (!worldrenderer.isDrawing()) {
+~ //							worldrenderer.begin(7, DefaultVertexFormats.BLOCK);
+~ //							worldrenderer.setTranslation(p_renderOverlayModels_5_.getXOffset(),
+~ //									p_renderOverlayModels_5_.getYOffset(), p_renderOverlayModels_5_.getZOffset());
+~ //						}
+~ 
+~ 						for (int j = 0; j < listquadsoverlay.size(); ++j) {
+~ 							BakedQuad bakedquad = listquadsoverlay.getQuad(j);
+~ 							List<BakedQuad> list = listquadsoverlay.getListQuadsSingle(bakedquad);
+~ 							IBlockState iblockstate = listquadsoverlay.getBlockState(j);
+~ 
+~ //							if (bakedquad.getQuadEmissive() != null) {
+~ //								listquadsoverlay.addQuad(bakedquad.getQuadEmissive(), iblockstate);
+~ //							}
+~ 
+~ 							p_renderOverlayModels_9_.reset(iblockstate, p_renderOverlayModels_4_);
+~ 
+~ 							if (p_renderOverlayModels_10_) {
+~ 								this.renderModelAmbientOcclusionQuads(p_renderOverlayModels_1_, iblockstate,
+~ 										p_renderOverlayModels_4_, worldrenderer, list, p_renderOverlayModels_9_);
+~ 							} else {
+~ 								Block block = iblockstate.getBlock();
+~ 								int k = block.getMixedBrightnessForBlock(p_renderOverlayModels_1_,
+~ 										p_renderOverlayModels_4_.offset(bakedquad.getFace()));
+~ 								this.renderModelStandardQuads(p_renderOverlayModels_1_, block, p_renderOverlayModels_4_,
+~ 										bakedquad.getFace(), k, false, worldrenderer, list, p_renderOverlayModels_9_);
+~ 							}
+~ 						}
+~ 					}
+~ 
+~ 					listquadsoverlay.clear();
+~ 				}
+~ 			}
+~ 		}
+~ 
+~ 		if (Config.isBetterSnow() && !p_renderOverlayModels_9_.isBreakingAnimation() && BetterSnow
+~ 				.shouldRender(p_renderOverlayModels_1_, p_renderOverlayModels_3_, p_renderOverlayModels_4_)) {
+~ 			IBakedModel ibakedmodel = BetterSnow.getModelSnowLayer();
+~ 			IBlockState iblockstate1 = BetterSnow.getStateSnowLayer();
+~ 			this.renderModel(p_renderOverlayModels_1_, ibakedmodel, iblockstate1, p_renderOverlayModels_4_,
+~ 					p_renderOverlayModels_5_, p_renderOverlayModels_6_);
+~ 		}
+~ 	}
+~ 
+~ 	public boolean renderModelAmbientOcclusion(IBlockAccess blockAccessIn, IBakedModel modelIn,
+~ 			IBlockState blockStateIn, BlockPos blockPosIn, WorldRenderer worldRendererIn, boolean checkSides) {
+
+> CHANGE  1 : 4  @  1 : 4
+
+~ 		Block blockIn = blockStateIn.getBlock();
+~ 		RenderEnv renderenv = worldRendererIn.getRenderEnv(blockStateIn, blockPosIn);
+~ 		EnumWorldBlockLayer enumworldblocklayer = worldRendererIn.getBlockLayer();
+
+> CHANGE  1 : 4  @  1 : 2
 
 ~ 		EnumFacing[] facings = EnumFacing._VALUES;
 ~ 		for (int i = 0; i < facings.length; ++i) {
 ~ 			EnumFacing enumfacing = facings[i];
 
-> INSERT  23 : 24  @  23
+> CHANGE  4 : 8  @  4 : 6
 
-+ 		boolean isDeferred = DeferredStateManager.isDeferredRenderer();
+~ 					list = BlockModelCustomizer.getRenderQuads(list, blockAccessIn, blockStateIn, blockPosIn,
+~ 							enumfacing, enumworldblocklayer, 0L, renderenv);
+~ 					this.renderModelAmbientOcclusionQuads(blockAccessIn, blockStateIn, blockPosIn, worldRendererIn,
+~ 							list, renderenv);
 
-> INSERT  1 : 2  @  1
+> CHANGE  7 : 11  @  7 : 9
 
-+ 		float[] afloat = isDeferred ? new float[EnumFacing._VALUES.length * 2] : null;
+~ 			list1 = BlockModelCustomizer.getRenderQuads(list1, blockAccessIn, blockStateIn, blockPosIn,
+~ 					(EnumFacing) null, enumworldblocklayer, 0L, renderenv);
+~ 			this.renderModelAmbientOcclusionQuads(blockAccessIn, blockStateIn, blockPosIn, worldRendererIn, list1,
+~ 					renderenv);
 
-> CHANGE  2 : 6  @  2 : 3
+> CHANGE  6 : 7  @  6 : 7
+
+~ 	public boolean renderModelStandard(IBlockAccess blockAccessIn, IBakedModel modelIn, IBlockState blockStateIn,
+
+> INSERT  1 : 4  @  1
+
++ 		// boolean isDeferred = DeferredStateManager.isDeferredRenderer();
++ 		// float[] afloat = isDeferred ? new float[EnumFacing._VALUES.length * 2] :
++ 		// null;
+
+> CHANGE  1 : 4  @  1 : 2
+
+~ 		Block blockIn = blockStateIn.getBlock();
+~ 		RenderEnv renderenv = worldRendererIn.getRenderEnv(blockStateIn, blockPosIn);
+~ 		EnumWorldBlockLayer enumworldblocklayer = worldRendererIn.getBlockLayer();
+
+> CHANGE  1 : 5  @  1 : 2
 
 ~ 		BlockPos pointer = new BlockPos();
 ~ 		EnumFacing[] facings = EnumFacing._VALUES;
@@ -45,18 +170,34 @@
 
 ~ 				BlockPos blockpos = blockPosIn.offsetEvenFaster(enumfacing, pointer);
 
-> CHANGE  3 : 4  @  3 : 4
+> INSERT  2 : 4  @  2
 
-~ 							worldRendererIn, list, bitset, afloat);
++ 					list = BlockModelCustomizer.getRenderQuads(list, blockAccessIn, blockStateIn, blockPosIn,
++ 							enumfacing, enumworldblocklayer, 0L, renderenv);
 
-> CHANGE  8 : 9  @  8 : 9
+> CHANGE  1 : 2  @  1 : 2
 
-~ 					worldRendererIn, list1, bitset, afloat);
+~ 							worldRendererIn, list, renderenv);
 
-> INSERT  9 : 11  @  9
+> INSERT  7 : 9  @  7
 
-+ 		boolean isDeferred = DeferredStateManager.isDeferredRenderer();
-+ 		boolean isDynamicLights = isDeferred || DynamicLightsStateManager.isDynamicLightsRender();
++ 			list1 = BlockModelCustomizer.getRenderQuads(list1, blockAccessIn, blockStateIn, blockPosIn,
++ 					(EnumFacing) null, enumworldblocklayer, 0L, renderenv);
+
+> CHANGE  1 : 2  @  1 : 2
+
+~ 					worldRendererIn, list1, renderenv);
+
+> CHANGE  6 : 14  @  6 : 9
+
+~ 	private void renderModelAmbientOcclusionQuads(IBlockAccess blockAccessIn, IBlockState blockStateIn,
+~ 			BlockPos blockPosIn, WorldRenderer worldRendererIn, List<BakedQuad> listQuadsIn, RenderEnv renderenv) {
+~ 		boolean isDeferred = DeferredStateManager.isDeferredRenderer();
+~ 		boolean isDynamicLights = isDeferred || DynamicLightsStateManager.isDynamicLightsRender();
+~ 		float[] quadBounds = renderenv.getQuadBounds();
+~ 		BitSet boundsFlags = renderenv.getBoundsFlags();
+~ 		BlockModelRenderer.AmbientOcclusionFace aoFaceIn = renderenv.getAoFace();
+~ 		Block blockIn = blockStateIn.getBlock();
 
 > CHANGE  8 : 9  @  8 : 9
 
@@ -104,11 +245,13 @@
 + 	private final BlockPos blockpos5 = new BlockPos(0, 0, 0);
 + 
 
-> CHANGE  2 : 5  @  2 : 3
+> CHANGE  2 : 7  @  2 : 3
 
-~ 			List<BakedQuad> listQuadsIn, BitSet boundsFlags, float[] quadBounds) {
+~ 			List<BakedQuad> listQuadsIn, RenderEnv renderenv) {
 ~ 		boolean isDeferred = DeferredStateManager.isDeferredRenderer();
 ~ 		boolean isDynamicLights = isDeferred || DynamicLightsStateManager.isDynamicLightsRender();
+~ 		BitSet boundsFlags = renderenv.getBoundsFlags();
+~ 		float[] quadBounds = renderenv.getQuadBounds();
 
 > CHANGE  11 : 12  @  11 : 12
 
@@ -263,7 +406,11 @@
 ~ 			worldrenderer.putNormal((float) vec3i.getX(), (float) vec3i.getY(), (float) vec3i.getZ(),
 ~ 					VertexMarkerState.markId);
 
-> INSERT  9 : 16  @  9
+> CHANGE  5 : 6  @  5 : 6
+
+~ 	public static class AmbientOcclusionFace {
+
+> INSERT  3 : 10  @  3
 
 + 		private final BlockPos blockpos0 = new BlockPos(0, 0, 0);
 + 		private final BlockPos blockpos1 = new BlockPos(0, 0, 0);

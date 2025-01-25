@@ -16,7 +16,13 @@
 ~ 
 ~ import net.lax1dude.eaglercraft.v1_8.minecraft.EaglerTextureAtlasSprite;
 
-> CHANGE  7 : 9  @  7 : 9
+> INSERT  5 : 8  @  5
+
++ import net.minecraft.util.ResourceLocation;
++ import net.optifine.Config;
++ import net.optifine.CustomItems;
+
+> CHANGE  2 : 4  @  2 : 4
 
 ~ 	private final IntObjectMap<ModelResourceLocation> simpleShapes = new IntObjectHashMap<>();
 ~ 	private final IntObjectMap<IBakedModel> simpleShapesCache = new IntObjectHashMap<>();
@@ -33,7 +39,14 @@
 
 ~ 			ItemMeshDefinition itemmeshdefinition = this.shapers.get(item);
 
-> CHANGE  17 : 18  @  17 : 18
+> INSERT  9 : 13  @  9
+
++ 		if (Config.isCustomItems()) {
++ 			ibakedmodel = CustomItems.getCustomItemModel(stack, ibakedmodel, (ResourceLocation) null, true);
++ 		}
++ 
+
+> CHANGE  8 : 9  @  8 : 9
 
 ~ 		return this.simpleShapesCache.get(this.getIndex(item, meta));
 

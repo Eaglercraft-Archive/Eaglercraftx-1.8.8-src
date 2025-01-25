@@ -37,7 +37,7 @@
 
 package jdk_internal.bidi;
 
-import jdk_internal.bidi.icu.text.NormalizerBase;
+import jdk_internal.icu.text.NormalizerBase;
 
 /**
  * This class provides the method {@code normalize} which transforms Unicode

@@ -239,6 +239,58 @@
  
  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
  
+ Project Name: Alfheim
+ Project Author: Red Studio
+ Project URL: https://github.com/Red-Studio-Ragnarok/Alfheim
+ 
+ Used For: Optimized lighting engine
+ 
+ * MIT License
+ *
+ * Copyright (c) 2023 Red Studio
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ 
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ 
+ Project Name: OptiFine (1.8.9_HD_U_M6)
+ Project Author: sp614x
+ Project URL: https://optifine.net/
+ 
+ Used For: A few, limited portions we "borrowed" without the author's permission
+ 
+ Note: Eaglercraft is not OptiFine, we only use the code for connected textures
+       and maintaining compatibility with certain resource pack features
+ 
+ * The mod OptiFine is Copyright © 2011-2021 by sp614x and the intellectual
+ * property of the author.
+ * It may be not be reproduced under any circumstances except for personal,
+ * private use as long as it remains in its unaltered, unedited form.
+ * It may not be placed on any web site or otherwise distributed publicly
+ * without advance written permission.
+ * Use of this mod on any other website or as a part of any public display
+ * is strictly prohibited and a violation of copyright.
+ 
+ (sorry sp614x)
+ 
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ 
  Project Name: Google Guava
  Project Author: Google
  Project URL: https://github.com/google/guava

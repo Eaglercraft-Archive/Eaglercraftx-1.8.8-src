@@ -35,7 +35,7 @@
 
 package jdk_internal.bidi;
 
-import jdk_internal.bidi.icu.text.BidiBase;
+import jdk_internal.icu.text.BidiBase;
 
 /**
  * This class implements the Unicode Bidirectional Algorithm.

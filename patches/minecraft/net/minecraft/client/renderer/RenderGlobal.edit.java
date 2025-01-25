@@ -16,13 +16,14 @@
 ~ import net.lax1dude.eaglercraft.v1_8.Keyboard;
 ~ 
 
-> INSERT  2 : 23  @  2
+> INSERT  2 : 24  @  2
 
 + 
 + import com.google.common.collect.Lists;
 + import com.google.common.collect.Maps;
 + import com.google.common.collect.Sets;
 + 
++ import dev.redstudio.alfheim.utils.DeduplicatedLongQueue;
 + import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 + import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 + import net.lax1dude.eaglercraft.v1_8.minecraft.ChunkUpdateManager;
@@ -59,7 +60,9 @@
 
 + import net.minecraft.util.EnumChatFormatting;
 
-> DELETE  13  @  13 : 18
+> CHANGE  13 : 14  @  13 : 18
+
+~ import net.optifine.CustomSky;
 
 > DELETE  20  @  20 : 24
 
@@ -72,7 +75,12 @@
 ~ 	private float lastViewProjMatrixFOV = Float.MIN_VALUE;
 ~ 	private final ChunkUpdateManager renderDispatcher = new ChunkUpdateManager();
 
-> CHANGE  22 : 24  @  22 : 24
+> INSERT  17 : 19  @  17
+
++ 	private final DeduplicatedLongQueue alfheim$lightUpdatesQueue = new DeduplicatedLongQueue(8192);
++ 
+
+> CHANGE  5 : 7  @  5 : 7
 
 ~ 		EaglercraftGPU.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 ~ 		EaglercraftGPU.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -615,7 +623,15 @@
 ~ 		}
 ~ 		return i;
 
-> CHANGE  92 : 93  @  92 : 102
+> CHANGE  18 : 19  @  18 : 19
+
+~ 		alfheim$processLightUpdates();
+
+> INSERT  71 : 72  @  71
+
++ 			GlStateManager.disableDepth();
+
+> CHANGE  2 : 3  @  2 : 12
 
 ~ 			GlStateManager.callList(this.glSkyList);
 
@@ -623,15 +639,42 @@
 
 ~ 							.pos((double) (f12 * 120.0F), (double) (f13 * 120.0F), (double) (f13 * 40.0F * afloat[3]))
 
-> CHANGE  42 : 43  @  42 : 52
+> INSERT  14 : 15  @  14
+
++ 			CustomSky.renderSky(this.theWorld, this.renderEngine, partialTicks);
+
+> CHANGE  26 : 28  @  26 : 27
+
+~ 			boolean b = !CustomSky.hasSkyLayers(this.theWorld);
+~ 			if (f15 > 0.0F && b) {
+
+> CHANGE  1 : 2  @  1 : 11
 
 ~ 				GlStateManager.callList(this.starGLCallList);
 
-> CHANGE  13 : 14  @  13 : 23
+> CHANGE  10 : 11  @  10 : 11
+
+~ 			if (d0 < 0.0D && b) {
+
+> CHANGE  2 : 3  @  2 : 12
 
 ~ 				GlStateManager.callList(this.glSkyList2);
 
-> CHANGE  372 : 373  @  372 : 373
+> CHANGE  35 : 42  @  35 : 39
+
+~ 			if (b) {
+~ 				GlStateManager.pushMatrix();
+~ 				GlStateManager.translate(0.0F, -((float) (d0 - 16.0D)), 0.0F);
+~ 				GlStateManager.callList(this.glSkyList2);
+~ 				GlStateManager.popMatrix();
+~ 			}
+~ 
+
+> INSERT  2 : 3  @  2
+
++ 			GlStateManager.enableDepth();
+
+> CHANGE  331 : 332  @  331 : 332
 
 ~ 		this.displayListEntitiesDirty |= this.renderDispatcher.updateChunks(finishTimeNano);
 
@@ -668,11 +711,15 @@
 
 ~ 			EaglercraftGPU.glLineWidth(2.0F);
 
-> CHANGE  240 : 241  @  240 : 241
+> CHANGE  111 : 112  @  111 : 115
+
+~ 		this.alfheim$lightUpdatesQueue.enqueue(blockpos.toLong());
+
+> CHANGE  125 : 126  @  125 : 126
 
 ~ 		EaglercraftRandom random = this.theWorld.rand;
 
-> INSERT  229 : 248  @  229
+> INSERT  229 : 263  @  229
 
 + 
 + 	public String getDebugInfoShort() {
@@ -692,6 +739,21 @@
 + 
 + 		return "" + Minecraft.getDebugFPS() + "fps | C: " + j + "/" + i + ", E: " + this.countEntitiesRendered + "+" + k
 + 				+ ", " + renderDispatcher.getDebugInfo();
++ 	}
++ 
++ 	public void alfheim$processLightUpdates() {
++ 		if (alfheim$lightUpdatesQueue.isEmpty())
++ 			return;
++ 
++ 		do {
++ 			final long longPos = alfheim$lightUpdatesQueue.dequeue();
++ 			final int x = (int) (longPos << 64 - BlockPos.X_SHIFT - BlockPos.NUM_X_BITS >> 64 - BlockPos.NUM_X_BITS);
++ 			final int y = (int) (longPos << 64 - BlockPos.Y_SHIFT - BlockPos.NUM_Y_BITS >> 64 - BlockPos.NUM_Y_BITS);
++ 			final int z = (int) (longPos << 64 - BlockPos.NUM_Z_BITS >> 64 - BlockPos.NUM_Z_BITS);
++ 			markBlocksForUpdate(x - 1, y - 1, z - 1, x + 1, y + 1, z + 1);
++ 		} while (!alfheim$lightUpdatesQueue.isEmpty());
++ 
++ 		alfheim$lightUpdatesQueue.newDeduplicationSet();
 + 	}
 
 > EOF

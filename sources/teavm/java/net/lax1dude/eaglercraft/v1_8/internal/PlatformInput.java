@@ -318,6 +318,7 @@ public class PlatformInput {
 		parent.addEventListener("contextmenu", contextmenu = new EventListener<MouseEvent>() {
 			@Override
 			public void handleEvent(MouseEvent evt) {
+				if(evt.getTarget() == ClientMain.integratedServerCrashPanel) return;
 				evt.preventDefault();
 				evt.stopPropagation();
 			}
@@ -471,8 +472,10 @@ public class PlatformInput {
 		win.addEventListener("keydown", keydown = new EventListener<KeyboardEvent>() {
 			@Override
 			public void handleEvent(KeyboardEvent evt) {
-				evt.preventDefault();
-				evt.stopPropagation();
+				if(!ClientMain.integratedServerCrashPanelShowing) {
+					evt.preventDefault();
+					evt.stopPropagation();
+				}
 				if(!enableRepeatEvents && evt.isRepeat()) return;
 				LegacyKeycodeTranslator.LegacyKeycode keyCode = null;
 				if(keyCodeTranslatorMap != null && hasCodeVar(evt)) {
@@ -528,8 +531,10 @@ public class PlatformInput {
 		win.addEventListener("keyup", keyup = new EventListener<KeyboardEvent>() {
 			@Override
 			public void handleEvent(KeyboardEvent evt) {
-				evt.preventDefault();
-				evt.stopPropagation();
+				if(!ClientMain.integratedServerCrashPanelShowing) {
+					evt.preventDefault();
+					evt.stopPropagation();
+				}
 				LegacyKeycodeTranslator.LegacyKeycode keyCode = null;
 				if(keyCodeTranslatorMap != null && hasCodeVar(evt)) {
 					keyCode = keyCodeTranslatorMap.get(evt.getCode());

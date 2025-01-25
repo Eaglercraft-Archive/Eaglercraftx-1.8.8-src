@@ -1,11 +1,13 @@
 package net.lax1dude.eaglercraft.v1_8.opengl;
 
+import net.lax1dude.eaglercraft.v1_8.internal.ITextureGL;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.FloatBuffer;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 import net.lax1dude.eaglercraft.v1_8.vector.Matrix4f;
 import net.lax1dude.eaglercraft.v1_8.vector.Vector3f;
 import net.lax1dude.eaglercraft.v1_8.vector.Vector4f;
+import net.minecraft.util.MathHelper;
 
 import static net.lax1dude.eaglercraft.v1_8.opengl.RealOpenGLEnums.*;
 import static net.lax1dude.eaglercraft.v1_8.internal.PlatformOpenGL.*;
@@ -159,8 +161,8 @@ public class GlStateManager {
 	
 	static final Matrix4f[][] textureMatrixStack = new Matrix4f[8][8];
 	static final int[][] textureMatrixStackAccessSerial = new int[8][8];
-	static int[] textureMatrixAccessSerial = new int[8];
-	static int[] textureMatrixStackPointer = new int[8];
+	static final int[] textureMatrixAccessSerial = new int[8];
+	static final int[] textureMatrixStackPointer = new int[8];
 	
 	static boolean stateUseExtensionPipeline = false;
 	
@@ -821,6 +823,32 @@ public class GlStateManager {
 		}
 	}
 
+	private static Matrix4f getMatrixIncr() {
+		Matrix4f mat;
+		int _i, _j;
+		switch(stateMatrixMode) {
+		case GL_MODELVIEW:
+			_j = modelMatrixStackPointer;
+			mat = modelMatrixStack[_j];
+			modelMatrixStackAccessSerial[_j] = ++modelMatrixAccessSerial;
+			break;
+		case GL_PROJECTION:
+			_j = projectionMatrixStackPointer;
+			mat = projectionMatrixStack[_j];
+			projectionMatrixStackAccessSerial[_j] = ++projectionMatrixAccessSerial;
+			break;
+		case GL_TEXTURE:
+			_i = activeTexture;
+			_j = textureMatrixStackPointer[_i];
+			mat = textureMatrixStack[_i][_j];
+			textureMatrixStackAccessSerial[_i][_j] = ++textureCoordsAccessSerial[_i];
+			break;
+		default:
+			throw new IllegalStateException();
+		}
+		return mat;
+	}
+
 	public static final void getFloat(int pname, float[] params) {
 		switch(pname) {
 		case GL_MODELVIEW_MATRIX:
@@ -854,24 +882,7 @@ public class GlStateManager {
 	}
 
 	public static final void ortho(double left, double right, double bottom, double top, double zNear, double zFar) {
-		Matrix4f matrix;
-		switch(stateMatrixMode) {
-		case GL_MODELVIEW:
-			matrix = modelMatrixStack[modelMatrixStackPointer];
-			modelMatrixStackAccessSerial[modelMatrixStackPointer] = ++modelMatrixAccessSerial;
-			break;
-		case GL_PROJECTION:
-		default:
-			matrix = projectionMatrixStack[projectionMatrixStackPointer];
-			projectionMatrixStackAccessSerial[projectionMatrixStackPointer] = ++projectionMatrixAccessSerial;
-			break;
-		case GL_TEXTURE:
-			int ptr = textureMatrixStackPointer[activeTexture];
-			matrix = textureMatrixStack[activeTexture][ptr];
-			textureMatrixStackAccessSerial[activeTexture][textureMatrixStackPointer[activeTexture]] =
-					++textureMatrixAccessSerial[activeTexture];
-			break;
-		}
+		Matrix4f matrix = getMatrixIncr();
 		paramMatrix.m00 = 2.0f / (float)(right - left);
 		paramMatrix.m01 = 0.0f;
 		paramMatrix.m02 = 0.0f;
@@ -894,169 +905,200 @@ public class GlStateManager {
 	private static final Vector3f paramVector = new Vector3f();
 	private static final float toRad = 0.0174532925f;
 	public static final void rotate(float angle, float x, float y, float z) {
-		paramVector.x = x;
-		paramVector.y = y;
-		paramVector.z = z;
-		switch(stateMatrixMode) {
-		case GL_MODELVIEW:
-		default:
-			modelMatrixStack[modelMatrixStackPointer].rotate(angle * toRad, paramVector);
-			modelMatrixStackAccessSerial[modelMatrixStackPointer] = ++modelMatrixAccessSerial;
-			break;
-		case GL_PROJECTION:
-			projectionMatrixStack[projectionMatrixStackPointer].rotate(angle * toRad, paramVector);
-			projectionMatrixStackAccessSerial[projectionMatrixStackPointer] = ++projectionMatrixAccessSerial;
-			break;
-		case GL_TEXTURE:
-			int ptr = textureMatrixStackPointer[activeTexture];
-			textureMatrixStack[activeTexture][ptr].rotate(angle * toRad, paramVector);
-			textureMatrixStackAccessSerial[activeTexture][textureMatrixStackPointer[activeTexture]] =
-					++textureMatrixAccessSerial[activeTexture];
-			break;
+		Matrix4f matrix = getMatrixIncr();
+		if(x == 0.0f) {
+			if(y == 0.0f) {
+				if(z == 1.0f || z == -1.0f) {
+					_glRotatefZ(matrix, toRad * angle * z);
+					return;
+				}
+			}else if((y == 1.0f || y == -1.0f) && z == 0.0f) {
+				_glRotatefY(matrix, toRad * angle * y);
+				return;
+			}
+		}else if((x == 1.0f || x == -1.0f) && y == 0.0f && z == 0.0f) {
+			_glRotatefX(matrix, toRad * angle * x);
+			return;
 		}
+		_glRotatef(matrix, toRad * angle, x, y, z);
+	}
+
+	public static final void rotateXYZ(float x, float y, float z) {
+		Matrix4f matrix = getMatrixIncr();
+		if(x != 0.0f) _glRotatefX(matrix, toRad * x);
+		if(y != 0.0f) _glRotatefY(matrix, toRad * y);
+		if(z != 0.0f) _glRotatefZ(matrix, toRad * z);
+	}
+
+	public static final void rotateZYX(float x, float y, float z) {
+		Matrix4f matrix = getMatrixIncr();
+		if(z != 0.0f) _glRotatefZ(matrix, toRad * z);
+		if(y != 0.0f) _glRotatefY(matrix, toRad * y);
+		if(x != 0.0f) _glRotatefX(matrix, toRad * x);
+	}
+
+	public static final void rotateXYZRad(float x, float y, float z) {
+		Matrix4f matrix = getMatrixIncr();
+		if(x != 0.0f) _glRotatefX(matrix, x);
+		if(y != 0.0f) _glRotatefY(matrix, y);
+		if(z != 0.0f) _glRotatefZ(matrix, z);
+	}
+
+	public static final void rotateZYXRad(float x, float y, float z) {
+		Matrix4f matrix = getMatrixIncr();
+		if(z != 0.0f) _glRotatefZ(matrix, z);
+		if(y != 0.0f) _glRotatefY(matrix, y);
+		if(x != 0.0f) _glRotatefX(matrix, x);
+	}
+
+	private static void _glRotatefX(Matrix4f mat, float angle) {
+		float sin = MathHelper.sin(angle);
+		float cos = MathHelper.cos(angle);
+		float lm10 = mat.m10, lm11 = mat.m11, lm12 = mat.m12, lm13 = mat.m13, lm20 = mat.m20, lm21 = mat.m21,
+				lm22 = mat.m22, lm23 = mat.m23;
+		mat.m20 = lm10 * -sin + lm20 * cos;
+		mat.m21 = lm11 * -sin + lm21 * cos;
+		mat.m22 = lm12 * -sin + lm22 * cos;
+		mat.m23 = lm13 * -sin + lm23 * cos;
+		mat.m10 = lm10 * cos + lm20 * sin;
+		mat.m11 = lm11 * cos + lm21 * sin;
+		mat.m12 = lm12 * cos + lm22 * sin;
+		mat.m13 = lm13 * cos + lm23 * sin;
+	}
+
+	private static void _glRotatefY(Matrix4f mat, float angle) {
+		float sin = MathHelper.sin(angle);
+		float cos = MathHelper.cos(angle);
+		float nm00 = mat.m00 * cos + mat.m20 * -sin;
+		float nm01 = mat.m01 * cos + mat.m21 * -sin;
+		float nm02 = mat.m02 * cos + mat.m22 * -sin;
+		float nm03 = mat.m03 * cos + mat.m23 * -sin;
+		mat.m20 = mat.m00 * sin + mat.m20 * cos;
+		mat.m21 = mat.m01 * sin + mat.m21 * cos;
+		mat.m22 = mat.m02 * sin + mat.m22 * cos;
+		mat.m23 = mat.m03 * sin + mat.m23 * cos;
+		mat.m00 = nm00;
+		mat.m01 = nm01;
+		mat.m02 = nm02;
+		mat.m03 = nm03;
+	}
+
+	private static void _glRotatefZ(Matrix4f mat, float angle) {
+		float dirX = MathHelper.sin(angle);
+		float dirY = MathHelper.cos(angle);
+		float nm00 = mat.m00 * dirY + mat.m10 * dirX;
+		float nm01 = mat.m01 * dirY + mat.m11 * dirX;
+		float nm02 = mat.m02 * dirY + mat.m12 * dirX;
+		float nm03 = mat.m03 * dirY + mat.m13 * dirX;
+		mat.m10 = mat.m00 * -dirX + mat.m10 * dirY;
+		mat.m11 = mat.m01 * -dirX + mat.m11 * dirY;
+		mat.m12 = mat.m02 * -dirX + mat.m12 * dirY;
+		mat.m13 = mat.m03 * -dirX + mat.m13 * dirY;
+		mat.m00 = nm00;
+		mat.m01 = nm01;
+		mat.m02 = nm02;
+		mat.m03 = nm03;
+	}
+
+	private static void _glRotatef(Matrix4f mat, float angle, float x, float y, float z) {
+		float s = MathHelper.sin(angle);
+		float c = MathHelper.cos(angle);
+		float C = 1.0f - c;
+		float xx = x * x, xy = x * y, xz = x * z;
+		float yy = y * y, yz = y * z;
+		float zz = z * z;
+		float rm00 = xx * C + c;
+		float rm01 = xy * C + z * s;
+		float rm02 = xz * C - y * s;
+		float rm10 = xy * C - z * s;
+		float rm11 = yy * C + c;
+		float rm12 = yz * C + x * s;
+		float rm20 = xz * C + y * s;
+		float rm21 = yz * C - x * s;
+		float rm22 = zz * C + c;
+		float nm00 = mat.m00 * rm00 + mat.m10 * rm01 + mat.m20 * rm02;
+		float nm01 = mat.m01 * rm00 + mat.m11 * rm01 + mat.m21 * rm02;
+		float nm02 = mat.m02 * rm00 + mat.m12 * rm01 + mat.m22 * rm02;
+		float nm03 = mat.m03 * rm00 + mat.m13 * rm01 + mat.m23 * rm02;
+		float nm10 = mat.m00 * rm10 + mat.m10 * rm11 + mat.m20 * rm12;
+		float nm11 = mat.m01 * rm10 + mat.m11 * rm11 + mat.m21 * rm12;
+		float nm12 = mat.m02 * rm10 + mat.m12 * rm11 + mat.m22 * rm12;
+		float nm13 = mat.m03 * rm10 + mat.m13 * rm11 + mat.m23 * rm12;
+		mat.m20 = mat.m00 * rm20 + mat.m10 * rm21 + mat.m20 * rm22;
+		mat.m21 = mat.m01 * rm20 + mat.m11 * rm21 + mat.m21 * rm22;
+		mat.m22 = mat.m02 * rm20 + mat.m12 * rm21 + mat.m22 * rm22;
+		mat.m23 = mat.m03 * rm20 + mat.m13 * rm21 + mat.m23 * rm22;
+		mat.m00 = nm00;
+		mat.m01 = nm01;
+		mat.m02 = nm02;
+		mat.m03 = nm03;
+		mat.m10 = nm10;
+		mat.m11 = nm11;
+		mat.m12 = nm12;
+		mat.m13 = nm13;
 	}
 
 	public static final void scale(float x, float y, float z) {
-		paramVector.x = x;
-		paramVector.y = y;
-		paramVector.z = z;
-		switch(stateMatrixMode) {
-		case GL_MODELVIEW:
-		default:
-			modelMatrixStack[modelMatrixStackPointer].scale(paramVector);
-			modelMatrixStackAccessSerial[modelMatrixStackPointer] = ++modelMatrixAccessSerial;
-			break;
-		case GL_PROJECTION:
-			projectionMatrixStack[projectionMatrixStackPointer].scale(paramVector);
-			projectionMatrixStackAccessSerial[projectionMatrixStackPointer] = ++projectionMatrixAccessSerial;
-			break;
-		case GL_TEXTURE:
-			int ptr = textureMatrixStackPointer[activeTexture];
-			textureMatrixStack[activeTexture][ptr].scale(paramVector);
-			textureMatrixStackAccessSerial[activeTexture][textureMatrixStackPointer[activeTexture]] =
-					++textureMatrixAccessSerial[activeTexture];
-			break;
-		}
+		Matrix4f matrix = getMatrixIncr();
+		matrix.m00 *= x;
+		matrix.m01 *= x;
+		matrix.m02 *= x;
+		matrix.m03 *= x;
+		matrix.m10 *= y;
+		matrix.m11 *= y;
+		matrix.m12 *= y;
+		matrix.m13 *= y;
+		matrix.m20 *= z;
+		matrix.m21 *= z;
+		matrix.m22 *= z;
+		matrix.m23 *= z;
 	}
 
 	public static final void scale(double x, double y, double z) {
-		paramVector.x = (float)x;
-		paramVector.y = (float)y;
-		paramVector.z = (float)z;
-		switch(stateMatrixMode) {
-		case GL_MODELVIEW:
-		default:
-			modelMatrixStack[modelMatrixStackPointer].scale(paramVector);
-			modelMatrixStackAccessSerial[modelMatrixStackPointer] = ++modelMatrixAccessSerial;
-			break;
-		case GL_PROJECTION:
-			projectionMatrixStack[projectionMatrixStackPointer].scale(paramVector);
-			projectionMatrixStackAccessSerial[projectionMatrixStackPointer] = ++projectionMatrixAccessSerial;
-			break;
-		case GL_TEXTURE:
-			int ptr = textureMatrixStackPointer[activeTexture];
-			textureMatrixStack[activeTexture][ptr].scale(paramVector);
-			textureMatrixStackAccessSerial[activeTexture][textureMatrixStackPointer[activeTexture]] =
-					++textureMatrixAccessSerial[activeTexture];
-			break;
-		}
+		Matrix4f matrix = getMatrixIncr();
+		matrix.m00 *= x;
+		matrix.m01 *= x;
+		matrix.m02 *= x;
+		matrix.m03 *= x;
+		matrix.m10 *= y;
+		matrix.m11 *= y;
+		matrix.m12 *= y;
+		matrix.m13 *= y;
+		matrix.m20 *= z;
+		matrix.m21 *= z;
+		matrix.m22 *= z;
+		matrix.m23 *= z;
 	}
 
 	public static final void translate(float x, float y, float z) {
-		paramVector.x = x;
-		paramVector.y = y;
-		paramVector.z = z;
-		switch(stateMatrixMode) {
-		case GL_MODELVIEW:
-		default:
-			modelMatrixStack[modelMatrixStackPointer].translate(paramVector);
-			modelMatrixStackAccessSerial[modelMatrixStackPointer] = ++modelMatrixAccessSerial;
-			break;
-		case GL_PROJECTION:
-			projectionMatrixStack[projectionMatrixStackPointer].translate(paramVector);
-			projectionMatrixStackAccessSerial[projectionMatrixStackPointer] = ++projectionMatrixAccessSerial;
-			break;
-		case GL_TEXTURE:
-			int ptr = textureMatrixStackPointer[activeTexture];
-			textureMatrixStack[activeTexture][ptr].translate(paramVector);
-			textureMatrixStackAccessSerial[activeTexture][textureMatrixStackPointer[activeTexture]] =
-					++textureMatrixAccessSerial[activeTexture];
-			break;
-		}
+		Matrix4f matrix = getMatrixIncr();
+		matrix.m30 = matrix.m00 * x + matrix.m10 * y + matrix.m20 * z + matrix.m30;
+		matrix.m31 = matrix.m01 * x + matrix.m11 * y + matrix.m21 * z + matrix.m31;
+		matrix.m32 = matrix.m02 * x + matrix.m12 * y + matrix.m22 * z + matrix.m32;
+		matrix.m33 = matrix.m03 * x + matrix.m13 * y + matrix.m23 * z + matrix.m33;
 	}
 
 	public static final void translate(double x, double y, double z) {
-		paramVector.x = (float)x;
-		paramVector.y = (float)y;
-		paramVector.z = (float)z;
-		switch(stateMatrixMode) {
-		case GL_MODELVIEW:
-		default:
-			modelMatrixStack[modelMatrixStackPointer].translate(paramVector);
-			modelMatrixStackAccessSerial[modelMatrixStackPointer] = ++modelMatrixAccessSerial;
-			break;
-		case GL_PROJECTION:
-			projectionMatrixStack[projectionMatrixStackPointer].translate(paramVector);
-			projectionMatrixStackAccessSerial[projectionMatrixStackPointer] = ++projectionMatrixAccessSerial;
-			break;
-		case GL_TEXTURE:
-			int ptr = textureMatrixStackPointer[activeTexture];
-			textureMatrixStack[activeTexture][ptr].translate(paramVector);
-			textureMatrixStackAccessSerial[activeTexture][textureMatrixStackPointer[activeTexture]] =
-					++textureMatrixAccessSerial[activeTexture];
-			break;
-		}
+		float _x = (float)x;
+		float _y = (float)y;
+		float _z = (float)z;
+		Matrix4f matrix = getMatrixIncr();
+		matrix.m30 = matrix.m00 * _x + matrix.m10 * _y + matrix.m20 * _z + matrix.m30;
+		matrix.m31 = matrix.m01 * _x + matrix.m11 * _y + matrix.m21 * _z + matrix.m31;
+		matrix.m32 = matrix.m02 * _x + matrix.m12 * _y + matrix.m22 * _z + matrix.m32;
+		matrix.m33 = matrix.m03 * _x + matrix.m13 * _y + matrix.m23 * _z + matrix.m33;
 	}
 
 	private static final Matrix4f paramMatrix = new Matrix4f();
 	public static final void multMatrix(float[] matrix) {
-		Matrix4f modeMatrix;
-		
-		switch(stateMatrixMode) {
-		case GL_MODELVIEW:
-		default:
-			modeMatrix = modelMatrixStack[modelMatrixStackPointer];
-			modelMatrixStackAccessSerial[modelMatrixStackPointer] = ++modelMatrixAccessSerial;
-			break;
-		case GL_PROJECTION:
-			modeMatrix = projectionMatrixStack[projectionMatrixStackPointer];
-			projectionMatrixStackAccessSerial[projectionMatrixStackPointer] = ++projectionMatrixAccessSerial;
-			break;
-		case GL_TEXTURE:
-			int ptr = textureMatrixStackPointer[activeTexture];
-			modeMatrix = textureMatrixStack[activeTexture][ptr];
-			textureMatrixStackAccessSerial[activeTexture][textureMatrixStackPointer[activeTexture]] =
-					++textureMatrixAccessSerial[activeTexture];
-			break;
-		}
-		
 		paramMatrix.load(matrix);
-		
-		Matrix4f.mul(modeMatrix, paramMatrix, modeMatrix);
+		Matrix4f mat = getMatrixIncr();
+		Matrix4f.mul(mat, paramMatrix, mat);
 	}
 
 	public static final void multMatrix(Matrix4f matrix) {
-		Matrix4f modeMatrix;
-		
-		switch(stateMatrixMode) {
-		case GL_MODELVIEW:
-		default:
-			modeMatrix = modelMatrixStack[modelMatrixStackPointer];
-			modelMatrixStackAccessSerial[modelMatrixStackPointer] = ++modelMatrixAccessSerial;
-			break;
-		case GL_PROJECTION:
-			modeMatrix = projectionMatrixStack[projectionMatrixStackPointer];
-			projectionMatrixStackAccessSerial[projectionMatrixStackPointer] = ++projectionMatrixAccessSerial;
-			break;
-		case GL_TEXTURE:
-			int ptr = textureMatrixStackPointer[activeTexture];
-			modeMatrix = textureMatrixStack[activeTexture][ptr];
-			textureMatrixStackAccessSerial[activeTexture][textureMatrixStackPointer[activeTexture]] =
-					++textureMatrixAccessSerial[activeTexture];
-			break;
-		}
-		
-		Matrix4f.mul(modeMatrix, matrix, modeMatrix);
+		Matrix4f mat = getMatrixIncr();
+		Matrix4f.mul(mat, matrix, mat);
 	}
 
 	public static final void color(float colorRed, float colorGreen, float colorBlue, float colorAlpha) {
@@ -1088,24 +1130,7 @@ public class GlStateManager {
 	}
 
 	public static final void gluPerspective(float fovy, float aspect, float zNear, float zFar) {
-		Matrix4f matrix;
-		switch(stateMatrixMode) {
-		case GL_MODELVIEW:
-			matrix = modelMatrixStack[modelMatrixStackPointer];
-			modelMatrixStackAccessSerial[modelMatrixStackPointer] = ++modelMatrixAccessSerial;
-			break;
-		case GL_PROJECTION:
-		default:
-			matrix = projectionMatrixStack[projectionMatrixStackPointer];
-			projectionMatrixStackAccessSerial[projectionMatrixStackPointer] = ++projectionMatrixAccessSerial;
-			break;
-		case GL_TEXTURE:
-			int ptr = textureMatrixStackPointer[activeTexture];
-			matrix = textureMatrixStack[activeTexture][ptr];
-			textureMatrixStackAccessSerial[activeTexture][textureMatrixStackPointer[activeTexture]] =
-					++textureMatrixAccessSerial[activeTexture];
-			break;
-		}
+		Matrix4f matrix = getMatrixIncr();
 		float cotangent = (float) Math.cos(fovy * toRad * 0.5f) / (float) Math.sin(fovy * toRad * 0.5f);
 		paramMatrix.m00 = cotangent / aspect;
 		paramMatrix.m01 = 0.0f;
@@ -1127,24 +1152,7 @@ public class GlStateManager {
 	}
 
 	public static final void gluLookAt(Vector3f eye, Vector3f center, Vector3f up) {
-		Matrix4f matrix;
-		switch(stateMatrixMode) {
-		case GL_MODELVIEW:
-			matrix = modelMatrixStack[modelMatrixStackPointer];
-			modelMatrixStackAccessSerial[modelMatrixStackPointer] = ++modelMatrixAccessSerial;
-			break;
-		case GL_PROJECTION:
-		default:
-			matrix = projectionMatrixStack[projectionMatrixStackPointer];
-			projectionMatrixStackAccessSerial[projectionMatrixStackPointer] = ++projectionMatrixAccessSerial;
-			break;
-		case GL_TEXTURE:
-			int ptr = textureMatrixStackPointer[activeTexture];
-			matrix = textureMatrixStack[activeTexture][ptr];
-			textureMatrixStackAccessSerial[activeTexture][textureMatrixStackPointer[activeTexture]] =
-					++textureMatrixAccessSerial[activeTexture];
-			break;
-		}
+		Matrix4f matrix = getMatrixIncr();
 		float x = center.x - eye.x;
 		float y = center.y - eye.y;
 		float z = center.z - eye.z;
@@ -1262,4 +1270,18 @@ public class GlStateManager {
 	public static void recompileShaders() {
 		FixedFunctionPipeline.flushCache();
 	}
+
+	public static int getBoundTexture() {
+		return boundTexture[activeTexture];
+	}
+
+	static void setTextureCachedSize(int target, int w, int h) {
+		if(target == GL_TEXTURE_2D) {
+			ITextureGL tex = EaglercraftGPU.getNativeTexture(boundTexture[activeTexture]);
+			if(tex != null) {
+				tex.setCacheSize(w, h);
+			}
+		}
+	}
+
 }

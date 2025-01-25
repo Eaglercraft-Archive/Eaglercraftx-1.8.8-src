@@ -55,4 +55,11 @@
 ~ 		for (int m = 0, n = this.structureGenerators.size(); m < n; ++m) {
 ~ 			this.structureGenerators.get(m).generate(this, this.worldObj, i, j, (ChunkPrimer) null);
 
+> INSERT  7 : 11  @  7
+
++ 
++ 	public Chunk getLoadedChunk(int var1, int var2) {
++ 		return provideChunk(var1, var2);
++ 	}
+
 > EOF

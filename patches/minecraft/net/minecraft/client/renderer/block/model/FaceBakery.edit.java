@@ -47,7 +47,7 @@
 ~ 		}
 ~ 		stride = 7;
 ~ 
-~ 		return new BakedQuad(aint, aint2, face.tintIndex, enumfacing);
+~ 		return new BakedQuad(aint, aint2, face.tintIndex, enumfacing, sprite);
 
 > CHANGE  2 : 3  @  2 : 3
 

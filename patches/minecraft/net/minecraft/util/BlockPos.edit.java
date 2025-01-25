@@ -15,7 +15,18 @@
 
 > DELETE  1  @  1 : 5
 
-> INSERT  12 : 16  @  12
+> CHANGE  3 : 11  @  3 : 11
+
+~ 	public static final int NUM_X_BITS = 26;
+~ 	public static final int NUM_Z_BITS = NUM_X_BITS;
+~ 	public static final int NUM_Y_BITS = 64 - NUM_X_BITS - NUM_Z_BITS;
+~ 	public static final int Y_SHIFT = 0 + NUM_Z_BITS;
+~ 	public static final int X_SHIFT = Y_SHIFT + NUM_Y_BITS;
+~ 	public static final long X_MASK = (1L << NUM_X_BITS) - 1L;
+~ 	public static final long Y_MASK = (1L << NUM_Y_BITS) - 1L;
+~ 	public static final long Z_MASK = (1L << NUM_Z_BITS) - 1L;
+
+> INSERT  1 : 5  @  1
 
 + 	public BlockPos() {
 + 		super(0, 0, 0);

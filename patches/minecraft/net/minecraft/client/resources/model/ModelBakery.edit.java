@@ -13,7 +13,7 @@
 
 > DELETE  7  @  7 : 8
 
-> INSERT  1 : 16  @  1
+> INSERT  1 : 18  @  1
 
 + import java.util.Set;
 + 
@@ -29,13 +29,22 @@
 + import net.lax1dude.eaglercraft.v1_8.minecraft.EaglerTextureAtlasSprite;
 + import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.BlockVertexIDs;
 + import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.VertexMarkerState;
++ import net.minecraft.block.Block;
++ import net.minecraft.block.state.IBlockState;
 + import net.minecraft.client.Minecraft;
 
-> DELETE  9  @  9 : 10
+> INSERT  8 : 10  @  8
+
++ import net.minecraft.client.renderer.block.statemap.IStateMapper;
++ import net.minecraft.client.renderer.block.statemap.StateMapperBase;
+
+> DELETE  1  @  1 : 2
 
 > DELETE  3  @  3 : 9
 
-> DELETE  7  @  7 : 10
+> CHANGE  7 : 8  @  7 : 10
+
+~ import net.optifine.CustomItems;
 
 > CHANGE  20 : 21  @  20 : 21
 
@@ -85,12 +94,44 @@
 
 ~ 			return modelblock;
 
-> CHANGE  21 : 23  @  21 : 22
+> INSERT  4 : 5  @  4
+
++ 		String path = parResourceLocation.getResourcePath();
+
+> CHANGE  1 : 2  @  1 : 2
+
+~ 				((path.startsWith("mcpatcher/") || path.startsWith("optifine/")) ? "" : "models/") + path + ".json");
+
+> CHANGE  15 : 17  @  15 : 16
 
 ~ 								+ Item.itemRegistry.getNameForObject(item) + "\'");
 ~ 						LOGGER.warn(exception);
 
-> INSERT  132 : 133  @  132
+> INSERT  7 : 23  @  7
+
++ 	public void loadItemModel(String p_loadItemModel_1_, ResourceLocation p_loadItemModel_2_,
++ 			ResourceLocation p_loadItemModel_3_) {
++ 		this.itemLocations.put(p_loadItemModel_1_, p_loadItemModel_2_);
++ 
++ 		if (this.models.get(p_loadItemModel_2_) == null) {
++ 			try {
++ 				ModelBlock modelblock = this.loadModel(p_loadItemModel_2_);
++ 				this.models.put(p_loadItemModel_2_, modelblock);
++ 			} catch (Exception exception) {
++ 				LOGGER.warn("Unable to load item model: \'{}\' for item: \'{}\'",
++ 						new Object[] { p_loadItemModel_2_, p_loadItemModel_3_ });
++ 				LOGGER.warn(exception.getClass().getName() + ": " + exception.getMessage());
++ 			}
++ 		}
++ 	}
++ 
+
+> INSERT  107 : 109  @  107
+
++ 		CustomItems.update();
++ 		CustomItems.loadModels(this);
+
+> INSERT  18 : 19  @  18
 
 + 		boolean deferred = Minecraft.getMinecraft().gameSettings.shaders;
 
@@ -167,5 +208,39 @@
 > CHANGE  52 : 53  @  52 : 53
 
 ~ 		for (EaglerTextureAtlasSprite textureatlassprite : this.sprites.values()) {
+
+> INSERT  11 : 42  @  11
+
++ 	// eagler hack
++ 	public String getBaseTextureForBlockPre(int blockId, int metadata) {
++ 		Block block = Block.blockRegistry.getObjectById(blockId);
++ 		if (block != null) {
++ 			IBlockState state = block.getStateFromMeta(metadata);
++ 			if (state != null) {
++ 				IStateMapper mapper = blockModelShapes.getBlockStateMapper().blockStateMap.get(block);
++ 				ModelResourceLocation loc = null;
++ 				if (mapper != null) {
++ 					loc = mapper.putStateModelLocations(block).get(state);
++ 				}
++ 				if (loc == null) {
++ 					loc = new ModelResourceLocation(Block.blockRegistry.getNameForObject(block),
++ 							StateMapperBase.getPropertyString(state.getProperties()));
++ 				}
++ 				ModelBlockDefinition.Variants v = variants.get(loc);
++ 				if (v != null && v.getVariants().size() > 0) {
++ 					ModelBlockDefinition.Variant vv = v.getVariants().get(0);
++ 					ModelBlock model = this.models.get(vv.getModelLocation());
++ 					if (model != null) {
++ 						String name = model.resolveTextureName("particle");
++ 						if (name != null) {
++ 							return name;
++ 						}
++ 					}
++ 				}
++ 			}
++ 		}
++ 		return null;
++ 	}
++ 
 
 > EOF

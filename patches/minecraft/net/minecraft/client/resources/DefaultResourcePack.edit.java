@@ -7,25 +7,44 @@
 
 > DELETE  2  @  2 : 6
 
-> DELETE  3  @  3 : 4
+> CHANGE  3 : 5  @  3 : 4
 
-> INSERT  1 : 6  @  1
+~ import java.util.Collection;
+~ import java.util.Collections;
+
+> INSERT  1 : 8  @  1
 
 + 
 + import com.google.common.collect.ImmutableSet;
 + 
 + import net.lax1dude.eaglercraft.v1_8.EagRuntime;
++ import net.lax1dude.eaglercraft.v1_8.minecraft.EaglerFolderResourcePack;
++ import net.lax1dude.eaglercraft.v1_8.minecraft.ResourceIndex;
 + import net.lax1dude.eaglercraft.v1_8.opengl.ImageData;
 
 > DELETE  1  @  1 : 3
 
-> CHANGE  5 : 6  @  5 : 7
+> CHANGE  4 : 6  @  4 : 7
 
+~ public class DefaultResourcePack extends ResourceIndex implements IResourcePack {
 ~ 	public static final Set<String> defaultResourceDomains = ImmutableSet.of("minecraft", "eagler");
 
-> DELETE  1  @  1 : 5
+> CHANGE  1 : 13  @  1 : 3
 
-> CHANGE  15 : 16  @  15 : 17
+~ 	private final Collection<String> propertyFilesIndex;
+~ 
+~ 	public DefaultResourcePack() {
+~ 		String str = EagRuntime.getResourceString("/assets/minecraft/optifine/_property_files_index.json");
+~ 		if (str != null) {
+~ 			Collection<String> lst = EaglerFolderResourcePack.loadPropertyFileList(str);
+~ 			if (lst != null) {
+~ 				propertyFilesIndex = lst;
+~ 				return;
+~ 			}
+~ 		}
+~ 		propertyFilesIndex = Collections.emptyList();
+
+> CHANGE  17 : 18  @  17 : 19
 
 ~ 		return null;
 
@@ -51,5 +70,23 @@
 
 ~ 	public ImageData getPackImage() throws IOException {
 ~ 		return TextureUtil.readBufferedImage(EagRuntime.getRequiredResourceStream("pack.png"));
+
+> INSERT  5 : 20  @  5
+
++ 
++ 	@Override
++ 	public ResourceIndex getEaglerFileIndex() {
++ 		return this;
++ 	}
++ 
++ 	@Override
++ 	protected Collection<String> getPropertiesFiles0() {
++ 		return propertyFilesIndex;
++ 	}
++ 
++ 	@Override
++ 	protected Collection<String> getCITPotionsFiles0() {
++ 		return Collections.emptyList();
++ 	}
 
 > EOF

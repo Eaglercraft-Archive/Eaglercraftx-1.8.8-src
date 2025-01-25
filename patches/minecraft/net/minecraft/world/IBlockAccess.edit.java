@@ -12,4 +12,9 @@
 + 	int getBiomeColorForCoords(BlockPos var1, int index);
 + 
 
+> INSERT  5 : 7  @  5
+
++ 
++ 	int getLightFor(final EnumSkyBlock lightType, final BlockPos blockPos);
+
 > EOF

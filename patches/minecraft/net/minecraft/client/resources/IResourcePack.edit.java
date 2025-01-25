@@ -7,13 +7,23 @@
 
 > DELETE  2  @  2 : 3
 
-> INSERT  3 : 5  @  3
+> INSERT  2 : 3  @  2
+
++ import java.util.Collection;
+
+> INSERT  1 : 4  @  1
 
 + 
++ import net.lax1dude.eaglercraft.v1_8.minecraft.ResourceIndex;
 + import net.lax1dude.eaglercraft.v1_8.opengl.ImageData;
 
 > CHANGE  13 : 14  @  13 : 14
 
 ~ 	ImageData getPackImage() throws IOException;
+
+> INSERT  2 : 4  @  2
+
++ 
++ 	ResourceIndex getEaglerFileIndex();
 
 > EOF

@@ -52,7 +52,9 @@
 
 + import net.minecraft.util.EnumChatFormatting;
 
-> DELETE  2  @  2 : 8
+> CHANGE  2 : 3  @  2 : 8
+
+~ import net.optifine.CustomSky;
 
 > DELETE  3  @  3 : 8
 
@@ -124,7 +126,7 @@
 + 	public boolean hideDefaultUsernameWarning = false;
 + 	public boolean hideVideoSettingsWarning = EagRuntime.getPlatformType() == EnumPlatformType.DESKTOP;
 
-> CHANGE  1 : 15  @  1 : 2
+> CHANGE  1 : 21  @  1 : 2
 
 ~ 	public int voiceListenRadius = 16;
 ~ 	public float voiceListenVolume = 0.5f;
@@ -138,6 +140,12 @@
 ~ 	public int screenRecordVideoBitrate = ScreenRecordingController.DEFAULT_VIDEO_BITRATE;
 ~ 	public float screenRecordGameVolume = ScreenRecordingController.DEFAULT_GAME_VOLUME;
 ~ 	public float screenRecordMicVolume = ScreenRecordingController.DEFAULT_MIC_VOLUME;
+~ 
+~ 	public int betterGrassOF = 0;
+~ 	public int connectedTexturesOF = 1;
+~ 	public boolean customSkyOF = true;
+~ 	public boolean smartLeavesOF = false;
+~ 	public boolean customItemsOF = true;
 ~ 
 ~ 	public GameSettings(Minecraft mcIn) {
 
@@ -240,53 +248,77 @@
 ~ 		if (parOptions == GameSettings.Options.HUD_STATS) {
 ~ 			this.hudStats = !this.hudStats;
 
-> CHANGE  2 : 4  @  2 : 5
+> CHANGE  2 : 32  @  2 : 3
 
 ~ 		if (parOptions == GameSettings.Options.HUD_WORLD) {
 ~ 			this.hudWorld = !this.hudWorld;
-
-> CHANGE  2 : 4  @  2 : 5
-
+~ 		}
+~ 
 ~ 		if (parOptions == GameSettings.Options.HUD_24H) {
 ~ 			this.hud24h = !this.hud24h;
-
-> CHANGE  2 : 4  @  2 : 5
-
+~ 		}
+~ 
 ~ 		if (parOptions == GameSettings.Options.CHUNK_FIX) {
 ~ 			this.chunkFix = !this.chunkFix;
-
-> CHANGE  2 : 4  @  2 : 4
-
+~ 		}
+~ 
 ~ 		if (parOptions == GameSettings.Options.FOG) {
 ~ 			this.fog = !this.fog;
+~ 		}
+~ 
+~ 		if (parOptions == GameSettings.Options.FXAA) {
+~ 			this.fxaa = (this.fxaa + parInt1) % 3;
+~ 		}
+~ 
+~ 		if (parOptions == GameSettings.Options.FULLSCREEN) {
+~ 			this.mc.toggleFullscreen();
+~ 		}
+~ 
+~ 		if (parOptions == GameSettings.Options.FNAW_SKINS) {
+~ 			this.enableFNAWSkins = !this.enableFNAWSkins;
+~ 			this.mc.getRenderManager().setEnableFNAWSkins(this.mc.getEnableFNAWSkins());
+~ 		}
+~ 
+~ 		if (parOptions == GameSettings.Options.EAGLER_VSYNC) {
+
+> DELETE  1  @  1 : 2
 
 > CHANGE  2 : 4  @  2 : 4
 
-~ 		if (parOptions == GameSettings.Options.FXAA) {
-~ 			this.fxaa = (this.fxaa + parInt1) % 3;
+~ 		if (parOptions == GameSettings.Options.EAGLER_DYNAMIC_LIGHTS) {
+~ 			this.enableDynamicLights = !this.enableDynamicLights;
 
-> INSERT  2 : 24  @  2
+> CHANGE  3 : 9  @  3 : 5
 
-+ 		if (parOptions == GameSettings.Options.FULLSCREEN) {
-+ 			this.mc.toggleFullscreen();
-+ 		}
-+ 
-+ 		if (parOptions == GameSettings.Options.FNAW_SKINS) {
-+ 			this.enableFNAWSkins = !this.enableFNAWSkins;
-+ 			this.mc.getRenderManager().setEnableFNAWSkins(this.mc.getEnableFNAWSkins());
-+ 		}
-+ 
-+ 		if (parOptions == GameSettings.Options.EAGLER_VSYNC) {
-+ 			this.enableVsync = !this.enableVsync;
-+ 		}
-+ 
-+ 		if (parOptions == GameSettings.Options.EAGLER_DYNAMIC_LIGHTS) {
-+ 			this.enableDynamicLights = !this.enableDynamicLights;
+~ 		if (parOptions == GameSettings.Options.EAGLER_PROFANITY_FILTER) {
+~ 			this.enableProfanityFilter = !this.enableProfanityFilter;
+~ 		}
+~ 
+~ 		if (parOptions == GameSettings.Options.OF_CONNECTED_TEXTURES) {
+~ 			this.connectedTexturesOF = (this.connectedTexturesOF + 1) % 3;
+
+> CHANGE  3 : 6  @  3 : 5
+
+~ 		if (parOptions == GameSettings.Options.OF_BETTER_GRASS) {
+~ 			this.betterGrassOF = (this.betterGrassOF + 1) % 3;
+~ 			this.mc.renderGlobal.loadRenderers();
+
+> CHANGE  2 : 5  @  2 : 4
+
+~ 		if (parOptions == GameSettings.Options.OF_CUSTOM_SKIES) {
+~ 			this.customSkyOF = !this.customSkyOF;
+~ 			CustomSky.update();
+
+> INSERT  2 : 12  @  2
+
++ 		if (parOptions == GameSettings.Options.OF_SMART_LEAVES) {
++ 			this.smartLeavesOF = !this.smartLeavesOF;
 + 			this.mc.renderGlobal.loadRenderers();
 + 		}
 + 
-+ 		if (parOptions == GameSettings.Options.EAGLER_PROFANITY_FILTER) {
-+ 			this.enableProfanityFilter = !this.enableProfanityFilter;
++ 		if (parOptions == GameSettings.Options.OF_CUSTOM_ITEMS) {
++ 			this.customItemsOF = !this.customItemsOF;
++ 			this.mc.renderGlobal.loadRenderers();
 + 		}
 + 
 
@@ -298,7 +330,7 @@
 
 > DELETE  20  @  20 : 30
 
-> INSERT  8 : 34  @  8
+> INSERT  8 : 40  @  8
 
 + 		case HUD_COORDS:
 + 			return this.hudCoords;
@@ -326,6 +358,12 @@
 + 			return this.enableDynamicLights;
 + 		case EAGLER_PROFANITY_FILTER:
 + 			return this.enableProfanityFilter;
++ 		case OF_CUSTOM_SKIES:
++ 			return this.customSkyOF;
++ 		case OF_SMART_LEAVES:
++ 			return this.smartLeavesOF;
++ 		case OF_CUSTOM_ITEMS:
++ 			return this.customItemsOF;
 
 > CHANGE  43 : 46  @  43 : 47
 
@@ -374,7 +412,7 @@
 
 > DELETE  11  @  11 : 19
 
-> INSERT  9 : 17  @  9
+> INSERT  9 : 33  @  9
 
 + 		} else if (parOptions == GameSettings.Options.FXAA) {
 + 			if (this.fxaa == 0) {
@@ -383,6 +421,22 @@
 + 				return s + I18n.format("options.on");
 + 			} else {
 + 				return s + I18n.format("options.off");
++ 			}
++ 		} else if (parOptions == GameSettings.Options.OF_CONNECTED_TEXTURES) {
++ 			if (this.connectedTexturesOF == 0) {
++ 				return s + I18n.format("options.off");
++ 			} else if (this.connectedTexturesOF == 1) {
++ 				return s + I18n.format("options.graphics.fast");
++ 			} else {
++ 				return s + I18n.format("options.graphics.fancy");
++ 			}
++ 		} else if (parOptions == GameSettings.Options.OF_BETTER_GRASS) {
++ 			if (this.betterGrassOF == 0) {
++ 				return s + I18n.format("options.off");
++ 			} else if (this.betterGrassOF == 1) {
++ 				return s + I18n.format("options.graphics.fast");
++ 			} else {
++ 				return s + I18n.format("options.graphics.fancy");
 + 			}
 
 > CHANGE  6 : 12  @  6 : 10
@@ -547,7 +601,7 @@
 
 ~ 					for (EnumPlayerModelParts enumplayermodelparts : EnumPlayerModelParts._VALUES) {
 
-> INSERT  4 : 74  @  4
+> INSERT  4 : 94  @  4
 
 + 
 + 					if (astring[0].equals("enableFNAWSkins")) {
@@ -618,6 +672,26 @@
 + 						hideVideoSettingsWarning = astring[1].equals("true");
 + 					}
 + 
++ 					if (astring[0].equals("betterGrassOF")) {
++ 						betterGrassOF = Integer.parseInt(astring[1]);
++ 					}
++ 
++ 					if (astring[0].equals("connectedTexturesOF")) {
++ 						connectedTexturesOF = Integer.parseInt(astring[1]);
++ 					}
++ 
++ 					if (astring[0].equals("customSkyOF")) {
++ 						customSkyOF = astring[1].equals("true");
++ 					}
++ 
++ 					if (astring[0].equals("smartLeavesOF")) {
++ 						smartLeavesOF = astring[1].equals("true");
++ 					}
++ 
++ 					if (astring[0].equals("customItemsOF")) {
++ 						customItemsOF = astring[1].equals("true");
++ 					}
++ 
 + 					deferredShaderConf.readOption(astring[0], astring[1]);
 
 > CHANGE  6 : 23  @  6 : 7
@@ -681,7 +755,7 @@
 
 > DELETE  9  @  9 : 20
 
-> INSERT  5 : 37  @  5
+> INSERT  5 : 42  @  5
 
 + 			printwriter.println("hudFps:" + this.hudFps);
 + 			printwriter.println("hudWorld:" + this.hudWorld);
@@ -715,6 +789,11 @@
 + 			printwriter.println("touchControlOpacity:" + this.touchControlOpacity);
 + 			printwriter.println("hideDefaultUsernameWarning:" + this.hideDefaultUsernameWarning);
 + 			printwriter.println("hideVideoSettingsWarning:" + this.hideVideoSettingsWarning);
++ 			printwriter.println("betterGrassOF:" + this.betterGrassOF);
++ 			printwriter.println("connectedTexturesOF:" + this.connectedTexturesOF);
++ 			printwriter.println("customSkyOF:" + this.customSkyOF);
++ 			printwriter.println("smartLeavesOF:" + this.smartLeavesOF);
++ 			printwriter.println("customItemsOF:" + this.customItemsOF);
 
 > CHANGE  5 : 8  @  5 : 6
 
@@ -780,7 +859,7 @@
 
 > DELETE  8  @  8 : 10
 
-> CHANGE  16 : 26  @  16 : 17
+> CHANGE  16 : 29  @  16 : 17
 
 ~ 		ENTITY_SHADOWS("options.entityShadows", false, true), HUD_FPS("options.hud.fps", false, true),
 ~ 		HUD_COORDS("options.hud.coords", false, true), HUD_STATS("options.hud.stats", false, true),
@@ -791,6 +870,9 @@
 ~ 		FNAW_SKINS("options.skinCustomisation.enableFNAWSkins", false, true),
 ~ 		EAGLER_VSYNC("options.vsync", false, true), EAGLER_DYNAMIC_LIGHTS("options.dynamicLights", false, true),
 ~ 		EAGLER_PROFANITY_FILTER("options.profanityFilterButton", false, true),
-~ 		EAGLER_TOUCH_CONTROL_OPACITY("options.touchControlOpacity", true, false);
+~ 		EAGLER_TOUCH_CONTROL_OPACITY("options.touchControlOpacity", true, false),
+~ 		OF_CONNECTED_TEXTURES("options.connectedTexturesOF", false, false),
+~ 		OF_BETTER_GRASS("options.betterGrassOF", false, false), OF_CUSTOM_SKIES("options.customSkiesOF", false, true),
+~ 		OF_SMART_LEAVES("options.smartLeavesOF", false, true), OF_CUSTOM_ITEMS("options.customItemsOF", false, true);
 
 > EOF

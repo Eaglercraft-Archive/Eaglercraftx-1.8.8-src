@@ -1,22 +1,19 @@
 package net.lax1dude.eaglercraft.v1_8.minecraft;
 
-import static net.lax1dude.eaglercraft.v1_8.internal.PlatformOpenGL.*;
 import static net.lax1dude.eaglercraft.v1_8.opengl.RealOpenGLEnums.*;
 
 import java.util.List;
 
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
-import net.lax1dude.eaglercraft.v1_8.internal.IFramebufferGL;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.IntBuffer;
 import net.lax1dude.eaglercraft.v1_8.opengl.EaglercraftGPU;
 import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 import net.lax1dude.eaglercraft.v1_8.opengl.SpriteLevelMixer;
 import net.lax1dude.eaglercraft.v1_8.opengl.TextureCopyUtil;
-import net.lax1dude.eaglercraft.v1_8.vector.Matrix3f;
 import net.minecraft.client.renderer.GLAllocation;
 
 /**
- * Copyright (c) 2022 lax1dude. All Rights Reserved.
+ * Copyright (c) 2022-2025 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -39,8 +36,6 @@ public class TextureAnimationCache {
 	private int frameCount = 1;
 
 	private int[] cacheTextures = null;
-
-	public static final int _GL_FRAMEBUFFER = 0x8D40;
 
 	public TextureAnimationCache(int width, int height, int mipLevels) {
 		this.width = width;
@@ -105,76 +100,40 @@ public class TextureAnimationCache {
 		}
 	}
 
-	public void copyFrameLevelsToTex2D(int animationFrame, int dx, int dy, int w, int h, IFramebufferGL[] dstFramebuffers) {
-		copyFrameLevelsToTex2D(animationFrame, mipLevels, dx, dy, w, h, dstFramebuffers);
-	}
-
-	/**
-	 * WARNING: call <code>_wglBindFramebuffer(_GL_FRAMEBUFFER, null);</code> when complete
-	 */
-	public void copyFrameLevelsToTex2D(int animationFrame, int levels, int dx, int dy, int w, int h, IFramebufferGL[] dstFramebuffers) {
-		for(int i = 0; i < levels; ++i) {
-			_wglBindFramebuffer(_GL_FRAMEBUFFER, dstFramebuffers[i]);
-			copyFrameToTex2D(animationFrame, i, dx >> i, dy >> i, w >> i, h >> i);
-		}
-	}
-
-	public void copyFrameToTex2D(int animationFrame, int level, int dx, int dy, int w, int h) {
+	public void copyFrameToTex2D(int animationFrame, int level, int dx, int dy, int w, int h, int mapWidth, int mapHeight) {
 		if(cacheTextures == null) {
 			throw new IllegalStateException("Cannot copy from uninitialized TextureAnimationCache");
 		}
 		GlStateManager.disableBlend();
-		GlStateManager.disableAlpha();
 		GlStateManager.bindTexture(cacheTextures[level]);
 		TextureCopyUtil.srcSize(width >> level, (height >> level) * frameCount);
-		TextureCopyUtil.blitTextureUsingViewports(0, h * animationFrame, dx, dy, w, h);
-	}
-
-	public void copyInterpolatedFrameLevelsToTex2D(int animationFrameFrom, int animationFrameTo, float factor, int dx,
-			int dy, int w, int h, IFramebufferGL[] dstFramebuffers) {
-		copyInterpolatedFrameLevelsToTex2D(animationFrameFrom, animationFrameTo, factor, mipLevels, dx, dy, w, h, dstFramebuffers);
-	}
-
-	/**
-	 * WARNING: call <code>_wglBindFramebuffer(_GL_FRAMEBUFFER, null);</code> when complete
-	 */
-	public void copyInterpolatedFrameLevelsToTex2D(int animationFrameFrom, int animationFrameTo, float factor,
-			int levels, int dx, int dy, int w, int h, IFramebufferGL[] dstFramebuffers) {
-		for(int i = 0; i < levels; ++i) {
-			_wglBindFramebuffer(_GL_FRAMEBUFFER, dstFramebuffers[i]);
-			copyInterpolatedFrameToTex2D(animationFrameFrom, animationFrameTo, factor, i, dx >> i, dy >> i, w >> i, h >> i);
-		}
+		TextureCopyUtil.dstSize(mapWidth, mapHeight);
+		TextureCopyUtil.blitTexture(0, h * animationFrame, dx, dy, w, h);
 	}
 
 	public void copyInterpolatedFrameToTex2D(int animationFrameFrom, int animationFrameTo, float factor, int level,
-			int dx, int dy, int w, int h) {
+			int dx, int dy, int w, int h, int mapWidth, int mapHeight) {
 		if(cacheTextures == null) {
 			throw new IllegalStateException("Cannot copy from uninitialized TextureAnimationCache");
 		}
 		
-		GlStateManager.viewport(dx, dy, w, h);
 		GlStateManager.bindTexture(cacheTextures[level]);
 		GlStateManager.disableBlend();
 		
-		Matrix3f matrix = new Matrix3f();
-		matrix.m11 = 1.0f / frameCount;
-		matrix.m21 = matrix.m11 * animationFrameFrom;
-		
-		SpriteLevelMixer.setMatrix3f(matrix);
+		SpriteLevelMixer.srcSize(width >> level, (height >> level) * frameCount);
+		SpriteLevelMixer.dstSize(mapWidth, mapHeight);
 		SpriteLevelMixer.setBlendColor(factor, factor, factor, factor);
 		SpriteLevelMixer.setBiasColor(0.0f, 0.0f, 0.0f, 0.0f);
 		
-		SpriteLevelMixer.drawSprite(0);
+		SpriteLevelMixer.drawSprite(0, 0, h * animationFrameFrom, w, h, dx, dy, w, h);
 		
-		matrix.m21 = matrix.m11 * animationFrameTo;
-		SpriteLevelMixer.setMatrix3f(matrix);
 		float fac1 = 1.0f - factor;
 		SpriteLevelMixer.setBlendColor(fac1, fac1, fac1, fac1);
 		
 		GlStateManager.enableBlend();
 		GlStateManager.blendFunc(GL_ONE, GL_ONE);
 		
-		SpriteLevelMixer.drawSprite(0);
+		SpriteLevelMixer.drawSprite(0, 0, h * animationFrameTo, w, h, dx, dy, w, h);
 		
 		GlStateManager.disableBlend();
 		GlStateManager.blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

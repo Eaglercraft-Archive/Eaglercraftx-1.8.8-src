@@ -25,8 +25,8 @@
 
 package jdk_internal.bidi;
 
-import jdk_internal.bidi.icu.lang.UCharacter;
-import jdk_internal.bidi.icu.text.NormalizerBase;
+import jdk_internal.icu.lang.UCharacter;
+import jdk_internal.icu.text.NormalizerBase;
 
 /**
  * This Normalizer is for Unicode 3.2 support for IDNA only. Developers should

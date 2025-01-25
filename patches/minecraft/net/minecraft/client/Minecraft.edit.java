@@ -149,7 +149,9 @@
 
 > DELETE  6  @  6 : 7
 
-> DELETE  1  @  1 : 19
+> CHANGE  1 : 2  @  1 : 19
+
+~ import net.optifine.Config;
 
 > CHANGE  1 : 2  @  1 : 2
 
@@ -272,10 +274,11 @@
 ~ 		} finally {
 ~ 			this.shutdownMinecraftApplet();
 
-> CHANGE  4 : 6  @  4 : 6
+> CHANGE  4 : 7  @  4 : 6
 
 ~ 	private void startGame() throws IOException {
 ~ 		this.gameSettings = new GameSettings(this);
+~ 		Config.setGameObj(this);
 
 > DELETE  1  @  1 : 2
 
@@ -1419,7 +1422,7 @@
 
 > DELETE  26  @  26 : 34
 
-> INSERT  7 : 44  @  7
+> INSERT  7 : 47  @  7
 
 + 
 + 	public static int getGLMaximumTextureSize() {
@@ -1458,5 +1461,8 @@
 + 		return EagRuntime.getConfiguration().isForceProfanityFilter() || gameSettings.enableProfanityFilter;
 + 	}
 + 
++ 	public DefaultResourcePack getDefaultResourcePack() {
++ 		return mcDefaultResourcePack;
++ 	}
 
 > EOF

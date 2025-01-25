@@ -1,6 +1,6 @@
 
 # Eagler Context Redacted Diff
-# Copyright (c) 2024 lax1dude. All rights reserved.
+# Copyright (c) 2025 lax1dude. All rights reserved.
 
 # Version: 1.0
 # Author: lax1dude
@@ -257,7 +257,7 @@
 + eaglercraft.command.clientStub=This command is client side!
 + 
 
-> INSERT  163 : 568  @  163
+> INSERT  163 : 574  @  163
 
 + eaglercraft.singleplayer.busy.killTask=Cancel Task
 + eaglercraft.singleplayer.busy.cancelWarning=Are you sure?
@@ -663,6 +663,12 @@
 + eaglercraft.options.vsyncReEnabled.2=Using the WASM-GC version of EaglercraftX without
 + eaglercraft.options.vsyncReEnabled.3=VSync enabled causes bad input lag, sorry!
 + eaglercraft.options.vsyncReEnabled.continue=Continue
++ 
++ eaglercraft.options.connectedTexturesOF=Connected Textures
++ eaglercraft.options.betterGrassOF=Better Grass/Snow
++ eaglercraft.options.customSkiesOF=Custom Skies
++ eaglercraft.options.smartLeavesOF=Smart Leaves
++ eaglercraft.options.customItemsOF=Custom Items
 + 
 
 > INSERT  18 : 19  @  18

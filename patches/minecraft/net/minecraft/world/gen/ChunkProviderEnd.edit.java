@@ -19,4 +19,11 @@
 
 ~ 		this.endRNG = new EaglercraftRandom(parLong1, !worldIn.getWorldInfo().isOldEaglercraftRandom());
 
+> INSERT  246 : 250  @  246
+
++ 
++ 	public Chunk getLoadedChunk(int var1, int var2) {
++ 		return provideChunk(var1, var2);
++ 	}
+
 > EOF

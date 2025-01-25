@@ -77,6 +77,8 @@ class OpenGLObjects {
 		private static int hashGen = 0;
 		final WebGLTexture ptr;
 		final int hash;
+		int width;
+		int height;
 
 		TextureGL(WebGLTexture ptr) {
 			this.ptr = ptr;
@@ -90,6 +92,22 @@ class OpenGLObjects {
 		@Override
 		public void free() {
 			PlatformOpenGL._wglDeleteTextures(this);
+		}
+
+		@Override
+		public void setCacheSize(int w, int h) {
+			width = w;
+			height = h;
+		}
+
+		@Override
+		public int getWidth() {
+			return width;
+		}
+
+		@Override
+		public int getHeight() {
+			return height;
 		}
 
 	}

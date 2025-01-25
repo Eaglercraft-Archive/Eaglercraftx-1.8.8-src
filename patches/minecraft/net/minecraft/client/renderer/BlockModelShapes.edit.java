@@ -24,11 +24,23 @@
 
 ~ 			this.bakedModelStore.put((IBlockState) entry.getKey(),
 
-> CHANGE  175 : 176  @  175 : 176
+> CHANGE  157 : 158  @  157 : 158
+
+~ 						getPropertyString(linkedhashmap));
+
+> CHANGE  11 : 12  @  11 : 12
+
+~ 						getPropertyString(linkedhashmap));
+
+> CHANGE  5 : 6  @  5 : 6
 
 ~ 				String s = BlockDirt.VARIANT.getName((BlockDirt.DirtType) linkedhashmap.remove(BlockDirt.VARIANT));
 
-> CHANGE  10 : 12  @  10 : 11
+> CHANGE  4 : 5  @  4 : 5
+
+~ 				return new ModelResourceLocation(s, getPropertyString(linkedhashmap));
+
+> CHANGE  5 : 7  @  5 : 6
 
 ~ 				String s = BlockStoneSlab.VARIANT
 ~ 						.getName((BlockStoneSlab.EnumType) linkedhashmap.remove(BlockStoneSlab.VARIANT));

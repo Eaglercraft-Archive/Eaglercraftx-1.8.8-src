@@ -127,4 +127,11 @@
 
 ~ 		return this.id2ChunkMap.size();
 
+> INSERT  8 : 12  @  8
+
++ 
++ 	public Chunk getLoadedChunk(int var1, int var2) {
++ 		return this.id2ChunkMap.get(ChunkCoordIntPair.chunkXZ2Int(var1, var2));
++ 	}
+
 > EOF
