@@ -235,18 +235,20 @@ public class GameProtocolMessageController {
 			pkt = sendQueueV4.remove(0);
 			owner.sendData(GamePluginMessageConstants.V4_CHANNEL, pkt);
 		}else {
-			int i, j, sendCount, totalLen;
+			int i, j, sendCount, totalLen, lastLen;
 			while(!sendQueueV4.isEmpty()) {
 				sendCount = 0;
 				totalLen = 0;
 				Iterator<byte[]> itr = sendQueueV4.iterator();
 				do {
 					i = itr.next().length;
-					totalLen += GamePacketOutputBuffer.getVarIntSize(i) + i;
+					lastLen = GamePacketOutputBuffer.getVarIntSize(i) + i;
+					totalLen += lastLen;
 					++sendCount;
 				}while(totalLen < 32760 && itr.hasNext());
 				if(totalLen >= 32760) {
 					--sendCount;
+					totalLen -= lastLen;
 				}
 				if(sendCount <= 1) {
 					pkt = sendQueueV4.remove(0);
