@@ -23,6 +23,7 @@ import org.teavm.jso.typedarrays.Uint8ClampedArray;
 
 import net.lax1dude.eaglercraft.v1_8.Base64;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.ByteBuffer;
+import net.lax1dude.eaglercraft.v1_8.internal.buffer.MemoryStack;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.WASMGCBufferAllocator;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.WASMGCDirectArrayConverter;
 import net.lax1dude.eaglercraft.v1_8.internal.wasm_gc_teavm.BetterJSStringConverter;
@@ -242,11 +243,11 @@ public class PlatformApplication {
 	}
 
 	public static void downloadFileWithName(String str, byte[] dat) {
-		ByteBuffer buf = WASMGCDirectArrayConverter.byteArrayToBuffer(dat);
+		MemoryStack.push();
 		try {
-			downloadFileWithNameTeaVM(BetterJSStringConverter.stringToJS(str), WASMGCBufferAllocator.getUnsignedByteBufferView(buf));
+			downloadFileWithNameTeaVM(BetterJSStringConverter.stringToJS(str), WASMGCDirectArrayConverter.byteArrayToStackU8Array(dat));
 		}finally {
-			PlatformRuntime.freeByteBuffer(buf);
+			MemoryStack.pop();
 		}
 	}
 

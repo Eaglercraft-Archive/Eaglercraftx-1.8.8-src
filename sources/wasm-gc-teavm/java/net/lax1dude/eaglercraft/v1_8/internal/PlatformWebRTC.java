@@ -12,8 +12,7 @@ import org.teavm.jso.core.JSArray;
 import org.teavm.jso.core.JSString;
 import org.teavm.jso.typedarrays.Uint8Array;
 
-import net.lax1dude.eaglercraft.v1_8.internal.buffer.ByteBuffer;
-import net.lax1dude.eaglercraft.v1_8.internal.buffer.WASMGCBufferAllocator;
+import net.lax1dude.eaglercraft.v1_8.internal.buffer.MemoryStack;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.WASMGCDirectArrayConverter;
 import net.lax1dude.eaglercraft.v1_8.internal.wasm_gc_teavm.BetterJSStringConverter;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
@@ -67,11 +66,11 @@ public class PlatformWebRTC {
 	public static native void clientLANCloseConnection();
 
 	public static void clientLANSendPacket(byte[] pkt) {
-		ByteBuffer buf = WASMGCDirectArrayConverter.byteArrayToBuffer(pkt);
+		MemoryStack.push();
 		try {
-			clientLANSendPacket0(WASMGCBufferAllocator.getUnsignedByteBufferView(buf));
+			clientLANSendPacket0(WASMGCDirectArrayConverter.byteArrayToStackU8Array(pkt));
 		}finally {
-			PlatformRuntime.freeByteBuffer(buf);
+			MemoryStack.pop();
 		}
 	}
 
@@ -254,11 +253,11 @@ public class PlatformWebRTC {
 
 		private void writePacket(byte[] pkt) {
 			if(dead) return;
-			ByteBuffer buf = WASMGCDirectArrayConverter.byteArrayToBuffer(pkt);
+			MemoryStack.push();
 			try {
-				handle.writePacket(WASMGCBufferAllocator.getUnsignedByteBufferView(buf));
+				handle.writePacket(WASMGCDirectArrayConverter.byteArrayToStackU8Array(pkt));
 			}finally {
-				PlatformRuntime.freeByteBuffer(buf);
+				MemoryStack.pop();
 			}
 		}
 

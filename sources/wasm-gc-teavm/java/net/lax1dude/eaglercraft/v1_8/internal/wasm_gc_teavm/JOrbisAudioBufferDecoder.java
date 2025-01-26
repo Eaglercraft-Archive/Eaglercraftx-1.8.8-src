@@ -17,8 +17,8 @@ import com.jcraft.jorbis.Info;
 
 import net.lax1dude.eaglercraft.v1_8.EaglerInputStream;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformAudio;
-import net.lax1dude.eaglercraft.v1_8.internal.PlatformRuntime;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.FloatBuffer;
+import net.lax1dude.eaglercraft.v1_8.internal.buffer.MemoryStack;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.WASMGCBufferAllocator;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
@@ -88,8 +88,9 @@ public class JOrbisAudioBufferDecoder {
 				logger.error("[{}]: Empty file", errorString);
 				return null;
 			}
-			FloatBuffer buf = PlatformRuntime.allocateFloatBuffer(ch * len);
+			MemoryStack.push();
 			try {
+				FloatBuffer buf = MemoryStack.mallocFloatBuffer(ch * len);
 				int len2 = 0;
 				for(float[][] fl : lst) {
 					for(int i = 0; i < ch; ++i) {
@@ -102,7 +103,7 @@ public class JOrbisAudioBufferDecoder {
 				return PlatformAudio.decodeAudioBufferPCMBrowser(WASMGCBufferAllocator.getFloatBufferView(buf), ch,
 						len, dec.jorbisInfo.rate);
 			}finally {
-				PlatformRuntime.freeFloatBuffer(buf);
+				MemoryStack.pop();
 			}
 		}
 	}

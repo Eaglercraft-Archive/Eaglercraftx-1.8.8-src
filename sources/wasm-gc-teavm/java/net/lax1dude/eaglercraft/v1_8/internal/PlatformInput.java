@@ -382,6 +382,7 @@ public class PlatformInput {
 				int posY = windowHeight - (int)(obj.getPosY() * windowDPI) - 1;
 				switch(type) {
 					case EVENT_MOUSE_DOWN: {
+						handleWindowFocus();
 						int button = obj.getButton();
 						button = button == 1 ? 2 : (button == 2 ? 1 : button);
 						if(button >= 0 && button < buttonStates.length) {
@@ -466,6 +467,7 @@ public class PlatformInput {
 				JSTouchEvent obj = evt.getEventObj();
 				switch(obj.getEventType()) {
 				case EVENT_TOUCH_START:
+					handleWindowFocus();
 					touchEvents.add(currentTouchState = SortedTouchEvent.createTouchEvent(EnumTouchEvent.TOUCHSTART, obj.getChangedTouches(),
 							obj.getTargetTouches(), touchUIDMapperCreate, windowHeight, windowDPI));
 					break;
@@ -596,6 +598,14 @@ public class PlatformInput {
 				break;
 			}
 		}
+	}
+
+	private static void handleWindowFocus() {
+		if(!isWindowFocused) {
+			PlatformRuntime.logger.warn("Detected mouse input while the window was not focused, setting the window focused so the client doesn't pause");
+			isWindowFocused = true;
+		}
+		isMouseOverWindow = true;
 	}
 
 	public static int getWindowWidth() {

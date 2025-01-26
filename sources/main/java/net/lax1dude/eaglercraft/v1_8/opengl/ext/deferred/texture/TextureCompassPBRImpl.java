@@ -1,6 +1,5 @@
 package net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.texture;
 
-import net.lax1dude.eaglercraft.v1_8.internal.IFramebufferGL;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;

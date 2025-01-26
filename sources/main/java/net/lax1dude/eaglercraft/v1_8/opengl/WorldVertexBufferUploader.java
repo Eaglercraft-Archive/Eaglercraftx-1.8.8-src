@@ -18,7 +18,7 @@ import net.lax1dude.eaglercraft.v1_8.internal.buffer.ByteBuffer;
  * 
  */
 public class WorldVertexBufferUploader {
-	public void func_181679_a(WorldRenderer parWorldRenderer) {
+	public static void func_181679_a(WorldRenderer parWorldRenderer) {
 		int cunt = parWorldRenderer.getVertexCount();
 		if (cunt > 0) {
 			VertexFormat fmt = parWorldRenderer.getVertexFormat();

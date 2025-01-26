@@ -11,10 +11,10 @@ import net.lax1dude.eaglercraft.v1_8.internal.IShaderGL;
 import net.lax1dude.eaglercraft.v1_8.internal.ITextureGL;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformAssets;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformInput;
-import net.lax1dude.eaglercraft.v1_8.internal.PlatformRuntime;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.ByteBuffer;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.FloatBuffer;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.IntBuffer;
+import net.lax1dude.eaglercraft.v1_8.internal.buffer.MemoryStack;
 import net.lax1dude.eaglercraft.v1_8.opengl.EaglercraftGPU;
 import net.lax1dude.eaglercraft.v1_8.opengl.ImageData;
 
@@ -56,29 +56,32 @@ public class EarlyLoadScreen {
 		_wglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		
 		ImageData img = PlatformAssets.loadImageFile(Base64.decodeBase64(loadScreen));
-		ByteBuffer upload = PlatformRuntime.allocateByteBuffer(192*192*4);
-		IntBuffer pixelUpload = upload.asIntBuffer();
-		pixelUpload.put(img.pixels);
-		pixelUpload.flip();
-		_wglTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 192, 192, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixelUpload);
-		
-		// create vertex buffer:
-		
-		FloatBuffer vertexUpload = upload.asFloatBuffer();
-		vertexUpload.clear();
-		vertexUpload.put(0.0f); vertexUpload.put(0.0f);
-		vertexUpload.put(0.0f); vertexUpload.put(1.0f);
-		vertexUpload.put(1.0f); vertexUpload.put(0.0f);
-		vertexUpload.put(1.0f); vertexUpload.put(0.0f);
-		vertexUpload.put(0.0f); vertexUpload.put(1.0f);
-		vertexUpload.put(1.0f); vertexUpload.put(1.0f);
-		vertexUpload.flip();
-		
-		vbo = _wglGenBuffers();
-		_wglBindBuffer(GL_ARRAY_BUFFER, vbo);
-		_wglBufferData(GL_ARRAY_BUFFER, vertexUpload, GL_STATIC_DRAW);
-		
-		PlatformRuntime.freeByteBuffer(upload);
+		MemoryStack.push();
+		try {
+			ByteBuffer upload = MemoryStack.mallocByteBuffer(192*192*4);
+			IntBuffer pixelUpload = upload.asIntBuffer();
+			pixelUpload.put(img.pixels);
+			pixelUpload.flip();
+			_wglTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 192, 192, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixelUpload);
+			
+			// create vertex buffer:
+			
+			FloatBuffer vertexUpload = upload.asFloatBuffer();
+			vertexUpload.clear();
+			vertexUpload.put(0.0f); vertexUpload.put(0.0f);
+			vertexUpload.put(0.0f); vertexUpload.put(1.0f);
+			vertexUpload.put(1.0f); vertexUpload.put(0.0f);
+			vertexUpload.put(1.0f); vertexUpload.put(0.0f);
+			vertexUpload.put(0.0f); vertexUpload.put(1.0f);
+			vertexUpload.put(1.0f); vertexUpload.put(1.0f);
+			vertexUpload.flip();
+			
+			vbo = _wglGenBuffers();
+			_wglBindBuffer(GL_ARRAY_BUFFER, vbo);
+			_wglBufferData(GL_ARRAY_BUFFER, vertexUpload, GL_STATIC_DRAW);
+		}finally {
+			MemoryStack.pop();
+		}
 
 		// compile the splash shader:
 		
@@ -165,11 +168,15 @@ public class EarlyLoadScreen {
 		_wglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		_wglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		_wglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		IntBuffer upload = PlatformRuntime.allocateIntBuffer(img.width * img.height);
-		upload.put(img.pixels);
-		upload.flip();
-		_wglTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, img.width, img.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, upload);
-		PlatformRuntime.freeIntBuffer(upload);
+		MemoryStack.push();
+		try {
+			IntBuffer upload = MemoryStack.mallocIntBuffer(img.width * img.height);
+			upload.put(img.pixels);
+			upload.flip();
+			_wglTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, img.width, img.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, upload);
+		}finally {
+			MemoryStack.pop();
+		}
 	}
 
 	public static void paintFinal(boolean softVAOs) {

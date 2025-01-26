@@ -16,6 +16,7 @@ import org.teavm.jso.typedarrays.Uint8ClampedArray;
 
 import net.lax1dude.eaglercraft.v1_8.EaglerInputStream;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.ByteBuffer;
+import net.lax1dude.eaglercraft.v1_8.internal.buffer.MemoryStack;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.WASMGCBufferAllocator;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.WASMGCDirectArrayConverter;
 import net.lax1dude.eaglercraft.v1_8.internal.wasm_gc_teavm.BetterJSStringConverter;
@@ -163,12 +164,13 @@ public class PlatformAssets {
 	}
 
 	public static ImageData loadImageFile(byte[] data, String mime) {
-		ByteBuffer buf = WASMGCDirectArrayConverter.byteArrayToBuffer(data);
 		JSImageLoadResult asyncResult;
+		MemoryStack.push();
 		try {
-			asyncResult = loadImageFile0(WASMGCBufferAllocator.getUnsignedByteBufferView(buf), BetterJSStringConverter.stringToJS(mime));
+			asyncResult = loadImageFile0(WASMGCDirectArrayConverter.byteArrayToStackU8Array(data),
+					BetterJSStringConverter.stringToJS(mime));
 		}finally {
-			PlatformRuntime.freeByteBuffer(buf);
+			MemoryStack.pop();
 		}
 
 		if(asyncResult == null) {
@@ -178,15 +180,17 @@ public class PlatformAssets {
 		int w = asyncResult.getWidth();
 		int h = asyncResult.getHeight();
 		int len = w * h;
+		int len2 = len << 2;
 		
-		ByteBuffer dataDest = PlatformRuntime.allocateByteBuffer(len << 2);
+		MemoryStack.push();
 		try {
-			loadImageFile1(asyncResult, WASMGCBufferAllocator.getUnsignedClampedByteBufferView(dataDest));
+			Address dataDest = MemoryStack.malloc(len2);
+			loadImageFile1(asyncResult, WASMGCBufferAllocator.getUnsignedClampedByteBufferView0(dataDest, len2));
 			int[] pixelsArray = new int[len];
-			copyPixelArrayFast(pixelsArray, WASMGCBufferAllocator.getByteBufferAddress(dataDest), len);
+			copyPixelArrayFast(pixelsArray, dataDest, len2);
 			return new ImageData(w, h, pixelsArray, true);
 		}finally {
-			PlatformRuntime.freeByteBuffer(dataDest);
+			MemoryStack.pop();
 		}
 	}
 
@@ -208,7 +212,7 @@ public class PlatformAssets {
 
 	@Unmanaged
 	private static void copyPixelArrayFast(int[] pixelsArray, Address addr, int count) {
-		Address addrEnd = addr.add(count << 2);
+		Address addrEnd = addr.add(count);
 		int dstOffset = 0;
 		while(addr.isLessThan(addrEnd)) {
 			pixelsArray[dstOffset] = addr.getInt();

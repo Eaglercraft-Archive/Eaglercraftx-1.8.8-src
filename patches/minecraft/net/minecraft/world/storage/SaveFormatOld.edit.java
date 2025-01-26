@@ -41,33 +41,53 @@
 
 ~ 						worldinfo.areCommandsAllowed(), null));
 
-> CHANGE  10 : 11  @  10 : 11
+> CHANGE  10 : 17  @  10 : 22
 
 ~ 		VFile2 file1 = WorldsDB.newVFile(this.savesDirectory, saveName);
+~ 		VFile2 file2 = WorldsDB.newVFile(file1, "level.dat");
+~ 		if (file2.exists()) {
+~ 			try {
+~ 				NBTTagCompound nbttagcompound2;
+~ 				try (InputStream is = file2.getInputStream()) {
+~ 					nbttagcompound2 = CompressedStreamTools.readCompressed(is);
 
-> CHANGE  3 : 4  @  3 : 4
+> INSERT  1 : 6  @  1
 
-~ 			VFile2 file2 = WorldsDB.newVFile(file1, "level.dat");
++ 				NBTTagCompound nbttagcompound3 = nbttagcompound2.getCompoundTag("Data");
++ 				return new WorldInfo(nbttagcompound3);
++ 			} catch (Exception exception1) {
++ 				logger.error("Exception reading " + file2);
++ 				logger.error(exception1);
 
-> CHANGE  2 : 6  @  2 : 3
+> INSERT  1 : 2  @  1
 
-~ 					NBTTagCompound nbttagcompound2;
-~ 					try (InputStream is = file2.getInputStream()) {
-~ 						nbttagcompound2 = CompressedStreamTools.readCompressed(is);
-~ 					}
++ 		}
 
-> CHANGE  7 : 8  @  7 : 8
+> CHANGE  1 : 7  @  1 : 9
 
-~ 			file2 = WorldsDB.newVFile(file1, "level.dat_old");
+~ 		file2 = WorldsDB.newVFile(file1, "level.dat_old");
+~ 		if (file2.exists()) {
+~ 			try {
+~ 				NBTTagCompound nbttagcompound;
+~ 				try (InputStream is = file2.getInputStream()) {
+~ 					nbttagcompound = CompressedStreamTools.readCompressed(is);
 
-> CHANGE  2 : 6  @  2 : 3
+> INSERT  1 : 6  @  1
 
-~ 					NBTTagCompound nbttagcompound;
-~ 					try (InputStream is = file2.getInputStream()) {
-~ 						nbttagcompound = CompressedStreamTools.readCompressed(is);
-~ 					}
++ 				NBTTagCompound nbttagcompound1 = nbttagcompound.getCompoundTag("Data");
++ 				return new WorldInfo(nbttagcompound1);
++ 			} catch (Exception exception) {
++ 				logger.error("Exception reading " + file2);
++ 				logger.error(exception);
 
-> CHANGE  11 : 15  @  11 : 15
+> DELETE  1  @  1 : 3
+
+> INSERT  1 : 3  @  1
+
++ 
++ 		return null;
+
+> CHANGE  2 : 6  @  2 : 6
 
 ~ 	public boolean renameWorld(String dirName, String newName) {
 ~ 		VFile2 file1 = WorldsDB.newVFile(this.savesDirectory, dirName);

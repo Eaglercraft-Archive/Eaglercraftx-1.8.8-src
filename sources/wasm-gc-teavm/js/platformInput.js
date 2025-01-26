@@ -370,7 +370,7 @@ async function initPlatformInput(inputImports) {
 	}
 
 	window.addEventListener("keydown", /** @type {function(Event)} */ (currentEventListeners.keydown = function(/** KeyboardEvent */ evt) {
-		if(integratedServerCrashPanelShowing) {
+		if(!integratedServerCrashPanelShowing) {
 			evt.preventDefault();
 			evt.stopPropagation();
 		}
@@ -383,7 +383,7 @@ async function initPlatformInput(inputImports) {
 	}));
 
 	window.addEventListener("keyup", /** @type {function(Event)} */ (currentEventListeners.keyup = function(/** KeyboardEvent */ evt) {
-		if(integratedServerCrashPanelShowing) {
+		if(!integratedServerCrashPanelShowing) {
 			evt.preventDefault();
 			evt.stopPropagation();
 		}

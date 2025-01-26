@@ -1,13 +1,13 @@
 package net.lax1dude.eaglercraft.v1_8.internal.vfs2;
 
 import java.io.IOException;
+import java.io.OutputStream;
 
-import net.lax1dude.eaglercraft.v1_8.EaglerOutputStream;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformRuntime;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.ByteBuffer;
 
 /**
- * Copyright (c) 2023-2024 lax1dude. All Rights Reserved.
+ * Copyright (c) 2023-2025 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -21,29 +21,58 @@ import net.lax1dude.eaglercraft.v1_8.internal.buffer.ByteBuffer;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-class VFileOutputStream extends EaglerOutputStream {
+class VFileOutputStream extends OutputStream {
 
 	private final VFile2 vfsFile;
-	private boolean closed = false;
+	private ByteBuffer buffer;
 
 	VFileOutputStream(VFile2 vfsFile) {
-		super(256);
+		this.buffer = PlatformRuntime.allocateByteBuffer(256);
 		this.vfsFile = vfsFile;
 	}
 
 	@Override
+	public void write(int b) throws IOException {
+		if(buffer == null) throw new IOException("File is closed!");
+		if(buffer.remaining() < 1) {
+			buffer.flip();
+			ByteBuffer buf = PlatformRuntime.allocateByteBuffer(buffer.limit() << 1);
+			buf.put(buffer);
+			PlatformRuntime.freeByteBuffer(buffer);
+			buffer = buf;
+		}
+		buffer.put((byte)(b & 0xFF));
+	}
+
+	@Override
+	public void write(byte[] b, int off, int len) throws IOException {
+		if(buffer == null) throw new IOException("File is closed!");
+		if(buffer.remaining() < len) {
+			buffer.flip();
+			int oldLen = buffer.limit();
+			int newLen = oldLen;
+			do {
+				newLen <<= 1;
+			}while(newLen < oldLen + len);
+			ByteBuffer buf = PlatformRuntime.allocateByteBuffer(newLen);
+			buf.put(buffer);
+			PlatformRuntime.freeByteBuffer(buffer);
+			buffer = buf;
+		}
+		buffer.put(b, off, len);
+	}
+
+	@Override
 	public void close() throws IOException {
-		if(!closed) {
-			closed = true;
-			ByteBuffer copyBuffer = PlatformRuntime.allocateByteBuffer(count);
+		if(buffer != null) {
+			buffer.flip();
 			try {
-				copyBuffer.put(buf, 0, count);
-				copyBuffer.flip();
-				vfsFile.getFS().eaglerWrite(vfsFile.path, copyBuffer);
+				vfsFile.getFS().eaglerWrite(vfsFile.path, buffer);
 			}catch(Throwable t) {
 				throw new IOException("Could not write stream contents to file!", t);
 			}finally {
-				PlatformRuntime.freeByteBuffer(copyBuffer);
+				PlatformRuntime.freeByteBuffer(buffer);
+				buffer = null;
 			}
 		}
 	}

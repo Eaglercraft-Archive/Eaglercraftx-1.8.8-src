@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.teavm.jso.JSObject;
 import org.teavm.jso.JSProperty;
+import org.teavm.jso.core.JSString;
 import org.teavm.jso.typedarrays.Uint8Array;
 
 import net.lax1dude.eaglercraft.v1_8.EagUtils;
@@ -12,8 +13,7 @@ import net.lax1dude.eaglercraft.v1_8.internal.EnumEaglerConnectionState;
 import net.lax1dude.eaglercraft.v1_8.internal.IWebSocketClient;
 import net.lax1dude.eaglercraft.v1_8.internal.IWebSocketFrame;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformRuntime;
-import net.lax1dude.eaglercraft.v1_8.internal.buffer.ByteBuffer;
-import net.lax1dude.eaglercraft.v1_8.internal.buffer.WASMGCBufferAllocator;
+import net.lax1dude.eaglercraft.v1_8.internal.buffer.MemoryStack;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.WASMGCDirectArrayConverter;
 
 /**
@@ -40,7 +40,7 @@ public class WASMGCWebSocketClient implements IWebSocketClient {
 
 		void closeSocket();
 
-		void sendStringFrame(String str);
+		void sendStringFrame(JSString str);
 
 		void sendBinaryFrame(Uint8Array arr);
 
@@ -220,16 +220,16 @@ public class WASMGCWebSocketClient implements IWebSocketClient {
 
 	@Override
 	public void send(String str) {
-		handle.sendStringFrame(str);
+		handle.sendStringFrame(BetterJSStringConverter.stringToJS(str));
 	}
 
 	@Override
 	public void send(byte[] bytes) {
-		ByteBuffer buf = WASMGCDirectArrayConverter.byteArrayToBuffer(bytes);
+		MemoryStack.push();
 		try {
-			handle.sendBinaryFrame(WASMGCBufferAllocator.getUnsignedByteBufferView(buf));
+			handle.sendBinaryFrame(WASMGCDirectArrayConverter.byteArrayToStackU8Array(bytes));
 		}finally {
-			PlatformRuntime.freeByteBuffer(buf);
+			MemoryStack.pop();
 		}
 	}
 

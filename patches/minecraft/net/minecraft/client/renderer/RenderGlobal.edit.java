@@ -16,7 +16,7 @@
 ~ import net.lax1dude.eaglercraft.v1_8.Keyboard;
 ~ 
 
-> INSERT  2 : 24  @  2
+> INSERT  2 : 25  @  2
 
 + 
 + import com.google.common.collect.Lists;
@@ -28,6 +28,7 @@
 + import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 + import net.lax1dude.eaglercraft.v1_8.minecraft.ChunkUpdateManager;
 + import net.lax1dude.eaglercraft.v1_8.minecraft.EaglerTextureAtlasSprite;
++ import net.lax1dude.eaglercraft.v1_8.minecraft.EaglerCloudRenderer;
 + import net.lax1dude.eaglercraft.v1_8.opengl.EaglercraftGPU;
 + import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 + import net.lax1dude.eaglercraft.v1_8.opengl.VertexFormat;
@@ -75,21 +76,22 @@
 ~ 	private float lastViewProjMatrixFOV = Float.MIN_VALUE;
 ~ 	private final ChunkUpdateManager renderDispatcher = new ChunkUpdateManager();
 
-> INSERT  17 : 19  @  17
+> INSERT  16 : 18  @  16
 
 + 	private final DeduplicatedLongQueue alfheim$lightUpdatesQueue = new DeduplicatedLongQueue(8192);
-+ 
++ 	public final EaglerCloudRenderer cloudRenderer;
 
-> CHANGE  5 : 7  @  5 : 7
+> CHANGE  6 : 8  @  6 : 8
 
 ~ 		EaglercraftGPU.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 ~ 		EaglercraftGPU.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-> CHANGE  2 : 5  @  2 : 14
+> CHANGE  2 : 6  @  2 : 14
 
 ~ 		this.vboEnabled = false;
 ~ 		this.renderContainer = new RenderList();
 ~ 		this.renderChunkFactory = new ListChunkFactory();
+~ 		this.cloudRenderer = new EaglerCloudRenderer(mcIn);
 
 > DELETE  19  @  19 : 23
 
@@ -121,7 +123,16 @@
 ~ 		tessellator.draw();
 ~ 		EaglercraftGPU.glEndList();
 
-> DELETE  29  @  29 : 32
+> DELETE  4  @  4 : 6
+
+> CHANGE  1 : 5  @  1 : 18
+
+~ 		worldRendererIn.pos(-384, parFloat1, -384).endVertex();
+~ 		worldRendererIn.pos(-384, parFloat1, 384).endVertex();
+~ 		worldRendererIn.pos(384, parFloat1, 384).endVertex();
+~ 		worldRendererIn.pos(384, parFloat1, -384).endVertex();
+
+> DELETE  5  @  5 : 8
 
 > CHANGE  6 : 13  @  6 : 21
 
@@ -674,7 +685,11 @@
 
 + 			GlStateManager.enableDepth();
 
-> CHANGE  331 : 332  @  331 : 332
+> DELETE  3  @  3 : 79
+
+> DELETE  4  @  4 : 251
+
+> CHANGE  1 : 2  @  1 : 2
 
 ~ 		this.displayListEntitiesDirty |= this.renderDispatcher.updateChunks(finishTimeNano);
 
@@ -719,7 +734,7 @@
 
 ~ 		EaglercraftRandom random = this.theWorld.rand;
 
-> INSERT  229 : 263  @  229
+> INSERT  229 : 267  @  229
 
 + 
 + 	public String getDebugInfoShort() {
@@ -754,6 +769,10 @@
 + 		} while (!alfheim$lightUpdatesQueue.isEmpty());
 + 
 + 		alfheim$lightUpdatesQueue.newDeduplicationSet();
++ 	}
++ 
++ 	public double getCloudCounter(float partialTicks) {
++ 		return (double) cloudTickCounter + partialTicks;
 + 	}
 
 > EOF

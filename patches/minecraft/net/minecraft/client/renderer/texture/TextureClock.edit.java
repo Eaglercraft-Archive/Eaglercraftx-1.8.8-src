@@ -5,9 +5,8 @@
 # Version: 1.0
 # Author: lax1dude
 
-> INSERT  2 : 4  @  2
+> INSERT  2 : 3  @  2
 
-+ import net.lax1dude.eaglercraft.v1_8.internal.IFramebufferGL;
 + import net.lax1dude.eaglercraft.v1_8.minecraft.EaglerTextureAtlasSprite;
 
 > DELETE  1  @  1 : 3

@@ -6,6 +6,7 @@ import org.teavm.interop.Unmanaged;
 import org.teavm.jso.core.JSArray;
 import org.teavm.jso.core.JSString;
 
+import net.lax1dude.eaglercraft.v1_8.internal.buffer.MemoryStack;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.WASMGCBufferAllocator;
 
 /**
@@ -31,12 +32,13 @@ public class BetterJSStringConverter {
 	public static JSString stringToJS(String input) {
 		if(input == null) return null;
 		int len = input.length();
-		Address tmpAddr = WASMGCBufferAllocator.malloc(len << 1);
+		MemoryStack.push();
+		Address tmpAddr = MemoryStack.malloc(len << 1);
 		for(int i = 0; i < len; ++i) {
 			tmpAddr.add(i << 1).putChar(input.charAt(i));
 		}
 		JSString ret = textDecoder.decode(WASMGCBufferAllocator.getUnsignedByteBufferView0(tmpAddr, len << 1));
-		WASMGCBufferAllocator.free(tmpAddr);
+		MemoryStack.pop();
 		return ret;
 	}
 

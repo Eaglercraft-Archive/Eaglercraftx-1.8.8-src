@@ -13,4 +13,16 @@
 ~ 	public int y;
 ~ 	public int z;
 
+> CHANGE  33 : 34  @  33 : 34
+
+~ 	public final int getX() {
+
+> CHANGE  3 : 4  @  3 : 4
+
+~ 	public final int getY() {
+
+> CHANGE  3 : 4  @  3 : 4
+
+~ 	public final int getZ() {
+
 > EOF

@@ -23,8 +23,7 @@ import org.teavm.jso.webaudio.MediaStreamAudioDestinationNode;
 import org.teavm.jso.webaudio.PannerNode;
 
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
-import net.lax1dude.eaglercraft.v1_8.internal.buffer.ByteBuffer;
-import net.lax1dude.eaglercraft.v1_8.internal.buffer.WASMGCBufferAllocator;
+import net.lax1dude.eaglercraft.v1_8.internal.buffer.MemoryStack;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.WASMGCDirectArrayConverter;
 import net.lax1dude.eaglercraft.v1_8.internal.wasm_gc_teavm.BetterJSStringConverter;
 import net.lax1dude.eaglercraft.v1_8.internal.wasm_gc_teavm.JOrbisAudioBufferDecoder;
@@ -79,16 +78,16 @@ public class PlatformAudio {
 			logger.info("Note: Using embedded JOrbis OGG decoder");
 		}else {
 			byte[] fileData = EagRuntime.getRequiredResourceBytes("/assets/eagler/audioctx_test_ogg.dat");
-			ByteBuffer buf = WASMGCDirectArrayConverter.byteArrayToBuffer(fileData);
+			MemoryStack.push();
 			try {
-				AudioBuffer audioBuffer = decodeAudioBrowserAsync(WASMGCBufferAllocator.getUnsignedByteBufferView(buf),
+				AudioBuffer audioBuffer = decodeAudioBrowserAsync(WASMGCDirectArrayConverter.byteArrayToStackU8Array(fileData),
 						BetterJSStringConverter.stringToJS("audioctx_test_ogg.dat"));
 				if(audioBuffer != null && audioBuffer.getLength() > 0) {
 					oggSupport = true;
 				}
 			}catch(Throwable t) {
 			}finally {
-				PlatformRuntime.freeByteBuffer(buf);
+				MemoryStack.pop();
 			}
 			if(!oggSupport) {
 				logger.error("OGG file support detected as false! Using embedded JOrbis OGG decoder");
@@ -294,27 +293,17 @@ public class PlatformAudio {
 		if(data == null) {
 			return null;
 		}
-		if(oggSupport) {
-			ByteBuffer buf = WASMGCDirectArrayConverter.byteArrayToBuffer(data);
+		if(oggSupport || !(data.length > 4 && data[0] == (byte) 0x4F && data[1] == (byte) 0x67 && data[2] == (byte) 0x67
+					&& data[3] == (byte) 0x53)) {
+			MemoryStack.push();
 			try {
-				return decodeAudioBrowserAsync(WASMGCBufferAllocator.getUnsignedByteBufferView(buf),
+				return decodeAudioBrowserAsync(WASMGCDirectArrayConverter.byteArrayToStackU8Array(data),
 						BetterJSStringConverter.stringToJS(errorFileName));
 			}finally {
-				PlatformRuntime.freeByteBuffer(buf);
+				MemoryStack.pop();
 			}
 		}else {
-			if (data.length > 4 && data[0] == (byte) 0x4F && data[1] == (byte) 0x67 && data[2] == (byte) 0x67
-					&& data[3] == (byte) 0x53) {
-				return JOrbisAudioBufferDecoder.decodeAudioJOrbis(data, errorFileName);
-			}else {
-				ByteBuffer buf = WASMGCDirectArrayConverter.byteArrayToBuffer(data);
-				try {
-					return decodeAudioBrowserAsync(WASMGCBufferAllocator.getUnsignedByteBufferView(buf),
-							BetterJSStringConverter.stringToJS(errorFileName));
-				}finally {
-					PlatformRuntime.freeByteBuffer(buf);
-				}
-			}
+			return JOrbisAudioBufferDecoder.decodeAudioJOrbis(data, errorFileName);
 		}
 	}
 

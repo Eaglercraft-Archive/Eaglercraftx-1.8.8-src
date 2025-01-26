@@ -2,8 +2,6 @@ package net.optifine;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.io.StringReader;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -15,7 +13,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-import net.lax1dude.eaglercraft.v1_8.IOUtils;
 import net.lax1dude.eaglercraft.v1_8.minecraft.EaglerTextureAtlasSprite;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockGlass;

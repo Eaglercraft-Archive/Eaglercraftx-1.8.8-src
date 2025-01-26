@@ -33,7 +33,7 @@
 
 > CHANGE  1 : 3  @  1 : 4
 
-~ 				// note: vanilla order for this function is YXZ not ZYX for some reason
+~ 				// note: vanilla order for this transformation was YXZ not ZYX for some reason
 ~ 				GlStateManager.rotateZYXRad(this.rotateAngleX, this.rotateAngleY, this.rotateAngleZ);
 
 > DELETE  1  @  1 : 5

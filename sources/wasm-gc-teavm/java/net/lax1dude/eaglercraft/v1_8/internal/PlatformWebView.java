@@ -14,8 +14,7 @@ import org.teavm.jso.typedarrays.ArrayBuffer;
 import org.teavm.jso.typedarrays.Uint8Array;
 
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformRuntime.JSEagRuntimeEvent;
-import net.lax1dude.eaglercraft.v1_8.internal.buffer.ByteBuffer;
-import net.lax1dude.eaglercraft.v1_8.internal.buffer.WASMGCBufferAllocator;
+import net.lax1dude.eaglercraft.v1_8.internal.buffer.MemoryStack;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.WASMGCDirectArrayConverter;
 import net.lax1dude.eaglercraft.v1_8.internal.wasm_gc_teavm.BetterJSStringConverter;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
@@ -224,12 +223,12 @@ public class PlatformWebView {
 				sendStringMessage(BetterJSStringConverter.stringToJS(currentMessageChannelName),
 						BetterJSStringConverter.stringToJS(new String(packet.data, StandardCharsets.UTF_8)));
 			}else if(packet.type == SPacketWebViewMessageV4EAG.TYPE_BINARY) {
-				ByteBuffer buf = WASMGCDirectArrayConverter.byteArrayToBuffer(packet.data);
+				MemoryStack.push();
 				try {
 					sendBinaryMessage(BetterJSStringConverter.stringToJS(currentMessageChannelName),
-							WASMGCBufferAllocator.getUnsignedByteBufferView(buf));
+							WASMGCDirectArrayConverter.byteArrayToStackU8Array(packet.data));
 				}finally {
-					PlatformRuntime.freeByteBuffer(buf);
+					MemoryStack.pop();
 				}
 			}
 		}else {
@@ -342,12 +341,12 @@ public class PlatformWebView {
 		JSWebViewOptions opts = makeOptions(isBlob ? 1 : 0, BetterJSStringConverter.stringToJS(options.fallbackTitle),
 				options.scriptEnabled, options.strictCSPEnable, options.serverMessageAPIEnabled);
 		if(isBlob) {
-			ByteBuffer buf = WASMGCDirectArrayConverter.byteArrayToBuffer(options.blob);
+			MemoryStack.push();
 			try {
-				opts.setBlob(WASMGCBufferAllocator.getUnsignedByteBufferView(buf));
+				opts.setBlob(WASMGCDirectArrayConverter.byteArrayToStackU8Array(options.blob));
 				beginShowing0(state, opts, x, y, w, h);
 			}finally {
-				PlatformRuntime.freeByteBuffer(buf);
+				MemoryStack.pop();
 			}
 		}else {
 			opts.setURI(BetterJSStringConverter.stringToJS(options.url.toString()));

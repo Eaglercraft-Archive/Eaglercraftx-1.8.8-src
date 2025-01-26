@@ -328,6 +328,7 @@ public class PlatformInput {
 			public void handleEvent(MouseEvent evt) {
 				evt.preventDefault();
 				evt.stopPropagation();
+				handleWindowFocus();
 				if(tryGrabCursorHook()) return;
 				int b = evt.getButton();
 				b = b == 1 ? 2 : (b == 2 ? 1 : b);
@@ -400,6 +401,7 @@ public class PlatformInput {
 			public void handleEvent(TouchEvent evt) {
 				evt.preventDefault();
 				evt.stopPropagation();
+				handleWindowFocus();
 				SortedTouchEvent sorted = new SortedTouchEvent(evt, touchUIDMapperCreate);
 				currentTouchState = sorted;
 				List<OffsetTouch> lst = sorted.getEventTouches();
@@ -792,6 +794,14 @@ public class PlatformInput {
 		}
 
 		enumerateGamepads();
+	}
+
+	private static void handleWindowFocus() {
+		if(!isWindowFocused) {
+			PlatformRuntime.logger.warn("Detected mouse input while the window was not focused, setting the window focused so the client doesn't pause");
+			isWindowFocused = true;
+		}
+		isMouseOverWindow = true;
 	}
 
 	@JSFunctor

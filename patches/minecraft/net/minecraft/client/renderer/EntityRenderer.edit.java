@@ -83,25 +83,25 @@
 
 ~ import net.optifine.Config;
 
-> CHANGE  9 : 10  @  9 : 10
+> INSERT  4 : 6  @  4
+
++ 	private static final ResourceLocation locationRainDeferredPng = new ResourceLocation(
++ 			"eagler:glsl/deferred/rain.png");
+
+> CHANGE  5 : 6  @  5 : 6
 
 ~ 	private EaglercraftRandom random = new EaglercraftRandom();
 
 > DELETE  43  @  43 : 59
 
-> INSERT  3 : 5  @  3
+> INSERT  3 : 7  @  3
 
 + 	private GameOverlayFramebuffer overlayFramebuffer;
 + 	private float eagPartialTicks = 0.0f;
-
-> INSERT  1 : 5  @  1
-
 + 	public float currentProjMatrixFOV = 0.0f;
-+ 
 + 	private boolean initializedOF = false;
-+ 
 
-> DELETE  1  @  1 : 2
+> DELETE  2  @  2 : 3
 
 > CHANGE  9 : 10  @  9 : 10
 
@@ -584,7 +584,12 @@
 
 ~ 			GlStateManager.gluPerspective(this.getFOVModifier(partialTicks, true),
 
-> CHANGE  9 : 10  @  9 : 10
+> CHANGE  4 : 6  @  4 : 5
+
+~ 			// renderGlobalIn.renderClouds(partialTicks, pass);
+~ 			renderGlobalIn.cloudRenderer.renderClouds(partialTicks, pass);
+
+> CHANGE  4 : 5  @  4 : 5
 
 ~ 			GlStateManager.gluPerspective(this.getFOVModifier(partialTicks, true),
 
@@ -636,11 +641,10 @@
 
 ~ 							if (f2 >= 0.15F) {
 
-> CHANGE  6 : 15  @  6 : 7
+> CHANGE  6 : 14  @  6 : 7
 
 ~ 									this.mc.getTextureManager()
-~ 											.bindTexture(df ? new ResourceLocation("eagler:glsl/deferred/rain.png")
-~ 													: locationRainPng);
+~ 											.bindTexture(df ? locationRainDeferredPng : locationRainPng);
 ~ 									if (df) {
 ~ 										DeferredStateManager.setRoughnessConstant(0.5f);
 ~ 										DeferredStateManager.setMetalnessConstant(0.05f);

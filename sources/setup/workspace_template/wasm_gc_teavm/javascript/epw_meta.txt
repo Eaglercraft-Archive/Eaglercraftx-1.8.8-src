@@ -1,8 +1,8 @@
-client-version-integer=48
+client-version-integer=49
 client-package-name=net.lax1dude.eaglercraft.v1_8.client
 client-origin-name=EaglercraftX
-client-origin-version=u48
+client-origin-version=u49
 client-origin-vendor=lax1dude
 client-fork-name=EaglercraftX
-client-fork-version=u48
+client-fork-version=u49
 client-fork-vendor=lax1dude

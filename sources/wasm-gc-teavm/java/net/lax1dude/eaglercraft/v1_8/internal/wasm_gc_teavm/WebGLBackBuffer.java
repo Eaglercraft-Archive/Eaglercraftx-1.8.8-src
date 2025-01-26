@@ -10,8 +10,8 @@ import net.lax1dude.eaglercraft.v1_8.internal.IProgramGL;
 import net.lax1dude.eaglercraft.v1_8.internal.IRenderbufferGL;
 import net.lax1dude.eaglercraft.v1_8.internal.IShaderGL;
 import net.lax1dude.eaglercraft.v1_8.internal.ITextureGL;
-import net.lax1dude.eaglercraft.v1_8.internal.PlatformRuntime;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.ByteBuffer;
+import net.lax1dude.eaglercraft.v1_8.internal.buffer.MemoryStack;
 import net.lax1dude.eaglercraft.v1_8.opengl.EaglercraftGPU;
 import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 
@@ -93,21 +93,24 @@ public class WebGLBackBuffer {
 			_wglBindRenderbuffer(_GL_RENDERBUFFER, gles2DepthRenderbuffer);
 			_wglRenderbufferStorage(_GL_RENDERBUFFER, _GL_DEPTH_COMPONENT16, sw, sh);
 			_wglFramebufferRenderbuffer(_GL_FRAMEBUFFER, _GL_DEPTH_ATTACHMENT, _GL_RENDERBUFFER, gles2DepthRenderbuffer);
-			
-			ByteBuffer upload = PlatformRuntime.allocateByteBuffer(48);
-			upload.putFloat(0.0f); upload.putFloat(0.0f);
-			upload.putFloat(1.0f); upload.putFloat(0.0f);
-			upload.putFloat(0.0f); upload.putFloat(1.0f);
-			upload.putFloat(1.0f); upload.putFloat(0.0f);
-			upload.putFloat(1.0f); upload.putFloat(1.0f);
-			upload.putFloat(0.0f); upload.putFloat(1.0f);
-			upload.flip();
-			
-			gles2BlitVBO = _wglGenBuffers();
-			EaglercraftGPU.bindVAOGLArrayBufferNow(gles2BlitVBO);
-			_wglBufferData(GL_ARRAY_BUFFER, upload, GL_STATIC_DRAW);
-			
-			PlatformRuntime.freeByteBuffer(upload);
+
+			MemoryStack.push();
+			try {
+				ByteBuffer upload = MemoryStack.mallocByteBuffer(48);
+				upload.putFloat(0.0f); upload.putFloat(0.0f);
+				upload.putFloat(1.0f); upload.putFloat(0.0f);
+				upload.putFloat(0.0f); upload.putFloat(1.0f);
+				upload.putFloat(1.0f); upload.putFloat(0.0f);
+				upload.putFloat(1.0f); upload.putFloat(1.0f);
+				upload.putFloat(0.0f); upload.putFloat(1.0f);
+				upload.flip();
+				
+				gles2BlitVBO = _wglGenBuffers();
+				EaglercraftGPU.bindVAOGLArrayBufferNow(gles2BlitVBO);
+				_wglBufferData(GL_ARRAY_BUFFER, upload, GL_STATIC_DRAW);
+			}finally {
+				MemoryStack.pop();
+			}
 			
 			if(isVAOCapable) {
 				gles2BlitVAO = _wglGenVertexArrays();

@@ -5,16 +5,16 @@
 # Version: 1.0
 # Author: lax1dude
 
-> CHANGE  2 : 6  @  2 : 5
+> CHANGE  2 : 4  @  2 : 5
 
-~ import net.lax1dude.eaglercraft.v1_8.internal.buffer.FloatBuffer;
-~ 
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.DeferredStateManager;
 
 > DELETE  1  @  1 : 2
 
-> CHANGE  7 : 13  @  7 : 11
+> DELETE  2  @  2 : 3
+
+> CHANGE  4 : 10  @  4 : 8
 
 ~ 		if (!DeferredStateManager.isInDeferredPass()) {
 ~ 			GlStateManager.disableLighting();
@@ -33,7 +33,9 @@
 ~ 			GlStateManager.enableColorMaterial();
 ~ 		}
 
-> CHANGE  15 : 22  @  15 : 20
+> DELETE  2  @  2 : 14
+
+> CHANGE  1 : 8  @  1 : 6
 
 ~ 		if (!DeferredStateManager.isInDeferredPass()) {
 ~ 			GlStateManager.pushMatrix();

@@ -11,8 +11,7 @@ import org.teavm.jso.typedarrays.Uint8Array;
 
 import net.lax1dude.eaglercraft.v1_8.internal.IPCPacketData;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformRuntime;
-import net.lax1dude.eaglercraft.v1_8.internal.buffer.ByteBuffer;
-import net.lax1dude.eaglercraft.v1_8.internal.buffer.WASMGCBufferAllocator;
+import net.lax1dude.eaglercraft.v1_8.internal.buffer.MemoryStack;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.WASMGCDirectArrayConverter;
 import net.lax1dude.eaglercraft.v1_8.internal.wasm_gc_teavm.BetterJSStringConverter;
 import net.lax1dude.eaglercraft.v1_8.internal.wasm_gc_teavm.WASMGCClientConfigAdapter;
@@ -69,11 +68,12 @@ public class ClientPlatformSingleplayer {
 		if(isSingleThreadMode) {
 			SingleThreadWorker.sendPacketToWorker(packet);
 		}else {
-			ByteBuffer buf = WASMGCDirectArrayConverter.byteArrayToBuffer(packet.contents);
+			MemoryStack.push();
 			try {
-				sendPacket0(BetterJSStringConverter.stringToJS(packet.channel), WASMGCBufferAllocator.getUnsignedByteBufferView(buf));
-			}finally {
-				PlatformRuntime.freeByteBuffer(buf);
+				sendPacket0(BetterJSStringConverter.stringToJS(packet.channel),
+						WASMGCDirectArrayConverter.byteArrayToStackU8Array(packet.contents));
+			} finally {
+				MemoryStack.pop();
 			}
 		}
 	}

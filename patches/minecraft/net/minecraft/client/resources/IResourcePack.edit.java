@@ -7,11 +7,7 @@
 
 > DELETE  2  @  2 : 3
 
-> INSERT  2 : 3  @  2
-
-+ import java.util.Collection;
-
-> INSERT  1 : 4  @  1
+> INSERT  3 : 6  @  3
 
 + 
 + import net.lax1dude.eaglercraft.v1_8.minecraft.ResourceIndex;

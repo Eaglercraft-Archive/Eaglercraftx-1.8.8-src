@@ -9,7 +9,6 @@ import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 import net.lax1dude.eaglercraft.v1_8.opengl.EaglercraftGPU;
-import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 import net.lax1dude.eaglercraft.v1_8.opengl.WorldRenderer;
 import net.lax1dude.eaglercraft.v1_8.opengl.WorldVertexBufferUploader;
 import net.minecraft.client.Minecraft;
@@ -25,7 +24,6 @@ public class ChunkUpdateManager {
 
 	private static final Logger LOGGER = LogManager.getLogger();
 
-	private final WorldVertexBufferUploader worldVertexUploader;
 	private final RegionRenderCacheBuilder renderCache;
 
 	private int chunkUpdatesTotal = 0;
@@ -39,7 +37,6 @@ public class ChunkUpdateManager {
 	private final List<ChunkCompileTaskGenerator> queue = new LinkedList<>();
 
 	public ChunkUpdateManager() {
-		worldVertexUploader = new WorldVertexBufferUploader();
 		renderCache = new RegionRenderCacheBuilder();
 	}
 	
@@ -202,9 +199,7 @@ public class ChunkUpdateManager {
 
 	private void uploadDisplayList(WorldRenderer chunkRenderer, int parInt1, RenderChunk parRenderChunk) {
 		EaglercraftGPU.glNewList(parInt1, GL_COMPILE);
-		GlStateManager.pushMatrix();
-		this.worldVertexUploader.func_181679_a(chunkRenderer);
-		GlStateManager.popMatrix();
+		WorldVertexBufferUploader.func_181679_a(chunkRenderer);
 		EaglercraftGPU.glEndList();
 	}
 

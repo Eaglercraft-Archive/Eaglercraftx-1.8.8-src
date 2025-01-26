@@ -268,16 +268,19 @@ public class GlStateManager {
 	private static final Vector4f paramVector4 = new Vector4f();
 	public static final void enableMCLight(int light, float diffuse, double dirX,
 			double dirY, double dirZ, double dirW) {
+		if(dirW != 0.0) throw new IllegalArgumentException("dirW must be 0.0!");
 		paramVector4.x = (float)dirX;
 		paramVector4.y = (float)dirY;
 		paramVector4.z = (float)dirZ;
-		paramVector4.w = (float)dirW;
+		paramVector4.w = (float)0.0f;
 		Matrix4f.transform(modelMatrixStack[modelMatrixStackPointer], paramVector4, paramVector4);
-		paramVector4.normalise();
 		Vector4f dest = stateLightsStack[stateLightsStackPointer][light];
-		dest.x = paramVector4.x;
-		dest.y = paramVector4.y;
-		dest.z = paramVector4.z;
+		float len = MathHelper.sqrt_float(paramVector4.x * paramVector4.x
+				+ paramVector4.y * paramVector4.y
+				+ paramVector4.z * paramVector4.z);
+		dest.x = paramVector4.x / len;
+		dest.y = paramVector4.y / len;
+		dest.z = paramVector4.z / len;
 		dest.w = diffuse;
 		stateLightsEnabled[stateLightsStackPointer][light] = true;
 		++stateLightingSerial[stateLightsStackPointer];
@@ -1265,6 +1268,10 @@ public class GlStateManager {
 
 	public static final Matrix4f getModelViewReference() {
 		return modelMatrixStack[modelMatrixStackPointer];
+	}
+
+	public static final Matrix4f getProjectionReference() {
+		return projectionMatrixStack[projectionMatrixStackPointer];
 	}
 
 	public static void recompileShaders() {

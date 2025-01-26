@@ -16,6 +16,7 @@
 
 async function entryPoint() {
 	try {
+		Error["stackTraceLimit"] = 1024;
 		eaglercraftXOpts = self.__eaglercraftXLoaderContext.getEaglercraftXOpts();
 		eagRuntimeJSURL = self.__eaglercraftXLoaderContext.getEagRuntimeJSURL();
 		const classesWASM = self.__eaglercraftXLoaderContext.getClassesWASMURL();

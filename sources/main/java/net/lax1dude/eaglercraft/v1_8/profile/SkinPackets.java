@@ -47,7 +47,7 @@ public class SkinPackets {
 			k = i * 3 + 2;
 			packet[k] = v3data[j + 1];
 			packet[k + 1] = v3data[j + 2];
-			packet[k + 2] = (byte)((v3data[j + 3] >>> 1) | (v3data[j] & 0x80));
+			packet[k + 2] = (byte)(((v3data[j + 3] & 0xFF) >>> 1) | (v3data[j] & 0x80));
 		}
 		return packet;
 	}
