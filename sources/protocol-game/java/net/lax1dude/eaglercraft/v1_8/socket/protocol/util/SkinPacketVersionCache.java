@@ -230,7 +230,7 @@ public class SkinPacketVersionCache {
 			k = i << 2;
 			v3data[k + 1] = v4data[j];
 			v3data[k + 2] = v4data[j + 1];
-			v3data[k + 3] = (byte)(v4data[j + 2] << 1);
+			v3data[k + 3] = (byte)((v4data[j + 2] & 0x7F) << 1);
 			v3data[k] = (v4data[j + 2] & 0x80) != 0 ? (byte)0xFF : (byte)0;
 		}
 		return v3data;
@@ -243,7 +243,7 @@ public class SkinPacketVersionCache {
 			k = i * 3;
 			v4data[k] = v3data[j + 1];
 			v4data[k + 1] = v3data[j + 2];
-			v4data[k + 2] = (byte)((v3data[j + 3] >>> 1) | (v3data[j] & 0x80));
+			v4data[k + 2] = (byte)(((v3data[j + 3] & 0xFF) >>> 1) | (v3data[j] & 0x80));
 		}
 		return v4data;
 	}
