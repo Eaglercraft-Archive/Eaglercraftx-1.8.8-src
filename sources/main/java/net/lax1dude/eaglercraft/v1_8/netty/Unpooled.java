@@ -1,8 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.netty;
-
-import java.nio.ByteBuffer;
-
-/**
+/*
  * Copyright (c) 2022 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -17,6 +13,11 @@ import java.nio.ByteBuffer;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.netty;
+
+import java.nio.ByteBuffer;
+
 public class Unpooled {
 
 	public static final ByteBuf EMPTY_BUFFER = ByteBuf.allocate(0, 0);

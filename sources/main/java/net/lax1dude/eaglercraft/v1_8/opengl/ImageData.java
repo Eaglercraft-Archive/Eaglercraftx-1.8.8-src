@@ -1,11 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.opengl;
-
-import java.io.InputStream;
-
-import net.lax1dude.eaglercraft.v1_8.EagRuntime;
-import net.lax1dude.eaglercraft.v1_8.internal.PlatformAssets;
-
-/**
+/*
  * Copyright (c) 2022-2023 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -20,6 +13,14 @@ import net.lax1dude.eaglercraft.v1_8.internal.PlatformAssets;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.opengl;
+
+import java.io.InputStream;
+
+import net.lax1dude.eaglercraft.v1_8.EagRuntime;
+import net.lax1dude.eaglercraft.v1_8.internal.PlatformAssets;
+
 public class ImageData {
 	
 	public final int width;

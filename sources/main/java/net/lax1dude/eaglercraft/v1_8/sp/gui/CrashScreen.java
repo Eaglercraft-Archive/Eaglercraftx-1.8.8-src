@@ -1,8 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.sp.gui;
-
-import net.lax1dude.eaglercraft.v1_8.sp.internal.ClientPlatformSingleplayer;
-
-/**
+/*
  * Copyright (c) 2023-2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -17,6 +13,11 @@ import net.lax1dude.eaglercraft.v1_8.sp.internal.ClientPlatformSingleplayer;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.sp.gui;
+
+import net.lax1dude.eaglercraft.v1_8.sp.internal.ClientPlatformSingleplayer;
+
 public class CrashScreen {
 
 	public static void showCrashReportOverlay(String report, int x, int y, int w, int h) {

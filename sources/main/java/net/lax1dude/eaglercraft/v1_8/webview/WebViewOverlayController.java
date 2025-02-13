@@ -1,12 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.webview;
-
-import net.lax1dude.eaglercraft.v1_8.internal.PlatformWebView;
-import net.lax1dude.eaglercraft.v1_8.internal.WebViewOptions;
-import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.GameMessagePacket;
-import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.server.SPacketWebViewMessageV4EAG;
-import net.minecraft.client.gui.ScaledResolution;
-
-/**
+/*
  * Copyright (c) 2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -21,6 +13,15 @@ import net.minecraft.client.gui.ScaledResolution;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.webview;
+
+import net.lax1dude.eaglercraft.v1_8.internal.PlatformWebView;
+import net.lax1dude.eaglercraft.v1_8.internal.WebViewOptions;
+import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.GameMessagePacket;
+import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.server.SPacketWebViewMessageV4EAG;
+import net.minecraft.client.gui.ScaledResolution;
+
 public class WebViewOverlayController {
 
 	public static boolean supported() {

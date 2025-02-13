@@ -1,17 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.server.query;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import com.google.gson.JsonObject;
-
-import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.EaglerXVelocity;
-import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.EaglerXVelocityVersion;
-import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.api.EaglerXVelocityAPIHelper;
-import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.config.EaglerVelocityConfig;
-import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.server.HttpServerQueryHandler;
-
-/**
+/*
  * Copyright (c) 2022-2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -26,6 +13,20 @@ import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.server.HttpServerQu
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.server.query;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import com.google.gson.JsonObject;
+
+import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.EaglerXVelocity;
+import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.EaglerXVelocityVersion;
+import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.api.EaglerXVelocityAPIHelper;
+import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.config.EaglerVelocityConfig;
+import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.server.HttpServerQueryHandler;
+
 public class QueryManager {
 
 	private static final Map<String, Class<? extends HttpServerQueryHandler>> queryTypes = new HashMap<>();

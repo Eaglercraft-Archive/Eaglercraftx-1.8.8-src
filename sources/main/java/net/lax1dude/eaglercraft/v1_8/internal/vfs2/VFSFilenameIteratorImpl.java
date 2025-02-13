@@ -1,9 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.internal.vfs2;
-
-import net.lax1dude.eaglercraft.v1_8.internal.IEaglerFilesystem;
-import net.lax1dude.eaglercraft.v1_8.internal.VFSFilenameIterator;
-
-/**
+/*
  * Copyright (c) 2023-2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -18,6 +13,12 @@ import net.lax1dude.eaglercraft.v1_8.internal.VFSFilenameIterator;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.internal.vfs2;
+
+import net.lax1dude.eaglercraft.v1_8.internal.IEaglerFilesystem;
+import net.lax1dude.eaglercraft.v1_8.internal.VFSFilenameIterator;
+
 class VFSFilenameIteratorImpl implements VFSFilenameIterator {
 
 	protected IEaglerFilesystem fs;

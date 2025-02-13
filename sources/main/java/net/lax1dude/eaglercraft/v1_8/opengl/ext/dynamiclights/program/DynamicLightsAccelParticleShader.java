@@ -1,17 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.opengl.ext.dynamiclights.program;
-
-import static net.lax1dude.eaglercraft.v1_8.internal.PlatformOpenGL.*;
-import static net.lax1dude.eaglercraft.v1_8.opengl.RealOpenGLEnums.*;
-
-import net.lax1dude.eaglercraft.v1_8.internal.IProgramGL;
-import net.lax1dude.eaglercraft.v1_8.internal.IShaderGL;
-import net.lax1dude.eaglercraft.v1_8.internal.IUniformGL;
-import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.program.IProgramUniforms;
-import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.program.ShaderCompiler;
-import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.program.ShaderProgram;
-import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.program.ShaderSource;
-
-/**
+/*
  * Copyright (c) 2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -26,6 +13,20 @@ import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.program.ShaderSource;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.opengl.ext.dynamiclights.program;
+
+import static net.lax1dude.eaglercraft.v1_8.internal.PlatformOpenGL.*;
+import static net.lax1dude.eaglercraft.v1_8.opengl.RealOpenGLEnums.*;
+
+import net.lax1dude.eaglercraft.v1_8.internal.IProgramGL;
+import net.lax1dude.eaglercraft.v1_8.internal.IShaderGL;
+import net.lax1dude.eaglercraft.v1_8.internal.IUniformGL;
+import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.program.IProgramUniforms;
+import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.program.ShaderCompiler;
+import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.program.ShaderProgram;
+import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.program.ShaderSource;
+
 public class DynamicLightsAccelParticleShader extends ShaderProgram<DynamicLightsAccelParticleShader.Uniforms> {
 
 	public static DynamicLightsAccelParticleShader compile() {

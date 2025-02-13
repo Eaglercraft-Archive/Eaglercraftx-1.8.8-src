@@ -1,14 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.opengl;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import net.lax1dude.eaglercraft.v1_8.EagUtils;
-import net.lax1dude.eaglercraft.v1_8.internal.IProgramGL;
-
-import static net.lax1dude.eaglercraft.v1_8.internal.PlatformOpenGL.*;
-
-/**
+/*
  * Copyright (c) 2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -23,6 +13,17 @@ import static net.lax1dude.eaglercraft.v1_8.internal.PlatformOpenGL.*;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.opengl;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import net.lax1dude.eaglercraft.v1_8.EagUtils;
+import net.lax1dude.eaglercraft.v1_8.internal.IProgramGL;
+
+import static net.lax1dude.eaglercraft.v1_8.internal.PlatformOpenGL.*;
+
 public class VSHInputLayoutParser {
 
 	public static class ShaderInput {

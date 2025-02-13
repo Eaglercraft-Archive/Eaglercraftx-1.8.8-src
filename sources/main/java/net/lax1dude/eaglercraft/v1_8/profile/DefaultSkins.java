@@ -1,8 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.profile;
-
-import net.minecraft.util.ResourceLocation;
-
-/**
+/*
  * Copyright (c) 2022-2023 lax1dude, ayunami2000. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -17,6 +13,11 @@ import net.minecraft.util.ResourceLocation;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.profile;
+
+import net.minecraft.util.ResourceLocation;
+
 public enum DefaultSkins {
 
 	DEFAULT_STEVE(0, "Default Steve", new ResourceLocation("eagler:skins/01.default_steve.png"), SkinModel.STEVE),

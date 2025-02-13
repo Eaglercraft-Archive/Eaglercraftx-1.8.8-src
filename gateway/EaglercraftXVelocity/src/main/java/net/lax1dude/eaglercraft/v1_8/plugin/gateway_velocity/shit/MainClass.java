@@ -1,10 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.shit;
-
-import java.awt.GraphicsEnvironment;
-
-import javax.swing.JOptionPane;
-
-/**
+/*
  * Copyright (c) 2022-2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -19,6 +13,13 @@ import javax.swing.JOptionPane;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.shit;
+
+import java.awt.GraphicsEnvironment;
+
+import javax.swing.JOptionPane;
+
 public class MainClass {
 
 	public static void main(String[] args) {

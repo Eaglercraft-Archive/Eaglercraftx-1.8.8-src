@@ -1,13 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.internal;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-
-import net.lax1dude.eaglercraft.v1_8.internal.lwjgl.DesktopWebSocketClient;
-import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
-import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
-
-/**
+/*
  * Copyright (c) 2022-2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -22,6 +13,16 @@ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.internal;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+
+import net.lax1dude.eaglercraft.v1_8.internal.lwjgl.DesktopWebSocketClient;
+import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
+import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
+
 public class PlatformNetworking {
 	
 	private static final Logger logger = LogManager.getLogger("PlatformNetworking");

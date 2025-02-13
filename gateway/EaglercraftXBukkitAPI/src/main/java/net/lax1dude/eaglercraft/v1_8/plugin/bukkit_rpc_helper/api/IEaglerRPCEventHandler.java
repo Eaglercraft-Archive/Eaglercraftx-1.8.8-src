@@ -1,8 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.plugin.bukkit_rpc_helper.api;
-
-import net.lax1dude.eaglercraft.v1_8.plugin.bukkit_rpc_helper.api.event.IEaglerRPCEvent;
-
-/**
+/*
  * Copyright (c) 2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -17,6 +13,11 @@ import net.lax1dude.eaglercraft.v1_8.plugin.bukkit_rpc_helper.api.event.IEaglerR
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.plugin.bukkit_rpc_helper.api;
+
+import net.lax1dude.eaglercraft.v1_8.plugin.bukkit_rpc_helper.api.event.IEaglerRPCEvent;
+
 public interface IEaglerRPCEventHandler<T extends IEaglerRPCEvent> {
 
 	void handleEvent(IEaglerXBukkitAPI api, EnumSubscribeEvents event, T data);

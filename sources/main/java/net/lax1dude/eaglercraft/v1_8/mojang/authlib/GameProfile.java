@@ -1,14 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.mojang.authlib;
-
-import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
-import com.google.common.collect.Multimap;
-import com.google.common.collect.MultimapBuilder;
-
-/**
+/*
  * Copyright (c) 2022 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -23,6 +13,17 @@ import com.google.common.collect.MultimapBuilder;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.mojang.authlib;
+
+import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import com.google.common.collect.Multimap;
+import com.google.common.collect.MultimapBuilder;
+
 public class GameProfile {
 	
 	private final EaglercraftUUID id;

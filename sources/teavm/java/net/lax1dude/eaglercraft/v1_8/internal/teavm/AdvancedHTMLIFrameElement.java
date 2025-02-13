@@ -1,18 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.internal.teavm;
-
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
-import org.apache.commons.lang3.StringUtils;
-import org.teavm.jso.JSBody;
-import org.teavm.jso.JSProperty;
-import org.teavm.jso.dom.html.HTMLIFrameElement;
-import org.teavm.jso.dom.types.DOMTokenList;
-
-import com.google.common.collect.Iterators;
-
-/**
+/*
  * Copyright (c) 2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -27,6 +13,21 @@ import com.google.common.collect.Iterators;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.internal.teavm;
+
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.apache.commons.lang3.StringUtils;
+import org.teavm.jso.JSBody;
+import org.teavm.jso.JSProperty;
+import org.teavm.jso.dom.html.HTMLIFrameElement;
+import org.teavm.jso.dom.types.DOMTokenList;
+
+import com.google.common.collect.Iterators;
+
 public abstract class AdvancedHTMLIFrameElement implements HTMLIFrameElement {
 
 	@JSProperty

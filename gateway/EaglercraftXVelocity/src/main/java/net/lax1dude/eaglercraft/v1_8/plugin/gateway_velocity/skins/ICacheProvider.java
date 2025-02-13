@@ -1,8 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.skins;
-
-import java.util.UUID;
-
-/**
+/*
  * Copyright (c) 2022-2023 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -17,6 +13,11 @@ import java.util.UUID;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.skins;
+
+import java.util.UUID;
+
 public interface ICacheProvider {
 
 	public static class CacheException extends RuntimeException {

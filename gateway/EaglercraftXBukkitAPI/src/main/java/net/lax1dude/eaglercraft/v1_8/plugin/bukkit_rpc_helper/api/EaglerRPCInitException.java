@@ -1,6 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.plugin.bukkit_rpc_helper.api;
-
-/**
+/*
  * Copyright (c) 2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -15,6 +13,9 @@ package net.lax1dude.eaglercraft.v1_8.plugin.bukkit_rpc_helper.api;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.plugin.bukkit_rpc_helper.api;
+
 public class EaglerRPCInitException extends EaglerRPCException {
 
 	private int code;

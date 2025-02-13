@@ -1,12 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.internal.vfs2;
-
-import java.io.IOException;
-import java.io.OutputStream;
-
-import net.lax1dude.eaglercraft.v1_8.internal.PlatformRuntime;
-import net.lax1dude.eaglercraft.v1_8.internal.buffer.ByteBuffer;
-
-/**
+/*
  * Copyright (c) 2023-2025 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -21,6 +13,15 @@ import net.lax1dude.eaglercraft.v1_8.internal.buffer.ByteBuffer;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.internal.vfs2;
+
+import java.io.IOException;
+import java.io.OutputStream;
+
+import net.lax1dude.eaglercraft.v1_8.internal.PlatformRuntime;
+import net.lax1dude.eaglercraft.v1_8.internal.buffer.ByteBuffer;
+
 class VFileOutputStream extends OutputStream {
 
 	private final VFile2 vfsFile;

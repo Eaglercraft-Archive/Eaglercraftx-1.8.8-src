@@ -1,12 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.json.impl;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import net.lax1dude.eaglercraft.v1_8.json.JSONDataParserImpl;
-
-/**
+/*
  * Copyright (c) 2022 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -21,6 +13,15 @@ import net.lax1dude.eaglercraft.v1_8.json.JSONDataParserImpl;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.json.impl;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import net.lax1dude.eaglercraft.v1_8.json.JSONDataParserImpl;
+
 public class JSONDataParserString implements JSONDataParserImpl {
 
 	public boolean accepts(Object type) {

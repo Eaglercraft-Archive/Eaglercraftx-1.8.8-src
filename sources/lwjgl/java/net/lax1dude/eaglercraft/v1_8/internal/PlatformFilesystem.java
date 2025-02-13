@@ -1,14 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.internal;
-
-import java.io.File;
-
-import net.lax1dude.eaglercraft.v1_8.internal.lwjgl.DebugFilesystem;
-import net.lax1dude.eaglercraft.v1_8.internal.lwjgl.JDBCFilesystem;
-import net.lax1dude.eaglercraft.v1_8.internal.lwjgl.JDBCFilesystemConverter;
-import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
-import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
-
-/**
+/*
  * Copyright (c) 2022-2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -23,6 +13,17 @@ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.internal;
+
+import java.io.File;
+
+import net.lax1dude.eaglercraft.v1_8.internal.lwjgl.DebugFilesystem;
+import net.lax1dude.eaglercraft.v1_8.internal.lwjgl.JDBCFilesystem;
+import net.lax1dude.eaglercraft.v1_8.internal.lwjgl.JDBCFilesystemConverter;
+import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
+import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
+
 public class PlatformFilesystem {
 
 	public static final Logger logger = LogManager.getLogger("PlatformFilesystem");

@@ -1,8 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.internal.wasm_gc_teavm;
-
-import net.lax1dude.eaglercraft.v1_8.sp.server.internal.wasm_gc_teavm.WorkerMain;
-
-/**
+/*
  * Copyright (c) 2022-2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -17,6 +13,11 @@ import net.lax1dude.eaglercraft.v1_8.sp.server.internal.wasm_gc_teavm.WorkerMain
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.internal.wasm_gc_teavm;
+
+import net.lax1dude.eaglercraft.v1_8.sp.server.internal.wasm_gc_teavm.WorkerMain;
+
 public class MainClass {
 
 	public static void main(String[] args) {

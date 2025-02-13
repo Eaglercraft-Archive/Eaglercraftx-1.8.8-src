@@ -1,11 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.api.event;
-
-import java.util.UUID;
-
-import net.md_5.bungee.api.plugin.Event;
-import net.md_5.bungee.protocol.Property;
-
-/**
+/*
  * Copyright (c) 2022-2023 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -20,6 +13,14 @@ import net.md_5.bungee.protocol.Property;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.api.event;
+
+import java.util.UUID;
+
+import net.md_5.bungee.api.plugin.Event;
+import net.md_5.bungee.protocol.Property;
+
 public class EaglercraftRegisterSkinEvent extends Event {
 
 	private final Object authAttachment;

@@ -1,9 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8;
-
-import net.lax1dude.eaglercraft.v1_8.touch_gui.TouchControls;
-import net.minecraft.client.Minecraft;
-
-/**
+/*
  * Copyright (c) 2024 lax1dude, ayunami2000. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -18,6 +13,12 @@ import net.minecraft.client.Minecraft;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8;
+
+import net.lax1dude.eaglercraft.v1_8.touch_gui.TouchControls;
+import net.minecraft.client.Minecraft;
+
 public class PointerInputAbstraction {
 
 	protected static Minecraft mc;

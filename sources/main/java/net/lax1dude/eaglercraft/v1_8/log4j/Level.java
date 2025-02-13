@@ -1,8 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.log4j;
-
-import java.io.PrintStream;
-
-/**
+/*
  * Copyright (c) 2022 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -17,6 +13,11 @@ import java.io.PrintStream;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.log4j;
+
+import java.io.PrintStream;
+
 public enum Level {
 	
 	TRACE(0, "TRACE", false), DEBUG(1, "DEBUG", false), INFO(2, "INFO", false),

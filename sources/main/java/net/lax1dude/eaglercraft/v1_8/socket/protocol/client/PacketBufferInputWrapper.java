@@ -1,15 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.socket.protocol.client;
-
-import java.io.DataInputStream;
-import java.io.EOFException;
-import java.io.IOException;
-import java.io.InputStream;
-
-import net.lax1dude.eaglercraft.v1_8.DecoderException;
-import net.lax1dude.eaglercraft.v1_8.socket.protocol.GamePacketInputBuffer;
-import net.minecraft.network.PacketBuffer;
-
-/**
+/*
  * Copyright (c) 2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -24,6 +13,18 @@ import net.minecraft.network.PacketBuffer;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.socket.protocol.client;
+
+import java.io.DataInputStream;
+import java.io.EOFException;
+import java.io.IOException;
+import java.io.InputStream;
+
+import net.lax1dude.eaglercraft.v1_8.DecoderException;
+import net.lax1dude.eaglercraft.v1_8.socket.protocol.GamePacketInputBuffer;
+import net.minecraft.network.PacketBuffer;
+
 public class PacketBufferInputWrapper implements GamePacketInputBuffer {
 
 	protected PacketBuffer buffer;

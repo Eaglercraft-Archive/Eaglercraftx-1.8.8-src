@@ -1,15 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.sp.server.socket.protocol;
-
-import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
-import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.GameMessageHandler;
-import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.client.*;
-import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.server.SPacketOtherPlayerClientUUIDV4EAG;
-import net.lax1dude.eaglercraft.v1_8.sp.server.EaglerMinecraftServer;
-import net.lax1dude.eaglercraft.v1_8.sp.server.voice.IntegratedVoiceService;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.network.NetHandlerPlayServer;
-
-/**
+/*
  * Copyright (c) 2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -24,6 +13,18 @@ import net.minecraft.network.NetHandlerPlayServer;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.sp.server.socket.protocol;
+
+import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
+import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.GameMessageHandler;
+import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.client.*;
+import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.server.SPacketOtherPlayerClientUUIDV4EAG;
+import net.lax1dude.eaglercraft.v1_8.sp.server.EaglerMinecraftServer;
+import net.lax1dude.eaglercraft.v1_8.sp.server.voice.IntegratedVoiceService;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.network.NetHandlerPlayServer;
+
 public class ServerV4MessageHandler implements GameMessageHandler {
 
 	private final NetHandlerPlayServer netHandler;

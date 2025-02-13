@@ -1,17 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.boot_menu.teavm;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import com.google.common.collect.Collections2;
-
-import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
-
-/**
+/*
  * Copyright (c) 2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -26,6 +13,20 @@ import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.boot_menu.teavm;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import com.google.common.collect.Collections2;
+
+import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
+
 public class ClientDataEntry {
 
 	public final EnumClientFormatType type;

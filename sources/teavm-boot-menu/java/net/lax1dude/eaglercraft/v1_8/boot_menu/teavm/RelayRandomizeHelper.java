@@ -1,11 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.boot_menu.teavm;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import net.lax1dude.eaglercraft.v1_8.ThreadLocalRandom;
-
-/**
+/*
  * Copyright (c) 2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -20,6 +13,14 @@ import net.lax1dude.eaglercraft.v1_8.ThreadLocalRandom;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.boot_menu.teavm;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import net.lax1dude.eaglercraft.v1_8.ThreadLocalRandom;
+
 public class RelayRandomizeHelper {
 
 	public static int countRelayMacro(String launchOpts) {

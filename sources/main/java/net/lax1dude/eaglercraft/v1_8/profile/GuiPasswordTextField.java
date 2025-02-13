@@ -1,9 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.profile;
-
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiTextField;
-
-/**
+/*
  * Copyright (c) 2023 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -18,6 +13,12 @@ import net.minecraft.client.gui.GuiTextField;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.profile;
+
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.GuiTextField;
+
 public class GuiPasswordTextField extends GuiTextField {
 
 	public GuiPasswordTextField(int componentId, FontRenderer fontrendererObj, int x, int y, int par5Width,

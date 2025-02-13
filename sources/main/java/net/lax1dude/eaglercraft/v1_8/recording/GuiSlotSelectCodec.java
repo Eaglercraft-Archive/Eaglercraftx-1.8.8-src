@@ -1,8 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.recording;
-
-import net.minecraft.client.gui.GuiSlot;
-
-/**
+/*
  * Copyright (c) 2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -17,6 +13,11 @@ import net.minecraft.client.gui.GuiSlot;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.recording;
+
+import net.minecraft.client.gui.GuiSlot;
+
 public class GuiSlotSelectCodec extends GuiSlot {
 
 	protected final GuiScreenSelectCodec screen;

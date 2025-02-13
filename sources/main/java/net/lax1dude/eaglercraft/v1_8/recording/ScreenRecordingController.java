@@ -1,14 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.recording;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import net.lax1dude.eaglercraft.v1_8.internal.PlatformScreenRecord;
-import net.lax1dude.eaglercraft.v1_8.internal.ScreenRecordParameters;
-
-/**
+/*
  * Copyright (c) 2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -23,6 +13,17 @@ import net.lax1dude.eaglercraft.v1_8.internal.ScreenRecordParameters;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.recording;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import net.lax1dude.eaglercraft.v1_8.internal.PlatformScreenRecord;
+import net.lax1dude.eaglercraft.v1_8.internal.ScreenRecordParameters;
+
 public class ScreenRecordingController {
 
 	public static final int DEFAULT_FPS = 30;

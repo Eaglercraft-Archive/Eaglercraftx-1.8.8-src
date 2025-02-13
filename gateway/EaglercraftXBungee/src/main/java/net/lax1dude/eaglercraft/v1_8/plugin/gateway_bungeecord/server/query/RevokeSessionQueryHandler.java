@@ -1,13 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.server.query;
-
-import com.google.gson.JsonObject;
-
-import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.api.event.EaglercraftRevokeSessionQueryEvent;
-import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.api.event.EaglercraftRevokeSessionQueryEvent.EnumSessionRevokeStatus;
-import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.api.query.EaglerQueryHandler;
-import net.md_5.bungee.BungeeCord;
-
-/**
+/*
  * Copyright (c) 2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -22,6 +13,16 @@ import net.md_5.bungee.BungeeCord;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.server.query;
+
+import com.google.gson.JsonObject;
+
+import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.api.event.EaglercraftRevokeSessionQueryEvent;
+import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.api.event.EaglercraftRevokeSessionQueryEvent.EnumSessionRevokeStatus;
+import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.api.query.EaglerQueryHandler;
+import net.md_5.bungee.BungeeCord;
+
 public class RevokeSessionQueryHandler extends EaglerQueryHandler {
 
 	@Override

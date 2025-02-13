@@ -1,17 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.touch_gui;
-
-import net.lax1dude.eaglercraft.v1_8.Touch;
-import net.lax1dude.eaglercraft.v1_8.touch_gui.EnumTouchControl.TouchAction;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.ScaledResolution;
-
-import java.util.*;
-
-import com.carrotsearch.hppc.IntObjectHashMap;
-import com.carrotsearch.hppc.IntObjectMap;
-import com.carrotsearch.hppc.cursors.ObjectCursor;
-
-/**
+/*
  * Copyright (c) 2024 lax1dude, ayunami2000. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -26,6 +13,20 @@ import com.carrotsearch.hppc.cursors.ObjectCursor;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.touch_gui;
+
+import net.lax1dude.eaglercraft.v1_8.Touch;
+import net.lax1dude.eaglercraft.v1_8.touch_gui.EnumTouchControl.TouchAction;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ScaledResolution;
+
+import java.util.*;
+
+import com.carrotsearch.hppc.IntObjectHashMap;
+import com.carrotsearch.hppc.IntObjectMap;
+import com.carrotsearch.hppc.cursors.ObjectCursor;
+
 public class TouchControls {
 
 	public static final IntObjectMap<TouchControlInput> touchControls = new IntObjectHashMap<>();

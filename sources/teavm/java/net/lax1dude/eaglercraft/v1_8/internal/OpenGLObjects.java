@@ -1,17 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.internal;
-
-import org.teavm.jso.webgl.WebGLBuffer;
-import org.teavm.jso.webgl.WebGLFramebuffer;
-import org.teavm.jso.webgl.WebGLProgram;
-import org.teavm.jso.webgl.WebGLRenderbuffer;
-import org.teavm.jso.webgl.WebGLShader;
-import org.teavm.jso.webgl.WebGLTexture;
-import org.teavm.jso.webgl.WebGLUniformLocation;
-
-import net.lax1dude.eaglercraft.v1_8.internal.teavm.WebGLQuery;
-import net.lax1dude.eaglercraft.v1_8.internal.teavm.WebGLVertexArray;
-
-/**
+/*
  * Copyright (c) 2022-2023 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -26,6 +13,20 @@ import net.lax1dude.eaglercraft.v1_8.internal.teavm.WebGLVertexArray;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.internal;
+
+import org.teavm.jso.webgl.WebGLBuffer;
+import org.teavm.jso.webgl.WebGLFramebuffer;
+import org.teavm.jso.webgl.WebGLProgram;
+import org.teavm.jso.webgl.WebGLRenderbuffer;
+import org.teavm.jso.webgl.WebGLShader;
+import org.teavm.jso.webgl.WebGLTexture;
+import org.teavm.jso.webgl.WebGLUniformLocation;
+
+import net.lax1dude.eaglercraft.v1_8.internal.teavm.WebGLQuery;
+import net.lax1dude.eaglercraft.v1_8.internal.teavm.WebGLVertexArray;
+
 class OpenGLObjects {
 
 	static class BufferGL implements IBufferGL {

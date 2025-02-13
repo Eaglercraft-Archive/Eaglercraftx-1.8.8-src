@@ -1,17 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.internal.wasm_gc_teavm;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
-import org.teavm.jso.JSObject;
-import org.teavm.jso.JSProperty;
-import org.teavm.jso.core.JSArrayReader;
-
-import net.lax1dude.eaglercraft.v1_8.internal.EnumTouchEvent;
-
-/**
+/*
  * Copyright (c) 2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -26,6 +13,20 @@ import net.lax1dude.eaglercraft.v1_8.internal.EnumTouchEvent;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.internal.wasm_gc_teavm;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+import org.teavm.jso.JSObject;
+import org.teavm.jso.JSProperty;
+import org.teavm.jso.core.JSArrayReader;
+
+import net.lax1dude.eaglercraft.v1_8.internal.EnumTouchEvent;
+
 public class SortedTouchEvent {
 
 	public interface ITouchUIDMapper {

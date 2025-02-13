@@ -1,8 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.plugin.bukkit_rpc_helper.api;
-
-import net.lax1dude.eaglercraft.v1_8.plugin.backend_rpc_protocol.pkt.client.CPacketRPCSubscribeEvents;
-
-/**
+/*
  * Copyright (c) 2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -17,6 +13,11 @@ import net.lax1dude.eaglercraft.v1_8.plugin.backend_rpc_protocol.pkt.client.CPac
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.plugin.bukkit_rpc_helper.api;
+
+import net.lax1dude.eaglercraft.v1_8.plugin.backend_rpc_protocol.pkt.client.CPacketRPCSubscribeEvents;
+
 public enum EnumSubscribeEvents {
 
 	/** @see net.lax1dude.eaglercraft.v1_8.plugin.bukkit_rpc_helper.api.event.EventWebViewOpenClose */

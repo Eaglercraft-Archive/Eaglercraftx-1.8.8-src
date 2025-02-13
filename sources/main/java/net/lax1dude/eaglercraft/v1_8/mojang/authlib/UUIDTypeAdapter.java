@@ -1,8 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.mojang.authlib;
-
-import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
-
-/**
+/*
  * Copyright (c) 2022 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -17,6 +13,11 @@ import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.mojang.authlib;
+
+import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
+
 public class UUIDTypeAdapter {
 	public static String fromUUID(EaglercraftUUID value) {
 		return value.toString().replace("-", "");

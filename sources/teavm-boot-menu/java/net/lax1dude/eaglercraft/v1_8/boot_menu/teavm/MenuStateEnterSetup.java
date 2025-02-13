@@ -1,15 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.boot_menu.teavm;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
-import org.teavm.jso.dom.html.HTMLElement;
-
-import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
-
-/**
+/*
  * Copyright (c) 2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -24,6 +13,18 @@ import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.boot_menu.teavm;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+import org.teavm.jso.dom.html.HTMLElement;
+
+import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
+
 public class MenuStateEnterSetup extends MenuState {
 
 	private static enum EnumListMultiSelectType {

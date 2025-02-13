@@ -1,11 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.sp.relay;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import net.lax1dude.eaglercraft.v1_8.EagRuntime;
-
-/**
+/*
  * Copyright (c) 2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -20,6 +13,14 @@ import net.lax1dude.eaglercraft.v1_8.EagRuntime;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.sp.relay;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import net.lax1dude.eaglercraft.v1_8.EagRuntime;
+
 public class RelayServerRateLimitTracker {
 
 	private static final Map<String,Long> relayQueryLimited = new HashMap<>();

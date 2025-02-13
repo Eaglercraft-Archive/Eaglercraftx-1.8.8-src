@@ -1,6 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.socket;
-
-/**
+/*
  * Copyright (c) 2022-2023 lax1dude, ayunami2000. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -15,6 +13,9 @@ package net.lax1dude.eaglercraft.v1_8.socket;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.socket;
+
 public class EncryptionNotSupportedException extends UnsupportedOperationException {
 
 	public EncryptionNotSupportedException() {

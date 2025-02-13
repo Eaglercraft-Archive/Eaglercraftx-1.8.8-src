@@ -1,7 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.internal.buffer;
-
-
-/**
+/*
  * Copyright (c) 2022-2025 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -16,6 +13,10 @@ package net.lax1dude.eaglercraft.v1_8.internal.buffer;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.internal.buffer;
+
+
 public abstract class ByteBuffer implements Buffer {
 
 	public abstract ByteBuffer duplicate();

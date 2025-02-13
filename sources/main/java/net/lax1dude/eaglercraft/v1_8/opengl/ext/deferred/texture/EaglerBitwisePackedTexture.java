@@ -1,12 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.texture;
-
-import java.io.IOException;
-import java.io.InputStream;
-
-import net.lax1dude.eaglercraft.v1_8.IOUtils;
-import net.lax1dude.eaglercraft.v1_8.opengl.ImageData;
-
-/**
+/*
  * Copyright (c) 2023 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -21,6 +13,15 @@ import net.lax1dude.eaglercraft.v1_8.opengl.ImageData;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.texture;
+
+import java.io.IOException;
+import java.io.InputStream;
+
+import net.lax1dude.eaglercraft.v1_8.IOUtils;
+import net.lax1dude.eaglercraft.v1_8.opengl.ImageData;
+
 public class EaglerBitwisePackedTexture {
 
 	private static int getFromBits(int idxx, int bits, byte[] bytes) {

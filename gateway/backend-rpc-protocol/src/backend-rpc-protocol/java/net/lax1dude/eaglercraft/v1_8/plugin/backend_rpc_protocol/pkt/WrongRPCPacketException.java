@@ -1,6 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.plugin.backend_rpc_protocol.pkt;
-
-/**
+/*
  * Copyright (c) 2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -15,6 +13,9 @@ package net.lax1dude.eaglercraft.v1_8.plugin.backend_rpc_protocol.pkt;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.plugin.backend_rpc_protocol.pkt;
+
 public class WrongRPCPacketException extends RuntimeException {
 
 	public WrongRPCPacketException() {

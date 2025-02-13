@@ -1,8 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.minecraft;
-
-import net.minecraft.world.World;
-
-/**
+/*
  * Copyright (c) 2022 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -17,6 +13,11 @@ import net.minecraft.world.World;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.minecraft;
+
+import net.minecraft.world.World;
+
 public interface EntityConstructor<T> {
 
 	T createEntity(World world);

@@ -1,18 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.internal.wasm_gc_teavm;
-
-import java.io.InputStream;
-
-import org.teavm.jso.JSObject;
-import org.teavm.jso.JSProperty;
-import org.teavm.jso.core.JSString;
-import org.teavm.jso.typedarrays.ArrayBuffer;
-import org.teavm.jso.typedarrays.Uint8Array;
-
-import net.lax1dude.eaglercraft.v1_8.EaglerInputStream;
-import net.lax1dude.eaglercraft.v1_8.internal.IWebSocketFrame;
-import net.lax1dude.eaglercraft.v1_8.internal.buffer.WASMGCDirectArrayConverter;
-
-/**
+/*
  * Copyright (c) 2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -27,6 +13,21 @@ import net.lax1dude.eaglercraft.v1_8.internal.buffer.WASMGCDirectArrayConverter;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.internal.wasm_gc_teavm;
+
+import java.io.InputStream;
+
+import org.teavm.jso.JSObject;
+import org.teavm.jso.JSProperty;
+import org.teavm.jso.core.JSString;
+import org.teavm.jso.typedarrays.ArrayBuffer;
+import org.teavm.jso.typedarrays.Uint8Array;
+
+import net.lax1dude.eaglercraft.v1_8.EaglerInputStream;
+import net.lax1dude.eaglercraft.v1_8.internal.IWebSocketFrame;
+import net.lax1dude.eaglercraft.v1_8.internal.buffer.WASMGCDirectArrayConverter;
+
 public class WASMGCWebSocketFrame implements IWebSocketFrame {
 
 	public interface JSWebSocketFrame extends JSObject {

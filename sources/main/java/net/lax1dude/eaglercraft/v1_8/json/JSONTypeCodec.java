@@ -1,6 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.json;
-
-/**
+/*
  * Copyright (c) 2022 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -15,6 +13,9 @@ package net.lax1dude.eaglercraft.v1_8.json;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.json;
+
 public interface JSONTypeCodec<O, J> extends JSONTypeSerializer<O, J>, JSONTypeDeserializer<J, O> {
 
 }

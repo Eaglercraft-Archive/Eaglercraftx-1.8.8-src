@@ -1,15 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.internal.wasm_gc_teavm;
-
-import org.teavm.interop.Address;
-import org.teavm.interop.Import;
-import org.teavm.interop.Unmanaged;
-import org.teavm.jso.core.JSArray;
-import org.teavm.jso.core.JSString;
-
-import net.lax1dude.eaglercraft.v1_8.internal.buffer.MemoryStack;
-import net.lax1dude.eaglercraft.v1_8.internal.buffer.WASMGCBufferAllocator;
-
-/**
+/*
  * Copyright (c) 2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -24,6 +13,18 @@ import net.lax1dude.eaglercraft.v1_8.internal.buffer.WASMGCBufferAllocator;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.internal.wasm_gc_teavm;
+
+import org.teavm.interop.Address;
+import org.teavm.interop.Import;
+import org.teavm.interop.Unmanaged;
+import org.teavm.jso.core.JSArray;
+import org.teavm.jso.core.JSString;
+
+import net.lax1dude.eaglercraft.v1_8.internal.buffer.MemoryStack;
+import net.lax1dude.eaglercraft.v1_8.internal.buffer.WASMGCBufferAllocator;
+
 public class BetterJSStringConverter {
 
 	private static final TextDecoder textDecoder = new TextDecoder("utf-16");

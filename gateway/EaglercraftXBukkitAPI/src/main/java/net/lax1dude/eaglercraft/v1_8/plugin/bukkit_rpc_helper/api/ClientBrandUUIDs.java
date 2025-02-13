@@ -1,9 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.plugin.bukkit_rpc_helper.api;
-
-import java.nio.charset.StandardCharsets;
-import java.util.UUID;
-
-/**
+/*
  * Copyright (c) 2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -18,6 +13,12 @@ import java.util.UUID;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.plugin.bukkit_rpc_helper.api;
+
+import java.nio.charset.StandardCharsets;
+import java.util.UUID;
+
 public class ClientBrandUUIDs {
 
 	public static final UUID BRAND_NULL_UUID = new UUID(0l, 0l);

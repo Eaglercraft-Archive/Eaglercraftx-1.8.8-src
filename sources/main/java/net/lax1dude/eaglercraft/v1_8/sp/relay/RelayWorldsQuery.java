@@ -1,11 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.sp.relay;
-
-import java.util.List;
-
-import net.lax1dude.eaglercraft.v1_8.sp.relay.RelayQuery.VersionMismatch;
-import net.lax1dude.eaglercraft.v1_8.sp.relay.pkt.RelayPacket07LocalWorlds;
-
-/**
+/*
  * Copyright (c) 2022-2024 lax1dude, ayunami2000. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -20,6 +13,14 @@ import net.lax1dude.eaglercraft.v1_8.sp.relay.pkt.RelayPacket07LocalWorlds;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.sp.relay;
+
+import java.util.List;
+
+import net.lax1dude.eaglercraft.v1_8.sp.relay.RelayQuery.VersionMismatch;
+import net.lax1dude.eaglercraft.v1_8.sp.relay.pkt.RelayPacket07LocalWorlds;
+
 public interface RelayWorldsQuery {
 
 	void update();

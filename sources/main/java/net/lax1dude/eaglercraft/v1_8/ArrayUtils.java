@@ -1,10 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8;
-
-import java.util.List;
-
-import net.minecraft.client.settings.KeyBinding;
-
-/**
+/*
  * Copyright (c) 2022 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -19,6 +13,13 @@ import net.minecraft.client.settings.KeyBinding;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8;
+
+import java.util.List;
+
+import net.minecraft.client.settings.KeyBinding;
+
 public class ArrayUtils {
 
 	public static KeyBinding[] clone(KeyBinding[] keyBinding) {

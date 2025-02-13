@@ -1,12 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.boot_menu.teavm;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import org.teavm.jso.dom.html.HTMLElement;
-import org.teavm.jso.dom.html.HTMLInputElement;
-
-/**
+/*
  * Copyright (c) 2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -21,6 +13,15 @@ import org.teavm.jso.dom.html.HTMLInputElement;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.boot_menu.teavm;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.teavm.jso.dom.html.HTMLElement;
+import org.teavm.jso.dom.html.HTMLInputElement;
+
 public class BootMenuDOM {
 
 	public final HTMLElement content_view_selection;

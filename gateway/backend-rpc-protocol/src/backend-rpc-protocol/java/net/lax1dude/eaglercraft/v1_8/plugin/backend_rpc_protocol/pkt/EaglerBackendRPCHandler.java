@@ -1,9 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.plugin.backend_rpc_protocol.pkt;
-
-import net.lax1dude.eaglercraft.v1_8.plugin.backend_rpc_protocol.pkt.client.*;
-import net.lax1dude.eaglercraft.v1_8.plugin.backend_rpc_protocol.pkt.server.*;
-
-/**
+/*
  * Copyright (c) 2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -18,6 +13,12 @@ import net.lax1dude.eaglercraft.v1_8.plugin.backend_rpc_protocol.pkt.server.*;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.plugin.backend_rpc_protocol.pkt;
+
+import net.lax1dude.eaglercraft.v1_8.plugin.backend_rpc_protocol.pkt.client.*;
+import net.lax1dude.eaglercraft.v1_8.plugin.backend_rpc_protocol.pkt.server.*;
+
 public interface EaglerBackendRPCHandler {
 
 	default void handleClient(CPacketRPCEnabled packet) {

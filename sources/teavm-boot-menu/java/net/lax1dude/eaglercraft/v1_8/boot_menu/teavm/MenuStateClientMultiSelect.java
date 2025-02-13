@@ -1,14 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.boot_menu.teavm;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.teavm.jso.dom.html.HTMLElement;
-
-import com.google.common.collect.Collections2;
-import com.google.common.collect.Lists;
-
-/**
+/*
  * Copyright (c) 2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -23,6 +13,17 @@ import com.google.common.collect.Lists;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.boot_menu.teavm;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.teavm.jso.dom.html.HTMLElement;
+
+import com.google.common.collect.Collections2;
+import com.google.common.collect.Lists;
+
 public abstract class MenuStateClientMultiSelect extends MenuState {
 
 	protected static class BootItem implements SelectionListController.ListItem {

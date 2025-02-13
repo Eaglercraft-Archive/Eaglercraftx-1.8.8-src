@@ -1,10 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.plugin.backend_rpc_protocol.util;
-
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
-
-/**
+/*
  * Copyright (c) 2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -19,6 +13,13 @@ import java.io.IOException;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.plugin.backend_rpc_protocol.util;
+
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
+
 public class PacketImageData {
 
 	public final int width;

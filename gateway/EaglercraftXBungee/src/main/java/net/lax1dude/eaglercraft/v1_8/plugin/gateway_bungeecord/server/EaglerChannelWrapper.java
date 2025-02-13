@@ -1,10 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.server;
-
-import io.netty.channel.ChannelHandlerContext;
-import net.md_5.bungee.netty.ChannelWrapper;
-import net.md_5.bungee.protocol.Protocol;
-
-/**
+/*
  * Copyright (c) 2022-2023 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -19,6 +13,13 @@ import net.md_5.bungee.protocol.Protocol;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.server;
+
+import io.netty.channel.ChannelHandlerContext;
+import net.md_5.bungee.netty.ChannelWrapper;
+import net.md_5.bungee.protocol.Protocol;
+
 public class EaglerChannelWrapper extends ChannelWrapper {
 
 	public EaglerChannelWrapper(ChannelHandlerContext ctx) {

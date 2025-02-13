@@ -1,15 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.internal.teavm.generators;
-
-import java.io.IOException;
-
-import org.teavm.backend.javascript.codegen.SourceWriter;
-import org.teavm.backend.javascript.spi.Generator;
-import org.teavm.backend.javascript.spi.GeneratorContext;
-import org.teavm.backend.javascript.spi.Injector;
-import org.teavm.backend.javascript.spi.InjectorContext;
-import org.teavm.model.MethodReference;
-
-/**
+/*
  * Copyright (c) 2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -24,6 +13,18 @@ import org.teavm.model.MethodReference;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.internal.teavm.generators;
+
+import java.io.IOException;
+
+import org.teavm.backend.javascript.codegen.SourceWriter;
+import org.teavm.backend.javascript.spi.Generator;
+import org.teavm.backend.javascript.spi.GeneratorContext;
+import org.teavm.backend.javascript.spi.Injector;
+import org.teavm.backend.javascript.spi.InjectorContext;
+import org.teavm.model.MethodReference;
+
 public class TeaVMUtilsUnwrapGenerator {
 
 	// WARNING: This code uses internal TeaVM APIs that may not have

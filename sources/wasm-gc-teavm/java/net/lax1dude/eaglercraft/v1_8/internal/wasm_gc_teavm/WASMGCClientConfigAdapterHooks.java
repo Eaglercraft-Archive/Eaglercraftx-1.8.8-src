@@ -1,16 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.internal.wasm_gc_teavm;
-
-import java.util.function.Consumer;
-
-import org.teavm.jso.JSFunctor;
-import org.teavm.jso.JSObject;
-
-import net.lax1dude.eaglercraft.v1_8.internal.IClientConfigAdapterHooks;
-import net.lax1dude.eaglercraft.v1_8.internal.wasm_gc_teavm.opts.JSEaglercraftXOptsHooks;
-import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
-import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
-
-/**
+/*
  * Copyright (c) 2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -25,6 +13,19 @@ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.internal.wasm_gc_teavm;
+
+import java.util.function.Consumer;
+
+import org.teavm.jso.JSFunctor;
+import org.teavm.jso.JSObject;
+
+import net.lax1dude.eaglercraft.v1_8.internal.IClientConfigAdapterHooks;
+import net.lax1dude.eaglercraft.v1_8.internal.wasm_gc_teavm.opts.JSEaglercraftXOptsHooks;
+import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
+import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
+
 public class WASMGCClientConfigAdapterHooks implements IClientConfigAdapterHooks {
 
 	private static final Logger logger = LogManager.getLogger("TeaVMClientConfigAdapterHooks");

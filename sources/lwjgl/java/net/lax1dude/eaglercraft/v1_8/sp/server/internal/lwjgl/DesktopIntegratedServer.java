@@ -1,9 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.sp.server.internal.lwjgl;
-
-import net.lax1dude.eaglercraft.v1_8.sp.server.EaglerIntegratedServerWorker;
-import net.lax1dude.eaglercraft.v1_8.sp.server.internal.ServerPlatformSingleplayer;
-
-/**
+/*
  * Copyright (c) 2023-2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -18,6 +13,12 @@ import net.lax1dude.eaglercraft.v1_8.sp.server.internal.ServerPlatformSingleplay
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.sp.server.internal.lwjgl;
+
+import net.lax1dude.eaglercraft.v1_8.sp.server.EaglerIntegratedServerWorker;
+import net.lax1dude.eaglercraft.v1_8.sp.server.internal.ServerPlatformSingleplayer;
+
 public class DesktopIntegratedServer implements Runnable {
 
 	public static Thread serverThread = null;

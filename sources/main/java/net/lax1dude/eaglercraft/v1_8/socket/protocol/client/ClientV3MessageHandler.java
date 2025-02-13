@@ -1,18 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.socket.protocol.client;
-
-import java.nio.charset.StandardCharsets;
-
-import net.lax1dude.eaglercraft.v1_8.EagRuntime;
-import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
-import net.lax1dude.eaglercraft.v1_8.profile.SkinModel;
-import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.GameMessageHandler;
-import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.server.*;
-import net.lax1dude.eaglercraft.v1_8.update.UpdateService;
-import net.lax1dude.eaglercraft.v1_8.voice.VoiceClientController;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.network.NetHandlerPlayClient;
-
-/**
+/*
  * Copyright (c) 2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -27,6 +13,21 @@ import net.minecraft.client.network.NetHandlerPlayClient;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.socket.protocol.client;
+
+import java.nio.charset.StandardCharsets;
+
+import net.lax1dude.eaglercraft.v1_8.EagRuntime;
+import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
+import net.lax1dude.eaglercraft.v1_8.profile.SkinModel;
+import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.GameMessageHandler;
+import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.server.*;
+import net.lax1dude.eaglercraft.v1_8.update.UpdateService;
+import net.lax1dude.eaglercraft.v1_8.voice.VoiceClientController;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.network.NetHandlerPlayClient;
+
 public class ClientV3MessageHandler implements GameMessageHandler {
 
 	private final NetHandlerPlayClient netHandler;

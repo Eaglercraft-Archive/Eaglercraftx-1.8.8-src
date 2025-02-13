@@ -1,16 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.plugin.backend_rpc_protocol;
-
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
-import net.lax1dude.eaglercraft.v1_8.plugin.backend_rpc_protocol.pkt.EaglerBackendRPCPacket;
-import net.lax1dude.eaglercraft.v1_8.plugin.backend_rpc_protocol.pkt.client.*;
-import net.lax1dude.eaglercraft.v1_8.plugin.backend_rpc_protocol.pkt.server.*;
-
-/**
+/*
  * Copyright (c) 2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -25,6 +13,19 @@ import net.lax1dude.eaglercraft.v1_8.plugin.backend_rpc_protocol.pkt.server.*;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.plugin.backend_rpc_protocol;
+
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import net.lax1dude.eaglercraft.v1_8.plugin.backend_rpc_protocol.pkt.EaglerBackendRPCPacket;
+import net.lax1dude.eaglercraft.v1_8.plugin.backend_rpc_protocol.pkt.client.*;
+import net.lax1dude.eaglercraft.v1_8.plugin.backend_rpc_protocol.pkt.server.*;
+
 public enum EaglerBackendRPCProtocol {
 	INIT(0,
 			define_CLIENT_(0x00, CPacketRPCEnabled.class),

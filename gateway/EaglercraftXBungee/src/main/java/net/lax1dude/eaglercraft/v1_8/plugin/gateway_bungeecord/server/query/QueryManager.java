@@ -1,17 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.server.query;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.logging.Level;
-
-import com.google.gson.JsonObject;
-
-import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.EaglerXBungee;
-import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.config.EaglerBungeeConfig;
-import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.server.HttpServerQueryHandler;
-import net.md_5.bungee.api.plugin.PluginDescription;
-
-/**
+/*
  * Copyright (c) 2022-2023 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -26,6 +13,20 @@ import net.md_5.bungee.api.plugin.PluginDescription;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.server.query;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Level;
+
+import com.google.gson.JsonObject;
+
+import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.EaglerXBungee;
+import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.config.EaglerBungeeConfig;
+import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.server.HttpServerQueryHandler;
+import net.md_5.bungee.api.plugin.PluginDescription;
+
 public class QueryManager {
 
 	private static final Map<String, Class<? extends HttpServerQueryHandler>> queryTypes = new HashMap<>();

@@ -1,6 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.voice;
-
-/**
+/*
  * Copyright (c) 2024 ayunami2000. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -15,6 +13,9 @@ package net.lax1dude.eaglercraft.v1_8.voice;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.voice;
+
 public enum EnumVoiceChannelReadyState {
 	NONE, ABORTED, DEVICE_INITIALIZED;
 }

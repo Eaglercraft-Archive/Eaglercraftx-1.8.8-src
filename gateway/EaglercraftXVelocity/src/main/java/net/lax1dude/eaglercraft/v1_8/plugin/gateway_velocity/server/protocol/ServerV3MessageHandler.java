@@ -1,14 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.server.protocol;
-
-import java.util.UUID;
-
-import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.EaglerXVelocity;
-import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.server.EaglerPlayerData;
-import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.voice.VoiceService;
-import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.GameMessageHandler;
-import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.client.*;
-
-/**
+/*
  * Copyright (c) 2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -23,6 +13,17 @@ import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.client.*;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.server.protocol;
+
+import java.util.UUID;
+
+import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.EaglerXVelocity;
+import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.server.EaglerPlayerData;
+import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.voice.VoiceService;
+import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.GameMessageHandler;
+import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.client.*;
+
 public class ServerV3MessageHandler implements GameMessageHandler {
 
 	private final EaglerPlayerData eaglerHandle;

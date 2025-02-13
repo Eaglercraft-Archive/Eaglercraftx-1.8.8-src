@@ -1,9 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.internal.teavm;
-
-import org.teavm.jso.JSProperty;
-import org.teavm.jso.dom.events.Event;
-
-/**
+/*
  * Copyright (c) 2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -18,6 +13,12 @@ import org.teavm.jso.dom.events.Event;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.internal.teavm;
+
+import org.teavm.jso.JSProperty;
+import org.teavm.jso.dom.events.Event;
+
 public interface TouchEvent extends Event {
 
 	@JSProperty

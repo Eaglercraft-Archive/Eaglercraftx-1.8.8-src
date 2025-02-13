@@ -1,16 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.opengl.ext.dynamiclights;
-
-import static net.lax1dude.eaglercraft.v1_8.internal.PlatformOpenGL.*;
-
-import net.lax1dude.eaglercraft.v1_8.internal.IProgramGL;
-import net.lax1dude.eaglercraft.v1_8.internal.buffer.FloatBuffer;
-import net.lax1dude.eaglercraft.v1_8.opengl.FixedFunctionShader.FixedFunctionState;
-import net.lax1dude.eaglercraft.v1_8.opengl.IExtPipelineCompiler;
-import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.program.ShaderSource;
-import net.lax1dude.eaglercraft.v1_8.opengl.ext.dynamiclights.program.DynamicLightsExtPipelineShader;
-import net.minecraft.client.renderer.GLAllocation;
-
-/**
+/*
  * Copyright (c) 2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -25,6 +13,19 @@ import net.minecraft.client.renderer.GLAllocation;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.opengl.ext.dynamiclights;
+
+import static net.lax1dude.eaglercraft.v1_8.internal.PlatformOpenGL.*;
+
+import net.lax1dude.eaglercraft.v1_8.internal.IProgramGL;
+import net.lax1dude.eaglercraft.v1_8.internal.buffer.FloatBuffer;
+import net.lax1dude.eaglercraft.v1_8.opengl.FixedFunctionShader.FixedFunctionState;
+import net.lax1dude.eaglercraft.v1_8.opengl.IExtPipelineCompiler;
+import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.program.ShaderSource;
+import net.lax1dude.eaglercraft.v1_8.opengl.ext.dynamiclights.program.DynamicLightsExtPipelineShader;
+import net.minecraft.client.renderer.GLAllocation;
+
 public class DynamicLightsPipelineCompiler implements IExtPipelineCompiler {
 
 	static FloatBuffer matrixCopyBuffer = null;

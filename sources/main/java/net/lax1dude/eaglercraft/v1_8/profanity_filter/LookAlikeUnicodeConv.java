@@ -1,6 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.profanity_filter;
-
-/**
+/*
  * Copyright (c) 2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -15,6 +13,9 @@ package net.lax1dude.eaglercraft.v1_8.profanity_filter;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.profanity_filter;
+
 public class LookAlikeUnicodeConv {
 
 	public static String convertString(String stringIn) {

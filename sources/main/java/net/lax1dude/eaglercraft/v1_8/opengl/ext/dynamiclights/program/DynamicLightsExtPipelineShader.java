@@ -1,13 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.opengl.ext.dynamiclights.program;
-
-import static net.lax1dude.eaglercraft.v1_8.internal.PlatformOpenGL.*;
-
-import net.lax1dude.eaglercraft.v1_8.internal.IProgramGL;
-import net.lax1dude.eaglercraft.v1_8.internal.IUniformGL;
-import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.program.IProgramUniforms;
-import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.program.ShaderProgram;
-
-/**
+/*
  * Copyright (c) 2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -22,6 +13,16 @@ import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.program.ShaderProgram;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.opengl.ext.dynamiclights.program;
+
+import static net.lax1dude.eaglercraft.v1_8.internal.PlatformOpenGL.*;
+
+import net.lax1dude.eaglercraft.v1_8.internal.IProgramGL;
+import net.lax1dude.eaglercraft.v1_8.internal.IUniformGL;
+import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.program.IProgramUniforms;
+import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.program.ShaderProgram;
+
 public class DynamicLightsExtPipelineShader extends ShaderProgram<DynamicLightsExtPipelineShader.Uniforms> {
 
 	public final int coreState;

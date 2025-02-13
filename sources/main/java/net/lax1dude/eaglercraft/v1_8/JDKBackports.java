@@ -1,8 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8;
-
-import java.util.function.Supplier;
-
-/**
+/*
  * Copyright (c) 2022 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -17,6 +13,11 @@ import java.util.function.Supplier;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8;
+
+import java.util.function.Supplier;
+
 public class JDKBackports {
 	
 	public static long parseLong(CharSequence s, int beginIndex, int endIndex, int radix) throws NumberFormatException {

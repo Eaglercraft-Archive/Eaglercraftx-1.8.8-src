@@ -1,9 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.internal.buffer;
-
-import org.teavm.interop.Address;
-import org.teavm.interop.DirectMalloc;
-
-/**
+/*
  * Copyright (c) 2025 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -18,6 +13,12 @@ import org.teavm.interop.DirectMalloc;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.internal.buffer;
+
+import org.teavm.interop.Address;
+import org.teavm.interop.DirectMalloc;
+
 public class MemoryStack {
 
 	public static final int STACK_SIZE = 2 * 1024 * 1024;

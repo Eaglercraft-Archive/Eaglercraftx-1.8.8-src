@@ -1,13 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.internal.teavm;
-
-import java.io.IOException;
-import java.io.InputStream;
-
-import org.teavm.jso.typedarrays.ArrayBuffer;
-import org.teavm.jso.typedarrays.Int8Array;
-import org.teavm.jso.typedarrays.Uint8Array;
-
-/**
+/*
  * Copyright (c) 2022-2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -22,6 +13,16 @@ import org.teavm.jso.typedarrays.Uint8Array;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.internal.teavm;
+
+import java.io.IOException;
+import java.io.InputStream;
+
+import org.teavm.jso.typedarrays.ArrayBuffer;
+import org.teavm.jso.typedarrays.Int8Array;
+import org.teavm.jso.typedarrays.Uint8Array;
+
 public class ArrayBufferInputStream extends InputStream {
 
 	private int mark = -1;

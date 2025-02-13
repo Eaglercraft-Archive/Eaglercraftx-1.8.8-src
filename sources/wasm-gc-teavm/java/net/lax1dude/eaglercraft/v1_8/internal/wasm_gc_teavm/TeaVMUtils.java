@@ -1,9 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.internal.wasm_gc_teavm;
-
-import org.teavm.jso.JSBody;
-import org.teavm.jso.JSObject;
-
-/**
+/*
  * Copyright (c) 2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -18,6 +13,12 @@ import org.teavm.jso.JSObject;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.internal.wasm_gc_teavm;
+
+import org.teavm.jso.JSBody;
+import org.teavm.jso.JSObject;
+
 public class TeaVMUtils {
 
 	@JSBody(params = { "obj" }, script = "return !!obj;")

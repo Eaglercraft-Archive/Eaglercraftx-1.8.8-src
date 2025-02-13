@@ -1,6 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.internal.teavm;
-
-/**
+/*
  * Copyright (c) 2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -15,6 +13,9 @@ package net.lax1dude.eaglercraft.v1_8.internal.teavm;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.internal.teavm;
+
 public enum EnumES6ShimStatus {
 	STATUS_NOT_PRESENT(Integer.MIN_VALUE, "Not present"),
 	STATUS_ERROR(ES6ShimStatusJS.INIT_STATUS_ERROR, "Error, Not initialized"),

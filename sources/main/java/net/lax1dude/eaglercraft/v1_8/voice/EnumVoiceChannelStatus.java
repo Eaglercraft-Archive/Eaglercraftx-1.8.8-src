@@ -1,6 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.voice;
-
-/**
+/*
  * Copyright (c) 2022-2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -15,6 +13,9 @@ package net.lax1dude.eaglercraft.v1_8.voice;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.voice;
+
 public enum EnumVoiceChannelStatus {
 	DISCONNECTED, CONNECTING, CONNECTED, UNAVAILABLE;
 }

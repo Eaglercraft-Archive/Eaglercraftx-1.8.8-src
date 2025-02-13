@@ -1,9 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.config;
-
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.config.Configuration;
-
-/**
+/*
  * Copyright (c) 2022-2023 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -18,6 +13,12 @@ import net.md_5.bungee.config.Configuration;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.config;
+
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.config.Configuration;
+
 public class EaglerAuthConfig {
 
 	static EaglerAuthConfig loadConfig(Configuration config) {

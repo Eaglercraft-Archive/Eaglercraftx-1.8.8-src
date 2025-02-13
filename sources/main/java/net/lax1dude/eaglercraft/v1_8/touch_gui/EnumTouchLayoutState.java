@@ -1,6 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.touch_gui;
-
-/**
+/*
  * Copyright (c) 2024 lax1due. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -15,6 +13,9 @@ package net.lax1dude.eaglercraft.v1_8.touch_gui;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.touch_gui;
+
 public enum EnumTouchLayoutState {
 	IN_GUI,
 	IN_GUI_TYPING,

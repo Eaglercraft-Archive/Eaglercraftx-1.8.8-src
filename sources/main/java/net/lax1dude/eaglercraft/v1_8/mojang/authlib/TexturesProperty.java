@@ -1,13 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.mojang.authlib;
-
-import java.util.Collection;
-
-import org.json.JSONObject;
-
-import net.lax1dude.eaglercraft.v1_8.ArrayUtils;
-import net.lax1dude.eaglercraft.v1_8.Base64;
-
-/**
+/*
  * Copyright (c) 2022 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -22,6 +13,16 @@ import net.lax1dude.eaglercraft.v1_8.Base64;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.mojang.authlib;
+
+import java.util.Collection;
+
+import org.json.JSONObject;
+
+import net.lax1dude.eaglercraft.v1_8.ArrayUtils;
+import net.lax1dude.eaglercraft.v1_8.Base64;
+
 public class TexturesProperty {
 
 	public final String skin;

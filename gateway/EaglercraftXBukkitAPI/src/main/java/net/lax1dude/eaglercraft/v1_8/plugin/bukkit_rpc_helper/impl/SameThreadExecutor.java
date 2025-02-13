@@ -1,10 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.plugin.bukkit_rpc_helper.impl;
-
-import java.util.concurrent.Executor;
-
-import com.google.common.util.concurrent.MoreExecutors;
-
-/**
+/*
  * Copyright (c) 2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -19,6 +13,13 @@ import com.google.common.util.concurrent.MoreExecutors;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.plugin.bukkit_rpc_helper.impl;
+
+import java.util.concurrent.Executor;
+
+import com.google.common.util.concurrent.MoreExecutors;
+
 public class SameThreadExecutor {
 
 	public static final Executor SAME_THREAD_EXECUTOR;

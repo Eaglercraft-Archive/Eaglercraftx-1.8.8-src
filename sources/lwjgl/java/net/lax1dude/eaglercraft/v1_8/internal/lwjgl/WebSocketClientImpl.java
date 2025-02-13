@@ -1,17 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.internal.lwjgl;
-
-import java.net.URI;
-import java.nio.ByteBuffer;
-
-import org.java_websocket.client.WebSocketClient;
-import org.java_websocket.drafts.Draft;
-import org.java_websocket.drafts.Draft_6455;
-import org.java_websocket.extensions.permessage_deflate.PerMessageDeflateExtension;
-import org.java_websocket.handshake.ServerHandshake;
-
-import net.lax1dude.eaglercraft.v1_8.internal.EnumEaglerConnectionState;
-
-/**
+/*
  * Copyright (c) 2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -26,6 +13,20 @@ import net.lax1dude.eaglercraft.v1_8.internal.EnumEaglerConnectionState;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.internal.lwjgl;
+
+import java.net.URI;
+import java.nio.ByteBuffer;
+
+import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.drafts.Draft;
+import org.java_websocket.drafts.Draft_6455;
+import org.java_websocket.extensions.permessage_deflate.PerMessageDeflateExtension;
+import org.java_websocket.handshake.ServerHandshake;
+
+import net.lax1dude.eaglercraft.v1_8.internal.EnumEaglerConnectionState;
+
 class WebSocketClientImpl extends WebSocketClient {
 
 	private static final Draft perMessageDeflateDraft = new Draft_6455(new PerMessageDeflateExtension());

@@ -1,16 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.json.impl;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-
-import org.json.JSONException;
-
-import net.lax1dude.eaglercraft.v1_8.IOUtils;
-import net.lax1dude.eaglercraft.v1_8.json.JSONDataParserImpl;
-import net.lax1dude.eaglercraft.v1_8.json.JSONTypeProvider;
-
-/**
+/*
  * Copyright (c) 2022 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -25,6 +13,19 @@ import net.lax1dude.eaglercraft.v1_8.json.JSONTypeProvider;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.json.impl;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+
+import org.json.JSONException;
+
+import net.lax1dude.eaglercraft.v1_8.IOUtils;
+import net.lax1dude.eaglercraft.v1_8.json.JSONDataParserImpl;
+import net.lax1dude.eaglercraft.v1_8.json.JSONTypeProvider;
+
 public class JSONDataParserStream implements JSONDataParserImpl {
 
 	public boolean accepts(Object type) {

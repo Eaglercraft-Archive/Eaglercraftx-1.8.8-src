@@ -1,13 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8;
-
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.List;
-import java.util.regex.Pattern;
-
-import net.lax1dude.eaglercraft.v1_8.internal.PlatformRuntime;
-
-/**
+/*
  * Copyright (c) 2022-2023 lax1dude, ayunami2000. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -22,6 +13,16 @@ import net.lax1dude.eaglercraft.v1_8.internal.PlatformRuntime;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8;
+
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.List;
+import java.util.regex.Pattern;
+
+import net.lax1dude.eaglercraft.v1_8.internal.PlatformRuntime;
+
 public class EagUtils {
 	
 	private static final String hex = "0123456789ABCDEF";

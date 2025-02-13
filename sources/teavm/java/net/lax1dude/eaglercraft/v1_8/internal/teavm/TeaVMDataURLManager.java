@@ -1,15 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.internal.teavm;
-
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-
-import org.teavm.interop.Async;
-import org.teavm.interop.AsyncCallback;
-import org.teavm.jso.browser.Window;
-
-import net.lax1dude.eaglercraft.v1_8.Base64;
-
-/**
+/*
  * Copyright (c) 2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -24,6 +13,18 @@ import net.lax1dude.eaglercraft.v1_8.Base64;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.internal.teavm;
+
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+
+import org.teavm.interop.Async;
+import org.teavm.interop.AsyncCallback;
+import org.teavm.jso.browser.Window;
+
+import net.lax1dude.eaglercraft.v1_8.Base64;
+
 public class TeaVMDataURLManager {
 
 	private static void checkDataURLSupport0(boolean fetchBased, final AsyncCallback<Boolean> callback) {

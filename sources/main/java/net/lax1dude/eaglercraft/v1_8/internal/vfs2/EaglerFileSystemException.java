@@ -1,6 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.internal.vfs2;
-
-/**
+/*
  * Copyright (c) 2023-2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -15,6 +13,9 @@ package net.lax1dude.eaglercraft.v1_8.internal.vfs2;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.internal.vfs2;
+
 public class EaglerFileSystemException extends RuntimeException {
 
 	public EaglerFileSystemException() {

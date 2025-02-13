@@ -1,8 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.boot_menu.teavm;
-
-import net.lax1dude.eaglercraft.v1_8.internal.teavm.TeaVMClientConfigAdapter;
-
-/**
+/*
  * Copyright (c) 2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -17,6 +13,11 @@ import net.lax1dude.eaglercraft.v1_8.internal.teavm.TeaVMClientConfigAdapter;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.boot_menu.teavm;
+
+import net.lax1dude.eaglercraft.v1_8.internal.teavm.TeaVMClientConfigAdapter;
+
 public interface IBootMenuConfigAdapter {
 
 	public static final IBootMenuConfigAdapter instance = (IBootMenuConfigAdapter)TeaVMClientConfigAdapter.instance;

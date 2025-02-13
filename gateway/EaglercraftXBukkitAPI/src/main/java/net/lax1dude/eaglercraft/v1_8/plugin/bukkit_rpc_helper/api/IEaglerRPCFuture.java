@@ -1,14 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.plugin.bukkit_rpc_helper.api;
-
-import java.util.concurrent.Executor;
-
-import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.Futures;
-import com.google.common.util.concurrent.ListenableFuture;
-
-import net.lax1dude.eaglercraft.v1_8.plugin.bukkit_rpc_helper.impl.SameThreadExecutor;
-
-/**
+/*
  * Copyright (c) 2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -23,6 +13,17 @@ import net.lax1dude.eaglercraft.v1_8.plugin.bukkit_rpc_helper.impl.SameThreadExe
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.plugin.bukkit_rpc_helper.api;
+
+import java.util.concurrent.Executor;
+
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFuture;
+
+import net.lax1dude.eaglercraft.v1_8.plugin.bukkit_rpc_helper.impl.SameThreadExecutor;
+
 public interface IEaglerRPCFuture<V> extends ListenableFuture<V> {
 
 	/**

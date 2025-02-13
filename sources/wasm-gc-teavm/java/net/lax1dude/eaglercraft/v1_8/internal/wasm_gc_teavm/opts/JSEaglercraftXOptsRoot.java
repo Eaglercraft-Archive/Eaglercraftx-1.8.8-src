@@ -1,10 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.internal.wasm_gc_teavm.opts;
-
-import org.teavm.jso.JSBody;
-import org.teavm.jso.JSObject;
-import org.teavm.jso.core.JSArrayReader;
-
-/**
+/*
  * Copyright (c) 2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -19,6 +13,13 @@ import org.teavm.jso.core.JSArrayReader;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.internal.wasm_gc_teavm.opts;
+
+import org.teavm.jso.JSBody;
+import org.teavm.jso.JSObject;
+import org.teavm.jso.core.JSArrayReader;
+
 public interface JSEaglercraftXOptsRoot extends JSObject {
 
 	@JSBody(params = { "def" }, script = "return (typeof this.lang === \"string\") ? this.lang : def;")

@@ -1,13 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.sp.server;
-
-import net.lax1dude.eaglercraft.v1_8.internal.vfs2.VFile2;
-import net.minecraft.world.WorldProvider;
-import net.minecraft.world.chunk.storage.IChunkLoader;
-import net.minecraft.world.storage.SaveHandler;
-import net.minecraft.world.storage.WorldInfo;
-import net.minecraft.nbt.NBTTagCompound;
-
-/**
+/*
  * Copyright (c) 2023-2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -22,6 +13,16 @@ import net.minecraft.nbt.NBTTagCompound;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.sp.server;
+
+import net.lax1dude.eaglercraft.v1_8.internal.vfs2.VFile2;
+import net.minecraft.world.WorldProvider;
+import net.minecraft.world.chunk.storage.IChunkLoader;
+import net.minecraft.world.storage.SaveHandler;
+import net.minecraft.world.storage.WorldInfo;
+import net.minecraft.nbt.NBTTagCompound;
+
 public class EaglerSaveHandler extends SaveHandler {
 
 	public EaglerSaveHandler(VFile2 savesDirectory, String directoryName) {

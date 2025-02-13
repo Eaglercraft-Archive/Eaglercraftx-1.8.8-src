@@ -1,10 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.config;
-
-import java.util.Collection;
-
-import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.config.bungee.Configuration;
-
-/**
+/*
  * Copyright (c) 2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -19,6 +13,13 @@ import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.config.bungee.Confi
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.config;
+
+import java.util.Collection;
+
+import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.config.bungee.Configuration;
+
 public class EaglerUpdateConfig {
 
 	static EaglerUpdateConfig loadConfig(Configuration config) {

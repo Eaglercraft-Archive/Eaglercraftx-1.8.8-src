@@ -1,8 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.minecraft;
-
-import net.minecraft.entity.Entity;
-
-/**
+/*
  * Copyright (c) 2022 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -17,6 +13,11 @@ import net.minecraft.entity.Entity;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.minecraft;
+
+import net.minecraft.entity.Entity;
+
 public interface IAcceleratedParticleEngine {
 
 	void begin(float partialTicks);

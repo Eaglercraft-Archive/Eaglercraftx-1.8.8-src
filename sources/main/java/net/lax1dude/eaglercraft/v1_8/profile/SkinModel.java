@@ -1,9 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.profile;
-
-import java.util.HashMap;
-import java.util.Map;
-
-/**
+/*
  * Copyright (c) 2022-2023 lax1dude, ayunami2000. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -18,6 +13,12 @@ import java.util.Map;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.profile;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public enum SkinModel {
 	STEVE(0, 64, 64, "default", false), ALEX(1, 64, 64, "slim", false), ZOMBIE(2, 64, 64, "zombie", true),
 	LONG_ARMS(3, HighPolySkin.LONG_ARMS), WEIRD_CLIMBER_DUDE(4, HighPolySkin.WEIRD_CLIMBER_DUDE),

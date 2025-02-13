@@ -1,6 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity;
-
-/**
+/*
  * Copyright (c) 2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -15,6 +13,9 @@ package net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity;
+
 public class EaglerXVelocityVersion {
 
 	public static final String NATIVE_VELOCITY_BUILD = "3.4.0-SNAPSHOT:6995f415:b464";

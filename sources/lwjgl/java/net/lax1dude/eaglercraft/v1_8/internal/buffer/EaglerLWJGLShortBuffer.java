@@ -1,9 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.internal.buffer;
-
-import net.lax1dude.unsafememcpy.UnsafeMemcpy;
-import net.lax1dude.unsafememcpy.UnsafeUtils;
-
-/**
+/*
  * Copyright (c) 2022-2025 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -18,6 +13,12 @@ import net.lax1dude.unsafememcpy.UnsafeUtils;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.internal.buffer;
+
+import net.lax1dude.unsafememcpy.UnsafeMemcpy;
+import net.lax1dude.unsafememcpy.UnsafeUtils;
+
 public class EaglerLWJGLShortBuffer extends ShortBuffer {
 
 	final long address;

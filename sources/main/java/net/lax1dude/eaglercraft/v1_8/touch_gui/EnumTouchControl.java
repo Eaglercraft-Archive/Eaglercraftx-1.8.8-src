@@ -1,16 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.touch_gui;
-
-import net.lax1dude.eaglercraft.v1_8.Touch;
-import net.lax1dude.eaglercraft.v1_8.minecraft.EnumInputEvent;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.gui.GuiChat;
-import net.minecraft.client.gui.GuiMainMenu;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.settings.GameSettings;
-
-/**
+/*
  * Copyright (c) 2024 lax1dude, ayunami2000. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -25,6 +13,19 @@ import net.minecraft.client.settings.GameSettings;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.touch_gui;
+
+import net.lax1dude.eaglercraft.v1_8.Touch;
+import net.lax1dude.eaglercraft.v1_8.minecraft.EnumInputEvent;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.gui.GuiChat;
+import net.minecraft.client.gui.GuiMainMenu;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.settings.GameSettings;
+
 public enum EnumTouchControl {
 	
 	DPAD_UP(EnumTouchControlPos.BOTTOM_LEFT, 60, 109, 44, null, (enumIn, x, y, pressed, mc, res) -> {

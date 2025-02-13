@@ -1,10 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.internal.teavm;
-
-import org.teavm.jso.JSBody;
-
-import net.lax1dude.eaglercraft.v1_8.sp.server.internal.teavm.WorkerMain;
-
-/**
+/*
  * Copyright (c) 2022-2025 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -19,6 +13,13 @@ import net.lax1dude.eaglercraft.v1_8.sp.server.internal.teavm.WorkerMain;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.internal.teavm;
+
+import org.teavm.jso.JSBody;
+
+import net.lax1dude.eaglercraft.v1_8.sp.server.internal.teavm.WorkerMain;
+
 public class MainClass {
 
 	public static void main(String[] args) {

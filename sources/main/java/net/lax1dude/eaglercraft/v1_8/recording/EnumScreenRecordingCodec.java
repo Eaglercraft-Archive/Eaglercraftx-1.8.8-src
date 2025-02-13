@@ -1,6 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.recording;
-
-/**
+/*
  * Copyright (c) 2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -15,6 +13,9 @@ package net.lax1dude.eaglercraft.v1_8.recording;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.recording;
+
 public enum EnumScreenRecordingCodec {
 
 	CODEC_MP4_H264_GENERIC_AAC("MP4 (video: H.264 Default, audio: AAC LC)", "mp4", "video/mp4", "avc1", "mp4a.40.2", false),

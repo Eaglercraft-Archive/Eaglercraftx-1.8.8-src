@@ -1,14 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.command;
-
-import java.nio.charset.StandardCharsets;
-
-import com.velocitypowered.api.command.CommandSource;
-
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.auth.SHA1Digest;
-
-/**
+/*
  * Copyright (c) 2022-2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -23,6 +13,17 @@ import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.auth.SHA1Digest;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.command;
+
+import java.nio.charset.StandardCharsets;
+
+import com.velocitypowered.api.command.CommandSource;
+
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.auth.SHA1Digest;
+
 public class CommandConfirmCode extends EaglerCommand {
 
 	public static String confirmHash = null;

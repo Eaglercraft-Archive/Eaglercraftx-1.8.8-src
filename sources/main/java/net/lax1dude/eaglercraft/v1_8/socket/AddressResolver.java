@@ -1,10 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.socket;
-
-import net.lax1dude.eaglercraft.v1_8.EagRuntime;
-import net.minecraft.client.multiplayer.ServerAddress;
-import net.minecraft.client.multiplayer.ServerData;
-
-/**
+/*
  * Copyright (c) 2022-2023 lax1dude, ayunami2000. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -19,6 +13,13 @@ import net.minecraft.client.multiplayer.ServerData;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.socket;
+
+import net.lax1dude.eaglercraft.v1_8.EagRuntime;
+import net.minecraft.client.multiplayer.ServerAddress;
+import net.minecraft.client.multiplayer.ServerData;
+
 public class AddressResolver {
 
 	public static String resolveURI(ServerData input) {

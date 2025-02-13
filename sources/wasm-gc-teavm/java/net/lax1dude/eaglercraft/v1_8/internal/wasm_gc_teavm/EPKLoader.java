@@ -1,17 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.internal.wasm_gc_teavm;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Map;
-
-import com.jcraft.jzlib.CRC32;
-import com.jcraft.jzlib.GZIPInputStream;
-import com.jcraft.jzlib.InflaterInputStream;
-
-import net.lax1dude.eaglercraft.v1_8.internal.buffer.ByteBuffer;
-import net.lax1dude.eaglercraft.v1_8.internal.buffer.EaglerBufferInputStream;
-
-/**
+/*
  * Copyright (c) 2022-2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -26,6 +13,20 @@ import net.lax1dude.eaglercraft.v1_8.internal.buffer.EaglerBufferInputStream;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.internal.wasm_gc_teavm;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Map;
+
+import com.jcraft.jzlib.CRC32;
+import com.jcraft.jzlib.GZIPInputStream;
+import com.jcraft.jzlib.InflaterInputStream;
+
+import net.lax1dude.eaglercraft.v1_8.internal.buffer.ByteBuffer;
+import net.lax1dude.eaglercraft.v1_8.internal.buffer.EaglerBufferInputStream;
+
 public class EPKLoader {
 
 	public static final void loadEPK(ByteBuffer epkFile, Map<String, byte[]> loadedFiles) throws IOException {

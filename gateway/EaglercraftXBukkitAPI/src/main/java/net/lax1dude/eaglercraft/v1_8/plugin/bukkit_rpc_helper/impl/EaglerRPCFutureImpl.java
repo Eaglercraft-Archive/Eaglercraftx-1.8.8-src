@@ -1,10 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.plugin.bukkit_rpc_helper.impl;
-
-import com.google.common.util.concurrent.AbstractFuture;
-
-import net.lax1dude.eaglercraft.v1_8.plugin.bukkit_rpc_helper.api.IEaglerRPCFuture;
-
-/**
+/*
  * Copyright (c) 2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -19,6 +13,13 @@ import net.lax1dude.eaglercraft.v1_8.plugin.bukkit_rpc_helper.api.IEaglerRPCFutu
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.plugin.bukkit_rpc_helper.impl;
+
+import com.google.common.util.concurrent.AbstractFuture;
+
+import net.lax1dude.eaglercraft.v1_8.plugin.bukkit_rpc_helper.api.IEaglerRPCFuture;
+
 public class EaglerRPCFutureImpl<V> extends AbstractFuture<V> implements IEaglerRPCFuture<V> {
 
 	private volatile long timeStart = -1l;

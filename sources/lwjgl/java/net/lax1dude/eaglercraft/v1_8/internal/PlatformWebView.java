@@ -1,10 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.internal;
-
-import net.lax1dude.eaglercraft.v1_8.internal.lwjgl.FallbackWebViewServer;
-import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.server.SPacketWebViewMessageV4EAG;
-import net.lax1dude.eaglercraft.v1_8.webview.WebViewOverlayController.IPacketSendCallback;
-
-/**
+/*
  * Copyright (c) 2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -19,6 +13,13 @@ import net.lax1dude.eaglercraft.v1_8.webview.WebViewOverlayController.IPacketSen
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.internal;
+
+import net.lax1dude.eaglercraft.v1_8.internal.lwjgl.FallbackWebViewServer;
+import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.server.SPacketWebViewMessageV4EAG;
+import net.lax1dude.eaglercraft.v1_8.webview.WebViewOverlayController.IPacketSendCallback;
+
 public class PlatformWebView {
 
 	private static FallbackWebViewServer fallbackServer = null;

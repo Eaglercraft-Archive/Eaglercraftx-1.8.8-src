@@ -1,6 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.mojang.authlib;
-
-/**
+/*
  * Copyright (c) 2022 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -15,6 +13,9 @@ package net.lax1dude.eaglercraft.v1_8.mojang.authlib;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.mojang.authlib;
+
 public class Property {
 	private final String name;
 	private final String value;

@@ -1,14 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.internal.buffer;
-
-import org.teavm.jso.typedarrays.DataView;
-import org.teavm.jso.typedarrays.Float32Array;
-import org.teavm.jso.typedarrays.Int16Array;
-import org.teavm.jso.typedarrays.Int32Array;
-import org.teavm.jso.typedarrays.Int8Array;
-
-import net.lax1dude.eaglercraft.v1_8.internal.teavm.TeaVMUtils;
-
-/**
+/*
  * Copyright (c) 2022-2025 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -23,6 +13,17 @@ import net.lax1dude.eaglercraft.v1_8.internal.teavm.TeaVMUtils;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.internal.buffer;
+
+import org.teavm.jso.typedarrays.DataView;
+import org.teavm.jso.typedarrays.Float32Array;
+import org.teavm.jso.typedarrays.Int16Array;
+import org.teavm.jso.typedarrays.Int32Array;
+import org.teavm.jso.typedarrays.Int8Array;
+
+import net.lax1dude.eaglercraft.v1_8.internal.teavm.TeaVMUtils;
+
 public class EaglerArrayByteBuffer extends ByteBuffer {
 
 	final DataView dataView;

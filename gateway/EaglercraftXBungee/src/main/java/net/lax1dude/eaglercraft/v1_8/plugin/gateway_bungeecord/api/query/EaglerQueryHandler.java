@@ -1,9 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.api.query;
-
-import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.server.HttpServerQueryHandler;
-import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.server.query.QueryManager;
-
-/**
+/*
  * Copyright (c) 2022-2023 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -18,6 +13,12 @@ import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.server.query.Quer
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.api.query;
+
+import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.server.HttpServerQueryHandler;
+import net.lax1dude.eaglercraft.v1_8.plugin.gateway_bungeecord.server.query.QueryManager;
+
 public abstract class EaglerQueryHandler extends HttpServerQueryHandler {
 
 	public static void registerQueryType(String name, Class<? extends EaglerQueryHandler> clazz) {

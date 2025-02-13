@@ -1,9 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.texture;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.util.MathHelper;
-
-/**
+/*
  * Copyright (c) 2023 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -18,6 +13,12 @@ import net.minecraft.util.MathHelper;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.texture;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.util.MathHelper;
+
 public class TextureClockPBRImpl extends EaglerTextureAtlasSpritePBR {
 	private double smoothParam1;
 	private double smoothParam2;

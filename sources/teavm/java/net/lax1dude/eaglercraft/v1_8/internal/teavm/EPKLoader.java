@@ -1,17 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.internal.teavm;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Map;
-
-import org.teavm.jso.typedarrays.ArrayBuffer;
-import org.teavm.jso.typedarrays.Uint8Array;
-
-import com.jcraft.jzlib.CRC32;
-import com.jcraft.jzlib.GZIPInputStream;
-import com.jcraft.jzlib.InflaterInputStream;
-
-/**
+/*
  * Copyright (c) 2022 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -26,6 +13,20 @@ import com.jcraft.jzlib.InflaterInputStream;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.internal.teavm;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Map;
+
+import org.teavm.jso.typedarrays.ArrayBuffer;
+import org.teavm.jso.typedarrays.Uint8Array;
+
+import com.jcraft.jzlib.CRC32;
+import com.jcraft.jzlib.GZIPInputStream;
+import com.jcraft.jzlib.InflaterInputStream;
+
 public class EPKLoader {
 
 	public static final void loadEPK(ArrayBuffer epkFile, Map<String, byte[]> loadedFiles) throws IOException {

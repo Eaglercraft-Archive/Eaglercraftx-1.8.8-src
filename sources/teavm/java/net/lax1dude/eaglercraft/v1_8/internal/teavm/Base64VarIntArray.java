@@ -1,13 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.internal.teavm;
-
-import java.util.Arrays;
-import java.util.List;
-
-import org.teavm.jso.core.JSString;
-
-import net.lax1dude.eaglercraft.v1_8.Base64;
-
-/**
+/*
  * Copyright (c) 2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -22,6 +13,16 @@ import net.lax1dude.eaglercraft.v1_8.Base64;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.internal.teavm;
+
+import java.util.Arrays;
+import java.util.List;
+
+import org.teavm.jso.core.JSString;
+
+import net.lax1dude.eaglercraft.v1_8.Base64;
+
 public class Base64VarIntArray {
 
 	public static String encodeVarIntArray(List<Integer> values) {

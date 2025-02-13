@@ -1,13 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.api.event;
-
-import java.net.InetAddress;
-import java.nio.charset.StandardCharsets;
-import java.util.UUID;
-import java.util.function.Consumer;
-
-import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.config.EaglerListenerConfig;
-
-/**
+/*
  * Copyright (c) 2022-2023 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -22,6 +13,16 @@ import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.config.EaglerListen
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.api.event;
+
+import java.net.InetAddress;
+import java.nio.charset.StandardCharsets;
+import java.util.UUID;
+import java.util.function.Consumer;
+
+import net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.config.EaglerListenerConfig;
+
 public class EaglercraftHandleAuthCookieEvent {
 
 	public static enum AuthResponse {

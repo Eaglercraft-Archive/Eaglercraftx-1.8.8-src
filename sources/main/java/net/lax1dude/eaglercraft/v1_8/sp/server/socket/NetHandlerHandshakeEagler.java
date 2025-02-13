@@ -1,12 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.sp.server.socket;
-
-import net.lax1dude.eaglercraft.v1_8.sp.server.EaglerMinecraftServer;
-import net.minecraft.network.handshake.INetHandlerHandshakeServer;
-import net.minecraft.network.handshake.client.C00Handshake;
-import net.minecraft.server.network.NetHandlerLoginServer;
-import net.minecraft.util.IChatComponent;
-
-/**
+/*
  * Copyright (c) 2023-2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -21,6 +13,15 @@ import net.minecraft.util.IChatComponent;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.sp.server.socket;
+
+import net.lax1dude.eaglercraft.v1_8.sp.server.EaglerMinecraftServer;
+import net.minecraft.network.handshake.INetHandlerHandshakeServer;
+import net.minecraft.network.handshake.client.C00Handshake;
+import net.minecraft.server.network.NetHandlerLoginServer;
+import net.minecraft.util.IChatComponent;
+
 public class NetHandlerHandshakeEagler implements INetHandlerHandshakeServer {
 
 	private final EaglerMinecraftServer mcServer;

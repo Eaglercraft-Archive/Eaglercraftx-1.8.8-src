@@ -1,10 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred;
-
-import net.lax1dude.eaglercraft.v1_8.minecraft.IAcceleratedParticleEngine;
-import net.minecraft.client.particle.EntityFX;
-import net.minecraft.entity.Entity;
-
-/**
+/*
  * Copyright (c) 2023 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -19,6 +13,13 @@ import net.minecraft.entity.Entity;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred;
+
+import net.lax1dude.eaglercraft.v1_8.minecraft.IAcceleratedParticleEngine;
+import net.minecraft.client.particle.EntityFX;
+import net.minecraft.entity.Entity;
+
 public abstract class AbstractAcceleratedEffectRenderer implements IAcceleratedParticleEngine {
 
 	public float partialTicks;

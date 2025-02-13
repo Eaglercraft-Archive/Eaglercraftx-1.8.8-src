@@ -1,11 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.internal.wasm_gc_teavm;
-
-import org.teavm.interop.Import;
-import org.teavm.jso.core.JSString;
-
-import net.lax1dude.eaglercraft.v1_8.EaglercraftVersion;
-
-/**
+/*
  * Copyright (c) 2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -20,6 +13,14 @@ import net.lax1dude.eaglercraft.v1_8.EaglercraftVersion;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.internal.wasm_gc_teavm;
+
+import org.teavm.interop.Import;
+import org.teavm.jso.core.JSString;
+
+import net.lax1dude.eaglercraft.v1_8.EaglercraftVersion;
+
 public class WASMGCCrashReportStrings {
 
 	private static final int CRASH_REPORT_EAGLER_VERSION = 0;

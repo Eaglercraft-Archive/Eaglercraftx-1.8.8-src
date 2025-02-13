@@ -1,11 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.internal;
-
-import java.util.List;
-
-import net.lax1dude.eaglercraft.v1_8.sp.relay.RelayEntry;
-import org.json.JSONObject;
-
-/**
+/*
  * Copyright (c) 2022-2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -20,6 +13,14 @@ import org.json.JSONObject;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.internal;
+
+import java.util.List;
+
+import net.lax1dude.eaglercraft.v1_8.sp.relay.RelayEntry;
+import org.json.JSONObject;
+
 public interface IClientConfigAdapter {
 
 	public static class DefaultServer {

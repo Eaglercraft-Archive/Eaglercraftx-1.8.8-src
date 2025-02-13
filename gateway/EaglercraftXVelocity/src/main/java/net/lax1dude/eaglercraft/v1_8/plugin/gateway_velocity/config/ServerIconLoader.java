@@ -1,15 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.config;
-
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.InputStream;
-
-import javax.imageio.ImageIO;
-
-/**
+/*
  * Copyright (c) 2022-2023 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -24,6 +13,18 @@ import javax.imageio.ImageIO;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.plugin.gateway_velocity.config;
+
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.InputStream;
+
+import javax.imageio.ImageIO;
+
 class ServerIconLoader {
 
 	static int[] createServerIcon(BufferedImage awtIcon) {

@@ -1,9 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.internal.buffer;
-
-import org.teavm.interop.Address;
-import org.teavm.interop.Unmanaged;
-
-/**
+/*
  * Copyright (c) 2024 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -18,6 +13,12 @@ import org.teavm.interop.Unmanaged;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.internal.buffer;
+
+import org.teavm.interop.Address;
+import org.teavm.interop.Unmanaged;
+
 public class WASMGCDirectArrayCopy {
 
 	@Unmanaged

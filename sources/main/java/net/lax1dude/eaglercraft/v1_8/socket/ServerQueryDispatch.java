@@ -1,12 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.socket;
-
-import net.lax1dude.eaglercraft.v1_8.internal.IServerQuery;
-import net.lax1dude.eaglercraft.v1_8.internal.IWebSocketClient;
-import net.lax1dude.eaglercraft.v1_8.internal.PlatformNetworking;
-import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
-import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
-
-/**
+/*
  * Copyright (c) 2022-2023 lax1dude, ayunami2000. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -21,6 +13,15 @@ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.socket;
+
+import net.lax1dude.eaglercraft.v1_8.internal.IServerQuery;
+import net.lax1dude.eaglercraft.v1_8.internal.IWebSocketClient;
+import net.lax1dude.eaglercraft.v1_8.internal.PlatformNetworking;
+import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
+import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
+
 public class ServerQueryDispatch {
 
 	private static final Logger logger = LogManager.getLogger("QueryDispatch");

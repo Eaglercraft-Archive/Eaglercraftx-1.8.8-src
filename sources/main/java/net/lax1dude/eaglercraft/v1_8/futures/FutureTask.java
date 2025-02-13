@@ -1,9 +1,4 @@
-package net.lax1dude.eaglercraft.v1_8.futures;
-
-import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
-
-/**
+/*
  * Copyright (c) 2022-2023 lax1dude, ayunami2000. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -18,6 +13,12 @@ import java.util.concurrent.TimeUnit;
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+package net.lax1dude.eaglercraft.v1_8.futures;
+
+import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
+
 public class FutureTask<V> implements RunnableFuture<V> {
 
 	private boolean cancelled;
