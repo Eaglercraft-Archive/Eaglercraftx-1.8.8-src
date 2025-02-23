@@ -690,7 +690,7 @@
 
 > CHANGE  17 : 18  @  17 : 21
 
-~ 			EaglercraftGPU.glFogi('\u855a', '\u855b');
+~ 			// EaglercraftGPU.glFogi('\u855a', '\u855b');
 
 > INSERT  14 : 17  @  14
 
@@ -702,11 +702,9 @@
 
 + 			GlStateManager.setFogDensity(0.001F);
 
-> CHANGE  10 : 11  @  10 : 13
+> DELETE  10  @  10 : 14
 
-~ 			EaglercraftGPU.glFogi('\u855a', '\u855b');
-
-> DELETE  9  @  9 : 10
+> DELETE  8  @  8 : 9
 
 > INSERT  12 : 953  @  12
 

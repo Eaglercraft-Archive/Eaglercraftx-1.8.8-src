@@ -46,6 +46,7 @@ public class DeferredStateManager {
 	static float materialConstantsRoughness = 0.5f;
 	static float materialConstantsMetalness = 0.02f;
 	static float materialConstantsEmission = 0.0f;
+	static float materialConstantsSubsurfScatting = 0.0f;
 	static boolean materialConstantsUseEnvMap = false;
 
 	static int wavingBlockOffsetSerial = 0;
@@ -103,46 +104,47 @@ public class DeferredStateManager {
 
 	public static boolean doCheckErrors = false;
 
-	public static final boolean isDeferredRenderer() {
+	public static boolean isDeferredRenderer() {
 		return EaglerDeferredPipeline.instance != null;
 	}
 
-	public static final boolean isInDeferredPass() {
+	public static boolean isInDeferredPass() {
 		return EaglerDeferredPipeline.instance != null && GlStateManager.isExtensionPipeline();
 	}
 
-	public static final boolean isInForwardPass() {
+	public static boolean isInForwardPass() {
 		return enableForwardRender && !enableShadowRender;
 	}
 
-	public static final boolean isInParaboloidPass() {
+	public static boolean isInParaboloidPass() {
 		return enableParaboloidRender;
 	}
 
-	public static final boolean isRenderingRealisticWater() {
+	public static boolean isRenderingRealisticWater() {
 		return EaglerDeferredPipeline.instance != null && EaglerDeferredPipeline.instance.config.is_rendering_realisticWater;
 	}
 
-	public static final boolean isRenderingGlassHighlights() {
+	public static boolean isRenderingGlassHighlights() {
 		return EaglerDeferredPipeline.instance != null && EaglerDeferredPipeline.instance.config.is_rendering_useEnvMap;
 	}
 
-	public static final void setDefaultMaterialConstants() {
+	public static void setDefaultMaterialConstants() {
 		materialConstantsRoughness = 0.5f;
 		materialConstantsMetalness = 0.02f;
 		materialConstantsEmission = 0.0f;
+		materialConstantsSubsurfScatting = 0.0f;
 		++materialConstantsSerial;
 	}
 
-	public static final void startUsingEnvMap() {
+	public static void startUsingEnvMap() {
 		materialConstantsUseEnvMap = true;
 	}
 
-	public static final void endUsingEnvMap() {
+	public static void endUsingEnvMap() {
 		materialConstantsUseEnvMap = false;
 	}
 
-	public static final void reportForwardRenderObjectPosition(int centerX, int centerY, int centerZ) {
+	public static void reportForwardRenderObjectPosition(int centerX, int centerY, int centerZ) {
 		EaglerDeferredPipeline instance = EaglerDeferredPipeline.instance;
 		if(instance != null && enableForwardRender) {
 			EaglerDeferredConfig cfg = instance.config;
@@ -153,7 +155,7 @@ public class DeferredStateManager {
 		}
 	}
 
-	public static final void reportForwardRenderObjectPosition2(float x, float y, float z) {
+	public static void reportForwardRenderObjectPosition2(float x, float y, float z) {
 		EaglerDeferredPipeline instance = EaglerDeferredPipeline.instance;
 		if(instance != null && enableForwardRender) {
 			EaglerDeferredConfig cfg = instance.config;
@@ -167,114 +169,114 @@ public class DeferredStateManager {
 		}
 	}
 
-	public static final void setHDRTranslucentPassBlendFunc() {
+	public static void setHDRTranslucentPassBlendFunc() {
 		GlStateManager.tryBlendFuncSeparate(GL_ONE, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ZERO);
 	}
 
-	public static final void enableMaterialTexture() {
+	public static void enableMaterialTexture() {
 		enableMaterialMapTexture = true;
 	}
 
-	public static final void disableMaterialTexture() {
+	public static void disableMaterialTexture() {
 		enableMaterialMapTexture = false;
 	}
 
-	public static final void enableForwardRender() {
+	public static void enableForwardRender() {
 		enableForwardRender = true;
 	}
 
-	public static final void disableForwardRender() {
+	public static void disableForwardRender() {
 		enableForwardRender = false;
 	}
 
-	public static final void enableParaboloidRender() {
+	public static void enableParaboloidRender() {
 		enableParaboloidRender = true;
 	}
 
-	public static final void disableParaboloidRender() {
+	public static void disableParaboloidRender() {
 		enableParaboloidRender = false;
 	}
 
-	public static final void enableShadowRender() {
+	public static void enableShadowRender() {
 		enableShadowRender = true;
 	}
 
-	public static final void disableShadowRender() {
+	public static void disableShadowRender() {
 		enableShadowRender = false;
 	}
 
-	public static final boolean isEnableShadowRender() {
+	public static boolean isEnableShadowRender() {
 		return enableShadowRender;
 	}
 
-	public static final void enableClipPlane() {
+	public static void enableClipPlane() {
 		enableClipPlane = true;
 	}
 
-	public static final void disableClipPlane() {
+	public static void disableClipPlane() {
 		enableClipPlane = false;
 	}
 
-	public static final void setClipPlaneY(float yValue) {
+	public static void setClipPlaneY(float yValue) {
 		clipPlaneY = yValue;
 	}
 
-	public static final void enableDrawWavingBlocks() {
+	public static void enableDrawWavingBlocks() {
 		enableDrawWavingBlocks = true;
 	}
 
-	public static final void disableDrawWavingBlocks() {
+	public static void disableDrawWavingBlocks() {
 		enableDrawWavingBlocks = false;
 	}
 
-	public static final boolean isEnableDrawWavingBlocks() {
+	public static boolean isEnableDrawWavingBlocks() {
 		return enableDrawWavingBlocks;
 	}
 
-	public static final void enableDrawRealisticWaterMask() {
+	public static void enableDrawRealisticWaterMask() {
 		enableDrawRealisticWaterMask = true;
 	}
 
-	public static final void disableDrawRealisticWaterMask() {
+	public static void disableDrawRealisticWaterMask() {
 		enableDrawRealisticWaterMask = false;
 	}
 
-	public static final boolean isDrawRealisticWaterMask() {
+	public static boolean isDrawRealisticWaterMask() {
 		return enableDrawRealisticWaterMask;
 	}
 
-	public static final void enableDrawRealisticWaterRender() {
+	public static void enableDrawRealisticWaterRender() {
 		enableDrawRealisticWaterRender = true;
 	}
 
-	public static final void disableDrawRealisticWaterRender() {
+	public static void disableDrawRealisticWaterRender() {
 		enableDrawRealisticWaterRender = false;
 	}
 
-	public static final boolean isDrawRealisticWaterRender() {
+	public static boolean isDrawRealisticWaterRender() {
 		return enableDrawRealisticWaterRender;
 	}
 
-	public static final void enableDrawGlassHighlightsRender() {
+	public static void enableDrawGlassHighlightsRender() {
 		enableDrawGlassHighlightsRender = true;
 	}
 
-	public static final void disableDrawGlassHighlightsRender() {
+	public static void disableDrawGlassHighlightsRender() {
 		enableDrawGlassHighlightsRender = false;
 	}
 
-	public static final boolean isDrawGlassHighlightsRender() {
+	public static boolean isDrawGlassHighlightsRender() {
 		return enableDrawGlassHighlightsRender;
 	}
 
-	public static final void setWavingBlockOffset(float x, float y, float z) {
+	public static void setWavingBlockOffset(float x, float y, float z) {
 		wavingBlockOffsetX = x;
 		wavingBlockOffsetY = y;
 		wavingBlockOffsetZ = z;
 		++wavingBlockOffsetSerial;
 	}
 
-	public static final void setWavingBlockParams(float x, float y, float z, float w) {
+	public static void setWavingBlockParams(float x, float y, float z, float w) {
 		wavingBlockParamX = x;
 		wavingBlockParamY = y;
 		wavingBlockParamZ = z;
@@ -282,34 +284,39 @@ public class DeferredStateManager {
 		++wavingBlockParamSerial;
 	}
 
-	public static final void setRoughnessConstant(float roughness) {
+	public static void setRoughnessConstant(float roughness) {
 		materialConstantsRoughness = roughness;
 		++materialConstantsSerial;
 	}
 
-	public static final void setMetalnessConstant(float metalness) {
+	public static void setMetalnessConstant(float metalness) {
 		materialConstantsMetalness = metalness;
 		++materialConstantsSerial;
 	}
 
-	public static final void setEmissionConstant(float emission) {
+	public static void setEmissionConstant(float emission) {
 		materialConstantsEmission = emission;
 		++materialConstantsSerial;
 	}
 
-	public static final void setBlockConstant(int blockId) {
+	public static void setSubsurfScatteringConstant(float sss) {
+		materialConstantsSubsurfScatting = sss;
+		++materialConstantsSerial;
+	}
+
+	public static void setBlockConstant(int blockId) {
 		constantBlock = blockId;
 	}
 
-	public static final AxisAlignedBB getShadowMapBounds() {
+	public static AxisAlignedBB getShadowMapBounds() {
 		return shadowMapBounds;
 	}
 
-	public static final void setShadowMapBounds(AxisAlignedBB newShadowMapBounds) {
+	public static void setShadowMapBounds(AxisAlignedBB newShadowMapBounds) {
 		shadowMapBounds = newShadowMapBounds;
 	}
 
-	public static final void loadGBufferViewMatrix() {
+	public static void loadGBufferViewMatrix() {
 		loadPassViewMatrix();
 		viewMatrix.load(passViewMatrix);
 		inverseViewMatrix.load(passInverseViewMatrix);
@@ -323,7 +330,7 @@ public class DeferredStateManager {
 		projMatrixSerial = passProjMatrixSerial;
 	}
 
-	public static final void loadPassViewMatrix() {
+	public static void loadPassViewMatrix() {
 		GlStateManager.getFloat(GL_MODELVIEW_MATRIX, matrixCopyBuffer);
 		passViewMatrix.load(matrixCopyBuffer);
 		Matrix4f.invert(passViewMatrix, passInverseViewMatrix);
@@ -338,7 +345,7 @@ public class DeferredStateManager {
 		++passProjMatrixSerial;
 	}
 
-	public static final void loadShadowPassViewMatrix() {
+	public static void loadShadowPassViewMatrix() {
 		GlStateManager.getFloat(GL_PROJECTION_MATRIX, matrixCopyBuffer);
 		passViewMatrix.load(matrixCopyBuffer);
 		Matrix4f.invert(passViewMatrix, passInverseViewMatrix);
@@ -347,7 +354,7 @@ public class DeferredStateManager {
 		isShadowPassMatrixLoaded = true;
 	}
 
-	public static final void setPassMatrixToGBuffer() {
+	public static void setPassMatrixToGBuffer() {
 		passViewMatrix.load(viewMatrix);
 		passInverseViewMatrix.load(inverseViewMatrix);
 		passProjMatrix.load(projMatrix);
@@ -378,39 +385,39 @@ public class DeferredStateManager {
 		}
 	}
 
-	public static final void loadSunShadowMatrixLOD0() {
+	public static void loadSunShadowMatrixLOD0() {
 		GlStateManager.getFloat(GL_PROJECTION_MATRIX, matrixCopyBuffer);
 		sunShadowMatrix0.load(matrixCopyBuffer);
 	}
 
-	public static final void loadSunShadowMatrixLOD1() {
+	public static void loadSunShadowMatrixLOD1() {
 		GlStateManager.getFloat(GL_PROJECTION_MATRIX, matrixCopyBuffer);
 		sunShadowMatrix1.load(matrixCopyBuffer);
 	}
 
-	public static final void loadSunShadowMatrixLOD2() {
+	public static void loadSunShadowMatrixLOD2() {
 		GlStateManager.getFloat(GL_PROJECTION_MATRIX, matrixCopyBuffer);
 		sunShadowMatrix2.load(matrixCopyBuffer);
 	}
 
-	public static final Matrix4f getSunShadowMatrixLOD0() {
+	public static Matrix4f getSunShadowMatrixLOD0() {
 		return sunShadowMatrix0;
 	}
 
-	public static final Matrix4f getSunShadowMatrixLOD1() {
+	public static Matrix4f getSunShadowMatrixLOD1() {
 		return sunShadowMatrix1;
 	}
 
-	public static final Matrix4f getSunShadowMatrixLOD2() {
+	public static Matrix4f getSunShadowMatrixLOD2() {
 		return sunShadowMatrix2;
 	}
 
-	public static final void setGBufferNearFarPlanes(float zNear, float zFar) {
+	public static void setGBufferNearFarPlanes(float zNear, float zFar) {
 		gbufferNearPlane = zNear;
 		gbufferFarPlane = zFar;
 	}
 
-	public static final void setWaterWindOffset(float sx, float sy, float fx, float fy) {
+	public static void setWaterWindOffset(float sx, float sy, float fx, float fy) {
 		++waterWindOffsetSerial;
 		u_waterWindOffset4f.x = sx;
 		u_waterWindOffset4f.y = sy;
@@ -435,7 +442,7 @@ public class DeferredStateManager {
 	static float fogColorDarkB = 1.0f;
 	static float fogColorDarkA = 1.0f;
 
-	public static final void enableFogLinear(float near, float far, boolean atmosphere, float colorLightR,
+	public static void enableFogLinear(float near, float far, boolean atmosphere, float colorLightR,
 			float colorLightG, float colorLightB, float colorLightA, float colorDarkR, float colorDarkG,
 			float colorDarkB, float colorDarkA) {
 		fogLinearExp = atmosphere ? 5 : 1;
@@ -451,7 +458,7 @@ public class DeferredStateManager {
 		fogColorDarkA = colorDarkA;
 	}
 
-	public static final void enableFogExp(float density, boolean atmosphere, float colorLightR, float colorLightG,
+	public static void enableFogExp(float density, boolean atmosphere, float colorLightR, float colorLightG,
 			float colorLightB, float colorLightA, float colorDarkR, float colorDarkG, float colorDarkB,
 			float colorDarkA) {
 		fogLinearExp = atmosphere ? 6 : 2;
@@ -466,11 +473,11 @@ public class DeferredStateManager {
 		fogColorDarkA = colorDarkA;
 	}
 
-	public static final void disableFog() {
+	public static void disableFog() {
 		fogLinearExp = 0;
 	}
 
-	public static final void disableAll() {
+	public static void disableAll() {
 		enableMaterialMapTexture = false;
 		materialConstantsUseEnvMap = false;
 		enableForwardRender = false;

@@ -23,8 +23,6 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.google.common.collect.Collections2;
-
 import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
 
 public class ClientDataEntry {
@@ -131,12 +129,12 @@ public class ClientDataEntry {
 		case EAGLER_STANDARD_OFFLINE:
 		default:
 			toRet.add(mainPayload);
-			toRet.addAll(Collections2.transform(epkFiles, (e) -> e.dataUUID));
+			epkFiles.stream().map((e) -> e.dataUUID).forEach(toRet::add);
 			break;
 		case EAGLER_STANDARD_1_5_OFFLINE:
 			toRet.add(mainPayload);
 			toRet.add(integratedServer);
-			toRet.addAll(Collections2.transform(epkFiles, (e) -> e.dataUUID));
+			epkFiles.stream().map((e) -> e.dataUUID).forEach(toRet::add);
 			break;
 		case EAGLER_SIGNED_OFFLINE:
 			toRet.add(mainPayload);

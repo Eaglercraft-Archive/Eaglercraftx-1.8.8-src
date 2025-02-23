@@ -65,7 +65,14 @@
 
 ~ import net.optifine.CustomSky;
 
-> DELETE  20  @  20 : 24
+> INSERT  17 : 21  @  17
+
++ 	private int glSunList = -1;
++ 	private int moonPhase = -1;
++ 	private int glMoonList = -1;
++ 	private int glHorizonList = -1;
+
+> DELETE  3  @  3 : 7
 
 > CHANGE  3 : 4  @  3 : 6
 
@@ -86,26 +93,128 @@
 ~ 		EaglercraftGPU.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 ~ 		EaglercraftGPU.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-> CHANGE  2 : 6  @  2 : 14
+> CHANGE  2 : 8  @  2 : 14
 
 ~ 		this.vboEnabled = false;
 ~ 		this.renderContainer = new RenderList();
 ~ 		this.renderChunkFactory = new ListChunkFactory();
 ~ 		this.cloudRenderer = new EaglerCloudRenderer(mcIn);
+~ 		this.generateSun();
+~ 		this.generateHorizon();
 
 > DELETE  19  @  19 : 23
 
-> DELETE  1  @  1 : 22
+> CHANGE  1 : 2  @  1 : 2
 
-> DELETE  3  @  3 : 9
+~ 	}
 
-> CHANGE  4 : 5  @  4 : 6
+> CHANGE  1 : 2  @  1 : 19
 
+~ 	public void renderEntityOutlineFramebuffer() {
+
+> CHANGE  3 : 14  @  3 : 9
+
+~ 	protected boolean isRenderEntityOutlines() {
 ~ 		return false;
+~ 	}
+~ 
+~ 	private void generateSun() {
+~ 		Tessellator tessellator = Tessellator.getInstance();
+~ 		WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+~ 
+~ 		if (this.glSunList >= 0) {
+~ 			GLAllocation.deleteDisplayLists(this.glSunList);
+~ 			this.glSunList = -1;
 
-> DELETE  5  @  5 : 8
+> INSERT  2 : 12  @  2
 
-> CHANGE  6 : 11  @  6 : 19
++ 		this.glSunList = GLAllocation.generateDisplayLists();
++ 		EaglercraftGPU.glNewList(this.glSunList, GL_COMPILE);
++ 		float f17 = 30.0F;
++ 		worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX);
++ 		worldrenderer.pos((double) (-f17), 100.0D, (double) (-f17)).tex(0.0D, 0.0D).endVertex();
++ 		worldrenderer.pos((double) f17, 100.0D, (double) (-f17)).tex(1.0D, 0.0D).endVertex();
++ 		worldrenderer.pos((double) f17, 100.0D, (double) f17).tex(1.0D, 1.0D).endVertex();
++ 		worldrenderer.pos((double) (-f17), 100.0D, (double) f17).tex(0.0D, 1.0D).endVertex();
++ 		tessellator.draw();
++ 		EaglercraftGPU.glEndList();
+
+> CHANGE  2 : 29  @  2 : 5
+
+~ 	private int getMoonList(int phase) {
+~ 		if (phase != moonPhase) {
+~ 			Tessellator tessellator = Tessellator.getInstance();
+~ 			WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+~ 
+~ 			if (glMoonList == -1) {
+~ 				glMoonList = GLAllocation.generateDisplayLists();
+~ 			}
+~ 
+~ 			EaglercraftGPU.glNewList(this.glMoonList, GL_COMPILE);
+~ 			float f17 = 20.0F;
+~ 			int j = phase % 4;
+~ 			int l = phase / 4 % 2;
+~ 			float f22 = (float) (j + 0) / 4.0F;
+~ 			float f23 = (float) (l + 0) / 2.0F;
+~ 			float f24 = (float) (j + 1) / 4.0F;
+~ 			float f14 = (float) (l + 1) / 2.0F;
+~ 			worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX);
+~ 			worldrenderer.pos((double) (-f17), -100.0D, (double) f17).tex((double) f24, (double) f14).endVertex();
+~ 			worldrenderer.pos((double) f17, -100.0D, (double) f17).tex((double) f22, (double) f14).endVertex();
+~ 			worldrenderer.pos((double) f17, -100.0D, (double) (-f17)).tex((double) f22, (double) f23).endVertex();
+~ 			worldrenderer.pos((double) (-f17), -100.0D, (double) (-f17)).tex((double) f24, (double) f23).endVertex();
+~ 			tessellator.draw();
+~ 			EaglercraftGPU.glEndList();
+~ 			moonPhase = phase;
+~ 		}
+~ 		return glMoonList;
+
+> CHANGE  2 : 3  @  2 : 3
+
+~ 	private void generateHorizon() {
+
+> CHANGE  2 : 6  @  2 : 4
+
+~ 
+~ 		if (this.glHorizonList >= 0) {
+~ 			GLAllocation.deleteDisplayLists(this.glHorizonList);
+~ 			this.glHorizonList = -1;
+
+> INSERT  2 : 33  @  2
+
++ 		this.glHorizonList = GLAllocation.generateDisplayLists();
++ 		EaglercraftGPU.glNewList(this.glHorizonList, GL_COMPILE);
++ 		worldrenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
++ 		worldrenderer.pos(-1.0D, 0.0D, 1.0D).color(0, 0, 0, 255).endVertex();
++ 		worldrenderer.pos(1.0D, 0.0D, 1.0D).color(0, 0, 0, 255).endVertex();
++ 		worldrenderer.pos(1.0D, -1.0D, 1.0D).color(0, 0, 0, 255).endVertex();
++ 		worldrenderer.pos(-1.0D, -1.0D, 1.0D).color(0, 0, 0, 255).endVertex();
++ 		worldrenderer.pos(-1.0D, -1.0D, -1.0D).color(0, 0, 0, 255).endVertex();
++ 		worldrenderer.pos(1.0D, -1.0D, -1.0D).color(0, 0, 0, 255).endVertex();
++ 		worldrenderer.pos(1.0D, 0.0D, -1.0D).color(0, 0, 0, 255).endVertex();
++ 		worldrenderer.pos(-1.0D, 0.0D, -1.0D).color(0, 0, 0, 255).endVertex();
++ 		worldrenderer.pos(1.0D, -1.0D, -1.0D).color(0, 0, 0, 255).endVertex();
++ 		worldrenderer.pos(1.0D, -1.0D, 1.0D).color(0, 0, 0, 255).endVertex();
++ 		worldrenderer.pos(1.0D, 0.0D, 1.0D).color(0, 0, 0, 255).endVertex();
++ 		worldrenderer.pos(1.0D, 0.0D, -1.0D).color(0, 0, 0, 255).endVertex();
++ 		worldrenderer.pos(-1.0D, 0.0D, -1.0D).color(0, 0, 0, 255).endVertex();
++ 		worldrenderer.pos(-1.0D, 0.0D, 1.0D).color(0, 0, 0, 255).endVertex();
++ 		worldrenderer.pos(-1.0D, -1.0D, 1.0D).color(0, 0, 0, 255).endVertex();
++ 		worldrenderer.pos(-1.0D, -1.0D, -1.0D).color(0, 0, 0, 255).endVertex();
++ 		worldrenderer.pos(-1.0D, -1.0D, -1.0D).color(0, 0, 0, 255).endVertex();
++ 		worldrenderer.pos(-1.0D, -1.0D, 1.0D).color(0, 0, 0, 255).endVertex();
++ 		worldrenderer.pos(1.0D, -1.0D, 1.0D).color(0, 0, 0, 255).endVertex();
++ 		worldrenderer.pos(1.0D, -1.0D, -1.0D).color(0, 0, 0, 255).endVertex();
++ 		tessellator.draw();
++ 		EaglercraftGPU.glEndList();
++ 	}
++ 
++ 	private void generateSky2() {
++ 		Tessellator tessellator = Tessellator.getInstance();
++ 		WorldRenderer worldrenderer = tessellator.getWorldRenderer();
++ 
+
+> CHANGE  5 : 10  @  5 : 18
 
 ~ 		this.glSkyList2 = GLAllocation.generateDisplayLists();
 ~ 		EaglercraftGPU.glNewList(this.glSkyList2, GL_COMPILE);
@@ -164,7 +273,7 @@
 + 			this.renderDistanceChunks = this.mc.gameSettings.renderDistanceChunks;
 + 
 
-> INSERT  19 : 85  @  19
+> INSERT  19 : 88  @  19
 
 + 
 + 			if (mc.gameSettings.shaders) {
@@ -173,6 +282,7 @@
 + 				if (theWorld.provider.getHasNoSky()) {
 + 					dfc.is_rendering_shadowsSun_clamped = 0;
 + 					dfc.is_rendering_lightShafts = false;
++ 					dfc.is_rendering_subsurfaceScattering = false;
 + 				} else {
 + 					int maxDist = renderDistanceChunks << 4;
 + 					int ss = dfc.is_rendering_shadowsSun;
@@ -180,7 +290,9 @@
 + 						--ss;
 + 					}
 + 					dfc.is_rendering_shadowsSun_clamped = ss;
-+ 					dfc.is_rendering_lightShafts = dfc.lightShafts;
++ 					dfc.is_rendering_lightShafts = ss > 0 && dfc.lightShafts && dfc.shaderPackInfo.LIGHT_SHAFTS;
++ 					dfc.is_rendering_subsurfaceScattering = ss > 0 && dfc.subsurfaceScattering
++ 							&& dfc.shaderPackInfo.SUBSURFACE_SCATTERING;
 + 				}
 + 				boolean flag = false;
 + 				if (EaglerDeferredPipeline.instance == null) {
@@ -654,7 +766,17 @@
 
 + 			CustomSky.renderSky(this.theWorld, this.renderEngine, partialTicks);
 
-> CHANGE  26 : 28  @  26 : 27
+> DELETE  1  @  1 : 2
+
+> CHANGE  1 : 2  @  1 : 8
+
+~ 			GlStateManager.callList(glSunList);
+
+> CHANGE  1 : 2  @  1 : 14
+
+~ 			GlStateManager.callList(getMoonList(this.theWorld.getMoonPhase()));
+
+> CHANGE  2 : 4  @  2 : 3
 
 ~ 			boolean b = !CustomSky.hasSkyLayers(this.theWorld);
 ~ 			if (f15 > 0.0F && b) {
@@ -671,7 +793,18 @@
 
 ~ 				GlStateManager.callList(this.glSkyList2);
 
-> CHANGE  35 : 42  @  35 : 39
+> DELETE  2  @  2 : 3
+
+> CHANGE  1 : 7  @  1 : 24
+
+~ 
+~ 				GlStateManager.pushMatrix();
+~ 				GlStateManager.translate(0.0F, f19, 0.0F);
+~ 				GlStateManager.scale(1.0f, 1.0f - f19, 1.0f);
+~ 				GlStateManager.callList(this.glHorizonList);
+~ 				GlStateManager.popMatrix();
+
+> CHANGE  8 : 15  @  8 : 12
 
 ~ 			if (b) {
 ~ 				GlStateManager.pushMatrix();

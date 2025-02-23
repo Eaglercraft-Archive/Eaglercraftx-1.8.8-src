@@ -46,6 +46,7 @@ public class ShaderPackInfo {
 	public final boolean POST_LENS_FLARES;
 	public final boolean POST_BLOOM;
 	public final boolean POST_FXAA;
+	public final boolean SUBSURFACE_SCATTERING;
 
 	public ShaderPackInfo(JSONObject json) {
 		name = json.optString("name", "Untitled");
@@ -75,6 +76,7 @@ public class ShaderPackInfo {
 		POST_LENS_FLARES = supportedFeatures.contains("POST_LENS_FLARES");
 		POST_BLOOM = supportedFeatures.contains("POST_BLOOM");
 		POST_FXAA = supportedFeatures.contains("POST_FXAA");
+		SUBSURFACE_SCATTERING = supportedFeatures.contains("SUBSURFACE_SCATTERING");
 	}
 
 }

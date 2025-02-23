@@ -270,8 +270,29 @@ const platfNetworkingName = "platformNetworking";
 		this["_frameCountBin"] = 0;
 	}
 
+	/**
+	 * @param {boolean} enable
+	 */
+	function setEnableStringFramesImpl(enable) {
+		this["_enableStringFrames"] = enable;
+	}
+
+	/**
+	 * @param {boolean} enable
+	 */
+	function setEnableBinaryFramesImpl(enable) {
+		this["_enableBinaryFrames"] = enable;
+	}
+
 	function addRecievedFrameImpl(dat) {
 		const isStr = (typeof dat === "string");
+		if(isStr) {
+			if(!this["_enableStringFrames"])
+				return;
+		}else {
+			if(!this["_enableBinaryFrames"])
+				return;
+		}
 		const itm = {
 			"type": (isStr ? 0 : 1),
 			"data": dat,
@@ -322,6 +343,8 @@ const platfNetworkingName = "platformNetworking";
 			"_frameCountStr": 0,
 			"_frameCountBin": 0,
 			"_addRecievedFrame": addRecievedFrameImpl,
+			"_enableStringFrames": true,
+			"_enableBinaryFrames": true,
 			"closeSocket": closeSocketImpl,
 			"sendStringFrame": sendStringFrameImpl,
 			"sendBinaryFrame": sendBinaryFrameImpl,
@@ -336,7 +359,9 @@ const platfNetworkingName = "platformNetworking";
 			"availableBinaryFrames": availableBinaryFramesImpl,
 			"getNextBinaryFrame": getNextBinaryFrameImpl,
 			"getAllBinaryFrames": getAllBinaryFramesImpl,
-			"clearBinaryFrames": clearBinaryFramesImpl
+			"clearBinaryFrames": clearBinaryFramesImpl,
+			"setEnableStringFrames": setEnableStringFramesImpl,
+			"setEnableBinaryFrames": setEnableBinaryFramesImpl
 		};
 		
 		sock.addEventListener("open", function(evt) {

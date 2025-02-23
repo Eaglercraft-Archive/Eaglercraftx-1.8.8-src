@@ -73,7 +73,11 @@ in vec3 v_viewdir3f;
 uniform vec2 u_textureCoords01;
 #endif
 #else
+#ifdef COMPILE_SUBSURFACE_SCATTERING
+uniform vec4 u_materialConstants4f;
+#else
 uniform vec3 u_materialConstants3f;
+#endif
 #endif
 
 #ifdef COMPILE_NORMAL_MATERIAL_TEXTURE
@@ -155,14 +159,21 @@ void main() {
 		normal = cf * vec3(normal2, sqrt(1.0 - dot(normal2, normal2)));
 	}
 	uv2.y += 0.5;
-	vec3 material = texture(u_samplerNormalMaterial, uv2).rgb;
+	vec4 material = texture(u_samplerNormalMaterial, uv2);
 #else
-	vec3 material = u_materialConstants3f;
+#ifdef COMPILE_SUBSURFACE_SCATTERING
+	vec4 material = u_materialConstants4f;
+#else
+	vec4 material = vec4(u_materialConstants3f, 1.0);
 #endif
+#endif
+
+	material.a = 1.0 - material.a + u_useEnvMap1f;
+	material.a *= 0.502;
 
 	gbufferColor4f.rgb = color.rgb;
 	gbufferColor4f.a = lightmap.r;
 	gbufferNormal4f.rgb = normal * 0.5 + 0.5;
 	gbufferNormal4f.a = lightmap.g;
-	gbufferMaterial4f = vec4(material.rgb, u_useEnvMap1f);
+	gbufferMaterial4f = material;
 }

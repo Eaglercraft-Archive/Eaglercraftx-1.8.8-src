@@ -24,7 +24,6 @@ layout(location = 0) out vec4 output4f;
 
 in vec2 v_position2f;
 
-uniform sampler2D u_gbufferDepthTexture;
 uniform sampler2D u_gbufferNormalTexture;
 uniform sampler2D u_fogDepthTexture;
 
@@ -34,6 +33,7 @@ uniform sampler2D u_lightShaftsTexture;
 
 #ifdef COMPILE_FOG_ATMOSPHERE
 uniform sampler2D u_environmentMap;
+uniform sampler2D u_skyTexture;
 uniform vec3 u_sunColorAdd3f;
 #endif
 
@@ -56,11 +56,6 @@ void main() {
 		discard;
 	}
 #endif
-
-	float solidDepth = textureLod(u_gbufferDepthTexture, v_position2f, 0.0).r;
-	if(solidDepth != fragPos4f.z) {
-		discard;
-	}
 
 	fragPos4f.xyz *= 2.0;
 	fragPos4f.xyz -= 1.0;
@@ -85,18 +80,26 @@ void main() {
 	fragPos4f.xz *= 0.75;
 
 	vec3 envMapSample3f;
+	vec3 skyboxSample3f;
 
 	fragPos4f.xz *= vec2(-0.5, -0.25);
 	fragPos4f.xz += vec2(0.5, 0.25);
 	envMapSample3f = textureLod(u_environmentMap, fragPos4f.xz, 0.0).rgb + u_sunColorAdd3f;
 
+	skyboxSample3f = textureLod(u_skyTexture, v_position2f, 0.0).rgb;
+
 #ifdef COMPILE_FOG_LIGHT_SHAFTS
-	f2 = textureLod(u_lightShaftsTexture, v_position2f, 0.0).r;
-	envMapSample3f *= pow(f2, 2.25);
-	f = (f * 0.85 + 0.2) * f2 + f * (1.0 - f2);
+	f2 = textureLod(u_lightShaftsTexture, v_position2f, 0.0).r * 0.95 + 0.05;
+	envMapSample3f *= (f2 * 0.8 + 0.2);
+	skyboxSample3f *= f2 * f2 * f2;
+	f = min(f + 0.15, 1.0);
+	f2 = 0.5 + f * 0.5;
+#else
+	f = max(f * 1.0375 - 0.0375, 0.0);
+	f2 = 0.3 + f * 0.7;
 #endif
 
-	output4f = vec4(envMapSample3f * fogColor4f.rgb, f);
+	output4f = vec4(mix(envMapSample3f, skyboxSample3f, f2) * fogColor4f.rgb, f);
 #else
 	output4f = vec4(fogColor4f.rgb, f);
 #endif

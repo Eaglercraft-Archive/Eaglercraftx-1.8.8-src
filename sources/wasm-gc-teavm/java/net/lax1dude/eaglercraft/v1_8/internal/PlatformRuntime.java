@@ -43,9 +43,11 @@ import com.jcraft.jzlib.Inflater;
 import com.jcraft.jzlib.InflaterInputStream;
 
 import net.lax1dude.eaglercraft.v1_8.Filesystem;
+import net.lax1dude.eaglercraft.v1_8.HString;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.ByteBuffer;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.FloatBuffer;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.IntBuffer;
+import net.lax1dude.eaglercraft.v1_8.internal.buffer.MemoryStack;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.WASMGCBufferAllocator;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.WASMGCDirectArrayConverter;
 import net.lax1dude.eaglercraft.v1_8.internal.vfs2.VFile2;
@@ -75,6 +77,7 @@ public class PlatformRuntime {
 		root = getRootElement();
 		parent = getParentElement();
 		canvas = getCanvasElement();
+		printMemoryStackAddrWASMGC();
 		PlatformApplication.setMCServerWindowGlobal(null);
 		PlatformOpenGL.initContext();
 		PlatformInput.initContext(win, parent, canvas);
@@ -84,29 +87,27 @@ public class PlatformRuntime {
 
 		WebGLBackBuffer.initBackBuffer(PlatformInput.getWindowWidth(), PlatformInput.getWindowHeight());
 
-		HTMLElement el = parent.querySelector("._eaglercraftX_early_splash_element");
-		if(el != null) {
-			el.delete();
-		}
-
-		EarlyLoadScreen.extractingAssetsScreen();
-		sleep(20);
-
 		PlatformAssets.readAssetsTeaVM();
 
 		byte[] finalLoadScreen = PlatformAssets.getResourceBytes("/assets/eagler/eagtek.png");
 
 		if(finalLoadScreen != null) {
+			EarlyLoadScreen.initialize();
 			EarlyLoadScreen.loadFinal(finalLoadScreen);
 			EarlyLoadScreen.paintFinal(false);
+			EarlyLoadScreen.destroy();
 		}else {
 			PlatformOpenGL._wglClearColor(1.0f, 0.0f, 1.0f, 1.0f);
 			PlatformOpenGL._wglClear(RealOpenGLEnums.GL_COLOR_BUFFER_BIT);
 			PlatformInput.update();
 		}
-		sleep(20);
 
-		EarlyLoadScreen.destroy();
+		HTMLElement el = parent.querySelector("._eaglercraftX_early_splash_element");
+		if(el != null) {
+			el.delete();
+		}
+
+		sleep(20);
 
 		logger.info("Initializing filesystem...");
 
@@ -535,6 +536,11 @@ public class PlatformRuntime {
 
 	public static InputStream newGZIPInputStream(InputStream is) throws IOException {
 		return new GZIPInputStream(is);
+	}
+
+	public static void printMemoryStackAddrWASMGC() {
+		logger.info("MemoryStack base: 0x{}, limit: 0x{}", HString.format("%08x", MemoryStack.stackBase.toInt()),
+				HString.format("%08x", MemoryStack.stackMax.toInt()));
 	}
 
 }

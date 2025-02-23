@@ -283,8 +283,4 @@
 + 	}
 + 
 
-> CHANGE  5 : 6  @  5 : 6
-
-~ 		return parInt1 < this.savedServerList.countServers();
-
 > EOF

@@ -23,6 +23,10 @@ precision highp sampler2D;
 in vec3 v_position3f;
 in vec3 v_color3f;
 
+#ifndef COMPILE_PARABOLOID_SKY
+in vec3 v_positionClip3f;
+#endif
+
 layout(location = 0) out vec4 output4f;
 
 uniform vec3 u_sunDirection3f;
@@ -33,9 +37,14 @@ uniform vec4 u_lightningColor4f;
 uniform sampler2D u_cloudsTexture;
 #endif
 
+#ifndef COMPILE_PARABOLOID_SKY
 uniform sampler2D u_sunOcclusion;
+uniform sampler2D u_gbufferDepthTexture;
+#endif
 
 #define SKY_BRIGHTNESS 5.0
+
+#EAGLER INCLUDE (4) "eagler:glsl/deferred/lib/branchless_comparison.glsl"
 
 void main() {
 	gl_FragDepth = 0.0;
@@ -46,6 +55,7 @@ void main() {
 	float f = max(dot(viewDir, u_sunDirection3f) - 0.995, 0.0) * 100.0;
 	float intensity = min(f * 2.0, 1.0);
 	intensity *= intensity * intensity * intensity * textureLod(u_sunOcclusion, vec2(0.5, 0.5), 0.0).r * 2.0;
+	intensity *= 1.0 - COMPARE_GT_0_1(textureLod(u_gbufferDepthTexture, (v_positionClip3f.xy / v_positionClip3f.z) * 0.5 + 0.5, 0.0).r, 0.0);
 	output4f = vec4(v_color3f * SKY_BRIGHTNESS + intensity * u_sunColor3f, 0.0);
 #endif
 #ifdef COMPILE_CLOUDS

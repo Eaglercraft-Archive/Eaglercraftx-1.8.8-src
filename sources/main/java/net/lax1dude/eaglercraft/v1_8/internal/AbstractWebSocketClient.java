@@ -27,6 +27,8 @@ public abstract class AbstractWebSocketClient implements IWebSocketClient {
 	protected volatile int availableBinaryFrames = 0;
 	protected final List<IWebSocketFrame> recievedPacketBuffer = new LinkedList<>();
 	protected String currentURI;
+	private boolean strEnable = true;
+	private boolean binEnable = true;
 
 	protected AbstractWebSocketClient(String currentURI) {
 		this.currentURI = currentURI;
@@ -34,6 +36,13 @@ public abstract class AbstractWebSocketClient implements IWebSocketClient {
 
 	protected void addRecievedFrame(IWebSocketFrame frame) {
 		boolean str = frame.isString();
+		if(str) {
+			if(!strEnable)
+				return;
+		}else {
+			if(!binEnable)
+				return;
+		}
 		synchronized(recievedPacketBuffer) {
 			recievedPacketBuffer.add(frame);
 			if(str) {
@@ -223,6 +232,16 @@ public abstract class AbstractWebSocketClient implements IWebSocketClient {
 	@Override
 	public String getCurrentURI() {
 		return currentURI;
+	}
+
+	@Override
+	public void setEnableStringFrames(boolean enable) {
+		strEnable = enable;
+	}
+
+	@Override
+	public void setEnableBinaryFrames(boolean enable) {
+		binEnable = enable;
 	}
 
 }

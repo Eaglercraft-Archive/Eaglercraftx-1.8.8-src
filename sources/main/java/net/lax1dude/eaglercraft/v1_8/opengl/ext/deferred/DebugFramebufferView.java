@@ -83,7 +83,7 @@ public class DebugFramebufferView {
 			(new DebugFramebufferView("Sun Shadow Depth: LOD 1", (pipeline) -> {
 				if(pipeline.config.is_rendering_shadowsSun_clamped < 1) throw new NoDataException();
 				PipelineShaderGBufferDebugView dbv = pipeline.useDebugViewShader(5);
-				_wglUniform2f(dbv.uniforms.u_depthSliceStartEnd2f, 1.0f / pipeline.config.is_rendering_shadowsSun_clamped, 0.0f);
+				_wglUniform2f(dbv.uniforms.u_depthSliceStartEnd2f, 1.0f / Math.min(pipeline.config.is_rendering_shadowsSun_clamped, 3), 0.0f);
 				GlStateManager.setActiveTexture(GL_TEXTURE0);
 				GlStateManager.bindTexture(pipeline.sunShadowDepthBuffer);
 				_wglTexParameteri(GL_TEXTURE_2D, _GL_TEXTURE_COMPARE_MODE, GL_NONE);
@@ -93,7 +93,7 @@ public class DebugFramebufferView {
 			(new DebugFramebufferView("Sun Shadow Color: LOD 1", (pipeline) -> {
 				if(pipeline.config.is_rendering_shadowsSun_clamped < 1 || !pipeline.config.is_rendering_shadowsColored) throw new NoDataException();
 				PipelineShaderGBufferDebugView dbv = pipeline.useDebugViewShader(10);
-				_wglUniform2f(dbv.uniforms.u_depthSliceStartEnd2f, 1.0f / pipeline.config.is_rendering_shadowsSun_clamped, 0.0f);
+				_wglUniform2f(dbv.uniforms.u_depthSliceStartEnd2f, 1.0f / Math.min(pipeline.config.is_rendering_shadowsSun_clamped, 3), 0.0f);
 				GlStateManager.setActiveTexture(GL_TEXTURE1);
 				GlStateManager.bindTexture(pipeline.sunShadowColorBuffer);
 				GlStateManager.setActiveTexture(GL_TEXTURE0);
@@ -105,7 +105,7 @@ public class DebugFramebufferView {
 			(new DebugFramebufferView("Sun Shadow Depth: LOD 2", (pipeline) -> {
 				if(pipeline.config.is_rendering_shadowsSun_clamped < 2) throw new NoDataException();
 				PipelineShaderGBufferDebugView dbv = pipeline.useDebugViewShader(5);
-				_wglUniform2f(dbv.uniforms.u_depthSliceStartEnd2f, 1.0f / pipeline.config.is_rendering_shadowsSun_clamped, 1.0f);
+				_wglUniform2f(dbv.uniforms.u_depthSliceStartEnd2f, 1.0f / Math.min(pipeline.config.is_rendering_shadowsSun_clamped, 3), 1.0f);
 				GlStateManager.setActiveTexture(GL_TEXTURE0);
 				GlStateManager.bindTexture(pipeline.sunShadowDepthBuffer);
 				_wglTexParameteri(GL_TEXTURE_2D, _GL_TEXTURE_COMPARE_MODE, GL_NONE);
@@ -115,7 +115,7 @@ public class DebugFramebufferView {
 			(new DebugFramebufferView("Sun Shadow Color: LOD 2", (pipeline) -> {
 				if(pipeline.config.is_rendering_shadowsSun_clamped < 2 || !pipeline.config.is_rendering_shadowsColored) throw new NoDataException();
 				PipelineShaderGBufferDebugView dbv = pipeline.useDebugViewShader(10);
-				_wglUniform2f(dbv.uniforms.u_depthSliceStartEnd2f, 1.0f / pipeline.config.is_rendering_shadowsSun_clamped, 1.0f);
+				_wglUniform2f(dbv.uniforms.u_depthSliceStartEnd2f, 1.0f / Math.min(pipeline.config.is_rendering_shadowsSun_clamped, 3), 1.0f);
 				GlStateManager.setActiveTexture(GL_TEXTURE1);
 				GlStateManager.bindTexture(pipeline.sunShadowColorBuffer);
 				GlStateManager.setActiveTexture(GL_TEXTURE0);
@@ -127,7 +127,7 @@ public class DebugFramebufferView {
 			(new DebugFramebufferView("Sun Shadow Depth: LOD 3", (pipeline) -> {
 				if(pipeline.config.is_rendering_shadowsSun_clamped < 3) throw new NoDataException();
 				PipelineShaderGBufferDebugView dbv = pipeline.useDebugViewShader(5);
-				_wglUniform2f(dbv.uniforms.u_depthSliceStartEnd2f, 1.0f / pipeline.config.is_rendering_shadowsSun_clamped, 2.0f);
+				_wglUniform2f(dbv.uniforms.u_depthSliceStartEnd2f, 1.0f / Math.min(pipeline.config.is_rendering_shadowsSun_clamped, 3), 2.0f);
 				GlStateManager.setActiveTexture(GL_TEXTURE0);
 				GlStateManager.bindTexture(pipeline.sunShadowDepthBuffer);
 				_wglTexParameteri(GL_TEXTURE_2D, _GL_TEXTURE_COMPARE_MODE, GL_NONE);
@@ -143,6 +143,13 @@ public class DebugFramebufferView {
 				}
 				GlStateManager.setActiveTexture(GL_TEXTURE0);
 				GlStateManager.bindTexture(pipeline.sunLightingShadowTexture);
+				DrawUtils.drawStandardQuad2D();
+			})),
+			(new DebugFramebufferView("GBuffer Subsurface Scattering", (pipeline) -> {
+				if(!pipeline.config.is_rendering_subsurfaceScattering || Minecraft.getMinecraft().theWorld.provider.getDimensionId() != 0) throw new NoDataException();
+				pipeline.useDebugViewShader(6);
+				GlStateManager.setActiveTexture(GL_TEXTURE0);
+				GlStateManager.bindTexture(pipeline.subsurfaceScatteringTexture);
 				DrawUtils.drawStandardQuad2D();
 			})),
 			(new DebugFramebufferView("Light Shafts Buffer", (pipeline) -> {

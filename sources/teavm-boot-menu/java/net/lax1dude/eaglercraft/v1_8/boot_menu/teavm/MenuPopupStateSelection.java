@@ -16,13 +16,10 @@
 
 package net.lax1dude.eaglercraft.v1_8.boot_menu.teavm;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
 import org.teavm.jso.dom.html.HTMLElement;
-
-import com.google.common.collect.Collections2;
 
 public abstract class MenuPopupStateSelection<T> extends MenuState {
 
@@ -64,8 +61,7 @@ public abstract class MenuPopupStateSelection<T> extends MenuState {
 	}
 
 	public static <T> MenuPopupStateSelection<T> createHelper(String title, List<T> items, Consumer<T> selectCallback) {
-		return new MenuPopupStateSelection<T>(title,
-				new ArrayList<SelectionItem<T>>(Collections2.transform(items, SelectionItem<T>::new))) {
+		return new MenuPopupStateSelection<T>(title, items.stream().map(SelectionItem<T>::new).toList()) {
 			@Override
 			protected void itemSelected(T item) {
 				selectCallback.accept(item);

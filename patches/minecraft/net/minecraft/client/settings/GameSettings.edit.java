@@ -824,7 +824,7 @@
 
 > CHANGE  22 : 23  @  22 : 23
 
-~ 					Math.max(this.renderDistanceChunks, 2), this.chatVisibility, this.chatColours, i));
+~ 					Math.max(this.renderDistanceChunks, 3), this.chatVisibility, this.chatColours, i));
 
 > INSERT  36 : 60  @  36
 

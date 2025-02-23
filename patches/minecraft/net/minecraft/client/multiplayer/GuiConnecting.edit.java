@@ -155,7 +155,7 @@
 ~ 							new ChatComponentText("Could not open WebSocket to \"" + currentAddress + "\"!")));
 ~ 				}
 
-> CHANGE  1 : 79  @  1 : 2
+> CHANGE  1 : 81  @  1 : 2
 
 ~ 				if (webSocket.getState() == EnumEaglerConnectionState.CONNECTED) {
 ~ 					if (!hasOpened) {
@@ -172,6 +172,8 @@
 ~ 						if (ConnectionHandshake.attemptHandshake(this.mc, webSocket, this, previousGuiScreen,
 ~ 								currentPassword, allowPlaintext, allowCookies, cookieData)) {
 ~ 							logger.info("Handshake Success");
+~ 							webSocket.setEnableStringFrames(false);
+~ 							webSocket.clearStringFrames();
 ~ 							this.networkManager = new WebSocketNetworkManager(webSocket);
 ~ 							this.networkManager.setPluginInfo(ConnectionHandshake.pluginBrand,
 ~ 									ConnectionHandshake.pluginVersion);

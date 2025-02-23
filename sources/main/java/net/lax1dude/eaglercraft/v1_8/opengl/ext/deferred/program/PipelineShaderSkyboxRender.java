@@ -84,6 +84,7 @@ public class PipelineShaderSkyboxRender extends ShaderProgram<PipelineShaderSkyb
 			_wglUniform1i(_wglGetUniformLocation(prog, "u_renderedAtmosphere"), 0);
 			_wglUniform1i(_wglGetUniformLocation(prog, "u_cloudsTexture"), 1);
 			_wglUniform1i(_wglGetUniformLocation(prog, "u_sunOcclusion"), 2);
+			_wglUniform1i(_wglGetUniformLocation(prog, "u_gbufferDepthTexture"), 3);
 		}
 		
 	}

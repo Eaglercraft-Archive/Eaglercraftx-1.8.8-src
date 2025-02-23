@@ -53,16 +53,20 @@ public class ClientUUIDLoadingCache {
 			if(ret == null) {
 				Minecraft mc = Minecraft.getMinecraft();
 				if(mc != null && mc.thePlayer != null && mc.thePlayer.sendQueue.getEaglerMessageProtocol().ver >= 4) {
-					ret = PENDING_UUID;
-					EaglercraftUUID playerUUID = player.getUniqueID();
-					if(!waitingUUIDs.containsKey(playerUUID) && !evictedUUIDs.containsKey(playerUUID)) {
-						int reqID = ++requestId & 0x3FFF;
-						WaitingLookup newLookup = new WaitingLookup(reqID, playerUUID, EagRuntime.steadyTimeMillis(),
-								(AbstractClientPlayer) player);
-						waitingIDs.put(reqID, newLookup);
-						waitingUUIDs.put(playerUUID, newLookup);
-						mc.thePlayer.sendQueue.sendEaglerMessage(
-								new CPacketGetOtherClientUUIDV4EAG(reqID, newLookup.uuid.msb, newLookup.uuid.lsb));
+					if(ignoreNonEaglerPlayers && !player.getGameProfile().getTextures().eaglerPlayer) {
+						ret = VANILLA_UUID;
+					}else {
+						ret = PENDING_UUID;
+						EaglercraftUUID playerUUID = player.getUniqueID();
+						if(!waitingUUIDs.containsKey(playerUUID) && !evictedUUIDs.containsKey(playerUUID)) {
+							int reqID = ++requestId & 0x3FFF;
+							WaitingLookup newLookup = new WaitingLookup(reqID, playerUUID, EagRuntime.steadyTimeMillis(),
+									(AbstractClientPlayer) player);
+							waitingIDs.put(reqID, newLookup);
+							waitingUUIDs.put(playerUUID, newLookup);
+							mc.thePlayer.sendQueue.sendEaglerMessage(
+									new CPacketGetOtherClientUUIDV4EAG(reqID, newLookup.uuid.msb, newLookup.uuid.lsb));
+						}
 					}
 				}
 			}
@@ -82,6 +86,7 @@ public class ClientUUIDLoadingCache {
 	private static int requestId = 0;
 	private static long lastFlushReq = EagRuntime.steadyTimeMillis();
 	private static long lastFlushEvict = EagRuntime.steadyTimeMillis();
+	private static boolean ignoreNonEaglerPlayers = false;
 
 	public static void update() {
 		long timestamp = EagRuntime.steadyTimeMillis();
@@ -117,13 +122,19 @@ public class ClientUUIDLoadingCache {
 		evictedUUIDs.clear();
 	}
 
+	private static final EaglercraftUUID MAGIC_DISABLE_NON_EAGLER_PLAYERS = new EaglercraftUUID(0xEEEEA64771094C4EL, 0x86E55B81D17E67EBL);
+
 	public static void handleResponse(int requestId, EaglercraftUUID clientId) {
 		WaitingLookup lookup = waitingIDs.remove(requestId);
 		if(lookup != null) {
 			lookup.player.clientBrandUUIDCache = clientId;
 			waitingUUIDs.remove(lookup.uuid);
 		}else {
-			logger.warn("Unsolicited client brand UUID lookup response #{} recieved! (Brand UUID: {})", requestId, clientId);
+			if(requestId == -1 && MAGIC_DISABLE_NON_EAGLER_PLAYERS.equals(clientId)) {
+				ignoreNonEaglerPlayers = true;
+			}else {
+				logger.warn("Unsolicited client brand UUID lookup response #{} recieved! (Brand UUID: {})", requestId, clientId);
+			}
 		}
 	}
 
@@ -133,6 +144,10 @@ public class ClientUUIDLoadingCache {
 		if(lk != null) {
 			waitingIDs.remove(lk.reqID);
 		}
+	}
+
+	public static void resetFlags() {
+		ignoreNonEaglerPlayers = false;
 	}
 
 	private static class WaitingLookup {

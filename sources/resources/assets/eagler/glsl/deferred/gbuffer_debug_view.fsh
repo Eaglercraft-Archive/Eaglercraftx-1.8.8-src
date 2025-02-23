@@ -53,7 +53,7 @@ void main() {
 #endif
 #ifdef DEBUG_VIEW_3
 	vec4 color4f = textureLod(u_texture0, v_position2f, 0.0);
-	output4f = vec4(color4f.b > 0.99 ? 1.0 : 0.0, color4f.a, 0.0, 1.0);
+	output4f = vec4((color4f.a - (color4f.a > 0.5 ? 0.5 : 0.0)) * 2.0, color4f.a > 0.5 ? 1.0 : 0.0, color4f.b > 0.99 ? 1.0 : 0.0, 1.0);
 #endif
 #ifdef DEBUG_VIEW_4
 	output4f = vec4(vec3(clamp((textureLod(u_texture0, v_position2f, 0.0).r - u_depthSliceStartEnd2f.x) * u_depthSliceStartEnd2f.y, 0.0, 1.0)), 1.0);

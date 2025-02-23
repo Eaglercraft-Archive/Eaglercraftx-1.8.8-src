@@ -66,6 +66,7 @@ public class RelayQueryImpl implements RelayQuery {
 		try {
 			connectionOpenedAt = EagRuntime.steadyTimeMillis();
 			s = PlatformNetworking.openWebSocketUnsafe(uri);
+			s.setEnableStringFrames(false);
 		}catch(Throwable t) {
 			connectionOpenedAt = 0l;
 			sock = null;
@@ -79,10 +80,6 @@ public class RelayQueryImpl implements RelayQuery {
 	@Override
 	public void update() {
 		if(sock == null) return;
-		if(sock.availableStringFrames() > 0) {
-			logger.warn("[{}] discarding {} string frames recieved on a binary connection", uri, sock.availableStringFrames());
-			sock.clearStringFrames();
-		}
 		List<IWebSocketFrame> frames = sock.getNextBinaryFrames();
 		if(frames != null) {
 			for(int i = 0, l = frames.size(); i < l; ++i) {

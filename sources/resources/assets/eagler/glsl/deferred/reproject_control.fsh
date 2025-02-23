@@ -84,6 +84,8 @@ uniform vec4 u_nearFarPlane4f;
 
 uniform vec4 u_pixelAlignment4f;
 
+#EAGLER INCLUDE (4) "eagler:glsl/deferred/lib/branchless_comparison.glsl"
+
 #define reprojDepthLimit 0.25
 
 #define GET_LINEAR_DEPTH_FROM_VALUE(depthSample) (u_nearFarPlane4f.z / (u_nearFarPlane4f.y + u_nearFarPlane4f.x + (depthSample * 2.0 - 1.0) * u_nearFarPlane4f.w))
@@ -135,9 +137,9 @@ void main() {
 
 #ifdef COMPILE_REPROJECT_SSR
 	vec4 materials = textureLod(u_gbufferMaterialTexture, v_position2f2, 0.0);
-	float f = materials.g < 0.06 ? 1.0 : 0.0;
-	f += materials.r < 0.5 ? 1.0 : 0.0;
-	f += materials.a > 0.5 ? 1.0 : 0.0;
+	float f = COMPARE_LT_0_ANY(materials.g, 0.06);
+	f += COMPARE_LT_0_ANY(materials.r, 0.5);
+	f += COMPARE_GT_0_ANY(materials.a, 0.5);
 	if(f > 0.0) {
 		return;
 	}

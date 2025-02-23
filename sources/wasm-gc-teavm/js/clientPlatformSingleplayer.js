@@ -140,7 +140,7 @@ function initializeClientPlatfSP(spImports) {
 			workerObj.postMessage({
 				"ch": channel,
 				"dat": copiedArray.buffer
-			});
+			}, [copiedArray.buffer]);
 		}
 	};
 
@@ -153,7 +153,7 @@ function initializeClientPlatfSP(spImports) {
 			workerObj.postMessage({
 				"ch": channel,
 				"dat": arr
-			});
+			}, [arr]);
 		}
 	};
 

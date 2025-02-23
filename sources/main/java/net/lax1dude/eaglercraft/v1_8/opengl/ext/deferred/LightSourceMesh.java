@@ -26,7 +26,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
-import net.lax1dude.eaglercraft.v1_8.internal.IBufferArrayGL;
+import net.lax1dude.eaglercraft.v1_8.internal.IVertexArrayGL;
 import net.lax1dude.eaglercraft.v1_8.internal.IBufferGL;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.ByteBuffer;
 import net.lax1dude.eaglercraft.v1_8.opengl.EaglercraftGPU;
@@ -40,7 +40,7 @@ public class LightSourceMesh {
 
 	private IBufferGL meshVBO = null;
 	private IBufferGL meshIBO = null;
-	private IBufferArrayGL meshVAO = null;
+	private IVertexArrayGL meshVAO = null;
 
 	private int meshIndexType = -1;
 	private int meshIndexCount = -1;
@@ -102,7 +102,7 @@ public class LightSourceMesh {
 			buf.flip();
 			
 			meshVAO = _wglGenVertexArrays();
-			EaglercraftGPU.bindGLBufferArray(meshVAO);
+			EaglercraftGPU.bindGLVertexArray(meshVAO);
 			
 			meshIBO = _wglGenBuffers();
 			_wglBindBuffer(GL_ELEMENT_ARRAY_BUFFER, meshIBO);
@@ -117,7 +117,7 @@ public class LightSourceMesh {
 	}
 
 	public void drawMeshVAO() {
-		EaglercraftGPU.bindGLBufferArray(meshVAO);
+		EaglercraftGPU.bindGLVertexArray(meshVAO);
 		_wglDrawElements(GL_TRIANGLES, meshIndexCount, meshIndexType, 0);
 	}
 

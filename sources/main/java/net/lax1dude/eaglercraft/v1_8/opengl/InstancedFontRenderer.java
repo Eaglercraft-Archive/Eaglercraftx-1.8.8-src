@@ -20,7 +20,7 @@ import static net.lax1dude.eaglercraft.v1_8.internal.PlatformOpenGL.*;
 import static net.lax1dude.eaglercraft.v1_8.opengl.RealOpenGLEnums.*;
 
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
-import net.lax1dude.eaglercraft.v1_8.internal.IBufferArrayGL;
+import net.lax1dude.eaglercraft.v1_8.internal.IVertexArrayGL;
 import net.lax1dude.eaglercraft.v1_8.internal.IBufferGL;
 import net.lax1dude.eaglercraft.v1_8.internal.IProgramGL;
 import net.lax1dude.eaglercraft.v1_8.internal.IShaderGL;
@@ -54,7 +54,7 @@ public class InstancedFontRenderer {
 	private static IUniformGL u_color4f = null;
 	private static IUniformGL u_colorBias4f = null;
 
-	private static IBufferArrayGL vertexArray = null;
+	private static IVertexArrayGL vertexArray = null;
 	private static IBufferGL vertexBuffer = null;
 
 	private static IBufferGL instancesBuffer = null;
@@ -160,7 +160,7 @@ public class InstancedFontRenderer {
 
 		_wglUniform1i(_wglGetUniformLocation(shaderProgram, "u_inputTexture"), 0);
 
-		vertexArray = EaglercraftGPU.createGLBufferArray();
+		vertexArray = EaglercraftGPU.createGLVertexArray();
 		vertexBuffer = _wglGenBuffers();
 		instancesBuffer = _wglGenBuffers();
 
@@ -191,7 +191,7 @@ public class InstancedFontRenderer {
 		});
 		verts.flip();
 
-		EaglercraftGPU.bindGLBufferArray(vertexArray);
+		EaglercraftGPU.bindGLVertexArray(vertexArray);
 
 		EaglercraftGPU.bindVAOGLArrayBufferNow(vertexBuffer);
 		_wglBufferData(GL_ARRAY_BUFFER, verts, GL_STATIC_DRAW);
@@ -370,7 +370,7 @@ public class InstancedFontRenderer {
 		}
 
 		EaglercraftGPU.bindGLArrayBuffer(instancesBuffer);
-		EaglercraftGPU.bindGLBufferArray(vertexArray);
+		EaglercraftGPU.bindGLVertexArray(vertexArray);
 
 		if(charactersDrawn > 0) {
 			int p = fontDataBuffer.position();
@@ -382,7 +382,7 @@ public class InstancedFontRenderer {
 			fontDataBuffer.position(p);
 			fontDataBuffer.limit(l);
 
-			EaglercraftGPU.doDrawArraysInstanced(GL_TRIANGLES, shadow ? 0 : 6, shadow ? 12 : 6, charactersDrawn);
+			EaglercraftGPU.drawArraysInstanced(GL_TRIANGLES, shadow ? 0 : 6, shadow ? 12 : 6, charactersDrawn);
 		}
 
 		if(boldCharactersDrawn > 0) {
@@ -395,7 +395,7 @@ public class InstancedFontRenderer {
 			fontBoldDataBuffer.position(p);
 			fontBoldDataBuffer.limit(l);
 
-			EaglercraftGPU.doDrawArraysInstanced(GL_TRIANGLES, shadow ? 12 : 24, shadow ? 24 : 12, boldCharactersDrawn);
+			EaglercraftGPU.drawArraysInstanced(GL_TRIANGLES, shadow ? 12 : 24, shadow ? 24 : 12, boldCharactersDrawn);
 		}
 	}
 
@@ -449,7 +449,7 @@ public class InstancedFontRenderer {
 		}
 	}
 
-	private static final void updateBounds(int x, int y) {
+	private static void updateBounds(int x, int y) {
 		if(x < widthCalcLeast || widthCalcLeast == Integer.MAX_VALUE) widthCalcLeast = x;
 		if(x > widthCalcMost || widthCalcMost == Integer.MAX_VALUE) widthCalcMost = x;
 		if(y < heightCalcLeast || heightCalcLeast == Integer.MAX_VALUE) heightCalcLeast = y;
@@ -479,7 +479,7 @@ public class InstancedFontRenderer {
 		u_color4f = null;
 		u_colorBias4f = null;
 		if(vertexArray != null) {
-			EaglercraftGPU.destroyGLBufferArray(vertexArray);
+			EaglercraftGPU.destroyGLVertexArray(vertexArray);
 			vertexArray = null;
 		}
 		if(vertexBuffer != null) {

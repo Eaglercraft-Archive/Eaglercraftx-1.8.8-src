@@ -59,6 +59,7 @@ import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.program.PipelineShaderS
 import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.program.PipelineShaderSkyboxIrradiance;
 import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.program.PipelineShaderSkyboxRender;
 import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.program.PipelineShaderSkyboxRenderEnd;
+import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.program.PipelineShaderSubsurfaceScattering;
 import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.program.PipelineShaderTonemap;
 import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.program.ShaderMissingException;
 import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.texture.MetalsLUT;
@@ -150,12 +151,18 @@ public class EaglerDeferredPipeline {
 	public IFramebufferGL sunLightingShadowFramebuffer = null;
 	public int sunLightingShadowTexture = -1;
 
+	public IFramebufferGL subsurfaceScatteringFramebuffer = null;
+	public int subsurfaceScatteringTexture = -1;
+
 	public IFramebufferGL ssaoGenerateFramebuffer = null;
 	public int ssaoGenerateTexture = -1;
 
 	private int reprojectionStartup = 0;
 
 	public int ssaoNoiseTexture = -1;
+
+	public IFramebufferGL skyFramebuffer = null;
+	public int skyTexture = -1;
 
 	public IFramebufferGL lightingHDRFramebuffer = null;
 	public int lightingHDRFramebufferColorTexture = -1;
@@ -297,6 +304,7 @@ public class EaglerDeferredPipeline {
 	public PipelineShaderRealisticWaterNormalsMix shader_realistic_water_normals_mix = null;
 	public PipelineShaderHandDepthMask shader_hand_depth_mask = null;
 	public PipelineShaderFXAA shader_post_fxaa = null;
+	public PipelineShaderSubsurfaceScattering shader_subsurface_scattering = null;
 	public SkyboxRenderer skybox = null;
 	public LightSourceMesh pointLightMesh = null;
 	public final GBufferAcceleratedEffectRenderer gbufferEffectRenderer = new GBufferAcceleratedEffectRenderer();
@@ -456,6 +464,16 @@ public class EaglerDeferredPipeline {
 			GlStateManager.bindTexture(sunLightingShadowTexture);
 			setNearest();
 			_wglFramebufferTexture2D(_GL_FRAMEBUFFER, _GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, EaglercraftGPU.getNativeTexture(sunLightingShadowTexture), 0);
+			if(config.is_rendering_subsurfaceScattering) {
+				shader_subsurface_scattering = PipelineShaderSubsurfaceScattering.compile(lods, sunShadowDepthBufferRes, sunShadowDepthBufferRes * lods);
+				shader_subsurface_scattering.loadUniforms();
+				subsurfaceScatteringFramebuffer = _wglCreateFramebuffer();
+				_wglBindFramebuffer(_GL_FRAMEBUFFER, subsurfaceScatteringFramebuffer);
+				subsurfaceScatteringTexture = GlStateManager.generateTexture();
+				GlStateManager.bindTexture(subsurfaceScatteringTexture);
+				setNearest();
+				_wglFramebufferTexture2D(_GL_FRAMEBUFFER, _GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, EaglercraftGPU.getNativeTexture(subsurfaceScatteringTexture), 0);
+			}
 			if(config.is_rendering_shadowsColored) {
 				sunShadowColorFramebuffer = _wglCreateFramebuffer();
 				_wglBindFramebuffer(_GL_FRAMEBUFFER, sunShadowColorFramebuffer);
@@ -594,6 +612,13 @@ public class EaglerDeferredPipeline {
 		setNearest();
 		_wglFramebufferTexture2D(_GL_FRAMEBUFFER, _GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, EaglercraftGPU.getNativeTexture(lightingHDRFramebufferDepthTexture), 0);
 
+		skyFramebuffer = _wglCreateFramebuffer();
+		_wglBindFramebuffer(_GL_FRAMEBUFFER, skyFramebuffer);
+		skyTexture = GlStateManager.generateTexture();
+		GlStateManager.bindTexture(skyTexture);
+		setLinear();
+		_wglFramebufferTexture2D(_GL_FRAMEBUFFER, _GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, EaglercraftGPU.getNativeTexture(skyTexture), 0);
+
 		handRenderFramebuffer = _wglCreateFramebuffer();
 		_wglBindFramebuffer(_GL_FRAMEBUFFER, handRenderFramebuffer);
 		GlStateManager.bindTexture(lightingHDRFramebufferColorTexture);
@@ -641,7 +666,7 @@ public class EaglerDeferredPipeline {
 		DeferredStateManager.checkGLError("Post: rebuild pipeline: dither8x8Texture");
 
 		shader_lighting_sun = PipelineShaderLightingSun.compile(shadowsSun ? config.is_rendering_shadowsSun_clamped : 0,
-				config.is_rendering_shadowsColored);
+				config.is_rendering_shadowsColored, config.is_rendering_subsurfaceScattering);
 		shader_lighting_sun.loadUniforms();
 		if(shadowsSun) {
 			shader_shadows_sun = PipelineShaderShadowsSun.compile(config.is_rendering_shadowsSun_clamped,
@@ -1233,11 +1258,20 @@ public class EaglerDeferredPipeline {
 			DeferredStateManager.checkGLError("Post: resize pipeline: lightShafts");
 		}
 
+		if(config.is_rendering_subsurfaceScattering) {
+			GlStateManager.bindTexture(subsurfaceScatteringTexture);
+			_wglTexImage2D(GL_TEXTURE_2D, 0, _GL_R8, reprojectionTexWidth, reprojectionTexHeight, 0, GL_RED, GL_UNSIGNED_BYTE, (ByteBuffer)null);
+			DeferredStateManager.checkGLError("Post: resize pipeline: subsurfaceScattering");
+		}
+
 		GlStateManager.bindTexture(lightingHDRFramebufferColorTexture);
 		EaglercraftGPU.createFramebufferHDR16FTexture(GL_TEXTURE_2D, 0, w, h, GL_RGBA, true); // USE RGBA! WebGL won't render to RGB16F
 
 		GlStateManager.bindTexture(lightingHDRFramebufferDepthTexture);
 		_wglTexImage2D(GL_TEXTURE_2D, 0, _GL_DEPTH_COMPONENT32F, w, h, 0, _GL_DEPTH_COMPONENT, GL_FLOAT, (ByteBuffer)null);
+
+		GlStateManager.bindTexture(skyTexture);
+		EaglercraftGPU.createFramebufferHDR16FTexture(GL_TEXTURE_2D, 0, reprojectionTexWidth, reprojectionTexHeight, GL_RGBA, true);
 
 		GlStateManager.bindTexture(handRenderFramebufferDepthTexture);
 		_wglTexImage2D(GL_TEXTURE_2D, 0, _GL_DEPTH_COMPONENT32F, w, h, 0, _GL_DEPTH_COMPONENT, GL_FLOAT, (ByteBuffer)null);
@@ -1367,8 +1401,8 @@ public class EaglerDeferredPipeline {
 		resize(mc.displayWidth, mc.displayHeight);
 		_wglBindFramebuffer(_GL_FRAMEBUFFER, gBufferFramebuffer);
 		_wglDrawBuffers(gBufferDrawBuffers);
-		_wglClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-		_wglClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		GlStateManager.clearColor(0.0f, 0.0f, 0.0f, 0.0f);
+		GlStateManager.clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 		GlStateManager.viewport(0, 0, currentWidth, currentHeight);
 		GlStateManager.colorMask(true, true, true, true);
@@ -1422,7 +1456,7 @@ public class EaglerDeferredPipeline {
 			GlStateManager.clear(GL_DEPTH_BUFFER_BIT);
 		}
 		GlStateManager.enableCull();
-		GlStateManager.cullFace(GL_FRONT);
+		//GlStateManager.cullFace(GL_FRONT);
 		DeferredStateManager.enableShadowRender();
 		GlStateManager.colorMask(false, false, false, false);
 		DeferredStateManager.checkGLError("Post: beginDrawMainShadowMap()");
@@ -1431,7 +1465,7 @@ public class EaglerDeferredPipeline {
 	public void endDrawMainShadowMap() {
 		DeferredStateManager.checkGLError("Pre: endDrawMainShadowMap()");
 		GlStateManager.viewport(0, 0, currentWidth, currentHeight);
-		GlStateManager.cullFace(GL_BACK);
+		//GlStateManager.cullFace(GL_BACK);
 		DeferredStateManager.disableShadowRender();
 		GlStateManager.colorMask(true, true, true, true);
 		DeferredStateManager.checkGLError("Post: endDrawMainShadowMap()");
@@ -1653,7 +1687,7 @@ public class EaglerDeferredPipeline {
 				// =============== NETHER SKY REFLECTION MAP ================ //
 
 				_wglBindFramebuffer(_GL_FRAMEBUFFER, envMapSkyFramebuffer);
-				GlStateManager.clearColor(0.55f, 0.25f, 0.05f, 1.0f);
+				GlStateManager.clearColor(0.055f, 0.025f, 0.005f, 1.0f);
 				GlStateManager.clear(GL_COLOR_BUFFER_BIT);
 
 				DeferredStateManager.checkGLError("combineGBuffersAndIlluminate(): NETHER SKY REFLECTION MAP");
@@ -1908,6 +1942,17 @@ public class EaglerDeferredPipeline {
 			uniformMatrixHelper(shader_shadows_sun.uniforms.u_inverseViewMatrix4f, DeferredStateManager.inverseViewMatrix);
 			uniformMatrixHelper(shader_shadows_sun.uniforms.u_inverseViewProjMatrix4f, tmpMatrixInverseViewProj);
 
+			Matrix4f.mul(tmpClipToTexSpaceMatLeft, DeferredStateManager.sunShadowMatrix0, tmpShadowLOD0MatrixTexSpace);
+			uniformMatrixHelper(shader_shadows_sun.uniforms.u_sunShadowMatrixLOD04f, tmpShadowLOD0MatrixTexSpace);
+			if(config.is_rendering_shadowsSun_clamped > 1) {
+				Matrix4f.mul(tmpClipToTexSpaceMatLeft, DeferredStateManager.sunShadowMatrix1, tmpShadowLOD1MatrixTexSpace);
+				uniformMatrixHelper(shader_shadows_sun.uniforms.u_sunShadowMatrixLOD14f, tmpShadowLOD1MatrixTexSpace);
+				if(config.is_rendering_shadowsSun_clamped > 2) {
+					Matrix4f.mul(tmpClipToTexSpaceMatLeft, DeferredStateManager.sunShadowMatrix2, tmpShadowLOD2MatrixTexSpace);
+					uniformMatrixHelper(shader_shadows_sun.uniforms.u_sunShadowMatrixLOD24f, tmpShadowLOD2MatrixTexSpace);
+				}
+			}
+
 			if(config.is_rendering_shadowsColored) {
 				GlStateManager.setActiveTexture(GL_TEXTURE3);
 				GlStateManager.bindTexture(sunShadowColorBuffer);
@@ -1921,16 +1966,6 @@ public class EaglerDeferredPipeline {
 			GlStateManager.bindTexture(gBufferDepthTexture);
 			GlStateManager.setActiveTexture(GL_TEXTURE0);
 			GlStateManager.bindTexture(gBufferNormalsTexture);
-			Matrix4f.mul(tmpClipToTexSpaceMatLeft, DeferredStateManager.sunShadowMatrix0, tmpShadowLOD0MatrixTexSpace);
-			uniformMatrixHelper(shader_shadows_sun.uniforms.u_sunShadowMatrixLOD04f, tmpShadowLOD0MatrixTexSpace);
-			if(config.is_rendering_shadowsSun_clamped > 1) {
-				Matrix4f.mul(tmpClipToTexSpaceMatLeft, DeferredStateManager.sunShadowMatrix1, tmpShadowLOD1MatrixTexSpace);
-				uniformMatrixHelper(shader_shadows_sun.uniforms.u_sunShadowMatrixLOD14f, tmpShadowLOD1MatrixTexSpace);
-				if(config.is_rendering_shadowsSun_clamped > 2) {
-					Matrix4f.mul(tmpClipToTexSpaceMatLeft, DeferredStateManager.sunShadowMatrix2, tmpShadowLOD2MatrixTexSpace);
-					uniformMatrixHelper(shader_shadows_sun.uniforms.u_sunShadowMatrixLOD24f, tmpShadowLOD2MatrixTexSpace);
-				}
-			}
 
 			Vector3f currentSunShadowAngle = DeferredStateManager.currentSunLightAngle;
 			_wglUniform3f(shader_shadows_sun.uniforms.u_sunDirection3f, -currentSunShadowAngle.x, -currentSunShadowAngle.y, -currentSunShadowAngle.z);
@@ -1943,27 +1978,174 @@ public class EaglerDeferredPipeline {
 			}
 
 			DeferredStateManager.checkGLError("combineGBuffersAndIlluminate(): RENDER SUNLIGHT SHADOWS");
+
+			if(config.is_rendering_subsurfaceScattering && dim == 0) {
+
+				// ==================== RENDER SUBSURFACE SCATTERING ===================== //
+
+				_wglBindFramebuffer(_GL_FRAMEBUFFER, subsurfaceScatteringFramebuffer);
+				GlStateManager.viewport(0, 0, reprojectionTexWidth, reprojectionTexHeight);
+
+				shader_subsurface_scattering.useProgram();
+				uniformMatrixHelper(shader_subsurface_scattering.uniforms.u_inverseViewMatrix4f, DeferredStateManager.inverseViewMatrix);
+				uniformMatrixHelper(shader_subsurface_scattering.uniforms.u_inverseViewProjMatrix4f, tmpMatrixInverseViewProj);
+
+				uniformMatrixHelper(shader_subsurface_scattering.uniforms.u_sunShadowMatrixLOD04f, tmpShadowLOD0MatrixTexSpace);
+				if(config.is_rendering_shadowsSun_clamped > 1) {
+					uniformMatrixHelper(shader_subsurface_scattering.uniforms.u_sunShadowMatrixLOD14f, tmpShadowLOD1MatrixTexSpace);
+					if(config.is_rendering_shadowsSun_clamped > 2) {
+						uniformMatrixHelper(shader_subsurface_scattering.uniforms.u_sunShadowMatrixLOD24f, tmpShadowLOD2MatrixTexSpace);
+					}
+				}
+
+				_wglUniform3f(shader_subsurface_scattering.uniforms.u_sunDirection3f, -currentSunShadowAngle.x, -currentSunShadowAngle.y, -currentSunShadowAngle.z);
+
+				GlStateManager.setActiveTexture(GL_TEXTURE3);
+				GlStateManager.bindTexture(sunShadowDepthBuffer);
+				_wglTexParameteri(GL_TEXTURE_2D, _GL_TEXTURE_COMPARE_MODE, GL_NONE);
+				GlStateManager.setActiveTexture(GL_TEXTURE2);
+				GlStateManager.bindTexture(gBufferMaterialTexture);
+				GlStateManager.setActiveTexture(GL_TEXTURE1);
+				GlStateManager.bindTexture(gBufferDepthTexture);
+				GlStateManager.setActiveTexture(GL_TEXTURE0);
+				GlStateManager.bindTexture(gBufferNormalsTexture);
+
+				DrawUtils.drawStandardQuad2D();
+
+				GlStateManager.setActiveTexture(GL_TEXTURE3);
+				_wglTexParameteri(GL_TEXTURE_2D, _GL_TEXTURE_COMPARE_MODE, _GL_COMPARE_REF_TO_TEXTURE);
+
+				DeferredStateManager.checkGLError("combineGBuffersAndIlluminate(): RENDER SUBSURFACE SCATTERING");
+			}
 		}
 
-		// ================ INITIALIZE HDR FRAMEBUFFER ================== //
+		// =================== RENDER SKYBOX MESH =================== //
 
-		GlStateManager.viewport(0, 0, currentWidth, currentHeight);
+		_wglBindFramebuffer(_GL_FRAMEBUFFER, skyFramebuffer);
+		GlStateManager.viewport(0, 0, reprojectionTexWidth, reprojectionTexHeight);
+
+		if(dim == 0) {
+			GlStateManager.disableDepth();
+			GlStateManager.setActiveTexture(GL_TEXTURE3);
+			GlStateManager.bindTexture(gBufferDepthTexture);
+			GlStateManager.setActiveTexture(GL_TEXTURE2);
+			GlStateManager.bindTexture(CloudRenderWorker.cloudOcclusionTexture);
+			GlStateManager.setActiveTexture(GL_TEXTURE1);
+			CloudRenderWorker.bindParaboloid();
+			GlStateManager.setActiveTexture(GL_TEXTURE0);
+			GlStateManager.bindTexture(atmosphereHDRFramebufferColorTexture);
+			shader_skybox_render.useProgram();
+			uniformMatrixHelper(shader_skybox_render.uniforms.u_viewMatrix4f, DeferredStateManager.viewMatrix);
+			uniformMatrixHelper(shader_skybox_render.uniforms.u_projMatrix4f, DeferredStateManager.projMatrix);
+			_wglUniform3f(shader_skybox_render.uniforms.u_sunDirection3f, -currentSunAngle.x, -currentSunAngle.y, -currentSunAngle.z);
+			float mag = 25.0f;
+			float[] sunRGB2 = TemperaturesLUT.getColorTemperature((int)sunKelvin - 1000);
+			_wglUniform3f(shader_skybox_render.uniforms.u_sunColor3f, sunRGB2[0] * mag, sunRGB2[1] * mag, sunRGB2[2] * mag);
+			if (mc.theWorld.getLastLightningBolt() > 0) {
+				float f = 0.3f + fff;
+				_wglUniform4f(shader_skybox_render.uniforms.u_lightningColor4f, 0.02f * f, 0.02f * f, 0.02f * f, 1.0f - f * 0.25f);
+			}else {
+				_wglUniform4f(shader_skybox_render.uniforms.u_lightningColor4f, 0.0f, 0.0f, 0.0f, 1.0f);
+			}
+			skybox.drawFull();
+	
+			DeferredStateManager.checkGLError("combineGBuffersAndIlluminate(): RENDER SKYBOX MESH");
+		}else if(dim == 1) {
+			GlStateManager.disableDepth();
+
+			GlStateManager.setActiveTexture(GL_TEXTURE0);
+			mc.getTextureManager().bindTexture(locationEndSkyPng);
+
+			if(shader_skybox_render_end == null) {
+				shader_skybox_render_end = PipelineShaderSkyboxRenderEnd.compile();
+				shader_skybox_render_end.loadUniforms();
+			}
+
+			shader_skybox_render_end.useProgram();
+			uniformMatrixHelper(shader_skybox_render_end.uniforms.u_viewMatrix4f, DeferredStateManager.viewMatrix);
+			uniformMatrixHelper(shader_skybox_render_end.uniforms.u_projMatrix4f, DeferredStateManager.projMatrix);
+			_wglUniform2f(shader_skybox_render_end.uniforms.u_skyTextureScale2f, 4.0f, 4.0f);
+
+			skybox.drawFull();
+
+			DeferredStateManager.checkGLError("combineGBuffersAndIlluminate(): RENDER SKYBOX MESH");
+		}else if(dim == -1) {
+			GlStateManager.clearColor(0.055f, 0.025f, 0.005f, 1.0f);
+			GlStateManager.clear(GL_COLOR_BUFFER_BIT);
+		}
+
+		// ================ INITIALIZE DEPTH BUFFER ================== //
+
 		_wglBindFramebuffer(_GL_READ_FRAMEBUFFER, gBufferFramebuffer);
 		_wglBindFramebuffer(_GL_DRAW_FRAMEBUFFER, lightingHDRFramebuffer);
 		_wglBlitFramebuffer(0, 0, currentWidth, currentHeight, 0, 0, currentWidth, currentHeight, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
 		_wglBindFramebuffer(_GL_FRAMEBUFFER, lightingHDRFramebuffer);
 
-		if(dim == -1) {
-			float f = 0.13f;
-			GlStateManager.clearColor(0.57f * 0.57f * f, 0.38f * 0.38f * f, 0.20f * 0.20f * f, 0.0f);
-		}else {
-			GlStateManager.clearColor(0.0f, 0.0f, 0.0f, 0.0f);
-		}
-		GlStateManager.clear(GL_COLOR_BUFFER_BIT);
+		DeferredStateManager.checkGLError("combineGBuffersAndIlluminate(): INITIALIZE DEPTH BUFFER");
 
-		DeferredStateManager.checkGLError("combineGBuffersAndIlluminate(): INITIALIZE HDR FRAMEBUFFER");
+		// ===================== COPY SKY TEXTURE ====================== //
+
+		_wglBindFramebuffer(_GL_FRAMEBUFFER, lightingHDRFramebuffer);
+		GlStateManager.viewport(0, 0, currentWidth, currentHeight);
+
+		GlStateManager.setActiveTexture(GL_TEXTURE0);
+		GlStateManager.bindTexture(skyTexture);
+		TextureCopyUtil.blitTexture();
+
+		if(dim == 0 && fff < 1.0f) {
+
+			// ===================== RENDER MOON ====================== //
+
+			GlStateManager.enableDepth();
+			Matrix4f moonMatrix = tmpMatrix2;
+			moonMatrix.setIdentity();
+			tmpVector3.set(-1.0f, -1.0f, 1.0f);
+			Matrix4f.scale(tmpVector3, moonMatrix, moonMatrix);
+			tmpVector3.set(0.0f, 0.0f, 1.0f);
+			Matrix4f.rotate(2.7f, tmpVector3, moonMatrix, moonMatrix);
+			tmpVector3.set(-1.0f, 0.0f, 0.0f);
+			tmpVector4.set(currentSunAngle);
+			tmpVector4.scale(-1.0f);
+			Vector3f.cross(tmpVector3, tmpVector4, tmpVector1);
+			Vector3f.cross(tmpVector4, tmpVector1, tmpVector3);
+			moonMatrix = tmpMatrix1;
+			moonMatrix.setIdentity();
+			moonMatrix.m00 = tmpVector1.x;
+			moonMatrix.m01 = tmpVector1.y;
+			moonMatrix.m02 = tmpVector1.z;
+			moonMatrix.m10 = tmpVector3.x;
+			moonMatrix.m11 = tmpVector3.y;
+			moonMatrix.m12 = tmpVector3.z;
+			moonMatrix.m20 = tmpVector4.x;
+			moonMatrix.m21 = tmpVector4.y;
+			moonMatrix.m22 = tmpVector4.z;
+			Matrix4f.mul(moonMatrix, tmpMatrix2, moonMatrix);
+			
+			GlStateManager.bindTexture(moonTextures);
+			shader_moon_render.useProgram();
+			
+			uniformMatrixHelper(shader_moon_render.uniforms.u_modelMatrix4f, moonMatrix);
+			uniformMatrixHelper(shader_moon_render.uniforms.u_viewMatrix4f, DeferredStateManager.viewMatrix);
+			uniformMatrixHelper(shader_moon_render.uniforms.u_projMatrix4f, DeferredStateManager.projMatrix);
+			float fffff = 0.1f + MathHelper.clamp_float((-currentSunAngle.y + 0.1f) * 6.0f, 0.0f, 0.375f);
+			_wglUniform3f(shader_moon_render.uniforms.u_moonColor3f, 1.4f * fffff, 1.2f * fffff, 1.0f * fffff);
+			
+			float f = (float)(Minecraft.getMinecraft().theWorld.getWorldTime() - 18000f) / 24000f / 4f * 3.14159f;
+			_wglUniform3f(shader_moon_render.uniforms.u_lightDir3f, MathHelper.sin(f), 0.0f, MathHelper.cos(f));
+			
+			GlStateManager.enableBlend();
+			GlStateManager.tryBlendFuncSeparate(GL_ONE, GL_ONE, GL_ZERO, GL_ZERO);
+			
+			DrawUtils.drawStandardQuad2D();
+
+			GlStateManager.disableDepth();
+
+			DeferredStateManager.checkGLError("combineGBuffersAndIlluminate(): RENDER MOON");
+		}
 
 		// ================= RENDER AMBIENT LIGHTING ==================== //
+
+		GlStateManager.disableBlend();
 
 		GlStateManager.setActiveTexture(GL_TEXTURE9);
 		GlStateManager.bindTexture(MetalsLUT.getGLTexture());
@@ -2020,6 +2202,11 @@ public class EaglerDeferredPipeline {
 			shader_lighting_sun.useProgram();
 			uniformMatrixHelper(shader_lighting_sun.uniforms.u_inverseViewMatrix4f, DeferredStateManager.inverseViewMatrix);
 			uniformMatrixHelper(shader_lighting_sun.uniforms.u_inverseProjectionMatrix4f, DeferredStateManager.inverseProjMatrix);
+			if(config.is_rendering_subsurfaceScattering) {
+				GlStateManager.setActiveTexture(GL_TEXTURE6);
+				GlStateManager.bindTexture(subsurfaceScatteringTexture);
+			}
+			_wglTexParameteri(GL_TEXTURE_2D, _GL_TEXTURE_COMPARE_MODE, GL_NONE);
 			GlStateManager.setActiveTexture(GL_TEXTURE5);
 			GlStateManager.bindTexture(MetalsLUT.getGLTexture());
 			GlStateManager.setActiveTexture(GL_TEXTURE4);
@@ -2029,7 +2216,7 @@ public class EaglerDeferredPipeline {
 				GlStateManager.bindTexture(-1);
 			}
 			GlStateManager.setActiveTexture(GL_TEXTURE0);
-	
+
 			float ffff = getSkyBrightnessParam();
 			float[] sunRGB;
 			if(currentSunAngle.y < 0.05f) {
@@ -2047,11 +2234,11 @@ public class EaglerDeferredPipeline {
 				currentSunLightColor3f.z = sunRGB[2] * 0.3f * (0.2f + ffff * 0.8f);
 				_wglUniform3f(shader_lighting_sun.uniforms.u_sunColor3f, sunRGB[0] * 0.1f * (0.5f + ffff * 0.5f), sunRGB[1] * 0.1f * (0.5f + ffff * 0.5f), sunRGB[2] * 0.1f * (0.5f + ffff * 0.5f));
 			}
-	
+
 			_wglUniform3f(shader_lighting_sun.uniforms.u_sunDirection3f, -DeferredStateManager.currentSunLightAngle.x, -DeferredStateManager.currentSunLightAngle.y, -DeferredStateManager.currentSunLightAngle.z);
-	
+
 			DrawUtils.drawStandardQuad2D();
-	
+
 			DeferredStateManager.checkGLError("combineGBuffersAndIlluminate(): RENDER SUNLIGHT");
 		}else {
 			DeferredStateManager.currentSunLightColor.set(0.0f, 0.0f, 0.0f);
@@ -2123,101 +2310,6 @@ public class EaglerDeferredPipeline {
 		}
 
 		_wglBindFramebuffer(_GL_FRAMEBUFFER, lightingHDRFramebuffer);
-
-		// =================== RENDER SKYBOX MESH =================== //
-
-		if(dim == 0) {
-			GlStateManager.enableDepth();
-			GlStateManager.setActiveTexture(GL_TEXTURE2);
-			GlStateManager.bindTexture(CloudRenderWorker.cloudOcclusionTexture);
-			GlStateManager.setActiveTexture(GL_TEXTURE1);
-			CloudRenderWorker.bindParaboloid();
-			GlStateManager.setActiveTexture(GL_TEXTURE0);
-			GlStateManager.bindTexture(atmosphereHDRFramebufferColorTexture);
-			shader_skybox_render.useProgram();
-			uniformMatrixHelper(shader_skybox_render.uniforms.u_viewMatrix4f, DeferredStateManager.viewMatrix);
-			uniformMatrixHelper(shader_skybox_render.uniforms.u_projMatrix4f, DeferredStateManager.projMatrix);
-			_wglUniform3f(shader_skybox_render.uniforms.u_sunDirection3f, -currentSunAngle.x, -currentSunAngle.y, -currentSunAngle.z);
-			float mag = 25.0f;
-			float[] sunRGB2 = TemperaturesLUT.getColorTemperature((int)sunKelvin - 1000);
-			_wglUniform3f(shader_skybox_render.uniforms.u_sunColor3f, sunRGB2[0] * mag, sunRGB2[1] * mag, sunRGB2[2] * mag);
-			if (mc.theWorld.getLastLightningBolt() > 0) {
-				float f = 0.3f + fff;
-				_wglUniform4f(shader_skybox_render.uniforms.u_lightningColor4f, 0.02f * f, 0.02f * f, 0.02f * f, 1.0f - f * 0.25f);
-			}else {
-				_wglUniform4f(shader_skybox_render.uniforms.u_lightningColor4f, 0.0f, 0.0f, 0.0f, 1.0f);
-			}
-			skybox.drawFull();
-	
-			DeferredStateManager.checkGLError("combineGBuffersAndIlluminate(): RENDER SKYBOX MESH");
-		}else if(dim == 1) {
-			GlStateManager.enableDepth();
-
-			GlStateManager.setActiveTexture(GL_TEXTURE0);
-			mc.getTextureManager().bindTexture(locationEndSkyPng);
-
-			if(shader_skybox_render_end == null) {
-				shader_skybox_render_end = PipelineShaderSkyboxRenderEnd.compile();
-				shader_skybox_render_end.loadUniforms();
-			}
-
-			shader_skybox_render_end.useProgram();
-			uniformMatrixHelper(shader_skybox_render_end.uniforms.u_viewMatrix4f, DeferredStateManager.viewMatrix);
-			uniformMatrixHelper(shader_skybox_render_end.uniforms.u_projMatrix4f, DeferredStateManager.projMatrix);
-			_wglUniform2f(shader_skybox_render_end.uniforms.u_skyTextureScale2f, 4.0f, 4.0f);
-
-			skybox.drawFull();
-
-			DeferredStateManager.checkGLError("combineGBuffersAndIlluminate(): RENDER SKYBOX MESH");
-		}
-
-		if(dim == 0 && fff < 1.0f) {
-
-			// ===================== RENDER MOON ====================== //
-
-			Matrix4f moonMatrix = tmpMatrix2;
-			moonMatrix.setIdentity();
-			tmpVector3.set(-1.0f, -1.0f, 1.0f);
-			Matrix4f.scale(tmpVector3, moonMatrix, moonMatrix);
-			tmpVector3.set(0.0f, 0.0f, 1.0f);
-			Matrix4f.rotate(2.7f, tmpVector3, moonMatrix, moonMatrix);
-			tmpVector3.set(-1.0f, 0.0f, 0.0f);
-			tmpVector4.set(currentSunAngle);
-			tmpVector4.scale(-1.0f);
-			Vector3f.cross(tmpVector3, tmpVector4, tmpVector1);
-			Vector3f.cross(tmpVector4, tmpVector1, tmpVector3);
-			moonMatrix = tmpMatrix1;
-			moonMatrix.setIdentity();
-			moonMatrix.m00 = tmpVector1.x;
-			moonMatrix.m01 = tmpVector1.y;
-			moonMatrix.m02 = tmpVector1.z;
-			moonMatrix.m10 = tmpVector3.x;
-			moonMatrix.m11 = tmpVector3.y;
-			moonMatrix.m12 = tmpVector3.z;
-			moonMatrix.m20 = tmpVector4.x;
-			moonMatrix.m21 = tmpVector4.y;
-			moonMatrix.m22 = tmpVector4.z;
-			Matrix4f.mul(moonMatrix, tmpMatrix2, moonMatrix);
-			
-			GlStateManager.bindTexture(moonTextures);
-			shader_moon_render.useProgram();
-			
-			uniformMatrixHelper(shader_moon_render.uniforms.u_modelMatrix4f, moonMatrix);
-			uniformMatrixHelper(shader_moon_render.uniforms.u_viewMatrix4f, DeferredStateManager.viewMatrix);
-			uniformMatrixHelper(shader_moon_render.uniforms.u_projMatrix4f, DeferredStateManager.projMatrix);
-			float fffff = 0.1f + MathHelper.clamp_float((-currentSunAngle.y + 0.1f) * 8.0f, 0.0f, 0.5f);
-			_wglUniform3f(shader_moon_render.uniforms.u_moonColor3f, 1.4f * fffff, 1.2f * fffff, 1.0f * fffff);
-			
-			float f = (float)(Minecraft.getMinecraft().theWorld.getWorldTime() - 18000f) / 24000f / 4f * 3.14159f;
-			_wglUniform3f(shader_moon_render.uniforms.u_lightDir3f, MathHelper.sin(f), 0.0f, MathHelper.cos(f));
-			
-			GlStateManager.enableBlend();
-			GlStateManager.tryBlendFuncSeparate(GL_ONE, GL_ONE, GL_ZERO, GL_ZERO);
-			
-			DrawUtils.drawStandardQuad2D();
-
-			DeferredStateManager.checkGLError("combineGBuffersAndIlluminate(): RENDER MOON");
-		}
 
 		GlStateManager.disableDepth();
 		GlStateManager.depthMask(true);
@@ -2883,6 +2975,8 @@ public class EaglerDeferredPipeline {
 		_wglBindFramebuffer(_GL_DRAW_FRAMEBUFFER, fogDepthCopyBuffer);
 		_wglBlitFramebuffer(0, 0, currentWidth, currentHeight, 0, 0, currentWidth, currentHeight, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
 		_wglBindFramebuffer(_GL_FRAMEBUFFER, lightingHDRFramebuffer);
+		GlStateManager.setActiveTexture(GL_TEXTURE5);
+		GlStateManager.bindTexture(skyTexture);
 		if(config.is_rendering_lightShafts) {
 			GlStateManager.setActiveTexture(GL_TEXTURE4);
 			GlStateManager.bindTexture(lightShaftsTexture);
@@ -3038,6 +3132,10 @@ public class EaglerDeferredPipeline {
 
 	public void beginDrawTranslucentEntities() {
 		DeferredStateManager.checkGLError("Pre: beginDrawTranslucentEntities()");
+		if(config.is_rendering_useEnvMap) {
+			GlStateManager.setActiveTexture(GL_TEXTURE5);
+			GlStateManager.bindTexture(envMapColorTexture);
+		}
 		GlStateManager.setActiveTexture(GL_TEXTURE4);
 		if(config.is_rendering_shadowsSun_clamped > 0) {
 			GlStateManager.bindTexture(sunShadowDepthBuffer);
@@ -3559,6 +3657,14 @@ public class EaglerDeferredPipeline {
 			GlStateManager.deleteTexture(sunLightingShadowTexture);
 			sunLightingShadowTexture = -1;
 		}
+		if(subsurfaceScatteringFramebuffer != null) {
+			_wglDeleteFramebuffer(subsurfaceScatteringFramebuffer);
+			subsurfaceScatteringFramebuffer = null;
+		}
+		if(subsurfaceScatteringTexture != -1) {
+			GlStateManager.deleteTexture(subsurfaceScatteringTexture);
+			subsurfaceScatteringTexture = -1;
+		}
 		if(ssaoGenerateFramebuffer != null) {
 			_wglDeleteFramebuffer(ssaoGenerateFramebuffer);
 			ssaoGenerateFramebuffer = null;
@@ -3626,6 +3732,14 @@ public class EaglerDeferredPipeline {
 		if(lastFrameGBufferDepthTexture != -1) {
 			GlStateManager.deleteTexture(lastFrameGBufferDepthTexture);
 			lastFrameGBufferDepthTexture = -1;
+		}
+		if(skyFramebuffer != null) {
+			_wglDeleteFramebuffer(skyFramebuffer);
+			skyFramebuffer = null;
+		}
+		if(skyTexture != -1) {
+			GlStateManager.deleteTexture(skyTexture);
+			skyTexture = -1;
 		}
 		if(lightingHDRFramebuffer != null) {
 			_wglDeleteFramebuffer(lightingHDRFramebuffer);
@@ -3887,6 +4001,10 @@ public class EaglerDeferredPipeline {
 			shader_post_fxaa.destroy();
 			shader_post_fxaa = null;
 		}
+		if(shader_subsurface_scattering != null) {
+			shader_subsurface_scattering.destroy();
+			shader_subsurface_scattering = null;
+		}
 		if(shader_skybox_render_paraboloid != null) {
 			shader_skybox_render_paraboloid.destroy();
 			shader_skybox_render_paraboloid = null;
@@ -4069,11 +4187,11 @@ public class EaglerDeferredPipeline {
 		}
 	}
 
-	public static final boolean isSupported() {
+	public static boolean isSupported() {
 		return EaglercraftGPU.checkOpenGLESVersion() >= 300 && EaglercraftGPU.checkHasHDRFramebufferSupportWithFilter();
 	}
 
-	public static final String getReasonUnsupported() {
+	public static String getReasonUnsupported() {
 		if(EaglercraftGPU.checkOpenGLESVersion() < 300) {
 			return I18n.format("shaders.gui.unsupported.reason.oldOpenGLVersion");
 		}else if(!EaglercraftGPU.checkHasHDRFramebufferSupportWithFilter()) {
@@ -4083,7 +4201,7 @@ public class EaglerDeferredPipeline {
 		}
 	}
 
-	public static final void renderSuspended() {
+	public static void renderSuspended() {
 		_wglBindFramebuffer(_GL_FRAMEBUFFER, null);
 		GlStateManager.globalEnableBlend();
 		Minecraft mc = Minecraft.getMinecraft();

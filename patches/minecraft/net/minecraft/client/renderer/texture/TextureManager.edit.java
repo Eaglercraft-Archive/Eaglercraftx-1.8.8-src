@@ -94,7 +94,7 @@
 
 > INSERT  1 : 3  @  1
 
-+ 	public ResourceLocation getDynamicTextureLocation(String name, DynamicTexture texture) {
++ 	public ResourceLocation getDynamicTextureLocation(String name, ITextureObject texture) {
 + 		int integer = this.mapTextureCounters.getOrDefault(name, 0) + 1;
 
 > CHANGE  2 : 3  @  2 : 3

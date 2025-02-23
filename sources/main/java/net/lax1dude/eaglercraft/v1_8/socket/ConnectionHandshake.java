@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import net.lax1dude.eaglercraft.v1_8.ArrayUtils;
+import net.lax1dude.eaglercraft.v1_8.ClientUUIDLoadingCache;
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.EagUtils;
 import net.lax1dude.eaglercraft.v1_8.EaglerInputStream;
@@ -83,6 +84,7 @@ public class ConnectionHandshake {
 		try {
 			EaglerProfile.clearServerSkinOverride();
 			PauseMenuCustomizeState.reset();
+			ClientUUIDLoadingCache.resetFlags();
 			pluginVersion = null;
 			pluginBrand = null;
 			protocolVersion = -1;

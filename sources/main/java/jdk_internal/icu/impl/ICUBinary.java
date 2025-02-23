@@ -42,6 +42,7 @@ import java.util.Arrays;
 
 import jdk_internal.icu.util.VersionInfo;
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
+import net.lax1dude.eaglercraft.v1_8.HString;
 
 public final class ICUBinary {
 
@@ -227,7 +228,7 @@ public final class ICUBinary {
 				|| bytes.get(14) != (byte) (dataFormat >> 8) || bytes.get(15) != (byte) dataFormat
 				|| (authenticate != null && !authenticate.isDataVersionAcceptable(formatVersion))) {
 			throw new IOException(HEADER_AUTHENTICATION_FAILED_
-					+ String.format("; data format %02x%02x%02x%02x, format version %d.%d.%d.%d", bytes.get(12),
+					+ HString.format("; data format %02x%02x%02x%02x, format version %d.%d.%d.%d", bytes.get(12),
 							bytes.get(13), bytes.get(14), bytes.get(15), formatVersion[0] & 0xff,
 							formatVersion[1] & 0xff, formatVersion[2] & 0xff, formatVersion[3] & 0xff));
 		}

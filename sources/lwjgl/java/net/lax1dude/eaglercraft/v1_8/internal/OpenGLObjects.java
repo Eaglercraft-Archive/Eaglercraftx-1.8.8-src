@@ -37,11 +37,11 @@ class OpenGLObjects {
 		
 	}
 
-	static class BufferArrayGL implements IBufferArrayGL {
+	static class VertexArrayGL implements IVertexArrayGL {
 		
 		final int ptr;
 		
-		BufferArrayGL(int ptr) {
+		VertexArrayGL(int ptr) {
 			this.ptr = ptr;
 		}
 

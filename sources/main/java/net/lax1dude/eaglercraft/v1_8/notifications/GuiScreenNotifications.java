@@ -19,9 +19,6 @@ package net.lax1dude.eaglercraft.v1_8.notifications;
 import java.io.IOException;
 import java.util.List;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Collections2;
-
 import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
 import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.server.SPacketNotifBadgeShowV4EAG.EnumBadgePriority;
 import net.minecraft.client.Minecraft;
@@ -88,12 +85,8 @@ public class GuiScreenNotifications extends GuiScreen {
 				selectedUUID = lst.get(oldSelectedId).badge.badgeUUID;
 			}
 			lst.clear();
-			lst.addAll(Collections2.transform(Collections2.filter(mgr.getNotifLongHistory(), new Predicate<NotificationBadge>() {
-				@Override
-				public boolean apply(NotificationBadge input) {
-					return input.priority.priority >= priorityOrder[showPriority];
-				}
-			}), GuiSlotNotifications.NotifBadgeSlot::new));
+			mgr.getNotifLongHistory().stream().filter((input) -> input.priority.priority >= priorityOrder[showPriority])
+					.map(GuiSlotNotifications.NotifBadgeSlot::new).forEach(lst::add);
 			selected = -1;
 			if(selectedUUID != null) {
 				for(int i = 0, l = lst.size(); i < l; ++i) {

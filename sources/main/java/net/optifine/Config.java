@@ -65,15 +65,15 @@ public class Config {
 	}
 
 	public static boolean isTreesFancy() {
-		return gameSettings.fancyGraphics;
+		return gameSettings.fancyGraphics || gameSettings.shaders;
 	}
 
 	public static boolean isTreesSmart() {
-		return gameSettings.fancyGraphics && gameSettings.smartLeavesOF;
+		return (gameSettings.fancyGraphics || gameSettings.shaders) && gameSettings.smartLeavesOF;
 	}
 
 	public static boolean isCullFacesLeaves() {
-		return !gameSettings.fancyGraphics;
+		return !gameSettings.fancyGraphics || gameSettings.shaders;
 	}
 
 	public static boolean isCustomItems() {

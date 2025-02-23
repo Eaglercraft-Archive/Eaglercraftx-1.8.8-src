@@ -44,7 +44,7 @@ public class DynamicLightsStateManager {
 	static int lastTotal = 0;
 	private static long lastTick = 0l;
 
-	public static final void enableDynamicLightsRender() {
+	public static void enableDynamicLightsRender() {
 		if(bucketLoader == null) {
 			bucketLoader = new DynamicLightBucketLoader();
 			bucketLoader.initialize();
@@ -60,11 +60,11 @@ public class DynamicLightsStateManager {
 		maxListLengthTracker = 0;
 	}
 
-	public static final void bindAcceleratedEffectRenderer(EffectRenderer renderer) {
+	public static void bindAcceleratedEffectRenderer(EffectRenderer renderer) {
 		renderer.acceleratedParticleRenderer = accelParticleRenderer;
 	}
 
-	public static final void disableDynamicLightsRender(boolean unloadPipeline) {
+	public static void disableDynamicLightsRender(boolean unloadPipeline) {
 		if(bucketLoader != null) {
 			bucketLoader.destroy();
 			bucketLoader = null;
@@ -82,21 +82,21 @@ public class DynamicLightsStateManager {
 		maxListLengthTracker = 0;
 	}
 
-	public static final boolean isDynamicLightsRender() {
+	public static boolean isDynamicLightsRender() {
 		return bucketLoader != null;
 	}
 
-	public static final boolean isInDynamicLightsPass() {
+	public static boolean isInDynamicLightsPass() {
 		return GlStateManager.isExtensionPipeline() && bucketLoader != null;
 	}
 
-	public static final void reportForwardRenderObjectPosition(int centerX, int centerY, int centerZ) {
+	public static void reportForwardRenderObjectPosition(int centerX, int centerY, int centerZ) {
 		if(bucketLoader != null) {
 			bucketLoader.bindLightSourceBucket(centerX, centerY, centerZ, 0);
 		}
 	}
 
-	public static final void reportForwardRenderObjectPosition2(float x, float y, float z) {
+	public static void reportForwardRenderObjectPosition2(float x, float y, float z) {
 		if(bucketLoader != null) {
 			float posX = (float)((x + TileEntityRendererDispatcher.staticPlayerX) - (MathHelper.floor_double(TileEntityRendererDispatcher.staticPlayerX / 16.0) << 4));
 			float posY = (float)((y + TileEntityRendererDispatcher.staticPlayerY) - (MathHelper.floor_double(TileEntityRendererDispatcher.staticPlayerY / 16.0) << 4));
@@ -105,7 +105,7 @@ public class DynamicLightsStateManager {
 		}
 	}
 
-	public static final void renderDynamicLight(String lightName, double posX, double posY, double posZ, float radius) {
+	public static void renderDynamicLight(String lightName, double posX, double posY, double posZ, float radius) {
 		if(bucketLoader != null) {
 			DynamicLightInstance dl;
 			if(instancePoolIndex < lightInstancePool.size()) {
@@ -119,7 +119,7 @@ public class DynamicLightsStateManager {
 		}
 	}
 
-	public static final void clearRenderList() {
+	public static void clearRenderList() {
 		if(instancePoolIndex > maxListLengthTracker) {
 			maxListLengthTracker = instancePoolIndex;
 		}
@@ -127,7 +127,7 @@ public class DynamicLightsStateManager {
 		instancePoolIndex = 0;
 	}
 
-	public static final void commitLightSourceBuckets(double renderPosX, double renderPosY, double renderPosZ) {
+	public static void commitLightSourceBuckets(double renderPosX, double renderPosY, double renderPosZ) {
 		lastTotal = lightRenderList.size();
 		if(bucketLoader != null) {
 			bucketLoader.clearBuckets();
@@ -149,12 +149,12 @@ public class DynamicLightsStateManager {
 		clearRenderList();
 	}
 
-	public static final void setupInverseViewMatrix() {
+	public static void setupInverseViewMatrix() {
 		Matrix4f.invert(GlStateManager.getModelViewReference(), inverseViewMatrix);
 		inverseViewMatrixSerial = GlStateManager.getModelViewSerial();
 	}
 
-	private static final void updateTimers() {
+	private static void updateTimers() {
 		long millis = EagRuntime.steadyTimeMillis();
 		if(millis - lastTick > 5000l) {
 			lastTick = millis;
@@ -169,7 +169,7 @@ public class DynamicLightsStateManager {
 		}
 	}
 
-	public static final void destroyAll() {
+	public static void destroyAll() {
 		lightInstancePool = new ArrayList<>();
 	}
 

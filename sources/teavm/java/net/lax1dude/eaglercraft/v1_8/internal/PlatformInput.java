@@ -405,7 +405,6 @@ public class PlatformInput {
 				handleWindowFocus();
 				SortedTouchEvent sorted = new SortedTouchEvent(evt, touchUIDMapperCreate);
 				currentTouchState = sorted;
-				List<OffsetTouch> lst = sorted.getEventTouches();
 				synchronized(touchEvents) {
 					touchEvents.add(sorted);
 					if(touchEvents.size() > 64) {

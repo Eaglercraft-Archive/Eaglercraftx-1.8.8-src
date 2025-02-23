@@ -38,6 +38,7 @@ def folder = "javascript"
 def name = "classes.wasm"
 
 teavm.wasmGC {
+    compileJava.options.encoding = "UTF-8"
     targetFileName = "../" + name
     optimization = OptimizationLevel.AGGRESSIVE
     outOfProcess = false
@@ -51,6 +52,6 @@ teavm.wasmGC {
     debugInfoLevel = WasmDebugInfoLevel.DEOBFUSCATION;
 	directMallocSupport = true
     minHeapSize = 32
-    maxHeapSize = 384
+    maxHeapSize = 512
     disassembly = true
 }

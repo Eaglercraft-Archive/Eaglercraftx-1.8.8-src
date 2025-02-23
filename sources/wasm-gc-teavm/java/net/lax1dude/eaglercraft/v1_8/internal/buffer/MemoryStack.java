@@ -44,25 +44,27 @@ public class MemoryStack {
 	}
 
 	public static void push() {
+		Address addr = stackTopPointer.add(8);
+		if(addr.toInt() > stackMax.toInt()) {
+			throw new StackOverflowError();
+		}
 		stackTopPointer.putAddress(stackBottomPointer);
 		stackTopPointer.add(4).putInt(0);
 		stackBottomPointer = stackTopPointer;
-		stackTopPointer = stackBottomPointer.add(8);
-		if(stackTopPointer.toInt() > stackMax.toInt()) {
-			throw new StackOverflowError();
-		}
+		stackTopPointer = addr;
 	}
 
 	public static void pop() {
+		Address addr = stackBottomPointer.getAddress();
+		if(addr.toInt() == 0) {
+			throw new IllegalStateException("MemoryStack underflow");
+		}
 		stackTopPointer = stackBottomPointer;
-		stackBottomPointer = stackTopPointer.getAddress();
+		stackBottomPointer = addr;
 		Address cleanup = stackTopPointer.add(4).getAddress();
 		while(cleanup.toInt() != 0) {
 			WASMGCBufferAllocator.free(cleanup.getAddress());
 			cleanup = cleanup.add(4).getAddress();
-		}
-		if(stackBottomPointer.toInt() == 0) {
-			throw new IllegalStateException("MemoryStack underflow");
 		}
 	}
 
@@ -98,7 +100,7 @@ public class MemoryStack {
 	}
 
 	public static Address calloc(int length) {
-		if(length > MALLOC_THRESHOLD || (stackMax.toInt() - stackTopPointer.toInt()) < RESERVE_SIZE) {
+		if(length > MALLOC_THRESHOLD || (stackMax.toInt() - stackTopPointer.toInt() - length) < RESERVE_SIZE) {
 			if(stackTopPointer.toInt() + 8 > stackMax.toInt()) {
 				throw new StackOverflowError();
 			}

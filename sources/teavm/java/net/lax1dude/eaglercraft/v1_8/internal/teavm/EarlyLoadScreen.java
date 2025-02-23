@@ -16,7 +16,7 @@
 
 package net.lax1dude.eaglercraft.v1_8.internal.teavm;
 
-import net.lax1dude.eaglercraft.v1_8.internal.IBufferArrayGL;
+import net.lax1dude.eaglercraft.v1_8.internal.IVertexArrayGL;
 import net.lax1dude.eaglercraft.v1_8.internal.IBufferGL;
 import net.lax1dude.eaglercraft.v1_8.internal.IProgramGL;
 import net.lax1dude.eaglercraft.v1_8.internal.IShaderGL;
@@ -184,7 +184,7 @@ public class EarlyLoadScreen {
 		_wglUseProgram(program);
 		_wglUniform2f(_wglGetUniformLocation(program, "aspect"), x, y);
 		
-		IBufferArrayGL vao = null;
+		IVertexArrayGL vao = null;
 		if(vaos) {
 			vao = _wglGenVertexArrays();
 			_wglBindVertexArray(vao);
@@ -250,7 +250,7 @@ public class EarlyLoadScreen {
 		
 		_wglUniform2f(_wglGetUniformLocation(program, "aspect"), x, y);
 
-		IBufferArrayGL vao = null;
+		IVertexArrayGL vao = null;
 		if(vaos) {
 			vao = _wglGenVertexArrays();
 			_wglBindVertexArray(vao);
@@ -324,11 +324,11 @@ public class EarlyLoadScreen {
 		
 		_wglUniform2f(_wglGetUniformLocation(program, "aspect"), x, y);
 
-		IBufferArrayGL vao = null;
+		IVertexArrayGL vao = null;
 		if(vaos) {
 			if(softVAOs) {
-				vao = EaglercraftGPU.createGLBufferArray();
-				EaglercraftGPU.bindGLBufferArray(vao);
+				vao = EaglercraftGPU.createGLVertexArray();
+				EaglercraftGPU.bindGLVertexArray(vao);
 			}else {
 				vao = _wglGenVertexArrays();
 				_wglBindVertexArray(vao);
@@ -338,7 +338,7 @@ public class EarlyLoadScreen {
 			EaglercraftGPU.bindVAOGLArrayBuffer(vbo);
 			EaglercraftGPU.enableVertexAttribArray(0);
 			EaglercraftGPU.vertexAttribPointer(0, 2, GL_FLOAT, false, 8, 0);
-			EaglercraftGPU.doDrawArrays(GL_TRIANGLES, 0, 6);
+			EaglercraftGPU.drawArrays(GL_TRIANGLES, 0, 6);
 		}else {
 			_wglBindBuffer(GL_ARRAY_BUFFER, vbo);
 			_wglEnableVertexAttribArray(0);
@@ -367,7 +367,7 @@ public class EarlyLoadScreen {
 		}
 		if(vaos) {
 			if(softVAOs) {
-				EaglercraftGPU.destroyGLBufferArray(vao);
+				EaglercraftGPU.destroyGLVertexArray(vao);
 			}else {
 				_wglDeleteVertexArrays(vao);
 			}

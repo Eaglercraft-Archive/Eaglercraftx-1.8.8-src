@@ -1204,14 +1204,11 @@
 ~ 
 ~ 		this.renderGlobal.setDisplayListEntitiesDirty();
 
-> INSERT  2 : 20  @  2
+> INSERT  2 : 17  @  2
 
 + 	public void launchIntegratedServer(String folderName, String worldName, WorldSettings worldSettingsIn) {
 + 		this.loadWorld((WorldClient) null);
 + 		renderManager.setEnableFNAWSkins(this.gameSettings.enableFNAWSkins);
-+ 		session.reset();
-+ 		EaglerProfile.clearServerSkinOverride();
-+ 		PauseMenuCustomizeState.reset();
 + 		SingleplayerServerController.launchEaglercraftServer(folderName, gameSettings.difficulty.getDifficultyId(),
 + 				Math.max(gameSettings.renderDistanceChunks, 2), worldSettingsIn);
 + 		EagRuntime.setMCServerWindowGlobal("singleplayer");
@@ -1225,12 +1222,13 @@
 + 	}
 + 
 
-> INSERT  10 : 15  @  10
+> INSERT  10 : 16  @  10
 
 + 			session.reset();
 + 			EaglerProfile.clearServerSkinOverride();
 + 			PauseMenuCustomizeState.reset();
 + 			ClientUUIDLoadingCache.flushRequestCache();
++ 			ClientUUIDLoadingCache.resetFlags();
 + 			WebViewOverlayController.setPacketSendCallback(null);
 
 > DELETE  1  @  1 : 7

@@ -32,6 +32,7 @@ import net.lax1dude.eaglercraft.v1_8.Filesystem;
 import net.lax1dude.eaglercraft.v1_8.internal.IClientConfigAdapter;
 import net.lax1dude.eaglercraft.v1_8.internal.IEaglerFilesystem;
 import net.lax1dude.eaglercraft.v1_8.internal.IPCPacketData;
+import net.lax1dude.eaglercraft.v1_8.internal.PlatformRuntime;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.MemoryStack;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.WASMGCDirectArrayConverter;
 import net.lax1dude.eaglercraft.v1_8.internal.vfs2.VFile2;
@@ -50,6 +51,7 @@ public class ServerPlatformSingleplayer {
 	private static IEaglerFilesystem filesystem = null;
 
 	public static void initializeContext() {
+		PlatformRuntime.printMemoryStackAddrWASMGC();
 		singleThreadMode = false;
 		singleThreadCB = null;
 		filesystem = Filesystem.getHandleFor(getClientConfigAdapter().getWorldsDB());

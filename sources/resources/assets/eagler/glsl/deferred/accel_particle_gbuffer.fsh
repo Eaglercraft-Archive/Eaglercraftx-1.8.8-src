@@ -40,5 +40,6 @@ void main() {
 	}
 	gbufferColor4f = vec4(diffuseRGBA.rgb, v_lightmap2f.r);
 	gbufferNormal4f = vec4(0.5, 0.5, 1.0, v_lightmap2f.g);
-	gbufferMaterial4f = vec4(texture(u_samplerNormalMaterial, vec2(v_texCoord2f.x, v_texCoord2f.y * u_textureYScale2f.x + u_textureYScale2f.y)).rgb, 1.0);
+	gbufferMaterial4f = texture(u_samplerNormalMaterial, vec2(v_texCoord2f.x, v_texCoord2f.y * u_textureYScale2f.x + u_textureYScale2f.y));
+	gbufferMaterial4f.a = 0.502 - gbufferMaterial4f.a * 0.502;
 }

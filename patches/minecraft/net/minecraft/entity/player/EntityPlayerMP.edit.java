@@ -97,7 +97,11 @@
 ~ 					this.getServerForPlayer().getEntityTracker().func_85172_a(this, c);
 ~ 					this.loadedChunks.removeAll(c.getChunkCoordLong());
 
-> CHANGE  518 : 521  @  518 : 519
+> CHANGE  140 : 141  @  140 : 141
+
+~ 					.get(EntityList.getEntityID(entitylivingbase));
+
+> CHANGE  377 : 380  @  377 : 378
 
 ~ 		for (IntCursor cur : ((EntityPlayerMP) oldPlayer).destroyedItemsNetCache) {
 ~ 			destroyedItemsNetCache.addLast(cur.value);

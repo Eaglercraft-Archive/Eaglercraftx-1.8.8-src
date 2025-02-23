@@ -26,7 +26,11 @@
 
 > DELETE  6  @  6 : 9
 
-> CHANGE  74 : 75  @  74 : 75
+> CHANGE  31 : 32  @  31 : 32
+
+~ 	private static int nextEntityID = 1;
+
+> CHANGE  42 : 43  @  42 : 43
 
 ~ 	protected EaglercraftRandom rand;
 
@@ -185,7 +189,15 @@
 
 > DELETE  2  @  2 : 3
 
-> CHANGE  63 : 64  @  63 : 64
+> CHANGE  40 : 41  @  40 : 41
+
+~ 		category.addCrashSection("Entity\'s Exact location", HString.format("%.2f, %.2f, %.2f",
+
+> CHANGE  4 : 5  @  4 : 5
+
+~ 		category.addCrashSection("Entity\'s Momentum", HString.format("%.2f, %.2f, %.2f", new Object[] {
+
+> CHANGE  17 : 18  @  17 : 18
 
 ~ 	public EaglercraftUUID getUniqueID() {
 

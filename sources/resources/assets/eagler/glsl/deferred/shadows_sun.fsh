@@ -60,14 +60,14 @@ vec2(-0.077, 0.995), vec2(0.998, 0.015),
 vec2(-0.116, -0.987), vec2(-0.916, 0.359),
 vec2(-0.697, -0.511), vec2(0.740, -0.612),
 vec2(0.675, 0.682));
-#define SMOOTH_SHADOW_SAMPLES 1.0 / 8.0
-#define SMOOTH_SHADOW_RADIUS 0.00075
+#define SMOOTH_SHADOW_SAMPLES (1.0 / 8.0)
+#define SMOOTH_SHADOW_RADIUS 0.000488
 #define SMOOTH_SHADOW_POISSON_SAMPLE(idx, tex, lod, vec3Pos, accum, tmpVec2)\
 	tmpVec2 = vec3Pos.xy + POISSON_DISK[idx] * SMOOTH_SHADOW_RADIUS;\
 	tmpVec2 = clamp(tmpVec2, vec2(0.001), vec2(0.999));\
 	tmpVec2.y += lod;\
 	tmpVec2.y *= SUN_SHADOW_MAP_FRAC;\
-	accum += textureLod(tex, vec3(tmpVec2, vec3Pos.z), 0.0) * SMOOTH_SHADOW_SAMPLES;
+	accum += textureLod(tex, vec3(tmpVec2, vec3Pos.z + 0.0001), 0.0);
 #endif
 
 uniform vec3 u_sunDirection3f;
@@ -97,7 +97,7 @@ void main() {
 	worldSpacePosition.xyz -= 1.0;
 	worldSpacePosition = u_inverseViewProjMatrix4f * worldSpacePosition;
 	worldSpacePosition.xyz /= worldSpacePosition.w;
-	worldSpacePosition.xyz += worldSpaceNormal * 0.05;
+	worldSpacePosition.xyz += worldSpaceNormal * 0.1;
 	worldSpacePosition.w = 1.0;
 	float skyLight = max(normalVector4f.a * 2.0 - 1.0, 0.0);
 	float shadowSample;
@@ -106,9 +106,8 @@ void main() {
 	for(;;) {
 		shadowSpacePosition = u_sunShadowMatrixLOD04f * worldSpacePosition;
 		if(shadowSpacePosition.xyz == clamp(shadowSpacePosition.xyz, vec3(0.005), vec3(0.995))) {
-			shadowSample = textureLod(u_sunShadowDepthTexture, vec3(shadowSpacePosition.xy * vec2(1.0, SUN_SHADOW_MAP_FRAC), shadowSpacePosition.z), 0.0);
+			shadowSample = textureLod(u_sunShadowDepthTexture, vec3(shadowSpacePosition.xy * vec2(1.0, SUN_SHADOW_MAP_FRAC), shadowSpacePosition.z + 0.0001), 0.0);
 #ifdef COMPILE_SUN_SHADOW_SMOOTH
-			shadowSample *= SMOOTH_SHADOW_SAMPLES;
 			SMOOTH_SHADOW_POISSON_SAMPLE(0, u_sunShadowDepthTexture, 0.0, shadowSpacePosition.xyz, shadowSample, tmpVec2)
 			SMOOTH_SHADOW_POISSON_SAMPLE(1, u_sunShadowDepthTexture, 0.0, shadowSpacePosition.xyz, shadowSample, tmpVec2)
 			SMOOTH_SHADOW_POISSON_SAMPLE(2, u_sunShadowDepthTexture, 0.0, shadowSpacePosition.xyz, shadowSample, tmpVec2)
@@ -116,7 +115,7 @@ void main() {
 			SMOOTH_SHADOW_POISSON_SAMPLE(4, u_sunShadowDepthTexture, 0.0, shadowSpacePosition.xyz, shadowSample, tmpVec2)
 			SMOOTH_SHADOW_POISSON_SAMPLE(5, u_sunShadowDepthTexture, 0.0, shadowSpacePosition.xyz, shadowSample, tmpVec2)
 			SMOOTH_SHADOW_POISSON_SAMPLE(6, u_sunShadowDepthTexture, 0.0, shadowSpacePosition.xyz, shadowSample, tmpVec2)
-			shadowSample = max(shadowSample * 2.0 - 1.0, 0.0);
+			shadowSample *= SMOOTH_SHADOW_SAMPLES;
 #endif
 #ifdef COMPILE_COLORED_SHADOW
 			shadowSpacePosition.y *= SUN_SHADOW_MAP_FRAC;

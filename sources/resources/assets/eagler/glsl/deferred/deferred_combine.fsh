@@ -60,6 +60,7 @@ uniform float u_skyLightFactor1f;
 #endif
 
 #EAGLER INCLUDE (3) "eagler:glsl/deferred/lib/pbr_env_map.glsl"
+#EAGLER INCLUDE (4) "eagler:glsl/deferred/lib/branchless_comparison.glsl"
 
 void main() {
 	vec3 diffuseColor3f;
@@ -86,7 +87,7 @@ void main() {
 
 #ifdef COMPILE_GLOBAL_AMBIENT_OCCLUSION
 	vec4 ao = textureLod(u_ssaoTexture, min(v_position2f * u_halfResolutionPixelAlignment2f, 1.0), 0.0);
-	ao.g = ao.b > 0.0 ? ao.g : 1.0;
+	ao.g = mix(COMPARE_GT_0_1(0.0, ao.b), 1.0, ao.g);
 	shadow = mix(shadow, shadow * ao.g, 0.9);
 #endif
 
@@ -102,8 +103,8 @@ void main() {
 		vec4 sample2 = textureLod(u_irradianceMap, irradianceMapSamplePos2f.xz * vec2(0.5, -0.25) + vec2(0.5, 0.75), 0.0);
 		skyLight += mix(sample1.rgb, sample2.rgb, smoothstep(0.0, 1.0, irradianceMapSamplePos2f.y * -12.5 + 0.5)).rgb;
 	}else {
-		irradianceMapSamplePos2f.xz *= vec2(0.5, irradianceMapSamplePos2f.y > 0.0 ? 0.25 : -0.25);
-		irradianceMapSamplePos2f.xz += vec2(0.5, irradianceMapSamplePos2f.y > 0.0 ? 0.25 : 0.75);
+		irradianceMapSamplePos2f.xz *= vec2(0.5, COMPARE_GT_C_C(irradianceMapSamplePos2f.y, 0.0, 0.25, -0.25));
+		irradianceMapSamplePos2f.xz += vec2(0.5, COMPARE_GT_C_C(irradianceMapSamplePos2f.y, 0.0, 0.25, 0.75));
 		skyLight += textureLod(u_irradianceMap, irradianceMapSamplePos2f.xz, 0.0).rgb;
 	}
 
@@ -114,8 +115,8 @@ void main() {
 	vec3 specular = vec3(0.0);
 
 #ifdef COMPILE_ENV_MAP_REFLECTIONS
-	float f = materialData4f.g < 0.06 ? 1.0 : 0.0;
-	f += materialData4f.r < 0.5 ? 1.0 : 0.0;
+	float f = COMPARE_LT_0_ANY(materialData4f.g, 0.06);
+	f += COMPARE_LT_0_ANY(materialData4f.r, 0.5);
 	while((materialData4f.a >= 0.5 ? f : -1.0) == 0.0) {
 		vec4 worldPosition4f = vec4(v_position2f, depth, 1.0) * 2.0 - 1.0;
 		worldPosition4f = u_inverseProjMatrix4f * worldPosition4f;
@@ -137,8 +138,8 @@ void main() {
 			vec4 sample2 = textureLod(u_environmentMap, reflectDir.xz * vec2(0.5, -0.25) + vec2(0.5, 0.75), 0.0);
 			envMapSample4f = vec4(mix(sample1.rgb, sample2.rgb, smoothstep(0.0, 1.0, reflectDir.y * -12.5 + 0.5)).rgb, min(sample1.a, sample2.a));
 		}else {
-			reflectDir.xz = reflectDir.xz * vec2(0.5, reflectDir.y > 0.0 ? 0.25 : -0.25);
-			reflectDir.xz += vec2(0.5, reflectDir.y > 0.0 ? 0.25 : 0.75);
+			reflectDir.xz = reflectDir.xz * vec2(0.5, COMPARE_GT_C_C(reflectDir.y, 0.0, 0.25, -0.25));
+			reflectDir.xz += vec2(0.5, COMPARE_GT_C_C(reflectDir.y, 0.0, 0.25, 0.75));
 			envMapSample4f = textureLod(u_environmentMap, reflectDir.xz, 0.0);
 		}
 		envMapSample4f.a += min(lightmapCoords2f.g * 2.0, 1.0) * (1.0 - envMapSample4f.a);
@@ -152,8 +153,8 @@ void main() {
 
 #ifdef COMPILE_SCREEN_SPACE_REFLECTIONS
 #ifndef COMPILE_ENV_MAP_REFLECTIONS
-	float f = materialData4f.g < 0.06 ? 1.0 : 0.0;
-	f += materialData4f.r < 0.5 ? 1.0 : 0.0;
+	float f = COMPARE_LT_0_ANY(materialData4f.g, 0.06);
+	f += COMPARE_LT_0_ANY(materialData4f.r, 0.5);
 	if(f == 0.0) {
 #else
 	if((materialData4f.a < 0.5 ? f : -1.0) == 0.0) {

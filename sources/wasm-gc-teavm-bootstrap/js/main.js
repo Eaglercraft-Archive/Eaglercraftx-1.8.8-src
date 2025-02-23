@@ -245,6 +245,10 @@ window.main = async function() {
 		}
 	}
 	
+	if(assetsURI.startsWith("data:")) {
+		delete window.eaglercraftXOpts.assetsURI;
+	}
+	
 	const rootElement = /** @type {HTMLElement} */ (document.getElementById(containerId));
 	
 	if(!rootElement) {

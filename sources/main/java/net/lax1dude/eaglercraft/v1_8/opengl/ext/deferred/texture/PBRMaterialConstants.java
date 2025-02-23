@@ -37,7 +37,7 @@ public class PBRMaterialConstants implements IResourceManagerReloadListener {
 	public final ResourceLocation resourceLocation;
 	public final Map<String,Integer> spriteNameToMaterialConstants = new HashMap<>();
 
-	public int defaultMaterial = 0x00000A77;
+	public int defaultMaterial = 0xFF000A77;
 
 	public PBRMaterialConstants(ResourceLocation resourceLocation) {
 		this.resourceLocation = resourceLocation;
@@ -59,9 +59,14 @@ public class PBRMaterialConstants implements IResourceManagerReloadListener {
 					continue;
 				}
 				String[] cols = line.split(",");
-				if(cols.length == 4)  {
+				if(cols.length == 4 || cols.length == 5)  {
 					try {
 						int value = Integer.parseInt(cols[1]) | (Integer.parseInt(cols[2]) << 8) | (Integer.parseInt(cols[3]) << 16);
+						if(cols.length == 5) {
+							value |= ((255 - Integer.parseInt(cols[4])) << 24);
+						}else {
+							value |= 0xFF000000;
+						}
 						if(cols[0].equals("default")) {
 							defaultMaterial = value;
 						}else {

@@ -27,4 +27,12 @@
 
 ~ 		WorldVertexBufferUploader.func_181679_a(this.worldRenderer);
 
+> INSERT  2 : 7  @  2
+
++ 	public void uploadDisplayList(int displayList) {
++ 		this.worldRenderer.finishDrawing();
++ 		WorldVertexBufferUploader.uploadDisplayList(displayList, this.worldRenderer);
++ 	}
++ 
+
 > EOF

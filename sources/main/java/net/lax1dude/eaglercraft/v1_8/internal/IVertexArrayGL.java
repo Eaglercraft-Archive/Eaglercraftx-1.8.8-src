@@ -16,6 +16,6 @@
 
 package net.lax1dude.eaglercraft.v1_8.internal;
 
-public interface IBufferArrayGL extends IObjectGL {
+public interface IVertexArrayGL extends IObjectGL {
 
 }

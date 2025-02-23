@@ -24,7 +24,7 @@ import java.io.DataInputStream;
 import java.io.IOException;
 
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
-import net.lax1dude.eaglercraft.v1_8.internal.IBufferArrayGL;
+import net.lax1dude.eaglercraft.v1_8.internal.IVertexArrayGL;
 import net.lax1dude.eaglercraft.v1_8.internal.IBufferGL;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.ByteBuffer;
 import net.lax1dude.eaglercraft.v1_8.opengl.DrawUtils;
@@ -43,10 +43,10 @@ public class LensFlareMeshRenderer {
 	public static final ResourceLocation ghostsTextureLocation = new ResourceLocation("eagler:glsl/deferred/lens_ghosts.bmp");
 	public static final int ghostsSpriteCount = 4;
 
-	static IBufferArrayGL streaksVertexArray = null;
+	static IVertexArrayGL streaksVertexArray = null;
 	static IBufferGL streaksVertexBuffer = null;
 
-	static IBufferArrayGL ghostsVertexArray = null;
+	static IVertexArrayGL ghostsVertexArray = null;
 	static IBufferGL ghostsVertexBuffer = null;
 
 	static PipelineShaderLensFlares streaksProgram = null;
@@ -88,7 +88,7 @@ public class LensFlareMeshRenderer {
 		_wglBufferData(GL_ARRAY_BUFFER, copyBuffer, GL_STATIC_DRAW);
 
 		streaksVertexArray = _wglGenVertexArrays();
-		EaglercraftGPU.bindGLBufferArray(streaksVertexArray);
+		EaglercraftGPU.bindGLVertexArray(streaksVertexArray);
 		EaglercraftGPU.attachQuad16EmulationBuffer(16, true);
 
 		_wglEnableVertexAttribArray(0);
@@ -133,7 +133,7 @@ public class LensFlareMeshRenderer {
 		copyBuffer.flip();
 
 		ghostsVertexArray = _wglGenVertexArrays();
-		EaglercraftGPU.bindGLBufferArray(ghostsVertexArray);
+		EaglercraftGPU.bindGLVertexArray(ghostsVertexArray);
 		EaglercraftGPU.bindGLArrayBuffer(DrawUtils.standardQuadVBO);
 
 		_wglEnableVertexAttribArray(0);
@@ -315,7 +315,7 @@ public class LensFlareMeshRenderer {
 		mag = 0.003f * (1.0f + mag * mag * mag * 4.0f);
 		_wglUniform3f(streaksProgram.uniforms.u_flareColor3f, v.x * mag * 0.5f, v.y * mag * 0.5f, v.z * mag * 0.5f);
 
-		EaglercraftGPU.bindGLBufferArray(streaksVertexArray);
+		EaglercraftGPU.bindGLVertexArray(streaksVertexArray);
 		_wglDrawElements(GL_TRIANGLES, streaksVertexCount + (streaksVertexCount >> 1), GL_UNSIGNED_SHORT, 0);
 
 		ghostsProgram.useProgram();
@@ -328,7 +328,7 @@ public class LensFlareMeshRenderer {
 		_wglUniform2f(ghostsProgram.uniforms.u_sunPosition2f, sunScreenX, sunScreenY);
 		_wglUniform1f(ghostsProgram.uniforms.u_baseScale1f, fov);
 
-		EaglercraftGPU.bindGLBufferArray(ghostsVertexArray);
+		EaglercraftGPU.bindGLVertexArray(ghostsVertexArray);
 		_wglDrawArraysInstanced(GL_TRIANGLES, 0, 6, ghostsInstanceCount);
 
 		GlStateManager.disableBlend();

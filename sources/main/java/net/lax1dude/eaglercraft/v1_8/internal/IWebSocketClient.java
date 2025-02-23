@@ -60,4 +60,8 @@ public interface IWebSocketClient {
 
 	String getCurrentURI();
 
+	void setEnableStringFrames(boolean enable);
+
+	void setEnableBinaryFrames(boolean enable);
+
 }

@@ -69,6 +69,10 @@ public class WASMGCWebSocketClient implements IWebSocketClient {
 
 		void clearBinaryFrames();
 
+		void setEnableStringFrames(boolean enable);
+
+		void setEnableBinaryFrames(boolean enable);
+
 	}
 
 	private final JSWebSocketClientHandle handle;
@@ -237,6 +241,16 @@ public class WASMGCWebSocketClient implements IWebSocketClient {
 	@Override
 	public String getCurrentURI() {
 		return uri;
+	}
+
+	@Override
+	public void setEnableStringFrames(boolean enable) {
+		handle.setEnableStringFrames(enable);
+	}
+
+	@Override
+	public void setEnableBinaryFrames(boolean enable) {
+		handle.setEnableBinaryFrames(enable);
 	}
 
 }

@@ -20,7 +20,7 @@ import static net.lax1dude.eaglercraft.v1_8.internal.PlatformOpenGL.*;
 import static net.lax1dude.eaglercraft.v1_8.opengl.RealOpenGLEnums.*;
 
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
-import net.lax1dude.eaglercraft.v1_8.internal.IBufferArrayGL;
+import net.lax1dude.eaglercraft.v1_8.internal.IVertexArrayGL;
 import net.lax1dude.eaglercraft.v1_8.internal.IBufferGL;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.ByteBuffer;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.FloatBuffer;
@@ -46,7 +46,7 @@ public class GBufferAcceleratedEffectRenderer extends AbstractAcceleratedEffectR
 
 	private PipelineShaderAccelParticleGBuffer shaderProgram = null;
 
-	private IBufferArrayGL vertexArray = null;
+	private IVertexArrayGL vertexArray = null;
 	private IBufferGL vertexBuffer = null;
 
 	private IBufferGL instancesBuffer = null;
@@ -80,7 +80,7 @@ public class GBufferAcceleratedEffectRenderer extends AbstractAcceleratedEffectR
 		});
 		verts.flip();
 
-		EaglercraftGPU.bindGLBufferArray(vertexArray);
+		EaglercraftGPU.bindGLVertexArray(vertexArray);
 
 		EaglercraftGPU.bindGLArrayBuffer(vertexBuffer);
 		_wglBufferData(GL_ARRAY_BUFFER, verts, GL_STATIC_DRAW);
@@ -142,7 +142,7 @@ public class GBufferAcceleratedEffectRenderer extends AbstractAcceleratedEffectR
 		EaglerDeferredPipeline.uniformMatrixHelper(shaderProgram.uniforms.u_matrixTransform, tmpMatrix);
 
 		EaglercraftGPU.bindGLArrayBuffer(instancesBuffer);
-		EaglercraftGPU.bindGLBufferArray(vertexArray);
+		EaglercraftGPU.bindGLVertexArray(vertexArray);
 
 		int p = particleBuffer.position();
 		int l = particleBuffer.limit();

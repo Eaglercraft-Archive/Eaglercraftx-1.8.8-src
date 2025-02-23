@@ -163,14 +163,14 @@
 
 > INSERT  15 : 16  @  15
 
-+ 		boolean flag = DeferredStateManager.isEnableShadowRender();
++ 		// boolean flag = DeferredStateManager.isEnableShadowRender();
 
-> CHANGE  1 : 2  @  1 : 2
+> INSERT  1 : 2  @  1
 
-~ 			GlStateManager.cullFace(flag ? GL_BACK : GL_FRONT);
++ 			// GlStateManager.cullFace(flag ? GL_BACK : GL_FRONT);
 
-> CHANGE  3 : 4  @  3 : 4
+> INSERT  4 : 5  @  4
 
-~ 		GlStateManager.cullFace(flag ? GL_FRONT : GL_BACK);
++ 		// GlStateManager.cullFace(flag ? GL_FRONT : GL_BACK);
 
 > EOF

@@ -60,7 +60,11 @@
 + 						return true;
 + 					}
 
-> CHANGE  757 : 759  @  757 : 759
+> CHANGE  502 : 503  @  502 : 503
+
+~ 				.get(EntityList.getEntityID(entitylivingbase));
+
+> CHANGE  254 : 256  @  254 : 256
 
 ~ 	public static EaglercraftUUID getUUID(GameProfile profile) {
 ~ 		EaglercraftUUID uuid = profile.getId();

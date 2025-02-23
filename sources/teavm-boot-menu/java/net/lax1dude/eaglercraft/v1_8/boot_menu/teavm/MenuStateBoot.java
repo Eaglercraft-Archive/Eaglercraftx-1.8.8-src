@@ -24,9 +24,6 @@ import java.util.function.Consumer;
 
 import org.teavm.jso.dom.html.HTMLElement;
 
-import com.google.common.collect.Collections2;
-import com.google.common.collect.Lists;
-
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.EagUtils;
 import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
@@ -395,7 +392,7 @@ public class MenuStateBoot extends MenuState {
 												}else if(enumValue2 == EnumImportModeMenu.AUTO_DETECT || enumValue2 == EnumImportModeMenu.EAGLERCRAFT_EPK_FILE) {
 													filteredList = bootableClients;
 												}else {
-													filteredList = Lists.newArrayList(Collections2.filter(bootableClients, (etr) -> {
+													filteredList = bootableClients.stream().filter((etr) -> {
 														switch(enumValue2) {
 														case EAGLERCRAFTX_1_8_OFFLINE:
 														case EAGLERCRAFT_1_5_OLD_OFFLINE:
@@ -411,7 +408,7 @@ public class MenuStateBoot extends MenuState {
 														default:
 															return false;
 														}
-													}));
+													}).toList();
 												}
 												if(filteredList.size() > 0) {
 													MenuStateBoot.this.changePopupState(null);

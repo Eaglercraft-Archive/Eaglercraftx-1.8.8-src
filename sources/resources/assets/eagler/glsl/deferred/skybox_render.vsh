@@ -26,6 +26,10 @@ layout(location = 1) in vec2 a_colorIndex2f;
 out vec3 v_position3f;
 out vec3 v_color3f;
 
+#ifndef COMPILE_PARABOLOID_SKY
+out vec3 v_positionClip3f;
+#endif
+
 uniform mat4 u_viewMatrix4f;
 #ifdef COMPILE_PARABOLOID_SKY
 uniform float u_farPlane1f;
@@ -47,5 +51,6 @@ void main() {
 	gl_Position = vec4(pos.xyz, 1.0);
 #else
 	gl_Position = u_projMatrix4f * vec4(pos.xyz, 1.0);
+	v_positionClip3f = gl_Position.xyw;
 #endif
 }

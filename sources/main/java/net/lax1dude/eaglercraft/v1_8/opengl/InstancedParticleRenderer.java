@@ -20,7 +20,7 @@ import static net.lax1dude.eaglercraft.v1_8.internal.PlatformOpenGL.*;
 import static net.lax1dude.eaglercraft.v1_8.opengl.RealOpenGLEnums.*;
 
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
-import net.lax1dude.eaglercraft.v1_8.internal.IBufferArrayGL;
+import net.lax1dude.eaglercraft.v1_8.internal.IVertexArrayGL;
 import net.lax1dude.eaglercraft.v1_8.internal.IBufferGL;
 import net.lax1dude.eaglercraft.v1_8.internal.IProgramGL;
 import net.lax1dude.eaglercraft.v1_8.internal.IShaderGL;
@@ -56,7 +56,7 @@ public class InstancedParticleRenderer {
 	private static IUniformGL u_transformParam_3_4_f = null;
 	private static IUniformGL u_color4f = null;
 
-	private static IBufferArrayGL vertexArray = null;
+	private static IVertexArrayGL vertexArray = null;
 	private static IBufferGL vertexBuffer = null;
 
 	private static IBufferGL instancesBuffer = null;
@@ -161,7 +161,7 @@ public class InstancedParticleRenderer {
 		_wglUniform1i(_wglGetUniformLocation(shaderProgram, "u_inputTexture"), 0);
 		_wglUniform1i(_wglGetUniformLocation(shaderProgram, "u_lightmapTexture"), 1);
 
-		vertexArray = EaglercraftGPU.createGLBufferArray();
+		vertexArray = EaglercraftGPU.createGLVertexArray();
 		vertexBuffer = _wglGenBuffers();
 		instancesBuffer = _wglGenBuffers();
 
@@ -172,7 +172,7 @@ public class InstancedParticleRenderer {
 		});
 		verts.flip();
 
-		EaglercraftGPU.bindGLBufferArray(vertexArray);
+		EaglercraftGPU.bindGLVertexArray(vertexArray);
 
 		EaglercraftGPU.bindVAOGLArrayBufferNow(vertexBuffer);
 		_wglBufferData(GL_ARRAY_BUFFER, verts, GL_STATIC_DRAW);
@@ -305,7 +305,7 @@ public class InstancedParticleRenderer {
 		}
 
 		EaglercraftGPU.bindGLArrayBuffer(instancesBuffer);
-		EaglercraftGPU.bindGLBufferArray(vertexArray);
+		EaglercraftGPU.bindGLVertexArray(vertexArray);
 		
 		int p = particleBuffer.position();
 		int l = particleBuffer.limit();
@@ -316,7 +316,7 @@ public class InstancedParticleRenderer {
 		particleBuffer.position(p);
 		particleBuffer.limit(l);
 
-		EaglercraftGPU.doDrawArraysInstanced(GL_TRIANGLES, 0, 6, particleCount);
+		EaglercraftGPU.drawArraysInstanced(GL_TRIANGLES, 0, 6, particleCount);
 	}
 
 	public static void stupidColorSetHack(IUniformGL color4f) {
@@ -342,7 +342,7 @@ public class InstancedParticleRenderer {
 		u_transformParam_3_4_f = null;
 		u_color4f = null;
 		if(vertexArray != null) {
-			EaglercraftGPU.destroyGLBufferArray(vertexArray);
+			EaglercraftGPU.destroyGLVertexArray(vertexArray);
 			vertexArray = null;
 		}
 		if(vertexBuffer != null) {

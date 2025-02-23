@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 lax1dude. All Rights Reserved.
+ * Copyright (c) 2022-2025 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -19,6 +19,7 @@ package net.lax1dude.eaglercraft.v1_8.opengl;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.ByteBuffer;
 
 public class WorldVertexBufferUploader {
+
 	public static void func_181679_a(WorldRenderer parWorldRenderer) {
 		int cunt = parWorldRenderer.getVertexCount();
 		if (cunt > 0) {
@@ -30,4 +31,18 @@ public class WorldVertexBufferUploader {
 			parWorldRenderer.reset();
 		}
 	}
+
+	public static void uploadDisplayList(int displayList, WorldRenderer worldRenderer) {
+		int cunt = worldRenderer.getVertexCount();
+		if (cunt > 0) {
+			VertexFormat fmt = worldRenderer.getVertexFormat();
+			ByteBuffer buf = worldRenderer.getByteBuffer();
+			buf.position(0).limit(cunt * fmt.attribStride);
+			EaglercraftGPU.uploadListDirect(displayList, buf, fmt.eaglercraftAttribBits, worldRenderer.getDrawMode(), cunt);
+			worldRenderer.reset();
+		}else {
+			EaglercraftGPU.flushDisplayList(displayList);
+		}
+	}
+
 }

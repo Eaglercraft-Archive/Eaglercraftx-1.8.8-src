@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 lax1dude. All Rights Reserved.
+ * Copyright (c) 2025 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -16,17 +16,41 @@
 
 package net.lax1dude.eaglercraft.v1_8.opengl;
 
-import net.lax1dude.eaglercraft.v1_8.opengl.SoftGLBufferArray.Attrib;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
-class SoftGLBufferState {
+public abstract class GLObjectRecycler<T> {
 
-	final Attrib[] attribs = new Attrib[24];
-	int[] attribDivisors = new int[24];
-	int hasAttribDivisorMask = 0;
-	int oldEnabled = 0;
-	int oldEnabledCnt = -1;
+	private Deque<T> deletedObjects;
 
-	SoftGLBufferState() {
+	private final int reserveSize;
+
+	public GLObjectRecycler(int reserveSize) {
+		this.reserveSize = reserveSize;
+		this.deletedObjects = new ArrayDeque<>(reserveSize << 1);
 	}
+
+	public T createObject() {
+		T ret = deletedObjects.pollLast();
+		if(ret != null) {
+			return ret;
+		}else {
+			return create();
+		}
+	}
+
+	public void destroyObject(T obj) {
+		deletedObjects.addLast(obj);
+	}
+
+	public void compact() {
+		while(deletedObjects.size() > reserveSize) {
+			destroy(deletedObjects.removeFirst());
+		}
+	}
+
+	protected abstract T create();
+
+	protected abstract void destroy(T object);
 
 }

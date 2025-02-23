@@ -42,6 +42,7 @@ def folder = "javascript"
 def name = "classes.js"
 
 teavm.js {
+    compileJava.options.encoding = "UTF-8"
     obfuscated = true
     sourceMap = true
     targetFileName = "../" + name

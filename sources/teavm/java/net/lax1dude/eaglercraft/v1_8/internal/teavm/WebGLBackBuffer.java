@@ -21,7 +21,7 @@ import static net.lax1dude.eaglercraft.v1_8.opengl.RealOpenGLEnums.*;
 
 import org.teavm.jso.webgl.WebGLFramebuffer;
 
-import net.lax1dude.eaglercraft.v1_8.internal.IBufferArrayGL;
+import net.lax1dude.eaglercraft.v1_8.internal.IVertexArrayGL;
 import net.lax1dude.eaglercraft.v1_8.internal.IBufferGL;
 import net.lax1dude.eaglercraft.v1_8.internal.IFramebufferGL;
 import net.lax1dude.eaglercraft.v1_8.internal.IProgramGL;
@@ -51,7 +51,7 @@ public class WebGLBackBuffer {
 	private static ITextureGL gles2ColorTexture;
 	private static IRenderbufferGL gles2DepthRenderbuffer;
 	private static IProgramGL gles2BlitProgram;
-	private static IBufferArrayGL gles2BlitVAO;
+	private static IVertexArrayGL gles2BlitVAO;
 	private static IBufferGL gles2BlitVBO;
 
 	private static boolean isVAOCapable = false;
@@ -61,8 +61,9 @@ public class WebGLBackBuffer {
 	private static final int _GL_RENDERBUFFER = 0x8D41;
 	private static final int _GL_COLOR_ATTACHMENT0 = 0x8CE0;
 	private static final int _GL_DEPTH_ATTACHMENT = 0x8D00;
-	private static final int _GL_DEPTH_COMPONENT16 = 0x81A5;
+	private static final int _GL_DEPTH_STENCIL_ATTACHMENT = 0x821A;
 	private static final int _GL_DEPTH_COMPONENT32F = 0x8CAC;
+	private static final int _GL_DEPTH_STENCIL = 0x84F9;
 	private static final int _GL_READ_FRAMEBUFFER = 0x8CA8;
 	private static final int _GL_DRAW_FRAMEBUFFER = 0x8CA9;
 
@@ -98,8 +99,8 @@ public class WebGLBackBuffer {
 			_wglTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, sw, sh, 0, GL_RGBA, GL_UNSIGNED_BYTE, (ByteBuffer)null);
 			_wglFramebufferTexture2D(_GL_FRAMEBUFFER, _GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, gles2ColorTexture, 0);
 			_wglBindRenderbuffer(_GL_RENDERBUFFER, gles2DepthRenderbuffer);
-			_wglRenderbufferStorage(_GL_RENDERBUFFER, _GL_DEPTH_COMPONENT16, sw, sh);
-			_wglFramebufferRenderbuffer(_GL_FRAMEBUFFER, _GL_DEPTH_ATTACHMENT, _GL_RENDERBUFFER, gles2DepthRenderbuffer);
+			_wglRenderbufferStorage(_GL_RENDERBUFFER, _GL_DEPTH_STENCIL, sw, sh);
+			_wglFramebufferRenderbuffer(_GL_FRAMEBUFFER, _GL_DEPTH_STENCIL_ATTACHMENT, _GL_RENDERBUFFER, gles2DepthRenderbuffer);
 			
 			ByteBuffer upload = PlatformRuntime.allocateByteBuffer(48);
 			upload.putFloat(0.0f); upload.putFloat(0.0f);
@@ -160,8 +161,8 @@ public class WebGLBackBuffer {
 				if(isVAOCapable) {
 					_wglDeleteVertexArrays(gles2BlitVAO);
 				}
-				gles2BlitVAO = EaglercraftGPU.createGLBufferArray();
-				EaglercraftGPU.bindGLBufferArray(gles2BlitVAO);
+				gles2BlitVAO = EaglercraftGPU.createGLVertexArray();
+				EaglercraftGPU.bindGLVertexArray(gles2BlitVAO);
 				EaglercraftGPU.bindVAOGLArrayBuffer(gles2BlitVBO);
 				EaglercraftGPU.enableVertexAttribArray(0);
 				EaglercraftGPU.vertexAttribPointer(0, 2, GL_FLOAT, false, 8, 0);
@@ -172,8 +173,8 @@ public class WebGLBackBuffer {
 
 	private static void drawBlitQuad() {
 		if(isEmulatedVAOPhase) {
-			EaglercraftGPU.bindGLBufferArray(gles2BlitVAO);
-			EaglercraftGPU.doDrawArrays(GL_TRIANGLES, 0, 6);
+			EaglercraftGPU.bindGLVertexArray(gles2BlitVAO);
+			EaglercraftGPU.drawArrays(GL_TRIANGLES, 0, 6);
 		}else {
 			if(isVAOCapable) {
 				_wglBindVertexArray(gles2BlitVAO);
@@ -237,7 +238,7 @@ public class WebGLBackBuffer {
 				_wglTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, windowWidth, windowHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, (ByteBuffer)null);
 				
 				_wglBindRenderbuffer(_GL_RENDERBUFFER, gles2DepthRenderbuffer);
-				_wglRenderbufferStorage(_GL_RENDERBUFFER, _GL_DEPTH_COMPONENT16, windowWidth, windowHeight);
+				_wglRenderbufferStorage(_GL_RENDERBUFFER, _GL_DEPTH_STENCIL, windowWidth, windowHeight);
 			}
 
 			if(isEmulatedVAOPhase) {
@@ -281,7 +282,7 @@ public class WebGLBackBuffer {
 		}
 		if(gles2BlitVAO != null) {
 			if(isEmulatedVAOPhase) {
-				EaglercraftGPU.destroyGLBufferArray(gles2BlitVAO);
+				EaglercraftGPU.destroyGLVertexArray(gles2BlitVAO);
 			}else if(isVAOCapable) {
 				_wglDeleteVertexArrays(gles2BlitVAO);
 			}

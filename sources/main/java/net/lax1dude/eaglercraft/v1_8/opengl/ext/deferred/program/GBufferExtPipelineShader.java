@@ -39,9 +39,11 @@ public class GBufferExtPipelineShader extends ShaderProgram<GBufferExtPipelineSh
 		public float materialConstantsRoughness = -999.0f;
 		public float materialConstantsMetalness = -999.0f;
 		public float materialConstantsEmission = -999.0f;
+		public float materialConstantsSubsurfScattering = -999.0f;
 		public float materialConstantsUseEnvMap = -999.0f;
 
 		public IUniformGL u_materialConstants3f = null;
+		public IUniformGL u_materialConstants4f = null;
 		public IUniformGL u_useEnvMap1f = null;
 
 		public int constantBlock = -999;
@@ -91,6 +93,7 @@ public class GBufferExtPipelineShader extends ShaderProgram<GBufferExtPipelineSh
 		@Override
 		public void loadUniforms(IProgramGL prog) {
 			u_materialConstants3f = _wglGetUniformLocation(prog, "u_materialConstants3f");
+			u_materialConstants4f = _wglGetUniformLocation(prog, "u_materialConstants4f");
 			u_useEnvMap1f = _wglGetUniformLocation(prog, "u_useEnvMap1f");
 			u_blockConstant1f = _wglGetUniformLocation(prog, "u_blockConstant1f");
 			u_clipPlaneY1f = _wglGetUniformLocation(prog, "u_clipPlaneY1f");

@@ -65,7 +65,7 @@ function initializeServerPlatfSP(spImports) {
 		postMessage({
 			"ch": channel,
 			"dat": copiedArray.buffer
-		});
+		}, [copiedArray.buffer]);
 	};
 
 	spImports["getAvailablePackets"] = serverMessageQueue.getLength.bind(serverMessageQueue);

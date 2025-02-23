@@ -22,7 +22,7 @@ import static net.lax1dude.eaglercraft.v1_8.opengl.RealOpenGLEnums.*;
 import java.util.List;
 
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
-import net.lax1dude.eaglercraft.v1_8.internal.IBufferArrayGL;
+import net.lax1dude.eaglercraft.v1_8.internal.IVertexArrayGL;
 import net.lax1dude.eaglercraft.v1_8.internal.IBufferGL;
 import net.lax1dude.eaglercraft.v1_8.internal.IShaderGL;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.FloatBuffer;
@@ -32,8 +32,8 @@ public class DrawUtils {
 	public static final String vertexShaderPath = "/assets/eagler/glsl/local.vsh";
 	public static final String vertexShaderPrecision = "precision highp float;\n";
 
-	public static IBufferArrayGL standardQuad2DVAO = null;
-	public static IBufferArrayGL standardQuad3DVAO = null;
+	public static IVertexArrayGL standardQuad2DVAO = null;
+	public static IVertexArrayGL standardQuad3DVAO = null;
 	public static IBufferGL standardQuadVBO = null;
 
 	public static IShaderGL vshLocal = null;
@@ -41,8 +41,8 @@ public class DrawUtils {
 
 	static void init() {
 		if(standardQuad2DVAO == null) {
-			standardQuad2DVAO = EaglercraftGPU.createGLBufferArray();
-			standardQuad3DVAO = EaglercraftGPU.createGLBufferArray();
+			standardQuad2DVAO = EaglercraftGPU.createGLVertexArray();
+			standardQuad3DVAO = EaglercraftGPU.createGLVertexArray();
 			standardQuadVBO = _wglGenBuffers();
 
 			FloatBuffer verts = EagRuntime.allocateFloatBuffer(18);
@@ -56,12 +56,12 @@ public class DrawUtils {
 			_wglBufferData(GL_ARRAY_BUFFER, verts, GL_STATIC_DRAW);
 			EagRuntime.freeFloatBuffer(verts);
 
-			EaglercraftGPU.bindGLBufferArray(standardQuad2DVAO);
+			EaglercraftGPU.bindGLVertexArray(standardQuad2DVAO);
 
 			EaglercraftGPU.enableVertexAttribArray(0);
 			EaglercraftGPU.vertexAttribPointer(0, 2, GL_FLOAT, false, 12, 0);
 
-			EaglercraftGPU.bindGLBufferArray(standardQuad3DVAO);
+			EaglercraftGPU.bindGLVertexArray(standardQuad3DVAO);
 
 			EaglercraftGPU.enableVertexAttribArray(0);
 			EaglercraftGPU.vertexAttribPointer(0, 3, GL_FLOAT, false, 12, 0);
@@ -92,22 +92,22 @@ public class DrawUtils {
 	}
 
 	public static void drawStandardQuad2D() {
-		EaglercraftGPU.bindGLBufferArray(standardQuad2DVAO);
-		EaglercraftGPU.doDrawArrays(GL_TRIANGLES, 0, 6);
+		EaglercraftGPU.bindGLVertexArray(standardQuad2DVAO);
+		EaglercraftGPU.drawArrays(GL_TRIANGLES, 0, 6);
 	}
 
 	public static void drawStandardQuad3D() {
-		EaglercraftGPU.bindGLBufferArray(standardQuad3DVAO);
-		EaglercraftGPU.doDrawArrays(GL_TRIANGLES, 0, 6);
+		EaglercraftGPU.bindGLVertexArray(standardQuad3DVAO);
+		EaglercraftGPU.drawArrays(GL_TRIANGLES, 0, 6);
 	}
 
 	public static void destroy() {
 		if(standardQuad2DVAO != null) {
-			EaglercraftGPU.destroyGLBufferArray(standardQuad2DVAO);
+			EaglercraftGPU.destroyGLVertexArray(standardQuad2DVAO);
 			standardQuad2DVAO = null;
 		}
 		if(standardQuad3DVAO != null) {
-			EaglercraftGPU.destroyGLBufferArray(standardQuad3DVAO);
+			EaglercraftGPU.destroyGLVertexArray(standardQuad3DVAO);
 			standardQuad3DVAO = null;
 		}
 		if(standardQuadVBO != null) {

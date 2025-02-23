@@ -49,6 +49,7 @@ public class EaglerDeferredConfig {
 	public boolean lensFlares = true;
 	public boolean bloom = false;
 	public boolean fxaa = true;
+	public boolean subsurfaceScattering = true;
 
 	public boolean is_rendering_wavingBlocks = true;
 	public boolean is_rendering_dynamicLights = true;
@@ -65,6 +66,7 @@ public class EaglerDeferredConfig {
 	public boolean is_rendering_lensFlares = true;
 	public boolean is_rendering_bloom = false;
 	public boolean is_rendering_fxaa = true;
+	public boolean is_rendering_subsurfaceScattering = true;
 
 	public void readOption(String key, String value) {
 		switch(key) {
@@ -110,6 +112,9 @@ public class EaglerDeferredConfig {
 		case "shaders_deferred_fxaa":
 			fxaa = value.equals("true");
 			break;
+		case "shaders_deferred_subsurfaceScattering":
+			subsurfaceScattering = value.equals("true");
+			break;
 		default:
 			break;
 		}
@@ -130,6 +135,7 @@ public class EaglerDeferredConfig {
 		output.println("shaders_deferred_lensFlares:" + lensFlares);
 		output.println("shaders_deferred_bloom:" + bloom);
 		output.println("shaders_deferred_fxaa:" + fxaa);
+		output.println("shaders_deferred_subsurfaceScattering:" + subsurfaceScattering);
 	}
 
 	public void reloadShaderPackInfo(IResourceManager mgr) throws IOException {
@@ -159,6 +165,7 @@ public class EaglerDeferredConfig {
 		is_rendering_lensFlares = lensFlares && shaderPackInfo.POST_LENS_FLARES;
 		is_rendering_bloom = bloom && shaderPackInfo.POST_BLOOM;
 		is_rendering_fxaa = fxaa && shaderPackInfo.POST_FXAA;
+		is_rendering_subsurfaceScattering = subsurfaceScattering && is_rendering_shadowsSun_clamped > 0 && shaderPackInfo.SUBSURFACE_SCATTERING;
 	}
 
 }

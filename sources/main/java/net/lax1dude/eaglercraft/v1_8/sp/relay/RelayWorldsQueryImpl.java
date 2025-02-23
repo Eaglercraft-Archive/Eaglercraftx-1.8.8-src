@@ -62,6 +62,7 @@ public class RelayWorldsQueryImpl implements RelayWorldsQuery {
 		try {
 			openedAt = EagRuntime.steadyTimeMillis();
 			s = PlatformNetworking.openWebSocketUnsafe(uri);
+			s.setEnableStringFrames(false);
 		}catch(Throwable t) {
 			sock = null;
 			failed = true;
@@ -73,10 +74,6 @@ public class RelayWorldsQueryImpl implements RelayWorldsQuery {
 	@Override
 	public void update() {
 		if(sock == null) return;
-		if(sock.availableStringFrames() > 0) {
-			logger.warn("[{}] discarding {} string frames recieved on a binary connection", uri, sock.availableStringFrames());
-			sock.clearStringFrames();
-		}
 		List<IWebSocketFrame> frames = sock.getNextBinaryFrames();
 		if(frames != null) {
 			for(int i = 0, l = frames.size(); i < l; ++i) {

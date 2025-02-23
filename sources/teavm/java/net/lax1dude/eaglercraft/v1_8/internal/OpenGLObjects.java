@@ -51,13 +51,13 @@ class OpenGLObjects {
 
 	}
 
-	static class BufferArrayGL implements IBufferArrayGL {
+	static class VertexArrayGL implements IVertexArrayGL {
 
 		private static int hashGen = 0;
 		final WebGLVertexArray ptr;
 		final int hash;
 
-		BufferArrayGL(WebGLVertexArray ptr) {
+		VertexArrayGL(WebGLVertexArray ptr) {
 			this.ptr = ptr;
 			this.hash = ++hashGen;
 		}

@@ -128,6 +128,9 @@ public class GBufferPipelineCompiler implements IExtPipelineCompiler {
 				if(conf.is_rendering_useEnvMap) {
 					macros.append("#define COMPILE_PARABOLOID_ENV_MAP\n");
 				}
+				if(conf.is_rendering_subsurfaceScattering) {
+					macros.append("#define COMPILE_SUBSURFACE_SCATTERING\n");
+				}
 			}
 			if(conf.is_rendering_dynamicLights) {
 				macros.append("#define COMPILE_DYNAMIC_LIGHTS\n");
@@ -165,6 +168,9 @@ public class GBufferPipelineCompiler implements IExtPipelineCompiler {
 			}
 			if((stateExtBits & STATE_WAVING_BLOCKS) != 0) {
 				macros.append("#define COMPILE_STATE_WAVING_BLOCKS\n");
+			}
+			if(conf.is_rendering_subsurfaceScattering) {
+				macros.append("#define COMPILE_SUBSURFACE_SCATTERING\n");
 			}
 
 			logger.info("Compiling program for core state: {}, ext state: {}", visualizeBits(stateCoreBits), visualizeBits(stateExtBits));
@@ -232,12 +238,24 @@ public class GBufferPipelineCompiler implements IExtPipelineCompiler {
 				float roughness = 1.0f - DeferredStateManager.materialConstantsRoughness;
 				float metalness = DeferredStateManager.materialConstantsMetalness;
 				float emission = DeferredStateManager.materialConstantsEmission;
-				if(uniforms.materialConstantsRoughness != roughness || uniforms.materialConstantsMetalness != metalness
-						|| uniforms.materialConstantsEmission != emission) {
-					uniforms.materialConstantsRoughness = roughness;
-					uniforms.materialConstantsMetalness = metalness;
-					uniforms.materialConstantsEmission = emission;
-					_wglUniform3f(uniforms.u_materialConstants3f, roughness, metalness, emission);
+				if(uniforms.u_materialConstants4f != null) {
+					float subsurfScattering = 1.0f - DeferredStateManager.materialConstantsSubsurfScatting;
+					if(uniforms.materialConstantsRoughness != roughness || uniforms.materialConstantsMetalness != metalness
+							|| uniforms.materialConstantsEmission != emission || uniforms.materialConstantsSubsurfScattering != subsurfScattering) {
+						uniforms.materialConstantsRoughness = roughness;
+						uniforms.materialConstantsMetalness = metalness;
+						uniforms.materialConstantsEmission = emission;
+						uniforms.materialConstantsSubsurfScattering = subsurfScattering;
+						_wglUniform4f(uniforms.u_materialConstants4f, roughness, metalness, emission, subsurfScattering);
+					}
+				}else {
+					if(uniforms.materialConstantsRoughness != roughness || uniforms.materialConstantsMetalness != metalness
+							|| uniforms.materialConstantsEmission != emission) {
+						uniforms.materialConstantsRoughness = roughness;
+						uniforms.materialConstantsMetalness = metalness;
+						uniforms.materialConstantsEmission = emission;
+						_wglUniform3f(uniforms.u_materialConstants3f, roughness, metalness, emission);
+					}
 				}
 			}
 		}

@@ -16,12 +16,9 @@
 
 package net.lax1dude.eaglercraft.v1_8.boot_menu.teavm;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.teavm.jso.dom.html.HTMLElement;
-
-import com.google.common.collect.Collections2;
 
 public abstract class MenuPopupStateConfirmation<E> extends MenuState {
 
@@ -65,7 +62,7 @@ public abstract class MenuPopupStateConfirmation<E> extends MenuState {
 		this.options = options;
 		this.popupController = new ConfirmationPopupController<SelectionItem>(
 				BootMenuMain.bootMenuDOM.popup_confirm_opts,
-				new ArrayList<SelectionItem>(Collections2.transform(options, SelectionItem::new))) {
+				options.stream().map(SelectionItem::new).toList()) {
 			@Override
 			protected void optionSelected(SelectionItem item) {
 				MenuPopupStateConfirmation.this.selectCallback(item.enumValue);

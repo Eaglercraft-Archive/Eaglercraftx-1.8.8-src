@@ -106,13 +106,13 @@ public class EaglerMeshLoader implements IResourceManagerReloadListener {
 			}
 
 			if(meshStruct.vertexArray == null) {
-				meshStruct.vertexArray = EaglercraftGPU.createGLBufferArray();
+				meshStruct.vertexArray = EaglercraftGPU.createGLVertexArray();
 			}
 			if(meshStruct.vertexBuffer == null) {
-				meshStruct.vertexBuffer = _wglGenBuffers();
+				meshStruct.vertexBuffer = EaglercraftGPU.createGLArrayBuffer();
 			}
 			if(meshStruct.indexBuffer == null) {
-				meshStruct.indexBuffer = _wglGenBuffers();
+				meshStruct.indexBuffer = EaglercraftGPU.createGLElementArrayBuffer();
 			}
 			
 			up1.position(0).limit(intsOfVertex);
@@ -120,7 +120,7 @@ public class EaglerMeshLoader implements IResourceManagerReloadListener {
 			EaglercraftGPU.bindVAOGLArrayBufferNow(meshStruct.vertexBuffer);
 			_wglBufferData(GL_ARRAY_BUFFER, up1, GL_STATIC_DRAW);
 			
-			EaglercraftGPU.bindGLBufferArray(meshStruct.vertexArray);
+			EaglercraftGPU.bindGLVertexArray(meshStruct.vertexArray);
 			
 			up1.position(intsOfVertex).limit(intsTotal);
 			
@@ -139,15 +139,15 @@ public class EaglerMeshLoader implements IResourceManagerReloadListener {
 			EaglercraftGPU.vertexAttribPointer(meshStruct.hasTexture ? 2 : 1, 4, GL_BYTE, true, stride, 12);
 		}catch(Throwable ex) {
 			if(meshStruct.vertexArray != null) {
-				EaglercraftGPU.destroyGLBufferArray(meshStruct.vertexArray);
+				EaglercraftGPU.destroyGLVertexArray(meshStruct.vertexArray);
 				meshStruct.vertexArray = null;
 			}
 			if(meshStruct.vertexBuffer != null) {
-				_wglDeleteBuffers(meshStruct.vertexBuffer);
+				EaglercraftGPU.destroyGLArrayBuffer(meshStruct.vertexBuffer);
 				meshStruct.vertexBuffer = null;
 			}
 			if(meshStruct.indexBuffer != null) {
-				_wglDeleteBuffers(meshStruct.indexBuffer);
+				EaglercraftGPU.destroyGLElementArrayBuffer(meshStruct.indexBuffer);
 				meshStruct.indexBuffer = null;
 			}
 			

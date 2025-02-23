@@ -217,6 +217,23 @@ public class GuiShaderConfigList extends GuiListExtended {
 				}
 			});
 		}
+		if(conf.shaderPackInfo.SUBSURFACE_SCATTERING) {
+			opts.add(new ShaderOption(loadShaderLbl("SUBSURFACE_SCATTERING"), loadShaderDesc("SUBSURFACE_SCATTERING")) {
+				private final boolean originalValue = conf.subsurfaceScattering;
+				@Override
+				protected String getDisplayValue() {
+					return getColoredOnOff(conf.subsurfaceScattering, EnumChatFormatting.GREEN, EnumChatFormatting.RED);
+				}
+				@Override
+				protected void toggleOption(GuiButton button, int dir) {
+					conf.subsurfaceScattering = !conf.subsurfaceScattering;
+				}
+				@Override
+				protected boolean getDirty() {
+					return conf.subsurfaceScattering != originalValue;
+				}
+			});
+		}
 		if(conf.shaderPackInfo.POST_LENS_FLARES) {
 			opts.add(new ShaderOption(loadShaderLbl("POST_LENS_FLARES"), loadShaderDesc("POST_LENS_FLARES")) {
 				private final boolean originalValue = conf.lensFlares;

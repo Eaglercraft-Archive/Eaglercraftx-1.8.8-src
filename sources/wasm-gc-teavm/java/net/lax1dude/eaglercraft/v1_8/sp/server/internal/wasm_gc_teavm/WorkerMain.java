@@ -35,6 +35,7 @@ public class WorkerMain {
 		PrintStream systemOut = System.out;
 		PrintStream systemErr = System.err;
 		try {
+			PlatformRuntime.setThreadName("IntegratedServer");
 			systemOut.println("WorkerMain: [INFO] eaglercraftx worker thread is starting...");
 			JSObject startArgs = getEaglerXOpts();
 			systemOut.println("WorkerMain: [INFO] reading configuration");
@@ -42,7 +43,6 @@ public class WorkerMain {
 			systemOut.println("WorkerMain: [INFO] initializing server runtime");
 			ServerPlatformSingleplayer.initializeContext();
 			systemOut.println("WorkerMain: [INFO] starting worker thread");
-			PlatformRuntime.setThreadName("IntegratedServer");
 			EaglerIntegratedServerWorker.serverMain();
 		}catch(Throwable t) {
 			System.setOut(systemOut);

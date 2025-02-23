@@ -80,6 +80,7 @@ public class PipelineShaderGBufferFog extends ShaderProgram<PipelineShaderGBuffe
 			_wglUniform1i(_wglGetUniformLocation(prog, "u_fogDepthTexture"), 2);
 			_wglUniform1i(_wglGetUniformLocation(prog, "u_environmentMap"), 3);
 			_wglUniform1i(_wglGetUniformLocation(prog, "u_lightShaftsTexture"), 4);
+			_wglUniform1i(_wglGetUniformLocation(prog, "u_skyTexture"), 5);
 		}
 
 	}

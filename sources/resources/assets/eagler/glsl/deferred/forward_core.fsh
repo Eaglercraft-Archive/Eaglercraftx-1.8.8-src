@@ -129,7 +129,11 @@ layout(std140) uniform u_worldLightingData {
 #ifdef COMPILE_NORMAL_MATERIAL_TEXTURE
 uniform sampler2D u_samplerNormalMaterial;
 #else
+#ifdef COMPILE_SUBSURFACE_SCATTERING
+uniform vec4 u_materialConstants4f;
+#else
 uniform vec3 u_materialConstants3f;
+#endif
 #endif
 
 uniform sampler2D u_metalsLUT;
@@ -158,6 +162,7 @@ uniform sampler2D u_lightShaftsTexture;
 #endif
 
 #EAGLER INCLUDE (4) "eagler:glsl/deferred/lib/pbr_env_map.glsl"
+#EAGLER INCLUDE (4) "eagler:glsl/deferred/lib/branchless_comparison.glsl"
 
 #ifdef DO_COMPILE_SUN_SHADOWS
 uniform sampler2DShadow u_sunShadowDepthTexture;
@@ -167,14 +172,14 @@ vec2(-0.077, 0.995), vec2(0.998, 0.015),
 vec2(-0.116, -0.987), vec2(-0.916, 0.359),
 vec2(-0.697, -0.511), vec2(0.740, -0.612),
 vec2(0.675, 0.682));
-#define SMOOTH_SHADOW_SAMPLES 1.0 / 8.0
-#define SMOOTH_SHADOW_RADIUS 0.00075
+#define SMOOTH_SHADOW_SAMPLES (1.0 / 8.0)
+#define SMOOTH_SHADOW_RADIUS 0.000488
 #define SMOOTH_SHADOW_POISSON_SAMPLE(idx, tex, lod, vec3Pos, accum, tmpVec2)\
 	tmpVec2 = vec3Pos.xy + POISSON_DISK[idx] * SMOOTH_SHADOW_RADIUS;\
 	tmpVec2 = clamp(tmpVec2, vec2(0.001), vec2(0.999));\
 	tmpVec2.y += lod;\
 	tmpVec2.y *= SUN_SHADOW_MAP_FRAC;\
-	accum += textureLod(tex, vec3(tmpVec2, vec3Pos.z), 0.0) * SMOOTH_SHADOW_SAMPLES;
+	accum += textureLod(tex, vec3(tmpVec2, vec3Pos.z + 0.0001), 0.0);
 #endif
 #endif
 
@@ -184,7 +189,7 @@ void main() {
 	vec4 diffuseColor4f;
 	vec3 normalVector3f;
 	vec2 lightmapCoords2f;
-	vec3 materialData3f;
+	vec4 materialData4f;
 	float block1f;
 
 	// =========== RESOLVE CONSTANTS ============ //
@@ -270,13 +275,17 @@ void main() {
 #ifdef COMPILE_NORMAL_MATERIAL_TEXTURE
 	vec2 uv2 = vec2(1.0, 0.5) * texCoords2f;
 	uv2.y += 0.5;
-	materialData3f = texture(u_samplerNormalMaterial, uv2).rgb;
+	materialData4f = texture(u_samplerNormalMaterial, uv2);
 #else
-	materialData3f = u_materialConstants3f;
+#ifdef COMPILE_SUBSURFACE_SCATTERING
+	materialData4f = u_materialConstants4f;
+#else
+	materialData4f = vec4(u_materialConstants3f, 1.0);
+#endif
 #endif
 
 	vec3 metalN, metalK;
-	PREFETCH_METALS(diffuseColor4f.rgb, materialData3f.g, metalN, metalK)
+	PREFETCH_METALS(diffuseColor4f.rgb, materialData4f.g, metalN, metalK)
 
 	// ============ SUN LIGHTING ============== //
 
@@ -292,7 +301,7 @@ void main() {
 		float skyLight = max(lightmapCoords2f.g * 2.0 - 1.0, 0.0);
 		float shadowSample = 1.0;
 		vec4 shadowWorldPos4f = worldPosition4f;
-		shadowWorldPos4f.xyz += normalVector3f * 0.05;
+		shadowWorldPos4f.xyz += normalVector3f * 0.1;
 
 		vec4 shadowTexPos4f;
 		vec2 tmpVec2;
@@ -301,7 +310,6 @@ void main() {
 			if(shadowTexPos4f.xyz == clamp(shadowTexPos4f.xyz, vec3(0.005), vec3(0.995))) {
 				shadowSample = textureLod(u_sunShadowDepthTexture, vec3(shadowTexPos4f.xy * vec2(1.0, SUN_SHADOW_MAP_FRAC), shadowTexPos4f.z), 0.0);
 #ifdef COMPILE_SUN_SHADOW_SMOOTH
-				shadowSample *= SMOOTH_SHADOW_SAMPLES;
 				SMOOTH_SHADOW_POISSON_SAMPLE(0, u_sunShadowDepthTexture, 0.0, shadowTexPos4f.xyz, shadowSample, tmpVec2)
 				SMOOTH_SHADOW_POISSON_SAMPLE(1, u_sunShadowDepthTexture, 0.0, shadowTexPos4f.xyz, shadowSample, tmpVec2)
 				SMOOTH_SHADOW_POISSON_SAMPLE(2, u_sunShadowDepthTexture, 0.0, shadowTexPos4f.xyz, shadowSample, tmpVec2)
@@ -309,7 +317,7 @@ void main() {
 				SMOOTH_SHADOW_POISSON_SAMPLE(4, u_sunShadowDepthTexture, 0.0, shadowTexPos4f.xyz, shadowSample, tmpVec2)
 				SMOOTH_SHADOW_POISSON_SAMPLE(5, u_sunShadowDepthTexture, 0.0, shadowTexPos4f.xyz, shadowSample, tmpVec2)
 				SMOOTH_SHADOW_POISSON_SAMPLE(6, u_sunShadowDepthTexture, 0.0, shadowTexPos4f.xyz, shadowSample, tmpVec2)
-				shadowSample = max(shadowSample * 2.0 - 1.0, 0.0);
+				shadowSample *= SMOOTH_SHADOW_SAMPLES;
 #endif
 				break;
 			}
@@ -339,16 +347,16 @@ void main() {
 #ifdef DO_COMPILE_SUN_SHADOWS
 		lightColor3f *= shadowSample * skyLight;
 #endif
-		lightColor3f = eaglercraftLighting(diffuseColor4f.rgb, lightColor3f, -worldDirection4f.xyz, u_sunDirection4f.xyz, normalVector3f, materialData3f, metalN, metalK) * u_blockSkySunDynamicLightFac4f.z;
+		lightColor3f = eaglercraftLighting(diffuseColor4f.rgb, lightColor3f, -worldDirection4f.xyz, u_sunDirection4f.xyz, normalVector3f, materialData4f.rgb, metalN, metalK) * u_blockSkySunDynamicLightFac4f.z;
 	}
 
 	float f;
-#ifdef COMPILE_PARABOLOID_ENV_MAP
+#if defined(COMPILE_PARABOLOID_ENV_MAP) && !defined(COMPILE_ENABLE_TEX_GEN)
 
 	// =========== ENVIRONMENT MAP =========== //
 
-	f = materialData3f.g < 0.06 ? 1.0 : 0.0;
-	f += materialData3f.r < 0.5 ? 1.0 : 0.0;
+	f = COMPARE_LT_0_ANY(materialData4f.g, 0.06);
+	f += COMPARE_LT_0_ANY(materialData4f.r, 0.5);
 	while(f == 0.0) {
 		float dst2 = dot(worldPosition4f.xyz, worldPosition4f.xyz);
 		if(dst2 > 25.0) {
@@ -365,13 +373,13 @@ void main() {
 			vec4 sample2 = textureLod(u_environmentMap, reflectDir.xz * vec2(0.5, -0.25) + vec2(0.5, 0.75), 0.0);
 			envMapSample4f = vec4(mix(sample1.rgb, sample2.rgb, smoothstep(0.0, 1.0, reflectDir.y * -12.5 + 0.5)).rgb, min(sample1.a, sample2.a));
 		}else {
-			reflectDir.xz = reflectDir.xz * vec2(0.5, reflectDir.y > 0.0 ? 0.25 : -0.25);
-			reflectDir.xz += vec2(0.5, reflectDir.y > 0.0 ? 0.25 : 0.75);
+			reflectDir.xz = reflectDir.xz * vec2(0.5, COMPARE_GT_C_C(reflectDir.y, 0.0, 0.25, -0.25));
+			reflectDir.xz += vec2(0.5, COMPARE_GT_C_C(reflectDir.y, 0.0, 0.25, 0.75));
 			envMapSample4f = textureLod(u_environmentMap, reflectDir.xz, 0.0);
 		}
 		envMapSample4f.a += min(lightmapCoords2f.g * 2.0, 1.0) * (1.0 - envMapSample4f.a);
 		if(envMapSample4f.a == 1.0) {
-			lightColor3f += eaglercraftIBL_Specular(diffuseColor4f.rgb, envMapSample4f.rgb * envMapSample4f.a, worldDirection4f.xyz, normalVector3f, materialData3f, metalN, metalK) * (1.0 - sqrt(dst2) * 0.2);
+			lightColor3f += eaglercraftIBL_Specular(diffuseColor4f.rgb, envMapSample4f.rgb * envMapSample4f.a, worldDirection4f.xyz, normalVector3f, materialData4f.rgb, metalN, metalK) * (1.0 - sqrt(dst2) * 0.2);
 		}
 		break;
 	}
@@ -393,8 +401,8 @@ void main() {
 		vec4 sample2 = textureLod(u_irradianceMap, irradianceMapSamplePos2f.xz * vec2(0.5, -0.25) + vec2(0.5, 0.75), 0.0);
 		skyLight += mix(sample1.rgb, sample2.rgb, smoothstep(0.0, 1.0, irradianceMapSamplePos2f.y * -12.5 + 0.5)).rgb;
 	}else {
-		irradianceMapSamplePos2f.xz *= vec2(0.5, irradianceMapSamplePos2f.y > 0.0 ? 0.25 : -0.25);
-		irradianceMapSamplePos2f.xz += vec2(0.5, irradianceMapSamplePos2f.y > 0.0 ? 0.25 : 0.75);
+		irradianceMapSamplePos2f.xz *= vec2(0.5, COMPARE_GT_C_C(irradianceMapSamplePos2f.y, 0.0, 0.25, -0.25));
+		irradianceMapSamplePos2f.xz += vec2(0.5, COMPARE_GT_C_C(irradianceMapSamplePos2f.y, 0.0, 0.25, 0.75));
 		skyLight += textureLod(u_irradianceMap, irradianceMapSamplePos2f.xz, 0.0).rgb;
 	}
 	skyLight *= lightmapCoords2f.g * u_sunColor3f_sky1f.w;
@@ -409,7 +417,7 @@ void main() {
 	for(int i = 0; i < safeLightCount; ++i) {
 		dlightDist3f = worldPosition4f.xyz - u_dynamicLightArray[i].u_lightPosition4f.xyz;
 		dlightDir3f = normalize(dlightDist3f);
-		dlightDir3f = materialData3f.b == 1.0 ? normalVector3f : -dlightDir3f;
+		dlightDir3f = materialData4f.b == 1.0 ? normalVector3f : -dlightDir3f;
 		if(dot(dlightDir3f, normalVector3f) <= 0.0) {
 			continue;
 		}
@@ -419,7 +427,7 @@ void main() {
 			continue;
 		}
 		dlightColor3f *= ((cm - 0.025) / cm);
-		lightColor3f += eaglercraftLighting(diffuseColor4f.rgb, dlightColor3f, -worldDirection4f.xyz, dlightDir3f, normalVector3f, materialData3f, metalN, metalK) * u_blockSkySunDynamicLightFac4f.w;
+		lightColor3f += eaglercraftLighting(diffuseColor4f.rgb, dlightColor3f, -worldDirection4f.xyz, dlightDir3f, normalVector3f, materialData4f.rgb, metalN, metalK) * u_blockSkySunDynamicLightFac4f.w;
 	}
 
 #endif
@@ -429,7 +437,7 @@ void main() {
 	vec4 fogBlend4f = vec4(0.0);
 #ifndef COMPILE_ENABLE_TEX_GEN
 	while(u_fogParameters4f.x > 0.0) {
-		float atmos = u_fogParameters4f.x >= 4.0 ? 4.0 : 0.0;
+		float atmos = COMPARE_LT_C_C(u_fogParameters4f.x, 4.0, 0.0, 4.0);
 		float type = u_fogParameters4f.x - atmos;
 		fogBlend4f = mix(u_fogColorLight4f, u_fogColorDark4f, lightmapCoords2f.g);
 
@@ -454,8 +462,10 @@ void main() {
 		fogBlend4f.rgb *= textureLod(u_irradianceMap, atmosSamplePos.xz, 0.0).rgb;
 
 #ifdef COMPILE_FOG_LIGHT_SHAFTS
-		fogBlend4f.rgb *= pow(textureLod(u_lightShaftsTexture, (v_positionClip3f.xy / v_positionClip3f.z) * 0.5 + 0.5, 0.0).r * 0.9 + 0.1, 2.25);
-		fogBlend4f.a = fogBlend4f.a * 0.85 + 0.2;
+		fogBlend4f.rgb *= textureLod(u_lightShaftsTexture, (v_positionClip3f.xy / v_positionClip3f.z) * 0.5 + 0.5, 0.0).r * 0.76 + 0.24;
+		fogBlend4f.a = min(fogBlend4f.a * 0.8 + 0.35, 1.0);
+#else
+		fogBlend4f.a = max(fogBlend4f.a * 0.83 + 0.17, 0.0);
 #endif
 		break;
 	}
@@ -465,7 +475,7 @@ void main() {
 
 	vec3 blockLight = lightmapCoords2f.r * vec3(1.0, 0.5809, 0.2433) * 2.0 * u_blockSkySunDynamicLightFac4f.x;
 	skyLight *= u_blockSkySunDynamicLightFac4f.y;
-	float emissive = materialData3f.b == 1.0 ? 0.0 : materialData3f.b;
+	float emissive = materialData4f.b == 1.0 ? 0.0 : materialData4f.b;
 	diffuseColor4f.rgb *= max(skyLight + blockLight, vec3(emissive * emissive * 20.0 + 0.075)) * 0.075;
 	diffuseColor4f.rgb += lightColor3f;
 

@@ -7,17 +7,16 @@
 
 > DELETE  2  @  2 : 5
 
-> DELETE  1  @  1 : 2
+> INSERT  1 : 2  @  1
 
-> INSERT  3 : 13  @  3
++ import java.util.HashMap;
+
+> INSERT  4 : 11  @  4
 
 + import java.util.Set;
 + 
 + import com.carrotsearch.hppc.IntObjectHashMap;
 + import com.carrotsearch.hppc.IntObjectMap;
-+ import com.carrotsearch.hppc.ObjectIntHashMap;
-+ import com.carrotsearch.hppc.ObjectIntMap;
-+ import com.carrotsearch.hppc.cursors.IntCursor;
 + import com.google.common.collect.HashMultimap;
 + import com.google.common.collect.Lists;
 + 
@@ -27,7 +26,7 @@
 > CHANGE  11 : 13  @  11 : 13
 
 ~ 	private IntObjectMap<List<PotionEffect>> effectCache = new IntObjectHashMap<>();
-~ 	private static final ObjectIntMap<List<PotionEffect>> SUB_ITEMS_CACHE = new ObjectIntHashMap<>();
+~ 	private static final Map<List<PotionEffect>, Integer> SUB_ITEMS_CACHE = new HashMap<>();
 
 > CHANGE  23 : 24  @  23 : 24
 
@@ -79,14 +78,5 @@
 > CHANGE  33 : 34  @  33 : 34
 
 ~ 				for (Entry entry1 : (Set<Entry<Object, Object>>) hashmultimap.entries()) {
-
-> CHANGE  56 : 57  @  56 : 57
-
-~ 							SUB_ITEMS_CACHE.put(list, i1);
-
-> CHANGE  6 : 8  @  6 : 11
-
-~ 		for (IntCursor cur : SUB_ITEMS_CACHE.values()) {
-~ 			subItems.add(new ItemStack(itemIn, 1, cur.value));
 
 > EOF

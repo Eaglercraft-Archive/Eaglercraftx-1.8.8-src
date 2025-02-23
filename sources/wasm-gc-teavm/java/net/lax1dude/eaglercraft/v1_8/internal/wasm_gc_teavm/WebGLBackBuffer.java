@@ -19,13 +19,13 @@ package net.lax1dude.eaglercraft.v1_8.internal.wasm_gc_teavm;
 import static net.lax1dude.eaglercraft.v1_8.internal.PlatformOpenGL.*;
 import static net.lax1dude.eaglercraft.v1_8.opengl.RealOpenGLEnums.*;
 
-import net.lax1dude.eaglercraft.v1_8.internal.IBufferArrayGL;
 import net.lax1dude.eaglercraft.v1_8.internal.IBufferGL;
 import net.lax1dude.eaglercraft.v1_8.internal.IFramebufferGL;
 import net.lax1dude.eaglercraft.v1_8.internal.IProgramGL;
 import net.lax1dude.eaglercraft.v1_8.internal.IRenderbufferGL;
 import net.lax1dude.eaglercraft.v1_8.internal.IShaderGL;
 import net.lax1dude.eaglercraft.v1_8.internal.ITextureGL;
+import net.lax1dude.eaglercraft.v1_8.internal.IVertexArrayGL;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.ByteBuffer;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.MemoryStack;
 import net.lax1dude.eaglercraft.v1_8.opengl.EaglercraftGPU;
@@ -47,7 +47,7 @@ public class WebGLBackBuffer {
 	private static ITextureGL gles2ColorTexture;
 	private static IRenderbufferGL gles2DepthRenderbuffer;
 	private static IProgramGL gles2BlitProgram;
-	private static IBufferArrayGL gles2BlitVAO;
+	private static IVertexArrayGL gles2BlitVAO;
 	private static IBufferGL gles2BlitVBO;
 
 	private static boolean isVAOCapable = false;
@@ -161,8 +161,8 @@ public class WebGLBackBuffer {
 				if(isVAOCapable) {
 					_wglDeleteVertexArrays(gles2BlitVAO);
 				}
-				gles2BlitVAO = EaglercraftGPU.createGLBufferArray();
-				EaglercraftGPU.bindGLBufferArray(gles2BlitVAO);
+				gles2BlitVAO = EaglercraftGPU.createGLVertexArray();
+				EaglercraftGPU.bindGLVertexArray(gles2BlitVAO);
 				EaglercraftGPU.bindVAOGLArrayBuffer(gles2BlitVBO);
 				EaglercraftGPU.enableVertexAttribArray(0);
 				EaglercraftGPU.vertexAttribPointer(0, 2, GL_FLOAT, false, 8, 0);
@@ -173,8 +173,8 @@ public class WebGLBackBuffer {
 
 	private static void drawBlitQuad() {
 		if(isEmulatedVAOPhase) {
-			EaglercraftGPU.bindGLBufferArray(gles2BlitVAO);
-			EaglercraftGPU.doDrawArrays(GL_TRIANGLES, 0, 6);
+			EaglercraftGPU.bindGLVertexArray(gles2BlitVAO);
+			EaglercraftGPU.drawArrays(GL_TRIANGLES, 0, 6);
 		}else {
 			if(isVAOCapable) {
 				_wglBindVertexArray(gles2BlitVAO);
@@ -282,7 +282,7 @@ public class WebGLBackBuffer {
 		}
 		if(gles2BlitVAO != null) {
 			if(isEmulatedVAOPhase) {
-				EaglercraftGPU.destroyGLBufferArray(gles2BlitVAO);
+				EaglercraftGPU.destroyGLVertexArray(gles2BlitVAO);
 			}else if(isVAOCapable) {
 				_wglDeleteVertexArrays(gles2BlitVAO);
 			}

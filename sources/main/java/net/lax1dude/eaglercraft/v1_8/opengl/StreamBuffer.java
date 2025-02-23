@@ -16,7 +16,7 @@
 
 package net.lax1dude.eaglercraft.v1_8.opengl;
 
-import net.lax1dude.eaglercraft.v1_8.internal.IBufferArrayGL;
+import net.lax1dude.eaglercraft.v1_8.internal.IVertexArrayGL;
 import net.lax1dude.eaglercraft.v1_8.internal.IBufferGL;
 
 import static net.lax1dude.eaglercraft.v1_8.opengl.RealOpenGLEnums.*;
@@ -76,12 +76,12 @@ public class StreamBuffer {
 	public static class StreamBufferInstance {
 
 		protected PoolInstance poolInstance = null;
-		protected IBufferArrayGL vertexArray = null;
+		protected IVertexArrayGL vertexArray = null;
 
 		public boolean bindQuad16 = false;
 		public boolean bindQuad32 = false;
 
-		public IBufferArrayGL getVertexArray() {
+		public IVertexArrayGL getVertexArray() {
 			return vertexArray;
 		}
 
@@ -92,7 +92,7 @@ public class StreamBuffer {
 	}
 
 	public static interface IStreamBufferInitializer {
-		void initialize(IBufferArrayGL vertexArray, IBufferGL vertexBuffer);
+		void initialize(IVertexArrayGL vertexArray, IBufferGL vertexBuffer);
 	}
 
 	public StreamBuffer(int initialSize, int initialCount, int maxCount, IStreamBufferInitializer initializer) {
@@ -115,7 +115,7 @@ public class StreamBuffer {
 		StreamBufferInstance next = buffers[(currentBufferId++) % buffers.length];
 		resizeInstance(next.poolInstance, requiredMemory);
 		if(next.vertexArray == null) {
-			next.vertexArray = EaglercraftGPU.createGLBufferArray();
+			next.vertexArray = EaglercraftGPU.createGLVertexArray();
 			initializer.initialize(next.vertexArray, next.poolInstance.vertexBuffer);
 		}
 		return next;
@@ -135,7 +135,7 @@ public class StreamBuffer {
 						newArray[i] = buffers[i];
 					}else {
 						if(buffers[i].vertexArray != null) {
-							EaglercraftGPU.destroyGLBufferArray(buffers[i].vertexArray);
+							EaglercraftGPU.destroyGLVertexArray(buffers[i].vertexArray);
 						}
 					}
 				}
@@ -186,7 +186,7 @@ public class StreamBuffer {
 		for(int i = 0; i < buffers.length; ++i) {
 			StreamBufferInstance next = buffers[i];
 			if(next.vertexArray != null) {
-				EaglercraftGPU.destroyGLBufferArray(next.vertexArray);
+				EaglercraftGPU.destroyGLVertexArray(next.vertexArray);
 			}
 		}
 		buffers = new StreamBufferInstance[initialCount];
