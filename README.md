@@ -11,7 +11,6 @@
  - **Source code to provide the LWJGL keyboard, mouse, and OpenGL APIs in a browser**
  - **Patch files to mod the Minecraft 1.8 source code to make it browser compatible**
  - **Browser-modified portions of Minecraft 1.8's open-source dependencies**
- - **Plugins for Minecraft servers to allow the eagler client to connect to them**
 
 ### This repository does NOT contain:
 
@@ -85,57 +84,7 @@ If you are creating a resource pack and want to disable the blur filter on the m
 
 ## Making a Server
 
-To make a server for EaglercraftX 1.8 the recommended software to use is EaglercraftXBungee ("EaglerXBungee") which is included in this repository in the `gateway/EaglercraftXBungee` folder. This is a plugin designed to be used with BungeeCord to allow Eaglercraft players to join your BungeeCord server. It is assumed that the reader already knows what BungeeCord is and has a working server set up that is joinable via java edition. If you don't know what BungeeCord is, please research the topic yourself first before continuing. Waterfall and FlameCord have also been tested, but EaglerXBungee was natively compiled against BungeeCord.
-
-There is an experimental velocity plugin available in `gateway/EaglercraftXVelocity` but it is still in development and not recommended for public servers, so be sure to check for updates regularly if you use it. Configuration files are basically identical to EaglercraftXBungee so its safe to just directy copy in your old EaglercraftXBungee config files to the `plugins/eaglerxvelocity` folder and they should work with a minimal number of edits if you are migrating your network from BungeeCord to Velocity.
-
-**Warning:** Both EaglerXBungee and EaglerXVelocity perform a lot of reflection that will inevitably break after a while when BungeeCord or Velocity is updated upstream. Both plugins will display the precise build number of BungeeCord and Velocity that has been tested by the developers and known to be compatible with EaglerXBungee and EaglerXVelocity when the proxy first starts up. If you are experiencing issues, try checking the BungeeCord or Velocity website for old versions and find the closest version number to whatever the current compatible version number is that is printed by EaglerXBungee/EaglerXVelocity, it will probably fix whatever missing functions the error messages are complaining about.
-
-### Detailed READMEs
-
-- [**EaglerXBungee README**](README_EAGLERXBUNGEE.md)
-- [**EaglerXVelocity README**](README_EAGLERXVELOCITY.md)
-- [**EaglerXBukkitAPI README**](README_EAGLERXBUKKITAPI.md)
-
-### Installation
-
-Obtain the latest version of the EaglerXBungee JAR file (it can be downloaded in the client from the "Multiplayer" screen) and place it in the "plugins" folder of your BungeeCord server. It's recommended to only join native Minecraft 1.8 servers through an EaglerXBungee server but plugins like ProtocolSupport have allowed some people to join newer servers too.
-
-Configuration files and other plugin data will be written in `plugins/EaglercraftXBungee`
-
-### Online Mode Instructions
-
-1. Enable `online_mode` in BungeeCord's `config.yml` file and make sure it works
-2. Join the BungeeCord server using Minecraft Java Edition while logged into your Microsoft account
-3. Run the `/eagler` command, it will give you a temporary login code
-4. Disconnect from the server, close java edition, launch EaglercraftX 1.8
-5. Set your profile username to the username of your Microsoft account
-6. Go to the "Multiplayer" menu, press "Direct Connect", press "Connect to Server", then enter "ws://localhost:8081/"
-7. If you are using a VPS, replace "localhost" with the IP address of the VPS when you connect
-8. Press "Join Server", a login screen will be displayed, enter the temporary login code into the password field
-9. EaglerXBungee will log you into the server as the Microsoft account you generated the login code with
-
-Players using EaglercraftX will be able to see the vanilla skins of players on the server using vanilla Minecraft, but players on the server using vanilla Minecraft won't be able to see the skins of players using Eaglercraft. Instead they will see the skin of the Minecraft account that was used when the Eaglercraft player originally ran the `/eagler` command.
-
-To disable this vanilla player skin feature and stop the plugin from downloading the textures of any player heads spawned with commands, edit the EaglercraftXBungee `settings.yml` file in the `plugins/EaglercraftXBungee` folder and change `download_vanilla_skins_to_clients` to `false`. Ratelimits configured in `settings.yml` define the maximum number of times per minute a single player is allowed to trigger profile/skin lookups and also define the maximum number of times per minute the entire server is allowed to actually perform profile/skin lookups.
-
-By default, EaglercraftXBungee will use a local SQLite database in the server's working directory to store player skins and authentication codes. SQLite will be downloaded automatically if it is not already present. If you would like to use MySQL or something else instead, EaglercraftXBungee is JDBC-based and supports any database type that you can find a driver for. You can set the path of the database, path of the driver JAR, and the name of the driver class (example: `org.sqlite.JDBC`) for storing player skins in `settings.yml` and for storing login codes and profiles in `authservice.yml`.
-
-### Offline Mode Instructions
-
-By setting `online_mode` to `false` in the BungeeCord `config.yml` the authentication system will be disabled and players will no longer be required to first generate a code to log in. This should only be used for testing or if you can't get the authentication system to work. EaglercraftXBungee's skin system is supposed to be able to display SkinsRestorer skins if you plan to have vanilla players on the server but it's not guaranteed.
-
-### Built-in HTTP server
-
-When configuring the EaglercraftXBungee `listeners.yml` file, every listener includes an `http_server` section that can be used to configure the listener to also behave like a regular HTTP server when the websocket address is entered into a browser. If this is disabled people will get the normal "404 Websocket Upgrade Failure" instead when they accidentally type your server address into their browser. `root` defines the path to the folder containing index.html and the other files you want to host, relative to the `plugins/EaglercraftXBungee` folder. This can be useful for hosting the client if the offline download doesn't work for some reason but might slow your BungeeCord server down if lots of people are loading it all the time.
-
-### Enabling Voice Chat
-
-Voice chat is disabled by default in EaglercraftXBungee because it is not recommended for use on public servers. To enable it, add or change `allow_voice: true` to your EaglercraftXBungee `listeners.yml` file. The main difference between Eaglercraft 1.5.2 and EaglercraftX 1.8's voice chat feature is that the "Global" channel now only includes other players on the same server as you instead of every single player connected to the same bungeecord proxy. If you would like to disable voice chat on certain servers, add the names of the servers to the `disable_voice_chat_on_servers` list in the EaglercraftXBungee `settings.yml` file. You may have to add this property to the YML file manually if you've upgraded your server from an older version of EaglercraftXBungee.
-
-### Disabling FNAW Skins
-
-Players are known to complain about the high-poly Five Nights At Winstons character skins making PVP harder because of the belief that they change a player's hitbox. If you would like to disable those skins in your PVP worlds you can either set `disable_fnaw_skins_everywhere: true` in your EaglercraftXBungee `settings.yml` file to disable them for all players on your whole BungeeCord proxy, or you can disable them on specific servers by adding the names of the servers to the `disable_fnaw_skins_on_servers` list also in `settings.yml` like with disabling voice chat.
+To make a server for EaglercraftX 1.8 the recommended software to use is EaglercraftXServer ("EaglerXServer"), which you can get from lax1dude here: [https://lax1dude.net/eaglerxserver/](https://lax1dude.net/eaglerxserver/)
 
 ## Launch Options
 

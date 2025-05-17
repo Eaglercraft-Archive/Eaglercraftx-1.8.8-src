@@ -1,6 +1,0 @@
-name: EaglercraftXBukkitAPI
-version: 1.0.1
-main: net.lax1dude.eaglercraft.v1_8.plugin.bukkit_rpc_helper.EaglerXBukkitAPIPlugin
-description: Official EaglercraftX API for Bukkit servers
-author: lax1dude
-api-version: 1.8
