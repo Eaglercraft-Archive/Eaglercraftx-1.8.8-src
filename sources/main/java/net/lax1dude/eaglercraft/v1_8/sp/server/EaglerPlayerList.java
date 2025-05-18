@@ -44,8 +44,5 @@ public class EaglerPlayerList extends ServerConfigurationManager {
 
 	public void playerLoggedOut(EntityPlayerMP playerIn) {
 		super.playerLoggedOut(playerIn);
-		EaglerMinecraftServer svr = (EaglerMinecraftServer)getServerInstance();
-		svr.skinService.unregisterPlayer(playerIn.getUniqueID());
-		svr.capeService.unregisterPlayer(playerIn.getUniqueID());
 	}
 }

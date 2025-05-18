@@ -18,4 +18,10 @@ package net.lax1dude.eaglercraft.v1_8.internal;
 
 public interface IVertexArrayGL extends IObjectGL {
 
+	int getBits();
+
+	void setBit(int bit);
+
+	void unsetBit(int bit);
+
 }

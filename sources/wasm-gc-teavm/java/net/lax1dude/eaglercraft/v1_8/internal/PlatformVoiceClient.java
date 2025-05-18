@@ -145,6 +145,8 @@ public class PlatformVoiceClient {
 		private final EaglercraftUUID peerId;
 		private final JSVoicePeerHandle jsHandle;
 
+		private MediaStreamAudioSourceNode audioNode = null;
+
 		private MediaStream rawStream = null;
 		private AnalyserNode analyser = null;
 		private GainNode gain = null;
@@ -175,50 +177,77 @@ public class PlatformVoiceClient {
 			jsHandle.addRemoteICECandidate(BetterJSStringConverter.stringToJS(candidate));
 		}
 
+		private void makeGlobal() {
+			if (audioNode == null) {
+				return;
+			}
+			if (panner != null) {
+				if (gain != null) {
+					panner.disconnect(gain);
+				}
+				audioNode.disconnect(panner);
+				panner = null;
+			} else if (gain != null) {
+				audioNode.disconnect(gain);
+			}
+			gain = PlatformAudio.audioctx.createGain();
+			gain.getGain().setValue(VoiceClientController.getVoiceListenVolume());
+			audioNode.connect(gain);
+			gain.connect(PlatformAudio.audioctx.getDestination());
+			if(PlatformAudio.gameRecGain != null) {
+				gain.connect(PlatformAudio.gameRecGain);
+			}
+			VoiceClientController.getVoiceListening().add(peerId);
+			recNode = gain;
+		}
+
+		private void makeProximity() {
+			if (audioNode == null) {
+				return;
+			}
+			if (panner != null) {
+				if (gain != null) {
+					panner.disconnect(gain);
+				}
+				audioNode.disconnect(panner);
+				panner = null;
+			} else if (gain != null) {
+				audioNode.disconnect(gain);
+			}
+			panner = PlatformAudio.audioctx.createPanner();
+			panner.setRolloffFactor(1f);
+			PlatformAudio.setDistanceModelLinearFast(panner);
+			PlatformAudio.setPanningModelHRTFFast(panner);
+			panner.setConeInnerAngle(360f);
+			panner.setConeOuterAngle(0f);
+			panner.setConeOuterGain(0f);
+			panner.setOrientation(0f, 1f, 0f);
+			panner.setPosition(0, 0, 0);
+			float vol = VoiceClientController.getVoiceListenVolume();
+			panner.setMaxDistance(vol * 2 * VoiceClientController.getVoiceProximity() + 0.1f);
+			gain = PlatformAudio.audioctx.createGain();
+			gain.getGain().setValue(vol);
+			audioNode.connect(gain);
+			gain.connect(panner);
+			panner.connect(PlatformAudio.audioctx.getDestination());
+			if(PlatformAudio.gameRecGain != null) {
+				panner.connect(PlatformAudio.gameRecGain);
+			}
+			VoiceClientController.getVoiceListening().add(peerId);
+			recNode = panner;
+		}
+
 		private void handleEventOpened(MediaStream stream) {
 			rawStream = stream;
-			MediaStreamAudioSourceNode audioNode = PlatformAudio.audioctx.createMediaStreamSource(stream);
-			AnalyserNode analyser = PlatformAudio.audioctx.createAnalyser();
+			audioNode = PlatformAudio.audioctx.createMediaStreamSource(stream);
+			analyser = PlatformAudio.audioctx.createAnalyser();
 			analyser.setSmoothingTimeConstant(0f);
 			analyser.setFftSize(32);
 			audioNode.connect(analyser);
 			if (VoiceClientController.getVoiceChannel() == EnumVoiceChannelType.GLOBAL) {
-				GainNode gain = PlatformAudio.audioctx.createGain();
-				gain.getGain().setValue(VoiceClientController.getVoiceListenVolume());
-				audioNode.connect(gain);
-				gain.connect(PlatformAudio.audioctx.getDestination());
-				if(PlatformAudio.gameRecGain != null) {
-					gain.connect(PlatformAudio.gameRecGain);
-				}
-				VoiceClientController.getVoiceListening().add(peerId);
-				this.analyser = analyser;
-				this.gain = gain;
-				this.recNode = gain;
+				makeGlobal();
 			} else if (VoiceClientController.getVoiceChannel() == EnumVoiceChannelType.PROXIMITY) {
-				PannerNode panner = PlatformAudio.audioctx.createPanner();
-				panner.setRolloffFactor(1f);
-				PlatformAudio.setDistanceModelLinearFast(panner);
-				PlatformAudio.setPanningModelHRTFFast(panner);
-				panner.setConeInnerAngle(360f);
-				panner.setConeOuterAngle(0f);
-				panner.setConeOuterGain(0f);
-				panner.setOrientation(0f, 1f, 0f);
-				panner.setPosition(0, 0, 0);
-				float vol = VoiceClientController.getVoiceListenVolume();
-				panner.setMaxDistance(vol * 2 * VoiceClientController.getVoiceProximity() + 0.1f);
-				GainNode gain = PlatformAudio.audioctx.createGain();
-				gain.getGain().setValue(vol);
-				audioNode.connect(gain);
-				gain.connect(panner);
-				panner.connect(PlatformAudio.audioctx.getDestination());
-				if(PlatformAudio.gameRecGain != null) {
-					panner.connect(PlatformAudio.gameRecGain);
-				}
-				VoiceClientController.getVoiceListening().add(peerId);
-				this.analyser = analyser;
-				this.panner = panner;
-				this.gain = gain;
-				this.recNode = panner;
+				makeProximity();
 			}
 			if (VoiceClientController.getVoiceMuted().contains(peerId)) mute(true);
 		}
@@ -437,6 +466,20 @@ public class PlatformVoiceClient {
 		VoicePeer peer = peerList.get(peerId);
 		if (peer != null) {
 			peer.handlePacketRemoteICECandidate(candidate);
+		}
+	}
+
+	public static void makePeerGlobal(EaglercraftUUID peerId) {
+		VoicePeer peer = peerList.get(peerId);
+		if (peer != null) {
+			peer.makeGlobal();
+		}
+	}
+
+	public static void makePeerProximity(EaglercraftUUID peerId) {
+		VoicePeer peer = peerList.get(peerId);
+		if (peer != null) {
+			peer.makeProximity();
 		}
 	}
 

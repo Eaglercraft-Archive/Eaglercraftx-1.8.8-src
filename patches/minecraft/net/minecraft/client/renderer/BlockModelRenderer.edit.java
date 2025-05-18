@@ -5,14 +5,13 @@
 # Version: 1.0
 # Author: lax1dude
 
-> INSERT  4 : 10  @  4
+> INSERT  4 : 9  @  4
 
 + 
 + import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 + import net.lax1dude.eaglercraft.v1_8.opengl.WorldRenderer;
 + import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.DeferredStateManager;
 + import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.VertexMarkerState;
-+ import net.lax1dude.eaglercraft.v1_8.opengl.ext.dynamiclights.DynamicLightsStateManager;
 
 > DELETE  3  @  3 : 7
 
@@ -193,7 +192,7 @@
 ~ 	private void renderModelAmbientOcclusionQuads(IBlockAccess blockAccessIn, IBlockState blockStateIn,
 ~ 			BlockPos blockPosIn, WorldRenderer worldRendererIn, List<BakedQuad> listQuadsIn, RenderEnv renderenv) {
 ~ 		boolean isDeferred = DeferredStateManager.isDeferredRenderer();
-~ 		boolean isDynamicLights = isDeferred || DynamicLightsStateManager.isDynamicLightsRender();
+~ 		boolean isDynamicLights = isDeferred;// || DynamicLightsStateManager.isDynamicLightsRender();
 ~ 		float[] quadBounds = renderenv.getQuadBounds();
 ~ 		BitSet boundsFlags = renderenv.getBoundsFlags();
 ~ 		BlockModelRenderer.AmbientOcclusionFace aoFaceIn = renderenv.getAoFace();
@@ -249,7 +248,7 @@
 
 ~ 			List<BakedQuad> listQuadsIn, RenderEnv renderenv) {
 ~ 		boolean isDeferred = DeferredStateManager.isDeferredRenderer();
-~ 		boolean isDynamicLights = isDeferred || DynamicLightsStateManager.isDynamicLightsRender();
+~ 		boolean isDynamicLights = isDeferred;// || DynamicLightsStateManager.isDynamicLightsRender();
 ~ 		BitSet boundsFlags = renderenv.getBoundsFlags();
 ~ 		float[] quadBounds = renderenv.getQuadBounds();
 

@@ -19,6 +19,7 @@ package net.lax1dude.eaglercraft.v1_8.internal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.teavm.jso.webgl.WebGLShader;
 import org.teavm.jso.webgl.WebGLUniformLocation;
 
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.ByteBuffer;
@@ -295,7 +296,17 @@ public class PlatformOpenGL {
 	}
 	
 	public static IShaderGL _wglCreateShader(int type) {
-		return new OpenGLObjects.ShaderGL(ctx.createShader(type));
+		WebGLShader shader = ctx.createShader(type);
+		if(shader == null) {
+			// Workaround for chrome not handling lost context correctly in shaderSource
+			// "Failed to execute 'shaderSource' on 'WebGL2RenderingContext': parameter 1 is not of type 'WebGLShader'."
+			if (PlatformInput.contextLost()) {
+				throw new ContextLostError();
+			} else {
+				throw new Error("createShader returned null and the context is not lost");
+			}
+		}
+		return new OpenGLObjects.ShaderGL(shader);
 	}
 	
 	public static IFramebufferGL _wglCreateFramebuffer() {

@@ -57,8 +57,9 @@ public class WebGLBackBuffer {
 	private static final int _GL_RENDERBUFFER = 0x8D41;
 	private static final int _GL_COLOR_ATTACHMENT0 = 0x8CE0;
 	private static final int _GL_DEPTH_ATTACHMENT = 0x8D00;
-	private static final int _GL_DEPTH_COMPONENT16 = 0x81A5;
+	private static final int _GL_DEPTH_STENCIL_ATTACHMENT = 0x821A;
 	private static final int _GL_DEPTH_COMPONENT32F = 0x8CAC;
+	private static final int _GL_DEPTH_STENCIL = 0x84F9;
 	private static final int _GL_READ_FRAMEBUFFER = 0x8CA8;
 	private static final int _GL_DRAW_FRAMEBUFFER = 0x8CA9;
 
@@ -92,8 +93,8 @@ public class WebGLBackBuffer {
 			_wglTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, sw, sh, 0, GL_RGBA, GL_UNSIGNED_BYTE, (ByteBuffer)null);
 			_wglFramebufferTexture2D(_GL_FRAMEBUFFER, _GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, gles2ColorTexture, 0);
 			_wglBindRenderbuffer(_GL_RENDERBUFFER, gles2DepthRenderbuffer);
-			_wglRenderbufferStorage(_GL_RENDERBUFFER, _GL_DEPTH_COMPONENT16, sw, sh);
-			_wglFramebufferRenderbuffer(_GL_FRAMEBUFFER, _GL_DEPTH_ATTACHMENT, _GL_RENDERBUFFER, gles2DepthRenderbuffer);
+			_wglRenderbufferStorage(_GL_RENDERBUFFER, _GL_DEPTH_STENCIL, sw, sh);
+			_wglFramebufferRenderbuffer(_GL_FRAMEBUFFER, _GL_DEPTH_STENCIL_ATTACHMENT, _GL_RENDERBUFFER, gles2DepthRenderbuffer);
 
 			MemoryStack.push();
 			try {
@@ -238,7 +239,7 @@ public class WebGLBackBuffer {
 				_wglTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, windowWidth, windowHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, (ByteBuffer)null);
 				
 				_wglBindRenderbuffer(_GL_RENDERBUFFER, gles2DepthRenderbuffer);
-				_wglRenderbufferStorage(_GL_RENDERBUFFER, _GL_DEPTH_COMPONENT16, windowWidth, windowHeight);
+				_wglRenderbufferStorage(_GL_RENDERBUFFER, _GL_DEPTH_STENCIL, windowWidth, windowHeight);
 			}
 
 			if(isEmulatedVAOPhase) {
@@ -248,7 +249,7 @@ public class WebGLBackBuffer {
 				}
 				GlStateManager.eagPopStateForGLES2BlitHack();
 			}else {
-				EaglercraftGPU.clearCurrentBinding(EaglercraftGPU.CLEAR_BINDING_TEXTURE0 | EaglercraftGPU.CLEAR_BINDING_ACTIVE_TEXTURE | EaglercraftGPU.CLEAR_BINDING_SHADER_PROGRAM | EaglercraftGPU.CLEAR_BINDING_BUFFER_ARRAY);
+				EaglercraftGPU.clearCurrentBinding(EaglercraftGPU.CLEAR_BINDING_TEXTURE0 | EaglercraftGPU.CLEAR_BINDING_ACTIVE_TEXTURE | EaglercraftGPU.CLEAR_BINDING_SHADER_PROGRAM | EaglercraftGPU.CLEAR_BINDING_VERTEX_ARRAY);
 			}
 
 			_wglBindFramebuffer(_GL_FRAMEBUFFER, eagFramebuffer);

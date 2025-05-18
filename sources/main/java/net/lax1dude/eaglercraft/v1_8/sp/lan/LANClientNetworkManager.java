@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024 lax1dude, ayunami2000. All Rights Reserved.
+ * Copyright (c) 2022-2025 lax1dude, ayunami2000. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -366,6 +366,10 @@ public class LANClientNetworkManager extends EaglercraftNetworkManager {
 					}
 				}
 
+				if(injectedController != null && injectedController.handlePacket(fullData, off)) {
+					continue;
+				}
+
 				ByteBuf nettyBuffer = Unpooled.buffer(fullData, fullData.length);
 				nettyBuffer.writerIndex(fullData.length);
 				nettyBuffer.readerIndex(off);
@@ -396,6 +400,32 @@ public class LANClientNetworkManager extends EaglercraftNetworkManager {
 					logger.error(t);
 				}
 			}
+		}
+	}
+
+	@Override
+	public void injectRawFrame(byte[] data) {
+		if(!isChannelOpen()) {
+			logger.error("Frame was injected on a closed connection");
+			return;
+		}
+		int len = data.length;
+		int fragmentSizeN1 = fragmentSize - 1;
+		if(len > fragmentSizeN1) {
+			int idx = 0;
+			do {
+				int readLen = len > fragmentSizeN1 ? fragmentSizeN1 : len;
+				byte[] frag = new byte[readLen + 1];
+				System.arraycopy(data, idx, frag, 1, readLen);
+				idx += readLen;
+				len -= readLen;
+				frag[0] = len == 0 ? (byte)0 : (byte)1;
+				PlatformWebRTC.clientLANSendPacket(frag);
+			}while(len > 0);
+		}else {
+			byte[] bytes = new byte[len + 1];
+			System.arraycopy(data, 0, bytes, 1, len);
+			PlatformWebRTC.clientLANSendPacket(bytes);
 		}
 	}
 

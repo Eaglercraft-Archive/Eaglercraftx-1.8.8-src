@@ -156,6 +156,13 @@ eagruntimeImpl.platformRuntime["writeCrashReport"] = function(crashDump) {
 	displayCrashReport(crashDump, false);
 };
 
+/**
+ * @param {string} crashDump
+ */
+eagruntimeImpl.platformRuntime["showContextLostScreen"] = function(crashDump) {
+	showContextLostScreen(crashDump);
+};
+
 eagruntimeImpl.platformRuntime["steadyTimeMillis"] = performance.now.bind(performance);
 
 /**

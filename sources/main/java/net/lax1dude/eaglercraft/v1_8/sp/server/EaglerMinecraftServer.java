@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024 lax1dude, ayunami2000. All Rights Reserved.
+ * Copyright (c) 2023-2025 lax1dude, ayunami2000. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -23,6 +23,7 @@ import java.util.List;
 import com.google.common.collect.Lists;
 
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
+import net.lax1dude.eaglercraft.v1_8.EagUtils;
 import net.lax1dude.eaglercraft.v1_8.internal.vfs2.VFile2;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 import net.minecraft.entity.player.EntityPlayer;
@@ -33,8 +34,7 @@ import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.WorldSettings;
 import net.minecraft.world.WorldSettings.GameType;
-import net.lax1dude.eaglercraft.v1_8.sp.server.skins.IntegratedCapeService;
-import net.lax1dude.eaglercraft.v1_8.sp.server.skins.IntegratedSkinService;
+import net.lax1dude.eaglercraft.v1_8.sp.server.skins.IntegratedTextureService;
 import net.lax1dude.eaglercraft.v1_8.sp.server.voice.IntegratedVoiceService;
 
 public class EaglerMinecraftServer extends MinecraftServer {
@@ -48,8 +48,7 @@ public class EaglerMinecraftServer extends MinecraftServer {
 	protected WorldSettings newWorldSettings;
 	protected boolean paused;
 	protected EaglerSaveHandler saveHandler;
-	protected IntegratedSkinService skinService;
-	protected IntegratedCapeService capeService;
+	protected IntegratedTextureService textureService;
 	protected IntegratedVoiceService voiceService;
 
 	private long lastTPSUpdate = 0l;
@@ -67,25 +66,22 @@ public class EaglerMinecraftServer extends MinecraftServer {
 		super(world);
 		Bootstrap.register();
 		this.saveHandler = new EaglerSaveHandler(savesDir, world);
-		this.skinService = new IntegratedSkinService(WorldsDB.newVFile(saveHandler.getWorldDirectory(), "eagler/skulls"));
-		this.capeService = new IntegratedCapeService();
+		EaglerPlayerList playerList = new EaglerPlayerList(this, viewDistance);
+		this.textureService = new IntegratedTextureService(playerList,
+				WorldsDB.newVFile(saveHandler.getWorldDirectory(), "eagler/skulls"));
 		this.voiceService = null;
 		this.setServerOwner(owner);
 		logger.info("server owner: " + owner);
 		this.setDemo(demo);
 		this.canCreateBonusChest(currentWorldSettings != null && currentWorldSettings.isBonusChestEnabled());
 		this.setBuildLimit(256);
-		this.setConfigManager(new EaglerPlayerList(this, viewDistance));
+		this.setConfigManager(playerList);
 		this.newWorldSettings = currentWorldSettings;
 		this.paused = false;
 	}
 
-	public IntegratedSkinService getSkinService() {
-		return skinService;
-	}
-
-	public IntegratedCapeService getCapeService() {
-		return capeService;
+	public IntegratedTextureService getTextureService() {
+		return textureService;
 	}
 
 	public IntegratedVoiceService getVoiceService() {
@@ -166,12 +162,14 @@ public class EaglerMinecraftServer extends MinecraftServer {
 				this.currentTime += 50l;
 				this.tick();
 				++counterTicksPerSecond;
+			} else if (!singleThreadMode) {
+				EagUtils.sleep(1);
 			}
 		}
 	}
 
 	public void updateTimeLightAndEntities() {
-		this.skinService.flushCache();
+		this.textureService.flushCache();
 		super.updateTimeLightAndEntities();
 	}
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024 lax1dude, ayunami2000. All Rights Reserved.
+ * Copyright (c) 2022-2025 lax1dude, ayunami2000. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -31,6 +31,7 @@ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 import net.lax1dude.eaglercraft.v1_8.netty.ByteBuf;
 import net.lax1dude.eaglercraft.v1_8.netty.Unpooled;
 import net.lax1dude.eaglercraft.v1_8.socket.CompressionNotSupportedException;
+import net.lax1dude.eaglercraft.v1_8.socket.protocol.message.InjectedMessageController;
 import net.lax1dude.eaglercraft.v1_8.sp.SingleplayerServerController;
 import net.lax1dude.eaglercraft.v1_8.sp.server.EaglerIntegratedServerWorker;
 import net.minecraft.network.EnumConnectionState;
@@ -53,6 +54,7 @@ public class IntegratedServerPlayerNetworkManager {
 	private int debugPacketCounter = 0;
 	private final List<byte[]> recievedPacketBuffer = new LinkedList<>();
 	private final boolean enableSendCompression;
+	protected InjectedMessageController injectedController = null;
 
 	private boolean firstPacket = true;
 
@@ -69,6 +71,10 @@ public class IntegratedServerPlayerNetworkManager {
 		}
 		this.playerChannel = playerChannel;
 		this.enableSendCompression = !SingleplayerServerController.PLAYER_CHANNEL.equals(playerChannel);
+	}
+
+	public void setInjectedMessageController(InjectedMessageController controller) {
+		injectedController = controller;
 	}
 	
 	public void connect() {
@@ -160,6 +166,10 @@ public class IntegratedServerPlayerNetworkManager {
 			
 			++debugPacketCounter;
 			try {
+				if(injectedController != null && injectedController.handlePacket(fullData, 0)) {
+					continue;
+				}
+				
 				ByteBuf nettyBuffer = Unpooled.buffer(fullData, fullData.length);
 				nettyBuffer.writerIndex(fullData.length);
 				PacketBuffer input = new PacketBuffer(nettyBuffer);
@@ -271,6 +281,66 @@ public class IntegratedServerPlayerNetworkManager {
 			byte[] bytes = new byte[len];
 			temporaryBuffer.readBytes(bytes, 0, len);
 			ServerPlatformSingleplayer.sendPacket(new IPCPacketData(playerChannel, bytes));
+		}
+	}
+	
+	public void injectRawFrame(byte[] data) {
+		if(!isChannelOpen()) {
+			return;
+		}
+		if(enableSendCompression) {
+			int len = data.length;
+			if(len > compressionThreshold) {
+				if(compressedPacketTmp == null || compressedPacketTmp.length < len) {
+					compressedPacketTmp = new byte[len];
+				}
+				int cmpLen;
+				try {
+					cmpLen = EaglerZLIB.deflateFull(data, 0, len, compressedPacketTmp, 0, compressedPacketTmp.length);
+				}catch(IOException ex) {
+					logger.error("Failed to compress injected frame!");
+					logger.error(ex);
+					return;
+				}
+				byte[] compressedData = new byte[5 + cmpLen];
+				compressedData[0] = (byte)2;
+				compressedData[1] = (byte)((len >>> 24) & 0xFF);
+				compressedData[2] = (byte)((len >>> 16) & 0xFF);
+				compressedData[3] = (byte)((len >>> 8) & 0xFF);
+				compressedData[4] = (byte)(len & 0xFF);
+				System.arraycopy(compressedPacketTmp, 0, compressedData, 5, cmpLen);
+				if(compressedData.length > fragmentSize) {
+					int fragmentSizeN1 = fragmentSize - 1;
+					for (int j = 1; j < compressedData.length; j += fragmentSizeN1) {
+						byte[] fragData = new byte[((j + fragmentSizeN1 > (compressedData.length - 1)) ? ((compressedData.length - 1) % fragmentSizeN1) : fragmentSizeN1) + 1];
+						System.arraycopy(compressedData, j, fragData, 1, fragData.length - 1);
+						fragData[0] = (j + fragmentSizeN1 < compressedData.length) ? (byte) 1 : (byte) 2;
+						ServerPlatformSingleplayer.sendPacket(new IPCPacketData(playerChannel, fragData));
+					}
+				}else {
+					ServerPlatformSingleplayer.sendPacket(new IPCPacketData(playerChannel, compressedData));
+				}
+			}else {
+				int fragmentSizeN1 = fragmentSize - 1;
+				if(len > fragmentSizeN1) {
+					int idx = 0;
+					do {
+						int readLen = len > fragmentSizeN1 ? fragmentSizeN1 : len;
+						byte[] frag = new byte[readLen + 1];
+						System.arraycopy(data, idx, frag, 1, readLen);
+						idx += readLen;
+						len -= readLen;
+						frag[0] = len == 0 ? (byte)0 : (byte)1;
+						ServerPlatformSingleplayer.sendPacket(new IPCPacketData(playerChannel, frag));
+					}while(len > 0);
+				}else {
+					byte[] bytes = new byte[len + 1];
+					System.arraycopy(data, 0, bytes, 1, len);
+					ServerPlatformSingleplayer.sendPacket(new IPCPacketData(playerChannel, bytes));
+				}
+			}
+		}else {
+			ServerPlatformSingleplayer.sendPacket(new IPCPacketData(playerChannel, data));
 		}
 	}
 	

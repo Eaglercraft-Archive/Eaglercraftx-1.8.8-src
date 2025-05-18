@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024 lax1dude. All Rights Reserved.
+ * Copyright (c) 2022-2025 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -22,6 +22,8 @@ import net.lax1dude.eaglercraft.v1_8.internal.EnumEaglerConnectionState;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 import net.lax1dude.eaglercraft.v1_8.netty.Unpooled;
+import net.lax1dude.eaglercraft.v1_8.socket.protocol.handshake.ServerCapabilities;
+import net.lax1dude.eaglercraft.v1_8.socket.protocol.message.InjectedMessageController;
 import net.minecraft.network.EnumConnectionState;
 import net.minecraft.network.INetHandler;
 import net.minecraft.network.Packet;
@@ -38,6 +40,9 @@ public abstract class EaglercraftNetworkManager {
 	
 	protected String pluginBrand = null;
 	protected String pluginVersion = null;
+	protected InjectedMessageController injectedController = null;
+
+	protected ServerCapabilities serverCapabilities = null;
 	
 	public static final Logger logger = LogManager.getLogger("NetworkManager");
 
@@ -45,10 +50,17 @@ public abstract class EaglercraftNetworkManager {
 		this.address = address;
 		this.temporaryBuffer = new PacketBuffer(Unpooled.buffer(0x1FFFF));
 	}
-	
-	public void setPluginInfo(String pluginBrand, String pluginVersion) {
+
+	public void setPluginInfo(String pluginBrand, String pluginVersion, ServerCapabilities serverCapabilities) {
 		this.pluginBrand = pluginBrand;
 		this.pluginVersion = pluginVersion;
+		this.serverCapabilities = serverCapabilities;
+	}
+
+	public void setLANInfo(int protocolVer) {
+		this.pluginBrand = "integrated";
+		this.pluginVersion = "v" + protocolVer;
+		this.serverCapabilities = ServerCapabilities.getLAN();
 	}
 	
 	public String getPluginBrand() {
@@ -57,6 +69,14 @@ public abstract class EaglercraftNetworkManager {
 	
 	public String getPluginVersion() {
 		return pluginVersion;
+	}
+	
+	public ServerCapabilities getServerCapabilities() {
+		return serverCapabilities;
+	}
+
+	public void setInjectedMessageController(InjectedMessageController controller) {
+		injectedController = controller;
 	}
 	
 	public abstract void connect();
@@ -109,5 +129,7 @@ public abstract class EaglercraftNetworkManager {
 			}
 		}
 	}
-	
+
+	public abstract void injectRawFrame(byte[] data);
+
 }

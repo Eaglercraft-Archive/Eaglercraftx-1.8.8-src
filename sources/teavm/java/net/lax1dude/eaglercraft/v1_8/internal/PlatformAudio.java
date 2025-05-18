@@ -242,7 +242,7 @@ public class PlatformAudio {
 			}
 		}
 		
-		PlatformInput.clearEvenBuffers();
+		PlatformInput.clearEventBuffers();
 		
 	}
 

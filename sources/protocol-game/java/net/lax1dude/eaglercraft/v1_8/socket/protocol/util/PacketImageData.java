@@ -17,11 +17,12 @@
 package net.lax1dude.eaglercraft.v1_8.socket.protocol.util;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import net.lax1dude.eaglercraft.v1_8.socket.protocol.GamePacketInputBuffer;
 import net.lax1dude.eaglercraft.v1_8.socket.protocol.GamePacketOutputBuffer;
 
-public class PacketImageData {
+public final class PacketImageData {
 
 	public final int width;
 	public final int height;
@@ -42,15 +43,15 @@ public class PacketImageData {
 		int h = buffer.readUnsignedByte();
 		int pixelCount = w * h;
 		int[] pixels = new int[pixelCount];
-		for(int j = 0, p, pR, pG, pB; j < pixelCount; ++j) {
+		for (int j = 0, p, pR, pG, pB; j < pixelCount; ++j) {
 			p = buffer.readUnsignedShort();
 			pR = (p >>> 11) & 0x1F;
 			pG = (p >>> 5) & 0x3F;
 			pB = p & 0x1F;
-			if(pR + pG + pB > 0) {
-				pB = (int)((pB - 1) * 8.5f);
+			if (pR + pG + pB > 0) {
+				pB = (pB - 1) * 255 / 30;
 				pixels[j] = 0xFF000000 | (pR << 19) | (pG << 10) | pB;
-			}else {
+			} else {
 				pixels[j] = 0;
 			}
 		}
@@ -58,23 +59,44 @@ public class PacketImageData {
 	}
 
 	public static void writeRGB16(GamePacketOutputBuffer buffer, PacketImageData imageData) throws IOException {
-		if(imageData.width < 1 || imageData.width > 255 || imageData.height < 1 || imageData.height > 255) {
-			throw new IOException("Invalid image dimensions in packet, must be between 1x1 and 255x255, got " + imageData.width + "x" + imageData.height);
+		if (imageData.width < 1 || imageData.width > 255 || imageData.height < 1 || imageData.height > 255) {
+			throw new IOException("Invalid image dimensions in packet, must be between 1x1 and 255x255, got "
+					+ imageData.width + "x" + imageData.height);
 		}
 		buffer.writeByte(imageData.width);
 		buffer.writeByte(imageData.height);
 		int pixelCount = imageData.width * imageData.height;
-		for(int j = 0, p, pR, pG, pB; j < pixelCount; ++j) {
+		for (int j = 0, p, pR, pG, pB; j < pixelCount; ++j) {
 			p = imageData.rgba[j];
-			if((p >>> 24) > 0x7F) {
+			if ((p >>> 24) > 0x7F) {
 				pR = (p >>> 19) & 0x1F;
 				pG = (p >>> 10) & 0x3F;
-				pB = (int)((p & 0xFF) * 0.1176471f) + 1;
+				pB = ((p & 0xFF) * 30 / 255) + 1;
 				buffer.writeShort((pR << 11) | (pG << 5) | pB);
-			}else {
+			} else {
 				buffer.writeShort(0);
 			}
 		}
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + Arrays.hashCode(rgba);
+		result = prime * result + width;
+		result = prime * result + height;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!(obj instanceof PacketImageData))
+			return false;
+		PacketImageData other = (PacketImageData) obj;
+		return width == other.width && height == other.height && Arrays.equals(rgba, other.rgba);
 	}
 
 }

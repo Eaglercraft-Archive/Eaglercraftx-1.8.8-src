@@ -17,11 +17,10 @@
 
 > DELETE  1  @  1 : 4
 
-> CHANGE  28 : 32  @  28 : 29
+> CHANGE  28 : 31  @  28 : 29
 
-~ 					worldrenderer.begin(7,
-~ 							(DeferredStateManager.isDeferredRenderer()
-~ 									|| DynamicLightsStateManager.isDynamicLightsRender()) ? VertexFormat.BLOCK_SHADERS
-~ 											: DefaultVertexFormats.BLOCK);
+~ 					worldrenderer.begin(7, (DeferredStateManager.isDeferredRenderer()
+~ 					/* || DynamicLightsStateManager.isDynamicLightsRender() */) ? VertexFormat.BLOCK_SHADERS
+~ 							: DefaultVertexFormats.BLOCK);
 
 > EOF

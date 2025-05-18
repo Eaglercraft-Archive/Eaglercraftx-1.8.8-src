@@ -81,6 +81,22 @@ public interface GameMessageHandler {
 		throw new WrongPacketException();
 	}
 
+	default void handleClient(CPacketGetOtherSkinV5EAG packet) {
+		throw new WrongPacketException();
+	}
+
+	default void handleClient(CPacketGetSkinByURLV5EAG packet) {
+		throw new WrongPacketException();
+	}
+
+	default void handleClient(CPacketGetOtherCapeV5EAG packet) {
+		throw new WrongPacketException();
+	}
+
+	default void handleClient(CPacketGetOtherTexturesV5EAG packet) {
+		throw new WrongPacketException();
+	}
+
 	default void handleServer(SPacketEnableFNAWSkinsEAG packet) {
 		throw new WrongPacketException();
 	}
@@ -202,6 +218,38 @@ public interface GameMessageHandler {
 	}
 
 	default void handleServer(SPacketNotifBadgeHideV4EAG packet) {
+		throw new WrongPacketException();
+	}
+
+	default void handleServer(SPacketOtherSkinPresetV5EAG packet) {
+		throw new WrongPacketException();
+	}
+
+	default void handleServer(SPacketOtherSkinCustomV5EAG packet) {
+		throw new WrongPacketException();
+	}
+
+	default void handleServer(SPacketOtherCapePresetV5EAG packet) {
+		throw new WrongPacketException();
+	}
+
+	default void handleServer(SPacketOtherCapeCustomV5EAG packet) {
+		throw new WrongPacketException();
+	}
+
+	default void handleServer(SPacketOtherTexturesV5EAG packet) {
+		throw new WrongPacketException();
+	}
+
+	default void handleServer(SPacketClientStateFlagV5EAG packet) {
+		throw new WrongPacketException();
+	}
+
+	default void handleServer(SPacketDisplayWebViewURLV5EAG packet) {
+		throw new WrongPacketException();
+	}
+
+	default void handleServer(SPacketDisplayWebViewBlobV5EAG packet) {
 		throw new WrongPacketException();
 	}
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 lax1dude. All Rights Reserved.
+ * Copyright (c) 2024-2025 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -22,6 +22,7 @@ import java.util.Map;
 
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
+import net.lax1dude.eaglercraft.v1_8.socket.protocol.client.StateFlags;
 import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.client.CPacketGetOtherClientUUIDV4EAG;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -53,7 +54,7 @@ public class ClientUUIDLoadingCache {
 			if(ret == null) {
 				Minecraft mc = Minecraft.getMinecraft();
 				if(mc != null && mc.thePlayer != null && mc.thePlayer.sendQueue.getEaglerMessageProtocol().ver >= 4) {
-					if(ignoreNonEaglerPlayers && !player.getGameProfile().getTextures().eaglerPlayer) {
+					if(StateFlags.eaglerPlayerFlag && player.getGameProfile().getTextures().eaglerPlayer != (byte) 2) {
 						ret = VANILLA_UUID;
 					}else {
 						ret = PENDING_UUID;
@@ -86,7 +87,6 @@ public class ClientUUIDLoadingCache {
 	private static int requestId = 0;
 	private static long lastFlushReq = EagRuntime.steadyTimeMillis();
 	private static long lastFlushEvict = EagRuntime.steadyTimeMillis();
-	private static boolean ignoreNonEaglerPlayers = false;
 
 	public static void update() {
 		long timestamp = EagRuntime.steadyTimeMillis();
@@ -122,19 +122,21 @@ public class ClientUUIDLoadingCache {
 		evictedUUIDs.clear();
 	}
 
-	private static final EaglercraftUUID MAGIC_DISABLE_NON_EAGLER_PLAYERS = new EaglercraftUUID(0xEEEEA64771094C4EL, 0x86E55B81D17E67EBL);
-
 	public static void handleResponse(int requestId, EaglercraftUUID clientId) {
 		WaitingLookup lookup = waitingIDs.remove(requestId);
 		if(lookup != null) {
 			lookup.player.clientBrandUUIDCache = clientId;
 			waitingUUIDs.remove(lookup.uuid);
 		}else {
-			if(requestId == -1 && MAGIC_DISABLE_NON_EAGLER_PLAYERS.equals(clientId)) {
-				ignoreNonEaglerPlayers = true;
-			}else {
-				logger.warn("Unsolicited client brand UUID lookup response #{} recieved! (Brand UUID: {})", requestId, clientId);
+			if (requestId == -1 && StateFlags.LEGACY_EAGLER_PLAYER_FLAG_PRESENT.equals(clientId)) {
+				Minecraft mc = Minecraft.getMinecraft();
+				if (mc != null && (mc.thePlayer == null || mc.thePlayer.sendQueue.getEaglerMessageProtocol().ver < 5)) {
+					StateFlags.eaglerPlayerFlag = true;
+					StateFlags.eaglerPlayerFlagSupervisor = true;
+					return;
+				}
 			}
+			logger.warn("Unsolicited client brand UUID lookup response #{} recieved! (Brand UUID: {})", requestId, clientId);
 		}
 	}
 
@@ -144,10 +146,6 @@ public class ClientUUIDLoadingCache {
 		if(lk != null) {
 			waitingIDs.remove(lk.reqID);
 		}
-	}
-
-	public static void resetFlags() {
-		ignoreNonEaglerPlayers = false;
 	}
 
 	private static class WaitingLookup {

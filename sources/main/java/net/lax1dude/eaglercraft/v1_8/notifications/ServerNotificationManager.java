@@ -39,7 +39,6 @@ import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.server.SPacketNotifBadg
 import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.server.SPacketNotifIconsRegisterV4EAG;
 import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.server.SPacketNotifIconsReleaseV4EAG;
 import net.lax1dude.eaglercraft.v1_8.socket.protocol.util.PacketImageData;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.util.IChatComponent;
 
@@ -56,8 +55,8 @@ public class ServerNotificationManager {
 	private final TextureManager textureMgr;
 	protected int unreadCounter = 0;
 
-	public ServerNotificationManager() {
-		this.textureMgr = Minecraft.getMinecraft().getTextureManager();
+	public ServerNotificationManager(TextureManager textureMgr) {
+		this.textureMgr = textureMgr;
 	}
 
 	public void processPacketAddIcons(SPacketNotifIconsRegisterV4EAG packet) {

@@ -1,1 +1,0 @@
-	<classpathentry kind="lib" path="${JAR_PATH}"/>

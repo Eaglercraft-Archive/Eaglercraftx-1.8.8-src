@@ -10,10 +10,14 @@
 + import com.carrotsearch.hppc.IntShortHashMap;
 + import com.carrotsearch.hppc.IntShortMap;
 
-> CHANGE  3 : 8  @  3 : 7
+> CHANGE  3 : 12  @  3 : 7
 
+~ 
+~ import net.lax1dude.eaglercraft.v1_8.socket.protocol.GamePluginMessageConstants;
 ~ import net.lax1dude.eaglercraft.v1_8.socket.protocol.GamePluginMessageProtocol;
-~ import net.lax1dude.eaglercraft.v1_8.socket.protocol.client.GameProtocolMessageController;
+~ import net.lax1dude.eaglercraft.v1_8.socket.protocol.message.InjectedMessageController;
+~ import net.lax1dude.eaglercraft.v1_8.socket.protocol.message.LegacyMessageController;
+~ import net.lax1dude.eaglercraft.v1_8.socket.protocol.message.MessageController;
 ~ import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.GameMessagePacket;
 ~ import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.server.SPacketUpdateCertEAG;
 ~ 
@@ -28,13 +32,18 @@
 
 > DELETE  25  @  25 : 29
 
-> DELETE  35  @  35 : 36
+> INSERT  33 : 34  @  33
+
++ import net.minecraft.network.play.server.S3FPacketCustomPayload;
+
+> DELETE  2  @  2 : 3
 
 > DELETE  13  @  13 : 14
 
-> INSERT  2 : 4  @  2
+> INSERT  2 : 5  @  2
 
 + import net.lax1dude.eaglercraft.v1_8.sp.server.socket.IntegratedServerPlayerNetworkManager;
++ import net.lax1dude.eaglercraft.v1_8.sp.server.socket.protocol.ServerMessageHandler;
 + 
 
 > DELETE  1  @  1 : 3
@@ -62,34 +71,42 @@
 > INSERT  4 : 6  @  4
 
 + 	private boolean hasDisconnected = false;
-+ 	private GameProtocolMessageController eaglerMessageController = null;
++ 	private MessageController eaglerMessageController = null;
 
 > CHANGE  1 : 3  @  1 : 2
 
 ~ 	public NetHandlerPlayServer(MinecraftServer server, IntegratedServerPlayerNetworkManager networkManagerIn,
-~ 			EntityPlayerMP playerIn) {
+~ 			EntityPlayerMP playerIn, GamePluginMessageProtocol eaglerProtocol) {
 
-> INSERT  7 : 28  @  7
+> INSERT  5 : 15  @  5
 
-+ 	public GameProtocolMessageController getEaglerMessageController() {
++ 		ServerMessageHandler handler = ServerMessageHandler.createServerHandler(eaglerProtocol.ver, this);
++ 		if (eaglerProtocol.ver >= 5) {
++ 			this.eaglerMessageController = new InjectedMessageController(eaglerProtocol, handler,
++ 					GamePluginMessageConstants.SERVER_TO_CLIENT, networkManagerIn::injectRawFrame);
++ 			networkManagerIn.setInjectedMessageController((InjectedMessageController) eaglerMessageController);
++ 		} else {
++ 			this.eaglerMessageController = new LegacyMessageController(eaglerProtocol, handler,
++ 					GamePluginMessageConstants.SERVER_TO_CLIENT,
++ 					(ch, msg) -> sendPacket(new S3FPacketCustomPayload(ch, msg)));
++ 		}
+
+> INSERT  2 : 18  @  2
+
++ 	public MessageController getEaglerMessageController() {
 + 		return eaglerMessageController;
 + 	}
 + 
-+ 	public void setEaglerMessageController(GameProtocolMessageController eaglerMessageController) {
++ 	public void setEaglerMessageController(MessageController eaglerMessageController) {
 + 		this.eaglerMessageController = eaglerMessageController;
 + 	}
 + 
 + 	public GamePluginMessageProtocol getEaglerMessageProtocol() {
-+ 		return eaglerMessageController != null ? eaglerMessageController.protocol : null;
++ 		return eaglerMessageController != null ? eaglerMessageController.getProtocol() : null;
 + 	}
 + 
 + 	public void sendEaglerMessage(GameMessagePacket packet) {
-+ 		try {
-+ 			eaglerMessageController.sendPacket(packet);
-+ 		} catch (IOException e) {
-+ 			logger.error("Failed to send eaglercraft plugin message packet: " + packet);
-+ 			logger.error(e);
-+ 		}
++ 		eaglerMessageController.sendPacket(packet);
 + 	}
 + 
 
@@ -268,10 +285,10 @@
 + 					}
 + 				}
 + 			}
-+ 		} else {
++ 		} else if (eaglerMessageController instanceof LegacyMessageController) {
 + 			try {
-+ 				eaglerMessageController.handlePacket(c17packetcustompayload.getChannelName(),
-+ 						c17packetcustompayload.getBufferData());
++ 				((LegacyMessageController) eaglerMessageController)
++ 						.handlePacket(c17packetcustompayload.getChannelName(), c17packetcustompayload.getBufferData());
 + 			} catch (IOException e) {
 + 				logger.error("Couldn't read \"{}\" packet as an eaglercraft plugin message!",
 + 						c17packetcustompayload.getChannelName());

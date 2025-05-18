@@ -17,7 +17,6 @@
 package net.lax1dude.eaglercraft.v1_8.internal.buffer;
 
 import org.teavm.interop.Address;
-import org.teavm.interop.DirectMalloc;
 
 public class DirectMallocFloatBuffer extends FloatBuffer {
 
@@ -147,7 +146,7 @@ public class DirectMallocFloatBuffer extends FloatBuffer {
 			DirectMallocFloatBuffer c = (DirectMallocFloatBuffer)src;
 			int l = c.limit - c.position;
 			if(position + l > limit) throw Buffer.makeIOOBE(position + l - 1);
-			DirectMalloc.memcpy(address.add(position << SHIFT), c.address.add(c.position << SHIFT), l << SHIFT);
+			Address.moveMemoryBlock(c.address.add(c.position << SHIFT), address.add(position << SHIFT), l << SHIFT);
 			position += l;
 			c.position += l;
 		}else {

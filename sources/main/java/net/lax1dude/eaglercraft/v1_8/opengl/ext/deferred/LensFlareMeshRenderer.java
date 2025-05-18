@@ -89,7 +89,7 @@ public class LensFlareMeshRenderer {
 
 		streaksVertexArray = _wglGenVertexArrays();
 		EaglercraftGPU.bindGLVertexArray(streaksVertexArray);
-		EaglercraftGPU.attachQuad16EmulationBuffer(16, true);
+		EaglercraftGPU.attachQuad16EmulationBuffer(true);
 
 		_wglEnableVertexAttribArray(0);
 		_wglVertexAttribPointer(0, 2, GL_FLOAT, false, 16, 0);

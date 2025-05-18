@@ -1,0 +1,26 @@
+
+# examples:
+
+# use-proxy: cors proxy here [$url$]
+# use-gateway: ipfs gateway here [$cid$,$path$]
+# url: url here
+# ipfs: cid here
+# list: url to another list
+
+list: https://eaglercraft.com/dl/cors/u50_backup.list
+#url: https://eaglercraft.com/dl/cors/u50_backup.dat
+
+ipfs: bafybeiakzrybcx52rxkjjtamqpdwhuqmsgi5bwmktjsvnnqpm67iajecnm
+
+use-gateway: https://gateway.ipfs.io/ipfs/$cid$/$path$
+use-gateway: https://4everland.io/ipfs/$cid$/$path$
+use-gateway: https://dweb.link/ipfs/$cid$/$path$
+use-gateway: https://cloudflare-ipfs.com/ipfs/$cid$/$path$
+use-gateway: https://cf-ipfs.com/ipfs/$cid$/$path$
+use-gateway: https://w3s.link/ipfs/$cid$/$path$
+use-gateway: https://nftstorage.link/ipfs/$cid$/$path$
+
+use-gateway: https://$cid$.ipfs.gateway.ipfs.io/$path$
+use-gateway: https://$cid$.ipfs.dweb.link/$path$
+use-gateway: https://$cid$.ipfs.cf-ipfs.com/$path$
+use-gateway: https://$cid$.ipfs.nftstorage.link/$path$

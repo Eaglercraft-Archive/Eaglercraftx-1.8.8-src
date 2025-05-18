@@ -22,6 +22,7 @@ import java.util.List;
 
 import static net.lax1dude.eaglercraft.v1_8.internal.PlatformOpenGL.*;
 
+import net.lax1dude.eaglercraft.v1_8.Display;
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.internal.IProgramGL;
 import net.lax1dude.eaglercraft.v1_8.internal.IShaderGL;
@@ -78,6 +79,7 @@ public class SpriteLevelMixer {
 		_wglCompileShader(frag);
 
 		if(_wglGetShaderi(frag, GL_COMPILE_STATUS) != GL_TRUE) {
+			Display.checkContextLost();
 			LOGGER.error("Failed to compile GL_FRAGMENT_SHADER \"" + fragmentShaderPath + "\" for SpriteLevelMixer!");
 			String log = _wglGetShaderInfoLog(frag);
 			if(log != null) {
@@ -106,6 +108,7 @@ public class SpriteLevelMixer {
 		_wglDeleteShader(frag);
 
 		if(_wglGetProgrami(shaderProgram, GL_LINK_STATUS) != GL_TRUE) {
+			Display.checkContextLost();
 			LOGGER.error("Failed to link shader program for SpriteLevelMixer!");
 			String log = _wglGetProgramInfoLog(shaderProgram);
 			if(log != null) {

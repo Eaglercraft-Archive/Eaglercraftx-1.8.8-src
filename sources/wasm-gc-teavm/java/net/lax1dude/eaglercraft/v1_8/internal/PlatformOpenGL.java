@@ -39,6 +39,7 @@ import net.lax1dude.eaglercraft.v1_8.internal.buffer.FloatBuffer;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.IntBuffer;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.WASMGCBufferAllocator;
 import net.lax1dude.eaglercraft.v1_8.internal.wasm_gc_teavm.BetterJSStringConverter;
+import net.lax1dude.eaglercraft.v1_8.internal.wasm_gc_teavm.MemoryViews;
 import net.lax1dude.eaglercraft.v1_8.internal.wasm_gc_teavm.WebGLBackBuffer;
 import net.lax1dude.eaglercraft.v1_8.internal.wasm_gc_teavm.WebGLQuery;
 import net.lax1dude.eaglercraft.v1_8.internal.wasm_gc_teavm.WebGLVertexArray;
@@ -164,23 +165,42 @@ public class PlatformOpenGL {
 	public static native void _wglReadBuffer(int glEnum);
 
 	public static void _wglReadPixels(int x, int y, int width, int height, int format, int type, ByteBuffer buffer) {
-		_wglReadPixelsN(x, y, width, height, format, type, WASMGCBufferAllocator.getUnsignedByteBufferView(buffer));
+		if (glesVers == 200) {
+			_wglReadPixelsN(x, y, width, height, format, type, WASMGCBufferAllocator.getUnsignedByteBufferView(buffer));
+		} else {
+			_wglReadPixelsN(x, y, width, height, format, type, MemoryViews.u8, WASMGCBufferAllocator.getByteBufferViewIndex(buffer));
+		}
 	}
 
 	public static void _wglReadPixels_u16(int x, int y, int width, int height, int format, int type, ByteBuffer buffer) {
-		_wglReadPixelsN(x, y, width, height, format, type, WASMGCBufferAllocator.getUnsignedShortBufferView(buffer));
+		if (glesVers == 200) {
+			_wglReadPixelsN(x, y, width, height, format, type, WASMGCBufferAllocator.getUnsignedShortBufferView(buffer));
+		} else {
+			_wglReadPixelsN(x, y, width, height, format, type, MemoryViews.u16, WASMGCBufferAllocator.getShortBufferViewIndex(buffer));
+		}
 	}
 
 	public static void _wglReadPixels(int x, int y, int width, int height, int format, int type, IntBuffer buffer) {
-		_wglReadPixelsN(x, y, width, height, format, type, WASMGCBufferAllocator.getIntBufferView(buffer));
+		if (glesVers == 200) {
+			_wglReadPixelsN(x, y, width, height, format, type, WASMGCBufferAllocator.getIntBufferView(buffer));
+		} else {
+			_wglReadPixelsN(x, y, width, height, format, type, MemoryViews.i32, WASMGCBufferAllocator.getIntBufferViewIndex(buffer));
+		}
 	}
 
 	public static void _wglReadPixels(int x, int y, int width, int height, int format, int type, FloatBuffer buffer) {
-		_wglReadPixelsN(x, y, width, height, format, type, WASMGCBufferAllocator.getFloatBufferView(buffer));
+		if (glesVers == 200) {
+			_wglReadPixelsN(x, y, width, height, format, type, WASMGCBufferAllocator.getFloatBufferView(buffer));
+		} else {
+			_wglReadPixelsN(x, y, width, height, format, type, MemoryViews.f32, WASMGCBufferAllocator.getFloatBufferViewIndex(buffer));
+		}
 	}
 
 	@Import(module = "platformOpenGL", name = "glReadPixels")
 	static native void _wglReadPixelsN(int x, int y, int width, int height, int format, int type, ArrayBufferView array);
+
+	@Import(module = "platformOpenGL", name = "glReadPixels0")
+	static native void _wglReadPixelsN(int x, int y, int width, int height, int format, int type, ArrayBufferView array, int offset);
 
 	@Import(module = "platformOpenGL", name = "glPolygonOffset")
 	public static native void _wglPolygonOffset(float f1, float f2);
@@ -217,7 +237,17 @@ public class PlatformOpenGL {
 	static native WebGLProgram _wglCreateProgramN();
 
 	public static IShaderGL _wglCreateShader(int type) {
-		return new OpenGLObjects.ShaderGL(_wglCreateShaderN(type));
+		WebGLShader shader = _wglCreateShaderN(type);
+		if(shader == null) {
+			// Workaround for chrome not handling lost context correctly in shaderSource
+			// "Failed to execute 'shaderSource' on 'WebGL2RenderingContext': parameter 1 is not of type 'WebGLShader'."
+			if (PlatformInput.contextLost()) {
+				throw new ContextLostError();
+			} else {
+				throw new Error("createShader returned null and the context is not lost");
+			}
+		}
+		return new OpenGLObjects.ShaderGL(shader);
 	}
 
 	@Import(module = "platformOpenGL", name = "glCreateShader")
@@ -311,34 +341,64 @@ public class PlatformOpenGL {
 	public static native void _wglBufferData(int target, int size, int usage);
 
 	public static void _wglBufferData(int target, ByteBuffer buffer, int usage) {
-		_wglBufferDataN(target, WASMGCBufferAllocator.getUnsignedByteBufferView(buffer), usage);
+		if (glesVers == 200) {
+			_wglBufferDataN(target, WASMGCBufferAllocator.getUnsignedByteBufferView(buffer), usage);
+		} else {
+			_wglBufferDataN(target, MemoryViews.u8, usage, WASMGCBufferAllocator.getByteBufferViewIndex(buffer), buffer.remaining());
+		}
 	}
 
 	public static void _wglBufferData(int target, IntBuffer buffer, int usage) {
-		_wglBufferDataN(target, WASMGCBufferAllocator.getIntBufferView(buffer), usage);
+		if (glesVers == 200) {
+			_wglBufferDataN(target, WASMGCBufferAllocator.getIntBufferView(buffer), usage);
+		} else {
+			_wglBufferDataN(target, MemoryViews.i32, usage, WASMGCBufferAllocator.getIntBufferViewIndex(buffer), buffer.remaining());
+		}
 	}
 
 	public static void _wglBufferData(int target, FloatBuffer buffer, int usage) {
-		_wglBufferDataN(target, WASMGCBufferAllocator.getFloatBufferView(buffer), usage);
+		if (glesVers == 200) {
+			_wglBufferDataN(target, WASMGCBufferAllocator.getFloatBufferView(buffer), usage);
+		} else {
+			_wglBufferDataN(target, MemoryViews.f32, usage, WASMGCBufferAllocator.getFloatBufferViewIndex(buffer), buffer.remaining());
+		}
 	}
 
 	@Import(module = "platformOpenGL", name = "glBufferData")
 	static native void _wglBufferDataN(int target, ArrayBufferView typedArray, int usage);
 
+	@Import(module = "platformOpenGL", name = "glBufferData0")
+	static native void _wglBufferDataN(int target, ArrayBufferView typedArray, int usage, int srcOffset, int length);
+
 	public static void _wglBufferSubData(int target, int dstOffset, ByteBuffer buffer) {
-		_wglBufferSubDataN(target, dstOffset, WASMGCBufferAllocator.getUnsignedByteBufferView(buffer));
+		if (glesVers == 200) {
+			_wglBufferSubDataN(target, dstOffset, WASMGCBufferAllocator.getUnsignedByteBufferView(buffer));
+		} else {
+			_wglBufferSubDataN(target, dstOffset, MemoryViews.u8, WASMGCBufferAllocator.getByteBufferViewIndex(buffer), buffer.remaining());
+		}
 	}
 
 	public static void _wglBufferSubData(int target, int dstOffset, IntBuffer buffer) {
-		_wglBufferSubDataN(target, dstOffset, WASMGCBufferAllocator.getIntBufferView(buffer));
+		if (glesVers == 200) {
+			_wglBufferSubDataN(target, dstOffset, WASMGCBufferAllocator.getIntBufferView(buffer));
+		} else {
+			_wglBufferSubDataN(target, dstOffset, MemoryViews.i32, WASMGCBufferAllocator.getIntBufferViewIndex(buffer), buffer.remaining());
+		}
 	}
 
 	public static void _wglBufferSubData(int target, int dstOffset, FloatBuffer buffer) {
-		_wglBufferSubDataN(target, dstOffset, WASMGCBufferAllocator.getFloatBufferView(buffer));
+		if (glesVers == 200) {
+			_wglBufferSubDataN(target, dstOffset, WASMGCBufferAllocator.getFloatBufferView(buffer));
+		} else {
+			_wglBufferSubDataN(target, dstOffset, MemoryViews.f32, WASMGCBufferAllocator.getFloatBufferViewIndex(buffer), buffer.remaining());
+		}
 	}
 
 	@Import(module = "platformOpenGL", name = "glBufferSubData")
 	static native void _wglBufferSubDataN(int target, int dstOffset, ArrayBufferView typedArray);
+
+	@Import(module = "platformOpenGL", name = "glBufferSubData0")
+	static native void _wglBufferSubDataN(int target, int dstOffset, ArrayBufferView typedArray, int srcOffset, int length);
 
 	public static void _wglBindVertexArray(IVertexArrayGL objId) {
 		_wglBindVertexArrayN(objId != null ? ((OpenGLObjects.VertexArrayGL)objId).ptr : null);
@@ -378,75 +438,136 @@ public class PlatformOpenGL {
 
 	public static void _wglTexImage3D(int target, int level, int internalFormat, int width, int height, int depth,
 			int border, int format, int type, ByteBuffer data) {
-		_wglTexImage3DN(target, level, internalFormat, width, height, depth, border, format, type,
-				data != null ? WASMGCBufferAllocator.getUnsignedByteBufferView(data) : null);
+		if (data == null) {
+			_wglTexImage3DN(target, level, internalFormat, width, height, depth, border, format, type, null);
+		} else {
+			_wglTexImage3DN(target, level, internalFormat, width, height, depth, border, format, type,
+					MemoryViews.u8, WASMGCBufferAllocator.getByteBufferViewIndex(data));
+		}
 	}
 
 	@Import(module = "platformOpenGL", name = "glTexImage3D")
 	static native void _wglTexImage3DN(int target, int level, int internalFormat, int width, int height, int depth,
 			int border, int format, int type, ArrayBufferView typedArray);
 
+	@Import(module = "platformOpenGL", name = "glTexImage3D0")
+	static native void _wglTexImage3DN(int target, int level, int internalFormat, int width, int height, int depth,
+			int border, int format, int type, ArrayBufferView typedArray, int offset);
+
 	public static void _wglTexImage2D(int target, int level, int internalFormat, int width, int height, int border,
 			int format, int type, ByteBuffer data) {
-		_wglTexImage2DN(target, level, internalFormat, width, height, border, format, type,
-				data != null ? WASMGCBufferAllocator.getUnsignedByteBufferView(data) : null);
+		if (data == null || glesVers == 200) {
+			_wglTexImage2DN(target, level, internalFormat, width, height, border, format, type,
+					data != null ? WASMGCBufferAllocator.getUnsignedByteBufferView(data) : null);
+		} else {
+			_wglTexImage2DN(target, level, internalFormat, width, height, border, format, type,
+					MemoryViews.u8, WASMGCBufferAllocator.getByteBufferViewIndex(data));
+		}
 	}
 
 	public static void _wglTexImage2Du16(int target, int level, int internalFormat, int width, int height, int border,
 			int format, int type, ByteBuffer data) {
-		_wglTexImage2DN(target, level, internalFormat, width, height, border, format, type,
-				data != null ? WASMGCBufferAllocator.getUnsignedShortBufferView(data) : null);
+		if (data == null || glesVers == 200) {
+			_wglTexImage2DN(target, level, internalFormat, width, height, border, format, type,
+					data != null ? WASMGCBufferAllocator.getUnsignedShortBufferView(data) : null);
+		} else {
+			_wglTexImage2DN(target, level, internalFormat, width, height, border, format, type,
+					MemoryViews.u16, WASMGCBufferAllocator.getShortBufferViewIndex(data));
+		}
 	}
 
 	public static void _wglTexImage2Df32(int target, int level, int internalFormat, int width, int height, int border,
 			int format, int type, ByteBuffer data) {
-		_wglTexImage2DN(target, level, internalFormat, width, height, border, format, type,
-				data != null ? WASMGCBufferAllocator.getFloatBufferView(data) : null);
+		if (data == null || glesVers == 200) {
+			_wglTexImage2DN(target, level, internalFormat, width, height, border, format, type,
+					data != null ? WASMGCBufferAllocator.getFloatBufferView(data) : null);
+		} else {
+			_wglTexImage2DN(target, level, internalFormat, width, height, border, format, type,
+					MemoryViews.f32, WASMGCBufferAllocator.getFloatBufferViewIndex(data));
+		}
 	}
 
 	public static void _wglTexImage2D(int target, int level, int internalFormat, int width,
 			int height, int border, int format, int type, IntBuffer data) {
-		_wglTexImage2DN(target, level, internalFormat, width, height, border, format, type,
-				data != null ? WASMGCBufferAllocator.getUnsignedByteBufferView(data) : null);
+		if (data == null || glesVers == 200) {
+			_wglTexImage2DN(target, level, internalFormat, width, height, border, format, type,
+					data != null ? WASMGCBufferAllocator.getUnsignedByteBufferView(data) : null);
+		} else {
+			_wglTexImage2DN(target, level, internalFormat, width, height, border, format, type,
+					MemoryViews.u8, WASMGCBufferAllocator.getByteBufferViewIndex(data));
+		}
 	}
 
 	public static void _wglTexImage2Df32(int target, int level, int internalFormat, int width,
 			int height, int border, int format, int type, FloatBuffer data) {
-		_wglTexImage2DN(target, level, internalFormat, width, height, border, format, type,
-				data != null ? WASMGCBufferAllocator.getFloatBufferView(data) : null);
+		if (data == null || glesVers == 200) {
+			_wglTexImage2DN(target, level, internalFormat, width, height, border, format, type,
+					data != null ? WASMGCBufferAllocator.getFloatBufferView(data) : null);
+		} else {
+			_wglTexImage2DN(target, level, internalFormat, width, height, border, format, type,
+					MemoryViews.f32, WASMGCBufferAllocator.getFloatBufferViewIndex(data));
+		}
 	}
 
 	@Import(module = "platformOpenGL", name = "glTexImage2D")
 	static native void _wglTexImage2DN(int target, int level, int internalFormat, int width, int height, int border,
 			int format, int type, ArrayBufferView typedArray);
 
+	@Import(module = "platformOpenGL", name = "glTexImage2D0")
+	static native void _wglTexImage2DN(int target, int level, int internalFormat, int width, int height, int border,
+			int format, int type, ArrayBufferView typedArray, int offset);
+
 	public static void _wglTexSubImage2D(int target, int level, int xoffset, int yoffset,
 			int width, int height, int format, int type, ByteBuffer data) {
-		_wglTexSubImage2D(target, level, xoffset, yoffset, width, height, format, type,
-				data != null ? WASMGCBufferAllocator.getUnsignedByteBufferView(data) : null);
+		if (data == null || glesVers == 200) {
+			_wglTexSubImage2D(target, level, xoffset, yoffset, width, height, format, type,
+					data != null ? WASMGCBufferAllocator.getUnsignedByteBufferView(data) : null);
+		} else {
+			_wglTexSubImage2D(target, level, xoffset, yoffset, width, height, format, type,
+					MemoryViews.u8, WASMGCBufferAllocator.getByteBufferViewIndex(data));
+		}
 	}
 
 	public static void _wglTexSubImage2Du16(int target, int level, int xoffset, int yoffset,
 			int width, int height, int format, int type, ByteBuffer data) {
-		_wglTexSubImage2D(target, level, xoffset, yoffset, width, height, format, type,
-				data != null ? WASMGCBufferAllocator.getUnsignedShortBufferView(data) : null);
+		if (data == null || glesVers == 200) {
+			_wglTexSubImage2D(target, level, xoffset, yoffset, width, height, format, type,
+					data != null ? WASMGCBufferAllocator.getUnsignedShortBufferView(data) : null);
+		} else {
+			_wglTexSubImage2D(target, level, xoffset, yoffset, width, height, format, type,
+					MemoryViews.u16, WASMGCBufferAllocator.getShortBufferViewIndex(data));
+		}
 	}
 
 	public static void _wglTexSubImage2D(int target, int level, int xoffset, int yoffset,
 			int width, int height, int format, int type, IntBuffer data) {
-		_wglTexSubImage2D(target, level, xoffset, yoffset, width, height, format, type,
-				data != null ? WASMGCBufferAllocator.getUnsignedByteBufferView(data) : null);
+		if (data == null || glesVers == 200) {
+			_wglTexSubImage2D(target, level, xoffset, yoffset, width, height, format, type,
+					data != null ? WASMGCBufferAllocator.getUnsignedByteBufferView(data) : null);
+		} else {
+			_wglTexSubImage2D(target, level, xoffset, yoffset, width, height, format, type,
+					MemoryViews.u8, WASMGCBufferAllocator.getByteBufferViewIndex(data));
+		}
 	}
 
 	public static void _wglTexSubImage2Df32(int target, int level, int xoffset, int yoffset,
 			int width, int height, int format, int type, FloatBuffer data) {
-		_wglTexSubImage2D(target, level, xoffset, yoffset, width, height, format, type,
-				data != null ? WASMGCBufferAllocator.getFloatBufferView(data) : null);
+		if (data == null || glesVers == 200) {
+			_wglTexSubImage2D(target, level, xoffset, yoffset, width, height, format, type,
+					data != null ? WASMGCBufferAllocator.getFloatBufferView(data) : null);
+		} else {
+			_wglTexSubImage2D(target, level, xoffset, yoffset, width, height, format, type,
+					MemoryViews.f32, WASMGCBufferAllocator.getFloatBufferViewIndex(data));
+		}
 	}
 
 	@Import(module = "platformOpenGL", name = "glTexSubImage2D")
 	static native void _wglTexSubImage2D(int target, int level, int offsetx, int offsety, int width, int height,
 			int format, int type, ArrayBufferView typedArray);
+
+	@Import(module = "platformOpenGL", name = "glTexSubImage2D0")
+	static native void _wglTexSubImage2D(int target, int level, int offsetx, int offsety, int width, int height,
+			int format, int type, ArrayBufferView typedArray, int offset);
 
 	@Import(module = "platformOpenGL", name = "glCopyTexSubImage2D")
 	public static native void _wglCopyTexSubImage2D(int target, int level, int xoffset, int yoffset,

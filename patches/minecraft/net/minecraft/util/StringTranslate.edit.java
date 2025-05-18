@@ -38,14 +38,13 @@
 ~ 	private StringTranslate() {
 ~ 	}
 
-> CHANGE  1 : 25  @  1 : 9
+> CHANGE  1 : 24  @  1 : 9
 
 ~ 	public static void initClient() {
 ~ 		try (InputStream inputstream = EagRuntime.getRequiredResourceStream("/assets/minecraft/lang/en_US.lang")) {
 ~ 			initServer(IOUtils.readLines(inputstream, StandardCharsets.UTF_8));
 ~ 			fallbackInstance = new StringTranslate();
 ~ 			fallbackInstance.replaceWith(instance.languageList);
-~ 			SingleplayerServerController.updateLocale(dump());
 ~ 		} catch (IOException e) {
 ~ 			EagRuntime.debugPrintStackTrace(e);
 ~ 		}
@@ -75,9 +74,10 @@
 
 ~ 	public static void replaceWith(Map<String, String> parMap) {
 
-> CHANGE  2 : 3  @  2 : 3
+> CHANGE  2 : 4  @  2 : 3
 
 ~ 		instance.lastUpdateTimeInMilliseconds = EagRuntime.steadyTimeMillis();
+~ 		SingleplayerServerController.updateLocale(dump());
 
 > CHANGE  2 : 3  @  2 : 3
 

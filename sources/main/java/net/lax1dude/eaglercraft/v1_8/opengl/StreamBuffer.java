@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024 lax1dude. All Rights Reserved.
+ * Copyright (c) 2023-2025 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -24,11 +24,7 @@ import static net.lax1dude.eaglercraft.v1_8.internal.PlatformOpenGL.*;
 
 public class StreamBuffer {
 
-	public static final int poolSize = 16;
-
-	public final int initialSize;
-	public final int initialCount;
-	public final int maxCount;
+	public static final int poolSize = 4;
 
 	protected static final PoolInstance[] pool = new PoolInstance[poolSize];
 	protected static int poolBufferID = 0;
@@ -55,21 +51,23 @@ public class StreamBuffer {
 	}
 
 	private static void resizeInstance(PoolInstance instance, int requiredMemory) {
-		if(instance.vertexBuffer == null) {
-			instance.vertexBuffer = _wglGenBuffers();
+		IBufferGL buffer = instance.vertexBuffer;
+		if (buffer == null) {
+			buffer = _wglGenBuffers();
+			instance.vertexBuffer = buffer;
 		}
-		if(instance.vertexBufferSize < requiredMemory) {
-			int newSize = (requiredMemory & 0xFFFFF000) + 0x2000;
-			EaglercraftGPU.bindGLArrayBuffer(instance.vertexBuffer);
-			_wglBufferData(GL_ARRAY_BUFFER, newSize, GL_STREAM_DRAW);
+		int newSize = instance.vertexBufferSize;
+		if (newSize < requiredMemory) {
+			newSize = (requiredMemory + 0xFFFF) & 0xFFFF0000;
 			instance.vertexBufferSize = newSize;
 		}
+		EaglercraftGPU.bindGLArrayBuffer(buffer);
+		_wglBufferData(GL_ARRAY_BUFFER, newSize, GL_STREAM_DRAW);
 	}
 
 	protected StreamBufferInstance[] buffers;
 
 	protected int currentBufferId = 0;
-	protected int overflowCounter = 0;
 
 	protected final IStreamBufferInitializer initializer;
 
@@ -95,19 +93,20 @@ public class StreamBuffer {
 		void initialize(IVertexArrayGL vertexArray, IBufferGL vertexBuffer);
 	}
 
-	public StreamBuffer(int initialSize, int initialCount, int maxCount, IStreamBufferInitializer initializer) {
-		if(maxCount > poolSize) {
-			maxCount = poolSize;
+	public StreamBuffer(IStreamBufferInitializer initializer) {
+		this(poolSize, initializer);
+	}
+
+	public StreamBuffer(int count, IStreamBufferInitializer initializer) {
+		if(count > poolSize) {
+			count = poolSize;
 		}
-		this.buffers = new StreamBufferInstance[initialCount];
+		this.buffers = new StreamBufferInstance[count];
 		for(int i = 0; i < this.buffers.length; ++i) {
 			StreamBufferInstance j = new StreamBufferInstance();
 			j.poolInstance = fillPoolInstance();
 			this.buffers[i] = j;
 		}
-		this.initialSize = initialSize;
-		this.initialCount = initialCount;
-		this.maxCount = maxCount;
 		this.initializer = initializer;
 	}
 
@@ -121,79 +120,12 @@ public class StreamBuffer {
 		return next;
 	}
 
-	public void optimize() {
-		overflowCounter += currentBufferId - buffers.length;
-		if(overflowCounter < -25) {
-			int newCount = buffers.length - 1 + ((overflowCounter + 25) / 5);
-			if(newCount < initialCount) {
-				newCount = initialCount;
-			}
-			if(newCount < buffers.length) {
-				StreamBufferInstance[] newArray = new StreamBufferInstance[newCount];
-				for(int i = 0; i < buffers.length; ++i) {
-					if(i < newArray.length) {
-						newArray[i] = buffers[i];
-					}else {
-						if(buffers[i].vertexArray != null) {
-							EaglercraftGPU.destroyGLVertexArray(buffers[i].vertexArray);
-						}
-					}
-				}
-				buffers = newArray;
-				refill();
-			}
-			overflowCounter = 0;
-		}else if(overflowCounter > 15) {
-			int newCount = buffers.length + 1 + ((overflowCounter - 15) / 5);
-			if(newCount > maxCount) {
-				newCount = maxCount;
-			}
-			if(newCount > buffers.length) {
-				StreamBufferInstance[] newArray = new StreamBufferInstance[newCount];
-				for(int i = 0; i < newArray.length; ++i) {
-					if(i < buffers.length) {
-						newArray[i] = buffers[i];
-					}else {
-						newArray[i] = new StreamBufferInstance();
-					}
-				}
-				buffers = newArray;
-				refill();
-			}
-			overflowCounter = 0;
-		}
-		currentBufferId = 0;
-	}
-
-	private void refill() {
-		for(int i = 0; i < buffers.length; ++i) {
-			PoolInstance j = fillPoolInstance();
-			StreamBufferInstance k = buffers[i];
-			if(j != k.poolInstance) {
-				PoolInstance l = k.poolInstance;
-				k.poolInstance = j;
-				if(k.vertexArray != null) {
-					if(j.vertexBuffer == null) {
-						resizeInstance(j, l.vertexBufferSize);
-					}
-					initializer.initialize(k.vertexArray, j.vertexBuffer);
-				}
-			}
-		}
-	}
-
 	public void destroy() {
 		for(int i = 0; i < buffers.length; ++i) {
 			StreamBufferInstance next = buffers[i];
 			if(next.vertexArray != null) {
 				EaglercraftGPU.destroyGLVertexArray(next.vertexArray);
 			}
-		}
-		buffers = new StreamBufferInstance[initialCount];
-		for(int i = 0; i < initialCount; ++i) {
-			StreamBufferInstance j = new StreamBufferInstance();
-			j.poolInstance = fillPoolInstance();
-			buffers[i] = j;
 		}
 	}
 

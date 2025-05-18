@@ -23,6 +23,6 @@
 > CHANGE  11 : 13  @  11 : 12
 
 ~ 		Minecraft.getMinecraft().getTextureManager().bindTexture(
-~ 				Minecraft.getMinecraft().getNetHandler().getSkinCache().getSkin(profile).getResourceLocation());
+~ 				Minecraft.getMinecraft().getNetHandler().getTextureCache().getPlayerSkin(profile).getLocation());
 
 > EOF

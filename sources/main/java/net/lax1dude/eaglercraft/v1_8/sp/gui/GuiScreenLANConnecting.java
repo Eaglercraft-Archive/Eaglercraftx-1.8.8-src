@@ -19,7 +19,7 @@ package net.lax1dude.eaglercraft.v1_8.sp.gui;
 import net.lax1dude.eaglercraft.v1_8.EaglercraftVersion;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformWebRTC;
 import net.lax1dude.eaglercraft.v1_8.profile.EaglerProfile;
-import net.lax1dude.eaglercraft.v1_8.socket.ConnectionHandshake;
+import net.lax1dude.eaglercraft.v1_8.socket.protocol.handshake.HandshakerHandler;
 import net.lax1dude.eaglercraft.v1_8.sp.lan.LANClientNetworkManager;
 import net.lax1dude.eaglercraft.v1_8.sp.relay.RelayManager;
 import net.lax1dude.eaglercraft.v1_8.sp.relay.RelayServer;
@@ -101,8 +101,11 @@ public class GuiScreenLANConnecting extends GuiScreen {
 			if(++renderCount > 1) {
 				RelayServerSocket sock;
 				if(relay == null) {
-					sock = RelayManager.relayManager.getWorkingRelay((str) -> ls.resetProgressAndMessage("Connecting: " + str), 0x02, code);
+					ls.resetProgressAndMessage("Connecting to '" + code + "'...");
+					sock = RelayManager.relayManager.getWorkingRelay((str) -> ls.displayLoadingString("Connecting: " + str), 0x02, code);
 				}else {
+					ls.resetProgressAndMessage("Connecting to '" + code + "'...");
+					ls.displayLoadingString("Connecting: " + relay.address);
 					sock = RelayManager.relayManager.connectHandshake(relay, 0x02, code);
 				}
 				if(sock == null) {
@@ -125,7 +128,7 @@ public class GuiScreenLANConnecting extends GuiScreen {
 				networkManager.setNetHandler(new NetHandlerSingleplayerLogin(networkManager, mc, parent));
 				networkManager.sendPacket(new C00PacketLoginStart(this.mc.getSession().getProfile(),
 						EaglerProfile.getSkinPacket(3), EaglerProfile.getCapePacket(),
-						ConnectionHandshake.getSPHandshakeProtocolData(), EaglercraftVersion.clientBrandUUID));
+						HandshakerHandler.getSPHandshakeProtocolData(), EaglercraftVersion.clientBrandUUID));
 			}
 		}
 	}

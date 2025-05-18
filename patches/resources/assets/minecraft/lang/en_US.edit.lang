@@ -16,7 +16,7 @@
 ~ eaglercraft.resourcePack.load.loading=Loading resource pack...
 ~ eaglercraft.resourcePack.load.deleting=Deleting resource pack...
 
-> INSERT  1 : 246  @  1
+> INSERT  1 : 247  @  1
 
 + eaglercraft.gui.exitKey=Use '%s' to close this screen!
 + eaglercraft.gui.exitKeyRetarded=Use Backtick (`) to close this screen!
@@ -201,8 +201,9 @@
 + eaglercraft.shaders.gui.option.LIGHT_SHAFTS.label=God Rays
 + 
 + eaglercraft.shaders.gui.option.LIGHT_SHAFTS.desc.0=Render god rays (light shafts) for sunlight and moonlight shadows
-+ eaglercraft.shaders.gui.option.LIGHT_SHAFTS.desc.2=ON: render god rays (slower)
-+ eaglercraft.shaders.gui.option.LIGHT_SHAFTS.desc.3=OFF: disable god rays (faster)
++ eaglercraft.shaders.gui.option.LIGHT_SHAFTS.desc.2=This shader tends to look unpleasent if the render distance is greater than the shadow map size
++ eaglercraft.shaders.gui.option.LIGHT_SHAFTS.desc.4=ON: render god rays (slower)
++ eaglercraft.shaders.gui.option.LIGHT_SHAFTS.desc.5=OFF: disable god rays (faster)
 + 
 + eaglercraft.shaders.gui.option.SCREEN_SPACE_REFLECTIONS.label=Raytracing
 + 
@@ -264,7 +265,7 @@
 + eaglercraft.command.clientStub=This command is client side!
 + 
 
-> INSERT  163 : 574  @  163
+> INSERT  163 : 578  @  163
 
 + eaglercraft.singleplayer.busy.killTask=Cancel Task
 + eaglercraft.singleplayer.busy.cancelWarning=Are you sure?
@@ -594,12 +595,16 @@
 + eaglercraft.fallbackWebViewScreen.openButton=Open
 + eaglercraft.fallbackWebViewScreen.exitButton=Exit
 + 
-+ eaglercraft.webviewPhishingWaring.title=WARNING!!!
-+ eaglercraft.webviewPhishingWaring.text0=If you see a login page, think before you enter a password
-+ eaglercraft.webviewPhishingWaring.text1=Passwords can be stolen by the owner of this server or website
-+ eaglercraft.webviewPhishingWaring.text2=Do not log in to accounts you don't want hackers to steal
-+ eaglercraft.webviewPhishingWaring.dontShowAgain=Do not show this message again
-+ eaglercraft.webviewPhishingWaring.continue=Continue
++ eaglercraft.webviewPhishingWarning.title=WARNING!!!
++ eaglercraft.webviewPhishingWarning.text0=If you see a login page, think before you enter a password
++ eaglercraft.webviewPhishingWarning.text1=Passwords can be stolen by the owner of this server or website
++ eaglercraft.webviewPhishingWarning.text2=Do not log in to accounts you don't want hackers to steal
++ eaglercraft.webviewPhishingWarning.dontShowAgain=Do not show this message again
++ eaglercraft.webviewPhishingWarning.continue=Continue
++ 
++ eaglercraft.webviewDisplayWarning.title=WebView Warning
++ eaglercraft.webviewDisplayWarning.text0=This server is attempting to display HTML content
++ eaglercraft.webviewDisplayWarning.text1=Would you like to continue?
 + 
 + eaglercraft.notifications.title=Notifications
 + eaglercraft.notifications.priority=Priority: %s

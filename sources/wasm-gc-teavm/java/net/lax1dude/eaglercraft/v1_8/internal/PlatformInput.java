@@ -990,7 +990,7 @@ public class PlatformInput {
 		functionKeyModifier = key;
 	}
 
-	public static void clearEvenBuffers() {
+	public static void clearEventBuffers() {
 		mouseEvents.clear();
 		keyEvents.clear();
 		//touchEvents.clear();

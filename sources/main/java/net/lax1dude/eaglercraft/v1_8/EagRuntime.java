@@ -69,10 +69,10 @@ public class EagRuntime {
 		operatingSystem = PlatformRuntime.getPlatformOS();
 		angleBackend = PlatformRuntime.getPlatformANGLE();
 		UpdateService.initialize();
-		EaglerXBungeeVersion.initialize();
 		EaglercraftGPU.warmUpCache();
 		ScreenRecordingController.initialize();
 		PlatformRuntime.postCreate();
+		Display.checkContextLost();
 	}
 
 	public static void destroy() {

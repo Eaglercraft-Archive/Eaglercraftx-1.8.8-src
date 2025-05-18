@@ -5,13 +5,12 @@
 # Version: 1.0
 # Author: lax1dude
 
-> INSERT  2 : 8  @  2
+> INSERT  2 : 7  @  2
 
 + import net.lax1dude.eaglercraft.v1_8.minecraft.EaglerTextureAtlasSprite;
 + import net.lax1dude.eaglercraft.v1_8.opengl.WorldRenderer;
 + import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.BlockVertexIDs;
 + import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.DeferredStateManager;
-+ import net.lax1dude.eaglercraft.v1_8.opengl.ext.dynamiclights.DynamicLightsStateManager;
 + import net.minecraft.block.Block;
 
 > DELETE  4  @  4 : 6
@@ -25,7 +24,7 @@
 
 + 		BlockPos tmp = new BlockPos(0, 0, 0);
 + 		boolean deferred = DeferredStateManager.isDeferredRenderer();
-+ 		boolean isDynamicLights = deferred || DynamicLightsStateManager.isDynamicLightsRender();
++ 		boolean isDynamicLights = deferred;// || DynamicLightsStateManager.isDynamicLightsRender();
 
 > INSERT  1 : 3  @  1
 

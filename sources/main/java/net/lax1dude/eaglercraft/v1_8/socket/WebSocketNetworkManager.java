@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024 lax1dude. All Rights Reserved.
+ * Copyright (c) 2022-2025 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -71,6 +71,11 @@ public class WebSocketNetworkManager extends EaglercraftNetworkManager {
 			++debugPacketCounter;
 			try {
 				byte[] asByteArray = next.getByteArray();
+				
+				if(injectedController != null && injectedController.handlePacket(asByteArray, 0)) {
+					continue;
+				}
+				
 				ByteBuf nettyBuffer = Unpooled.buffer(asByteArray, asByteArray.length);
 				nettyBuffer.writerIndex(asByteArray.length);
 				PacketBuffer input = new PacketBuffer(nettyBuffer);
@@ -148,6 +153,15 @@ public class WebSocketNetworkManager extends EaglercraftNetworkManager {
 		}else {
 			return false;
 		}
+	}
+
+	@Override
+	public void injectRawFrame(byte[] data) {
+		if(!isChannelOpen()) {
+			logger.error("Frame was injected on a closed connection");
+			return;
+		}
+		webSocketClient.send(data);
 	}
 
 }

@@ -78,3 +78,11 @@ eagruntimeImpl.WASMGCBufferAllocator["getIntBufferView"] = function(addr, length
 eagruntimeImpl.WASMGCBufferAllocator["getFloatBufferView"] = function(addr, length) {
 	return new Float32Array(heapArrayBuffer, addr, length);
 }
+
+/**
+ * @param {function(Int8Array,Uint8Array,Int16Array,Uint16Array,Int32Array,Uint32Array,Float32Array)} cb
+ */
+eagruntimeImpl.WASMGCBufferAllocator["setHeapViewCallback"] = function(cb) {
+	heapResizeHandler = cb;
+	callHeapViewCallback();
+}

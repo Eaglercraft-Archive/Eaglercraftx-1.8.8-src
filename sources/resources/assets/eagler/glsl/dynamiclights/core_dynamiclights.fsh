@@ -145,12 +145,6 @@ void main() {
 #endif
 #endif
 
-#ifdef COMPILE_NORMAL_ATTRIB
-	vec3 normal = v_normal3f;
-#else
-	vec3 normal = u_uniformNormal3f;
-#endif
-
 #ifdef COMPILE_ENABLE_LIGHTMAP
 	float diffuse = 0.0;
 #ifdef COMPILE_LIGHTMAP_ATTRIB
@@ -163,13 +157,12 @@ void main() {
 	if(u_dynamicLightCount1i > 0) {
 		vec4 worldPosition4f = u_inverseViewMatrix4f * v_position4f;
 		worldPosition4f.xyz /= worldPosition4f.w;
-		vec3 normalVector3f = normalize(mat3(u_inverseViewMatrix4f) * normal);
 		int safeLightCount = u_dynamicLightCount1i > 12 ? 0 : u_dynamicLightCount1i;
 		for(int i = 0; i < safeLightCount; ++i) {
 			light = u_dynamicLightArray[i];
 			light.xyz = light.xyz - worldPosition4f.xyz;
 			len = length(light.xyz);
-			diffuse += max(dot(light.xyz / len, normalVector3f) * 0.8 + 0.2, 0.0) * max(light.w - len, 0.0);
+			diffuse += max(light.w - len, 0.0);
 		}
 		blockLight = min(blockLight + diffuse * 0.066667, 1.0);
 	}
@@ -188,6 +181,12 @@ void main() {
 	if(color.a < u_alphaTestRef1f) discard;
 #endif
 
+#endif
+
+#ifdef COMPILE_NORMAL_ATTRIB
+	vec3 normal = v_normal3f;
+#else
+	vec3 normal = u_uniformNormal3f;
 #endif
 
 #ifdef COMPILE_ENABLE_MC_LIGHTING

@@ -5,14 +5,13 @@
 # Version: 1.0
 # Author: lax1dude
 
-> INSERT  2 : 8  @  2
+> INSERT  2 : 7  @  2
 
-+ import com.carrotsearch.hppc.IntArrayList;
 + import com.carrotsearch.hppc.IntObjectHashMap;
 + import com.carrotsearch.hppc.IntObjectMap;
 + import com.carrotsearch.hppc.ObjectContainer;
-+ import com.carrotsearch.hppc.cursors.IntObjectCursor;
 + import com.carrotsearch.hppc.cursors.ObjectCursor;
++ import com.carrotsearch.hppc.procedures.IntObjectProcedure;
 
 > CHANGE  2 : 5  @  2 : 5
 
@@ -68,30 +67,30 @@
 
 ~ 					this.activePotionsMap.put(potioneffect.getPotionID(), potioneffect);
 
-> CHANGE  23 : 24  @  23 : 24
+> CHANGE  23 : 26  @  23 : 31
 
-~ 		IntArrayList deadPotionEffects = null;
+~ 		if (!this.worldObj.isRemote) {
+~ 			this.activePotionsMap.removeAll((integer, potioneffect) -> {
+~ 				if (!potioneffect.onUpdate(this)) {
 
-> CHANGE  1 : 4  @  1 : 4
+> INSERT  1 : 4  @  1
 
-~ 		for (IntObjectCursor<PotionEffect> cur : this.activePotionsMap) {
-~ 			int integer = cur.key;
-~ 			PotionEffect potioneffect = cur.value;
++ 					return true;
++ 				} else if (potioneffect.getDuration() % 600 == 0) {
++ 					this.onChangedPotionEffect(potioneffect, false);
 
-> CHANGE  2 : 5  @  2 : 3
+> CHANGE  1 : 9  @  1 : 4
 
-~ 					if (deadPotionEffects == null)
-~ 						deadPotionEffects = new IntArrayList(4);
-~ 					deadPotionEffects.add(integer);
+~ 				return false;
+~ 			});
+~ 		} else {
+~ 			this.activePotionsMap.forEach((IntObjectProcedure<PotionEffect>) (integer, potioneffect) -> {
+~ 				if (potioneffect.onUpdate(this) && potioneffect.getDuration() % 600 == 0) {
+~ 					this.onChangedPotionEffect(potioneffect, false);
+~ 				}
+~ 			});
 
-> INSERT  7 : 11  @  7
-
-+ 		if (deadPotionEffects != null) {
-+ 			this.activePotionsMap.removeAll(deadPotionEffects);
-+ 		}
-+ 
-
-> CHANGE  40 : 43  @  40 : 43
+> CHANGE  42 : 45  @  42 : 45
 
 ~ 			ObjectContainer<PotionEffect> cc = this.activePotionsMap.values();
 ~ 			int i = PotionHelper.calcPotionLiquidColor(cc);

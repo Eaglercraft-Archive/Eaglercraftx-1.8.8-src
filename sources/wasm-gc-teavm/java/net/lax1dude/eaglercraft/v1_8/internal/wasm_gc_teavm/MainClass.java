@@ -22,6 +22,7 @@ public class MainClass {
 
 	public static void main(String[] args) {
 		WASMGCCrashReportStrings.setCrashReportStrings();
+		MemoryViews.setupCallback();
 		if(args.length == 1) {
 			if("_worker_process_".equalsIgnoreCase(args[0])) {
 				workerMain();

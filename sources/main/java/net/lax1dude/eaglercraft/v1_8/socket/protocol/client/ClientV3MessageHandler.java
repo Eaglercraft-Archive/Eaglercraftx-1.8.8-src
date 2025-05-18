@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 lax1dude. All Rights Reserved.
+ * Copyright (c) 2024-2025 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -20,20 +20,16 @@ import java.nio.charset.StandardCharsets;
 
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
-import net.lax1dude.eaglercraft.v1_8.profile.SkinModel;
-import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.GameMessageHandler;
 import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.server.*;
 import net.lax1dude.eaglercraft.v1_8.update.UpdateService;
 import net.lax1dude.eaglercraft.v1_8.voice.VoiceClientController;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.network.NetHandlerPlayClient;
 
-public class ClientV3MessageHandler implements GameMessageHandler {
-
-	private final NetHandlerPlayClient netHandler;
+public class ClientV3MessageHandler extends ClientMessageHandler {
 
 	public ClientV3MessageHandler(NetHandlerPlayClient netHandler) {
-		this.netHandler = netHandler;
+		super(netHandler);
 	}
 
 	public void handleServer(SPacketEnableFNAWSkinsEAG packet) {
@@ -44,35 +40,19 @@ public class ClientV3MessageHandler implements GameMessageHandler {
 	}
 
 	public void handleServer(SPacketOtherCapeCustomEAG packet) {
-		netHandler.getCapeCache().cacheCapeCustom(new EaglercraftUUID(packet.uuidMost, packet.uuidLeast),
-				packet.customCape);
+		netHandler.getTextureCache().handlePacket(packet);
 	}
 
 	public void handleServer(SPacketOtherCapePresetEAG packet) {
-		netHandler.getCapeCache().cacheCapePreset(new EaglercraftUUID(packet.uuidMost, packet.uuidLeast),
-				packet.presetCape);
+		netHandler.getTextureCache().handlePacket(packet);
 	}
 
 	public void handleServer(SPacketOtherSkinCustomV3EAG packet) {
-		EaglercraftUUID responseUUID = new EaglercraftUUID(packet.uuidMost, packet.uuidLeast);
-		SkinModel modelId;
-		if(packet.modelID == (byte)0xFF) {
-			modelId = this.netHandler.getSkinCache().getRequestedSkinType(responseUUID);
-		}else {
-			modelId = SkinModel.getModelFromId(packet.modelID & 0x7F);
-			if((packet.modelID & 0x80) != 0 && modelId.sanitize) {
-				modelId = SkinModel.STEVE;
-			}
-		}
-		if(modelId.highPoly != null) {
-			modelId = SkinModel.STEVE;
-		}
-		this.netHandler.getSkinCache().cacheSkinCustom(responseUUID, packet.customSkin, modelId);
+		netHandler.getTextureCache().handlePacket(packet);
 	}
 
 	public void handleServer(SPacketOtherSkinPresetEAG packet) {
-		this.netHandler.getSkinCache().cacheSkinPreset(new EaglercraftUUID(packet.uuidMost, packet.uuidLeast),
-				packet.presetSkin);
+		netHandler.getTextureCache().handlePacket(packet);
 	}
 
 	public void handleServer(SPacketUpdateCertEAG packet) {

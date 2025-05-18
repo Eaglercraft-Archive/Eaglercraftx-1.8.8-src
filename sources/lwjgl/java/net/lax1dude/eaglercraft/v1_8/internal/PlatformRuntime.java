@@ -101,7 +101,11 @@ public class PlatformRuntime {
 		IEaglerFilesystem resourcePackFilesystem = Filesystem.getHandleFor(getClientConfigAdapter().getResourcePacksDB());
 		VFile2.setPrimaryFilesystem(resourcePackFilesystem);
 		EaglerFolderResourcePack.setSupported(true);
-		
+
+		if (glfwPlatformSupported(GLFW_PLATFORM_X11)) {
+			glfwInitHint(GLFW_PLATFORM, GLFW_PLATFORM_X11);
+		}
+
 		if(requestedANGLEPlatform != EnumPlatformANGLE.DEFAULT) {
 			logger.info("Setting ANGLE Platform: {}", requestedANGLEPlatform.name);
 			glfwInitHint(GLFW_ANGLE_PLATFORM_TYPE, requestedANGLEPlatform.eglEnum);

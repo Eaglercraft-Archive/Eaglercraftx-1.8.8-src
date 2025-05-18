@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 lax1dude, ayunami2000. All Rights Reserved.
+ * Copyright (c) 2022-2023 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -17,10 +17,6 @@
 package net.lax1dude.eaglercraft.v1_8.opengl;
 
 public class FixedFunctionShader {
-
-	public static final int initialSize = 0x8000;
-	public static final int initialCount = 3;
-	public static final int maxCount = 8;
 
 	public class FixedFunctionState {
 

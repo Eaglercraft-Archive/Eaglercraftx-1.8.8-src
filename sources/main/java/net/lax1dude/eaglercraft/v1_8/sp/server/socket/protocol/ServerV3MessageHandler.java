@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 lax1dude. All Rights Reserved.
+ * Copyright (c) 2024-2025 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -17,58 +17,57 @@
 package net.lax1dude.eaglercraft.v1_8.sp.server.socket.protocol;
 
 import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
-import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.GameMessageHandler;
 import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.client.*;
-import net.lax1dude.eaglercraft.v1_8.sp.server.EaglerMinecraftServer;
 import net.lax1dude.eaglercraft.v1_8.sp.server.voice.IntegratedVoiceService;
 import net.minecraft.network.NetHandlerPlayServer;
 
-public class ServerV3MessageHandler implements GameMessageHandler {
-
-	private final NetHandlerPlayServer netHandler;
-	private final EaglerMinecraftServer server;
+public class ServerV3MessageHandler extends ServerMessageHandler {
 
 	public ServerV3MessageHandler(NetHandlerPlayServer netHandler) {
-		this.netHandler = netHandler;
-		this.server = (EaglerMinecraftServer)netHandler.serverController;
+		super(netHandler);
 	}
 
 	public void handleClient(CPacketGetOtherCapeEAG packet) {
-		server.getCapeService().processGetOtherCape(new EaglercraftUUID(packet.uuidMost, packet.uuidLeast), netHandler.playerEntity);
+		server.getTextureService().handleRequestPlayerCape(netHandler.playerEntity,
+				new EaglercraftUUID(packet.uuidMost, packet.uuidLeast));
 	}
 
 	public void handleClient(CPacketGetOtherSkinEAG packet) {
-		server.getSkinService().processPacketGetOtherSkin(new EaglercraftUUID(packet.uuidMost, packet.uuidLeast), netHandler.playerEntity);
+		server.getTextureService().handleRequestPlayerSkin(netHandler.playerEntity,
+				new EaglercraftUUID(packet.uuidMost, packet.uuidLeast));
 	}
 
 	public void handleClient(CPacketGetSkinByURLEAG packet) {
-		server.getSkinService().processPacketGetOtherSkin(new EaglercraftUUID(packet.uuidMost, packet.uuidLeast), packet.url, netHandler.playerEntity);
+		server.getTextureService().handleRequestSkinByURL(netHandler.playerEntity,
+				new EaglercraftUUID(packet.uuidMost, packet.uuidLeast), packet.url);
 	}
 
 	public void handleClient(CPacketInstallSkinSPEAG packet) {
-		server.getSkinService().processPacketInstallNewSkin(packet.customSkin, netHandler.playerEntity);
+		server.getTextureService().handleInstallNewSkin(netHandler.playerEntity, packet.customSkin);
 	}
 
 	public void handleClient(CPacketVoiceSignalConnectEAG packet) {
 		IntegratedVoiceService voiceSvc = server.getVoiceService();
-		if(voiceSvc != null) {
+		if (voiceSvc != null) {
 			voiceSvc.handleVoiceSignalPacketTypeConnect(netHandler.playerEntity);
 		}
 	}
 
 	public void handleClient(CPacketVoiceSignalDescEAG packet) {
 		IntegratedVoiceService voiceSvc = server.getVoiceService();
-		if(voiceSvc != null) {
-			voiceSvc.handleVoiceSignalPacketTypeDesc(new EaglercraftUUID(packet.uuidMost, packet.uuidLeast), packet.desc, netHandler.playerEntity);
+		if (voiceSvc != null) {
+			voiceSvc.handleVoiceSignalPacketTypeDesc(new EaglercraftUUID(packet.uuidMost, packet.uuidLeast),
+					packet.desc, netHandler.playerEntity);
 		}
 	}
 
 	public void handleClient(CPacketVoiceSignalDisconnectV3EAG packet) {
 		IntegratedVoiceService voiceSvc = server.getVoiceService();
-		if(voiceSvc != null) {
-			if(packet.isPeerType) {
-				voiceSvc.handleVoiceSignalPacketTypeDisconnectPeer(new EaglercraftUUID(packet.uuidMost, packet.uuidLeast), netHandler.playerEntity);
-			}else {
+		if (voiceSvc != null) {
+			if (packet.isPeerType) {
+				voiceSvc.handleVoiceSignalPacketTypeDisconnectPeer(
+						new EaglercraftUUID(packet.uuidMost, packet.uuidLeast), netHandler.playerEntity);
+			} else {
 				voiceSvc.handleVoiceSignalPacketTypeDisconnect(netHandler.playerEntity);
 			}
 		}
@@ -76,15 +75,17 @@ public class ServerV3MessageHandler implements GameMessageHandler {
 
 	public void handleClient(CPacketVoiceSignalICEEAG packet) {
 		IntegratedVoiceService voiceSvc = server.getVoiceService();
-		if(voiceSvc != null) {
-			voiceSvc.handleVoiceSignalPacketTypeICE(new EaglercraftUUID(packet.uuidMost, packet.uuidLeast), packet.ice, netHandler.playerEntity);
+		if (voiceSvc != null) {
+			voiceSvc.handleVoiceSignalPacketTypeICE(new EaglercraftUUID(packet.uuidMost, packet.uuidLeast), packet.ice,
+					netHandler.playerEntity);
 		}
 	}
 
 	public void handleClient(CPacketVoiceSignalRequestEAG packet) {
 		IntegratedVoiceService voiceSvc = server.getVoiceService();
-		if(voiceSvc != null) {
-			voiceSvc.handleVoiceSignalPacketTypeRequest(new EaglercraftUUID(packet.uuidMost, packet.uuidLeast), netHandler.playerEntity);
+		if (voiceSvc != null) {
+			voiceSvc.handleVoiceSignalPacketTypeRequest(new EaglercraftUUID(packet.uuidMost, packet.uuidLeast),
+					netHandler.playerEntity);
 		}
 	}
 

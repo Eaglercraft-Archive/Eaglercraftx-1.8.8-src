@@ -29,12 +29,15 @@ public class HandshakePacketTypes {
 	public static final int PROTOCOL_CLIENT_PROFILE_DATA = 0x07;
 	public static final int PROTOCOL_CLIENT_FINISH_LOGIN = 0x08;
 	public static final int PROTOCOL_SERVER_FINISH_LOGIN = 0x09;
+	public static final int PROTOCOL_SERVER_REDIRECT_TO = 0x0A;
 	public static final int PROTOCOL_SERVER_ERROR = 0xFF;
 
-	public static final int STATE_OPENED = 0x00;
-	public static final int STATE_CLIENT_VERSION = 0x01;
-	public static final int STATE_CLIENT_LOGIN = 0x02;
-	public static final int STATE_CLIENT_COMPLETE = 0x03;
+	public static final int STATE_NEW = 0x00;
+	public static final int STATE_OPENED = 0x01;
+	public static final int STATE_CLIENT_VERSION = 0x02;
+	public static final int STATE_CLIENT_LOGIN = 0x03;
+	public static final int STATE_CLIENT_COMPLETE = 0x04;
+	public static final int STATE_FINISHED = 0x05;
 
 	public static final int SERVER_ERROR_UNKNOWN_PACKET = 0x01;
 	public static final int SERVER_ERROR_INVALID_PACKET = 0x02;

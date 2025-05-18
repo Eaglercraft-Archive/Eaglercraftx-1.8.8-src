@@ -43,6 +43,7 @@ import java.util.List;
 import com.google.common.collect.Lists;
 
 import net.lax1dude.eaglercraft.v1_8.Base64;
+import net.lax1dude.eaglercraft.v1_8.Display;
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.EaglercraftRandom;
 import net.lax1dude.eaglercraft.v1_8.crypto.GeneralDigest;
@@ -108,6 +109,7 @@ public class HardwareFingerprint {
 			_wglShaderSource(vert, GLSLHeader.getVertexHeaderCompat(vshLocalSrc, DrawUtils.vertexShaderPrecision));
 			_wglCompileShader(vert);
 			if(_wglGetShaderi(vert, GL_COMPILE_STATUS) != GL_TRUE) {
+				Display.checkContextLost();
 				_wglDeleteShader(vert);
 				GlStateManager.deleteTexture(helperTexture);
 				return new byte[0];
@@ -118,6 +120,7 @@ public class HardwareFingerprint {
 		_wglShaderSource(frag, GLSLHeader.getFragmentHeaderCompat(EagRuntime.getRequiredResourceString("/assets/eagler/glsl/hw_fingerprint.fsh"), shaderPrecision));
 		_wglCompileShader(frag);
 		if(_wglGetShaderi(frag, GL_COMPILE_STATUS) != GL_TRUE) {
+			Display.checkContextLost();
 			_wglDeleteShader(vert);
 			_wglDeleteShader(frag);
 			GlStateManager.deleteTexture(helperTexture);
@@ -142,6 +145,7 @@ public class HardwareFingerprint {
 		_wglDeleteShader(frag);
 		
 		if(_wglGetProgrami(program, GL_LINK_STATUS) != GL_TRUE) {
+			Display.checkContextLost();
 			_wglDeleteProgram(program);
 			GlStateManager.deleteTexture(helperTexture);
 			return new byte[0];

@@ -7,7 +7,7 @@
 
 > DELETE  2  @  2 : 8
 
-> CHANGE  4 : 28  @  4 : 7
+> CHANGE  4 : 32  @  4 : 7
 
 ~ 
 ~ import net.lax1dude.eaglercraft.v1_8.ClientUUIDLoadingCache;
@@ -19,11 +19,15 @@
 ~ 
 ~ import net.lax1dude.eaglercraft.v1_8.netty.Unpooled;
 ~ import net.lax1dude.eaglercraft.v1_8.notifications.ServerNotificationManager;
-~ import net.lax1dude.eaglercraft.v1_8.profile.ServerCapeCache;
-~ import net.lax1dude.eaglercraft.v1_8.profile.ServerSkinCache;
+~ import net.lax1dude.eaglercraft.v1_8.skin_cache.ServerTextureCache;
 ~ import net.lax1dude.eaglercraft.v1_8.socket.EaglercraftNetworkManager;
+~ import net.lax1dude.eaglercraft.v1_8.socket.protocol.GamePluginMessageConstants;
 ~ import net.lax1dude.eaglercraft.v1_8.socket.protocol.GamePluginMessageProtocol;
-~ import net.lax1dude.eaglercraft.v1_8.socket.protocol.client.GameProtocolMessageController;
+~ import net.lax1dude.eaglercraft.v1_8.socket.protocol.client.ClientMessageHandler;
+~ import net.lax1dude.eaglercraft.v1_8.socket.protocol.handshake.StandardCaps;
+~ import net.lax1dude.eaglercraft.v1_8.socket.protocol.message.InjectedMessageController;
+~ import net.lax1dude.eaglercraft.v1_8.socket.protocol.message.LegacyMessageController;
+~ import net.lax1dude.eaglercraft.v1_8.socket.protocol.message.MessageController;
 ~ import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.GameMessagePacket;
 ~ import net.lax1dude.eaglercraft.v1_8.sp.lan.LANClientNetworkManager;
 ~ import net.lax1dude.eaglercraft.v1_8.sp.socket.ClientIntegratedServerNetworkManager;
@@ -68,70 +72,71 @@
 
 ~ 	private final Map<EaglercraftUUID, NetworkPlayerInfo> playerInfoMap = Maps.newHashMap();
 
-> CHANGE  2 : 12  @  2 : 3
+> CHANGE  2 : 13  @  2 : 3
 
 ~ 	private boolean isIntegratedServer = false;
 ~ 	private final EaglercraftRandom avRandomizer = new EaglercraftRandom();
-~ 	private final ServerSkinCache skinCache;
-~ 	private final ServerCapeCache capeCache;
+~ 	private final ServerTextureCache textureCache;
 ~ 	private final ServerNotificationManager notifManager;
 ~ 	public boolean currentFNAWSkinAllowedState = true;
 ~ 	public boolean currentFNAWSkinForcedState = true;
-~ 	private GameProtocolMessageController eaglerMessageController = null;
-~ 	public boolean hasRequestedServerInfo = false;
+~ 	private final MessageController eaglerMessageController;
+~ 	public byte[] cachedServerInfoHash = null;
 ~ 	public byte[] cachedServerInfoData = null;
+~ 	public boolean allowedDisplayWebview = false;
+~ 	public boolean allowedDisplayWebviewYes = false;
 
-> CHANGE  1 : 2  @  1 : 2
+> CHANGE  1 : 3  @  1 : 3
 
 ~ 	public NetHandlerPlayClient(Minecraft mcIn, GuiScreen parGuiScreen, EaglercraftNetworkManager parNetworkManager,
+~ 			GameProfile parGameProfile, GamePluginMessageProtocol eaglerProtocol) {
 
-> INSERT  5 : 10  @  5
+> INSERT  3 : 4  @  3
 
-+ 		this.skinCache = new ServerSkinCache(this, mcIn.getTextureManager());
-+ 		this.capeCache = new ServerCapeCache(this, mcIn.getTextureManager());
-+ 		this.notifManager = new ServerNotificationManager();
++ 		this.netManager.setNetHandler(this);
+
+> INSERT  1 : 15  @  1
+
 + 		this.isIntegratedServer = (parNetworkManager instanceof ClientIntegratedServerNetworkManager)
 + 				|| (parNetworkManager instanceof LANClientNetworkManager);
++ 		ClientMessageHandler handler = ClientMessageHandler.createClientHandler(eaglerProtocol.ver, this);
++ 		if (eaglerProtocol.ver >= 5) {
++ 			this.eaglerMessageController = new InjectedMessageController(eaglerProtocol, handler,
++ 					GamePluginMessageConstants.CLIENT_TO_SERVER, parNetworkManager::injectRawFrame);
++ 			parNetworkManager.setInjectedMessageController((InjectedMessageController) eaglerMessageController);
++ 		} else {
++ 			this.eaglerMessageController = new LegacyMessageController(eaglerProtocol, handler,
++ 					GamePluginMessageConstants.CLIENT_TO_SERVER,
++ 					(ch, msg) -> addToSendQueue(new C17PacketCustomPayload(ch, msg)));
++ 		}
++ 		this.textureCache = ServerTextureCache.create(this, mcIn.getTextureManager());
++ 		this.notifManager = new ServerNotificationManager(mcIn.getTextureManager());
 
-> INSERT  4 : 7  @  4
+> INSERT  4 : 6  @  4
 
-+ 		this.skinCache.destroy();
-+ 		this.capeCache.destroy();
++ 		this.textureCache.destroy();
 + 		this.notifManager.destroy();
 
-> INSERT  2 : 51  @  2
+> INSERT  2 : 38  @  2
 
-+ 	public ServerSkinCache getSkinCache() {
-+ 		return this.skinCache;
-+ 	}
-+ 
-+ 	public ServerCapeCache getCapeCache() {
-+ 		return this.capeCache;
++ 	public ServerTextureCache getTextureCache() {
++ 		return this.textureCache;
 + 	}
 + 
 + 	public ServerNotificationManager getNotifManager() {
 + 		return this.notifManager;
 + 	}
 + 
-+ 	public GameProtocolMessageController getEaglerMessageController() {
++ 	public MessageController getEaglerMessageController() {
 + 		return eaglerMessageController;
 + 	}
 + 
-+ 	public void setEaglerMessageController(GameProtocolMessageController eaglerMessageController) {
-+ 		this.eaglerMessageController = eaglerMessageController;
-+ 	}
-+ 
 + 	public GamePluginMessageProtocol getEaglerMessageProtocol() {
-+ 		return eaglerMessageController != null ? eaglerMessageController.protocol : null;
++ 		return eaglerMessageController != null ? eaglerMessageController.getProtocol() : null;
 + 	}
 + 
 + 	public void sendEaglerMessage(GameMessagePacket packet) {
-+ 		try {
-+ 			eaglerMessageController.sendPacket(packet);
-+ 		} catch (IOException e) {
-+ 			logger.error("Failed to send eaglercraft plugin message packet: " + packet);
-+ 			logger.error(e);
-+ 		}
++ 		eaglerMessageController.sendPacket(packet);
 + 	}
 + 
 + 	public boolean webViewSendHandler(GameMessagePacket pkt) {
@@ -142,7 +147,7 @@
 + 			logger.error("WebView sent message on a dead handler!");
 + 			return false;
 + 		}
-+ 		if (eaglerMessageController.protocol.ver >= 4) {
++ 		if (eaglerMessageController.getProtocol().ver >= 4) {
 + 			sendEaglerMessage(pkt);
 + 			return true;
 + 		} else {
@@ -158,12 +163,21 @@
 ~ 		this.clientWorldController = new WorldClient(this, new WorldSettings(0L, packetIn.getGameType(), false,
 ~ 				packetIn.isHardcoreMode(), packetIn.getWorldType()), packetIn.getDimension(), packetIn.getDifficulty());
 
-> INSERT  11 : 15  @  11
+> INSERT  11 : 24  @  11
 
 + 		if (VoiceClientController.isClientSupported()) {
-+ 			VoiceClientController.initializeVoiceClient(this::sendEaglerMessage, eaglerMessageController.protocol.ver);
++ 			if (netManager.getServerCapabilities().hasCapability(StandardCaps.VOICE, 0)) {
++ 				VoiceClientController.initializeVoiceClient(this::sendEaglerMessage,
++ 						eaglerMessageController.getProtocol().ver);
++ 			} else {
++ 				VoiceClientController.initializeVoiceClient(null, -1);
++ 			}
 + 		}
-+ 		WebViewOverlayController.setPacketSendCallback(this::webViewSendHandler);
++ 		if (netManager.getServerCapabilities().hasCapability(StandardCaps.WEBVIEW, 0)) {
++ 			WebViewOverlayController.setPacketSendCallback(this::webViewSendHandler);
++ 		} else {
++ 			WebViewOverlayController.setPacketSendCallback(null);
++ 		}
 
 > DELETE  3  @  3 : 4
 
@@ -477,12 +491,11 @@
 ~ 		for (int i = 0, l = lst.size(); i < l; ++i) {
 ~ 			S38PacketPlayerListItem.AddPlayerData s38packetplayerlistitem$addplayerdata = lst.get(i);
 
-> CHANGE  1 : 6  @  1 : 2
+> CHANGE  1 : 5  @  1 : 2
 
 ~ 				EaglercraftUUID uuid = s38packetplayerlistitem$addplayerdata.getProfile().getId();
 ~ 				this.playerInfoMap.remove(uuid);
-~ 				this.skinCache.evictSkin(uuid);
-~ 				this.capeCache.evictCape(uuid);
+~ 				this.textureCache.evictPlayer(uuid);
 ~ 				ClientUUIDLoadingCache.evict(uuid);
 
 > DELETE  34  @  34 : 35
@@ -573,11 +586,12 @@
 
 > DELETE  11  @  11 : 13
 
-> INSERT  9 : 17  @  9
+> INSERT  9 : 18  @  9
 
-+ 		} else {
++ 		} else if (eaglerMessageController instanceof LegacyMessageController) {
 + 			try {
-+ 				eaglerMessageController.handlePacket(packetIn.getChannelName(), packetIn.getBufferData());
++ 				((LegacyMessageController) eaglerMessageController).handlePacket(packetIn.getChannelName(),
++ 						packetIn.getBufferData());
 + 			} catch (IOException e) {
 + 				logger.error("Couldn't read \"{}\" packet as an eaglercraft plugin message!",
 + 						packetIn.getChannelName());

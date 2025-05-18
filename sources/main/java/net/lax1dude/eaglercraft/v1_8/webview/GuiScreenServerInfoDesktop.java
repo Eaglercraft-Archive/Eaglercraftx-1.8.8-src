@@ -17,7 +17,6 @@
 package net.lax1dude.eaglercraft.v1_8.webview;
 
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
-import net.lax1dude.eaglercraft.v1_8.PauseMenuCustomizeState;
 import net.lax1dude.eaglercraft.v1_8.internal.WebViewOptions;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -77,7 +76,8 @@ public class GuiScreenServerInfoDesktop extends GuiScreen {
 
 	public void drawScreen(int mx, int my, float pt) {
 		drawDefaultBackground();
-		drawCenteredString(fontRendererObj, PauseMenuCustomizeState.serverInfoEmbedTitle, this.width / 2, 70, 16777215);
+		drawCenteredString(fontRendererObj, opts.fallbackTitle == null ? "Server Info" : opts.fallbackTitle,
+				this.width / 2, 70, 16777215);
 		drawCenteredString(fontRendererObj, I18n.format("fallbackWebViewScreen.text0"), this.width / 2, 90, 11184810);
 		String link = WebViewOverlayController.fallbackRunning() ? WebViewOverlayController.getFallbackURL()
 				: I18n.format(hasStarted ? "fallbackWebViewScreen.exited" : "fallbackWebViewScreen.startingUp");

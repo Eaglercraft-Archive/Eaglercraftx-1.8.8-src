@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024 lax1dude. All Rights Reserved.
+ * Copyright (c) 2023-2025 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -17,35 +17,56 @@
 package net.lax1dude.eaglercraft.v1_8.sp.server.skins;
 
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
-import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
 import net.lax1dude.eaglercraft.v1_8.socket.protocol.GamePluginMessageProtocol;
 import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.GameMessagePacket;
 import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.server.SPacketOtherSkinCustomV3EAG;
+import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.server.SPacketOtherSkinCustomV4EAG;
+import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.server.SPacketOtherSkinCustomV5EAG;
 import net.lax1dude.eaglercraft.v1_8.socket.protocol.util.SkinPacketVersionCache;
 
 public class CustomSkullData {
 
-	public String skinURL;
-	public long lastHit;
-	public SkinPacketVersionCache skinData;
+	protected long lastHit;
+	protected byte[] textureDataV3;
+	protected byte[] textureDataV4;
 
-	public CustomSkullData(String skinURL, byte[] skinData) {
-		this.skinURL = skinURL;
-		this.lastHit = EagRuntime.steadyTimeMillis();
+	public CustomSkullData(byte[] skinData) {
 		if(skinData.length != 16384) {
 			byte[] fixed = new byte[16384];
 			System.arraycopy(skinData, 0, fixed, 0, skinData.length > fixed.length ? fixed.length : skinData.length);
 			skinData = fixed;
 		}
-		this.skinData = SkinPacketVersionCache.createCustomV3(0l, 0l, 0, skinData);
+		textureDataV3 = skinData;
+		lastHit = EagRuntime.steadyTimeMillis();
 	}
 
 	public byte[] getFullSkin() {
-		return ((SPacketOtherSkinCustomV3EAG)skinData.getV3()).customSkin;
+		return textureDataV3;
 	}
 
-	public GameMessagePacket getSkinPacket(EaglercraftUUID uuid, GamePluginMessageProtocol protocol) {
-		return SkinPacketVersionCache.rewriteUUID(skinData.get(protocol), uuid.getMostSignificantBits(), uuid.getLeastSignificantBits());
+	public GameMessagePacket getSkin(long uuidMost, long uuidLeast, GamePluginMessageProtocol protocol) {
+		switch(protocol) {
+		case V3:
+			return new SPacketOtherSkinCustomV3EAG(uuidMost, uuidLeast, 0xFF, textureDataV3);
+		case V4:
+			if(textureDataV4 == null) {
+				textureDataV4 = SkinPacketVersionCache.convertToV4Raw(textureDataV3);
+			}
+			return new SPacketOtherSkinCustomV4EAG(uuidMost, uuidLeast, 0xFF, textureDataV4);
+		default:
+			throw new IllegalStateException();
+		}
+	}
+
+	public GameMessagePacket getSkinV5(int requestId, GamePluginMessageProtocol protocol) {
+		if(protocol.ver >= 5) {
+			if(textureDataV4 == null) {
+				textureDataV4 = SkinPacketVersionCache.convertToV4Raw(textureDataV3);
+			}
+			return new SPacketOtherSkinCustomV5EAG(requestId, 0xFF, textureDataV4);
+		}else {
+			throw new IllegalStateException();
+		}
 	}
 
 }

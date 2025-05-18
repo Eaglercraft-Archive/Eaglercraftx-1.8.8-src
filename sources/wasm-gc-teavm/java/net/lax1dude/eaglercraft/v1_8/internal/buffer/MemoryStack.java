@@ -17,7 +17,7 @@
 package net.lax1dude.eaglercraft.v1_8.internal.buffer;
 
 import org.teavm.interop.Address;
-import org.teavm.interop.DirectMalloc;
+import org.teavm.runtime.heap.Heap;
 
 public class MemoryStack {
 
@@ -32,9 +32,9 @@ public class MemoryStack {
 	private static Address stackTopPointer;
 
 	static {
-		stackBase = DirectMalloc.malloc(STACK_SIZE + 16);
+		stackBase = Heap.alloc(STACK_SIZE + 16);
 		if(stackBase.toInt() == 0) {
-			throw new IllegalStateException("Could not allocate MemoryStack of size " + STACK_SIZE);
+			throw new Error("Could not allocate MemoryStack of size " + STACK_SIZE);
 		}
 		stackMax = stackBase.add(STACK_SIZE);
 		stackBottomPointer = stackBase;
@@ -97,38 +97,6 @@ public class MemoryStack {
 
 	public static FloatBuffer mallocFloatBuffer(int length) {
 		return new DirectMallocFloatBuffer(malloc(length << 2), length, false);
-	}
-
-	public static Address calloc(int length) {
-		if(length > MALLOC_THRESHOLD || (stackMax.toInt() - stackTopPointer.toInt() - length) < RESERVE_SIZE) {
-			if(stackTopPointer.toInt() + 8 > stackMax.toInt()) {
-				throw new StackOverflowError();
-			}
-			Address malloced = WASMGCBufferAllocator.calloc(length);
-			Address cleanup = stackBottomPointer.add(4).getAddress();
-			stackTopPointer.putAddress(malloced);
-			stackTopPointer.add(4).putAddress(cleanup);
-			stackBottomPointer.add(4).putAddress(stackTopPointer);
-			stackTopPointer = stackTopPointer.add(8);
-			return malloced;
-		}else {
-			DirectMalloc.zmemset(stackTopPointer, length);
-			Address ret = stackTopPointer;
-			stackTopPointer = stackTopPointer.add((length + 3) & 0xFFFFFFFC);
-			return ret;
-		}
-	}
-
-	public static ByteBuffer callocByteBuffer(int length) {
-		return new DirectMallocByteBuffer(calloc(length), length, false);
-	}
-
-	public static IntBuffer callocIntBuffer(int length) {
-		return new DirectMallocIntBuffer(calloc(length << 2), length, false);
-	}
-
-	public static FloatBuffer callocFloatBuffer(int length) {
-		return new DirectMallocFloatBuffer(calloc(length << 2), length, false);
 	}
 
 }

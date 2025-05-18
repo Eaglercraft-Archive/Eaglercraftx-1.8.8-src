@@ -18,7 +18,7 @@
 
 + import net.minecraft.util.ChatComponentText;
 
-> CHANGE  228 : 242  @  228 : 229
+> CHANGE  228 : 241  @  228 : 229
 
 ~ 			try {
 ~ 				this.netClientHandler.getNetworkManager().processReceivedPackets();
@@ -30,8 +30,7 @@
 ~ 				this.netClientHandler.getNetworkManager()
 ~ 						.closeChannel(new ChatComponentText("Exception thrown: " + ex.toString()));
 ~ 			}
-~ 			this.netClientHandler.getSkinCache().flush();
-~ 			this.netClientHandler.getCapeCache().flush();
+~ 			this.netClientHandler.getTextureCache().runTick();
 ~ 			this.netClientHandler.getNotifManager().runTick();
 ~ 			ClientUUIDLoadingCache.update();
 

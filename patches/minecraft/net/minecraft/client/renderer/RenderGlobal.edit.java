@@ -832,12 +832,13 @@
 
 > DELETE  5  @  5 : 6
 
-> CHANGE  155 : 159  @  155 : 156
+> CHANGE  155 : 160  @  155 : 156
 
 ~ 			worldRendererIn.begin(7,
-~ 					(DeferredStateManager.isDeferredRenderer() || DynamicLightsStateManager.isDynamicLightsRender())
-~ 							? VertexFormat.BLOCK_SHADERS
-~ 							: DefaultVertexFormats.BLOCK);
+~ 					(DeferredStateManager
+~ 							.isDeferredRenderer() /* || DynamicLightsStateManager.isDynamicLightsRender() */)
+~ 									? VertexFormat.BLOCK_SHADERS
+~ 									: DefaultVertexFormats.BLOCK);
 
 > CHANGE  19 : 20  @  19 : 20
 

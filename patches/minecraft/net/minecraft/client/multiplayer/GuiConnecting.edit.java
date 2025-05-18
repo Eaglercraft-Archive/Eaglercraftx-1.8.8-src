@@ -5,7 +5,7 @@
 # Version: 1.0
 # Author: lax1dude
 
-> CHANGE  3 : 21  @  3 : 6
+> CHANGE  2 : 16  @  2 : 6
 
 ~ import java.util.List;
 ~ 
@@ -17,22 +17,14 @@
 ~ import net.lax1dude.eaglercraft.v1_8.internal.PlatformNetworking;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
+~ import net.lax1dude.eaglercraft.v1_8.profile.EaglerProfile;
 ~ import net.lax1dude.eaglercraft.v1_8.socket.AddressResolver;
-~ import net.lax1dude.eaglercraft.v1_8.socket.ConnectionHandshake;
-~ import net.lax1dude.eaglercraft.v1_8.socket.EaglercraftNetworkManager;
 ~ import net.lax1dude.eaglercraft.v1_8.socket.RateLimitTracker;
-~ import net.lax1dude.eaglercraft.v1_8.socket.WebSocketNetworkManager;
-~ import net.lax1dude.eaglercraft.v1_8.socket.protocol.GamePluginMessageConstants;
-~ import net.lax1dude.eaglercraft.v1_8.socket.protocol.GamePluginMessageProtocol;
-~ import net.lax1dude.eaglercraft.v1_8.socket.protocol.client.GameProtocolMessageController;
+~ import net.lax1dude.eaglercraft.v1_8.socket.protocol.handshake.HandshakerHandler;
 
-> CHANGE  4 : 5  @  4 : 8
+> DELETE  4  @  4 : 8
 
-~ import net.minecraft.client.network.NetHandlerPlayClient;
-
-> CHANGE  2 : 3  @  2 : 5
-
-~ import net.minecraft.network.play.client.C17PacketCustomPayload;
+> DELETE  1  @  1 : 5
 
 > DELETE  1  @  1 : 4
 
@@ -41,17 +33,13 @@
 > CHANGE  1 : 7  @  1 : 2
 
 ~ 	private IWebSocketClient webSocket;
-~ 	private EaglercraftNetworkManager networkManager;
+~ 	private HandshakerHandler handshaker;
 ~ 	private String currentAddress;
 ~ 	private String currentPassword;
 ~ 	private boolean allowPlaintext;
 ~ 	private boolean allowCookies;
 
-> INSERT  1 : 2  @  1
-
-+ 	private boolean hasOpened;
-
-> INSERT  1 : 2  @  1
+> INSERT  2 : 3  @  2
 
 + 	private int timer = 0;
 
@@ -155,12 +143,15 @@
 ~ 							new ChatComponentText("Could not open WebSocket to \"" + currentAddress + "\"!")));
 ~ 				}
 
-> CHANGE  1 : 81  @  1 : 2
+> CHANGE  1 : 38  @  1 : 2
 
-~ 				if (webSocket.getState() == EnumEaglerConnectionState.CONNECTED) {
-~ 					if (!hasOpened) {
-~ 						hasOpened = true;
+~ 				EnumEaglerConnectionState connState = webSocket.getState();
+~ 				if (connState == EnumEaglerConnectionState.CONNECTED) {
+~ 					if (handshaker == null) {
+~ 						this.mc.getSession().reset();
+~ 
 ~ 						logger.info("Logging in: {}", currentAddress);
+~ 
 ~ 						byte[] cookieData = null;
 ~ 						if (allowCookies) {
 ~ 							ServerCookieDataStore.ServerCookie cookie = ServerCookieDataStore
@@ -169,61 +160,15 @@
 ~ 								cookieData = cookie.cookie;
 ~ 							}
 ~ 						}
-~ 						if (ConnectionHandshake.attemptHandshake(this.mc, webSocket, this, previousGuiScreen,
-~ 								currentPassword, allowPlaintext, allowCookies, cookieData)) {
-~ 							logger.info("Handshake Success");
-~ 							webSocket.setEnableStringFrames(false);
-~ 							webSocket.clearStringFrames();
-~ 							this.networkManager = new WebSocketNetworkManager(webSocket);
-~ 							this.networkManager.setPluginInfo(ConnectionHandshake.pluginBrand,
-~ 									ConnectionHandshake.pluginVersion);
-~ 							mc.bungeeOutdatedMsgTimer = 80;
-~ 							mc.clearTitles();
-~ 							this.networkManager.setConnectionState(EnumConnectionState.PLAY);
-~ 							NetHandlerPlayClient netHandler = new NetHandlerPlayClient(this.mc, previousGuiScreen,
-~ 									this.networkManager, this.mc.getSession().getProfile());
-~ 							this.networkManager.setNetHandler(netHandler);
-~ 							netHandler.setEaglerMessageController(new GameProtocolMessageController(
-~ 									GamePluginMessageProtocol.getByVersion(ConnectionHandshake.protocolVersion),
-~ 									GamePluginMessageConstants.CLIENT_TO_SERVER,
-~ 									GameProtocolMessageController
-~ 											.createClientHandler(ConnectionHandshake.protocolVersion, netHandler),
-~ 									(ch, msg) -> netHandler.addToSendQueue(new C17PacketCustomPayload(ch, msg))));
-~ 						} else {
-~ 							if (mc.currentScreen == this) {
-~ 								checkRatelimit();
-~ 								logger.info("Handshake Failure");
-~ 								mc.getSession().reset();
-~ 								mc.displayGuiScreen(
-~ 										new GuiDisconnected(previousGuiScreen, "connect.failed", new ChatComponentText(
-~ 												"Handshake Failure\n\nAre you sure this is an eagler 1.8 server?")));
-~ 							}
-~ 							webSocket.close();
-~ 							return;
-~ 						}
+~ 
+~ 						handshaker = new HandshakerHandler(this, webSocket, EaglerProfile.getName(), currentPassword,
+~ 								allowPlaintext, allowCookies, cookieData);
 ~ 					}
-~ 					if (this.networkManager != null) {
-~ 						try {
-~ 							this.networkManager.processReceivedPackets();
-~ 						} catch (IOException ex) {
-~ 						}
-~ 					}
+~ 					handshaker.tick();
 ~ 				} else {
-~ 					if (webSocket.getState() == EnumEaglerConnectionState.FAILED) {
-~ 						if (!hasOpened) {
-~ 							mc.getSession().reset();
-~ 							checkRatelimit();
-~ 							if (mc.currentScreen == this) {
-~ 								if (RateLimitTracker.isProbablyLockedOut(currentAddress)) {
-~ 									mc.displayGuiScreen(GuiDisconnected.createRateLimitKick(previousGuiScreen));
-~ 								} else {
-~ 									mc.displayGuiScreen(new GuiDisconnected(previousGuiScreen, "connect.failed",
-~ 											new ChatComponentText("Connection Refused")));
-~ 								}
-~ 							}
-~ 						}
-~ 					} else {
-~ 						if (this.networkManager != null && this.networkManager.checkDisconnected()) {
+~ 					if (handshaker != null) {
+~ 						handshaker.tick();
+~ 						if (connState == EnumEaglerConnectionState.FAILED) {
 ~ 							this.mc.getSession().reset();
 ~ 							checkRatelimit();
 ~ 							if (mc.currentScreen == this) {
@@ -263,16 +208,15 @@
 
 ~ 	protected void actionPerformed(GuiButton parGuiButton) {
 
-> INSERT  4 : 6  @  4
+> CHANGE  2 : 3  @  2 : 6
 
-+ 			} else if (this.webSocket != null) {
-+ 				this.webSocket.close();
+~ 			this.webSocket.close();
 
-> CHANGE  9 : 10  @  9 : 10
+> CHANGE  7 : 8  @  7 : 8
 
-~ 		if (this.networkManager == null || !this.networkManager.isChannelOpen()) {
+~ 		if (this.handshaker == null) {
 
-> INSERT  9 : 34  @  9
+> INSERT  9 : 43  @  9
 
 + 
 + 	private void checkRatelimit() {
@@ -299,5 +243,14 @@
 + 	public boolean canCloseGui() {
 + 		return false;
 + 	}
++ 
++ 	public static Minecraft getMC(GuiConnecting gui) {
++ 		return gui.mc;
++ 	}
++ 
++ 	public static GuiScreen getPrevScreen(GuiConnecting gui) {
++ 		return gui.previousGuiScreen;
++ 	}
++ 
 
 > EOF

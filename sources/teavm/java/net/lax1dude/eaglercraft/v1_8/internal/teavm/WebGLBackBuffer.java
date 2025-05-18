@@ -248,7 +248,7 @@ public class WebGLBackBuffer {
 				}
 				GlStateManager.eagPopStateForGLES2BlitHack();
 			}else {
-				EaglercraftGPU.clearCurrentBinding(EaglercraftGPU.CLEAR_BINDING_TEXTURE0 | EaglercraftGPU.CLEAR_BINDING_ACTIVE_TEXTURE | EaglercraftGPU.CLEAR_BINDING_SHADER_PROGRAM | EaglercraftGPU.CLEAR_BINDING_BUFFER_ARRAY);
+				EaglercraftGPU.clearCurrentBinding(EaglercraftGPU.CLEAR_BINDING_TEXTURE0 | EaglercraftGPU.CLEAR_BINDING_ACTIVE_TEXTURE | EaglercraftGPU.CLEAR_BINDING_SHADER_PROGRAM | EaglercraftGPU.CLEAR_BINDING_VERTEX_ARRAY);
 			}
 
 			ctx.bindFramebuffer(_GL_FRAMEBUFFER, framebuffer);

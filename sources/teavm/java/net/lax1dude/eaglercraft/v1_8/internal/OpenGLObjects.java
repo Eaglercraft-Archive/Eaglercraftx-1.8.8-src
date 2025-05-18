@@ -56,6 +56,7 @@ class OpenGLObjects {
 		private static int hashGen = 0;
 		final WebGLVertexArray ptr;
 		final int hash;
+		int enabled;
 
 		VertexArrayGL(WebGLVertexArray ptr) {
 			this.ptr = ptr;
@@ -69,6 +70,21 @@ class OpenGLObjects {
 		@Override
 		public void free() {
 			PlatformOpenGL._wglDeleteVertexArrays(this);
+		}
+
+		@Override
+		public int getBits() {
+			return enabled;
+		}
+
+		@Override
+		public void setBit(int bit) {
+			enabled |= bit;
+		}
+
+		@Override
+		public void unsetBit(int bit) {
+			enabled &= ~bit;
 		}
 
 	}

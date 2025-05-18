@@ -62,7 +62,7 @@ public class CompileLatestClientHeadless {
 		
 		System.out.println();
 		System.out.println("Launching client compiler...");
-		System.out.println("Copyright (c) 2022-2024 lax1dude");
+		System.out.println("Copyright (c) 2022-2025 lax1dude");
 		System.out.println();
 		
 		boolean yes = false;
@@ -327,6 +327,7 @@ public class CompileLatestClientHeadless {
 							new File(repositoryFolder, "sources/protocol-game/java"),
 							new File(repositoryFolder, "sources/protocol-relay/java"),
 							new File(repositoryFolder, "sources/teavm/java"),
+							new File(repositoryFolder, "sources/teavm/resources"),
 							new File(repositoryFolder, "sources/teavm-boot-menu/java"));
 				}catch(IOException ex) {
 					throw new CompileFailureException("failed to run javac compiler! " + ex.toString(), ex);
@@ -404,11 +405,11 @@ public class CompileLatestClientHeadless {
 			
 			File classesJS = new File(outputDirectory, "classes.js");
 			
-			if(!ES6Compat.patchClassesJS(classesJS, new File(repositoryFolder, "sources/setup/workspace_template/javascript/ES6ShimScript.txt"))) {
+			if(!ES6Compat.patchClassesJS(classesJS, new File(repositoryFolder, "sources/setup/workspace_template/target_teavm_javascript/javascript/ES6ShimScript.txt"))) {
 				System.err.println("Error: could not inject shim, continuing anyway because it is not required");
 			}
 			
-			File epkCompiler = new File(repositoryFolder, "sources/setup/workspace_template/desktopRuntime/CompileEPK.jar");
+			File epkCompiler = new File(repositoryFolder, "sources/setup/workspace_template/target_teavm_javascript/buildtools/CompileEPK.jar");
 			
 			if(!epkCompiler.exists()) {
 				throw new CompileFailureException("EPKCompiler JAR file is missing: " + epkCompiler.getAbsolutePath());
@@ -586,7 +587,7 @@ public class CompileLatestClientHeadless {
 						}
 					}
 				}
-				File offlineDownloadGenerator = new File(repositoryFolder, "sources/setup/workspace_template/desktopRuntime/MakeOfflineDownload.jar");
+				File offlineDownloadGenerator = new File(repositoryFolder, "sources/setup/workspace_template/target_teavm_javascript/buildtools/MakeOfflineDownload.jar");
 				MakeOfflineDownload.compilerMain(offlineDownloadGenerator, new String[] {
 						offlineTemplateArg.getAbsolutePath(),
 						classesJS.getAbsolutePath(), (new File(outputDirectory, "assets.epk")).getAbsolutePath(),

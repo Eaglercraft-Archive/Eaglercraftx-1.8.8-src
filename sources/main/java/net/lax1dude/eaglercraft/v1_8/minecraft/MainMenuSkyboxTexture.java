@@ -55,10 +55,10 @@ public class MainMenuSkyboxTexture extends AbstractTexture {
 			GlStateManager.bindTexture(tex);
 			_wglFramebufferTexture2D(_GL_FRAMEBUFFER, _GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
 					EaglercraftGPU.getNativeTexture(tex), 0);
+			_wglDrawBuffers(_GL_COLOR_ATTACHMENT0);
 		}else {
 			_wglBindFramebuffer(_GL_FRAMEBUFFER, framebuffer);
 		}
-		_wglDrawBuffers(new int[] { _GL_COLOR_ATTACHMENT0 });
 	}
 
 	public void deleteGlTexture() {

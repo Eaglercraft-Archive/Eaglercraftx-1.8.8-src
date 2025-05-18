@@ -21,6 +21,7 @@ import static net.lax1dude.eaglercraft.v1_8.opengl.RealOpenGLEnums.*;
 
 import java.util.List;
 
+import net.lax1dude.eaglercraft.v1_8.Display;
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.internal.IProgramGL;
 import net.lax1dude.eaglercraft.v1_8.internal.IShaderGL;
@@ -100,6 +101,7 @@ public class TextureCopyUtil {
 		_wglCompileShader(vshShader);
 
 		if(_wglGetShaderi(vshShader, GL_COMPILE_STATUS) != GL_TRUE) {
+			Display.checkContextLost();
 			LOGGER.error("Failed to compile GL_VERTEX_SHADER \"" + vertexShaderPath + "\" for TextureCopyUtil!");
 			String log = _wglGetShaderInfoLog(vshShader);
 			if(log != null) {
@@ -126,6 +128,7 @@ public class TextureCopyUtil {
 		_wglCompileShader(frag);
 
 		if(_wglGetShaderi(frag, GL_COMPILE_STATUS) != GL_TRUE) {
+			Display.checkContextLost();
 			LOGGER.error("Failed to compile GL_FRAGMENT_SHADER \"" + fragmentShaderPath + "\" for TextureCopyUtil!");
 			String log = _wglGetShaderInfoLog(frag);
 			if(log != null) {
@@ -154,6 +157,7 @@ public class TextureCopyUtil {
 		_wglDeleteShader(frag);
 
 		if(_wglGetProgrami(shaderProgram, GL_LINK_STATUS) != GL_TRUE) {
+			Display.checkContextLost();
 			LOGGER.error("Failed to link shader program for TextureCopyUtil!");
 			String log = _wglGetProgramInfoLog(shaderProgram);
 			if(log != null) {

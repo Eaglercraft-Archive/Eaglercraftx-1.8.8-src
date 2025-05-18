@@ -104,4 +104,14 @@ public class GuiHandshakeApprove extends GuiScreen {
 		}
 	}
 
+	public static GuiScreen displayAuthProtocolConfirm(int protocol, GuiScreen no, GuiScreen yes) {
+		if(protocol == HandshakePacketTypes.AUTH_METHOD_PLAINTEXT) {
+			return new GuiHandshakeApprove("plaintext", no, yes);
+		}else if(protocol != HandshakePacketTypes.AUTH_METHOD_EAGLER_SHA256 && protocol != HandshakePacketTypes.AUTH_METHOD_AUTHME_SHA256) {
+			return new GuiHandshakeApprove("unsupportedAuth", no);
+		}else {
+			return null;
+		}
+	}
+
 }

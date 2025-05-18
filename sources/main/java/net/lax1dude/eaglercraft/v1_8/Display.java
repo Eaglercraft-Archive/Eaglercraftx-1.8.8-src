@@ -16,6 +16,7 @@
 
 package net.lax1dude.eaglercraft.v1_8;
 
+import net.lax1dude.eaglercraft.v1_8.internal.ContextLostError;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformInput;
 
 public class Display {
@@ -81,6 +82,12 @@ public class Display {
 
 	public static boolean contextLost() {
 		return PlatformInput.contextLost();
+	}
+
+	public static void checkContextLost() {
+		if(PlatformInput.contextLost()) {
+			throw new ContextLostError();
+		}
 	}
 
 	public static boolean wasResized() {

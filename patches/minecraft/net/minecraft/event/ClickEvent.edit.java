@@ -12,11 +12,7 @@
 + import com.google.common.collect.Maps;
 + 
 
-> CHANGE  53 : 54  @  53 : 54
-
-~ 		CHANGE_PAGE("change_page", true), EAGLER_PLUGIN_DOWNLOAD("eagler_plugin_download", true);
-
-> CHANGE  23 : 26  @  23 : 25
+> CHANGE  77 : 80  @  77 : 79
 
 ~ 			ClickEvent.Action[] types = values();
 ~ 			for (int i = 0; i < types.length; ++i) {

@@ -37,15 +37,13 @@
 
 ~ 					byte b0 = (byte) spawnHostileMobs.getMinecraftServer().getConfigurationManager().getViewDistance();
 
-> CHANGE  4 : 9  @  4 : 6
+> CHANGE  4 : 7  @  4 : 5
 
 ~ 							int cx = l + j;
 ~ 							int cz = i1 + k;
 ~ 							long chunkcoordintpair = ChunkCoordIntPair.chunkXZ2Int(cx, cz);
-~ 							if (!this.eligibleChunksForSpawning.contains(chunkcoordintpair)
-~ 									&& spawnHostileMobs.theChunkProviderServer.chunkExists(cx, cz)) {
 
-> CHANGE  13 : 16  @  13 : 14
+> CHANGE  14 : 17  @  14 : 15
 
 ~ 			EnumCreatureType[] types = EnumCreatureType._VALUES;
 ~ 			for (int m = 0; m < types.length; ++m) {

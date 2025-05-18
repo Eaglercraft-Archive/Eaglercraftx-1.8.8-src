@@ -26,6 +26,7 @@ import net.lax1dude.eaglercraft.v1_8.internal.WebViewOptions;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 import net.lax1dude.eaglercraft.v1_8.minecraft.GuiScreenGenericErrorMessage;
+import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.server.SPacketDisplayWebViewURLV5EAG;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
@@ -91,6 +92,54 @@ public class GuiScreenServerInfo extends GuiScreen {
 		opts.fallbackTitle = PauseMenuCustomizeState.serverInfoEmbedTitle;
 	}
 
+	public static GuiScreen createForDisplayRequest(GuiScreen parent, int perms, String title, String url) {
+		URI urlObj;
+		try {
+			urlObj = new URI(url);
+		}catch(URISyntaxException ex) {
+			logger.error("Refusing to iframe an invalid URL: {}", url);
+			logger.error(ex);
+			return new GuiScreenGenericErrorMessage("webviewInvalidURL.title", "webviewInvalidURL.desc", parent);
+		}
+		return createForDisplayRequest(parent, perms, title, urlObj);
+	}
+
+	public static GuiScreen createForDisplayRequest(GuiScreen parent, int perms, String title, URI url) {
+		boolean support = WebViewOverlayController.supported();
+		boolean fallbackSupport = WebViewOverlayController.fallbackSupported();
+		if(!support && !fallbackSupport) {
+			return new GuiScreenGenericErrorMessage("webviewNotSupported.title", "webviewNotSupported.desc", parent);
+		}
+		WebViewOptions opts = new WebViewOptions();
+		opts.contentMode = EnumWebViewContentMode.URL_BASED;
+		opts.url = url;
+		setupState(opts, perms, title);
+		opts.permissionsOriginUUID = WebViewOptions.getURLOriginUUID(url);
+		return support ? new GuiScreenServerInfo(parent, opts) : new GuiScreenServerInfoDesktop(parent, opts);
+	}
+
+	public static GuiScreen createForDisplayRequest(GuiScreen parent, int perms, String title, byte[] blob,
+			EaglercraftUUID permissionsOriginUUID) {
+		boolean support = WebViewOverlayController.supported();
+		boolean fallbackSupport = WebViewOverlayController.fallbackSupported();
+		if(!support && !fallbackSupport) {
+			return new GuiScreenGenericErrorMessage("webviewNotSupported.title", "webviewNotSupported.desc", parent);
+		}
+		WebViewOptions opts = new WebViewOptions();
+		opts.contentMode = EnumWebViewContentMode.BLOB_BASED;
+		opts.blob = blob;
+		setupState(opts, perms, title);
+		opts.permissionsOriginUUID = permissionsOriginUUID;
+		return support ? new GuiScreenServerInfo(parent, opts) : new GuiScreenServerInfoDesktop(parent, opts);
+	}
+
+	public static void setupState(WebViewOptions opts, int perms, String title) {
+		opts.scriptEnabled = (perms & SPacketDisplayWebViewURLV5EAG.FLAG_PERMS_JAVASCRIPT) != 0;
+		opts.strictCSPEnable = (perms & SPacketDisplayWebViewURLV5EAG.FLAG_PERMS_STRICT_CSP) != 0;
+		opts.serverMessageAPIEnabled = (perms & SPacketDisplayWebViewURLV5EAG.FLAG_PERMS_MESSAGE_API) != 0;
+		opts.fallbackTitle = title;
+	}
+
 	public void initGui() {
 		ScaledResolution res = mc.scaledResolution;
 		if(!isShowing) {
@@ -118,8 +167,7 @@ public class GuiScreenServerInfo extends GuiScreen {
 
 	public void drawScreen(int mx, int my, float pt) {
 		drawDefaultBackground();
-		drawCenteredString(fontRendererObj, PauseMenuCustomizeState.serverInfoEmbedTitle == null ? "Server Info"
-				: PauseMenuCustomizeState.serverInfoEmbedTitle, width / 2, 13, 0xFFFFFF);
+		drawCenteredString(fontRendererObj, opts.fallbackTitle == null ? "Server Info" : opts.fallbackTitle, width / 2, 13, 0xFFFFFF);
 		super.drawScreen(mx, my, pt);
 	}
 

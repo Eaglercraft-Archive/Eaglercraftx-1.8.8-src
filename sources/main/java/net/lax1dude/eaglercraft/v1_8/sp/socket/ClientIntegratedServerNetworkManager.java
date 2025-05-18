@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024 lax1dude, ayunami2000. All Rights Reserved.
+ * Copyright (c) 2023-2025 lax1dude, ayunami2000. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -78,6 +78,10 @@ public class ClientIntegratedServerNetworkManager extends EaglercraftNetworkMana
 			byte[] next = recievedPacketBuffer.remove(0);
 			++debugPacketCounter;
 			try {
+				if(injectedController != null && injectedController.handlePacket(next, 0)) {
+					continue;
+				}
+				
 				ByteBuf nettyBuffer = Unpooled.buffer(next, next.length);
 				nettyBuffer.writerIndex(next.length);
 				PacketBuffer input = new PacketBuffer(nettyBuffer);
@@ -168,4 +172,14 @@ public class ClientIntegratedServerNetworkManager extends EaglercraftNetworkMana
 	public void clearRecieveQueue() {
 		recievedPacketBuffer.clear();
 	}
+
+	@Override
+	public void injectRawFrame(byte[] data) {
+		if(!isChannelOpen()) {
+			logger.error("Frame was injected on a closed connection");
+			return;
+		}
+		ClientPlatformSingleplayer.sendPacket(new IPCPacketData(address, data));
+	}
+
 }

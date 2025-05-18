@@ -23,6 +23,7 @@ import java.util.Arrays;
 
 import net.lax1dude.eaglercraft.v1_8.EaglerInputStream;
 import net.lax1dude.eaglercraft.v1_8.EaglerZLIB;
+import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
 import net.lax1dude.eaglercraft.v1_8.IOUtils;
 import net.lax1dude.eaglercraft.v1_8.crypto.SHA1Digest;
 import net.lax1dude.eaglercraft.v1_8.internal.WebViewOptions;
@@ -34,6 +35,7 @@ import net.lax1dude.eaglercraft.v1_8.opengl.WorldRenderer;
 import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.client.CPacketRequestServerInfoV4EAG;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
@@ -44,13 +46,25 @@ public class GuiScreenRecieveServerInfo extends GuiScreen {
 
 	protected final GuiScreen parent;
 	protected final byte[] expectHash;
+	protected final IDisplayWebviewProc proc;
 	protected int timer;
 	protected int timer2;
 	protected String statusString = "recieveServerInfo.checkingCache";
 
+	public static interface IDisplayWebviewProc {
+		GuiScreen display(GuiScreen parent, byte[] blob, EaglercraftUUID permissionsOriginUUID);
+	}
+
 	public GuiScreenRecieveServerInfo(GuiScreen parent, byte[] expectHash) {
 		this.parent = parent;
 		this.expectHash = expectHash;
+		this.proc = GuiScreenServerInfo::createForCurrentState;
+	}
+
+	public GuiScreenRecieveServerInfo(GuiScreen parent, byte[] expectHash, IDisplayWebviewProc proc) {
+		this.parent = parent;
+		this.expectHash = expectHash;
+		this.proc = proc;
 	}
 
 	public void initGui() {
@@ -105,28 +119,26 @@ public class GuiScreenRecieveServerInfo extends GuiScreen {
 			mc.displayGuiScreen(parent);
 			return;
 		}
+		NetHandlerPlayClient sendQueue = mc.thePlayer.sendQueue;
 		++timer;
 		if(timer == 1) {
 			byte[] data = ServerInfoCache.loadFromCache(expectHash);
 			if(data != null) {
-				mc.displayGuiScreen(GuiScreenServerInfo.createForCurrentState(parent, data, WebViewOptions.getEmbedOriginUUID(expectHash)));
+				mc.displayGuiScreen(proc.display(parent, data, WebViewOptions.getEmbedOriginUUID(expectHash)));
 			}else {
-				byte[] b = mc.thePlayer.sendQueue.cachedServerInfoData;
-				if(b != null) {
+				byte[] b = sendQueue.cachedServerInfoData;
+				if(b != null && Arrays.equals(expectHash, sendQueue.cachedServerInfoHash)) {
 					if(b.length == 0) {
 						mc.displayGuiScreen(new GuiScreenGenericErrorMessage("serverInfoFailure.title", "serverInfoFailure.desc", parent));
 					}else {
 						ServerInfoCache.storeInCache(expectHash, b);
-						mc.displayGuiScreen(GuiScreenServerInfo.createForCurrentState(parent, b, WebViewOptions.getEmbedOriginUUID(expectHash)));
+						mc.displayGuiScreen(proc.display(parent, b, WebViewOptions.getEmbedOriginUUID(expectHash)));
 					}
 				}else {
 					statusString = "recieveServerInfo.contactingServer";
-					if(!mc.thePlayer.sendQueue.hasRequestedServerInfo) {
-						if(!ServerInfoCache.hasLastChunk || !Arrays.equals(ServerInfoCache.chunkRecieveHash, expectHash)) {
-							ServerInfoCache.clearDownload();
-							mc.thePlayer.sendQueue.sendEaglerMessage(new CPacketRequestServerInfoV4EAG(expectHash));
-							mc.thePlayer.sendQueue.hasRequestedServerInfo = true;
-						}
+					if(!ServerInfoCache.hasLastChunk || !Arrays.equals(ServerInfoCache.chunkRecieveHash, expectHash)) {
+						ServerInfoCache.clearDownload();
+						sendQueue.sendEaglerMessage(new CPacketRequestServerInfoV4EAG(expectHash));
 					}
 				}
 			}
@@ -144,7 +156,8 @@ public class GuiScreenRecieveServerInfo extends GuiScreen {
 						}
 						if(i != ServerInfoCache.chunkCurrentSize) {
 							logger.error("An unknown error occured!");
-							mc.thePlayer.sendQueue.cachedServerInfoData = new byte[0];
+							sendQueue.cachedServerInfoHash = expectHash;
+							sendQueue.cachedServerInfoData = new byte[0];
 							mc.displayGuiScreen(new GuiScreenGenericErrorMessage("serverInfoFailure.title", "serverInfoFailure.desc", parent));
 							return;
 						}
@@ -154,14 +167,16 @@ public class GuiScreenRecieveServerInfo extends GuiScreen {
 							int finalSize = (new DataInputStream(bis)).readInt();
 							if(finalSize < 0) {
 								logger.error("The response data was corrupt, decompressed size is negative!");
-								mc.thePlayer.sendQueue.cachedServerInfoData = new byte[0];
+								sendQueue.cachedServerInfoHash = expectHash;
+								sendQueue.cachedServerInfoData = new byte[0];
 								mc.displayGuiScreen(new GuiScreenGenericErrorMessage("serverInfoFailure.title", "serverInfoFailure.desc", parent));
 								return;
 							}
 							if(finalSize > ServerInfoCache.CACHE_MAX_SIZE * 2) {
-								logger.error("Failed to decompress/verify server info response! Size is massive, {} " + finalSize + " bytes reported!");
+								logger.error("Failed to decompress/verify server info response! Size is massive, {} bytes reported!", finalSize);
 								logger.error("Aborting decompression. Rejoin the server to try again.");
-								mc.thePlayer.sendQueue.cachedServerInfoData = new byte[0];
+								sendQueue.cachedServerInfoHash = expectHash;
+								sendQueue.cachedServerInfoData = new byte[0];
 								mc.displayGuiScreen(new GuiScreenGenericErrorMessage("serverInfoFailure.title", "serverInfoFailure.desc", parent));
 								return;
 							}
@@ -175,17 +190,20 @@ public class GuiScreenRecieveServerInfo extends GuiScreen {
 							digest.doFinal(csum, 0);
 							if(Arrays.equals(csum, expectHash)) {
 								ServerInfoCache.storeInCache(csum, decompressed);
-								mc.thePlayer.sendQueue.cachedServerInfoData = decompressed;
-								mc.displayGuiScreen(GuiScreenServerInfo.createForCurrentState(parent, decompressed, WebViewOptions.getEmbedOriginUUID(expectHash)));
+								sendQueue.cachedServerInfoHash = expectHash;
+								sendQueue.cachedServerInfoData = decompressed;
+								mc.displayGuiScreen(proc.display(parent, decompressed, WebViewOptions.getEmbedOriginUUID(expectHash)));
 							}else {
 								logger.error("The data recieved from the server did not have the correct SHA1 checksum! Rejoin the server to try again.");
-								mc.thePlayer.sendQueue.cachedServerInfoData = new byte[0];
+								sendQueue.cachedServerInfoHash = expectHash;
+								sendQueue.cachedServerInfoData = new byte[0];
 								mc.displayGuiScreen(new GuiScreenGenericErrorMessage("serverInfoFailure.title", "serverInfoFailure.desc", parent));
 							}
 						}catch(IOException ex) {
 							logger.error("Failed to decompress/verify server info response! Rejoin the server to try again.");
 							logger.error(ex);
-							mc.thePlayer.sendQueue.cachedServerInfoData = new byte[0];
+							sendQueue.cachedServerInfoHash = expectHash;
+							sendQueue.cachedServerInfoData = new byte[0];
 							mc.displayGuiScreen(new GuiScreenGenericErrorMessage("serverInfoFailure.title", "serverInfoFailure.desc", parent));
 						}
 					}

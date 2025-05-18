@@ -1483,6 +1483,7 @@ public class EaglerDeferredPipeline {
 		GlStateManager.globalEnableBlend();
 		GlStateManager.enableBlend();
 		GlStateManager.depthMask(false);
+		GlStateManager.cullFace(GL_FRONT);
 		GlStateManager.tryBlendFuncSeparate(GL_ZERO, GL_SRC_COLOR, GL_ZERO, GL_ZERO);
 		GlStateManager.enablePolygonOffset();
 		GlStateManager.doPolygonOffset(0.25f, 1.0f);
@@ -1497,6 +1498,7 @@ public class EaglerDeferredPipeline {
 		GlStateManager.disableBlend();
 		GlStateManager.globalDisableBlend();
 		GlStateManager.depthMask(true);
+		GlStateManager.cullFace(GL_BACK);
 		GlStateManager.disablePolygonOffset();
 		GlStateManager.colorMask(false, false, false, false);
 		DeferredStateManager.checkGLError("Post: endDrawColoredShadows()");

@@ -62,12 +62,16 @@ public class TeaVMBinaries {
 	public static final MavenJAREntry teavmMetaprogrammingImpl = new MavenJAREntry("org/teavm/teavm-metaprogramming-impl/0.9.2/teavm-metaprogramming-impl-0.9.2.jar");
 	public static final MavenJAREntry teavmJodaTime = new MavenJAREntry("joda-time/joda-time/2.12.2/joda-time-2.12.2.jar");
 	public static final MavenJAREntry teavmJZLIB = new MavenJAREntry("com/jcraft/jzlib/1.1.3/jzlib-1.1.3.jar");
+	public static final MavenJAREntry depJOrbis = new MavenJAREntry("org/jcraft/jorbis/0.0.17/jorbis-0.0.17.jar");
+	public static final MavenJAREntry depLang3 = new MavenJAREntry("org/apache/commons/commons-lang3/3.6/commons-lang3-3.6.jar");
+	public static final MavenJAREntry depHPPC = new MavenJAREntry("com/carrotsearch/hppc/0.10.0/hppc-0.10.0.jar");
+	public static final MavenJAREntry depJSR305 = new MavenJAREntry("com/google/code/findbugs/jsr305/3.0.2/jsr305-3.0.2.jar");
 
 	private static final MavenJAREntry[] jarsList = new MavenJAREntry[] { teavmCore, teavmCli, teavmTooling,
 			teavmPlatform, teavmClasslib, teavmInterop, teavmJSO, teavmJSOApis, teavmJSOImpl, teavmRelocatedLibsASM,
 			teavmRelocatedLibsASMAnalysis, teavmRelocatedLibsASMCommons, teavmRelocatedLibsASMTree,
 			teavmRelocatedLibsASMUtil, teavmRelocatedLibsHPPC, teavmRelocatedLibsRhino, teavmMetaprogrammingAPI,
-			teavmMetaprogrammingImpl, teavmJodaTime, teavmJZLIB };
+			teavmMetaprogrammingImpl, teavmJodaTime, teavmJZLIB, depJOrbis, depLang3, depHPPC, depJSR305 };
 
 	public static File teavmBridge = null;
 
@@ -201,10 +205,12 @@ public class TeaVMBinaries {
 
 	public static String[] getTeaVMRuntimeClasspath() {
 		return new String[] { teavmJodaTime.file.getAbsolutePath(), teavmJZLIB.file.getAbsolutePath(),
-				teavmClasslib.file.getAbsolutePath(), teavmInterop.file.getAbsolutePath(), teavmJSO.file.getAbsolutePath(),
-				teavmJSOApis.file.getAbsolutePath(), teavmJSOImpl.file.getAbsolutePath(),
-				teavmMetaprogrammingAPI.file.getAbsolutePath(), teavmMetaprogrammingImpl.file.getAbsolutePath(),
-				teavmPlatform.file.getAbsolutePath(), teavmCore.file.getAbsolutePath() };
+				teavmClasslib.file.getAbsolutePath(), teavmInterop.file.getAbsolutePath(),
+				teavmJSO.file.getAbsolutePath(), teavmJSOApis.file.getAbsolutePath(),
+				teavmJSOImpl.file.getAbsolutePath(), teavmMetaprogrammingAPI.file.getAbsolutePath(),
+				teavmMetaprogrammingImpl.file.getAbsolutePath(), teavmPlatform.file.getAbsolutePath(),
+				teavmCore.file.getAbsolutePath(), depJOrbis.file.getAbsolutePath(), depLang3.file.getAbsolutePath(),
+				depHPPC.file.getAbsolutePath(), depJSR305.file.getAbsolutePath() };
 	}
 
 }

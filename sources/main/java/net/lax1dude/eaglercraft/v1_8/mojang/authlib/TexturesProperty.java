@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 lax1dude. All Rights Reserved.
+ * Copyright (c) 2022-2025 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -22,48 +22,66 @@ import org.json.JSONObject;
 
 import net.lax1dude.eaglercraft.v1_8.ArrayUtils;
 import net.lax1dude.eaglercraft.v1_8.Base64;
+import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
+import net.lax1dude.eaglercraft.v1_8.profile.SkinModel;
+import net.lax1dude.eaglercraft.v1_8.profile.SkinPackets;
 
 public class TexturesProperty {
 
 	public final String skin;
-	public final String model;
+	public final SkinModel model;
 	public final String cape;
-	public final boolean eaglerPlayer;
+	public final byte eaglerPlayer;
 
-	public static final TexturesProperty defaultNull = new TexturesProperty(null, "default", null, false);
+	private EaglercraftUUID skinTextureUUID;
 
-	private TexturesProperty(String skin, String model, String cape, boolean eaglerPlayer) {
+	public static final TexturesProperty[] defaultNull = new TexturesProperty[] {
+			new TexturesProperty(null, SkinModel.STEVE, null, (byte) 0),
+			new TexturesProperty(null, SkinModel.STEVE, null, (byte) 1),
+			new TexturesProperty(null, SkinModel.STEVE, null, (byte) 2)
+	};
+
+	private TexturesProperty(String skin, SkinModel model, String cape, byte eaglerPlayer) {
 		this.skin = skin;
 		this.model = model;
 		this.cape = cape;
 		this.eaglerPlayer = eaglerPlayer;
 	}
 
+	public EaglercraftUUID loadSkinTextureUUID() {
+		if(skinTextureUUID == null && skin != null) {
+			skinTextureUUID = SkinPackets.createEaglerURLSkinUUID(skin);
+		}
+		return skinTextureUUID;
+	}
+
 	public static TexturesProperty parseProfile(GameProfile profile) {
+		String str = null;
+		byte isEagler = 0;
+		Property prop;
 		Collection<Property> etr = profile.getProperties().get("textures");
 		if(!etr.isEmpty()) {
-			Property prop = etr.iterator().next();
-			String str;
+			prop = etr.iterator().next();
 			try {
 				str = ArrayUtils.asciiString(Base64.decodeBase64(prop.getValue()));
 			}catch(Throwable t) {
-				return defaultNull;
 			}
-			boolean isEagler = false;
-			etr = profile.getProperties().get("isEaglerPlayer");
-			if(!etr.isEmpty()) {
-				prop = etr.iterator().next();
-				isEagler = prop.getValue().equalsIgnoreCase("true");
-			}
+		}
+		etr = profile.getProperties().get("isEaglerPlayer");
+		if(!etr.isEmpty()) {
+			prop = etr.iterator().next();
+			isEagler = prop.getValue().equalsIgnoreCase("true") ? (byte) 2 : (byte) 1;
+		}
+		if(str != null) {
 			return parseTextures(str, isEagler);
 		}else {
-			return defaultNull;
+			return defaultNull[isEagler];
 		}
 	}
 
-	public static TexturesProperty parseTextures(String string, boolean isEagler) {
+	public static TexturesProperty parseTextures(String string, byte isEagler) {
 		String skin = null;
-		String model = "default";
+		SkinModel model = SkinModel.STEVE;
 		String cape = null;
 		try {
 			JSONObject json = new JSONObject(string);
@@ -74,7 +92,10 @@ public class TexturesProperty {
 					skin = skinObj.optString("url");
 					JSONObject meta = skinObj.optJSONObject("metadata");
 					if(meta != null) {
-						model = meta.optString("model", model);
+						String modelStr = meta.optString("model");
+						if(modelStr != null && modelStr.equalsIgnoreCase("slim")) {
+							model = SkinModel.STEVE;
+						}
 					}
 				}
 				JSONObject capeObj = json.optJSONObject("CAPE");

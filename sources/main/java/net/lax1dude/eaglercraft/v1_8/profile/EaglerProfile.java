@@ -210,7 +210,6 @@ public class EaglerProfile {
 	public static void handleForceSkinPreset(int preset) {
 		isServerSkinOverride = true;
 		overridePresetSkinId = preset;
-		ServerSkinCache.needReloadClientSkin = true;
 	}
 
 	public static void handleForceSkinCustom(int modelID, byte[] datav3) {
@@ -229,13 +228,11 @@ public class EaglerProfile {
 		}else {
 			overrideCustomSkin.copyPixelsIn(datav3);
 		}
-		ServerSkinCache.needReloadClientSkin = true;
 	}
 
 	public static void handleForceCapePreset(int preset) {
 		isServerCapeOverride = true;
 		overridePresetCapeId = preset;
-		ServerCapeCache.needReloadClientCape = true;
 	}
 
 	public static void handleForceCapeCustom(byte[] custom) {
@@ -252,7 +249,6 @@ public class EaglerProfile {
 		}else {
 			overrideCustomCape.copyPixelsIn(pixels32x32);
 		}
-		ServerCapeCache.needReloadClientCape = true;
 	}
 
 	public static void clearServerSkinOverride() {

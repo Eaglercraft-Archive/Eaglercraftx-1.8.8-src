@@ -31,26 +31,24 @@
 
 ~ 		return true;
 
-> CHANGE  3 : 5  @  3 : 4
+> CHANGE  3 : 4  @  3 : 4
 
-~ 		return Minecraft.getMinecraft().getNetHandler().getSkinCache().getSkin(this.gameProfile)
-~ 				.getSkinModel().profileSkinType;
+~ 		return getEaglerSkinModel().profileSkinType;
 
 > CHANGE  2 : 5  @  2 : 6
 
 ~ 	public SkinModel getEaglerSkinModel() {
-~ 		return Minecraft.getMinecraft().getNetHandler().getSkinCache().getSkin(this.gameProfile).getSkinModel();
+~ 		return Minecraft.getMinecraft().getNetHandler().getTextureCache().getPlayerSkin(this.gameProfile).getModel();
 ~ 	}
 
 > CHANGE  1 : 3  @  1 : 3
 
 ~ 	public ResourceLocation getLocationSkin() {
-~ 		return Minecraft.getMinecraft().getNetHandler().getSkinCache().getSkin(this.gameProfile).getResourceLocation();
+~ 		return Minecraft.getMinecraft().getNetHandler().getTextureCache().getPlayerSkin(this.gameProfile).getLocation();
 
-> CHANGE  3 : 5  @  3 : 8
+> CHANGE  3 : 4  @  3 : 8
 
-~ 		return Minecraft.getMinecraft().getNetHandler().getCapeCache().getCape(this.gameProfile.getId())
-~ 				.getResourceLocation();
+~ 		return Minecraft.getMinecraft().getNetHandler().getTextureCache().getPlayerCape(this.gameProfile);
 
 > DELETE  6  @  6 : 33
 

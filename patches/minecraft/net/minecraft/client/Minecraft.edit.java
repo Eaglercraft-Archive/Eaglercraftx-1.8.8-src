@@ -18,14 +18,13 @@
 
 > DELETE  1  @  1 : 4
 
-> CHANGE  1 : 75  @  1 : 4
+> CHANGE  1 : 76  @  1 : 4
 
 ~ 
 ~ import net.lax1dude.eaglercraft.v1_8.ClientUUIDLoadingCache;
 ~ import net.lax1dude.eaglercraft.v1_8.Display;
 ~ import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 ~ import net.lax1dude.eaglercraft.v1_8.EagUtils;
-~ import net.lax1dude.eaglercraft.v1_8.EaglerXBungeeVersion;
 ~ import net.lax1dude.eaglercraft.v1_8.HString;
 ~ import net.lax1dude.eaglercraft.v1_8.IOUtils;
 ~ import net.lax1dude.eaglercraft.v1_8.Keyboard;
@@ -43,6 +42,7 @@
 ~ import net.lax1dude.eaglercraft.v1_8.futures.FutureTask;
 ~ import net.lax1dude.eaglercraft.v1_8.futures.ListenableFuture;
 ~ import net.lax1dude.eaglercraft.v1_8.futures.ListenableFutureTask;
+~ import net.lax1dude.eaglercraft.v1_8.internal.ContextLostError;
 ~ import net.lax1dude.eaglercraft.v1_8.internal.EnumPlatformType;
 ~ import net.lax1dude.eaglercraft.v1_8.internal.PlatformRuntime;
 ~ import net.lax1dude.eaglercraft.v1_8.internal.PlatformWebRTC;
@@ -76,6 +76,7 @@
 ~ import net.lax1dude.eaglercraft.v1_8.socket.AddressResolver;
 ~ import net.lax1dude.eaglercraft.v1_8.socket.EaglercraftNetworkManager;
 ~ import net.lax1dude.eaglercraft.v1_8.socket.RateLimitTracker;
+~ import net.lax1dude.eaglercraft.v1_8.socket.protocol.client.StateFlags;
 ~ import net.lax1dude.eaglercraft.v1_8.sp.IntegratedServerState;
 ~ import net.lax1dude.eaglercraft.v1_8.sp.SingleplayerServerController;
 ~ import net.lax1dude.eaglercraft.v1_8.sp.SkullCommand;
@@ -139,7 +140,9 @@
 + import net.minecraft.util.ChatStyle;
 + import net.minecraft.util.EnumChatFormatting;
 
-> INSERT  7 : 8  @  7
+> DELETE  3  @  3 : 4
+
+> INSERT  3 : 4  @  3
 
 + import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 
@@ -256,12 +259,14 @@
 
 ~ 					this.runGameLoop();
 
-> DELETE  4  @  4 : 21
+> CHANGE  4 : 5  @  4 : 21
+
+~ 				return;
 
 > CHANGE  1 : 14  @  1 : 3
 
-~ 		} catch (MinecraftError var12) {
-~ 			// ??
+~ 		} catch (ContextLostError err) {
+~ 			throw err;
 ~ 		} catch (ReportedException reportedexception) {
 ~ 			this.addGraphicsAndWorldToCrashReport(reportedexception.getCrashReport());
 ~ 			logger.fatal("Reported exception thrown!", reportedexception);
@@ -555,8 +560,10 @@
 ~ 		long i = EagRuntime.nanoTime();
 ~ 		if (Display.isCloseRequested()) {
 
-> INSERT  3 : 6  @  3
+> INSERT  3 : 8  @  3
 
++ 		Display.checkContextLost();
++ 
 + 		PointerInputAbstraction.runGameLoop();
 + 		this.gameSettings.touchscreen = PointerInputAbstraction.isTouchMode();
 + 
@@ -583,34 +590,31 @@
 
 > DELETE  1  @  1 : 2
 
-> DELETE  1  @  1 : 11
+> CHANGE  1 : 6  @  1 : 3
 
-> CHANGE  1 : 12  @  1 : 7
+~ 
+~ 		EaglercraftGPU.optimize();
+~ 		_wglBindFramebuffer(0x8D40, null);
+~ 		GlStateManager.viewport(0, 0, this.displayWidth, this.displayHeight);
+~ 		GlStateManager.clearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-~ 		if (!Display.contextLost()) {
-~ 			EaglercraftGPU.optimize();
-~ 			_wglBindFramebuffer(0x8D40, null);
-~ 			GlStateManager.viewport(0, 0, this.displayWidth, this.displayHeight);
-~ 			GlStateManager.clearColor(0.0f, 0.0f, 0.0f, 1.0f);
-~ 			GlStateManager.pushMatrix();
-~ 			GlStateManager.clear(16640);
-~ 			GlStateManager.enableTexture2D();
-~ 			if (this.thePlayer != null && this.thePlayer.isEntityInsideOpaqueBlock()) {
-~ 				this.gameSettings.thirdPersonView = 0;
-~ 			}
+> DELETE  2  @  2 : 4
 
-> CHANGE  1 : 3  @  1 : 5
+> DELETE  5  @  5 : 6
 
-~ 			if (!this.skipRenderWorld) {
-~ 				this.entityRenderer.func_181560_a(this.timer.renderPartialTicks, i);
+> DELETE  1  @  1 : 2
 
-> CHANGE  2 : 5  @  2 : 7
+> DELETE  1  @  1 : 2
 
-~ 			this.guiAchievement.updateAchievementWindow();
-~ 			this.touchOverlayRenderer.render(displayWidth, displayHeight, scaledResolution);
-~ 			GlStateManager.popMatrix();
+> DELETE  2  @  2 : 15
 
-> DELETE  2  @  2 : 12
+> CHANGE  1 : 2  @  1 : 2
+
+~ 		this.touchOverlayRenderer.render(displayWidth, displayHeight, scaledResolution);
+
+> CHANGE  1 : 2  @  1 : 8
+
+~ 
 
 > DELETE  1  @  1 : 9
 
@@ -777,7 +781,7 @@
 
 > CHANGE  4 : 6  @  4 : 5
 
-~ 		VoiceClientController.tickVoiceClient(this);
+~ 		VoiceClientController.tickVoiceClient();
 ~ 
 
 > DELETE  1  @  1 : 2
@@ -1047,29 +1051,29 @@
 ~ 			if (bungeeOutdatedMsgTimer > 0) {
 ~ 				if (--bungeeOutdatedMsgTimer == 0 && this.thePlayer.sendQueue != null) {
 ~ 					String pluginBrand = this.thePlayer.sendQueue.getNetworkManager().getPluginBrand();
-~ 					String pluginVersion = this.thePlayer.sendQueue.getNetworkManager().getPluginVersion();
-~ 					if (pluginBrand != null && pluginVersion != null
-~ 							&& EaglerXBungeeVersion.isUpdateToPluginAvailable(pluginBrand, pluginVersion)) {
+~ 					if (pluginBrand != null && ("EaglercraftXBungee".equals(pluginBrand)
+~ 							|| "EaglercraftXVelocity".equals(pluginBrand))) {
 ~ 						String pfx = EnumChatFormatting.GOLD + "[EagX]" + EnumChatFormatting.AQUA;
 ~ 						ingameGUI.getChatGUI().printChatMessage(
 ~ 								new ChatComponentText(pfx + " ---------------------------------------"));
+~ 						ingameGUI.getChatGUI().printChatMessage(new ChatComponentText(pfx + " This server is running "
+~ 								+ EnumChatFormatting.YELLOW + pluginBrand + EnumChatFormatting.AQUA + ","));
 ~ 						ingameGUI.getChatGUI().printChatMessage(
-~ 								new ChatComponentText(pfx + " This server appears to be using version "
-~ 										+ EnumChatFormatting.YELLOW + pluginVersion));
+~ 								new ChatComponentText(pfx + " which has been discontinued by lax1dude."));
+~ 						ingameGUI.getChatGUI().printChatMessage(new ChatComponentText(pfx));
 ~ 						ingameGUI.getChatGUI().printChatMessage(
-~ 								new ChatComponentText(pfx + " of the EaglerXBungee plugin which is outdated"));
+~ 								new ChatComponentText(pfx + " If you are the admin of this server, please"));
+~ 						ingameGUI.getChatGUI().printChatMessage(
+~ 								new ChatComponentText(pfx + " upgrade to EaglercraftXServer if you want to"));
+~ 						ingameGUI.getChatGUI().printChatMessage(
+~ 								new ChatComponentText(pfx + " to continue to receive support and bugfixes."));
 ~ 						ingameGUI.getChatGUI().printChatMessage(new ChatComponentText(pfx));
 ~ 						ingameGUI.getChatGUI()
-~ 								.printChatMessage(new ChatComponentText(pfx + " If you are the admin update to "
-~ 										+ EnumChatFormatting.YELLOW + EaglerXBungeeVersion.getPluginVersion()
-~ 										+ EnumChatFormatting.AQUA + " or newer"));
-~ 						ingameGUI.getChatGUI().printChatMessage(new ChatComponentText(pfx));
-~ 						ingameGUI.getChatGUI().printChatMessage((new ChatComponentText(pfx + " Click: "))
-~ 								.appendSibling((new ChatComponentText("" + EnumChatFormatting.GREEN
-~ 										+ EnumChatFormatting.UNDERLINE + EaglerXBungeeVersion.getPluginButton()))
-~ 												.setChatStyle((new ChatStyle()).setChatClickEvent(
-~ 														new ClickEvent(ClickEvent.Action.EAGLER_PLUGIN_DOWNLOAD,
-~ 																"plugin_download.zip")))));
+~ 								.printChatMessage((new ChatComponentText(pfx + " " + EnumChatFormatting.GREEN
+~ 										+ EnumChatFormatting.UNDERLINE + "https://lax1dude.net/eaglerxserver"))
+~ 												.setChatStyle((new ChatStyle())
+~ 														.setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL,
+~ 																"https://lax1dude.net/eaglerxserver"))));
 ~ 						ingameGUI.getChatGUI().printChatMessage(
 ~ 								new ChatComponentText(pfx + " ---------------------------------------"));
 ~ 					}
@@ -1228,7 +1232,7 @@
 + 			EaglerProfile.clearServerSkinOverride();
 + 			PauseMenuCustomizeState.reset();
 + 			ClientUUIDLoadingCache.flushRequestCache();
-+ 			ClientUUIDLoadingCache.resetFlags();
++ 			StateFlags.reset();
 + 			WebViewOverlayController.setPacketSendCallback(null);
 
 > DELETE  1  @  1 : 7
@@ -1254,7 +1258,11 @@
 
 ~ 	public void middleClickMouse() {
 
-> CHANGE  127 : 128  @  127 : 128
+> CHANGE  76 : 77  @  76 : 77
+
+~ 					if (!EntityList.entityEggs.containsKey(i)) {
+
+> CHANGE  50 : 51  @  50 : 51
 
 ~ 				return EagRuntime.getVersion();
 

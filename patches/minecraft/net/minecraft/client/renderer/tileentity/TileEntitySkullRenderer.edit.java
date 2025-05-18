@@ -21,7 +21,7 @@
 ~ 				if (parGameProfile != null && parGameProfile.getId() != null) {
 ~ 					NetHandlerPlayClient netHandler = Minecraft.getMinecraft().getNetHandler();
 ~ 					if (netHandler != null) {
-~ 						resourcelocation = netHandler.getSkinCache().getSkin(parGameProfile).getResourceLocation();
+~ 						resourcelocation = netHandler.getTextureCache().getPlayerSkin(parGameProfile).getLocation();
 
 > DELETE  2  @  2 : 3
 

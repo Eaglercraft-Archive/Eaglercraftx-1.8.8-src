@@ -42,11 +42,13 @@ let setGlobalName = function(name, value) {
 
 /**
  * @param {Object} imports
+ * @param {Object} userExports
  */
-function defaults(imports) {
+function defaults(imports, userExports) {
     let context = {
         /** @type {Object} */
         exports: null,
+        userExports: userExports,
         /** @type {function(number)|null} */
         stackDeobfuscator: null,
         /** @type {function(function())|null} */
@@ -88,6 +90,21 @@ class JavaError extends Error {
         }
         return "(could not fetch message)";
     }
+}
+
+/**
+ * @param {Object} imports
+ */
+function stringImports(imports) {
+    imports["wasm:js-string"] = {
+        "fromCharCode": code => String.fromCharCode(code),
+        "fromCharCodeArray": () => { throw new Error("Not supported"); },
+        "intoCharCodeArray": () => { throw new Error("Not supported"); },
+        "concat": (first, second) => first + second,
+        "charCodeAt": (string, index) => string.charCodeAt(index),
+        "length": s => s.length,
+        "substring": (s, start, end) => s.substring(start, end)
+    };
 }
 
 /**
@@ -182,7 +199,10 @@ function coreImports(imports, context) {
             }
             return new WeakRef(value);
         },
-        "deref": weakRef => weakRef.deref(),
+        "deref": weakRef => {
+            let result = weakRef.deref();
+            return result !== void 0 ? result : null;
+        },
         "createStringWeakRef": (value, heldValue) => {
             stringFinalizationRegistry.register(value, heldValue)
             return new WeakRef(value);
@@ -224,7 +244,11 @@ function coreImports(imports, context) {
         },
         "decorateException": (javaException) => {
             new JavaError(context, javaException);
-        }
+        },
+        "linearMemory": () => {
+            return context.exports["teavm.memory"].buffer;
+        },
+        "notifyHeapResized": () => {}
     };
 }
 
@@ -349,11 +373,8 @@ function jsoImports(imports, context) {
         )(c);
     }
     imports["teavmJso"] = {
-        "emptyString": () => "",
-        "stringFromCharCode": code => String.fromCharCode(code),
-        "concatStrings": (a, b) => a + b,
-        "stringLength": s => s.length,
-        "charAt": (s, index) => s.charCodeAt(index),
+        "stringBuiltinsSupported": () => hasStringBuiltins(),
+        "isUndefined": o => typeof o === "undefined",
         "emptyArray": () => [],
         "appendToArray": (array, e) => array.push(e),
         "unwrapBoolean": value => value ? 1 : 0,
@@ -591,11 +612,16 @@ function jsoImports(imports, context) {
                 rethrowJsAsJava(e);
             }
         },
-        "concatArray": (a, b) => a.concat(b),
-        "getJavaException": e => e[javaExceptionSymbol]
+        "concatArray": (a, b) => [...a, ...b],
+        "getJavaException": e => e[javaExceptionSymbol],
+        "getJSException": e => {
+            let getJsException = context.exports["teavm.getJsException"];
+            return getJsException(e);
+        },
+        "jsExports": () => context.userExports
     };
-    for (let name of ["wrapByte", "wrapShort", "wrapChar", "wrapInt", "wrapFloat", "wrapDouble", "unwrapByte",
-        "unwrapShort", "unwrapChar", "unwrapInt", "unwrapFloat", "unwrapDouble"]) {
+    for (let name of ["wrapByte", "wrapShort", "wrapChar", "wrapInt", "wrapLong", "wrapFloat", "wrapDouble",
+        "unwrapByte", "unwrapShort", "unwrapChar", "unwrapInt", "unwrapLong", "unwrapFloat", "unwrapDouble"]) {
         imports["teavmJso"][name] = identity;
     }
     function wrapCallFromJavaToJs(call) {
@@ -705,14 +731,17 @@ async function load(path, options) {
     }
 
     let deobfuscatorOptions = options.stackDeobfuscator || {};
+
+    /** @suppress {checkTypes} */
     let [deobfuscatorFactory, module, debugInfo] = await Promise.all([
         deobfuscatorOptions.enabled ? getDeobfuscator(deobfuscatorOptions) : Promise.resolve(null),
-        (path instanceof WebAssembly.Module) ? Promise.resolve(path) : WebAssembly.compileStreaming(fetch(path)),
+        (path instanceof WebAssembly.Module) ? Promise.resolve(path) : WebAssembly.compileStreaming(fetch(path), { "builtins": ["js-string"] }),
         fetchExternalDebugInfo(deobfuscatorOptions.infoLocation, deobfuscatorOptions)
     ]);
 
     const importObj = {};
-    const defaultsResult = defaults(importObj);
+    let userExports = {};
+    const defaultsResult = defaults(importObj, userExports);
     if (typeof options.installImports !== "undefined") {
         options.installImports(importObj);
     }
@@ -724,7 +753,6 @@ async function load(path, options) {
     
     let instance = /** @type {!WebAssembly.Instance} */ (await WebAssembly.instantiate(module, importObj));
 
-    let userExports = {};
     
     defaultsResult.supplyExports(instance.exports);
     if (deobfuscatorFactory) {
@@ -758,6 +786,25 @@ async function load(path, options) {
     return teavm;
 }
 
+let stringBuiltinsCache = null;
+
+function hasStringBuiltins() {
+    if (stringBuiltinsCache === null) {
+        /*
+          (module
+           (type  (func))
+           (import "wasm:js-string" "cast" (func (type 0)))
+          )
+         */
+        let bytes = new Int8Array([0, 97, 115, 109, 1, 0, 0, 0, 1, 4, 1, 96, 0, 0, 2, 23, 1, 14, 119, 97,
+            115, 109, 58, 106, 115, 45, 115, 116, 114, 105, 110, 103, 4, 99, 97, 115, 116, 0, 0, 3, 1, 0,
+            5, 4, 1, 1, 0, 0, 10, -127, -128, -128, 0, 0]);
+        /** @suppress {checkTypes} */
+        stringBuiltinsCache = !WebAssembly.validate(bytes, { "builtins": ["js-string"]});
+    }
+    return stringBuiltinsCache;
+}
+
 /**
  * @param {Object} options
  * @return {!Promise<?{module:!WebAssembly.Module,instance:!WebAssembly.Instance}>}
@@ -765,9 +812,10 @@ async function load(path, options) {
 async function getDeobfuscator(options) {
     try {
         const importObj = {};
-        const defaultsResult = defaults(importObj);
+        const defaultsResult = defaults(importObj, {});
+        /** @suppress {checkTypes} */
         const module = (options.path instanceof WebAssembly.Module) ?
-            options.path : await WebAssembly.compileStreaming(fetch(options.path));
+            options.path : await WebAssembly.compileStreaming(fetch(options.path), { "builtins": ["js-string"] });
         const instance = new WebAssembly.Instance(module, importObj);
         defaultsResult.supplyExports(instance.exports)
         return { module, instance };
@@ -796,7 +844,7 @@ function createDeobfuscator(module, externalData, deobfuscatorFactory) {
                     console.warn("Could not load create deobfuscator", e);
                 }
             }
-            if (deobfuscator == null && module !== null) {
+            if (deobfuscator === null && module !== null) {
                 try {
                     deobfuscator = deobfuscatorFactory.exports["createForModule"].value(module);
                 } catch (e) {

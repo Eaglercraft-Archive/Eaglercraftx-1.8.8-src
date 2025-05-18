@@ -138,6 +138,15 @@
 
 > DELETE  20  @  20 : 36
 
-> DELETE  88  @  88 : 107
+> CHANGE  88 : 94  @  88 : 90
+
+~ 	public byte[] toBytes() {
+~ 		int readerIndex = buf.readerIndex();
+~ 		int writerIndex = buf.writerIndex();
+~ 		byte[] bytes = new byte[writerIndex - readerIndex];
+~ 		buf.getBytes(readerIndex, bytes);
+~ 		return bytes;
+
+> DELETE  2  @  2 : 17
 
 > EOF

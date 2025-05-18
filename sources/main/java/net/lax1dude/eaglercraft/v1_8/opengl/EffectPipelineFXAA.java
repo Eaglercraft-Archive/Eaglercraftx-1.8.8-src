@@ -26,6 +26,9 @@ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 
 import static net.lax1dude.eaglercraft.v1_8.opengl.RealOpenGLEnums.*;
+
+import net.lax1dude.eaglercraft.v1_8.Display;
+
 import static net.lax1dude.eaglercraft.v1_8.internal.PlatformOpenGL.*;
 
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
@@ -41,8 +44,9 @@ public class EffectPipelineFXAA {
 	private static final int _GL_RENDERBUFFER = 0x8D41;
 	private static final int _GL_COLOR_ATTACHMENT0 = 0x8CE0;
 	private static final int _GL_DEPTH_ATTACHMENT = 0x8D00;
-	private static final int _GL_DEPTH_COMPONENT16 = 0x81A5;
 	private static final int _GL_DEPTH_COMPONENT32F = 0x8CAC;
+	private static final int _GL_DEPTH_STENCIL_ATTACHMENT = 0x821A;
+	private static final int _GL_DEPTH_STENCIL = 0x84F9;
 
 	private static IProgramGL shaderProgram = null;
 	private static IUniformGL u_screenSize2f = null;
@@ -63,6 +67,7 @@ public class EffectPipelineFXAA {
 		_wglCompileShader(frag);
 
 		if(_wglGetShaderi(frag, GL_COMPILE_STATUS) != GL_TRUE) {
+			Display.checkContextLost();
 			logger.error("Failed to compile GL_FRAGMENT_SHADER \"" + fragmentShaderPath + "\" for EffectPipelineFXAA!");
 			String log = _wglGetShaderInfoLog(frag);
 			if(log != null) {
@@ -91,6 +96,7 @@ public class EffectPipelineFXAA {
 		_wglDeleteShader(frag);
 
 		if(_wglGetProgrami(shaderProgram, GL_LINK_STATUS) != GL_TRUE) {
+			Display.checkContextLost();
 			logger.error("Failed to link shader program for EffectPipelineFXAA!");
 			String log = _wglGetProgramInfoLog(shaderProgram);
 			if(log != null) {
@@ -121,8 +127,11 @@ public class EffectPipelineFXAA {
 		_wglBindRenderbuffer(_GL_RENDERBUFFER, framebufferDepth);
 
 		_wglBindFramebuffer(_GL_FRAMEBUFFER, framebuffer);
-		_wglFramebufferTexture2D(_GL_FRAMEBUFFER, _GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, EaglercraftGPU.getNativeTexture(framebufferColor), 0);
-		_wglFramebufferRenderbuffer(_GL_FRAMEBUFFER, _GL_DEPTH_ATTACHMENT, _GL_RENDERBUFFER, framebufferDepth);
+		_wglFramebufferTexture2D(_GL_FRAMEBUFFER, _GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+				EaglercraftGPU.getNativeTexture(framebufferColor), 0);
+		_wglFramebufferRenderbuffer(_GL_FRAMEBUFFER,
+				EaglercraftGPU.checkOpenGLESVersion() == 200 ? _GL_DEPTH_STENCIL_ATTACHMENT : _GL_DEPTH_ATTACHMENT,
+				_GL_RENDERBUFFER, framebufferDepth);
 
 		_wglBindFramebuffer(_GL_FRAMEBUFFER, null);
 	}
@@ -136,7 +145,8 @@ public class EffectPipelineFXAA {
 			EaglercraftGPU.glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, (ByteBuffer)null);
 
 			_wglBindRenderbuffer(_GL_RENDERBUFFER, framebufferDepth);
-			_wglRenderbufferStorage(_GL_RENDERBUFFER, EaglercraftGPU.checkOpenGLESVersion() == 200 ? _GL_DEPTH_COMPONENT16 : _GL_DEPTH_COMPONENT32F, width, height);
+			_wglRenderbufferStorage(_GL_RENDERBUFFER, EaglercraftGPU.checkOpenGLESVersion() == 200 ? _GL_DEPTH_STENCIL
+					: _GL_DEPTH_COMPONENT32F, width, height);
 		}
 
 		_wglBindFramebuffer(_GL_FRAMEBUFFER, framebuffer);

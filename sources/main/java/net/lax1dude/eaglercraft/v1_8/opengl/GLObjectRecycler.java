@@ -40,6 +40,7 @@ public abstract class GLObjectRecycler<T> {
 	}
 
 	public void destroyObject(T obj) {
+		invalidate(obj);
 		deletedObjects.addLast(obj);
 	}
 
@@ -50,6 +51,8 @@ public abstract class GLObjectRecycler<T> {
 	}
 
 	protected abstract T create();
+
+	protected abstract void invalidate(T object);
 
 	protected abstract void destroy(T object);
 

@@ -1,4 +1,4 @@
-# 148 files to delete:
+# 149 files to delete:
 net/minecraft/client/renderer/VertexBufferUploader.java
 net/minecraft/realms/DisconnectedRealmsScreen.java
 net/minecraft/client/stream/Metadata.java
@@ -14,6 +14,7 @@ net/minecraft/command/server/CommandSaveAll.java
 net/minecraft/realms/RealmsVertexFormat.java
 net/minecraft/network/NettyCompressionDecoder.java
 net/minecraft/profiler/PlayerUsageSnooper.java
+net/minecraft/util/MinecraftError.java
 net/minecraft/command/server/CommandPublishLocalServer.java
 net/minecraft/command/CommandDebug.java
 net/minecraft/client/renderer/chunk/VboChunkFactory.java

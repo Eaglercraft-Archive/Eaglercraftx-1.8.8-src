@@ -17,7 +17,6 @@
 package net.lax1dude.eaglercraft.v1_8.internal.buffer;
 
 import org.teavm.interop.Address;
-import org.teavm.interop.DirectMalloc;
 import org.teavm.interop.Import;
 import org.teavm.jso.typedarrays.Float32Array;
 import org.teavm.jso.typedarrays.Int16Array;
@@ -26,6 +25,7 @@ import org.teavm.jso.typedarrays.Int8Array;
 import org.teavm.jso.typedarrays.Uint16Array;
 import org.teavm.jso.typedarrays.Uint8Array;
 import org.teavm.jso.typedarrays.Uint8ClampedArray;
+import org.teavm.runtime.heap.Heap;
 
 public class WASMGCBufferAllocator {
 
@@ -37,9 +37,9 @@ public class WASMGCBufferAllocator {
 		}
 		Address addr;
 		if(enableBufferOverflowCheck) {
-			addr = DirectMalloc.malloc(size + 12);
+			addr = Heap.alloc(size + 12);
 			if(addr.toInt() == 0) {
-				throw new OutOfMemoryError("DirectMalloc returned null pointer!");
+				throw new OutOfMemoryError("Heap returned null pointer!");
 			}
 			int tag = (int)(Math.random() * 2147483647.0);
 			addr.putInt(size);
@@ -47,33 +47,9 @@ public class WASMGCBufferAllocator {
 			addr.add(size + 8).putInt(tag);
 			addr = addr.add(8);
 		}else {
-			addr = DirectMalloc.malloc(size);
+			addr = Heap.alloc(size);
 			if(addr.toInt() == 0) {
-				throw new OutOfMemoryError("DirectMalloc returned null pointer!");
-			}
-		}
-		return addr;
-	}
-
-	public static Address calloc(int size) {
-		if(size == 0) {
-			return Address.fromInt(0);
-		}
-		Address addr;
-		if(enableBufferOverflowCheck) {
-			addr = DirectMalloc.calloc(size + 12);
-			if(addr.toInt() == 0) {
-				throw new OutOfMemoryError("DirectMalloc returned null pointer!");
-			}
-			int tag = (int)(Math.random() * 2147483647.0);
-			addr.putInt(size);
-			addr.add(4).putInt(tag);
-			addr.add(size + 8).putInt(tag);
-			addr = addr.add(8);
-		}else {
-			addr = DirectMalloc.calloc(size);
-			if(addr.toInt() == 0) {
-				throw new OutOfMemoryError("DirectMalloc returned null pointer!");
+				throw new OutOfMemoryError("Heap returned null pointer!");
 			}
 		}
 		return addr;
@@ -86,10 +62,10 @@ public class WASMGCBufferAllocator {
 				int size = ptr.getInt();
 				int tag = ptr.add(4).getInt();
 				if(tag != ptr.add(size + 8).getInt()) {
-					throw new RuntimeException("Detected a buffer write overflow");
+					throw new Error("Detected a buffer write overflow");
 				}
 			}
-			DirectMalloc.free(ptr);
+			Heap.release(ptr);
 		}
 	}
 
@@ -223,6 +199,21 @@ public class WASMGCBufferAllocator {
 	@Import(module = "WASMGCBufferAllocator", name = "getUnsignedClampedByteBufferView")
 	public static native Uint8ClampedArray getUnsignedClampedByteBufferView0(Address addr, int length);
 
+	public static int getByteBufferViewIndex(ByteBuffer buffer) {
+		DirectMallocByteBuffer buf = (DirectMallocByteBuffer)buffer;
+		return buf.address.toInt() + buf.position();
+	}
+
+	public static int getByteBufferViewIndex(ShortBuffer buffer) {
+		DirectMallocShortBuffer buf = (DirectMallocShortBuffer)buffer;
+		return buf.address.add(buf.position() << 1).toInt();
+	}
+
+	public static int getByteBufferViewIndex(IntBuffer buffer) {
+		DirectMallocIntBuffer buf = (DirectMallocIntBuffer)buffer;
+		return buf.address.add(buf.position() << 2).toInt();
+	}
+
 	public static Int16Array getShortBufferView(ShortBuffer buffer) {
 		DirectMallocShortBuffer buf = (DirectMallocShortBuffer)buffer;
 		return getShortBufferView0(buf.address.add(buf.position() << 1), buf.remaining());
@@ -249,6 +240,16 @@ public class WASMGCBufferAllocator {
 	@Import(module = "WASMGCBufferAllocator", name = "getUnsignedShortBufferView")
 	public static native Uint16Array getUnsignedShortBufferView0(Address addr, int length);
 
+	public static int getShortBufferViewIndex(ByteBuffer buffer) {
+		DirectMallocByteBuffer buf = (DirectMallocByteBuffer)buffer;
+		return buf.address.add(buf.position()).toInt() >> 1;
+	}
+
+	public static int getShortBufferViewIndex(ShortBuffer buffer) {
+		DirectMallocShortBuffer buf = (DirectMallocShortBuffer)buffer;
+		return (buf.address.toInt() >> 1) + buf.position();
+	}
+
 	public static Int32Array getIntBufferView(IntBuffer buffer) {
 		DirectMallocIntBuffer buf = (DirectMallocIntBuffer)buffer;
 		return getIntBufferView0(buf.address.add(buf.position() << 2), buf.remaining());
@@ -262,6 +263,16 @@ public class WASMGCBufferAllocator {
 	@Import(module = "WASMGCBufferAllocator", name = "getIntBufferView")
 	public static native Int32Array getIntBufferView0(Address addr, int length);
 
+	public static int getIntBufferViewIndex(ByteBuffer buffer) {
+		DirectMallocByteBuffer buf = (DirectMallocByteBuffer)buffer;
+		return buf.address.add(buf.position()).toInt() >> 2;
+	}
+
+	public static int getIntBufferViewIndex(IntBuffer buffer) {
+		DirectMallocIntBuffer buf = (DirectMallocIntBuffer)buffer;
+		return (buf.address.toInt() >> 2) + buf.position();
+	}
+
 	public static Float32Array getFloatBufferView(FloatBuffer buffer) {
 		DirectMallocFloatBuffer buf = (DirectMallocFloatBuffer)buffer;
 		return getFloatBufferView0(buf.address.add(buf.position() << 2), buf.remaining());
@@ -274,6 +285,16 @@ public class WASMGCBufferAllocator {
 
 	@Import(module = "WASMGCBufferAllocator", name = "getFloatBufferView")
 	public static native Float32Array getFloatBufferView0(Address addr, int length);
+
+	public static int getFloatBufferViewIndex(ByteBuffer buffer) {
+		DirectMallocByteBuffer buf = (DirectMallocByteBuffer)buffer;
+		return buf.address.add(buf.position()).toInt() >> 2;
+	}
+
+	public static int getFloatBufferViewIndex(FloatBuffer buffer) {
+		DirectMallocFloatBuffer buf = (DirectMallocFloatBuffer)buffer;
+		return (buf.address.toInt() >> 2) + buf.position();
+	}
 
 	private static void throwNotOriginal(Object clazz) {
 		throw notOriginal(clazz);

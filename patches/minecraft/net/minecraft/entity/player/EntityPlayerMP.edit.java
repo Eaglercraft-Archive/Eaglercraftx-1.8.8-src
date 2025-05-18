@@ -14,10 +14,12 @@
 + import com.carrotsearch.hppc.cursors.IntCursor;
 + import com.carrotsearch.hppc.cursors.LongCursor;
 
-> CHANGE  2 : 4  @  2 : 4
+> CHANGE  2 : 6  @  2 : 4
 
 ~ import net.lax1dude.eaglercraft.v1_8.mojang.authlib.GameProfile;
 ~ import net.lax1dude.eaglercraft.v1_8.netty.Unpooled;
+~ import net.lax1dude.eaglercraft.v1_8.sp.server.skins.PlayerTextureData;
+~ 
 
 > DELETE  17  @  17 : 18
 
@@ -45,9 +47,10 @@
 
 ~ 	private long playerLastActiveTime = EagRuntime.steadyTimeMillis();
 
-> INSERT  5 : 7  @  5
+> INSERT  5 : 8  @  5
 
 + 	public byte[] updateCertificate = null;
++ 	public PlayerTextureData textureData = null;
 + 	public EaglercraftUUID clientBrandUUID = null;
 
 > CHANGE  87 : 88  @  87 : 88

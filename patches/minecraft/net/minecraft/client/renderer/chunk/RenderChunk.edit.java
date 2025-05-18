@@ -7,7 +7,7 @@
 
 > DELETE  2  @  2 : 5
 
-> CHANGE  3 : 11  @  3 : 4
+> CHANGE  3 : 10  @  3 : 4
 
 ~ 
 ~ import com.google.common.collect.Maps;
@@ -16,7 +16,6 @@
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.VertexFormat;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.WorldRenderer;
 ~ import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.DeferredStateManager;
-~ import net.lax1dude.eaglercraft.v1_8.opengl.ext.dynamiclights.DynamicLightsStateManager;
 
 > DELETE  4  @  4 : 7
 
@@ -186,7 +185,7 @@
 > CHANGE  3 : 7  @  3 : 4
 
 ~ 		worldRendererIn.begin(7,
-~ 				(DeferredStateManager.isDeferredRenderer() || DynamicLightsStateManager.isDynamicLightsRender())
+~ 				(DeferredStateManager.isDeferredRenderer() /* || DynamicLightsStateManager.isDynamicLightsRender() */)
 ~ 						? VertexFormat.BLOCK_SHADERS
 ~ 						: DefaultVertexFormats.BLOCK);
 

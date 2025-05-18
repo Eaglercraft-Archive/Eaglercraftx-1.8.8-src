@@ -23,6 +23,7 @@ import org.teavm.jso.JSObject;
 import org.teavm.jso.browser.Window;
 
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
+import net.lax1dude.eaglercraft.v1_8.internal.ContextLostError;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformRuntime;
 import net.lax1dude.eaglercraft.v1_8.internal.wasm_gc_teavm.opts.JSEaglercraftXOptsRoot;
 import net.minecraft.client.main.Main;
@@ -68,6 +69,10 @@ public class ClientMain {
 
 			try {
 				EagRuntime.create();
+			}catch(ContextLostError t) {
+				systemErr.println("ClientMain: [ERROR] webgl context lost during initialization!");
+				PlatformRuntime.showContextLostScreen(EagRuntime.getStackTrace(t));
+				return;
 			}catch(Throwable t) {
 				systemErr.println("ClientMain: [ERROR] eaglercraftx's runtime could not be initialized!");
 				EagRuntime.debugPrintStackTraceToSTDERR(t);
@@ -80,6 +85,9 @@ public class ClientMain {
 
 			try {
 				Main.appMain();
+			}catch(ContextLostError t) {
+				systemErr.println("ClientMain: [ERROR] webgl context lost!");
+				PlatformRuntime.showContextLostScreen(EagRuntime.getStackTrace(t));
 			}catch(Throwable t) {
 				systemErr.println("ClientMain: [ERROR] unhandled exception caused main thread to exit");
 				EagRuntime.debugPrintStackTraceToSTDERR(t);

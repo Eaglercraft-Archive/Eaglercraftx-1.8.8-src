@@ -29,8 +29,27 @@ public class GamePluginMessageConstants {
 	public static final int CLIENT_TO_SERVER = 0;
 	public static final int SERVER_TO_CLIENT = 1;
 
+	public static String getModernName(String channel) {
+		switch (channel) {
+		case V3_SKIN_CHANNEL:
+			return "eagler:skins-1-8";
+		case V3_CAPE_CHANNEL:
+			return "eagler:capes-1-8";
+		case V3_VOICE_CHANNEL:
+			return "eagler:voice-1-8";
+		case V3_UPDATE_CHANNEL:
+			return "eagler:updatecrt-1-8";
+		case V3_FNAW_EN_CHANNEL:
+			return "eagler:fnawsen-1-8";
+		case V4_CHANNEL:
+			return "eagler:1-8";
+		default:
+			throw new IllegalArgumentException();
+		}
+	}
+
 	public static String getDirectionString(int dir) {
-		switch(dir) {
+		switch (dir) {
 		case CLIENT_TO_SERVER:
 			return "CLIENT_TO_SERVER";
 		case SERVER_TO_CLIENT:
@@ -41,7 +60,7 @@ public class GamePluginMessageConstants {
 	}
 
 	public static int oppositeDirection(int dir) {
-		switch(dir) {
+		switch (dir) {
 		case CLIENT_TO_SERVER:
 			return SERVER_TO_CLIENT;
 		case SERVER_TO_CLIENT:

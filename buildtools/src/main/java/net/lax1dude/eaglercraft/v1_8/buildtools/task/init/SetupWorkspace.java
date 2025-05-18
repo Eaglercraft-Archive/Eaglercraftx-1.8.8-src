@@ -124,9 +124,11 @@ public class SetupWorkspace {
 		File repoSourcesSetup = new File(repoSources, "setup/workspace_template");
 		File repoSourcesMain = new File(repoSources, "main/java");
 		File repoSourcesTeaVM = new File(repoSources, "teavm/java");
+		File repoSourcesTeaVMRes = new File(repoSources, "teavm/resources");
 		File repoSourcesLWJGL = new File(repoSources, "lwjgl/java");
 		File repoSourcesProtoGame = new File(repoSources, "protocol-game/java");
 		File repoSourcesProtoRelay = new File(repoSources, "protocol-relay/java");
+		File repoSourcesPlatformAPI = new File(repoSources, "platform-api/java");
 		File repoSourcesBootMenu = new File(repoSources, "teavm-boot-menu/java");
 		File repoSourcesTeavmCRes = new File(repoSources, "teavmc-classpath/resources");
 		File repoSourcesWASMGCTeaVMJava = new File(repoSources, "wasm-gc-teavm/java");
@@ -139,8 +141,10 @@ public class SetupWorkspace {
 		File srcGameJava = new File(workspaceDirectory, "src/game/java");
 		File srcLWJGLJava = new File(workspaceDirectory, "src/lwjgl/java");
 		File srcTeaVMJava = new File(workspaceDirectory, "src/teavm/java");
+		File srcTeaVMRes = new File(workspaceDirectory, "src/teavm/resources");
 		File srcProtoGame = new File(workspaceDirectory, "src/protocol-game/java");
 		File srcProtoRelay = new File(workspaceDirectory, "src/protocol-relay/java");
+		File srcPlatformAPI = new File(workspaceDirectory, "src/platform-api/java");
 		File srcBootMenu = new File(workspaceDirectory, "src/teavm-boot-menu/java");
 		File srcTeavmCRes = new File(workspaceDirectory, "src/teavmc-classpath/resources");
 		File srcWASMGCTeaVMJava = new File(workspaceDirectory, "src/wasm-gc-teavm/java");
@@ -150,7 +154,9 @@ public class SetupWorkspace {
 		File srcWASMGCTeaVMLoaderJS = new File(workspaceDirectory, "src/wasm-gc-teavm-loader/js");
 		File resourcesExtractTo = new File(workspaceDirectory, "desktopRuntime/resources");
 		File mcLanguagesZip = new File(mcTmpDirectory, "minecraft_languages.zip");
-		File mcLanguagesExtractTo = new File(workspaceDirectory, "javascript/lang");
+		File localLibsZip = new File(repoSources, "setup/local-libs.zip");
+		File mcLanguagesExtractTo = new File(workspaceDirectory, "target_teavm_javascript/javascript/lang");
+		File localLibsExtractTo = new File(workspaceDirectory, "gradle/local-libs");
 
 		System.out.println("Copying files from \"/setup/workspace_template/\" to \"" + workspaceDirectory.getName() + "\"...");
 		
@@ -161,23 +167,19 @@ public class SetupWorkspace {
 			throw ex;
 		}
 		
-		String os = System.getProperty("os.name").toLowerCase();
-		if(os.contains("linux") || os.contains("macos") || os.contains("osx")) {
-			File gradleW = new File(workspaceDirectory, "gradlew");
-			if(!gradleW.setExecutable(true)) {
-				System.err.println("ERROR: could not set executable bit on 'gradlew'!");
-				System.err.println("Enter the root directory of the repository and run 'chmod +x gradlew' if you need access to the gradlew command");
-			}
-		}
-		
 		File existingGi = new File(workspaceDirectory, ".gitignore");
 		if((existingGi.exists() && !existingGi.delete()) || !(new File(workspaceDirectory, ".gitignore.default").renameTo(existingGi))) {
 			System.err.println("ERROR: Could not rename \".gitignore.default\" to \".gitignore\" in the workspace directory!");
 		}
 		
-		existingGi = new File(workspaceDirectory, "wasm_gc_teavm/.gitignore");
-		if((existingGi.exists() && !existingGi.delete()) || !(new File(workspaceDirectory, "wasm_gc_teavm/.gitignore.default").renameTo(existingGi))) {
-			System.err.println("ERROR: Could not rename \"wasm_gc_teavm/.gitignore.default\" to \"wasm_gc_teavm/.gitignore\" in the workspace directory!");
+		existingGi = new File(workspaceDirectory, "target_teavm_javascript/.gitignore");
+		if((existingGi.exists() && !existingGi.delete()) || !(new File(workspaceDirectory, "target_teavm_javascript/.gitignore.default").renameTo(existingGi))) {
+			System.err.println("ERROR: Could not rename \"target_teavm_javascript/.gitignore.default\" to \"target_teavm_javascript/.gitignore\" in the workspace directory!");
+		}
+		
+		existingGi = new File(workspaceDirectory, "target_teavm_wasm_gc/.gitignore");
+		if((existingGi.exists() && !existingGi.delete()) || !(new File(workspaceDirectory, "target_teavm_wasm_gc/.gitignore.default").renameTo(existingGi))) {
+			System.err.println("ERROR: Could not rename \"target_teavm_wasm_gc/.gitignore.default\" to \"target_teavm_wasm_gc/.gitignore\" in the workspace directory!");
 		}
 		
 		if(repoSourcesTeaVM.isDirectory()) {
@@ -191,6 +193,21 @@ public class SetupWorkspace {
 				FileUtils.copyDirectory(repoSourcesTeaVM, srcTeaVMJava);
 			}catch(IOException ex) {
 				System.err.println("ERROR: could not copy \"/sources/teavm/java/\" to \"" + srcTeaVMJava.getAbsolutePath() + "\"!");
+				throw ex;
+			}
+		}
+		
+		if(repoSourcesTeaVMRes.isDirectory()) {
+			System.out.println("Copying files from \"/sources/teavm/resources/\" to workspace...");
+			
+			try {
+				if(!srcTeaVMRes.isDirectory() && !srcTeaVMRes.mkdirs()) {
+					System.err.println("ERROR: Could not create destination directory!");
+					return false;
+				}
+				FileUtils.copyDirectory(repoSourcesTeaVMRes, srcTeaVMRes);
+			}catch(IOException ex) {
+				System.err.println("ERROR: could not copy \"/sources/teavm/resources/\" to \"" + srcTeaVMRes.getAbsolutePath() + "\"!");
 				throw ex;
 			}
 		}
@@ -234,6 +251,21 @@ public class SetupWorkspace {
 				FileUtils.copyDirectory(repoSourcesProtoRelay, srcProtoRelay);
 			}catch(IOException ex) {
 				System.err.println("ERROR: could not copy \"/sources/protocol-relay/java/\" to \"" + srcProtoRelay.getAbsolutePath() + "\"!");
+				throw ex;
+			}
+		}
+
+		if(repoSourcesPlatformAPI.isDirectory()) {
+			System.out.println("Copying files from \"/sources/platform-api/java/\" to workspace...");
+	
+			try {
+				if(!srcPlatformAPI.isDirectory() && !srcPlatformAPI.mkdirs()) {
+					System.err.println("ERROR: Could not create destination directory!");
+					return false;
+				}
+				FileUtils.copyDirectory(repoSourcesPlatformAPI, srcPlatformAPI);
+			}catch(IOException ex) {
+				System.err.println("ERROR: could not copy \"/sources/platform-api/java/\" to \"" + srcPlatformAPI.getAbsolutePath() + "\"!");
 				throw ex;
 			}
 		}
@@ -448,7 +480,7 @@ public class SetupWorkspace {
 			minecraftResJar.delete();
 		}
 		
-		System.out.println("Extracting files from \"minecraft_languages.zip\" to \"/javascript/lang/\"...");
+		System.out.println("Extracting files from \"minecraft_languages.zip\" to \"/target_teavm_javascript/javascript/lang/\"...");
 		
 		try {
 			extractJarTo(mcLanguagesZip, mcLanguagesExtractTo);
@@ -458,11 +490,21 @@ public class SetupWorkspace {
 			throw ex;
 		}
 		
-		System.out.println("Creating eclipse project for desktop runtime...");
-		if(!createDesktopRuntimeProject(new File(repoSources, "setup/eclipseProjectFiles"), workspaceDirectory)) {
-			System.err.println("ERROR: could not create eclipse project for desktop runtime!");
-			return false;
+		System.out.println("Extracting files from \"local-libs.zip\" to \"/gradle/local-libs/\"...");
+		
+		try {
+			extractJarTo(localLibsZip, localLibsExtractTo);
+		}catch(IOException ex) {
+			System.err.println("ERROR: could not extract \"" + localLibsZip.getName() + "\" to \"" + 
+					localLibsExtractTo.getAbsolutePath() + "\"!");
+			throw ex;
 		}
+		
+//		System.out.println("Creating eclipse project for desktop runtime...");
+//		if(!createDesktopRuntimeProject(new File(repoSources, "setup/eclipseProjectFiles"), workspaceDirectory)) {
+//			System.err.println("ERROR: could not create eclipse project for desktop runtime!");
+//			return false;
+//		}
 		
 		return true;
 	}
@@ -497,6 +539,7 @@ public class SetupWorkspace {
 		return cnt;
 	}
 	
+	@Deprecated
 	private static boolean createDesktopRuntimeProject(File templateFolderIn, File workspaceDirectory) throws Throwable {
 		File desktopRuntimeDirectory = new File(workspaceDirectory, "desktopRuntime");
 		File desktopRuntimeProjectDir = new File(desktopRuntimeDirectory, "eclipseProject");

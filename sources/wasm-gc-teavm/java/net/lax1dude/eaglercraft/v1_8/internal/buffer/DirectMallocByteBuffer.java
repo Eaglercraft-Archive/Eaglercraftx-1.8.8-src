@@ -17,7 +17,6 @@
 package net.lax1dude.eaglercraft.v1_8.internal.buffer;
 
 import org.teavm.interop.Address;
-import org.teavm.interop.DirectMalloc;
 
 public class DirectMallocByteBuffer extends ByteBuffer {
 
@@ -138,7 +137,7 @@ public class DirectMallocByteBuffer extends ByteBuffer {
 			DirectMallocByteBuffer c = (DirectMallocByteBuffer)src;
 			int l = c.limit - c.position;
 			if(position + l > limit) throw Buffer.makeIOOBE(position + l - 1);
-			DirectMalloc.memcpy(address.add(position), c.address.add(c.position), l);
+			Address.moveMemoryBlock(c.address.add(c.position), address.add(position), l);
 			position += l;
 			c.position += l;
 		}else {

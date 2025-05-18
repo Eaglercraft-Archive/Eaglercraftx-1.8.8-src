@@ -19,7 +19,7 @@ package net.lax1dude.eaglercraft.v1_8.profile;
 import net.lax1dude.eaglercraft.v1_8.Keyboard;
 import net.lax1dude.eaglercraft.v1_8.internal.KeyboardConstants;
 import net.lax1dude.eaglercraft.v1_8.minecraft.EnumInputEvent;
-import net.lax1dude.eaglercraft.v1_8.socket.ConnectionHandshake;
+import net.lax1dude.eaglercraft.v1_8.socket.GuiHandshakeApprove;
 import net.lax1dude.eaglercraft.v1_8.socket.HandshakePacketTypes;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -64,7 +64,7 @@ public class GuiAuthenticationScreen extends GuiScreen {
 
 	public void initGui() {
 		if(authTypeForWarning != Integer.MAX_VALUE) {
-			GuiScreen scr = ConnectionHandshake.displayAuthProtocolConfirm(authTypeForWarning, parent, this);
+			GuiScreen scr = GuiHandshakeApprove.displayAuthProtocolConfirm(authTypeForWarning, parent, this);
 			authTypeForWarning = Integer.MAX_VALUE;
 			if(scr != null) {
 				mc.displayGuiScreen(scr);
@@ -90,7 +90,7 @@ public class GuiAuthenticationScreen extends GuiScreen {
 
 	protected void actionPerformed(GuiButton parGuiButton) {
 		if(parGuiButton.id == 1) {
-			this.mc.displayGuiScreen(new GuiConnecting(retAfterAuthScreen, password.getText()));
+			this.mc.displayGuiScreen(new GuiConnecting(retAfterAuthScreen, password.getText(), allowPlaintext));
 		}else {
 			this.mc.displayGuiScreen(parent);
 		}

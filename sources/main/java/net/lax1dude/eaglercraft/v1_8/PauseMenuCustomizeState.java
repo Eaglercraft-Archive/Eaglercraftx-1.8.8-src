@@ -150,8 +150,7 @@ public class PauseMenuCustomizeState {
 		case DISCORD_MODE_NONE:
 		default:
 			discordButtonText = null;
-			serverInfoURL = null;
-			serverInfoHash = null;
+			discordInviteURL = null;
 			break;
 		case DISCORD_MODE_INVITE_URL:
 			discordButtonText = packet.discordButtonText;

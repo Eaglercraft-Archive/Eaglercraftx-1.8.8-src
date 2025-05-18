@@ -24,7 +24,7 @@ import java.util.List;
 
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.ByteBuffer;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.FloatBuffer;
-
+import net.lax1dude.eaglercraft.v1_8.Display;
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.internal.IVertexArrayGL;
 import net.lax1dude.eaglercraft.v1_8.internal.IProgramGL;
@@ -153,7 +153,7 @@ public class FixedFunctionPipeline {
 		EaglercraftGPU.bindGLShaderProgram(shaderProgram);
 		if(mode == GL_QUADS) {
 			StreamBufferInstance sb = currentVertexArray;
-			if(count > 0xFFFF) {
+			if(count > EaglercraftGPU.quad16MaxVertices) {
 				if(!sb.bindQuad32) {
 					sb.bindQuad16 = false;
 					sb.bindQuad32 = true;
@@ -161,18 +161,14 @@ public class FixedFunctionPipeline {
 				}else {
 					EaglercraftGPU.attachQuad32EmulationBuffer(count, false);
 				}
-				EaglercraftGPU.drawElements(GL_TRIANGLES, count + (count >> 1),
-						GL_UNSIGNED_INT, 0);
+				EaglercraftGPU.drawElements(GL_TRIANGLES, (count >> 2) * 6, GL_UNSIGNED_INT, 0);
 			}else {
 				if(!sb.bindQuad16) {
 					sb.bindQuad16 = true;
 					sb.bindQuad32 = false;
-					EaglercraftGPU.attachQuad16EmulationBuffer(count, true);
-				}else {
-					EaglercraftGPU.attachQuad16EmulationBuffer(count, false);
+					EaglercraftGPU.attachQuad16EmulationBuffer(true);
 				}
-				EaglercraftGPU.drawElements(GL_TRIANGLES, count + (count >> 1),
-						GL_UNSIGNED_SHORT, 0);
+				EaglercraftGPU.drawElements(GL_TRIANGLES, (count >> 2) * 6, GL_UNSIGNED_SHORT, 0);
 			}
 		}else {
 			EaglercraftGPU.drawArrays(mode, offset, count);
@@ -291,6 +287,7 @@ public class FixedFunctionPipeline {
 		_wglCompileShader(vsh);
 		
 		if(_wglGetShaderi(vsh, GL_COMPILE_STATUS) != GL_TRUE) {
+			Display.checkContextLost();
 			LOGGER.error("Failed to compile GL_VERTEX_SHADER for state {} !", (visualizeBits(coreBits) + (enableExt && extBits != 0 ? " ext " + visualizeBits(extBits) : "")));
 			String log = _wglGetShaderInfoLog(vsh);
 			if(log != null) {
@@ -309,6 +306,7 @@ public class FixedFunctionPipeline {
 		_wglCompileShader(fsh);
 		
 		if(_wglGetShaderi(fsh, GL_COMPILE_STATUS) != GL_TRUE) {
+			Display.checkContextLost();
 			LOGGER.error("Failed to compile GL_FRAGMENT_SHADER for state {} !", (visualizeBits(coreBits) + (enableExt && extBits != 0 ? " ext " + visualizeBits(extBits) : "")));
 			String log = _wglGetShaderInfoLog(fsh);
 			if(log != null) {
@@ -563,6 +561,7 @@ public class FixedFunctionPipeline {
 		_wglLinkProgram(compiledProg);
 		
 		if(_wglGetProgrami(compiledProg, GL_LINK_STATUS) != GL_TRUE) {
+			Display.checkContextLost();
 			LOGGER.error("Program could not be linked for state {} !", (visualizeBits(bits) + (extensionProvider != null && extBits != 0 ? " ext " + visualizeBits(extBits) : "")));
 			String log = _wglGetProgramInfoLog(compiledProg);
 			if(log != null) {
@@ -574,8 +573,7 @@ public class FixedFunctionPipeline {
 			throw new IllegalStateException("Program could not be linked!");
 		}
 		
-		streamBuffer = new StreamBuffer(FixedFunctionShader.initialSize, FixedFunctionShader.initialCount,
-				FixedFunctionShader.maxCount, (vertexArray, vertexBuffer) -> {
+		streamBuffer = new StreamBuffer((vertexArray, vertexBuffer) -> {
 					EaglercraftGPU.bindGLVertexArray(vertexArray);
 					EaglercraftGPU.bindVAOGLArrayBuffer(vertexBuffer);
 
@@ -1061,12 +1059,6 @@ public class FixedFunctionPipeline {
 		}
 		
 		return this;
-	}
-
-	static void optimize() {
-		for(int i = 0, l = pipelineListTracker.size(); i < l; ++i) {
-			pipelineListTracker.get(i).streamBuffer.optimize();
-		}
 	}
 
 	public static void flushCache() {

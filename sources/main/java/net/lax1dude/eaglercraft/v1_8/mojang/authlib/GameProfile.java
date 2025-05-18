@@ -78,8 +78,10 @@ public class GameProfile {
 	}
 
 	public String toString() {
-		return (new ToStringBuilder(this)).append("id", this.id).append("name", this.name)
-				.append("legacy", false).toString();
+		return "GameProfile{id=" + this.id + ", name=" + this.name + ", legacy=false}";
+		//TODO: uncomment once JS runtime is updated to newer TeaVM version
+		//return (new ToStringBuilder(this)).append("id", this.id).append("name", this.name)
+		//		.append("legacy", false).toString();
 	}
 
 	public boolean isLegacy() {

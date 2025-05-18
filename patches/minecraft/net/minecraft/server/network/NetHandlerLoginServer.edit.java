@@ -5,14 +5,16 @@
 # Version: 1.0
 # Author: lax1dude
 
-> CHANGE  3 : 9  @  3 : 15
+> CHANGE  3 : 11  @  3 : 15
 
 ~ import net.lax1dude.eaglercraft.v1_8.mojang.authlib.GameProfile;
+~ import net.lax1dude.eaglercraft.v1_8.socket.protocol.GamePluginMessageProtocol;
 ~ import net.lax1dude.eaglercraft.v1_8.ClientUUIDLoadingCache;
 ~ import net.lax1dude.eaglercraft.v1_8.EaglerInputStream;
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
 ~ import net.lax1dude.eaglercraft.v1_8.EaglercraftVersion;
 ~ import net.lax1dude.eaglercraft.v1_8.sp.server.EaglerMinecraftServer;
+~ import net.lax1dude.eaglercraft.v1_8.sp.server.skins.IntegratedTexturePackets;
 
 > CHANGE  1 : 2  @  1 : 2
 
@@ -62,19 +64,14 @@
 
 > DELETE  2  @  2 : 3
 
-> CHANGE  11 : 23  @  11 : 12
+> CHANGE  11 : 18  @  11 : 12
 
-~ 						this.field_181025_l, this.selectedProtocol, this.clientBrandUUID);
-~ 				((EaglerMinecraftServer) field_181025_l.mcServer).getSkinService()
-~ 						.processLoginPacket(this.loginSkinPacket, field_181025_l, 3); // singleplayer always sends V3
-~ 																						// skin in handshake
-~ 				if (this.loginCapePacket != null) {
-~ 					((EaglerMinecraftServer) field_181025_l.mcServer).getCapeService()
-~ 							.processLoginPacket(this.loginCapePacket, field_181025_l);
-~ 				}
+~ 						this.field_181025_l, GamePluginMessageProtocol.getByVersion(this.selectedProtocol),
+~ 						IntegratedTexturePackets.handleTextureData(this.loginSkinPacket, this.loginCapePacket),
+~ 						this.clientBrandUUID);
 ~ 				IntegratedVoiceService svc = ((EaglerMinecraftServer) field_181025_l.mcServer).getVoiceService();
 ~ 				if (svc != null) {
-~ 					svc.handlePlayerLoggedIn(entityplayermp);
+~ 					svc.handlePlayerLoggedIn(this.field_181025_l);
 ~ 				}
 
 > CHANGE  23 : 24  @  23 : 29
@@ -86,18 +83,13 @@
 ~ 			this.networkManager.sendPacket(new S02PacketLoginSuccess(this.loginGameProfile, this.selectedProtocol));
 ~ 			this.networkManager.setConnectionState(EnumConnectionState.PLAY);
 
-> CHANGE  6 : 20  @  6 : 8
+> CHANGE  6 : 15  @  6 : 8
 
 ~ 				entityplayermp = this.server.getConfigurationManager().createPlayerForUser(this.loginGameProfile);
 ~ 				this.server.getConfigurationManager().initializeConnectionToPlayer(this.networkManager, entityplayermp,
-~ 						this.selectedProtocol, this.clientBrandUUID);
-~ 				((EaglerMinecraftServer) entityplayermp.mcServer).getSkinService()
-~ 						.processLoginPacket(this.loginSkinPacket, entityplayermp, 3); // singleplayer always sends V3
-~ 																						// skin in handshake
-~ 				if (this.loginCapePacket != null) {
-~ 					((EaglerMinecraftServer) entityplayermp.mcServer).getCapeService()
-~ 							.processLoginPacket(this.loginCapePacket, entityplayermp);
-~ 				}
+~ 						GamePluginMessageProtocol.getByVersion(this.selectedProtocol),
+~ 						IntegratedTexturePackets.handleTextureData(this.loginSkinPacket, this.loginCapePacket),
+~ 						this.clientBrandUUID);
 ~ 				IntegratedVoiceService svc = ((EaglerMinecraftServer) entityplayermp.mcServer).getVoiceService();
 ~ 				if (svc != null) {
 ~ 					svc.handlePlayerLoggedIn(entityplayermp);
@@ -117,7 +109,7 @@
 ~ 				int protocolCount = dis.readUnsignedShort();
 ~ 				for (int i = 0; i < protocolCount; ++i) {
 ~ 					int p = dis.readUnsignedShort();
-~ 					if ((p == 3 || p == 4) && p > maxSupported) {
+~ 					if ((p == 3 || p == 4 || p == 5) && p > maxSupported) {
 ~ 						maxSupported = p;
 ~ 					}
 ~ 				}

@@ -41,7 +41,7 @@ public class WASMGCWebSocketClient implements IWebSocketClient {
 
 		void closeSocket();
 
-		void sendStringFrame(JSString str);
+		void sendStringFrame(String str);
 
 		void sendBinaryFrame(Uint8Array arr);
 
@@ -225,7 +225,7 @@ public class WASMGCWebSocketClient implements IWebSocketClient {
 
 	@Override
 	public void send(String str) {
-		handle.sendStringFrame(BetterJSStringConverter.stringToJS(str));
+		handle.sendStringFrame(str);
 	}
 
 	@Override

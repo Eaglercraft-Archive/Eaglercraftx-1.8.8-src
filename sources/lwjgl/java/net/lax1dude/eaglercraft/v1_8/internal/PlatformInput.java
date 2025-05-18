@@ -580,7 +580,7 @@ public class PlatformInput {
 	}
 	
 	public static boolean contextLost() {
-		return glfwGetWindowAttrib(win, GLFW_ICONIFIED) == GLFW_TRUE;
+		return false;
 	}
 
 	public static void setFunctionKeyModifier(int key) {

@@ -30,14 +30,13 @@
 
 + import net.minecraft.util.ChatComponentText;
 
-> CHANGE  12 : 22  @  12 : 14
+> CHANGE  12 : 21  @  12 : 14
 
-~ import net.lax1dude.eaglercraft.v1_8.socket.protocol.GamePluginMessageConstants;
 ~ import net.lax1dude.eaglercraft.v1_8.socket.protocol.GamePluginMessageProtocol;
-~ import net.lax1dude.eaglercraft.v1_8.socket.protocol.client.GameProtocolMessageController;
 ~ import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.server.SPacketUpdateCertEAG;
 ~ import net.lax1dude.eaglercraft.v1_8.sp.server.EaglerMinecraftServer;
 ~ import net.lax1dude.eaglercraft.v1_8.sp.server.WorldsDB;
+~ import net.lax1dude.eaglercraft.v1_8.sp.server.skins.PlayerTextureData;
 ~ import net.lax1dude.eaglercraft.v1_8.sp.server.socket.IntegratedServerPlayerNetworkManager;
 ~ import net.lax1dude.eaglercraft.v1_8.sp.server.voice.IntegratedVoiceService;
 ~ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
@@ -69,20 +68,18 @@
 > CHANGE  2 : 6  @  2 : 8
 
 ~ 	public void initializeConnectionToPlayer(IntegratedServerPlayerNetworkManager netManager, EntityPlayerMP playerIn,
-~ 			int protocolVersion, EaglercraftUUID clientBrandUUID) {
+~ 			GamePluginMessageProtocol protocolVersion, PlayerTextureData textureData, EaglercraftUUID clientBrandUUID) {
+~ 		playerIn.textureData = textureData;
 ~ 		playerIn.clientBrandUUID = clientBrandUUID;
-~ 		GameProfile gameprofile1 = playerIn.getGameProfile();
 
 > CHANGE  3 : 4  @  3 : 7
 
 ~ 		String s1 = "channel:" + netManager.playerChannel;
 
-> INSERT  8 : 12  @  8
+> CHANGE  7 : 9  @  7 : 8
 
-+ 		nethandlerplayserver.setEaglerMessageController(new GameProtocolMessageController(
-+ 				GamePluginMessageProtocol.getByVersion(protocolVersion), GamePluginMessageConstants.SERVER_TO_CLIENT,
-+ 				GameProtocolMessageController.createServerHandler(protocolVersion, nethandlerplayserver),
-+ 				(ch, msg) -> nethandlerplayserver.sendPacket(new S3FPacketCustomPayload(ch, msg))));
+~ 		NetHandlerPlayServer nethandlerplayserver = new NetHandlerPlayServer(this.mcServer, netManager, playerIn,
+~ 				protocolVersion);
 
 > DELETE  4  @  4 : 6
 
@@ -142,10 +139,8 @@
 
 ~ 			this.playerStatFiles.remove(entityplayermp.getName());
 
-> INSERT  2 : 9  @  2
+> INSERT  2 : 7  @  2
 
-+ 		((EaglerMinecraftServer) mcServer).getSkinService().unregisterPlayer(uuid);
-+ 		((EaglerMinecraftServer) mcServer).getCapeService().unregisterPlayer(uuid);
 + 		IntegratedVoiceService vcs = ((EaglerMinecraftServer) mcServer).getVoiceService();
 + 		if (vcs != null) {
 + 			vcs.handlePlayerLoggedOut(playerIn);

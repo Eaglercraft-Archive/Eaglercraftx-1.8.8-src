@@ -398,6 +398,13 @@ public class PlatformRuntime {
 	@Import(module = "platformRuntime", name = "writeCrashReport")
 	private static native void writeCrashReport0(JSString crashDump);
 
+	public static void showContextLostScreen(String crashDump) {
+		showContextLostScreen0(BetterJSStringConverter.stringToJS(crashDump));
+	}
+
+	@Import(module = "platformRuntime", name = "showContextLostScreen")
+	private static native void showContextLostScreen0(JSString crashDump);
+
 	public static void getStackTrace(Throwable t, Consumer<String> ret) {
 		StackTraceElement[] el = t.getStackTrace();
 		if(el.length > 0) {

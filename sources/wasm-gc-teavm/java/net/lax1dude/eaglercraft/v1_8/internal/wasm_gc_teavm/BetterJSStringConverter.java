@@ -16,67 +16,37 @@
 
 package net.lax1dude.eaglercraft.v1_8.internal.wasm_gc_teavm;
 
-import org.teavm.interop.Address;
-import org.teavm.interop.Import;
 import org.teavm.interop.Unmanaged;
 import org.teavm.jso.core.JSArray;
 import org.teavm.jso.core.JSString;
+import org.teavm.jso.impl.JS;
 
-import net.lax1dude.eaglercraft.v1_8.internal.buffer.MemoryStack;
-import net.lax1dude.eaglercraft.v1_8.internal.buffer.WASMGCBufferAllocator;
-
+/**
+ * Note: this is left over from when TeaVM JSO converted
+ * strings using a horrifying concatenation loop, eagler
+ * had a "better" implementation back then
+ */
 public class BetterJSStringConverter {
-
-	private static final TextDecoder textDecoder = new TextDecoder("utf-16");
 
 	@Unmanaged
 	public static JSString stringToJS(String input) {
-		if(input == null) return null;
-		int len = input.length();
-		MemoryStack.push();
-		Address tmpAddr = MemoryStack.malloc(len << 1);
-		for(int i = 0; i < len; ++i) {
-			tmpAddr.add(i << 1).putChar(input.charAt(i));
-		}
-		JSString ret = textDecoder.decode(WASMGCBufferAllocator.getUnsignedByteBufferView0(tmpAddr, len << 1));
-		MemoryStack.pop();
-		return ret;
+		return (JSString) JS.wrap(input);
 	}
 
 	@Unmanaged
+	@SuppressWarnings("unchecked")
 	public static JSArray<JSString> stringArrayToJS(String[] input) {
-		if(input == null) return null;
-		int len = input.length;
-		JSArray<JSString> ret = new JSArray<>(len);
-		for(int i = 0; i < len; ++i) {
-			ret.set(i, stringToJS(input[i]));
-		}
-		return ret;
+		return (JSArray<JSString>) JS.wrap(input);
 	}
 
 	@Unmanaged
 	public static String stringFromJS(JSString input) {
-		if(input == null) return null;
-		int len = input.getLength();
-		char[] chars = new char[len];
-		for(int i = 0; i < len; ++i) {
-			chars[i] = charCodeAt(input, i);
-		}
-		return new String(chars);
+		return JS.unwrapString(input);
 	}
-
-	@Import(module = "teavmJso", name = "charAt")
-	private static native char charCodeAt(JSString str, int idx);
 
 	@Unmanaged
 	public static String[] stringArrayFromJS(JSArray<JSString> input) {
-		if(input == null) return null;
-		int len = input.getLength();
-		String[] ret = new String[len];
-		for(int i = 0; i < len; ++i) {
-			ret[i] = stringFromJS(input.get(i));
-		}
-		return ret;
+		return JS.unwrapStringArray(input);
 	}
 
 }

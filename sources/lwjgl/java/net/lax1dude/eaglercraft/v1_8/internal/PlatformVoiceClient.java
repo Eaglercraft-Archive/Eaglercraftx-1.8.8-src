@@ -65,6 +65,14 @@ public class PlatformVoiceClient {
 		
 	}
 
+	public static void makePeerGlobal(EaglercraftUUID peerId) {
+		
+	}
+
+	public static void makePeerProximity(EaglercraftUUID peerId) {
+		
+	}
+
 	public static void tickVoiceClient() {
 		
 	}

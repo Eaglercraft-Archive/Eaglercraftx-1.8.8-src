@@ -6,21 +6,20 @@
 
   - Creator of Eaglercraft
   - Ported the Minecraft 1.8 src to TeaVM
-  - Wrote HW accelerated OpenGL 1.3 emulator
-  - Wrote the default shader pack
+  - Optimized the Minecraft 1.8 src
+  - Made the platform abstraction layer
+  - Made HW accelerated OpenGL 1.3 emulator
+  - Made the default shader pack
   - Made the integrated PBR resource pack
   - Added touch and mobile device support
-  - Wrote all desktop emulation code
-  - Wrote EaglercraftXBungee
-  - Wrote EaglercraftXVelocity
-  - Wrote WebRTC relay server
-  - Wrote voice chat server
-  - Wrote the patch and build system
+  - Made the multiplayer backends
+  - Made the shared world relay server
+  - Made the patch and build system
 
  ayunami2000:
 
   - Many bug fixes
-  - WebRTC LAN worlds
+  - WebRTC shared worlds
   - WebRTC voice chat
   - Worked on touch support
   - Made velocity plugin work
@@ -28,6 +27,11 @@
   - Added screen recording
   - Added seamless fullscreen
   - Created the replit
+
+ cire3:
+
+  - Created the Gradle plugin
+  - Proponent of Kotlin DSL
 
 
 

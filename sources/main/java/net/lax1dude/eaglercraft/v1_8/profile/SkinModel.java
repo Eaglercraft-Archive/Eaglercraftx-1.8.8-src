@@ -72,6 +72,14 @@ public enum SkinModel {
 			return STEVE;
 		}
 	}
+
+	public static SkinModel getSanitizedModelFromId(int id) {
+		SkinModel ret = getModelFromId(id & 0x7F);
+		if((id & 0x80) != 0 && ret.sanitize) {
+			ret = STEVE;
+		}
+		return ret;
+	}
 	
 	static {
 		SkinModel[] arr = values();

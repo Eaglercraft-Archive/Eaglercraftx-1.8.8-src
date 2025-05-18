@@ -68,7 +68,9 @@ public class PullRequestTask {
 		File originalSourceMain = new File(EaglerBuildTools.repositoryRoot, "sources/main/java");
 		File originalSourceProtoGame = new File(EaglerBuildTools.repositoryRoot, "sources/protocol-game/java");
 		File originalSourceProtoRelay = new File(EaglerBuildTools.repositoryRoot, "sources/protocol-relay/java");
+		File originalSourcePlatformAPI = new File(EaglerBuildTools.repositoryRoot, "sources/platform-api/java");
 		File originalSourceTeaVM = new File(EaglerBuildTools.repositoryRoot, "sources/teavm/java");
+		File originalSourceTeaVMRes = new File(EaglerBuildTools.repositoryRoot, "sources/teavm/resources");
 		File originalSourceTeaVMC = new File(EaglerBuildTools.repositoryRoot, "sources/teavmc-classpath/resources");
 		File originalSourceBootMenu = new File(EaglerBuildTools.repositoryRoot, "sources/teavm-boot-menu/java");
 		File originalSourceLWJGL = new File(EaglerBuildTools.repositoryRoot, "sources/lwjgl/java");
@@ -84,7 +86,9 @@ public class PullRequestTask {
 		File diffFromGame = new File(EaglerBuildToolsConfig.getWorkspaceDirectory(), "src/game/java");
 		File diffFromProtoGame = new File(EaglerBuildToolsConfig.getWorkspaceDirectory(), "src/protocol-game/java");
 		File diffFromProtoRelay = new File(EaglerBuildToolsConfig.getWorkspaceDirectory(), "src/protocol-relay/java");
+		File diffFromPlatformAPI = new File(EaglerBuildToolsConfig.getWorkspaceDirectory(), "src/platform-api/java");
 		File diffFromTeaVM = new File(EaglerBuildToolsConfig.getWorkspaceDirectory(), "src/teavm/java");
+		File diffFromTeaVMRes = new File(EaglerBuildToolsConfig.getWorkspaceDirectory(), "src/teavm/resources");
 		File diffFromBootMenu = new File(EaglerBuildToolsConfig.getWorkspaceDirectory(), "src/teavm-boot-menu/java");
 		File diffFromTeaVMC = new File(EaglerBuildToolsConfig.getWorkspaceDirectory(), "src/teavmc-classpath/resources");
 		File diffFromLWJGL = new File(EaglerBuildToolsConfig.getWorkspaceDirectory(), "src/lwjgl/java");
@@ -149,11 +153,23 @@ public class PullRequestTask {
 		}
 		System.out.println("Found " + i + " changed files in /src/protocol-relay/java/");
 		
+		i = copyAllModified(diffFromPlatformAPI, originalSourcePlatformAPI);
+		if(i > 0) {
+			flag = true;
+		}
+		System.out.println("Found " + i + " changed files in /src/platform-api/java/");
+		
 		i = copyAllModified(diffFromTeaVM, originalSourceTeaVM);
 		if(i > 0) {
 			flag = true;
 		}
 		System.out.println("Found " + i + " changed files in /src/teavm/java/");
+		
+		i = copyAllModified(diffFromTeaVMRes, originalSourceTeaVMRes);
+		if(i > 0) {
+			flag = true;
+		}
+		System.out.println("Found " + i + " changed files in /src/teavm/resources/");
 		
 		i = copyAllModified(diffFromBootMenu, originalSourceBootMenu);
 		if(i > 0) {

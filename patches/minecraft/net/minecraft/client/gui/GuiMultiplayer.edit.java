@@ -10,11 +10,10 @@
 + import java.io.IOException;
 + 
 
-> CHANGE  2 : 18  @  2 : 15
+> CHANGE  2 : 17  @  2 : 15
 
 ~ 
 ~ import net.lax1dude.eaglercraft.v1_8.EagRuntime;
-~ import net.lax1dude.eaglercraft.v1_8.EaglerXBungeeVersion;
 ~ import net.lax1dude.eaglercraft.v1_8.Keyboard;
 ~ import net.lax1dude.eaglercraft.v1_8.Mouse;
 ~ import net.lax1dude.eaglercraft.v1_8.cookie.ServerCookieDataStore;
@@ -207,7 +206,7 @@
 + 		GlStateManager.scale(0.75f, 0.75f, 0.75f);
 + 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 + 
-+ 		String text = EaglerXBungeeVersion.getPluginButton();
++ 		String text = "Download EaglerXServer";
 + 		int w = mc.fontRendererObj.getStringWidth(text);
 + 		boolean hover = xx > width - 5 - (w + 5) * 3 / 4 && yy > 1 && xx < width - 2 && yy < 12;
 + 		if (hover) {
@@ -268,12 +267,12 @@
 
 > INSERT  2 : 9  @  2
 
-+ 		String text = EaglerXBungeeVersion.getPluginButton();
++ 		String text = "Download EaglerXServer";
 + 		int w = mc.fontRendererObj.getStringWidth(text);
 + 		if (parInt1 > width - 5 - (w + 5) * 3 / 4 && parInt2 > 1 && parInt1 < width - 2 && parInt2 < 12) {
 + 			this.mc.getSoundHandler()
 + 					.playSound(PositionedSoundRecord.create(new ResourceLocation("gui.button.press"), 1.0F));
-+ 			EaglerXBungeeVersion.startPluginDownload();
++ 			EagRuntime.openLink("https://lax1dude.net/eaglerxserver");
 + 		}
 
 > INSERT  11 : 15  @  11

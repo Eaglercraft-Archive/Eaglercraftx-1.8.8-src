@@ -32,34 +32,42 @@ uniform sampler2D u_moonTextures;
 uniform sampler2D u_cloudsTexture;
 
 #define MOON_SURFACE 0.9
-#define MOON_MARGIN 0.0125
+#define MOON_MARGIN 0.025
+#define MOON_MARGIN_1NSQ ((1.0 - MOON_MARGIN) * (1.0 - MOON_MARGIN))
+#define ATMOSPHERE_BIAS 0.02
 
 void main() {
 	gl_FragDepth = 0.0;
 	vec2 coord2f = v_position2f * 2.0 - 1.0;
 
-	vec2 texUV = (coord2f * (1.0 / (MOON_SURFACE + MOON_MARGIN))) * 0.5 + 0.5;
+	vec2 surfaceCoord2f = coord2f * (1.0 / MOON_SURFACE);
+	float surfaceCoord2fDot = dot(surfaceCoord2f, surfaceCoord2f);
+	vec3 moonNormal3f;
 	vec4 color4f = vec4(0.0);
-	if(texUV == clamp(texUV, vec2(0.0), vec2(1.0))) {
-		color4f = texture(u_moonTextures, texUV);
+	float NdotV = 0.0;
+	float atmos = 1.0;
+	if(surfaceCoord2fDot < MOON_MARGIN_1NSQ) {
+		color4f = texture(u_moonTextures, surfaceCoord2f * 0.5 + 0.5);
+		moonNormal3f.xy = color4f.rg * 2.0 - 1.0;
+		moonNormal3f.z = sqrt(1.0 - dot(moonNormal3f.xy, moonNormal3f.xy));
+		NdotV = max(dot(moonNormal3f, u_lightDir3f), 0.0);
+		atmos = 0.0;
 	}
 
-	vec3 moonNormal3f;
-	moonNormal3f.xy = color4f.rg * 2.0 - 1.0;
-	moonNormal3f.z = sqrt(1.0 - dot(moonNormal3f.xy, moonNormal3f.xy));
-	float NdotV = max(dot(moonNormal3f, u_lightDir3f), 0.0);
+	float stupid = max(-u_lightDir3f.z - 0.5, 0.0) * 1.25;
+	stupid *= stupid * stupid;
+
 	vec3 viewDir = normalize(v_position3f);
 
-	vec2 surfaceCoord2f = coord2f * (1.0 / MOON_SURFACE);
-	vec3 moonAtmosNormalInner3f = vec3(surfaceCoord2f, sqrt(1.0 - dot(surfaceCoord2f, surfaceCoord2f)));
-	vec3 moonAtmosNormalOuter3f = vec3(surfaceCoord2f, sqrt(-1.0 + dot(surfaceCoord2f, surfaceCoord2f)));
+	vec3 moonAtmosNormalInner3f  = vec3(surfaceCoord2f, sqrt((MOON_MARGIN_1NSQ + ATMOSPHERE_BIAS) - surfaceCoord2fDot));
+	vec3 moonAtmosNormalOuter3f = vec3(surfaceCoord2f, sqrt((-MOON_MARGIN_1NSQ + ATMOSPHERE_BIAS) + surfaceCoord2fDot));
 	float NdotVInner = max(dot(moonAtmosNormalInner3f, u_lightDir3f), 0.0);
-	float NdotVOuter = max(dot(moonAtmosNormalOuter3f, u_lightDir3f) + 0.65, 0.0);
+	float NdotVOuter = max(dot(moonAtmosNormalOuter3f, u_lightDir3f) + 0.35, 0.0);
+	float atmosInner = max((MOON_SURFACE * 0.2 + stupid) / moonAtmosNormalInner3f.z - 0.2, 0.0);
+	float atmosOuter = max((MOON_SURFACE * 0.2 + stupid) / moonAtmosNormalOuter3f.z - 0.4, 0.0);
+	float atmosTotal = (1.0 - atmos) * NdotVInner * atmosInner + atmos * NdotVOuter * atmosOuter;
 
-	float atmosInner = max((MOON_SURFACE * 0.2) / moonAtmosNormalInner3f.z - 0.2, 0.0);
-	float atmosOuter = max((MOON_SURFACE * 0.2) / moonAtmosNormalOuter3f.z - 0.4, 0.0);
-
-	output4f = vec4(u_moonColor3f * (color4f.b * color4f.b * NdotV + (NdotVInner * atmosInner + NdotVOuter * atmosOuter * vec3(0.8, 0.825, 0.9)) * (0.5 - max(u_lightDir3f.z, 0.0) * 0.25)), 0.0);
+	output4f = vec4(u_moonColor3f * (color4f.b * color4f.b * NdotV + (atmosTotal * vec3(0.42, 0.5, 0.56))), 0.0);
 
 	if(viewDir.y < 0.01) {
 		return;

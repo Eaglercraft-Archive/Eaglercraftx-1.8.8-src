@@ -223,4 +223,17 @@ class SoftGLVertexArray implements IVertexArrayGL {
 
 	}
 
+	@Override
+	public int getBits() {
+		return enabled;
+	}
+
+	@Override
+	public void setBit(int bit) {
+	}
+
+	@Override
+	public void unsetBit(int bit) {
+	}
+
 }

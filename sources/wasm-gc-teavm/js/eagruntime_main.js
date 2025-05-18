@@ -86,6 +86,8 @@ var heapI32Array = null;
 var heapU32Array = null;
 /** @type {Float32Array} */
 var heapF32Array = null;
+/** @type {function(Int8Array,Uint8Array,Int16Array,Uint16Array,Int32Array,Uint32Array,Float32Array)|null} */
+var heapResizeHandler = null;
 /** @type {boolean} */
 var isLikelyMobileBrowser = false;
 /** @type {function(string, !ArrayBuffer)|null} */
@@ -460,6 +462,13 @@ function handleMemoryResized(mem) {
 	heapU32Array = new Uint32Array(heapArrayBuffer);
 	heapI32Array = new Int32Array(heapArrayBuffer);
 	heapF32Array = new Float32Array(heapArrayBuffer);
+	callHeapViewCallback();
+}
+
+function callHeapViewCallback() {
+	if (heapResizeHandler) {
+		heapResizeHandler(heapI8Array, heapU8Array, heapI16Array, heapU16Array, heapI32Array, heapU32Array, heapF32Array);
+	}
 }
 
 const EVENT_TYPE_INPUT = 0;
@@ -750,6 +759,44 @@ function showIncompatibleScreen(msg) {
 		}
 		
 		div.querySelector("#_eaglercraftX_crashWebGL").appendChild(document.createTextNode(webGLRenderer));
+	}
+}
+
+/**
+ * @param {string} msg
+ */
+function showContextLostScreen(msg) {
+	if(!isCrashed) {
+		isCrashed = true;
+		
+		var parentEl = parentElement || rootElement;
+		
+		if(!parentEl) {
+			alert("WebGL context lost!");
+			eagError("WebGL context lost!");
+			return;
+		}
+		
+		const img = document.createElement("img");
+		const div = document.createElement("div");
+		img.setAttribute("style", "z-index:100;position:absolute;top:10px;left:calc(50% - 151px);");
+		img.src = crashURL;
+		div.setAttribute("style", "z-index:100;position:absolute;top:135px;left:10%;right:10%;bottom:50px;background-color:white;border:1px solid #cccccc;overflow-x:hidden;overflow-y:scroll;font:18px sans-serif;padding:40px;");
+		div.classList.add("_eaglercraftX_context_lost_element");
+		parentEl.appendChild(img);
+		parentEl.appendChild(div);
+		div.innerHTML = "<h2><svg style=\"vertical-align:middle;margin:0px 16px 8px 8px;\" xmlns=\"http://www.w3.org/2000/svg\" width=\"48\" height=\"48\" viewBox=\"0 0 48 48\" fill=\"none\"><path stroke=\"#000000\" stroke-width=\"3\" stroke-linecap=\"square\" d=\"M1.5 8.5v34h45v-28m-3-3h-10v-3m-3-3h-10m15 6h-18v-3m-3-3h-10\"/><path stroke=\"#000000\" stroke-width=\"2\" stroke-linecap=\"square\" d=\"M12 21h0m0 4h0m4 0h0m0-4h0m-2 2h0m20-2h0m0 4h0m4 0h0m0-4h0m-2 2h0\"/><path stroke=\"#000000\" stroke-width=\"2\" stroke-linecap=\"square\" d=\"M20 30h0 m2 2h0 m2 2h0 m2 2h0 m2 -2h0 m2 -2h0 m2 -2h0\"/></svg> + WebGL context lost!</h2>"
+				+ "<div style=\"margin-left:40px;\">"
+				+ "<p style=\"font-size:1.2em;\">Your browser has forcibly released all of the resources "
+				+ "allocated by the game's 3D rendering context. EaglercraftX cannot continue, please refresh "
+				+ "the page to restart the game.</p>"
+				+ "<p style=\"font-size:1.2em;\">This is not a bug, it is usually caused by the browser "
+				+ "deciding it no longer has sufficient resources to continue rendering this page. If it "
+				+ "happens again, try closing your other browser tabs and windows.</p>"
+				+ "<p style=\"overflow-wrap:break-word;white-space:pre-wrap;font:0.75em monospace;margin-top:1.5em;\" id=\"_eaglercraftX_contextLostTrace\"></p>"
+				+ "</div>";
+		
+		div.querySelector("#_eaglercraftX_contextLostTrace").appendChild(document.createTextNode(msg));
 	}
 }
 

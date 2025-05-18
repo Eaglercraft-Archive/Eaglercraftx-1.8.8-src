@@ -66,16 +66,16 @@ public class CompileLatestClientGUI {
 						| UnsupportedLookAndFeelException e) {
 					System.err.println("Could not set system look and feel: " + e.toString());
 				}
-				if(!System.getProperty("eaglercraft.isJava11", "false").equalsIgnoreCase("true")) {
+				if(!System.getProperty("eaglercraft.isJava17", "false").equalsIgnoreCase("true")) {
 					try {
 						if (!(boolean) Class
-								.forName("net.lax1dude.eaglercraft.v1_8.buildtools.Java11Check", true,
-										new URLClassLoader(new URL[] { (new File("buildtools/Java11Check.jar")).toURI().toURL() }))
+								.forName("net.lax1dude.eaglercraft.v1_8.buildtools.Java17Check", true,
+										new URLClassLoader(new URL[] { (new File("buildtools/Java17Check.jar")).toURI().toURL() }))
 								.getMethod("classLoadCheck").invoke(null)) {
 							throw new RuntimeException("wtf?");
 						}
 					}catch(Throwable t) {
-						JOptionPane.showMessageDialog(null, "Error: Java 11 is required to run this program", "Unsupported JRE", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(null, "Error: Java 17 is required to run this program", "Unsupported JRE", JOptionPane.ERROR_MESSAGE);
 						System.exit(-1);
 						return;
 					}
@@ -90,7 +90,7 @@ public class CompileLatestClientGUI {
 				System.setErr(new PrintStream(new ConsoleRedirector(true)));
 				if(JavaC.jdkHome == null) {
 					if(JOptionPane.showConfirmDialog(frame.frmCompileLatestClient, "Error: A JDK is required to run this program!\nYou are currently running on a JRE\nDo you have a JDK installed that you would like to use instead?", "Unsupported JRE", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-						JOptionPane.showMessageDialog(frame.frmCompileLatestClient, "You need at least JDK 8 to compile EaglercraftX 1.8!\nSelect the path to the installation you want to use", "Unsupported JRE", JOptionPane.INFORMATION_MESSAGE);
+						JOptionPane.showMessageDialog(frame.frmCompileLatestClient, "You need at least JDK 17 to compile EaglercraftX 1.8!\nSelect the path to the installation you want to use", "Unsupported JRE", JOptionPane.INFORMATION_MESSAGE);
 						JFileChooser fileChooser = new JFileChooser((new File(System.getProperty("java.home"))).getParentFile());
 						fileChooser.setMultiSelectionEnabled(false);
 						fileChooser.setFileHidingEnabled(false);
@@ -106,7 +106,7 @@ public class CompileLatestClientGUI {
 									}
 								}
 							}
-							JOptionPane.showMessageDialog(frame.frmCompileLatestClient, "Please install JDK 8 or newer to continue", "Unsupported JRE", JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(frame.frmCompileLatestClient, "Please install JDK 17 or newer to continue", "Unsupported JRE", JOptionPane.ERROR_MESSAGE);
 							System.exit(-1);
 							return;
 						}
@@ -256,6 +256,7 @@ public class CompileLatestClientGUI {
 						new File(repositoryFolder, "sources/protocol-game/java"),
 						new File(repositoryFolder, "sources/protocol-relay/java"),
 						new File(repositoryFolder, "sources/teavm/java"),
+						new File(repositoryFolder, "sources/teavm/resources"),
 						new File(repositoryFolder, "sources/teavm-boot-menu/java"));
 			}catch(IOException ex) {
 				throw new CompileFailureException("failed to run javac compiler! " + ex.toString(), ex);
@@ -331,11 +332,11 @@ public class CompileLatestClientGUI {
 		
 		File classesJS = new File(outputDirectory, "classes.js");
 		
-		if(!ES6Compat.patchClassesJS(classesJS, new File(repositoryFolder, "sources/setup/workspace_template/javascript/ES6ShimScript.txt"))) {
+		if(!ES6Compat.patchClassesJS(classesJS, new File(repositoryFolder, "sources/setup/workspace_template/target_teavm_javascript/javascript/ES6ShimScript.txt"))) {
 			System.err.println("Error: could not inject shim, continuing anyway because it is not required");
 		}
 		
-		File epkCompiler = new File(repositoryFolder, "sources/setup/workspace_template/desktopRuntime/CompileEPK.jar");
+		File epkCompiler = new File(repositoryFolder, "sources/setup/workspace_template/target_teavm_javascript/buildtools/CompileEPK.jar");
 		
 		if(!epkCompiler.exists()) {
 			throw new CompileFailureException("EPKCompiler JAR file is missing: " + epkCompiler.getAbsolutePath());
@@ -390,9 +391,9 @@ public class CompileLatestClientGUI {
 		if(generateOfflineDownload) {
 			System.out.println("Running offline download generator...");
 			System.out.println();
-			File offlineDownloadGenerator = new File(repositoryFolder, "sources/setup/workspace_template/desktopRuntime/MakeOfflineDownload.jar");
+			File offlineDownloadGenerator = new File(repositoryFolder, "sources/setup/workspace_template/target_teavm_javascript/buildtools/MakeOfflineDownload.jar");
 			MakeOfflineDownload.compilerMain(offlineDownloadGenerator, new String[] {
-					(new File(repositoryFolder, "sources/setup/workspace_template/javascript/OfflineDownloadTemplate.txt")).getAbsolutePath(),
+					(new File(repositoryFolder, "sources/setup/workspace_template/target_teavm_javascript/javascript/OfflineDownloadTemplate.txt")).getAbsolutePath(),
 					classesJS.getAbsolutePath(), (new File(outputDirectory, "assets.epk")).getAbsolutePath(),
 					(new File(outputDirectory, "EaglercraftX_1.8_Offline_en_US.html")).getAbsolutePath(),
 					(new File(outputDirectory, "EaglercraftX_1.8_Offline_International.html")).getAbsolutePath(), 

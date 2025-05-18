@@ -22,6 +22,7 @@ import static net.lax1dude.eaglercraft.v1_8.opengl.RealOpenGLEnums.*;
 import java.util.Arrays;
 import java.util.List;
 
+import net.lax1dude.eaglercraft.v1_8.Display;
 import net.lax1dude.eaglercraft.v1_8.internal.IProgramGL;
 import net.lax1dude.eaglercraft.v1_8.internal.IShaderGL;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
@@ -69,6 +70,7 @@ public class ShaderCompiler {
 		_wglCompileShader(ret);
 		
 		if(_wglGetShaderi(ret, GL_COMPILE_STATUS) != GL_TRUE) {
+			Display.checkContextLost();
 			logger.error("Failed to compile {} \"{}\" of program \"{}\"!", getStageName(stage), filename, name);
 			String log = _wglGetShaderInfoLog(ret);
 			if(log != null) {
@@ -95,6 +97,7 @@ public class ShaderCompiler {
 		_wglDetachShader(ret, frag);
 		
 		if(_wglGetProgrami(ret, GL_LINK_STATUS) != GL_TRUE) {
+			Display.checkContextLost();
 			logger.error("Failed to link program \"{}\"!", name);
 			String log = _wglGetProgramInfoLog(ret);
 			if(log != null) {

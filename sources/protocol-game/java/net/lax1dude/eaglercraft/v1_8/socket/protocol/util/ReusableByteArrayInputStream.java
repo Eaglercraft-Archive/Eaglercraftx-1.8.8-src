@@ -21,7 +21,7 @@ import java.io.InputStream;
 
 public class ReusableByteArrayInputStream extends InputStream {
 
-	private volatile byte[] currentBuffer = null;
+	private byte[] currentBuffer = null;
 	private int idx = 0;
 	private int markIDX = 0;
 
@@ -31,21 +31,28 @@ public class ReusableByteArrayInputStream extends InputStream {
 		markIDX = 0;
 	}
 
+	public void feedBuffer(byte[] b, int offset) {
+		currentBuffer = b;
+		idx = offset;
+		markIDX = offset;
+	}
+
 	@Override
 	public int read() throws IOException {
-		if(currentBuffer.length <= idx) throw new IOException("ReusableByteArrayInputStream buffer underflow, no bytes remaining");
-		return (int)currentBuffer[idx++] & 0xFF;
+		if (currentBuffer.length <= idx)
+			throw new IOException("ReusableByteArrayInputStream buffer underflow, no bytes remaining");
+		return (int) currentBuffer[idx++] & 0xFF;
 	}
 
 	@Override
 	public int read(byte b[], int off, int len) throws IOException {
-		if(idx + len > currentBuffer.length) {
+		if (idx + len > currentBuffer.length) {
 			throw new IOException(
 					"ReusableByteArrayInputStream buffer underflow, tried to read " + len + " when there are only "
 							+ (currentBuffer.length - idx) + " bytes remaining",
 					new ArrayIndexOutOfBoundsException(idx + len - 1));
 		}
-		if(off + len > b.length) {
+		if (off + len > b.length) {
 			throw new ArrayIndexOutOfBoundsException(off + len - 1);
 		}
 		System.arraycopy(currentBuffer, idx, b, off, len);
@@ -71,7 +78,7 @@ public class ReusableByteArrayInputStream extends InputStream {
 
 	public void setReaderIndex(int i) {
 		idx = i;
-		markIDX = idx;
+		markIDX = i;
 	}
 
 	public boolean markSupported() {

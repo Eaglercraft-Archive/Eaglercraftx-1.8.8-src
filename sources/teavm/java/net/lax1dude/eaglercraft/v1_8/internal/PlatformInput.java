@@ -1694,7 +1694,7 @@ public class PlatformInput {
 		PlatformRuntime.logger.info("Waiting for user to select option on mobile press any key screen");
 	}
 
-	public static void clearEvenBuffers() {
+	public static void clearEventBuffers() {
 		mouseEvents.clear();
 		keyEvents.clear();
 		touchEvents.clear();

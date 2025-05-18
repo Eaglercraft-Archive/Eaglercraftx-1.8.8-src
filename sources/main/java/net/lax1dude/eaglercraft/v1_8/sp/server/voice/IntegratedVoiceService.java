@@ -32,6 +32,7 @@ import net.lax1dude.eaglercraft.v1_8.socket.protocol.pkt.server.*;
 import net.lax1dude.eaglercraft.v1_8.voice.ExpiringSet;
 import net.minecraft.entity.player.EntityPlayerMP;
 
+//TODO: Rewrite to be more like EaglerXServer
 public class IntegratedVoiceService {
 
 	public static final Logger logger = LogManager.getLogger("IntegratedVoiceService");
@@ -151,21 +152,32 @@ public class IntegratedVoiceService {
 		}
 		GameMessagePacket v3p = null;
 		GameMessagePacket v4p = null;
-		for(EntityPlayerMP conn : voicePlayers.values()) {
-			if(conn.playerNetServerHandler.getEaglerMessageProtocol().ver <= 3) {
-				conn.playerNetServerHandler.sendEaglerMessage(v3p == null ? (v3p = new SPacketVoiceSignalConnectV3EAG(senderUuid.msb, senderUuid.lsb, true, false)) : v3p);
-			} else {
-				conn.playerNetServerHandler.sendEaglerMessage(v4p == null ? (v4p = new SPacketVoiceSignalConnectAnnounceV4EAG(senderUuid.msb, senderUuid.lsb)) : v4p);
-			}
-		}
 		Collection<SPacketVoiceSignalGlobalEAG.UserData> userDatas = new ArrayList<>(voicePlayers.size());
-		for(EntityPlayerMP player : voicePlayers.values()) {
-			EaglercraftUUID uuid = player.getUniqueID();
-			userDatas.add(new SPacketVoiceSignalGlobalEAG.UserData(uuid.msb, uuid.lsb, player.getName()));
+		for(EntityPlayerMP conn : voicePlayers.values()) {
+			EaglercraftUUID otherUuid = conn.getUniqueID();
+			if(conn != sender) {
+				if(conn.playerNetServerHandler.getEaglerMessageProtocol().ver <= 3) {
+					conn.playerNetServerHandler.sendEaglerMessage(v3p == null ? (v3p = new SPacketVoiceSignalConnectV3EAG(senderUuid.msb, senderUuid.lsb, true, false)) : v3p);
+				} else {
+					conn.playerNetServerHandler.sendEaglerMessage(v4p == null ? (v4p = new SPacketVoiceSignalConnectAnnounceV4EAG(senderUuid.msb, senderUuid.lsb)) : v4p);
+				}
+			}
+			userDatas.add(new SPacketVoiceSignalGlobalEAG.UserData(otherUuid.msb, otherUuid.lsb, conn.getName()));
 		}
 		SPacketVoiceSignalGlobalEAG packetToBroadcast = new SPacketVoiceSignalGlobalEAG(userDatas);
 		for (EntityPlayerMP userCon : voicePlayers.values()) {
 			userCon.playerNetServerHandler.sendEaglerMessage(packetToBroadcast);
+		}
+		boolean selfV3 = sender.playerNetServerHandler.getEaglerMessageProtocol().ver <= 3;
+		for(EntityPlayerMP conn : voicePlayers.values()) {
+			EaglercraftUUID otherUuid = conn.getUniqueID();
+			if(conn != sender) {
+				if(selfV3) {
+					sender.playerNetServerHandler.sendEaglerMessage(new SPacketVoiceSignalConnectV3EAG(otherUuid.msb, otherUuid.lsb, true, false));
+				}else {
+					sender.playerNetServerHandler.sendEaglerMessage(new SPacketVoiceSignalConnectAnnounceV4EAG(otherUuid.msb, otherUuid.lsb));
+				}
+			}
 		}
 	}
 

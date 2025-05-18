@@ -20,9 +20,7 @@ import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 import net.lax1dude.eaglercraft.v1_8.netty.Unpooled;
 import net.lax1dude.eaglercraft.v1_8.socket.EaglercraftNetworkManager;
-import net.lax1dude.eaglercraft.v1_8.socket.protocol.GamePluginMessageConstants;
 import net.lax1dude.eaglercraft.v1_8.socket.protocol.GamePluginMessageProtocol;
-import net.lax1dude.eaglercraft.v1_8.socket.protocol.client.GameProtocolMessageController;
 import net.lax1dude.eaglercraft.v1_8.update.UpdateService;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiDisconnected;
@@ -73,15 +71,14 @@ public class NetHandlerSingleplayerLogin implements INetHandlerLoginClient {
 			return;
 		}
 		logger.info("Server is using protocol: {}", p);
-		NetHandlerPlayClient netHandler = new NetHandlerPlayClient(this.mc, this.previousGuiScreen, this.networkManager, var1.getProfile());
-		netHandler.setEaglerMessageController(
-				new GameProtocolMessageController(mp, GamePluginMessageConstants.CLIENT_TO_SERVER,
-						GameProtocolMessageController.createClientHandler(p, netHandler),
-						(ch, msg) -> netHandler.addToSendQueue(new C17PacketCustomPayload(ch, msg))));
+		this.networkManager.setLANInfo(p);
+		NetHandlerPlayClient netHandler = new NetHandlerPlayClient(this.mc, this.previousGuiScreen, this.networkManager,
+				var1.getProfile(), mp);
 		this.networkManager.setNetHandler(netHandler);
 		byte[] b = UpdateService.getClientSignatureData();
 		if(b != null) {
-			this.networkManager.sendPacket(new C17PacketCustomPayload("EAG|MyUpdCert-1.8", new PacketBuffer(Unpooled.buffer(b, b.length).writerIndex(b.length))));
+			this.networkManager.sendPacket(new C17PacketCustomPayload("EAG|MyUpdCert-1.8",
+					new PacketBuffer(Unpooled.buffer(b, b.length).writerIndex(b.length))));
 		}
 	}
 

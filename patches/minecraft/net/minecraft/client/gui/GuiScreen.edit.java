@@ -9,7 +9,7 @@
 
 > DELETE  1  @  1 : 3
 
-> INSERT  4 : 29  @  4
+> INSERT  4 : 28  @  4
 
 + 
 + import net.lax1dude.eaglercraft.v1_8.internal.EnumTouchEvent;
@@ -22,7 +22,6 @@
 + import com.google.common.collect.Sets;
 + 
 + import net.lax1dude.eaglercraft.v1_8.EagRuntime;
-+ import net.lax1dude.eaglercraft.v1_8.EaglerXBungeeVersion;
 + import net.lax1dude.eaglercraft.v1_8.Keyboard;
 + import net.lax1dude.eaglercraft.v1_8.Mouse;
 + import net.lax1dude.eaglercraft.v1_8.PauseMenuCustomizeState;
@@ -221,7 +220,7 @@
 
 ~ 					// rip
 
-> CHANGE  5 : 15  @  5 : 8
+> CHANGE  5 : 12  @  5 : 11
 
 ~ 					/*
 ~ 					 * ChatUserInfo chatuserinfo =
@@ -230,16 +229,8 @@
 ~ 					 * GuiTwitchUserMode(this.mc.getTwitchStream(), chatuserinfo)); } else { }
 ~ 					 */
 ~ 					LOGGER.error("Tried to handle twitch user but couldn\'t find them!");
-~ 				} else if (clickevent.getAction() == ClickEvent.Action.EAGLER_PLUGIN_DOWNLOAD) {
-~ 					if (EaglerXBungeeVersion.pluginFileEPK.equals(clickevent.getValue())) {
-~ 						EaglerXBungeeVersion.startPluginDownload();
 
-> CHANGE  1 : 3  @  1 : 2
-
-~ 						LOGGER.error("Invalid plugin download from EPK was blocked: {}",
-~ 								EaglerXBungeeVersion.pluginFileEPK);
-
-> CHANGE  24 : 49  @  24 : 26
+> CHANGE  23 : 48  @  23 : 25
 
 ~ 	protected void touchStarted(int parInt1, int parInt2, int parInt3) {
 ~ 		if (shouldTouchGenerateMouseEvents()) {

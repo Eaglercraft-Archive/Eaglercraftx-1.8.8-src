@@ -21,7 +21,7 @@ import java.io.IOException;
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.EaglercraftVersion;
 import net.lax1dude.eaglercraft.v1_8.profile.EaglerProfile;
-import net.lax1dude.eaglercraft.v1_8.socket.ConnectionHandshake;
+import net.lax1dude.eaglercraft.v1_8.socket.protocol.handshake.HandshakerHandler;
 import net.lax1dude.eaglercraft.v1_8.sp.SingleplayerServerController;
 import net.lax1dude.eaglercraft.v1_8.sp.socket.ClientIntegratedServerNetworkManager;
 import net.lax1dude.eaglercraft.v1_8.sp.socket.NetHandlerSingleplayerLogin;
@@ -94,7 +94,7 @@ public class GuiScreenSingleplayerConnecting extends GuiScreen {
 						this.networkManager.setNetHandler(new NetHandlerSingleplayerLogin(this.networkManager, this.mc, this.menu));
 						this.networkManager.sendPacket(new C00PacketLoginStart(this.mc.getSession().getProfile(),
 								EaglerProfile.getSkinPacket(3), EaglerProfile.getCapePacket(),
-								ConnectionHandshake.getSPHandshakeProtocolData(), EaglercraftVersion.clientBrandUUID));
+								HandshakerHandler.getSPHandshakeProtocolData(), EaglercraftVersion.clientBrandUUID));
 					}
 					try {
 						this.networkManager.processReceivedPackets();
