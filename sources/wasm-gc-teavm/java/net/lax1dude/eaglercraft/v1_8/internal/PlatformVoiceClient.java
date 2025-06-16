@@ -215,16 +215,8 @@ public class PlatformVoiceClient {
 				audioNode.disconnect(gain);
 			}
 			panner = PlatformAudio.audioctx.createPanner();
-			panner.setRolloffFactor(1f);
-			PlatformAudio.setDistanceModelLinearFast(panner);
-			PlatformAudio.setPanningModelHRTFFast(panner);
-			panner.setConeInnerAngle(360f);
-			panner.setConeOuterAngle(0f);
-			panner.setConeOuterGain(0f);
-			panner.setOrientation(0f, 1f, 0f);
-			panner.setPosition(0, 0, 0);
 			float vol = VoiceClientController.getVoiceListenVolume();
-			panner.setMaxDistance(vol * 2 * VoiceClientController.getVoiceProximity() + 0.1f);
+			PlatformAudio.setupPanner(panner, vol * 2 * VoiceClientController.getVoiceProximity() + 0.1f, 0, 0, 0);
 			gain = PlatformAudio.audioctx.createGain();
 			gain.getGain().setValue(vol);
 			audioNode.connect(gain);

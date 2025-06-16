@@ -37,6 +37,7 @@ public abstract class MessageController {
 	protected final int sendDirection;
 	protected final int receiveDirection;
 	protected List<GameMessagePacket> sendQueue;
+	protected int maxMultiPacket = 64;
 
 	public MessageController(GamePluginMessageProtocol protocol, GameMessageHandler handler, int direction) {
 		this.protocol = protocol;
@@ -55,6 +56,10 @@ public abstract class MessageController {
 
 	public boolean isSendQueueEnabled() {
 		return sendQueue != null;
+	}
+
+	public void setMaxMultiPacket(int max) {
+		this.maxMultiPacket = max;
 	}
 
 	public void sendPacket(GameMessagePacket packet) {

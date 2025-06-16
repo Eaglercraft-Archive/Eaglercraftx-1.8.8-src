@@ -57,6 +57,9 @@ public class InjectedMessageController extends MessageController {
 			byteInputStreamSingleton.feedBuffer(data, offset);
 			inputStreamSingleton.readByte();
 			if(data[offset + 1] == (byte) 0xFF) {
+				if(inputStreamSingleton.available() > 32768) {
+					throw new IOException("Impossible large multi-packet received: " + inputStreamSingleton.available());
+				}
 				inputStreamSingleton.readByte();
 				int count = inputStreamSingleton.readVarInt();
 				for(int i = 0, j, k; i < count; ++i) {
@@ -134,7 +137,7 @@ public class InjectedMessageController extends MessageController {
 				lastLen = GamePacketOutputBuffer.getVarIntSize(i) + i;
 				totalLen += lastLen;
 				++sendCount;
-			}while(totalLen < 32760 && sendCount < total - start);
+			}while(totalLen < 32760 && sendCount < total - start && sendCount < maxMultiPacket);
 			if(totalLen >= 32760) {
 				--sendCount;
 				totalLen -= lastLen;

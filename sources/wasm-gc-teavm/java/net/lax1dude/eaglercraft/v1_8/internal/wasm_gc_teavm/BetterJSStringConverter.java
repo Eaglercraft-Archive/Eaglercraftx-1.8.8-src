@@ -30,22 +30,26 @@ public class BetterJSStringConverter {
 
 	@Unmanaged
 	public static JSString stringToJS(String input) {
+		if (input == null) return null;
 		return (JSString) JS.wrap(input);
 	}
 
 	@Unmanaged
 	@SuppressWarnings("unchecked")
 	public static JSArray<JSString> stringArrayToJS(String[] input) {
+		if (input == null) return null;
 		return (JSArray<JSString>) JS.wrap(input);
 	}
 
 	@Unmanaged
 	public static String stringFromJS(JSString input) {
+		if (input == null) return null;
 		return JS.unwrapString(input);
 	}
 
 	@Unmanaged
 	public static String[] stringArrayFromJS(JSArray<JSString> input) {
+		if (input == null) return null;
 		return JS.unwrapStringArray(input);
 	}
 

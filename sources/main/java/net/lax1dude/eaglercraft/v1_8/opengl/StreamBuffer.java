@@ -42,14 +42,6 @@ public class StreamBuffer {
 		
 	}
 
-	private static PoolInstance fillPoolInstance() {
-		PoolInstance ret = pool[poolBufferID++];
-		if(poolBufferID > poolSize - 1) {
-			poolBufferID = 0;
-		}
-		return ret;
-	}
-
 	private static void resizeInstance(PoolInstance instance, int requiredMemory) {
 		IBufferGL buffer = instance.vertexBuffer;
 		if (buffer == null) {
@@ -66,8 +58,6 @@ public class StreamBuffer {
 	}
 
 	protected StreamBufferInstance[] buffers;
-
-	protected int currentBufferId = 0;
 
 	protected final IStreamBufferInitializer initializer;
 
@@ -94,24 +84,17 @@ public class StreamBuffer {
 	}
 
 	public StreamBuffer(IStreamBufferInitializer initializer) {
-		this(poolSize, initializer);
-	}
-
-	public StreamBuffer(int count, IStreamBufferInitializer initializer) {
-		if(count > poolSize) {
-			count = poolSize;
-		}
-		this.buffers = new StreamBufferInstance[count];
+		this.buffers = new StreamBufferInstance[poolSize];
 		for(int i = 0; i < this.buffers.length; ++i) {
 			StreamBufferInstance j = new StreamBufferInstance();
-			j.poolInstance = fillPoolInstance();
+			j.poolInstance = pool[i];
 			this.buffers[i] = j;
 		}
 		this.initializer = initializer;
 	}
 
 	public StreamBufferInstance getBuffer(int requiredMemory) {
-		StreamBufferInstance next = buffers[(currentBufferId++) % buffers.length];
+		StreamBufferInstance next = buffers[poolBufferID++ % buffers.length];
 		resizeInstance(next.poolInstance, requiredMemory);
 		if(next.vertexArray == null) {
 			next.vertexArray = EaglercraftGPU.createGLVertexArray();

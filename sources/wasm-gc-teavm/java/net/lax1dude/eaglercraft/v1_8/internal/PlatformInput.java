@@ -113,6 +113,7 @@ public class PlatformInput {
 
 	static boolean vsync = true;
 	static boolean vsyncSupport = false;
+	static boolean finish = true;
 
 	private static Map<String, LegacyKeycodeTranslator.LegacyKeycode> keyCodeTranslatorMap = null;
 
@@ -125,6 +126,7 @@ public class PlatformInput {
 		fullscreenSupported = supportsFullscreen0();
 		vsyncSupport = isVSyncSupported0();
 		WASMGCClientConfigAdapter conf = (WASMGCClientConfigAdapter)PlatformRuntime.getClientConfigAdapter();
+		finish = conf.isFinishOnSwapTeaVM();
 		useVisualViewport = conf.isUseVisualViewportTeaVM() && isVisualViewport0();
 		lastWasResizedWindowWidth = -2;
 		lastWasResizedWindowHeight = -2;
@@ -656,7 +658,7 @@ public class PlatformInput {
 			PlatformScreenRecord.captureFrameHook();
 		}
 		
-		updatePlatformAndSleep(fpsLimit, vsync && vsyncSupport);// && vsync
+		updatePlatformAndSleep(fpsLimit, vsync && vsyncSupport, finish);
 		PlatformRuntime.pollJSEventsAfterSleep();
 	}
 
@@ -664,7 +666,7 @@ public class PlatformInput {
 	private static native void updateCanvasSize(int width, int height);
 
 	@Import(module = "platformInput", name = "updatePlatformAndSleep")
-	private static native void updatePlatformAndSleep(int fpsLimit, boolean vsync);
+	private static native void updatePlatformAndSleep(int fpsLimit, boolean vsync, boolean finish);
 
 	public static boolean isVSyncSupported() {
 		return vsyncSupport;

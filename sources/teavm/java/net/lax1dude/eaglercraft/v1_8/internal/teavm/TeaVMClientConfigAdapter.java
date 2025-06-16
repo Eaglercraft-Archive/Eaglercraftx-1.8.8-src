@@ -90,6 +90,8 @@ public class TeaVMClientConfigAdapter implements IClientConfigAdapter, IBootMenu
 	private boolean ramdiskMode = false;
 	private boolean singleThreadMode = false;
 	private boolean enableEPKVersionCheck = true;
+	private boolean keepAliveHack = true;
+	private boolean finishOnSwap = true;
 
 	public void loadNative(JSObject jsObject) {
 		integratedServerOpts = new JSONObject();
@@ -139,6 +141,8 @@ public class TeaVMClientConfigAdapter implements IClientConfigAdapter, IBootMenu
 		ramdiskMode = eaglercraftXOpts.getRamdiskMode(false);
 		singleThreadMode = eaglercraftXOpts.getSingleThreadMode(false);
 		enableEPKVersionCheck = eaglercraftXOpts.getEnableEPKVersionCheck(true);
+		keepAliveHack = eaglercraftXOpts.getKeepAliveHack(true);
+		finishOnSwap = eaglercraftXOpts.getFinishOnSwap(true);
 		JSEaglercraftXOptsHooks hooksObj = eaglercraftXOpts.getHooks();
 		if(hooksObj != null) {
 			hooks.loadHooks(hooksObj);
@@ -270,6 +274,8 @@ public class TeaVMClientConfigAdapter implements IClientConfigAdapter, IBootMenu
 		ramdiskMode = eaglercraftOpts.optBoolean("ramdiskMode", false);
 		singleThreadMode = eaglercraftOpts.optBoolean("singleThreadMode", false);
 		enableEPKVersionCheck = eaglercraftOpts.optBoolean("enableEPKVersionCheck", true);
+		keepAliveHack = eaglercraftOpts.optBoolean("keepAliveHack", true);
+		finishOnSwap = eaglercraftOpts.optBoolean("finishOnSwap", true);
 		defaultServers.clear();
 		JSONArray serversArray = eaglercraftOpts.optJSONArray("servers");
 		if(serversArray != null) {
@@ -556,6 +562,14 @@ public class TeaVMClientConfigAdapter implements IClientConfigAdapter, IBootMenu
 		return false;
 	}
 
+	public boolean isKeepAliveHackTeaVM() {
+		return keepAliveHack;
+	}
+
+	public boolean isFinishOnSwapTeaVM() {
+		return finishOnSwap;
+	}
+
 	@Override
 	public IClientConfigAdapterHooks getHooks() {
 		return hooks;
@@ -608,6 +622,8 @@ public class TeaVMClientConfigAdapter implements IClientConfigAdapter, IBootMenu
 		jsonObject.put("ramdiskMode", ramdiskMode);
 		jsonObject.put("singleThreadMode", singleThreadMode);
 		jsonObject.put("enableEPKVersionCheck", enableEPKVersionCheck);
+		jsonObject.put("keepAliveHack", keepAliveHack);
+		jsonObject.put("finishOnSwap", finishOnSwap);
 		JSONArray serversArr = new JSONArray();
 		for(int i = 0, l = defaultServers.size(); i < l; ++i) {
 			DefaultServer srv = defaultServers.get(i);

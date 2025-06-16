@@ -23,13 +23,14 @@
 ~ //		this.verifyToken = verifyToken;
 ~ //	}
 
-> CHANGE  3 : 6  @  3 : 4
+> CHANGE  3 : 7  @  3 : 5
 
 ~ 		// this.publicKey =
 ~ 		// CryptManager.decodePublicKey(parPacketBuffer.readByteArray());
-~ 		parPacketBuffer.readByteArray(); // skip
+~ 		parPacketBuffer.readByteArray(1024); // skip
+~ 		this.verifyToken = parPacketBuffer.readByteArray(1024);
 
-> CHANGE  4 : 7  @  4 : 7
+> CHANGE  3 : 6  @  3 : 6
 
 ~ //		parPacketBuffer.writeString(this.hashedServerId);
 ~ //		parPacketBuffer.writeByteArray(this.publicKey.getEncoded());

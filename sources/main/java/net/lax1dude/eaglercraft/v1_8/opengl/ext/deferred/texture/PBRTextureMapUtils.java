@@ -52,11 +52,13 @@ public class PBRTextureMapUtils {
 				if(res.getResourcePackName().equals(resourcePack)) {
 					ImageData toRet = TextureUtil.readBufferedImage(res.getInputStream());
 					if(ext.equals("_s")) {
-						for(int i = 0, j; i < toRet.pixels.length; ++i) {
-							// swap B and A, because labPBR support
-							int a = (toRet.pixels[i] >>> 24) & 0xFF;
+						for(int i = 0, j, a, b; i < toRet.pixels.length; ++i) {
+							j = toRet.pixels[i];
+							a = (j >>> 24) & 0xFF;
 							if(a == 0xFF) a = 0;
-							toRet.pixels[i] = (toRet.pixels[i] & 0x0000FFFF) | Math.min(a << 18, 0xFF0000) | 0xFF000000;
+							b = (((j >>> 16) & 0xFF) - 65) * 255 / 190;
+							if(b < 0) b = 0;
+							toRet.pixels[i] = (j & 0x0000FFFF) | Math.min(a << 18, 0xFF0000) | ((255 - b) << 24);
 						}
 					}
 					return toRet;
@@ -74,7 +76,7 @@ public class PBRTextureMapUtils {
 			}catch(Throwable t) {
 			}
 			try {
-				return EaglerBitwisePackedTexture.loadTextureSafe(resMgr.getResource(new ResourceLocation("eagler:glsl/deferred/assets_pbr/" + fname + ".ebp")).getInputStream(), 255);
+				return EaglerBitwisePackedTexture.loadTextureSafe(resMgr.getResource(new ResourceLocation("eagler:glsl/deferred/assets_pbr/" + fname + ".ebp")).getInputStream());
 			}catch(Throwable t) {
 				// dead code because teavm
 				t.toString();

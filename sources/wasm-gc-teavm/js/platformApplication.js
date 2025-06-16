@@ -328,7 +328,7 @@ function initializePlatfApplication(applicationImports) {
 	/** @type {HTMLElement} */
 	var loggerMessageContainer = null;
 	/** @type {string} */
-	const loggerLocalStorageKey = runtimeOpts.localStorageNamespace + "showDebugConsole";
+	const loggerLocalStorageKey = runtimeOpts.localStorageNamespace + ".showDebugConsole";
 	/** @type {string} */
 	const loggerWinUnloadEvent = runtimeOpts.fixDebugConsoleUnloadListener ? "beforeunload" : "unload";
 
@@ -365,7 +365,7 @@ function initializePlatfApplication(applicationImports) {
 		showDebugConsole0();
 	}
 
-	function showDebugConsole() {
+	showDebugConsole = function() {
 		debugConsoleLocalStorageSet(true);
 		showDebugConsole0();
 	}
@@ -480,6 +480,17 @@ function initializePlatfApplication(applicationImports) {
 		return faviconURL;
 	};
 
+	/**
+	 * @return {Object}
+	 */
+	applicationImports["setResetSettingsCallback"] = function() {
+		return {
+			"call": function(/** function() */ cb) {
+				resetSettings = cb;
+			}
+		};
+	};
+
 }
 
 /**
@@ -499,4 +510,5 @@ function initializeNoPlatfApplication(applicationImports) {
 	setUnsupportedFunc(applicationImports, platfApplicationName, "addLogMessage");
 	setUnsupportedFunc(applicationImports, platfApplicationName, "isShowingDebugConsole");
 	setUnsupportedFunc(applicationImports, platfApplicationName, "getFaviconURL");
+	setUnsupportedFunc(applicationImports, platfApplicationName, "setResetSettingsCallback");
 }

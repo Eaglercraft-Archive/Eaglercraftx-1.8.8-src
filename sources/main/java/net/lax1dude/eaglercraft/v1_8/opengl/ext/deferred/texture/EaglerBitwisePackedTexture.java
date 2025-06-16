@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 lax1dude. All Rights Reserved.
+ * Copyright (c) 2023-2025 lax1dude. All Rights Reserved.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -16,6 +16,7 @@
 
 package net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.texture;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -34,53 +35,72 @@ public class EaglerBitwisePackedTexture {
 		}
 	}
 
-	public static ImageData loadTexture(InputStream is, int alpha) throws IOException {
-		if(is.read() != '%' || is.read() != 'E' || is.read() != 'B' || is.read() != 'P') {
+	private static int readByte(InputStream is) throws IOException {
+		int i = is.read();
+		if (i < 0) {
+			throw new EOFException();
+		}
+		return i;
+	}
+
+	public static ImageData loadTexture(InputStream is) throws IOException {
+		if(readByte(is) != '%' || readByte(is) != 'E' || readByte(is) != 'B' || readByte(is) != 'P') {
 			throw new IOException("Not an EBP file!");
 		}
-		int v = is.read();
+		int v = readByte(is);
 		if(v != 1) {
 			throw new IOException("Unknown EBP version: " + v);
 		}
-		v = is.read();
-		if(v != 3) {
-			throw new IOException("Invalid component count: " + v);
+		int c = readByte(is);
+		if(c != 3 && c != 4) {
+			throw new IOException("Invalid component count: " + c);
 		}
-		int w = is.read() | (is.read() << 8);
-		int h = is.read() | (is.read() << 8);
+		int w = readByte(is) | (readByte(is) << 8);
+		int h = readByte(is) | (readByte(is) << 8);
 		ImageData img = new ImageData(w, h, true);
-		alpha <<= 24;
-		v = is.read();
+		v = readByte(is);
 		if(v == 0) {
-			for(int i = 0, l = w * h; i < l; ++i) {
-				img.pixels[i] = is.read() | (is.read() << 8) | (is.read() << 16) | alpha;
+			if(c == 3) {
+				for(int i = 0, l = w * h; i < l; ++i) {
+					img.pixels[i] = readByte(is) | (readByte(is) << 8) | (readByte(is) << 16) | 0xFF000000;
+				}
+			}else {
+				for(int i = 0, l = w * h; i < l; ++i) {
+					img.pixels[i] = readByte(is) | (readByte(is) << 8) | (readByte(is) << 16) | (readByte(is) << 24);
+				}
 			}
 		}else if(v == 1) {
-			int paletteSize = is.read();
-			int[] palette = new int[paletteSize + 1];
-			palette[0] = alpha;
-			for(int i = 0; i < paletteSize; ++i) {
-				palette[i + 1] = is.read() | (is.read() << 8) | (is.read() << 16) | alpha;
+			int paletteSize = readByte(is) + 1;
+			int[] palette = new int[paletteSize];
+			palette[0] = 0xFF000000;
+			if(c == 3) {
+				for(int i = 1; i < paletteSize; ++i) {
+					palette[i] = readByte(is) | (readByte(is) << 8) | (readByte(is) << 16) | 0xFF000000;
+				}
+			}else {
+				for(int i = 1; i < paletteSize; ++i) {
+					palette[i] = readByte(is) | (readByte(is) << 8) | (readByte(is) << 16) | (readByte(is) << 24);
+				}
 			}
-			int bpp = is.read();
-			byte[] readSet = new byte[is.read() | (is.read() << 8) | (is.read() << 16)];
-			is.read(readSet);
+			int bpp = readByte(is);
+			byte[] readSet = new byte[readByte(is) | (readByte(is) << 8) | (readByte(is) << 16)];
+			IOUtils.readFully(is, readSet);
 			for(int i = 0, l = w * h; i < l; ++i) {
 				img.pixels[i] = palette[getFromBits(i * bpp, bpp, readSet)];
 			}
 		}else {
 			throw new IOException("Unknown EBP storage type: " + v);
 		}
-		if(is.read() != ':' || is.read() != '>') {
+		if(readByte(is) != ':' || readByte(is) != '>') {
 			throw new IOException("Invalid footer! (:>)");
 		}
 		return img;
 	}
 
-	public static ImageData loadTextureSafe(InputStream is, int alpha) throws IOException {
+	public static ImageData loadTextureSafe(InputStream is) throws IOException {
 		ImageData bufferedimage;
 		try {
-			bufferedimage = loadTexture(is, alpha);
+			bufferedimage = loadTexture(is);
 		} finally {
 			IOUtils.closeQuietly(is);
 		}

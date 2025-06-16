@@ -24,6 +24,7 @@ import org.teavm.jso.browser.Window;
 
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.internal.ContextLostError;
+import net.lax1dude.eaglercraft.v1_8.internal.PlatformApplication;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformRuntime;
 import net.lax1dude.eaglercraft.v1_8.internal.wasm_gc_teavm.opts.JSEaglercraftXOptsRoot;
 import net.minecraft.client.main.Main;
@@ -98,6 +99,25 @@ public class ClientMain {
 		}
 	}
 
+	/**
+	 * Defined here to match the JS runtime
+	 */
+	public static void resetSettings() {
+		boolean y = false;
+		if (Window.confirm("Do you want to reset client settings?")) {
+			PlatformApplication.setLocalStorage("g", null);
+			PlatformApplication.setLocalStorage("p", null);
+			y = true;
+		}
+		if (Window.confirm("Do you want to reset servers and relays?")) {
+			PlatformApplication.setLocalStorage("r", null);
+			PlatformApplication.setLocalStorage("s", null);
+			y = true;
+		}
+		if (y) {
+			Window.alert("Settings reset.");
+		}
+	}
 
 	@Import(module = "platformRuntime", name = "getEaglercraftXOpts")
 	private static native JSObject getEaglerXOpts();

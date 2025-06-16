@@ -17,6 +17,7 @@
 package net.lax1dude.eaglercraft.v1_8.socket.protocol.client;
 
 import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
+import net.minecraft.client.network.NetHandlerPlayClient;
 
 public class StateFlags {
 
@@ -29,18 +30,23 @@ public class StateFlags {
 	public static final EaglercraftUUID DISABLE_SKIN_URL_LOOKUP = new EaglercraftUUID(0xC41D641BE2DA4094L,
 			0xB1B2DFF2E9D08180L);
 
+	public static final EaglercraftUUID SET_MAX_MULTI_PACKET = new EaglercraftUUID(0x877BC5F5A2154DDBL,
+			0xB493BE790A763E90L);
+
 	public static boolean eaglerPlayerFlag = false;
 
 	public static boolean eaglerPlayerFlagSupervisor = false;
 
 	public static boolean disableSkinURLLookup = false;
 
-	public static void setFlag(EaglercraftUUID flag, int value) {
+	public static void setFlag(NetHandlerPlayClient handler, EaglercraftUUID flag, int value) {
 		if (flag.equals(EAGLER_PLAYER_FLAG_PRESENT)) {
 			eaglerPlayerFlag = (value & 1) != 0;
 			eaglerPlayerFlagSupervisor = (value & 2) != 0;
 		} else if (flag.equals(DISABLE_SKIN_URL_LOOKUP)) {
 			disableSkinURLLookup = value != 0;
+		} else if (flag.equals(SET_MAX_MULTI_PACKET)) {
+			handler.getEaglerMessageController().setMaxMultiPacket(value);
 		}
 	}
 

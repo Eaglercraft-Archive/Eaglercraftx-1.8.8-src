@@ -186,12 +186,12 @@ public class LensFlareMeshRenderer {
 		_wglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		_wglPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		int mip = 0;
-		while(dis.read() == 'E') {
+		while(dis.readUnsignedByte() == 'E') {
 			int w = dis.readShort();
 			int h = dis.readShort();
 			copyBuffer.clear();
 			for(int i = 0, l = w * h; i < l; ++i) {
-				copyBuffer.put((byte)dis.read());
+				copyBuffer.put((byte)dis.readUnsignedByte());
 			}
 			copyBuffer.flip();
 			_wglTexImage2D(GL_TEXTURE_2D, mip++, _GL_R8, w, h, 0, GL_RED, GL_UNSIGNED_BYTE, copyBuffer);

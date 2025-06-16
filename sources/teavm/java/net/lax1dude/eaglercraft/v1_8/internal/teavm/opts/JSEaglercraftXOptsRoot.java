@@ -178,4 +178,10 @@ public abstract class JSEaglercraftXOptsRoot implements JSObject {
 	@JSBody(params = { "def" }, script = "return (typeof this.enableEPKVersionCheck === \"boolean\") ? this.enableEPKVersionCheck : def;")
 	public native boolean getEnableEPKVersionCheck(boolean deobfStackTraces);
 
+	@JSBody(params = { "def" }, script = "return (typeof this.keepAliveHack === \"boolean\") ? this.keepAliveHack : def;")
+	public native boolean getKeepAliveHack(boolean keepAliveHack);
+
+	@JSBody(params = { "def" }, script = "return (typeof this.finishOnSwap === \"boolean\") ? this.finishOnSwap : def;")
+	public native boolean getFinishOnSwap(boolean finishOnSwap);
+
 }

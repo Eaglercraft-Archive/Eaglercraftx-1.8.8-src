@@ -125,7 +125,7 @@ public class EaglerLWJGLShortBuffer extends ShortBuffer {
 	@Override
 	public ShortBuffer get(short[] dst, int offset, int length) {
 		if(position + length > limit) throw Buffer.makeIOOBE(position + length - 1);
-		UnsafeMemcpy.memcpyAlignDst(dst, offset << SHIFT, address + (position << SHIFT), length);
+		UnsafeMemcpy.memcpyAlignDst(dst, offset, address + (position << SHIFT), length);
 		position += length;
 		return this;
 	}
@@ -161,7 +161,7 @@ public class EaglerLWJGLShortBuffer extends ShortBuffer {
 	@Override
 	public ShortBuffer put(short[] src, int offset, int length) {
 		if(position + length > limit) throw Buffer.makeIOOBE(position + length - 1);
-		UnsafeMemcpy.memcpyAlignSrc(address + (position << SHIFT), src, offset << SHIFT, length);
+		UnsafeMemcpy.memcpyAlignSrc(address + (position << SHIFT), src, offset, length);
 		position += length;
 		return this;
 	}

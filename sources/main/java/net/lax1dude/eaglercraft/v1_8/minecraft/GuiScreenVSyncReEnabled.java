@@ -30,7 +30,7 @@ public class GuiScreenVSyncReEnabled extends GuiScreen {
 
 	public void initGui() {
 		this.buttonList.clear();
-		this.buttonList.add(new GuiButton(0, this.width / 2 - 100, this.height / 6 + 136, I18n.format("options.vsyncReEnabled.continue")));
+		this.buttonList.add(new GuiButton(0, this.width / 2 - 100, this.height / 6 + 142, I18n.format("options.vsyncReEnabled.continue")));
 	}
 
 	public void drawScreen(int par1, int par2, float par3) {

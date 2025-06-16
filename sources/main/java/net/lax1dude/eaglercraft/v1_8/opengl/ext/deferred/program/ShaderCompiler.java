@@ -28,11 +28,26 @@ import net.lax1dude.eaglercraft.v1_8.internal.IShaderGL;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 import net.lax1dude.eaglercraft.v1_8.opengl.GLSLHeader;
+import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.D3DCmpLod0IssueCheck;
 import net.minecraft.util.ResourceLocation;
 
 public class ShaderCompiler {
 
 	private static final Logger logger = LogManager.getLogger("DeferredPipelineCompiler");
+
+	private static boolean isBrokenD3DCompiler = false;
+	private static boolean isBrokenD3DChecked = false;
+
+	/**
+	 * Warning: binds a different framebuffer
+	 */
+	public static boolean isBrokenD3DCompiler() {
+		if (!isBrokenD3DChecked) {
+			isBrokenD3DCompiler = D3DCmpLod0IssueCheck.test();
+			isBrokenD3DChecked = true;
+		}
+		return isBrokenD3DCompiler;
+	}
 
 	public static IShaderGL compileShader(String name, int stage, ResourceLocation filename, String... compileFlags) throws ShaderCompileException {
 		String src = ShaderSource.getSourceFor(filename);
@@ -58,7 +73,13 @@ public class ShaderCompiler {
 		logger.info("Compiling Shader: " + filename);
 		StringBuilder srcCat = new StringBuilder();
 		srcCat.append(GLSLHeader.getHeader()).append('\n');
-		
+
+		if (isBrokenD3DCompiler()) {
+			srcCat.append("#define CMPLOD0_D3D_WORKAROUND(a, b) texture(a, b)\n");
+		} else {
+			srcCat.append("#define CMPLOD0_D3D_WORKAROUND(a, b) textureLod(a, b, 0.0)\n");
+		}
+
 		if(compileFlags != null && compileFlags.size() > 0) {
 			for(int i = 0, l = compileFlags.size(); i < l; ++i) {
 				srcCat.append("#define ").append(compileFlags.get(i)).append('\n');

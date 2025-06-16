@@ -5,7 +5,7 @@ import org.teavm.gradle.api.WasmDebugInfoLevel
 
 plugins {
 	id("java")
-	id("org.teavm") version "0.12.0-EAGLER-R2"
+	id("org.teavm") version "0.12.1-EAGLER-R3"
 
 	id("com.resentclient.oss.eaglercraft.build") version "0.0.0"
 }
@@ -36,7 +36,7 @@ repositories {
 dependencies {
 	teavm(teavm.libs.jso)
 	teavm(teavm.libs.jsoApis)
-	compileOnly("org.teavm:teavm-core:0.12.0-EAGLER-R2") // workaround for a few hacks
+	compileOnly("org.teavm:teavm-core:0.12.1-EAGLER-R3") // workaround for a few hacks
 	implementation(rootProject)
 	implementation(libs.jorbis)
 	implementation(libs.bundles.common)

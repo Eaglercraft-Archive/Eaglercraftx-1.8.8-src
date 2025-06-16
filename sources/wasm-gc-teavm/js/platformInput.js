@@ -617,15 +617,19 @@ async function initPlatformInput(inputImports) {
 	/**
 	 * @param {number} fpsLimit
 	 * @param {number} vsync
+	 * @param {number} finish
 	 * @return {Promise}
 	 */
-	function updatePlatformAndSleepImpl(fpsLimit, vsync) {
+	function updatePlatformAndSleepImpl(fpsLimit, vsync, finish) {
 		reportWindowSize();
 		if((typeof document.visibilityState !== "string") || (document.visibilityState === "visible")) {
 			if(vsyncSupport && vsync) {
 				manualSyncTimer = 0;
 				return asyncRequestAnimationFrame();
 			}else {
+				if(finish) {
+					webglContext.finish();
+				}
 				if(fpsLimit <= 0) {
 					manualSyncTimer = 0;
 					return swapDelayImpl();

@@ -162,6 +162,8 @@ The default eaglercraftXOpts values is this:
 - `singleThreadMode:` if the game should run the client and integrated server in the same context instead of creating a worker object
 - `enableEPKVersionCheck:` if the game should attempt to bypass the browser's cache and retry downloading assets.epk when its outdated
 - `enforceVSync:` (WASM only) if the game should automatically re-enable VSync at launch if its disabled
+- `keepAliveHack:` if the game should embed a looping `<audio>` tag to keep the tab from becoming inactive on Chrome
+- `finishOnSwap:` if the WebGL `finish` function should be called after every frame when VSync is disabled
 - `hooks:` can be used to define JavaScript callbacks for certain events
     * `localStorageSaved:` JavaScript callback to save local storage keys (key, data)
     * `localStorageLoaded:` JavaScript callback to load local storage keys (key) returns data

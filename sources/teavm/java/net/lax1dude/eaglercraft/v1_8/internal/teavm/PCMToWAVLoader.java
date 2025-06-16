@@ -67,9 +67,6 @@ public class PCMToWAVLoader {
 					if (val < -32768) {
 						val = -32768;
 					}
-					if (val < 0) {
-						val |= 32768;
-					}
 					bufferOut.putShort((short)val);
 				}
 			}

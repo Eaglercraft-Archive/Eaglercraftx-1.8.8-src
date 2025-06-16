@@ -63,13 +63,13 @@ public class EaglerMeshLoader implements IResourceManagerReloadListener {
 			int intsOfVertex, intsOfIndex, intsTotal, stride;
 			try(DataInputStream dis = new DataInputStream(resourceManager.getResource(meshLoc).getInputStream())) {
 				byte[] header = new byte[8];
-				dis.read(header);
+				dis.readFully(header);
 				if(!Arrays.equals(header, new byte[] { (byte) 33, (byte) 69, (byte) 65, (byte) 71, (byte) 36,
 						(byte) 109, (byte) 100, (byte) 108 })) {
 					throw new IOException("File is not an eaglercraft high-poly mesh!");
 				}
 				
-				char CT = (char)dis.read();
+				char CT = (char)dis.readUnsignedByte();
 				
 				if(CT == 'C') {
 					meshStruct.hasTexture = false;

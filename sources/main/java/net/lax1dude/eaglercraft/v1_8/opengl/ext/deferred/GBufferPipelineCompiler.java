@@ -28,6 +28,7 @@ import net.lax1dude.eaglercraft.v1_8.opengl.FixedFunctionShader;
 import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 import net.lax1dude.eaglercraft.v1_8.opengl.IExtPipelineCompiler;
 import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.program.GBufferExtPipelineShader;
+import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.program.ShaderCompiler;
 import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.program.ShaderSource;
 import net.lax1dude.eaglercraft.v1_8.vector.Matrix4f;
 import net.lax1dude.eaglercraft.v1_8.vector.Vector4f;
@@ -59,6 +60,11 @@ public class GBufferPipelineCompiler implements IExtPipelineCompiler {
 		userPointer[0] = new GBufferPipelineProgramInstance(stateCoreBits, stateExtBits);
 		EaglerDeferredConfig conf = Minecraft.getMinecraft().gameSettings.deferredShaderConf;
 		StringBuilder macros = new StringBuilder();
+		if (ShaderCompiler.isBrokenD3DCompiler()) {
+			macros.append("#define CMPLOD0_D3D_WORKAROUND(a, b) texture(a, b)\n");
+		} else {
+			macros.append("#define CMPLOD0_D3D_WORKAROUND(a, b) textureLod(a, b, 0.0)\n");
+		}
 		if((stateExtBits & STATE_SHADOW_RENDER) != 0) {
 			if((stateExtBits & STATE_CLIP_PLANE) != 0) {
 				macros.append("#define STATE_CLIP_PLANE\n");

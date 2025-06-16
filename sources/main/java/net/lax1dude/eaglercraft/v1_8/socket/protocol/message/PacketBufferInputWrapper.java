@@ -227,9 +227,11 @@ public class PacketBufferInputWrapper implements GamePacketInputBuffer {
 	}
 
 	@Override
-	public byte[] readByteArrayMC() throws IOException {
+	public byte[] readByteArrayMC(int maxLen) throws IOException {
 		try {
-			return buffer.readByteArray();
+			return buffer.readByteArray(maxLen);
+		}catch(DecoderException ex) {
+			throw new IOException(ex.getMessage());
 		}catch(IndexOutOfBoundsException ex) {
 			throw new EOFException();
 		}

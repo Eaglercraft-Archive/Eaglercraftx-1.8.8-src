@@ -17,7 +17,11 @@
 
 + 		chunkIn.alfheim$getLightingEngine().processLightUpdates();
 
-> CHANGE  40 : 41  @  40 : 41
+> CHANGE  9 : 10  @  9 : 10
+
+~ 		this.extractedData.data = parPacketBuffer.readByteArray(0x1000000);
+
+> CHANGE  30 : 31  @  30 : 31
 
 ~ 		ArrayList<ExtendedBlockStorage> arraylist = Lists.newArrayList();
 

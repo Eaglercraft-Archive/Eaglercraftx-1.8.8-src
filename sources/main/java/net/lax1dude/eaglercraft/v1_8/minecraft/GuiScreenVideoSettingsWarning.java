@@ -49,10 +49,6 @@ public class GuiScreenVideoSettingsWarning extends GuiScreen {
 		if((mask & WARNING_VSYNC) != 0) {
 			messages.add(null);
 			messages.add(I18n.format("options.badVideoSettingsDetected.vsync.0"));
-			messages.add(I18n.format("options.badVideoSettingsDetected.vsync.1"));
-			messages.add(I18n.format("options.badVideoSettingsDetected.vsync.2"));
-			messages.add(I18n.format("options.badVideoSettingsDetected.vsync.3"));
-			messages.add(I18n.format("options.badVideoSettingsDetected.vsync.4"));
 		}
 		if((mask & WARNING_RENDER_DISTANCE) != 0) {
 			messages.add(null);

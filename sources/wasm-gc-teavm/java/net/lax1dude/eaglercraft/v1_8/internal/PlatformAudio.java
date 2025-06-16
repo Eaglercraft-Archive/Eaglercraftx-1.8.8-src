@@ -94,10 +94,25 @@ public class PlatformAudio {
 				logger.error("OGG file support detected as false! Using embedded JOrbis OGG decoder");
 			}
 		}
+
+		if(((WASMGCClientConfigAdapter)PlatformRuntime.getClientConfigAdapter()).isKeepAliveHackTeaVM()) {
+			byte[] silenceFile = PlatformAssets.getResourceBytes("/assets/eagler/silence_loop.wav");
+			if (silenceFile != null) {
+				MemoryStack.push();
+				try {
+					initKeepAliveHack(WASMGCDirectArrayConverter.byteArrayToStackU8Array(silenceFile));
+				}finally {
+					MemoryStack.pop();
+				}
+			}
+		}
 	}
 
 	@Import(module = "platformAudio", name = "getContext")
 	private static native AudioContext getContext();
+
+	@Import(module = "platformAudio", name = "initKeepAliveHack")
+	private static native void initKeepAliveHack(Uint8Array array);
 
 	protected static class BrowserAudioResource implements IAudioResource {
 		
@@ -356,11 +371,8 @@ public class PlatformAudio {
 		return audioctx != null;
 	}
 
-	@JSBody(params = { "node" }, script = "node.distanceModel = \"linear\";")
-	static native void setDistanceModelLinearFast(PannerNode node) ;
-
-	@JSBody(params = { "node" }, script = "node.panningModel = \"HRTF\";")
-	static native void setPanningModelHRTFFast(PannerNode node) ;
+	@Import(module = "platformAudio", name = "setupPanner")
+	static native void setupPanner(PannerNode node, float maxDist, float x, float y, float z);
 
 	public static IAudioHandle beginPlayback(IAudioResource track, float x, float y, float z,
 			float volume, float pitch, boolean repeat) {
@@ -373,17 +385,10 @@ public class PlatformAudio {
 		src.setLoop(repeat);
 		
 		PannerNode panner = audioctx.createPanner();
-		panner.setPosition(x, y, z);
+		
 		float v1 = volume * 16.0f;
 		if(v1 < 16.0f) v1 = 16.0f;
-		panner.setMaxDistance(v1);
-		panner.setRolloffFactor(1.0f);
-		setDistanceModelLinearFast(panner);
-		setPanningModelHRTFFast(panner);
-		panner.setConeInnerAngle(360.0f);
-		panner.setConeOuterAngle(0.0f);
-		panner.setConeOuterGain(0.0f);
-		panner.setOrientation(0.0f, 1.0f, 0.0f);
+		setupPanner(panner, v1, x, y, z);
 		
 		GainNode gain = audioctx.createGain();
 		float v2 = volume;
@@ -396,7 +401,7 @@ public class PlatformAudio {
 		if(gameRecGain != null) {
 			gain.connect(gameRecGain);
 		}
-
+		
 		src.start();
 		
 		BrowserAudioHandle ret = new BrowserAudioHandle(internalTrack, src, panner, gain, pitch, repeat);

@@ -83,7 +83,6 @@ uniform sampler2D u_metalsLUT;
 #define LIB_INCLUDE_PBR_LIGHTING_FUNCTION
 #define LIB_INCLUDE_PBR_LIGHTING_PREFETCH
 #EAGLER INCLUDE (3) "eagler:glsl/deferred/lib/pbr_lighting.glsl"
-#EAGLER INCLUDE (4) "eagler:glsl/deferred/lib/branchless_comparison.glsl"
 
 uniform sampler2D u_irradianceMap;
 
@@ -147,7 +146,7 @@ void main() {
 		for(;;) {
 			shadowTexPos4f = u_sunShadowMatrixLOD04f * shadowWorldPos4f;
 			if(shadowTexPos4f.xyz == clamp(shadowTexPos4f.xyz, vec3(0.005), vec3(0.995))) {
-				shadowSample = textureLod(u_sunShadowDepthTexture, vec3(shadowTexPos4f.xy * vec2(1.0, SUN_SHADOW_MAP_FRAC), shadowTexPos4f.z + 0.0001), 0.0);
+				shadowSample = CMPLOD0_D3D_WORKAROUND(u_sunShadowDepthTexture, vec3(shadowTexPos4f.xy * vec2(1.0, SUN_SHADOW_MAP_FRAC), shadowTexPos4f.z + 0.0001));
 				break;
 			}
 
@@ -156,7 +155,7 @@ void main() {
 			if(shadowTexPos4f.xyz == clamp(shadowTexPos4f.xyz, vec3(0.005), vec3(0.995))) {
 				shadowTexPos4f.y += 1.0;
 				shadowTexPos4f.y *= SUN_SHADOW_MAP_FRAC;
-				shadowSample = textureLod(u_sunShadowDepthTexture, vec3(shadowTexPos4f.xy, shadowTexPos4f.z + 0.00015), 0.0);
+				shadowSample = CMPLOD0_D3D_WORKAROUND(u_sunShadowDepthTexture, vec3(shadowTexPos4f.xy, shadowTexPos4f.z + 0.00015));
 				break;
 			}
 #endif
@@ -166,7 +165,7 @@ void main() {
 			if(shadowTexPos4f.xyz == clamp(shadowTexPos4f.xyz, vec3(0.005), vec3(0.995))) {
 				shadowTexPos4f.y += 2.0;
 				shadowTexPos4f.y *= SUN_SHADOW_MAP_FRAC;
-				shadowSample = textureLod(u_sunShadowDepthTexture, vec3(shadowTexPos4f.xy, shadowTexPos4f.z + 0.00015), 0.0);
+				shadowSample = CMPLOD0_D3D_WORKAROUND(u_sunShadowDepthTexture, vec3(shadowTexPos4f.xy, shadowTexPos4f.z + 0.00015));
 			}
 #endif
 			break;
@@ -176,7 +175,7 @@ void main() {
 #ifdef DO_COMPILE_SUN_SHADOWS
 		lightColor3f *= shadowSample * skyLight;
 #endif
-		vec3 normalWrap3f = normalVector3f * COMPARE_LT_C_C(dot(-worldDirection4f.xyz, normalVector3f), 0.0, -1.0, 1.0);
+		vec3 normalWrap3f = normalVector3f * (dot(-worldDirection4f.xyz, normalVector3f) < 0.0 ? -1.0 : 1.0);
 		lightColor3f = eaglercraftLighting(diffuseColor4f.rgb, lightColor3f, -worldDirection4f.xyz, u_sunDirection4f.xyz, normalWrap3f, materialData3f, metalN, metalK) * u_blockSkySunDynamicLightFac4f.z;
 	}
 
@@ -195,8 +194,8 @@ void main() {
 		vec4 sample2 = textureLod(u_irradianceMap, irradianceMapSamplePos2f.xz * vec2(0.5, -0.25) + vec2(0.5, 0.75), 0.0);
 		skyLight += mix(sample1.rgb, sample2.rgb, smoothstep(0.0, 1.0, irradianceMapSamplePos2f.y * -12.5 + 0.5)).rgb;
 	}else {
-		irradianceMapSamplePos2f.xz *= vec2(0.5, COMPARE_GT_C_C(irradianceMapSamplePos2f.y, 0.0, 0.25, -0.25));
-		irradianceMapSamplePos2f.xz += vec2(0.5, COMPARE_GT_C_C(irradianceMapSamplePos2f.y, 0.0, 0.25, 0.75));
+		irradianceMapSamplePos2f.xz *= vec2(0.5, irradianceMapSamplePos2f.y > 0.0 ? 0.25 : -0.25);
+		irradianceMapSamplePos2f.xz += vec2(0.5, irradianceMapSamplePos2f.y > 0.0 ? 0.25 : 0.75);
 		skyLight += textureLod(u_irradianceMap, irradianceMapSamplePos2f.xz, 0.0).rgb;
 	}
 	skyLight *= lightmapCoords2f.g * u_sunColor3f_sky1f.w;
@@ -211,7 +210,7 @@ void main() {
 	for(int i = 0; i < safeLightCount; ++i) {
 		dlightDist3f = worldPosition4f.xyz - u_dynamicLightArray[i].u_lightPosition4f.xyz;
 		dlightDir3f = normalize(dlightDist3f);
-		dlightDir3f = dlightDir3f * COMPARE_LT_C_C(dot(dlightDir3f, normalVector3f), 0.0, 1.0, -1.0);
+		dlightDir3f = dlightDir3f * (dot(dlightDir3f, normalVector3f) < 0.0 ? 1.0 : -1.0);
 		dlightDir3f = materialData3f.b == 1.0 ? normalVector3f : -dlightDir3f;
 		if(dot(dlightDir3f, normalVector3f) <= 0.0) {
 			continue;

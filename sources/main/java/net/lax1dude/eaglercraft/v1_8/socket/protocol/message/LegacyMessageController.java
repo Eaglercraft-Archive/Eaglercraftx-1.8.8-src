@@ -138,7 +138,7 @@ public class LegacyMessageController extends MessageController {
 				lastLen = GamePacketOutputBuffer.getVarIntSize(i) + i;
 				totalLen += lastLen;
 				++sendCount;
-			}while(totalLen < 32760 && sendCount < total - start);
+			}while(totalLen < 32760 && sendCount < total - start && sendCount < maxMultiPacket);
 			if(totalLen >= 32760) {
 				--sendCount;
 				totalLen -= lastLen;

@@ -47,21 +47,17 @@ void main() {
 		discard;
 	}
 
-	vec4 light;
+	vec4 dlight;
 	float blockLight = v_lightmap2f.x;
-	float diffuse = 0.0;
-	float len;
 	if(u_dynamicLightCount1i > 0) {
 		vec4 worldPosition4f = u_inverseViewMatrix4f * v_position4f;
 		worldPosition4f.xyz /= worldPosition4f.w;
 		int safeLightCount = u_dynamicLightCount1i > 12 ? 0 : u_dynamicLightCount1i;
 		for(int i = 0; i < safeLightCount; ++i) {
-			light = u_dynamicLightArray[i];
-			light.xyz = light.xyz - worldPosition4f.xyz;
-			len = length(light.xyz);
-			diffuse += max(light.w - len, 0.0);
+			dlight = u_dynamicLightArray[i];
+			dlight.xyz = dlight.xyz - worldPosition4f.xyz;
+			blockLight = max((dlight.w - length(dlight.xyz)) * 0.066667, blockLight);
 		}
-		blockLight = min(blockLight + diffuse * 0.066667, 1.0);
 	}
 
 	color *= texture(u_lightmapTexture, vec2(blockLight, v_lightmap2f.y));

@@ -79,6 +79,7 @@ public class PlatformRuntime {
 		canvas = getCanvasElement();
 		printMemoryStackAddrWASMGC();
 		PlatformApplication.setMCServerWindowGlobal(null);
+		PlatformApplication.setResetSettingsCallbackWASM();
 		PlatformOpenGL.initContext();
 		PlatformInput.initContext(win, parent, canvas);
 

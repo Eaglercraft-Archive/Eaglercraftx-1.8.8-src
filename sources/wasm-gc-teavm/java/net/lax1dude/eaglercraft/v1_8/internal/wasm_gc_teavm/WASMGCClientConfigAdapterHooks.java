@@ -114,10 +114,14 @@ public class WASMGCClientConfigAdapterHooks implements IClientConfigAdapterHooks
 	}
 
 	public void loadHooks(JSEaglercraftXOptsHooks hooks) {
-		saveHook = (LocalStorageSaveHook)hooks.getLocalStorageSavedHook();
-		loadHook = (LocalStorageLoadHook)hooks.getLocalStorageLoadedHook();
-		crashHook = (CrashReportHook)hooks.getCrashReportHook();
-		screenChangedHook = (ScreenChangeHook)hooks.getScreenChangedHook();
+		JSObject obj = hooks.getLocalStorageSavedHook();
+		saveHook = obj != null ? (LocalStorageSaveHook) obj : null;
+		obj = hooks.getLocalStorageLoadedHook();
+		loadHook = obj != null ? (LocalStorageLoadHook) obj : null;
+		obj = hooks.getCrashReportHook();
+		crashHook = obj != null ? (CrashReportHook) obj : null;
+		obj = hooks.getScreenChangedHook();
+		screenChangedHook = obj != null ? (ScreenChangeHook) obj : null;
 	}
 
 }

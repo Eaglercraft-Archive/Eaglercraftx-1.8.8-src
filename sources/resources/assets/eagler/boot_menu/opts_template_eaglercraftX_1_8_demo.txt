@@ -64,5 +64,8 @@
 	"eaglerNoDelay": false,
 	"ramdiskMode": false,
 	"singleThreadMode": false,
-	"enableEPKVersionCheck": true
+	"enableEPKVersionCheck": true,
+	"enforceVSync": true,
+	"keepAliveHack": true,
+	"finishOnSwap": true
 }

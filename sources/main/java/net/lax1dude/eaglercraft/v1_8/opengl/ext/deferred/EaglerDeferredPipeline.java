@@ -1889,45 +1889,9 @@ public class EaglerDeferredPipeline {
 				matrixCopyBuffer.flip();
 				_wglUniformMatrix4x2fv(shader_reproject_ssr.uniforms.u_lastInverseProjMatrix4x2f, false, matrixCopyBuffer);
 				_wglUniform1f(shader_reproject_ssr.uniforms.u_sampleStep1f, 0.125f);
+				_wglUniform1i(shader_reproject_ssr.uniforms.u_sampleDelta1i, 5);
 
-				if(shader_reproject_ssr.uniforms.u_sampleDelta1i != null) {
-					_wglUniform1i(shader_reproject_ssr.uniforms.u_sampleDelta1i, 5);
-					DrawUtils.drawStandardQuad2D();
-				}else {
-					DrawUtils.drawStandardQuad2D(); // sample 1
-
-					_wglBindFramebuffer(_GL_FRAMEBUFFER, reprojectionSSRFramebuffer[0]);
-					GlStateManager.setActiveTexture(GL_TEXTURE3);
-					GlStateManager.bindTexture(reprojectionSSRHitVector[1]);
-					GlStateManager.setActiveTexture(GL_TEXTURE2);
-					GlStateManager.bindTexture(reprojectionSSRTexture[1]);
-
-					DrawUtils.drawStandardQuad2D(); // sample 2
-
-					_wglBindFramebuffer(_GL_FRAMEBUFFER, reprojectionSSRFramebuffer[1]);
-					GlStateManager.setActiveTexture(GL_TEXTURE3);
-					GlStateManager.bindTexture(reprojectionSSRHitVector[0]);
-					GlStateManager.setActiveTexture(GL_TEXTURE2);
-					GlStateManager.bindTexture(reprojectionSSRTexture[0]);
-
-					DrawUtils.drawStandardQuad2D(); // sample 3
-
-					_wglBindFramebuffer(_GL_FRAMEBUFFER, reprojectionSSRFramebuffer[0]);
-					GlStateManager.setActiveTexture(GL_TEXTURE3);
-					GlStateManager.bindTexture(reprojectionSSRHitVector[1]);
-					GlStateManager.setActiveTexture(GL_TEXTURE2);
-					GlStateManager.bindTexture(reprojectionSSRTexture[1]);
-
-					DrawUtils.drawStandardQuad2D(); // sample 4
-
-					_wglBindFramebuffer(_GL_FRAMEBUFFER, reprojectionSSRFramebuffer[1]);
-					GlStateManager.setActiveTexture(GL_TEXTURE3);
-					GlStateManager.bindTexture(reprojectionSSRHitVector[0]);
-					GlStateManager.setActiveTexture(GL_TEXTURE2);
-					GlStateManager.bindTexture(reprojectionSSRTexture[0]);
-
-					DrawUtils.drawStandardQuad2D(); // sample 5
-				}
+				DrawUtils.drawStandardQuad2D();
 
 				DeferredStateManager.checkGLError("combineGBuffersAndIlluminate(): RUN SCREENSPACE REFLECTIONS ALGORITHM");
 			}
@@ -2900,45 +2864,9 @@ public class EaglerDeferredPipeline {
 		matrixCopyBuffer.flip();
 		_wglUniformMatrix4x2fv(shader_reproject_ssr.uniforms.u_lastInverseProjMatrix4x2f, false, matrixCopyBuffer);
 		_wglUniform1f(shader_reproject_ssr.uniforms.u_sampleStep1f, 0.5f);
+		_wglUniform1i(shader_reproject_ssr.uniforms.u_sampleDelta1i, 5);
 
-		if(shader_reproject_ssr.uniforms.u_sampleDelta1i != null) {
-			_wglUniform1i(shader_reproject_ssr.uniforms.u_sampleDelta1i, 5);
-			DrawUtils.drawStandardQuad2D();
-		}else {
-			DrawUtils.drawStandardQuad2D(); // sample 1
-
-			_wglBindFramebuffer(_GL_FRAMEBUFFER, realisticWaterSSRFramebuffer[0]);
-			GlStateManager.setActiveTexture(GL_TEXTURE3);
-			GlStateManager.bindTexture(realisticWaterControlHitVectorTexture[1]);
-			GlStateManager.setActiveTexture(GL_TEXTURE2);
-			GlStateManager.bindTexture(realisticWaterControlReflectionTexture[1]);
-
-			DrawUtils.drawStandardQuad2D(); // sample 2
-
-			_wglBindFramebuffer(_GL_FRAMEBUFFER, realisticWaterSSRFramebuffer[1]);
-			GlStateManager.setActiveTexture(GL_TEXTURE3);
-			GlStateManager.bindTexture(realisticWaterControlHitVectorTexture[0]);
-			GlStateManager.setActiveTexture(GL_TEXTURE2);
-			GlStateManager.bindTexture(realisticWaterControlReflectionTexture[0]);
-
-			DrawUtils.drawStandardQuad2D(); // sample 3
-
-			_wglBindFramebuffer(_GL_FRAMEBUFFER, realisticWaterSSRFramebuffer[0]);
-			GlStateManager.setActiveTexture(GL_TEXTURE3);
-			GlStateManager.bindTexture(realisticWaterControlHitVectorTexture[1]);
-			GlStateManager.setActiveTexture(GL_TEXTURE2);
-			GlStateManager.bindTexture(realisticWaterControlReflectionTexture[1]);
-
-			DrawUtils.drawStandardQuad2D(); // sample 4
-
-			_wglBindFramebuffer(_GL_FRAMEBUFFER, realisticWaterSSRFramebuffer[1]);
-			GlStateManager.setActiveTexture(GL_TEXTURE3);
-			GlStateManager.bindTexture(realisticWaterControlHitVectorTexture[0]);
-			GlStateManager.setActiveTexture(GL_TEXTURE2);
-			GlStateManager.bindTexture(realisticWaterControlReflectionTexture[0]);
-
-			DrawUtils.drawStandardQuad2D(); // sample 5
-		}
+		DrawUtils.drawStandardQuad2D();
 
 		DeferredStateManager.checkGLError("endDrawRealisticWaterMask(): RUN SCREENSPACE REFLECTIONS ALGORITHM");
 

@@ -18,6 +18,7 @@ package net.lax1dude.eaglercraft.v1_8.sp.server.export;
 
 import java.io.ByteArrayInputStream;
 import java.io.Closeable;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -67,13 +68,13 @@ public class EPKDecompiler implements Closeable {
 				throw new IOException("Unknown or invalid EPK version: " + vers);
 			}
 
-			IOUtils.skipFully(is, is.read()); // skip filename
+			IOUtils.skipFully(is, loadByte(is)); // skip filename
 			IOUtils.skipFully(is, loadShort(is)); // skip comment
 			IOUtils.skipFully(is, 8); // skip millis date
 			
 			numFiles = loadInt(is);
 			
-			char compressionType = (char)is.read();
+			char compressionType = (char)loadByte(is);
 			
 			switch(compressionType) {
 			case 'G':
@@ -137,7 +138,7 @@ public class EPKDecompiler implements Closeable {
 						throw new IOException("File '" + name + "' has an invalid checksum");
 					}
 					
-					if(zis.read() != ':') {
+					if(loadByte(zis) != ':') {
 						throw new IOException("File '" + name + "' is incomplete");
 					}
 				}else {
@@ -145,7 +146,7 @@ public class EPKDecompiler implements Closeable {
 					IOUtils.readFully(zis, data);
 				}
 				
-				if(zis.read() != '>') {
+				if(loadByte(zis) != '>') {
 					throw new IOException("Object '" + name + "' is incomplete");
 				}
 				
@@ -155,15 +156,23 @@ public class EPKDecompiler implements Closeable {
 		}
 	}
 	
-	public static final int loadShort(InputStream is) throws IOException {
-		return (is.read() << 8) | is.read();
+	public static int loadByte(InputStream is) throws IOException {
+		int i = is.read();
+		if (i < 0) {
+			throw new EOFException();
+		}
+		return i;
 	}
 	
-	public static final int loadInt(InputStream is) throws IOException {
-		return (is.read() << 24) | (is.read() << 16) | (is.read() << 8) | is.read();
+	public static int loadShort(InputStream is) throws IOException {
+		return (loadByte(is) << 8) | loadByte(is);
 	}
 	
-	public static final String readASCII(byte[] bytesIn) throws IOException {
+	public static int loadInt(InputStream is) throws IOException {
+		return (loadByte(is) << 24) | (loadByte(is) << 16) | (loadByte(is) << 8) | loadByte(is);
+	}
+	
+	public static String readASCII(byte[] bytesIn) throws IOException {
 		char[] charIn = new char[bytesIn.length];
 		for(int i = 0; i < bytesIn.length; ++i) {
 			charIn[i] = (char)((int)bytesIn[i] & 0xFF);
@@ -171,11 +180,11 @@ public class EPKDecompiler implements Closeable {
 		return new String(charIn);
 	}
 	
-	public static final String readASCII(InputStream bytesIn) throws IOException {
-		int len = bytesIn.read();
+	public static String readASCII(InputStream bytesIn) throws IOException {
+		int len = loadByte(bytesIn);
 		char[] charIn = new char[len];
 		for(int i = 0; i < len; ++i) {
-			charIn[i] = (char)(bytesIn.read() & 0xFF);
+			charIn[i] = (char)loadByte(bytesIn);
 		}
 		return new String(charIn);
 	}

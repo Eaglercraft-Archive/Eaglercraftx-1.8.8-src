@@ -33,8 +33,6 @@ uniform mat4 u_inverseProjectionMatrix4f;
 
 uniform mat2 u_randomizerDataMatrix2f;
 
-#EAGLER INCLUDE (4) "eagler:glsl/deferred/lib/branchless_comparison.glsl"
-
 const vec3 ssaoKernel[8] = vec3[](
 vec3(0.599,0.721,0.350),vec3(0.114,0.791,0.601),
 vec3(0.067,0.995,0.069),vec3(0.511,-0.510,0.692),
@@ -50,8 +48,8 @@ vec3(0.716,-0.439,0.543),vec3(-0.400,0.733,0.550));
 	tmpVec4_2.zw = matProjInv2f * vec4(tmpVec4_2.xy, textureLod(u_gbufferDepthTexture, tmpVec4_2.xy * 0.5 + 0.5, 0.0).r * 2.0 - 1.0, 1.0);\
 	tmpVec4_2.z /= tmpVec4_2.w;\
 	tmpVec4_2.x = smoothstep(0.0, 1.0, radius * 0.5 / abs(pos.z - tmpVec4_2.z));\
-	divisor += COMPARE_GT_0_1(tmpVec4_2.x, 0.0);\
-	occlusion += COMPARE_GT_0_1(tmpVec4_2.z, tmpVec4_1.z) * tmpVec4_2.x;
+	divisor += tmpVec4_2.x > 0.0 ? 1.0 : 0.0;\
+	occlusion += (tmpVec4_2.z >= tmpVec4_1.z ? 1.0 : 0.0) * tmpVec4_2.x;
 
 void main() {
 	vec3 originalClipSpacePos = vec3(v_position2f, textureLod(u_gbufferDepthTexture, v_position2f, 0.0).r);

@@ -44,8 +44,6 @@ uniform sampler2D u_gbufferDepthTexture;
 
 #define SKY_BRIGHTNESS 5.0
 
-#EAGLER INCLUDE (4) "eagler:glsl/deferred/lib/branchless_comparison.glsl"
-
 void main() {
 	gl_FragDepth = 0.0;
 	vec3 viewDir = normalize(v_position3f);
@@ -55,7 +53,7 @@ void main() {
 	float f = max(dot(viewDir, u_sunDirection3f) - 0.995, 0.0) * 100.0;
 	float intensity = min(f * 2.0, 1.0);
 	intensity *= intensity * intensity * intensity * textureLod(u_sunOcclusion, vec2(0.5, 0.5), 0.0).r * 2.0;
-	intensity *= 1.0 - COMPARE_GT_0_1(textureLod(u_gbufferDepthTexture, (v_positionClip3f.xy / v_positionClip3f.z) * 0.5 + 0.5, 0.0).r, 0.0);
+	intensity *= step(textureLod(u_gbufferDepthTexture, (v_positionClip3f.xy / v_positionClip3f.z) * 0.5 + 0.5, 0.0).r, 0.0);
 	output4f = vec4(v_color3f * SKY_BRIGHTNESS + intensity * u_sunColor3f, 0.0);
 #endif
 #ifdef COMPILE_CLOUDS

@@ -54,18 +54,19 @@ public class LightSourceMesh {
 		destroy();
 		try (DataInputStream is = new DataInputStream(
 				Minecraft.getMinecraft().getResourceManager().getResource(meshLocation).getInputStream())) {
-			if(is.read() != 0xEE || is.read() != 0xAA || is.read() != 0x66 || is.read() != '%') {
+			if(is.readUnsignedByte() != 0xEE || is.readUnsignedByte() != 0xAA || is.readUnsignedByte() != 0x66
+					|| is.readUnsignedByte() != '%') {
 				throw new IOException("Bad file type for: " + meshLocation.toString());
 			}
-			byte[] bb = new byte[is.read()];
-			is.read(bb);
+			byte[] bb = new byte[is.readUnsignedByte()];
+			is.readFully(bb);
 			if(!Arrays.equals(bb, typeBytes)) {
 				throw new IOException("Bad file type \"" + new String(bb, StandardCharsets.UTF_8) + "\" for: " + meshLocation.toString());
 			}
 			
 			int vboLength = is.readInt() * 6;
 			byte[] readBuffer = new byte[vboLength];
-			is.read(readBuffer);
+			is.readFully(readBuffer);
 			
 			ByteBuffer buf = EagRuntime.allocateByteBuffer(readBuffer.length);
 			buf.put(readBuffer);
@@ -78,7 +79,7 @@ public class LightSourceMesh {
 			EagRuntime.freeByteBuffer(buf);
 			
 			int iboLength = meshIndexCount = is.readInt();
-			int iboType = is.read();
+			int iboType = is.readUnsignedByte();
 			iboLength *= iboType;
 			switch(iboType) {
 			case 1:
@@ -95,7 +96,7 @@ public class LightSourceMesh {
 			}
 			
 			readBuffer = new byte[iboLength];
-			is.read(readBuffer);
+			is.readFully(readBuffer);
 			
 			buf = EagRuntime.allocateByteBuffer(readBuffer.length);
 			buf.put(readBuffer);

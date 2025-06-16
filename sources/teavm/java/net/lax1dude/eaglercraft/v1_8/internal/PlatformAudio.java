@@ -27,6 +27,8 @@ import org.teavm.interop.AsyncCallback;
 import org.teavm.jso.JSBody;
 import org.teavm.jso.JSObject;
 import org.teavm.jso.dom.events.EventListener;
+import org.teavm.jso.dom.html.HTMLAudioElement;
+import org.teavm.jso.dom.html.HTMLSourceElement;
 import org.teavm.jso.typedarrays.ArrayBuffer;
 import org.teavm.jso.typedarrays.Int8Array;
 import org.teavm.jso.webaudio.AudioBuffer;
@@ -43,6 +45,7 @@ import org.teavm.jso.webaudio.PannerNode;
 
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.internal.teavm.JOrbisAudioBufferDecoder;
+import net.lax1dude.eaglercraft.v1_8.internal.teavm.TeaVMBlobURLManager;
 import net.lax1dude.eaglercraft.v1_8.internal.teavm.TeaVMClientConfigAdapter;
 import net.lax1dude.eaglercraft.v1_8.internal.teavm.TeaVMUtils;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
@@ -243,7 +246,25 @@ public class PlatformAudio {
 		}
 		
 		PlatformInput.clearEventBuffers();
-		
+
+		if(((TeaVMClientConfigAdapter)PlatformRuntime.getClientConfigAdapter()).isKeepAliveHackTeaVM()) {
+			byte[] silenceFile = PlatformAssets.getResourceBytes("/assets/eagler/silence_loop.wav");
+			if (silenceFile != null) {
+				HTMLAudioElement audio = (HTMLAudioElement) PlatformRuntime.doc.createElement("audio");
+				audio.getClassList().add("_eaglercraftX_keepalive_hack");
+				audio.setAttribute("style", "display:none;");
+				audio.setAutoplay(true);
+				audio.setLoop(true);
+				HTMLSourceElement source = (HTMLSourceElement) PlatformRuntime.doc.createElement("source");
+				source.setType("audio/wav");
+				source.setSrc(TeaVMBlobURLManager.registerNewURLByte(silenceFile, "audio/wav").toExternalForm());
+				audio.appendChild(source);
+				audio.addEventListener("seeked", (e) -> {
+					// NOP, wakes up the browser's event loop
+				});
+				PlatformRuntime.parent.appendChild(audio);
+			}
+		}
 	}
 
 	@JSBody(params = { "ctx" }, script = "var tmpBuf = ctx.createBuffer(2, 16, 16000); return (typeof tmpBuf.copyToChannel === \"function\");")

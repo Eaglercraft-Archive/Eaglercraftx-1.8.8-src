@@ -58,6 +58,7 @@ import net.lax1dude.eaglercraft.v1_8.internal.teavm.InputEvent;
 import net.lax1dude.eaglercraft.v1_8.internal.teavm.LegacyKeycodeTranslator;
 import net.lax1dude.eaglercraft.v1_8.internal.teavm.OffsetTouch;
 import net.lax1dude.eaglercraft.v1_8.internal.teavm.SortedTouchEvent;
+import net.lax1dude.eaglercraft.v1_8.internal.teavm.TeaVMClientConfigAdapter;
 import net.lax1dude.eaglercraft.v1_8.internal.teavm.WebGLBackBuffer;
 
 public class PlatformInput {
@@ -241,13 +242,9 @@ public class PlatformInput {
 
 	static boolean vsync = true;
 	static boolean vsyncSupport = false;
+	static boolean finish = true;
 
-	private static long vsyncWaiting = -1l;
-	private static AsyncCallback<Void> vsyncAsyncCallback = null;
 	private static int vsyncTimeout = -1;
-	
-	// hack to fix occasional freeze on iOS
-	private static int vsyncSaveLockInterval = -1;
 
 	@JSFunctor
 	private static interface UnloadCallback extends JSObject {
@@ -723,8 +720,6 @@ public class PlatformInput {
 		}catch(Throwable t) {
 		}
 
-		vsyncWaiting = -1l;
-		vsyncAsyncCallback = null;
 		vsyncTimeout = -1;
 		vsyncSupport = false;
 
@@ -735,39 +730,7 @@ public class PlatformInput {
 			PlatformRuntime.logger.error("VSync is not supported on this browser!");
 		}
 
-		if(vsyncSupport) {
-			if(vsyncSaveLockInterval != -1) {
-				try {
-					Window.clearInterval(vsyncSaveLockInterval);
-				}catch(Throwable t) {
-				}
-				vsyncSaveLockInterval = -1;
-			}
-			// fix for iOS freezing randomly...?
-			vsyncSaveLockInterval =  Window.setInterval(() -> {
-				if(vsyncWaiting != -1l) {
-					long steadyTime = PlatformRuntime.steadyTimeMillis();
-					if(steadyTime - vsyncWaiting > 1000) {
-						PlatformRuntime.logger.error("VSync lockup detected! Attempting to recover...");
-						vsyncWaiting = -1l;
-						if(vsyncTimeout != -1) {
-							try {
-								Window.clearTimeout(vsyncTimeout);
-							}catch(Throwable t) {
-							}
-							vsyncTimeout = -1;
-						}
-						if(vsyncAsyncCallback != null) {
-							AsyncCallback<Void> cb = vsyncAsyncCallback;
-							vsyncAsyncCallback = null;
-							cb.complete(null);
-						}else {
-							PlatformRuntime.logger.error("Async callback is null!");
-						}
-					}
-				}
-			}, 1000);
-		}
+		finish = ((TeaVMClientConfigAdapter)PlatformRuntime.getClientConfigAdapter()).isFinishOnSwapTeaVM();
 
 		try {
 			gamepadSupported = gamepadSupported();
@@ -968,6 +931,9 @@ public class PlatformInput {
 				syncTimer = 0.0;
 				asyncRequestAnimationFrame();
 			}else {
+				if(finish) {
+					PlatformOpenGL.ctx.finish();
+				}
 				if(fpsLimit <= 0 || fpsLimit > 1000) {
 					syncTimer = 0.0;
 					PlatformRuntime.swapDelayTeaVM();
@@ -1010,38 +976,27 @@ public class PlatformInput {
 	private static native void asyncRequestAnimationFrame();
 
 	private static void asyncRequestAnimationFrame(AsyncCallback<Void> cb) {
-		if(vsyncWaiting != -1l) {
+		if(vsyncTimeout != -1) {
 			cb.error(new IllegalStateException("Already waiting for vsync!"));
 			return;
 		}
-		vsyncWaiting = PlatformRuntime.steadyTimeMillis();
-		vsyncAsyncCallback = cb;
 		final boolean[] hasTimedOut = new boolean[] { false };
 		final int[] timeout = new int[] { -1 };
 		Window.requestAnimationFrame((d) -> {
 			if(!hasTimedOut[0]) {
 				hasTimedOut[0] = true;
-				if(vsyncWaiting != -1l) {
-					vsyncWaiting = -1l;
-					if(vsyncTimeout != -1 && vsyncTimeout == timeout[0]) {
-						try {
-							Window.clearTimeout(vsyncTimeout);
-						}catch(Throwable t) {
-						}
-						vsyncTimeout = -1;
-					}
-					vsyncAsyncCallback = null;
-					cb.complete(null);
+				if(vsyncTimeout != -1) {
+					Window.clearTimeout(vsyncTimeout);
+					vsyncTimeout = -1;
 				}
+				cb.complete(null);
 			}
 		});
 		vsyncTimeout = timeout[0] = Window.setTimeout(() -> {
 			if(!hasTimedOut[0]) {
 				hasTimedOut[0] = true;
-				if(vsyncWaiting != -1l) {
+				if(vsyncTimeout != -1) {
 					vsyncTimeout = -1;
-					vsyncWaiting = -1l;
-					vsyncAsyncCallback = null;
 					cb.complete(null);
 				}
 			}
@@ -1577,13 +1532,6 @@ public class PlatformInput {
 		if(mouseUngrabTimeout != -1) {
 			Window.clearTimeout(mouseUngrabTimeout);
 			mouseUngrabTimeout = -1;
-		}
-		if(vsyncSaveLockInterval != -1) {
-			try {
-				Window.clearInterval(vsyncSaveLockInterval);
-			}catch(Throwable t) {
-			}
-			vsyncSaveLockInterval = -1;
 		}
 		if(touchKeyboardField != null) {
 			touchKeyboardField.blur();

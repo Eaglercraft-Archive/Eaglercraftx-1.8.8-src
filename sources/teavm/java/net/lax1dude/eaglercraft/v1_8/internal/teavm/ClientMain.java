@@ -32,6 +32,7 @@ import org.teavm.jso.browser.Window;
 import org.teavm.jso.core.JSArrayReader;
 import org.teavm.jso.core.JSError;
 import org.teavm.jso.dom.css.CSSStyleDeclaration;
+import org.teavm.jso.dom.html.HTMLButtonElement;
 import org.teavm.jso.dom.html.HTMLCanvasElement;
 import org.teavm.jso.dom.html.HTMLDocument;
 import org.teavm.jso.dom.html.HTMLElement;
@@ -292,6 +293,46 @@ public class ClientMain {
 		}
 	}
 	
+	private static HTMLElement createToolButtons(HTMLDocument doc) {
+		HTMLButtonElement buttonResetSettings = (HTMLButtonElement) doc.createElement("button");
+		buttonResetSettings.setAttribute("style", "margin-left:10px;");
+		buttonResetSettings.setInnerText("Reset Settings");
+		buttonResetSettings.addEventListener("click", (evt) -> {
+			boolean y = false;
+			if (Window.confirm("Do you want to reset client settings?")) {
+				PlatformApplication.setLocalStorage("g", null);
+				PlatformApplication.setLocalStorage("p", null);
+				y = true;
+			}
+			if (Window.confirm("Do you want to reset servers and relays?")) {
+				PlatformApplication.setLocalStorage("r", null);
+				PlatformApplication.setLocalStorage("s", null);
+				y = true;
+			}
+			if (y) {
+				Window.alert("Settings reset.");
+			}
+		});
+		HTMLButtonElement buttonOpenConsole = (HTMLButtonElement) doc.createElement("button");
+		buttonOpenConsole.setAttribute("style", "margin-left:10px;");
+		buttonOpenConsole.setInnerText("Open Debug Console");
+		buttonOpenConsole.addEventListener("click", (evt) -> {
+			DebugConsoleWindow.showDebugConsole();
+		});
+		HTMLElement div1 = doc.createElement("div");
+		div1.setAttribute("style", "position:absolute;bottom:5px;right:0px;");
+		div1.appendChild(buttonResetSettings);
+		div1.appendChild(buttonOpenConsole);
+		HTMLElement div2 = doc.createElement("div");
+		div2.setAttribute("style", "position:relative;");
+		div2.appendChild(div1);
+		HTMLElement div3 = doc.createElement("div");
+		div3.getClassList().add("_eaglercraftX_crash_tools_element");
+		div3.setAttribute("style", "z-index:101;position:absolute;top:135px;left:10%;right:10%;height:0px;");
+		div3.appendChild(div2);
+		return div3;
+	}
+	
 	public static void showCrashScreen(String message, Throwable t) {
 		try {
 			showCrashScreen(message + "\n\n" + EagRuntime.getStackTrace(t));
@@ -410,6 +451,7 @@ public class ClientMain {
 			div.getClassList().add("_eaglercraftX_crash_element");
 			el.appendChild(img);
 			el.appendChild(div);
+			el.appendChild(createToolButtons(doc));
 			div.appendChild(doc.createTextNode(strFinal));
 			
 			PlatformRuntime.removeEventHandlers();
@@ -581,6 +623,7 @@ public class ClientMain {
 			div.getClassList().add("_eaglercraftX_incompatible_element");
 			el.appendChild(img);
 			el.appendChild(div);
+			el.appendChild(createToolButtons(doc));
 			div.setInnerHTML("<h2><svg style=\"vertical-align:middle;margin:0px 16px 8px 8px;\" xmlns=\"http://www.w3.org/2000/svg\" width=\"48\" height=\"48\" viewBox=\"0 0 48 48\" fill=\"none\"><path stroke=\"#000000\" stroke-width=\"3\" stroke-linecap=\"square\" d=\"M1.5 8.5v34h45v-28m-3-3h-10v-3m-3-3h-10m15 6h-18v-3m-3-3h-10\"/><path stroke=\"#000000\" stroke-width=\"2\" stroke-linecap=\"square\" d=\"M12 21h0m0 4h0m4 0h0m0-4h0m-2 2h0m20-2h0m0 4h0m4 0h0m0-4h0m-2 2h0\"/><path stroke=\"#000000\" stroke-width=\"2\" stroke-linecap=\"square\" d=\"M20 30h0 m2 2h0 m2 2h0 m2 2h0 m2 -2h0 m2 -2h0 m2 -2h0\"/></svg>+ This device is incompatible with Eaglercraft&ensp;:(</h2>"
 					+ "<div style=\"margin-left:40px;\">"
 					+ "<p style=\"font-size:1.2em;\"><b style=\"font-size:1.1em;\">Issue:</b> <span style=\"color:#BB0000;\" id=\"_eaglercraftX_crashReason\"></span><br /></p>"
@@ -664,14 +707,17 @@ public class ClientMain {
 			div.getClassList().add("_eaglercraftX_context_lost_element");
 			el.appendChild(img);
 			el.appendChild(div);
+			el.appendChild(createToolButtons(doc));
 			div.setInnerHTML("<h2><svg style=\"vertical-align:middle;margin:0px 16px 8px 8px;\" xmlns=\"http://www.w3.org/2000/svg\" width=\"48\" height=\"48\" viewBox=\"0 0 48 48\" fill=\"none\"><path stroke=\"#000000\" stroke-width=\"3\" stroke-linecap=\"square\" d=\"M1.5 8.5v34h45v-28m-3-3h-10v-3m-3-3h-10m15 6h-18v-3m-3-3h-10\"/><path stroke=\"#000000\" stroke-width=\"2\" stroke-linecap=\"square\" d=\"M12 21h0m0 4h0m4 0h0m0-4h0m-2 2h0m20-2h0m0 4h0m4 0h0m0-4h0m-2 2h0\"/><path stroke=\"#000000\" stroke-width=\"2\" stroke-linecap=\"square\" d=\"M20 30h0 m2 2h0 m2 2h0 m2 2h0 m2 -2h0 m2 -2h0 m2 -2h0\"/></svg> + WebGL context lost!</h2>"
 					+ "<div style=\"margin-left:40px;\">"
 					+ "<p style=\"font-size:1.2em;\">Your browser has forcibly released all of the resources "
 					+ "allocated by the game's 3D rendering context. EaglercraftX cannot continue, please refresh "
-					+ "the page to restart the game.</p>"
+					+ "the page to restart the game, sorry for the inconvenience.</p>"
 					+ "<p style=\"font-size:1.2em;\">This is not a bug, it is usually caused by the browser "
 					+ "deciding it no longer has sufficient resources to continue rendering this page. If it "
 					+ "happens again, try closing your other browser tabs and windows.</p>"
+					+ "<p style=\"font-size:1.2em;\">If you're playing with vsync disabled, try enabling vsync "
+					+ "to allow the browser to control the GPU usage more precisely.</p>"
 					+ "<p style=\"overflow-wrap:break-word;white-space:pre-wrap;font:0.75em monospace;margin-top:1.5em;\" id=\"_eaglercraftX_contextLostTrace\"></p>"
 					+ "</div>");
 			

@@ -35,9 +35,9 @@
 > CHANGE  3 : 8  @  3 : 4
 
 ~ 		this.profile = new GameProfile((EaglercraftUUID) null, parPacketBuffer.readStringFromBuffer(16));
-~ 		this.skin = parPacketBuffer.readByteArray();
-~ 		this.cape = parPacketBuffer.readableBytes() > 0 ? parPacketBuffer.readByteArray() : null;
-~ 		this.protocols = parPacketBuffer.readableBytes() > 0 ? parPacketBuffer.readByteArray() : null;
+~ 		this.skin = parPacketBuffer.readByteArray(32768);
+~ 		this.cape = parPacketBuffer.readableBytes() > 0 ? parPacketBuffer.readByteArray(32768) : null;
+~ 		this.protocols = parPacketBuffer.readableBytes() > 0 ? parPacketBuffer.readByteArray(256) : null;
 ~ 		this.brandUUID = parPacketBuffer.readableBytes() > 0 ? parPacketBuffer.readUuid() : null;
 
 > INSERT  4 : 8  @  4

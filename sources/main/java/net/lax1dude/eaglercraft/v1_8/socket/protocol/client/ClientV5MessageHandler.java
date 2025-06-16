@@ -70,7 +70,7 @@ public class ClientV5MessageHandler extends ClientV4MessageHandler {
 	}
 
 	public void handleServer(SPacketClientStateFlagV5EAG packet) {
-		StateFlags.setFlag(new EaglercraftUUID(packet.uuidMost, packet.uuidLeast), packet.state);
+		StateFlags.setFlag(netHandler, new EaglercraftUUID(packet.uuidMost, packet.uuidLeast), packet.state);
 	}
 
 	public void handleServer(SPacketDisplayWebViewURLV5EAG packet) {

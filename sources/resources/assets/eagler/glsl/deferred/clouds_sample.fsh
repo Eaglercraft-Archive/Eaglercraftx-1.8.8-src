@@ -73,15 +73,20 @@ void main() {
 	vec3 sunDirection = u_sunDirection3f * vec3(1.0, 2.0, 1.0) * 0.025;
 	float sunVisibility = sample0;
 
-	GET_CLOUDS((samplePos + sunDirection), sample1)
+	vec3 pos = samplePos + sunDirection;
+	GET_CLOUDS(pos, sample1)
 	sunVisibility += sample1;
-	GET_CLOUDS((samplePos + sunDirection * 2.0), sample1)
+	pos = samplePos + sunDirection * 2.0;
+	GET_CLOUDS(pos, sample1)
 	sunVisibility += sample1;
-	GET_CLOUDS((samplePos + sunDirection * 3.0), sample1)
+	pos = samplePos + sunDirection * 3.0;
+	GET_CLOUDS(pos, sample1)
 	sunVisibility += sample1;
-	GET_CLOUDS((samplePos + sunDirection * 4.0), sample1)
+	pos = samplePos + sunDirection * 4.0;
+	GET_CLOUDS(pos, sample1)
 	sunVisibility += sample1;
-	GET_CLOUDS((samplePos + sunDirection * 5.0), sample1)
+	pos = samplePos + sunDirection * 5.0;
+	GET_CLOUDS(pos, sample1)
 	sunVisibility += sample1;
 
 	sunVisibility = exp2(-sunVisibility * 50.0);

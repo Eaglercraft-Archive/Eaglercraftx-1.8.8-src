@@ -21,7 +21,17 @@
 ~ import net.lax1dude.eaglercraft.v1_8.netty.ByteBufInputStream;
 ~ import net.lax1dude.eaglercraft.v1_8.netty.ByteBufOutputStream;
 
-> CHANGE  98 : 99  @  98 : 99
+> CHANGE  30 : 37  @  30 : 32
+
+~ 	public byte[] readByteArray(int maxLen) {
+~ 		int i = this.readVarIntFromBuffer();
+~ 		if (i < 0 || i > maxLen) {
+~ 			throw new DecoderException(
+~ 					"The received array length is longer than maximum allowed (" + i + " > " + maxLen + ")");
+~ 		}
+~ 		byte[] abyte = new byte[i];
+
+> CHANGE  66 : 67  @  66 : 67
 
 ~ 	public void writeUuid(EaglercraftUUID uuid) {
 

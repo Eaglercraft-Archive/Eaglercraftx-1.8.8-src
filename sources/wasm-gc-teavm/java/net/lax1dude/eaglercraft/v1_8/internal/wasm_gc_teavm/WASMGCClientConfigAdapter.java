@@ -82,6 +82,8 @@ public class WASMGCClientConfigAdapter implements IClientConfigAdapter {
 	private boolean ramdiskMode = false;
 	private boolean singleThreadMode = false;
 	private boolean enforceVSync = true;
+	private boolean keepAliveHack = true;
+	private boolean finishOnSwap = true;
 
 	public void loadNative(JSObject jsObject) {
 		JSEaglercraftXOptsRoot eaglercraftXOpts = (JSEaglercraftXOptsRoot)jsObject;
@@ -124,6 +126,8 @@ public class WASMGCClientConfigAdapter implements IClientConfigAdapter {
 		ramdiskMode = eaglercraftXOpts.getRamdiskMode(false);
 		singleThreadMode = eaglercraftXOpts.getSingleThreadMode(false);
 		enforceVSync = eaglercraftXOpts.getEnforceVSync(true);
+		keepAliveHack = eaglercraftXOpts.getKeepAliveHack(true);
+		finishOnSwap = eaglercraftXOpts.getFinishOnSwap(true);
 		JSEaglercraftXOptsHooks hooksObj = eaglercraftXOpts.getHooks();
 		if(hooksObj != null) {
 			hooks.loadHooks(hooksObj);
@@ -400,6 +404,14 @@ public class WASMGCClientConfigAdapter implements IClientConfigAdapter {
 		return enforceVSync;
 	}
 
+	public boolean isKeepAliveHackTeaVM() {
+		return keepAliveHack;
+	}
+
+	public boolean isFinishOnSwapTeaVM() {
+		return finishOnSwap;
+	}
+
 	@Override
 	public IClientConfigAdapterHooks getHooks() {
 		return hooks;
@@ -446,6 +458,8 @@ public class WASMGCClientConfigAdapter implements IClientConfigAdapter {
 		jsonObject.put("ramdiskMode", ramdiskMode);
 		jsonObject.put("singleThreadMode", singleThreadMode);
 		jsonObject.put("enforceVSync", enforceVSync);
+		jsonObject.put("keepAliveHack", keepAliveHack);
+		jsonObject.put("finishOnSwap", finishOnSwap);
 		JSONArray serversArr = new JSONArray();
 		for(int i = 0, l = defaultServers.size(); i < l; ++i) {
 			DefaultServer srv = defaultServers.get(i);

@@ -48,8 +48,6 @@ uniform mat4 u_sunShadowMatrixLOD24f;
 #define SUN_SHADOW_MAP_FRAC 0.3333333
 #endif
 
-#EAGLER INCLUDE (4) "eagler:glsl/deferred/lib/branchless_comparison.glsl"
-
 const vec2 POISSON_DISK[4] = vec2[](
 vec2(0.998, -0.0438),
 vec2(-0.345, -0.933),
@@ -96,7 +94,7 @@ void main() {
 		return;
 	}
 	float material1f = textureLod(u_gbufferMaterialTexture, v_position2f, 0.0).a;
-	material1f = 2.0 * material1f - COMPARE_GT_0_1(material1f, 0.5);
+	material1f = 2.0 * material1f - step(0.5, material1f);
 	if(material1f < 0.05) {
 		return;
 	}

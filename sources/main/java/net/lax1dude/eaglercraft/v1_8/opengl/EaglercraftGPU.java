@@ -493,26 +493,20 @@ public class EaglercraftGPU {
 	}
 
 	public static void enableVertexAttribArray(int index) {
-		if(emulatedVAOs) {
-			if(currentVertexArray == null) {
-				logger.warn("Skipping enable attrib with emulated VAO because no known VAO is bound!");
-				return;
-			}
-			((SoftGLVertexArray)currentVertexArray).enableAttrib(index, true);
-		}else {
+		if(!emulatedVAOs) {
 			_wglEnableVertexAttribArray(index);
+		}
+		if (currentVertexArray != null) {
+			currentVertexArray.setBit(1 << index);
 		}
 	}
 
 	public static void disableVertexAttribArray(int index) {
-		if(emulatedVAOs) {
-			if(currentVertexArray == null) {
-				logger.warn("Skipping disable attrib with emulated VAO because no known VAO is bound!");
-				return;
-			}
-			((SoftGLVertexArray)currentVertexArray).enableAttrib(index, false);
-		}else {
+		if(!emulatedVAOs) {
 			_wglDisableVertexAttribArray(index);
+		}
+		if (currentVertexArray != null) {
+			currentVertexArray.unsetBit(1 << index);
 		}
 	}
 

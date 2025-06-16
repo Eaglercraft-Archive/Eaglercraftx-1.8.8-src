@@ -172,4 +172,10 @@ public interface JSEaglercraftXOptsRoot extends JSObject {
 	@JSBody(params = { "def" }, script = "return (typeof this.enableEPKVersionCheck === \"boolean\") ? this.enableEPKVersionCheck : def;")
 	boolean getEnableEPKVersionCheck(boolean deobfStackTraces);
 
+	@JSBody(params = { "def" }, script = "return (typeof this.keepAliveHack === \"boolean\") ? this.keepAliveHack : def;")
+	boolean getKeepAliveHack(boolean keepAliveHack);
+
+	@JSBody(params = { "def" }, script = "return (typeof this.finishOnSwap === \"boolean\") ? this.finishOnSwap : def;")
+	boolean getFinishOnSwap(boolean finishOnSwap);
+
 }

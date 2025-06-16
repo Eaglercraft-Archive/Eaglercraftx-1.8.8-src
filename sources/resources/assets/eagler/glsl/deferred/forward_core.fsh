@@ -162,7 +162,6 @@ uniform sampler2D u_lightShaftsTexture;
 #endif
 
 #EAGLER INCLUDE (4) "eagler:glsl/deferred/lib/pbr_env_map.glsl"
-#EAGLER INCLUDE (4) "eagler:glsl/deferred/lib/branchless_comparison.glsl"
 
 #ifdef DO_COMPILE_SUN_SHADOWS
 uniform sampler2DShadow u_sunShadowDepthTexture;
@@ -179,7 +178,7 @@ vec2(0.675, 0.682));
 	tmpVec2 = clamp(tmpVec2, vec2(0.001), vec2(0.999));\
 	tmpVec2.y += lod;\
 	tmpVec2.y *= SUN_SHADOW_MAP_FRAC;\
-	accum += textureLod(tex, vec3(tmpVec2, vec3Pos.z + 0.0001), 0.0);
+	accum += CMPLOD0_D3D_WORKAROUND(tex, vec3(tmpVec2, vec3Pos.z + 0.0001));
 #endif
 #endif
 
@@ -308,7 +307,7 @@ void main() {
 		for(;;) {
 			shadowTexPos4f = u_sunShadowMatrixLOD04f * shadowWorldPos4f;
 			if(shadowTexPos4f.xyz == clamp(shadowTexPos4f.xyz, vec3(0.005), vec3(0.995))) {
-				shadowSample = textureLod(u_sunShadowDepthTexture, vec3(shadowTexPos4f.xy * vec2(1.0, SUN_SHADOW_MAP_FRAC), shadowTexPos4f.z), 0.0);
+				shadowSample = CMPLOD0_D3D_WORKAROUND(u_sunShadowDepthTexture, vec3(shadowTexPos4f.xy * vec2(1.0, SUN_SHADOW_MAP_FRAC), shadowTexPos4f.z));
 #ifdef COMPILE_SUN_SHADOW_SMOOTH
 				SMOOTH_SHADOW_POISSON_SAMPLE(0, u_sunShadowDepthTexture, 0.0, shadowTexPos4f.xyz, shadowSample, tmpVec2)
 				SMOOTH_SHADOW_POISSON_SAMPLE(1, u_sunShadowDepthTexture, 0.0, shadowTexPos4f.xyz, shadowSample, tmpVec2)
@@ -327,7 +326,7 @@ void main() {
 			if(shadowTexPos4f.xyz == clamp(shadowTexPos4f.xyz, vec3(0.005), vec3(0.995))) {
 				shadowTexPos4f.y += 1.0;
 				shadowTexPos4f.y *= SUN_SHADOW_MAP_FRAC;
-				shadowSample = textureLod(u_sunShadowDepthTexture, vec3(shadowTexPos4f.xy, shadowTexPos4f.z + 0.00015), 0.0);
+				shadowSample = CMPLOD0_D3D_WORKAROUND(u_sunShadowDepthTexture, vec3(shadowTexPos4f.xy, shadowTexPos4f.z + 0.00015));
 				break;
 			}
 #endif
@@ -337,7 +336,7 @@ void main() {
 			if(shadowTexPos4f.xyz == clamp(shadowTexPos4f.xyz, vec3(0.005), vec3(0.995))) {
 				shadowTexPos4f.y += 2.0;
 				shadowTexPos4f.y *= SUN_SHADOW_MAP_FRAC;
-				shadowSample = textureLod(u_sunShadowDepthTexture, vec3(shadowTexPos4f.xy, shadowTexPos4f.z + 0.00015), 0.0);
+				shadowSample = CMPLOD0_D3D_WORKAROUND(u_sunShadowDepthTexture, vec3(shadowTexPos4f.xy, shadowTexPos4f.z + 0.00015));
 			}
 #endif
 			break;
@@ -355,8 +354,8 @@ void main() {
 
 	// =========== ENVIRONMENT MAP =========== //
 
-	f = COMPARE_LT_0_ANY(materialData4f.g, 0.06);
-	f += COMPARE_LT_0_ANY(materialData4f.r, 0.5);
+	f = materialData4f.g < 0.06 ? 1.0 : 0.0;
+	f += materialData4f.r < 0.5 ? 1.0 : 0.0;
 	while(f == 0.0) {
 		float dst2 = dot(worldPosition4f.xyz, worldPosition4f.xyz);
 		if(dst2 > 25.0) {
@@ -373,8 +372,8 @@ void main() {
 			vec4 sample2 = textureLod(u_environmentMap, reflectDir.xz * vec2(0.5, -0.25) + vec2(0.5, 0.75), 0.0);
 			envMapSample4f = vec4(mix(sample1.rgb, sample2.rgb, smoothstep(0.0, 1.0, reflectDir.y * -12.5 + 0.5)).rgb, min(sample1.a, sample2.a));
 		}else {
-			reflectDir.xz = reflectDir.xz * vec2(0.5, COMPARE_GT_C_C(reflectDir.y, 0.0, 0.25, -0.25));
-			reflectDir.xz += vec2(0.5, COMPARE_GT_C_C(reflectDir.y, 0.0, 0.25, 0.75));
+			reflectDir.xz = reflectDir.xz * vec2(0.5, reflectDir.y > 0.0 ? 0.25 : -0.25);
+			reflectDir.xz += vec2(0.5, reflectDir.y > 0.0 ? 0.25 : 0.75);
 			envMapSample4f = textureLod(u_environmentMap, reflectDir.xz, 0.0);
 		}
 		envMapSample4f.a += min(lightmapCoords2f.g * 2.0, 1.0) * (1.0 - envMapSample4f.a);
@@ -401,8 +400,8 @@ void main() {
 		vec4 sample2 = textureLod(u_irradianceMap, irradianceMapSamplePos2f.xz * vec2(0.5, -0.25) + vec2(0.5, 0.75), 0.0);
 		skyLight += mix(sample1.rgb, sample2.rgb, smoothstep(0.0, 1.0, irradianceMapSamplePos2f.y * -12.5 + 0.5)).rgb;
 	}else {
-		irradianceMapSamplePos2f.xz *= vec2(0.5, COMPARE_GT_C_C(irradianceMapSamplePos2f.y, 0.0, 0.25, -0.25));
-		irradianceMapSamplePos2f.xz += vec2(0.5, COMPARE_GT_C_C(irradianceMapSamplePos2f.y, 0.0, 0.25, 0.75));
+		irradianceMapSamplePos2f.xz *= vec2(0.5, irradianceMapSamplePos2f.y > 0.0 ? 0.25 : -0.25);
+		irradianceMapSamplePos2f.xz += vec2(0.5, irradianceMapSamplePos2f.y > 0.0 ? 0.25 : 0.75);
 		skyLight += textureLod(u_irradianceMap, irradianceMapSamplePos2f.xz, 0.0).rgb;
 	}
 	skyLight *= lightmapCoords2f.g * u_sunColor3f_sky1f.w;
@@ -437,7 +436,7 @@ void main() {
 	vec4 fogBlend4f = vec4(0.0);
 #ifndef COMPILE_ENABLE_TEX_GEN
 	while(u_fogParameters4f.x > 0.0) {
-		float atmos = COMPARE_LT_C_C(u_fogParameters4f.x, 4.0, 0.0, 4.0);
+		float atmos = u_fogParameters4f.x >= 4.0 ? 4.0 : 0.0;
 		float type = u_fogParameters4f.x - atmos;
 		fogBlend4f = mix(u_fogColorLight4f, u_fogColorDark4f, lightmapCoords2f.g);
 

@@ -34,7 +34,7 @@ public interface GamePacketInputBuffer extends DataInput {
 
 	String readStringEaglerASCII16() throws IOException;
 
-	byte[] readByteArrayMC() throws IOException;
+	byte[] readByteArrayMC(int maxLen) throws IOException;
 
 	int available() throws IOException;
 

@@ -146,25 +146,21 @@ void main() {
 #endif
 
 #ifdef COMPILE_ENABLE_LIGHTMAP
-	float diffuse = 0.0;
 #ifdef COMPILE_LIGHTMAP_ATTRIB
 	float blockLight = v_lightmap2f.x;
 #else
 	float blockLight = u_textureCoords02.x;
 #endif
-	float len;
-	vec4 light;
+	vec4 dlight;
 	if(u_dynamicLightCount1i > 0) {
 		vec4 worldPosition4f = u_inverseViewMatrix4f * v_position4f;
 		worldPosition4f.xyz /= worldPosition4f.w;
 		int safeLightCount = u_dynamicLightCount1i > 12 ? 0 : u_dynamicLightCount1i;
 		for(int i = 0; i < safeLightCount; ++i) {
-			light = u_dynamicLightArray[i];
-			light.xyz = light.xyz - worldPosition4f.xyz;
-			len = length(light.xyz);
-			diffuse += max(light.w - len, 0.0);
+			dlight = u_dynamicLightArray[i];
+			dlight.xyz = dlight.xyz - worldPosition4f.xyz;
+			blockLight = max((dlight.w - length(dlight.xyz)) * 0.066667, blockLight);
 		}
-		blockLight = min(blockLight + diffuse * 0.066667, 1.0);
 	}
 #ifdef COMPILE_LIGHTMAP_ATTRIB
 	color *= texture(u_samplerLightmap, vec2(blockLight, v_lightmap2f.y));
@@ -190,12 +186,8 @@ void main() {
 #endif
 
 #ifdef COMPILE_ENABLE_MC_LIGHTING
-#ifndef COMPILE_ENABLE_LIGHTMAP
 	vec4 light;
 	float diffuse = 0.0;
-#else
-	diffuse = 0.0;
-#endif
 	for(int i = 0; i < u_lightsEnabled1i; ++i) {
 		light = u_lightsDirections4fv[i];
 		diffuse += max(dot(light.xyz, normal), 0.0) * light.w;

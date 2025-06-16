@@ -63,18 +63,19 @@ public class SkyboxRenderer {
 		destroy();
 		try (DataInputStream is = new DataInputStream(
 				Minecraft.getMinecraft().getResourceManager().getResource(skyboxLocation).getInputStream())) {
-			if(is.read() != 0xEE || is.read() != 0xAA || is.read() != 0x66 || is.read() != '%') {
+			if(is.readUnsignedByte() != 0xEE || is.readUnsignedByte() != 0xAA || is.readUnsignedByte() != 0x66
+					|| is.readUnsignedByte() != '%') {
 				throw new IOException("Bad file type for: " + skyboxLocation.toString());
 			}
 			byte[] bb = new byte[is.read()];
-			is.read(bb);
+			is.readFully(bb);
 			if(!Arrays.equals(bb, new byte[] { 's', 'k', 'y', 'b', 'o', 'x' })) {
 				throw new IOException("Bad file type \"" + new String(bb, StandardCharsets.UTF_8) + "\" for: " + skyboxLocation.toString());
 			}
 			atmosphereLUTWidth = is.readUnsignedShort();
 			atmosphereLUTHeight = is.readUnsignedShort();
 			byte[] readBuffer = new byte[atmosphereLUTWidth * atmosphereLUTHeight * 4];
-			is.read(readBuffer);
+			is.readFully(readBuffer);
 			
 			ByteBuffer buf = EagRuntime.allocateByteBuffer(readBuffer.length);
 			buf.put(readBuffer);
@@ -97,7 +98,7 @@ public class SkyboxRenderer {
 			
 			int vboLength = is.readInt() * 8;
 			readBuffer = new byte[vboLength];
-			is.read(readBuffer);
+			is.readFully(readBuffer);
 			
 			buf = EagRuntime.allocateByteBuffer(readBuffer.length);
 			buf.put(readBuffer);
@@ -110,7 +111,7 @@ public class SkyboxRenderer {
 			EagRuntime.freeByteBuffer(buf);
 			
 			int iboLength = skyboxIndexCount = is.readInt();
-			int iboType = is.read();
+			int iboType = is.readUnsignedByte();
 			iboLength *= iboType;
 			switch(iboType) {
 			case 1:
@@ -129,7 +130,7 @@ public class SkyboxRenderer {
 			skyboxIndexStride = iboType;
 			
 			readBuffer = new byte[iboLength];
-			is.read(readBuffer);
+			is.readFully(readBuffer);
 			
 			buf = EagRuntime.allocateByteBuffer(readBuffer.length);
 			buf.put(readBuffer);

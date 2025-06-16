@@ -74,12 +74,15 @@ class SoftGLVertexArray implements IVertexArrayGL {
 		}
 	}
 
-	void enableAttrib(int index, boolean en) {
-		if(en) {
-			enabled |= (1 << index);
-		}else {
-			enabled &= ~(1 << index);
-		}
+	@Override
+	public void setBit(int bit) {
+		enabled |= bit;
+		enabledCnt = 32 - Integer.numberOfLeadingZeros(enabled);
+	}
+
+	@Override
+	public void unsetBit(int bit) {
+		enabled &= ~bit;
 		enabledCnt = 32 - Integer.numberOfLeadingZeros(enabled);
 	}
 
@@ -183,6 +186,11 @@ class SoftGLVertexArray implements IVertexArrayGL {
 	public void free() {
 	}
 
+	@Override
+	public int getBits() {
+		return enabled;
+	}
+
 	static class Attrib {
 
 		final IBufferGL buffer;
@@ -221,19 +229,6 @@ class SoftGLVertexArray implements IVertexArrayGL {
 			return o2 == this || (o2.hash == hash && o2.buffer == buffer && o2.checkVal == checkVal && o2.stride == stride && o2.offset == offset);
 		}
 
-	}
-
-	@Override
-	public int getBits() {
-		return enabled;
-	}
-
-	@Override
-	public void setBit(int bit) {
-	}
-
-	@Override
-	public void unsetBit(int bit) {
 	}
 
 }

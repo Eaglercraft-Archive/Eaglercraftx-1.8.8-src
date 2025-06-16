@@ -18,7 +18,12 @@
 ~ //		this.verifyTokenEncrypted = CryptManager.encryptData(publicKey, verifyToken);
 ~ //	}
 
-> CHANGE  15 : 18  @  15 : 18
+> CHANGE  2 : 4  @  2 : 4
+
+~ 		this.secretKeyEncrypted = parPacketBuffer.readByteArray(1024);
+~ 		this.verifyTokenEncrypted = parPacketBuffer.readByteArray(1024);
+
+> CHANGE  11 : 14  @  11 : 14
 
 ~ //	public SecretKey getSecretKey(PrivateKey key) {
 ~ //		return CryptManager.decryptSharedKey(key, this.secretKeyEncrypted);

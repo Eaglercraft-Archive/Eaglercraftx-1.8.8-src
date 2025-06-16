@@ -67,7 +67,7 @@ vec2(0.675, 0.682));
 	tmpVec2 = clamp(tmpVec2, vec2(0.001), vec2(0.999));\
 	tmpVec2.y += lod;\
 	tmpVec2.y *= SUN_SHADOW_MAP_FRAC;\
-	accum += textureLod(tex, vec3(tmpVec2, vec3Pos.z + 0.0001), 0.0);
+	accum += CMPLOD0_D3D_WORKAROUND(tex, vec3(tmpVec2, vec3Pos.z + 0.0001));
 #endif
 
 uniform vec3 u_sunDirection3f;
@@ -106,7 +106,7 @@ void main() {
 	for(;;) {
 		shadowSpacePosition = u_sunShadowMatrixLOD04f * worldSpacePosition;
 		if(shadowSpacePosition.xyz == clamp(shadowSpacePosition.xyz, vec3(0.005), vec3(0.995))) {
-			shadowSample = textureLod(u_sunShadowDepthTexture, vec3(shadowSpacePosition.xy * vec2(1.0, SUN_SHADOW_MAP_FRAC), shadowSpacePosition.z + 0.0001), 0.0);
+			shadowSample = CMPLOD0_D3D_WORKAROUND(u_sunShadowDepthTexture, vec3(shadowSpacePosition.xy * vec2(1.0, SUN_SHADOW_MAP_FRAC), shadowSpacePosition.z + 0.0001));
 #ifdef COMPILE_SUN_SHADOW_SMOOTH
 			SMOOTH_SHADOW_POISSON_SAMPLE(0, u_sunShadowDepthTexture, 0.0, shadowSpacePosition.xyz, shadowSample, tmpVec2)
 			SMOOTH_SHADOW_POISSON_SAMPLE(1, u_sunShadowDepthTexture, 0.0, shadowSpacePosition.xyz, shadowSample, tmpVec2)
@@ -128,7 +128,7 @@ void main() {
 		if(shadowSpacePosition.xyz == clamp(shadowSpacePosition.xyz, vec3(0.005), vec3(0.995))) {
 			shadowSpacePosition.y += 1.0;
 			shadowSpacePosition.y *= SUN_SHADOW_MAP_FRAC;
-			shadowSample = textureLod(u_sunShadowDepthTexture, vec3(shadowSpacePosition.xy, shadowSpacePosition.z + 0.00015), 0.0);
+			shadowSample = CMPLOD0_D3D_WORKAROUND(u_sunShadowDepthTexture, vec3(shadowSpacePosition.xy, shadowSpacePosition.z + 0.00015));
 			break;
 		}
 #endif
@@ -138,7 +138,7 @@ void main() {
 		if(shadowSpacePosition.xyz == clamp(shadowSpacePosition.xyz, vec3(0.005), vec3(0.995))) {
 			shadowSpacePosition.y += 2.0;
 			shadowSpacePosition.y *= SUN_SHADOW_MAP_FRAC;
-			shadowSample = textureLod(u_sunShadowDepthTexture, vec3(shadowSpacePosition.xy, shadowSpacePosition.z + 0.00015), 0.0);
+			shadowSample = CMPLOD0_D3D_WORKAROUND(u_sunShadowDepthTexture, vec3(shadowSpacePosition.xy, shadowSpacePosition.z + 0.00015));
 			break;
 		}
 #endif

@@ -24,6 +24,7 @@ import java.util.Date;
 
 import org.teavm.interop.Import;
 import org.teavm.jso.JSBody;
+import org.teavm.jso.JSFunctor;
 import org.teavm.jso.JSObject;
 import org.teavm.jso.JSProperty;
 import org.teavm.jso.browser.Storage;
@@ -43,6 +44,7 @@ import net.lax1dude.eaglercraft.v1_8.internal.buffer.MemoryStack;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.WASMGCBufferAllocator;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.WASMGCDirectArrayConverter;
 import net.lax1dude.eaglercraft.v1_8.internal.wasm_gc_teavm.BetterJSStringConverter;
+import net.lax1dude.eaglercraft.v1_8.internal.wasm_gc_teavm.ClientMain;
 import net.lax1dude.eaglercraft.v1_8.internal.wasm_gc_teavm.TeaVMUtils;
 
 public class PlatformApplication {
@@ -174,7 +176,23 @@ public class PlatformApplication {
 		}
 	}
 
-	public static final void displayFileChooser(String mime, String ext) {
+	public static void setResetSettingsCallbackWASM() {
+		setResetSettingsCallbackWASM0().call(ClientMain::resetSettings);
+	}
+
+	@JSFunctor
+	private static interface JSWASMResetSettingsCallback extends JSObject {
+		void callback();
+	}
+
+	private static interface JSWASMResetSettingsCallbackInterface extends JSObject {
+		void call(JSWASMResetSettingsCallback callback);
+	}
+
+	@Import(module = "platformApplication", name = "setResetSettingsCallback")
+	private static native JSWASMResetSettingsCallbackInterface setResetSettingsCallbackWASM0();
+
+	public static void displayFileChooser(String mime, String ext) {
 		displayFileChooser0(BetterJSStringConverter.stringToJS(mime), BetterJSStringConverter.stringToJS(ext));
 	}
 

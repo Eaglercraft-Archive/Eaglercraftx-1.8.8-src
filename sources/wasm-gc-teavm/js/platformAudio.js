@@ -26,6 +26,47 @@ function setCurrentAudioContext(audioContext, audioImports) {
 	};
 
 	/**
+	 * @param {Uint8Array} fileData
+	 */
+	audioImports["initKeepAliveHack"] = function(fileData) {
+		const copiedData = new Uint8Array(fileData.length);
+		copiedData.set(fileData, 0);
+		const copiedDataURI = URL.createObjectURL(new Blob([copiedData], {type: "audio/wav"}));
+		const audioElement = /** @type {HTMLAudioElement} */ (document.createElement("audio"));
+		audioElement.classList.add("_eaglercraftX_keepalive_hack");
+		audioElement.setAttribute("style", "display:none;");
+		audioElement.autoplay = true;
+		audioElement.loop = true;
+		const sourceElement = /** @type {HTMLSourceElement} */ (document.createElement("source"));
+		sourceElement.type = "audio/wav";
+		sourceElement.src = copiedDataURI;
+		audioElement.appendChild(sourceElement);
+		audioElement.addEventListener("seeked", function() {
+			// NOP, wakes up the browser's event loop
+		});
+		parentElement.appendChild(audioElement);
+	};
+
+	/**
+	 * @param {PannerNode} node
+	 * @param {number} maxDist
+	 * @param {number} x
+	 * @param {number} y
+	 * @param {number} z
+	 */
+	audioImports["setupPanner"] = function(node, maxDist, x, y, z) {
+		node.maxDistance = maxDist;
+		node.rolloffFactor = 1.0;
+		node.panningModel = "HRTF";
+		node.distanceModel = "linear";
+		node.coneInnerAngle = 360.0;
+		node.coneOuterAngle = 0.0;
+		node.coneOuterGain = 0.0;
+		node.setOrientation(0.0, 1.0, 0.0);
+		node.setPosition(x, y, z);
+	};
+
+	/**
 	 * @param {AudioBufferSourceNode} sourceNode
 	 * @param {Object} isEnded
 	 */
@@ -72,6 +113,8 @@ function setNoAudioContext(audioImports) {
 	audioImports["getContext"] = function() {
 		return null;
 	};
+	setUnsupportedFunc(audioImports, platfAudioName, "setupPanner");
+	setUnsupportedFunc(audioImports, platfAudioName, "initKeepAliveHack");
 	setUnsupportedFunc(audioImports, platfAudioName, "registerIsEndedHandler");
 	setUnsupportedFunc(audioImports, platfAudioName, "releaseIsEndedHandler");
 	setUnsupportedFunc(audioImports, platfAudioName, "decodeAudioBrowser");
