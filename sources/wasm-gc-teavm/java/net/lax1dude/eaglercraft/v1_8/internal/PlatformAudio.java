@@ -22,6 +22,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.teavm.interop.Address;
 import org.teavm.interop.Import;
 import org.teavm.jso.JSBody;
 import org.teavm.jso.JSObject;
@@ -41,6 +42,7 @@ import org.teavm.jso.webaudio.PannerNode;
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.MemoryStack;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.WASMGCDirectArrayConverter;
+import net.lax1dude.eaglercraft.v1_8.internal.buffer.WASMGCDirectArrayCopy;
 import net.lax1dude.eaglercraft.v1_8.internal.wasm_gc_teavm.BetterJSStringConverter;
 import net.lax1dude.eaglercraft.v1_8.internal.wasm_gc_teavm.JOrbisAudioBufferDecoder;
 import net.lax1dude.eaglercraft.v1_8.internal.wasm_gc_teavm.WASMGCClientConfigAdapter;
@@ -100,7 +102,10 @@ public class PlatformAudio {
 			if (silenceFile != null) {
 				MemoryStack.push();
 				try {
-					initKeepAliveHack(WASMGCDirectArrayConverter.byteArrayToStackU8Array(silenceFile));
+					int len = silenceFile.length;
+					Address addr = MemoryStack.malloc(len);
+					WASMGCDirectArrayCopy.memcpy(addr, silenceFile, 0, len);
+					initKeepAliveHack(addr, len);
 				}finally {
 					MemoryStack.pop();
 				}
@@ -112,7 +117,7 @@ public class PlatformAudio {
 	private static native AudioContext getContext();
 
 	@Import(module = "platformAudio", name = "initKeepAliveHack")
-	private static native void initKeepAliveHack(Uint8Array array);
+	private static native void initKeepAliveHack(Address addr, int length);
 
 	protected static class BrowserAudioResource implements IAudioResource {
 		

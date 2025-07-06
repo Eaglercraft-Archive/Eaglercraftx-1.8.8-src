@@ -16,7 +16,7 @@
 ~ eaglercraft.resourcePack.load.loading=Loading resource pack...
 ~ eaglercraft.resourcePack.load.deleting=Deleting resource pack...
 
-> INSERT  1 : 247  @  1
+> INSERT  1 : 243  @  1
 
 + eaglercraft.gui.exitKey=Use '%s' to close this screen!
 + eaglercraft.gui.exitKeyRetarded=Use Backtick (`) to close this screen!
@@ -212,10 +212,6 @@
 + eaglercraft.shaders.gui.option.SCREEN_SPACE_REFLECTIONS.desc.4=Both raymarching and raytracing are employed, raymarching is initially used to locate and track groups of pixels on the screen to reflect, then raytracing is used to reproject that data between multiple frames so the raymarching process only has to be repeated once or twice every few seconds
 + eaglercraft.shaders.gui.option.SCREEN_SPACE_REFLECTIONS.desc.6=ON: enable raytracing (slower)
 + eaglercraft.shaders.gui.option.SCREEN_SPACE_REFLECTIONS.desc.7=OFF: disable raytracing (faster)
-+ 
-+ eaglercraft.shaders.gui.option.LIGHT_SHAFTS.desc.0=Render god rays (light shafts) for sunlight and moonlight shadows
-+ eaglercraft.shaders.gui.option.LIGHT_SHAFTS.desc.2=ON: render god rays (slower)
-+ eaglercraft.shaders.gui.option.LIGHT_SHAFTS.desc.3=OFF: disable god rays (faster)
 + 
 + eaglercraft.shaders.gui.option.POST_LENS_DISTORION.label=Lens Distort
 + 

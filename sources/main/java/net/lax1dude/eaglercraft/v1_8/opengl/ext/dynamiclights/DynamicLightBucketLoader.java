@@ -46,8 +46,8 @@ public class DynamicLightBucketLoader {
 	private int currentLightSourceBucketId = -1;
 	private int lightingBufferSliceLength = -1;
 
-	public static final int MAX_LIGHTS_PER_CHUNK = 12;
-	public static final int LIGHTING_BUFFER_LENGTH = 16 * MAX_LIGHTS_PER_CHUNK + 16;
+	public static final int MAX_LIGHTS_PER_CHUNK = 8;
+	public static final int LIGHTING_BUFFER_LENGTH = 8 * MAX_LIGHTS_PER_CHUNK + 16;
 
 	private final int lightSourceBucketsWidth;
 	private final int lightSourceBucketsHeight;
@@ -114,26 +114,36 @@ public class DynamicLightBucketLoader {
 			int ser = currentLightSourceBucket.getEaglerSerial();
 			int max = currentLightSourceBucket.size();
 			if(max > 0) {
+				if(max > MAX_LIGHTS_PER_CHUNK) {
+					max = MAX_LIGHTS_PER_CHUNK;
+				}
 				EaglercraftGPU.bindGLUniformBuffer(buffer_chunkLightingData);
 				int offset = currentLightSourceBucketId * lightingBufferSliceLength;
 				if (lightSourceBucketsSerials[currentLightSourceBucketId] != ser
 						|| lightSourceRenderPosSerials[currentLightSourceBucketId] != currentRenderPosSerial) {
 					lightSourceBucketsSerials[currentLightSourceBucketId] = ser;
 					lightSourceRenderPosSerials[currentLightSourceBucketId] = currentRenderPosSerial;
-					if(max > MAX_LIGHTS_PER_CHUNK) {
-						max = MAX_LIGHTS_PER_CHUNK;
-					}
+					int bucketXOff = -relativeBlockX & -16;
+					int bucketYOff = -relativeBlockY & -16;
+					int bucketZOff = -relativeBlockZ & -16;
 					chunkLightingDataCopyBuffer.clear();
+					chunkLightingDataCopyBuffer.putInt(
+						((bucketXOff & 0xFF) << 8) |
+						((bucketYOff & 0xFF) << 16) |
+						((bucketZOff & 0xFF) << 24)
+					);
 					chunkLightingDataCopyBuffer.putInt(max);
-					chunkLightingDataCopyBuffer.putInt(0); //padding
-					chunkLightingDataCopyBuffer.putInt(0); //padding
-					chunkLightingDataCopyBuffer.putInt(0); //padding
+					chunkLightingDataCopyBuffer.putInt(0); // padding
+					chunkLightingDataCopyBuffer.putInt(0); // padding
 					for(int i = 0; i < max; ++i) {
 						DynamicLightInstance dl = currentLightSourceBucket.get(i);
-						chunkLightingDataCopyBuffer.putFloat((float)(dl.posX - currentRenderX));
-						chunkLightingDataCopyBuffer.putFloat((float)(dl.posY - currentRenderY));
-						chunkLightingDataCopyBuffer.putFloat((float)(dl.posZ - currentRenderZ));
-						chunkLightingDataCopyBuffer.putFloat(dl.radius);
+						int x = (int)((dl.posX - currentRenderX + bucketXOff) * (1.0f / 0.0009765923f));
+						int y = (int)((dl.posY - currentRenderY + bucketYOff) * (1.0f / 0.0009765923f));
+						int z = (int)((dl.posZ - currentRenderZ + bucketZOff) * (1.0f / 0.0009765923f));
+						int r = (int)(dl.radius * (1.0f / 0.0009765923f));
+						if (r > 32767) r = 32767;
+						chunkLightingDataCopyBuffer.putInt((x & 0xFFFF) | (z << 16));
+						chunkLightingDataCopyBuffer.putInt((y & 0xFFFF) | (r << 16));
 					}
 					chunkLightingDataCopyBuffer.flip();
 					_wglBufferSubData(_GL_UNIFORM_BUFFER, offset, chunkLightingDataCopyBuffer);

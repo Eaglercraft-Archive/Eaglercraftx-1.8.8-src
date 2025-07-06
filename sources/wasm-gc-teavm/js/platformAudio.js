@@ -16,6 +16,9 @@
 
 const platfAudioName = "platformAudio";
 
+/** @type {HTMLAudioElement|null} */
+var silenceElement = null;
+
 function setCurrentAudioContext(audioContext, audioImports) {
 
 	/**
@@ -26,25 +29,41 @@ function setCurrentAudioContext(audioContext, audioImports) {
 	};
 
 	/**
-	 * @param {Uint8Array} fileData
+	 * @param {number} addr
+	 * @param {number} length
 	 */
-	audioImports["initKeepAliveHack"] = function(fileData) {
-		const copiedData = new Uint8Array(fileData.length);
-		copiedData.set(fileData, 0);
+	audioImports["initKeepAliveHack"] = function(addr, length) {
+		const copiedData = heapArrayBuffer.slice(addr, addr + length);
 		const copiedDataURI = URL.createObjectURL(new Blob([copiedData], {type: "audio/wav"}));
 		const audioElement = /** @type {HTMLAudioElement} */ (document.createElement("audio"));
 		audioElement.classList.add("_eaglercraftX_keepalive_hack");
 		audioElement.setAttribute("style", "display:none;");
-		audioElement.autoplay = true;
+		audioElement.autoplay = false;
 		audioElement.loop = true;
+		audioElement.addEventListener("seeked", function() {
+			// NOP, wakes up the browser's event loop
+		});
+		audioElement.addEventListener("canplay", function() {
+			if (silenceElement && document.visibilityState === "hidden") {
+				silenceElement.play();
+			}
+		});
 		const sourceElement = /** @type {HTMLSourceElement} */ (document.createElement("source"));
 		sourceElement.type = "audio/wav";
 		sourceElement.src = copiedDataURI;
 		audioElement.appendChild(sourceElement);
-		audioElement.addEventListener("seeked", function() {
-			// NOP, wakes up the browser's event loop
-		});
 		parentElement.appendChild(audioElement);
+		silenceElement = audioElement;
+	};
+
+	handleVisibilityChange = function() {
+		if (silenceElement) {
+			if (document.visibilityState === "hidden") {
+				silenceElement.play();
+			} else {
+				silenceElement.pause();
+			}
+		}
 	};
 
 	/**

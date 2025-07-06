@@ -199,7 +199,7 @@ public class PlatformOpenGL {
 	@Import(module = "platformOpenGL", name = "glReadPixels")
 	static native void _wglReadPixelsN(int x, int y, int width, int height, int format, int type, ArrayBufferView array);
 
-	@Import(module = "platformOpenGL", name = "glReadPixels0")
+	@Import(module = "platformOpenGL", name = "glReadPixels")
 	static native void _wglReadPixelsN(int x, int y, int width, int height, int format, int type, ArrayBufferView array, int offset);
 
 	@Import(module = "platformOpenGL", name = "glPolygonOffset")
@@ -367,7 +367,7 @@ public class PlatformOpenGL {
 	@Import(module = "platformOpenGL", name = "glBufferData")
 	static native void _wglBufferDataN(int target, ArrayBufferView typedArray, int usage);
 
-	@Import(module = "platformOpenGL", name = "glBufferData0")
+	@Import(module = "platformOpenGL", name = "glBufferData")
 	static native void _wglBufferDataN(int target, ArrayBufferView typedArray, int usage, int srcOffset, int length);
 
 	public static void _wglBufferSubData(int target, int dstOffset, ByteBuffer buffer) {
@@ -397,7 +397,7 @@ public class PlatformOpenGL {
 	@Import(module = "platformOpenGL", name = "glBufferSubData")
 	static native void _wglBufferSubDataN(int target, int dstOffset, ArrayBufferView typedArray);
 
-	@Import(module = "platformOpenGL", name = "glBufferSubData0")
+	@Import(module = "platformOpenGL", name = "glBufferSubData")
 	static native void _wglBufferSubDataN(int target, int dstOffset, ArrayBufferView typedArray, int srcOffset, int length);
 
 	public static void _wglBindVertexArray(IVertexArrayGL objId) {
@@ -450,7 +450,7 @@ public class PlatformOpenGL {
 	static native void _wglTexImage3DN(int target, int level, int internalFormat, int width, int height, int depth,
 			int border, int format, int type, ArrayBufferView typedArray);
 
-	@Import(module = "platformOpenGL", name = "glTexImage3D0")
+	@Import(module = "platformOpenGL", name = "glTexImage3D")
 	static native void _wglTexImage3DN(int target, int level, int internalFormat, int width, int height, int depth,
 			int border, int format, int type, ArrayBufferView typedArray, int offset);
 
@@ -513,7 +513,7 @@ public class PlatformOpenGL {
 	static native void _wglTexImage2DN(int target, int level, int internalFormat, int width, int height, int border,
 			int format, int type, ArrayBufferView typedArray);
 
-	@Import(module = "platformOpenGL", name = "glTexImage2D0")
+	@Import(module = "platformOpenGL", name = "glTexImage2D")
 	static native void _wglTexImage2DN(int target, int level, int internalFormat, int width, int height, int border,
 			int format, int type, ArrayBufferView typedArray, int offset);
 
@@ -565,7 +565,7 @@ public class PlatformOpenGL {
 	static native void _wglTexSubImage2D(int target, int level, int offsetx, int offsety, int width, int height,
 			int format, int type, ArrayBufferView typedArray);
 
-	@Import(module = "platformOpenGL", name = "glTexSubImage2D0")
+	@Import(module = "platformOpenGL", name = "glTexSubImage2D")
 	static native void _wglTexSubImage2D(int target, int level, int offsetx, int offsety, int width, int height,
 			int format, int type, ArrayBufferView typedArray, int offset);
 
@@ -657,6 +657,9 @@ public class PlatformOpenGL {
 
 	@Import(module = "platformOpenGL", name = "glDrawElements")
 	public static native void _wglDrawElements(int mode, int count, int type, int offset);
+
+	@Import(module = "platformOpenGL", name = "glDrawRangeElements")
+	public static native void _wglDrawRangeElements(int mode, int start, int end, int count, int type, int offset);
 
 	@Import(module = "platformOpenGL", name = "glDrawArraysInstanced")
 	public static native void _wglDrawArraysInstanced(int mode, int first, int count, int instanced);

@@ -28,21 +28,27 @@ layout(location = 3) in vec2 p_lightMap2f;
 layout(location = 4) in vec2 p_particleSize_texCoordsSize_2i;
 layout(location = 5) in vec4 p_color4f;
 
-out vec4 v_position4f;
 out vec2 v_texCoord2f;
 out vec4 v_color4f;
 out vec2 v_lightmap2f;
 
 uniform mat4 u_modelViewMatrix4f;
 uniform mat4 u_projectionMatrix4f;
+uniform mat4 u_inverseViewMatrix4f;
 uniform vec3 u_texCoordSize2f_particleSize1f;
 uniform vec3 u_transformParam_1_2_5_f;
 uniform vec2 u_transformParam_3_4_f;
 uniform vec4 u_color4f;
 
+layout(std140) uniform u_chunkLightingData {
+	mediump uvec2 u_dynamicLightOffsetCount2i;
+	mediump int _paddingA_;
+	mediump int _paddingB_;
+	mediump uvec4 u_dynamicLightArray[4];
+};
+
 void main() {
 	v_color4f = u_color4f * p_color4f.bgra;
-	v_lightmap2f = p_lightMap2f;
 
 	vec2 tex2f = a_position2f * 0.5 + 0.5;
 	tex2f.y = 1.0 - tex2f.y;
@@ -56,6 +62,40 @@ void main() {
 	pos3f += u_transformParam_1_2_5_f * spos2f.xyy;
 	pos3f.zx += u_transformParam_3_4_f * spos2f;
 
-	v_position4f = u_modelViewMatrix4f * vec4(pos3f, 1.0);
-	gl_Position = u_projectionMatrix4f * v_position4f;
+	vec4 pos4f = u_modelViewMatrix4f * vec4(pos3f, 1.0);
+	gl_Position = u_projectionMatrix4f * pos4f;
+
+	float blockLight = 0.0;
+
+	vec4 dlight;
+	uvec4 dlighti1, dlighti2;
+	if(u_dynamicLightOffsetCount2i.y > 0u) {
+		vec3 dlightOffset = vec3(ivec3(
+			int(u_dynamicLightOffsetCount2i.x << 16),
+			int(u_dynamicLightOffsetCount2i.x << 8),
+			int(u_dynamicLightOffsetCount2i.x)
+		) >> 24);
+		vec4 worldPosition4f = u_inverseViewMatrix4f * pos4f;
+		worldPosition4f.xyz = worldPosition4f.xyz / worldPosition4f.w + dlightOffset;
+		for(uint i = 0u; i < 4u; ++i) {
+			dlighti1 = u_dynamicLightArray[i];
+			dlighti2 = dlighti1 << 16;
+
+			dlight = vec4(ivec4(ivec2(dlighti2.xy), ivec2(dlighti1.xy)) >> 16) * 0.0009765923;
+			dlight.xyz = dlight.xyz - worldPosition4f.xyz;
+			blockLight = max((dlight.w - length(dlight.xyz)) * 0.066667, blockLight);
+			if(i * 2u + 1u >= u_dynamicLightOffsetCount2i.y) {
+				break;
+			}
+
+			dlight = vec4(ivec4(ivec2(dlighti2.zw), ivec2(dlighti1.zw)) >> 16) * 0.0009765923;
+			dlight.xyz = dlight.xyz - worldPosition4f.xyz;
+			blockLight = max((dlight.w - length(dlight.xyz)) * 0.066667, blockLight);
+			if(i * 2u + 2u >= u_dynamicLightOffsetCount2i.y) {
+				break;
+			}
+		}
+	}
+
+	v_lightmap2f = vec2(max(p_lightMap2f.x, blockLight), p_lightMap2f.y);
 }

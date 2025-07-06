@@ -63,7 +63,7 @@ uniform float u_alphaTestRef1f;
 
 #ifdef COMPILE_ENABLE_MC_LIGHTING
 uniform int u_lightsEnabled1i;
-uniform vec4 u_lightsDirections4fv[4];
+uniform vec4 u_lightsDirections4fv[2];
 uniform vec3 u_lightsAmbient3f;
 #ifndef COMPILE_NORMAL_ATTRIB
 uniform vec3 u_uniformNormal3f;
@@ -166,20 +166,14 @@ void main() {
 #else
 	vec3 normal = u_uniformNormal3f;
 #endif
-	float diffuse = 0.0;
 	vec4 light;
-#ifdef EAGLER_HAS_GLES_300
-	for(int i = 0; i < u_lightsEnabled1i; ++i) {
-#else
-	for(int i = 0; i < 4; ++i) {
-#endif
-		light = u_lightsDirections4fv[i];
-		diffuse += max(dot(light.xyz, normal), 0.0) * light.w;
-#ifndef EAGLER_HAS_GLES_300
-		if(i + 1 >= u_lightsEnabled1i) {
+	float diffuse = 0.0;
+	for(int i = 0; i < 2; ++i) {
+		if(i >= u_lightsEnabled1i) {
 			break;
 		}
-#endif
+		light = u_lightsDirections4fv[i];
+		diffuse += max(dot(light.xyz, normal), 0.0) * light.w;
 	}
 	color.rgb *= min(u_lightsAmbient3f + vec3(diffuse), 1.0);
 #endif

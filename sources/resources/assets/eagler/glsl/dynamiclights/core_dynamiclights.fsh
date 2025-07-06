@@ -16,7 +16,9 @@
  * 
  */
 
+#if defined(COMPILE_ENABLE_TEX_GEN) || defined(COMPILE_ENABLE_FOG)
 in vec4 v_position4f;
+#endif
 
 #ifdef COMPILE_TEXTURE_ATTRIB
 in vec2 v_texture2f;
@@ -61,7 +63,7 @@ uniform float u_alphaTestRef1f;
 
 #ifdef COMPILE_ENABLE_MC_LIGHTING
 uniform int u_lightsEnabled1i;
-uniform vec4 u_lightsDirections4fv[4];
+uniform vec4 u_lightsDirections4fv[2];
 uniform vec3 u_lightsAmbient3f;
 #endif
 
@@ -88,15 +90,9 @@ uniform mat4 u_textureMat4f01;
 uniform vec2 u_textureAnisotropicFix;
 #endif
 
-uniform mat4 u_inverseViewMatrix4f;
-
-layout(std140) uniform u_chunkLightingData {
-	mediump int u_dynamicLightCount1i;
-	mediump int _paddingA_;
-	mediump int _paddingB_;
-	mediump int _paddingC_;
-	mediump vec4 u_dynamicLightArray[12];
-};
+#ifdef COMPILE_ENABLE_LIGHTMAP
+in float v_dynamicLight1f;
+#endif
 
 layout(location = 0) out vec4 output4f;
 
@@ -151,17 +147,9 @@ void main() {
 #else
 	float blockLight = u_textureCoords02.x;
 #endif
-	vec4 dlight;
-	if(u_dynamicLightCount1i > 0) {
-		vec4 worldPosition4f = u_inverseViewMatrix4f * v_position4f;
-		worldPosition4f.xyz /= worldPosition4f.w;
-		int safeLightCount = u_dynamicLightCount1i > 12 ? 0 : u_dynamicLightCount1i;
-		for(int i = 0; i < safeLightCount; ++i) {
-			dlight = u_dynamicLightArray[i];
-			dlight.xyz = dlight.xyz - worldPosition4f.xyz;
-			blockLight = max((dlight.w - length(dlight.xyz)) * 0.066667, blockLight);
-		}
-	}
+
+	blockLight = max(blockLight, v_dynamicLight1f);
+
 #ifdef COMPILE_LIGHTMAP_ATTRIB
 	color *= texture(u_samplerLightmap, vec2(blockLight, v_lightmap2f.y));
 #else
@@ -179,16 +167,18 @@ void main() {
 
 #endif
 
+#ifdef COMPILE_ENABLE_MC_LIGHTING
 #ifdef COMPILE_NORMAL_ATTRIB
 	vec3 normal = v_normal3f;
 #else
 	vec3 normal = u_uniformNormal3f;
 #endif
-
-#ifdef COMPILE_ENABLE_MC_LIGHTING
 	vec4 light;
 	float diffuse = 0.0;
-	for(int i = 0; i < u_lightsEnabled1i; ++i) {
+	for(int i = 0; i < 2; ++i) {
+		if(i >= u_lightsEnabled1i) {
+			break;
+		}
 		light = u_lightsDirections4fv[i];
 		diffuse += max(dot(light.xyz, normal), 0.0) * light.w;
 	}

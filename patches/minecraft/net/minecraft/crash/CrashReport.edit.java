@@ -89,7 +89,17 @@
 ~ 			stackTrace.append("\tat ").append(s).append('\n');
 ~ 		});
 
-> CHANGE  1 : 2  @  1 : 12
+> CHANGE  1 : 8  @  1 : 9
+
+~ 		Throwable t = this.cause.getCause();
+~ 		while (t != null) {
+~ 			stackTrace.append("Caused by: " + t.toString()).append('\n');
+~ 			EagRuntime.getStackTrace(t, (s) -> {
+~ 				stackTrace.append("\tat ").append(s).append('\n');
+~ 			});
+~ 			t = t.getCause();
+
+> CHANGE  2 : 3  @  2 : 3
 
 ~ 		return stackTrace.toString();
 

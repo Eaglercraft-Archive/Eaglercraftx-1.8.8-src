@@ -78,8 +78,8 @@ addToLibrary({
 		
 		const eagRuntimeJSURL = URL.createObjectURL(new Blob([results[HEAP32[idx]]], { type: "text/javascript;charset=utf-8" }));
 		const classesWASMURL = URL.createObjectURL(new Blob([results[HEAP32[idx + 1]]], { type: "application/wasm" }));
-		const classesDeobfTEADBGURL = URL.createObjectURL(new Blob([results[HEAP32[idx + 2]]], { type: "application/octet-stream" }));
-		const classesDeobfWASMURL = URL.createObjectURL(new Blob([results[HEAP32[idx + 3]]], { type: "application/wasm" }));
+		const classesDeobfTEADBGURL = HEAP32[idx + 2] !== -1 ? URL.createObjectURL(new Blob([results[HEAP32[idx + 2]]], { type: "application/octet-stream" })) : null;
+		const classesDeobfWASMURL = HEAP32[idx + 3] !== -1 ? URL.createObjectURL(new Blob([results[HEAP32[idx + 3]]], { type: "application/wasm" })) : null;
 		
 		const pressAnyKey = URL.createObjectURL(new Blob([results[HEAP32[idx + 4]]], { type: results[HEAP32[idx + 5]] }));
 		const crashImg = URL.createObjectURL(new Blob([results[HEAP32[idx + 6]]], { type: results[HEAP32[idx + 7]] }));

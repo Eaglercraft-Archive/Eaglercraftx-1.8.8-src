@@ -19,7 +19,6 @@ package net.lax1dude.eaglercraft.v1_8.mojang.authlib;
 import net.lax1dude.eaglercraft.v1_8.EaglercraftUUID;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;

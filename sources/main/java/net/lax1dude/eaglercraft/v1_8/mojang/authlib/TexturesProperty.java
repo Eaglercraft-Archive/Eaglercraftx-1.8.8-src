@@ -94,7 +94,7 @@ public class TexturesProperty {
 					if(meta != null) {
 						String modelStr = meta.optString("model");
 						if(modelStr != null && modelStr.equalsIgnoreCase("slim")) {
-							model = SkinModel.STEVE;
+							model = SkinModel.ALEX;
 						}
 					}
 				}

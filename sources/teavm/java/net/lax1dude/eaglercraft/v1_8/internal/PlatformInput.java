@@ -103,6 +103,7 @@ public class PlatformInput {
 	private static EventListener<?> pointerlock = null;
 	private static EventListener<?> pointerlockerr = null;
 	private static EventListener<?> fullscreen = null;
+	private static EventListener<?> visibilitychange = null;
 
 	private static Map<String,LegacyKeycodeTranslator.LegacyKeycode> keyCodeTranslatorMap = null;
 
@@ -636,6 +637,12 @@ public class PlatformInput {
 				isWindowFocused = true;
 			}
 		});
+		win.getDocument().addEventListener("visibilitychange", visibilitychange = new EventListener<Event>() {
+			@Override
+			public void handleEvent(Event evt) {
+				PlatformAudio.handleVisibilityChange();
+			}
+		});
 		
 		try {
 			pointerLockSupported = getSupportedPointerLock(win.getDocument());
@@ -865,7 +872,7 @@ public class PlatformInput {
 	}
 
 	@JSBody(params = { "doc" }, script = "return (typeof doc.visibilityState !== \"string\") || (doc.visibilityState === \"visible\");")
-	private static native boolean getVisibilityState(JSObject doc);
+	static native boolean getVisibilityState(JSObject doc);
 
 	@JSBody(params = { "win" }, script = "return (typeof win.devicePixelRatio === \"number\") ? win.devicePixelRatio : 1.0;")
 	static native double getDevicePixelRatio(Window win);
@@ -1512,6 +1519,10 @@ public class PlatformInput {
 		if(blur != null) {
 			win.removeEventListener("blur", blur);
 			blur = null;
+		}
+		if(visibilitychange != null) {
+			win.getDocument().removeEventListener("visibilitychange", blur);
+			visibilitychange = null;
 		}
 		if(wheel != null) {
 			canvas.removeEventListener("wheel", wheel);

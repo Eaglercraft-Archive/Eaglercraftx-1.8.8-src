@@ -40,7 +40,7 @@ import static net.lax1dude.eaglercraft.v1_8.internal.PlatformOpenGL.*;
 
 public class EaglercraftGPU {
 
-	static final GLObjectRecycler<IBufferGL> arrayBufferRecycler = new GLObjectRecycler<IBufferGL>(32) {
+	static final GLObjectRecycler<IBufferGL> arrayBufferRecycler = new GLObjectRecycler<IBufferGL>(256) {
 
 		@Override
 		protected IBufferGL create() {
@@ -49,7 +49,14 @@ public class EaglercraftGPU {
 
 		@Override
 		protected void invalidate(IBufferGL object) {
-			// Don't bother
+			IBufferGL old = currentArrayBuffer;
+			if (old != object) {
+				_wglBindBuffer(GL_ARRAY_BUFFER, object);
+			}
+			_wglBufferData(GL_ARRAY_BUFFER, 0, GL_STATIC_DRAW);
+			if (old != object) {
+				_wglBindBuffer(GL_ARRAY_BUFFER, old);
+			}
 		}
 
 		@Override
@@ -59,7 +66,7 @@ public class EaglercraftGPU {
 
 	};
 
-	static final GLObjectRecycler<IBufferGL> elementArrayBufferRecycler = new GLObjectRecycler<IBufferGL>(32) {
+	static final GLObjectRecycler<IBufferGL> elementArrayBufferRecycler = new GLObjectRecycler<IBufferGL>(256) {
 
 		@Override
 		protected IBufferGL create() {
@@ -68,7 +75,22 @@ public class EaglercraftGPU {
 
 		@Override
 		protected void invalidate(IBufferGL object) {
-			// Don't bother
+			IVertexArrayGL oldArray = currentVertexArray;
+			boolean vao = !emulatedVAOs;
+			if (vao && vertexArrayCapable && oldArray != null) {
+				_wglBindVertexArray(null);
+			}
+			IBufferGL old = currentEmulatedVAOIndexBuffer;
+			if (vao || old != object) {
+				_wglBindBuffer(GL_ELEMENT_ARRAY_BUFFER, object);
+			}
+			_wglBufferData(GL_ELEMENT_ARRAY_BUFFER, 0, GL_STATIC_DRAW);
+			if (!vao && old != object) {
+				_wglBindBuffer(GL_ELEMENT_ARRAY_BUFFER, old);
+			}
+			if (vao && vertexArrayCapable && oldArray != null) {
+				_wglBindVertexArray(oldArray);
+			}
 		}
 
 		@Override
@@ -211,8 +233,7 @@ public class EaglercraftGPU {
 		
 		if(dp.vertexArray == null) {
 			dp.vertexArray = createGLVertexArray();
-			dp.bindQuad16 = false;
-			dp.bindQuad32 = false;
+			dp.bindQuad = 0;
 		}
 		if(dp.vertexBuffer == null) {
 			dp.vertexBuffer = createGLArrayBuffer();
@@ -252,8 +273,7 @@ public class EaglercraftGPU {
 		
 		if(dp.vertexArray == null) {
 			dp.vertexArray = createGLVertexArray();
-			dp.bindQuad16 = false;
-			dp.bindQuad32 = false;
+			dp.bindQuad = 0;
 		}
 		if(dp.vertexBuffer == null) {
 			dp.vertexBuffer = createGLArrayBuffer();
@@ -280,21 +300,19 @@ public class EaglercraftGPU {
 			if(dp.mode == GL_QUADS) {
 				int cnt = dp.count;
 				if(cnt > quad16MaxVertices) {
-					if(!dp.bindQuad32) {
-						dp.bindQuad16 = false;
-						dp.bindQuad32 = true;
+					if(dp.bindQuad != 32) {
+						dp.bindQuad = 32;
 						attachQuad32EmulationBuffer(cnt, true);
 					}else {
 						attachQuad32EmulationBuffer(cnt, false);
 					}
-					p.drawElements(GL_TRIANGLES, (cnt >> 2) * 6, GL_UNSIGNED_INT, 0);
+					p.drawRangeElements(GL_TRIANGLES, 0, cnt - 1, (cnt >> 2) * 6, GL_UNSIGNED_INT, 0);
 				}else {
-					if(!dp.bindQuad16) {
-						dp.bindQuad16 = true;
-						dp.bindQuad32 = false;
+					if(dp.bindQuad != 16) {
+						dp.bindQuad = 16;
 						attachQuad16EmulationBuffer(true);
 					}
-					p.drawElements(GL_TRIANGLES, (cnt >> 2) * 6, GL_UNSIGNED_SHORT, 0);
+					p.drawRangeElements(GL_TRIANGLES, 0, cnt - 1, (cnt >> 2) * 6, GL_UNSIGNED_SHORT, 0);
 				}
 			}else {
 				p.drawArrays(dp.mode, 0, dp.count);
@@ -560,6 +578,21 @@ public class EaglercraftGPU {
 		_wglDrawElements(mode, count, type, offset);
 	}
 
+	public static void drawRangeElements(int mode, int start, int end, int count, int type, int offset) {
+		if(emulatedVAOs) {
+			if(currentVertexArray == null) {
+				logger.warn("Skipping draw call with emulated VAO because no known VAO is bound!");
+				return;
+			}
+			((SoftGLVertexArray)currentVertexArray).transitionToState(emulatedVAOState, true);
+		}
+		if(glesVers >= 300) {
+			_wglDrawRangeElements(mode, start, end, count, type, offset);
+		}else {
+			_wglDrawElements(mode, count, type, offset);
+		}
+	}
+
 	public static void drawArraysInstanced(int mode, int first, int count, int instances) {
 		if(emulatedVAOs) {
 			if(currentVertexArray == null) {
@@ -768,7 +801,7 @@ public class EaglercraftGPU {
 			displayListBuffer.put(buffer);
 			lastRender = null;
 		}else {
-			lastRender = FixedFunctionPipeline.setupDirect(buffer, attrib).update();
+			lastRender = FixedFunctionPipeline.setupDirect(buffer, attrib, mode == GL_QUADS).update();
 			lastRender.drawDirectArrays(mode, 0, count);
 			lastMode = mode;
 			lastCount = count;
@@ -845,7 +878,7 @@ public class EaglercraftGPU {
 			v3 = v2 + 1;
 			v4 = v3 + 1;
 			buf.put(v1 | (v2 << 16));
-			buf.put(v4 | (v2 << 16));
+			buf.put(v3 | (v1 << 16));
 			buf.put(v3 | (v4 << 16));
 		}
 		buf.flip();
@@ -862,7 +895,7 @@ public class EaglercraftGPU {
 			v3 = v2 + 1;
 			v4 = v3 + 1;
 			buf.put(v1); buf.put(v2);
-			buf.put(v4); buf.put(v2);
+			buf.put(v3); buf.put(v1);
 			buf.put(v3); buf.put(v4);
 		}
 		buf.flip();
@@ -891,7 +924,7 @@ public class EaglercraftGPU {
 		}
 		FixedFunctionPipeline p = FixedFunctionPipeline.setupRenderDisplayList(mesh.getAttribBits()).update();
 		EaglercraftGPU.bindGLVertexArray(mesh.vertexArray);
-		p.drawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_SHORT, 0);
+		p.drawRangeElements(GL_TRIANGLES, 0, mesh.vertexCount - 1, mesh.indexCount, GL_UNSIGNED_SHORT, 0);
 	}
 
 	static int glesVers = -1;

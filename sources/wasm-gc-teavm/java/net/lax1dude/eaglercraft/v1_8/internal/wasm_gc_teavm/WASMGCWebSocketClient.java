@@ -21,7 +21,6 @@ import java.util.List;
 
 import org.teavm.jso.JSObject;
 import org.teavm.jso.JSProperty;
-import org.teavm.jso.core.JSString;
 import org.teavm.jso.typedarrays.Uint8Array;
 
 import net.lax1dude.eaglercraft.v1_8.EagUtils;

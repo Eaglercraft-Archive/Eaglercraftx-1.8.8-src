@@ -45,7 +45,7 @@ async function entryPoint() {
 
 		const teavm = await wasmGC.load(classesWASM, {
 			stackDeobfuscator: {
-				enabled: true,
+				enabled: !!(classesDeobfWASM && classesTEADBGURL),
 				path: classesDeobfWASM,
 				infoLocation: "external",
 				externalInfoPath: classesTEADBGURL

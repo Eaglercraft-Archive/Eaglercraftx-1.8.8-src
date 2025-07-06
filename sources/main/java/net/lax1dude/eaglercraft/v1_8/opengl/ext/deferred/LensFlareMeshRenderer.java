@@ -316,7 +316,8 @@ public class LensFlareMeshRenderer {
 		_wglUniform3f(streaksProgram.uniforms.u_flareColor3f, v.x * mag * 0.5f, v.y * mag * 0.5f, v.z * mag * 0.5f);
 
 		EaglercraftGPU.bindGLVertexArray(streaksVertexArray);
-		_wglDrawElements(GL_TRIANGLES, streaksVertexCount + (streaksVertexCount >> 1), GL_UNSIGNED_SHORT, 0);
+		_wglDrawRangeElements(GL_TRIANGLES, 0, streaksVertexCount - 1, streaksVertexCount + (streaksVertexCount >> 1),
+				GL_UNSIGNED_SHORT, 0);
 
 		ghostsProgram.useProgram();
 

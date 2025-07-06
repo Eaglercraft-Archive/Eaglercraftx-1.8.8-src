@@ -206,8 +206,7 @@ public class InstancedFontRenderer {
 		EaglercraftGPU.vertexAttribPointer(0, 3, GL_FLOAT, false, 12, 0);
 		EaglercraftGPU.vertexAttribDivisor(0, 0);
 
-		EaglercraftGPU.bindVAOGLArrayBufferNow(instancesBuffer);
-		_wglBufferData(GL_ARRAY_BUFFER, fontDataBuffer.capacity(), GL_STREAM_DRAW);
+		EaglercraftGPU.bindVAOGLArrayBuffer(instancesBuffer);
 
 		EaglercraftGPU.enableVertexAttribArray(1);
 		EaglercraftGPU.vertexAttribPointer(1, 2, GL_SHORT, false, 10, 0);
@@ -381,7 +380,7 @@ public class InstancedFontRenderer {
 			int l = fontDataBuffer.limit();
 
 			fontDataBuffer.flip();
-			_wglBufferData(GL_ARRAY_BUFFER, fontDataBuffer.capacity(), GL_STREAM_DRAW);
+			_wglBufferData(GL_ARRAY_BUFFER, (fontDataBuffer.remaining() + 0x3FF) & 0xFFFFFC00, GL_STREAM_DRAW);
 			_wglBufferSubData(GL_ARRAY_BUFFER, 0, fontDataBuffer);
 
 			fontDataBuffer.position(p);
@@ -395,7 +394,7 @@ public class InstancedFontRenderer {
 			int l = fontBoldDataBuffer.limit();
 
 			fontBoldDataBuffer.flip();
-			_wglBufferData(GL_ARRAY_BUFFER, fontBoldDataBuffer.capacity(), GL_STREAM_DRAW);
+			_wglBufferData(GL_ARRAY_BUFFER, (fontBoldDataBuffer.remaining() + 0x3FF) & 0xFFFFFC00, GL_STREAM_DRAW);
 			_wglBufferSubData(GL_ARRAY_BUFFER, 0, fontBoldDataBuffer);
 
 			fontBoldDataBuffer.position(p);

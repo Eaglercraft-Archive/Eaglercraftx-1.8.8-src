@@ -63,6 +63,7 @@ public class PlatformAudio {
 	static AudioBufferSourceNode recDestSilenceNode = null;
 	static GainNode micRecGain = null;
 	static GainNode gameRecGain = null;
+	static HTMLAudioElement silenceElement = null;
 	private static final Map<String, BrowserAudioResource> soundCache = new HashMap<>();
 	private static final List<BrowserAudioHandle> activeSounds = new LinkedList<>();
 
@@ -253,16 +254,33 @@ public class PlatformAudio {
 				HTMLAudioElement audio = (HTMLAudioElement) PlatformRuntime.doc.createElement("audio");
 				audio.getClassList().add("_eaglercraftX_keepalive_hack");
 				audio.setAttribute("style", "display:none;");
-				audio.setAutoplay(true);
+				audio.setAutoplay(false);
 				audio.setLoop(true);
+				audio.addEventListener("seeked", (e) -> {
+					// NOP, wakes up the browser's event loop
+				});
+				audio.addEventListener("canplay", (e) -> {
+					if (PlatformRuntime.doc != null && silenceElement != null &&
+							!PlatformInput.getVisibilityState(PlatformRuntime.doc)) {
+						silenceElement.play();
+					}
+				});
 				HTMLSourceElement source = (HTMLSourceElement) PlatformRuntime.doc.createElement("source");
 				source.setType("audio/wav");
 				source.setSrc(TeaVMBlobURLManager.registerNewURLByte(silenceFile, "audio/wav").toExternalForm());
 				audio.appendChild(source);
-				audio.addEventListener("seeked", (e) -> {
-					// NOP, wakes up the browser's event loop
-				});
 				PlatformRuntime.parent.appendChild(audio);
+				silenceElement = audio;
+			}
+		}
+	}
+
+	static void handleVisibilityChange() {
+		if (silenceElement != null) {
+			if (!PlatformInput.getVisibilityState(PlatformRuntime.doc)) {
+				silenceElement.play();
+			} else {
+				silenceElement.pause();
 			}
 		}
 	}
@@ -606,6 +624,11 @@ public class PlatformAudio {
 			recDestSilenceNode = null;
 			micRecGain = null;
 			gameRecGain = null;
+		}
+		if(silenceElement != null) {
+			silenceElement.pause();
+			silenceElement.delete();
+			silenceElement = null;
 		}
 	}
 	

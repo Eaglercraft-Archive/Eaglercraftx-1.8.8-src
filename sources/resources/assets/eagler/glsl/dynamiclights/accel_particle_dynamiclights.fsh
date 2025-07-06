@@ -20,7 +20,6 @@ precision lowp int;
 precision mediump float;
 precision mediump sampler2D;
 
-in vec4 v_position4f;
 in vec2 v_texCoord2f;
 in vec4 v_color4f;
 in vec2 v_lightmap2f;
@@ -30,16 +29,6 @@ layout(location = 0) out vec4 output4f;
 uniform sampler2D u_inputTexture;
 uniform sampler2D u_lightmapTexture;
 
-uniform mat4 u_inverseViewMatrix4f;
-
-layout(std140) uniform u_chunkLightingData {
-	mediump int u_dynamicLightCount1i;
-	mediump int _paddingA_;
-	mediump int _paddingB_;
-	mediump int _paddingC_;
-	mediump vec4 u_dynamicLightArray[12];
-};
-
 void main() {
 	vec4 color = texture(u_inputTexture, v_texCoord2f) * v_color4f;
 
@@ -47,20 +36,7 @@ void main() {
 		discard;
 	}
 
-	vec4 dlight;
-	float blockLight = v_lightmap2f.x;
-	if(u_dynamicLightCount1i > 0) {
-		vec4 worldPosition4f = u_inverseViewMatrix4f * v_position4f;
-		worldPosition4f.xyz /= worldPosition4f.w;
-		int safeLightCount = u_dynamicLightCount1i > 12 ? 0 : u_dynamicLightCount1i;
-		for(int i = 0; i < safeLightCount; ++i) {
-			dlight = u_dynamicLightArray[i];
-			dlight.xyz = dlight.xyz - worldPosition4f.xyz;
-			blockLight = max((dlight.w - length(dlight.xyz)) * 0.066667, blockLight);
-		}
-	}
-
-	color *= texture(u_lightmapTexture, vec2(blockLight, v_lightmap2f.y));
+	color *= texture(u_lightmapTexture, v_lightmap2f);
 
 	output4f = color;
 }

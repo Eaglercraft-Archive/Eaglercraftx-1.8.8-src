@@ -22,11 +22,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
 
+import org.teavm.interop.Address;
 import org.teavm.interop.Import;
 import org.teavm.jso.JSFunctor;
 import org.teavm.jso.JSObject;
 import org.teavm.jso.core.JSString;
-import org.teavm.jso.typedarrays.Uint8Array;
 
 import net.lax1dude.eaglercraft.v1_8.Filesystem;
 import net.lax1dude.eaglercraft.v1_8.internal.IClientConfigAdapter;
@@ -34,7 +34,7 @@ import net.lax1dude.eaglercraft.v1_8.internal.IEaglerFilesystem;
 import net.lax1dude.eaglercraft.v1_8.internal.IPCPacketData;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformRuntime;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.MemoryStack;
-import net.lax1dude.eaglercraft.v1_8.internal.buffer.WASMGCDirectArrayConverter;
+import net.lax1dude.eaglercraft.v1_8.internal.buffer.WASMGCDirectArrayCopy;
 import net.lax1dude.eaglercraft.v1_8.internal.vfs2.VFile2;
 import net.lax1dude.eaglercraft.v1_8.internal.wasm_gc_teavm.BetterJSStringConverter;
 import net.lax1dude.eaglercraft.v1_8.internal.wasm_gc_teavm.WASMGCClientConfigAdapter;
@@ -74,8 +74,10 @@ public class ServerPlatformSingleplayer {
 		}else {
 			MemoryStack.push();
 			try {
-				sendPacket0(BetterJSStringConverter.stringToJS(packet.channel),
-						WASMGCDirectArrayConverter.byteArrayToStackU8Array(packet.contents));
+				int len = packet.contents.length;
+				Address addr = MemoryStack.malloc(len);
+				WASMGCDirectArrayCopy.memcpy(addr, packet.contents, 0, len);
+				sendPacket0(BetterJSStringConverter.stringToJS(packet.channel), addr, len);
 			} finally {
 				MemoryStack.pop();
 			}
@@ -83,7 +85,7 @@ public class ServerPlatformSingleplayer {
 	}
 
 	@Import(module = "serverPlatformSingleplayer", name = "sendPacket")
-	private static native void sendPacket0(JSString channel, Uint8Array arr);
+	private static native void sendPacket0(JSString channel, Address addr, int length);
 
 	public static List<IPCPacketData> recieveAllPacket() {
 		if(singleThreadMode) {

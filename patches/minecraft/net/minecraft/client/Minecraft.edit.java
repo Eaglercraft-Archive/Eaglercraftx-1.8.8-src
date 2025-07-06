@@ -598,7 +598,7 @@
 ~ 		GlStateManager.viewport(0, 0, this.displayWidth, this.displayHeight);
 ~ 		GlStateManager.clearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-> DELETE  2  @  2 : 4
+> DELETE  1  @  1 : 4
 
 > DELETE  5  @  5 : 6
 

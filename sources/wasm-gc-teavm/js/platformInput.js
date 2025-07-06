@@ -118,7 +118,8 @@ async function initPlatformInput(inputImports) {
 		blur: null,
 		pointerlock: null,
 		pointerlockerr: null,
-		fullscreenChange: null
+		fullscreenChange: null,
+		visibilitychange: null
 	};
 
 	touchKeyboardOpenZone = document.createElement("div");
@@ -349,6 +350,11 @@ async function initPlatformInput(inputImports) {
 
 	window.addEventListener("focus", currentEventListeners.focus = function(/** Event */ evt) {
 		pushEvent(EVENT_TYPE_INPUT, EVENT_INPUT_FOCUS, null);
+	});
+
+	document.addEventListener("visibilitychange", currentEventListeners.visibilitychange = function(/** Event */ evt) {
+		if (handleVisibilityChange)
+			handleVisibilityChange();
 	});
 
 	/**
@@ -1137,6 +1143,10 @@ async function initPlatformInput(inputImports) {
 			if(currentEventListeners.blur) {
 				window.removeEventListener("blur", /** @type {function(Event)} */ (currentEventListeners.blur));
 				currentEventListeners.blur = null;
+			}
+			if(currentEventListeners.visibilitychange) {
+				document.removeEventListener("visibilitychange", currentEventListeners.visibilitychange);
+				currentEventListeners.visibilitychange = null;
 			}
 			if(currentEventListeners.pointerlock) {
 				document.removeEventListener("pointerlockchange", /** @type {function(Event)} */ (currentEventListeners.pointerlock));

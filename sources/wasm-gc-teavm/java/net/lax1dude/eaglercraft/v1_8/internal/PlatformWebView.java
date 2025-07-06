@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.teavm.interop.Address;
 import org.teavm.interop.Import;
 import org.teavm.jso.JSBody;
 import org.teavm.jso.JSObject;
@@ -32,6 +33,7 @@ import org.teavm.jso.typedarrays.Uint8Array;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformRuntime.JSEagRuntimeEvent;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.MemoryStack;
 import net.lax1dude.eaglercraft.v1_8.internal.buffer.WASMGCDirectArrayConverter;
+import net.lax1dude.eaglercraft.v1_8.internal.buffer.WASMGCDirectArrayCopy;
 import net.lax1dude.eaglercraft.v1_8.internal.wasm_gc_teavm.BetterJSStringConverter;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
@@ -226,8 +228,10 @@ public class PlatformWebView {
 			}else if(packet.type == SPacketWebViewMessageV4EAG.TYPE_BINARY) {
 				MemoryStack.push();
 				try {
-					sendBinaryMessage(BetterJSStringConverter.stringToJS(currentMessageChannelName),
-							WASMGCDirectArrayConverter.byteArrayToStackU8Array(packet.data));
+					int len = packet.data.length;
+					Address addr = MemoryStack.malloc(len);
+					WASMGCDirectArrayCopy.memcpy(addr, packet.data, 0, len);
+					sendBinaryMessage(BetterJSStringConverter.stringToJS(currentMessageChannelName), addr, len);
 				}finally {
 					MemoryStack.pop();
 				}
@@ -241,7 +245,7 @@ public class PlatformWebView {
 	private static native void sendStringMessage(JSString ch, JSString str);
 
 	@Import(module = "platformWebView", name = "sendBinaryMessage")
-	private static native void sendBinaryMessage(JSString ch, Uint8Array bin);
+	private static native void sendBinaryMessage(JSString ch, Address addr, int length);
 
 	private static void sendMessageToServer(String channelName, int type, byte[] data) {
 		if(channelName.length() > 255) {

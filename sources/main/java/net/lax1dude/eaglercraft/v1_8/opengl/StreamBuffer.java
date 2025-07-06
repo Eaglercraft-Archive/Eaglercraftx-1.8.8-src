@@ -16,108 +16,53 @@
 
 package net.lax1dude.eaglercraft.v1_8.opengl;
 
-import net.lax1dude.eaglercraft.v1_8.internal.IVertexArrayGL;
 import net.lax1dude.eaglercraft.v1_8.internal.IBufferGL;
 
 import static net.lax1dude.eaglercraft.v1_8.opengl.RealOpenGLEnums.*;
 import static net.lax1dude.eaglercraft.v1_8.internal.PlatformOpenGL.*;
 
+/**
+ * This streaming implementation was designed by reverse engineering the OpenGL
+ * driver that powers most Intel-based Chromebooks, performance may vary on
+ * other platforms
+ */
 public class StreamBuffer {
 
-	public static final int poolSize = 4;
+	protected static IBufferGL buffer = null;
 
-	protected static final PoolInstance[] pool = new PoolInstance[poolSize];
-	protected static int poolBufferID = 0;
+	protected static int currentOffset = 0;
+	protected static int currentSize = 0;
 
-	static {
-		for(int i = 0; i < poolSize; ++i) {
-			pool[i] = new PoolInstance();
-		}
-	}
-
-	protected static class PoolInstance {
-		
-		protected IBufferGL vertexBuffer = null;
-		protected int vertexBufferSize = 0;
-		
-	}
-
-	private static void resizeInstance(PoolInstance instance, int requiredMemory) {
-		IBufferGL buffer = instance.vertexBuffer;
+	public static IBufferGL getBuffer() {
 		if (buffer == null) {
-			buffer = _wglGenBuffers();
-			instance.vertexBuffer = buffer;
+			return buffer = _wglGenBuffers();
 		}
-		int newSize = instance.vertexBufferSize;
-		if (newSize < requiredMemory) {
-			newSize = (requiredMemory + 0xFFFF) & 0xFFFF0000;
-			instance.vertexBufferSize = newSize;
-		}
-		EaglercraftGPU.bindGLArrayBuffer(buffer);
-		_wglBufferData(GL_ARRAY_BUFFER, newSize, GL_STREAM_DRAW);
+		return buffer;
 	}
 
-	protected StreamBufferInstance[] buffers;
-
-	protected final IStreamBufferInitializer initializer;
-
-	public static class StreamBufferInstance {
-
-		protected PoolInstance poolInstance = null;
-		protected IVertexArrayGL vertexArray = null;
-
-		public boolean bindQuad16 = false;
-		public boolean bindQuad32 = false;
-
-		public IVertexArrayGL getVertexArray() {
-			return vertexArray;
+	public static int uploadData(int elSize, int elCount, boolean quads) {
+		EaglercraftGPU.bindGLArrayBuffer(getBuffer());
+		int off = (currentOffset + elSize - 1) / elSize;
+		if (quads) {
+			off = (off + 3) & -4;
 		}
-
-		public IBufferGL getVertexBuffer() {
-			return poolInstance.vertexBuffer;
-		}
-
-	}
-
-	public static interface IStreamBufferInitializer {
-		void initialize(IVertexArrayGL vertexArray, IBufferGL vertexBuffer);
-	}
-
-	public StreamBuffer(IStreamBufferInitializer initializer) {
-		this.buffers = new StreamBufferInstance[poolSize];
-		for(int i = 0; i < this.buffers.length; ++i) {
-			StreamBufferInstance j = new StreamBufferInstance();
-			j.poolInstance = pool[i];
-			this.buffers[i] = j;
-		}
-		this.initializer = initializer;
-	}
-
-	public StreamBufferInstance getBuffer(int requiredMemory) {
-		StreamBufferInstance next = buffers[poolBufferID++ % buffers.length];
-		resizeInstance(next.poolInstance, requiredMemory);
-		if(next.vertexArray == null) {
-			next.vertexArray = EaglercraftGPU.createGLVertexArray();
-			initializer.initialize(next.vertexArray, next.poolInstance.vertexBuffer);
-		}
-		return next;
-	}
-
-	public void destroy() {
-		for(int i = 0; i < buffers.length; ++i) {
-			StreamBufferInstance next = buffers[i];
-			if(next.vertexArray != null) {
-				EaglercraftGPU.destroyGLVertexArray(next.vertexArray);
-			}
+		int offBytes = off * elSize;
+		int reqBytes = elCount * elSize;
+		if (currentSize - offBytes >= reqBytes) {
+			currentOffset = offBytes + reqBytes;
+			return off;
+		} else {
+			currentOffset = 0;
+			currentSize = (reqBytes + 0xFFFF) & 0xFFFFF000;
+			_wglBufferData(GL_ARRAY_BUFFER, currentSize, GL_STREAM_DRAW);
+			return 0;
 		}
 	}
 
 	public static void destroyPool() {
-		for(int i = 0; i < pool.length; ++i) {
-			if(pool[i].vertexBuffer != null) {
-				_wglDeleteBuffers(pool[i].vertexBuffer);
-				pool[i].vertexBuffer = null;
-			}
+		if (buffer != null) {
+			_wglDeleteBuffers(buffer);
+			buffer = null;
 		}
 	}
 

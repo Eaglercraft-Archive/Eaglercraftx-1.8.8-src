@@ -57,15 +57,15 @@ function initializeServerPlatfSP(spImports) {
 
 	/**
 	 * @param {string} channel
-	 * @param {Uint8Array} arr
+	 * @param {number} addr
+	 * @param {number} length
 	 */
-	spImports["sendPacket"] = function(channel, arr) {
-		const copiedArray = new Uint8Array(arr.length);
-		copiedArray.set(arr, 0);
+	spImports["sendPacket"] = function(channel, addr, length) {
+		const copiedArray = heapArrayBuffer.slice(addr, addr + length);
 		postMessage({
 			"ch": channel,
-			"dat": copiedArray.buffer
-		}, [copiedArray.buffer]);
+			"dat": copiedArray
+		}, [copiedArray]);
 	};
 
 	spImports["getAvailablePackets"] = serverMessageQueue.getLength.bind(serverMessageQueue);

@@ -204,6 +204,8 @@ public class PlatformOpenGL {
 
 	public static native void _wglDrawElements(int mode, int count, int type, int offset);
 
+	public static native void _wglDrawRangeElements(int mode, int start, int end, int count, int type, int offset);
+
 	public static native void _wglDrawArraysInstanced(int mode, int first, int count, int instanced);
 
 	public static native void _wglDrawElementsInstanced(int mode, int count, int type, int offset, int instanced);

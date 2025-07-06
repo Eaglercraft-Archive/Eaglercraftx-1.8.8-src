@@ -76,9 +76,9 @@ public class GlStateManager {
 	static boolean stateMaterial = false;
 	static boolean stateLighting = false;
 	static int stateLightsStackPointer = 0;
-	static final boolean[][] stateLightsEnabled = new boolean[4][8];
-	static final Vector4f[][] stateLightsStack = new Vector4f[4][8];
-	static final int[] stateLightingSerial = new int[4];
+	static final boolean[][] stateLightsEnabled = new boolean[2][8];
+	static final Vector4f[][] stateLightsStack = new Vector4f[2][8];
+	static final int[] stateLightingSerial = new int[2];
 
 	static float stateLightingAmbientR = 0.0f;
 	static float stateLightingAmbientG = 0.0f;

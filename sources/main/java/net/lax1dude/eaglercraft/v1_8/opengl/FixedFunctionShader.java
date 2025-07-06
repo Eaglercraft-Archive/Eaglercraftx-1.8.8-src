@@ -44,7 +44,7 @@ public class FixedFunctionShader {
 		public static final String FILENAME_VSH = "/assets/eagler/glsl/core.vsh";
 		public static final String FILENAME_FSH = "/assets/eagler/glsl/core.fsh";
 
-		public static final String PRECISION_INT = "lowp";
+		public static final String PRECISION_INT = "mediump";
 		public static final String PRECISION_FLOAT = "highp";
 		public static final String PRECISION_SAMPLER = "mediump";
 		

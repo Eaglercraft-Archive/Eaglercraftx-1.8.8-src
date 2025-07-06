@@ -187,8 +187,7 @@ public class InstancedParticleRenderer {
 		EaglercraftGPU.vertexAttribPointer(0, 2, GL_FLOAT, false, 8, 0);
 		EaglercraftGPU.vertexAttribDivisor(0, 0);
 
-		EaglercraftGPU.bindVAOGLArrayBufferNow(instancesBuffer);
-		_wglBufferData(GL_ARRAY_BUFFER, particleBuffer.capacity(), GL_STREAM_DRAW);
+		EaglercraftGPU.bindVAOGLArrayBuffer(instancesBuffer);
 
 		EaglercraftGPU.enableVertexAttribArray(1);
 		EaglercraftGPU.vertexAttribPointer(1, 3, GL_FLOAT, false, 24, 0);
@@ -315,7 +314,7 @@ public class InstancedParticleRenderer {
 		int l = particleBuffer.limit();
 
 		particleBuffer.flip();
-		_wglBufferData(GL_ARRAY_BUFFER, particleBuffer.capacity(), GL_STREAM_DRAW);
+		_wglBufferData(GL_ARRAY_BUFFER, (particleBuffer.remaining() + 0xFFF) & 0xFFFFF000, GL_STREAM_DRAW);
 		_wglBufferSubData(GL_ARRAY_BUFFER, 0, particleBuffer);
 
 		particleBuffer.position(p);

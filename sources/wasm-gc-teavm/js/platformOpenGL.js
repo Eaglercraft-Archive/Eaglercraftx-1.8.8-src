@@ -99,7 +99,7 @@ function setCurrentGLContext(ctx, glesVersIn, allowExts, glImports) {
 	glImports["glColorMask"] = ctx.colorMask.bind(ctx);
 	glImports["glDrawBuffers"] = glesVersIn >= 300 ? ctx.drawBuffers.bind(ctx) : unsupportedFunc(platfOpenGLName, "glDrawBuffers");
 	glImports["glReadBuffer"] = glesVersIn >= 300 ? ctx.readBuffer.bind(ctx) : unsupportedFunc(platfOpenGLName, "glReadBuffer");
-	glImports["glReadPixels"] = glImports["glReadPixels0"] = ctx.readPixels.bind(ctx);
+	glImports["glReadPixels"] = ctx.readPixels.bind(ctx);
 	glImports["glPolygonOffset"] = ctx.polygonOffset.bind(ctx);
 	glImports["glLineWidth"] = ctx.lineWidth.bind(ctx);
 	glImports["glGenBuffers"] = ctx.createBuffer.bind(ctx);
@@ -117,8 +117,8 @@ function setCurrentGLContext(ctx, glesVersIn, allowExts, glImports) {
 	glImports["glDeleteRenderbuffer"] = ctx.deleteRenderbuffer.bind(ctx);
 	glImports["glDeleteQueries"] = glesVersIn >= 300 ? ctx.deleteQuery.bind(ctx) : unsupportedFunc(platfOpenGLName, "glDeleteQueries");
 	glImports["glBindBuffer"] = ctx.bindBuffer.bind(ctx);
-	glImports["glBufferData"] = glImports["glBufferData0"] = ctx.bufferData.bind(ctx);
-	glImports["glBufferSubData"] = glImports["glBufferSubData0"] = ctx.bufferSubData.bind(ctx);
+	glImports["glBufferData"] = ctx.bufferData.bind(ctx);
+	glImports["glBufferSubData"] = ctx.bufferSubData.bind(ctx);
 	glImports["glEnableVertexAttribArray"] = ctx.enableVertexAttribArray.bind(ctx);
 	glImports["glDisableVertexAttribArray"] = ctx.disableVertexAttribArray.bind(ctx);
 	glImports["glVertexAttribPointer"] = ctx.vertexAttribPointer.bind(ctx);
@@ -126,9 +126,9 @@ function setCurrentGLContext(ctx, glesVersIn, allowExts, glImports) {
 	glImports["glBindTexture"] = ctx.bindTexture.bind(ctx);
 	glImports["glTexParameterf"] = ctx.texParameterf.bind(ctx);
 	glImports["glTexParameteri"] = ctx.texParameteri.bind(ctx);
-	glImports["glTexImage3D"] = glImports["glTexImage3D0"] = glesVersIn >= 300 ? ctx.texImage3D.bind(ctx) : unsupportedFunc(platfOpenGLName, "glTexImage3D");
-	glImports["glTexImage2D"] = glImports["glTexImage2D0"] = ctx.texImage2D.bind(ctx);
-	glImports["glTexSubImage2D"] = glImports["glTexSubImage2D0"] = ctx.texSubImage2D.bind(ctx);
+	glImports["glTexImage3D"] = glesVersIn >= 300 ? ctx.texImage3D.bind(ctx) : unsupportedFunc(platfOpenGLName, "glTexImage3D");
+	glImports["glTexImage2D"] = ctx.texImage2D.bind(ctx);
+	glImports["glTexSubImage2D"] = ctx.texSubImage2D.bind(ctx);
 	glImports["glCopyTexSubImage2D"] = ctx.copyTexSubImage2D.bind(ctx);
 	glImports["glTexStorage2D"] = glesVersIn >= 300 ? ctx.texStorage2D.bind(ctx) : unsupportedFunc(platfOpenGLName, "glTexStorage2D");
 	glImports["glPixelStorei"] = ctx.pixelStorei.bind(ctx);
@@ -145,6 +145,7 @@ function setCurrentGLContext(ctx, glesVersIn, allowExts, glImports) {
 	glImports["glGetProgramInfoLog"] = ctx.getProgramInfoLog.bind(ctx);
 	glImports["glDrawArrays"] = ctx.drawArrays.bind(ctx);
 	glImports["glDrawElements"] = ctx.drawElements.bind(ctx);
+	glImports["glDrawRangeElements"] = glesVersIn >= 300 ? ctx.drawRangeElements.bind(ctx) : unsupportedFunc(platfOpenGLName, "glDrawRangeElements");
 	glImports["glBindAttribLocation"] = ctx.bindAttribLocation.bind(ctx);
 	glImports["glGetAttribLocation"] = ctx.getAttribLocation.bind(ctx);
 	glImports["glGetUniformLocation"] = ctx.getUniformLocation.bind(ctx);
@@ -299,7 +300,6 @@ function setNoGLContext(glImports) {
 	setUnsupportedFunc(glImports, platfOpenGLName, "glDrawBuffers");
 	setUnsupportedFunc(glImports, platfOpenGLName, "glReadBuffer");
 	setUnsupportedFunc(glImports, platfOpenGLName, "glReadPixels");
-	setUnsupportedFunc(glImports, platfOpenGLName, "glReadPixels0");
 	setUnsupportedFunc(glImports, platfOpenGLName, "glPolygonOffset");
 	setUnsupportedFunc(glImports, platfOpenGLName, "glLineWidth");
 	setUnsupportedFunc(glImports, platfOpenGLName, "glGenBuffers");
@@ -318,9 +318,7 @@ function setNoGLContext(glImports) {
 	setUnsupportedFunc(glImports, platfOpenGLName, "glDeleteQueries");
 	setUnsupportedFunc(glImports, platfOpenGLName, "glBindBuffer");
 	setUnsupportedFunc(glImports, platfOpenGLName, "glBufferData");
-	setUnsupportedFunc(glImports, platfOpenGLName, "glBufferData0");
 	setUnsupportedFunc(glImports, platfOpenGLName, "glBufferSubData");
-	setUnsupportedFunc(glImports, platfOpenGLName, "glBufferSubData0");
 	setUnsupportedFunc(glImports, platfOpenGLName, "glEnableVertexAttribArray");
 	setUnsupportedFunc(glImports, platfOpenGLName, "glDisableVertexAttribArray");
 	setUnsupportedFunc(glImports, platfOpenGLName, "glVertexAttribPointer");
@@ -329,11 +327,8 @@ function setNoGLContext(glImports) {
 	setUnsupportedFunc(glImports, platfOpenGLName, "glTexParameterf");
 	setUnsupportedFunc(glImports, platfOpenGLName, "glTexParameteri");
 	setUnsupportedFunc(glImports, platfOpenGLName, "glTexImage3D");
-	setUnsupportedFunc(glImports, platfOpenGLName, "glTexImage3D0");
 	setUnsupportedFunc(glImports, platfOpenGLName, "glTexImage2D");
-	setUnsupportedFunc(glImports, platfOpenGLName, "glTexImage2D0");
 	setUnsupportedFunc(glImports, platfOpenGLName, "glTexSubImage2D");
-	setUnsupportedFunc(glImports, platfOpenGLName, "glTexSubImage2D0");
 	setUnsupportedFunc(glImports, platfOpenGLName, "glCopyTexSubImage2D");
 	setUnsupportedFunc(glImports, platfOpenGLName, "glTexStorage2D");
 	setUnsupportedFunc(glImports, platfOpenGLName, "glPixelStorei");
@@ -350,6 +345,7 @@ function setNoGLContext(glImports) {
 	setUnsupportedFunc(glImports, platfOpenGLName, "glGetProgramInfoLog");
 	setUnsupportedFunc(glImports, platfOpenGLName, "glDrawArrays");
 	setUnsupportedFunc(glImports, platfOpenGLName, "glDrawElements");
+	setUnsupportedFunc(glImports, platfOpenGLName, "glDrawRangeElements");
 	setUnsupportedFunc(glImports, platfOpenGLName, "glBindAttribLocation");
 	setUnsupportedFunc(glImports, platfOpenGLName, "glGetAttribLocation");
 	setUnsupportedFunc(glImports, platfOpenGLName, "glGetUniformLocation");

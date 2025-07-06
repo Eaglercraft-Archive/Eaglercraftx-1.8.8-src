@@ -5,13 +5,12 @@
 # Version: 1.0
 # Author: lax1dude
 
-> INSERT  2 : 7  @  2
+> INSERT  2 : 6  @  2
 
 + import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 + import net.lax1dude.eaglercraft.v1_8.opengl.VertexFormat;
 + import net.lax1dude.eaglercraft.v1_8.opengl.WorldRenderer;
 + import net.lax1dude.eaglercraft.v1_8.opengl.ext.deferred.DeferredStateManager;
-+ import net.lax1dude.eaglercraft.v1_8.opengl.ext.dynamiclights.DynamicLightsStateManager;
 
 > DELETE  4  @  4 : 5
 

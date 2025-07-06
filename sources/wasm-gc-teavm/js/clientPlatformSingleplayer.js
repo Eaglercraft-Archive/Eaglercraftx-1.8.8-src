@@ -100,8 +100,13 @@ function initializeClientPlatfSP(spImports) {
 			});
 		}));
 		
-		const classesTEADBGCopy = new Int8Array(classesTEADBG.length);
-		classesTEADBGCopy.set(classesTEADBG, 0);
+		const transferList = [];
+		var classesTEADBGCopy = null;
+		
+		if(classesTEADBG) {
+			classesTEADBGCopy = classesTEADBG.buffer.slice(classesTEADBG.byteOffset, classesTEADBG.byteOffset + classesTEADBG.byteLength);
+			transferList.push(classesTEADBGCopy);
+		}
 		
 		var eagRuntimeJS;
 		try {
@@ -116,13 +121,15 @@ function initializeClientPlatfSP(spImports) {
 			return false;
 		}
 		
+		transferList.push(eagRuntimeJS);
+		
 		workerObj.postMessage({
 			"eaglercraftXOpts": eaglercraftXOpts,
 			"eagruntimeJS": eagRuntimeJS,
 			"classesWASM": classesWASMModule,
 			"classesDeobfWASM": classesDeobfWASMModule,
-			"classesTEADBG": classesTEADBGCopy.buffer
-		});
+			"classesTEADBG": classesTEADBGCopy
+		}, transferList);
 
 		return true;
 	};
@@ -131,16 +138,16 @@ function initializeClientPlatfSP(spImports) {
 
 	/**
 	 * @param {string} channel
-	 * @param {Uint8Array} arr
+	 * @param {number} addr
+	 * @param {number} length
 	 */
-	spImports["sendPacket"] = function(channel, arr) {
+	spImports["sendPacket"] = function(channel, addr, length) {
 		if(workerObj) {
-			const copiedArray = new Uint8Array(arr.length);
-			copiedArray.set(arr, 0);
+			const copiedArray = heapArrayBuffer.slice(addr, addr + length);
 			workerObj.postMessage({
 				"ch": channel,
-				"dat": copiedArray.buffer
-			}, [copiedArray.buffer]);
+				"dat": copiedArray
+			}, [copiedArray]);
 		}
 	};
 

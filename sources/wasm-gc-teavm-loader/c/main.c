@@ -26,6 +26,7 @@ static uint32_t initEPWBinaryCompressedHelper(struct epw_slice_compressed* slice
 static uint32_t initEPWBinaryHelper(struct epw_slice* sliceIn, uint32_t epwLen);
 static uint32_t initEPWStringHelper(struct epw_slice* sliceIn, uint32_t epwLen);
 
+#define SLICE_IS_PRESENT(pSlice) (((struct epw_slice_compressed*)(pSlice))->sliceCompressedLength && ((struct epw_slice_compressed*)(pSlice))->sliceDecompressedLength)
 #define SLICE_IN_BOUNDS(pSlice, epwLen) (((struct epw_slice*)(pSlice))->sliceOffset + ((struct epw_slice*)(pSlice))->sliceLength <= (epwLen))
 
 // Note: Linux kernel uses 4096
@@ -186,20 +187,28 @@ int main(int argc, char** argv) {
 		return -1;
 	}
 	
-	dbgLog("Decompressing classes.wasm.teadbg...");
-	
-	result->classesDeobfTEADBGData = initEPWBinaryCompressedHelper(&headerPtr->classesDeobfTEADBGData, epwLen);
-	if(!result->classesDeobfTEADBGData) {
-		resultFailed(EPW_INVALID);
-		return -1;
+	if(SLICE_IS_PRESENT(&headerPtr->classesDeobfTEADBGData)) {
+		dbgLog("Decompressing classes.wasm.teadbg...");
+		
+		result->classesDeobfTEADBGData = initEPWBinaryCompressedHelper(&headerPtr->classesDeobfTEADBGData, epwLen);
+		if(!result->classesDeobfTEADBGData) {
+			resultFailed(EPW_INVALID);
+			return -1;
+		}
+	}else {
+		result->classesDeobfTEADBGData = -1;
 	}
 	
-	dbgLog("Decompressing deobfuscator...");
-	
-	result->classesDeobfWASMData = initEPWBinaryCompressedHelper(&headerPtr->classesDeobfWASMData, epwLen);
-	if(!result->classesDeobfWASMData) {
-		resultFailed(EPW_INVALID);
-		return -1;
+	if(SLICE_IS_PRESENT(&headerPtr->classesDeobfWASMData)) {
+		dbgLog("Decompressing deobfuscator...");
+		
+		result->classesDeobfWASMData = initEPWBinaryCompressedHelper(&headerPtr->classesDeobfWASMData, epwLen);
+		if(!result->classesDeobfWASMData) {
+			resultFailed(EPW_INVALID);
+			return -1;
+		}
+	}else {
+		result->classesDeobfWASMData = -1;
 	}
 	
 	result->numEPKs = numEPKs;

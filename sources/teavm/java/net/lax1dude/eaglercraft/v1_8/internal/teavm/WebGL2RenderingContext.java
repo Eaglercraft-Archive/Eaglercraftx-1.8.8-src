@@ -72,6 +72,8 @@ public interface WebGL2RenderingContext extends WebGLRenderingContext {
 
 	void drawElementsInstanced(int p1, int p2, int p3, int p4, int p5);
 
+	void drawRangeElements(int p1, int p2, int p3, int p4, int p5, int p6);
+
 	int getUniformBlockIndex(WebGLProgram p1, String p2);
 
 	void bindBufferRange(int p1, int p2, WebGLBuffer p3, int p4, int p5);

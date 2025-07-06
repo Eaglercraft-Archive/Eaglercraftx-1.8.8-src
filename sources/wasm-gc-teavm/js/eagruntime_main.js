@@ -106,6 +106,8 @@ var keepAliveCallback = null;
 var showDebugConsole = null;
 /** @type {function()|null} */
 var resetSettings = null;
+/** @type {function()|null} */
+var handleVisibilityChange = null;
 
 const runtimeOpts = {
 	localStorageNamespace: "_eaglercraftX",

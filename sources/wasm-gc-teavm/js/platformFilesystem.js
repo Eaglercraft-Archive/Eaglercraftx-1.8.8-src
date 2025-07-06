@@ -147,10 +147,21 @@ eagruntimeImpl.platformFilesystem["eaglerRead"] = new WebAssembly.Suspending(eag
 /**
  * @param {IDBDatabase} database
  * @param {string} pathName
+ * @param {number} addr
+ * @param {number} length
+ * @return {Promise}
+ */
+function eaglerWriteImpl(database, pathName, addr, length) {
+	return eaglerWriteImpl0(database, pathName, heapArrayBuffer.slice(addr, addr + length));
+}
+
+/**
+ * @param {IDBDatabase} database
+ * @param {string} pathName
  * @param {ArrayBuffer} arr
  * @return {Promise}
  */
-function eaglerWriteImpl(database, pathName, arr) {
+function eaglerWriteImpl0(database, pathName, arr) {
 	return new Promise(function(resolve) {
 		const tx = database.transaction("filesystem", "readwrite");
 		const r = tx.objectStore("filesystem").put(writeDBRow(pathName, arr));
@@ -193,7 +204,7 @@ eagruntimeImpl.platformFilesystem["eaglerExists"] = new WebAssembly.Suspending(e
  */
 async function eaglerMoveImpl(database, pathNameOld, pathNameNew) {
 	const oldData = await eaglerReadImpl(database, pathNameOld);
-	if(!oldData || !(await eaglerWriteImpl(database, pathNameNew, oldData))) {
+	if(!oldData || !(await eaglerWriteImpl0(database, pathNameNew, oldData))) {
 		return false;
 	}
 	return await eaglerDeleteImpl(database, pathNameOld);
@@ -209,7 +220,7 @@ eagruntimeImpl.platformFilesystem["eaglerMove"] = new WebAssembly.Suspending(eag
  */
 async function eaglerCopyImpl(database, pathNameOld, pathNameNew) {
 	const oldData = await eaglerReadImpl(database, pathNameOld);
-	return oldData && (await eaglerWriteImpl(database, pathNameNew, oldData));
+	return oldData && (await eaglerWriteImpl0(database, pathNameNew, oldData));
 }
 
 eagruntimeImpl.platformFilesystem["eaglerCopy"] = new WebAssembly.Suspending(eaglerCopyImpl);

@@ -121,19 +121,18 @@ function initializePlatfWebView(webViewImports) {
 
 	/**
 	 * @param {string} ch
-	 * @param {Uint8Array} bin
+	 * @param {number} addr
+	 * @param {number} length
 	 */
-	webViewImports["sendBinaryMessage"] = function(ch, bin) {
+	webViewImports["sendBinaryMessage"] = function(ch, addr, length) {
 		try {
 			var w;
 			if(currentIFrame != null && (w = currentIFrame.contentWindow) != null) {
-				const copiedArray = new Uint8Array(bin.length);
-				copiedArray.set(bin, 0);
 				w.postMessage({
 					"ver": 1,
 					"channel": ch,
 					"type": "binary",
-					"data": copiedArray.buffer
+					"data": heapArrayBuffer.slice(addr, addr + length)
 				}, "*");
 			}else {
 				eagError("Server tried to send the WebView a message, but the message channel is not open!");
